@@ -15,57 +15,56 @@ is about *contributing to* the documentation.
 Clone the repo.
 
 ```sh
-$ git clone https://github.com/apostrophecms/apostrophe-documentation.git
-$ cd apostrophe-documentation
+$ git clone https://github.com/apostrophecms/a3-docs.git
+$ cd a3-docs
 ```
 
-Next, install the dependencies for the main Vuepress documentation as well as
-for the module documentation generator (see below). The `install` script file
-will do both with single command.
+Next, install the dependencies for the main Vuepress documentation build.
 
 ```
-./install
+npm install
 ```
 
-### 2. Updating the modules documentation from the source code
-
-The reference docs for the modules are based on comments inline in the code,
-which makes writing reference documentation easy and encourages us to do so.
-Comments above the module's source go into the `README.md` for the module's
-folder; comments above each method document that method. Helpers, routes and
-regular methods (`self.something = function()...`) are all automatically
-discovered. Frontend moog classes and methods, too.
-
-Here's how to generate the docs:
-
-> First make sure you are not running anything locally on port 3000.
+Now you can build the docs with:
 
 ```
-./generate
+npm run dev
 ```
 
-NOTE: this will `npm update` the version of `apostrophe` being documented first, so the docs are always for the **latest published release**.
+For testing, or
 
-Now commit the changes, as you would if you had made them manually.
+```
+npm run build
+```
 
-### 3. Making edits to other pages
+Before deployment with the `deploy` script (requires credentials of course).
 
-We make changes to other pages by hand and commit them to master.
+### 2. Editing content
 
-**If you add a new page,** you will need to edit `docs/.vuepress/config.js` in the root of the project. Otherwise it will not appear in the sidebar navigation.
+See the `docs` subdirectory for Markdown files.
 
-### 4. Submit for review
+Images should be added to `images/assets` and embedded with relative paths, like this:
 
-First, make sure you've run the documentations locally (`npm run dev`) and
-confirmed that your links work properly. Submit your changes as a pull request
-on the [apostrophe-documentation](https://github.com/apostrophecms/apostrophe-documentation/)
-repository. Please include as much context for the change as is reasonable in
-the PR description.
+```
+![](../../../images/assets/user-menu.png)
+```
 
-### Note on internal doc links
+**If you add a new top level page,** you will need to edit `docs/.vuepress/config.js`. **If you add a new deeper page,** you will need to edit `docs/.vuepress/sidebar.json`.  Otherwise it will not appear in the navigation.
+
+### 3. Linking to other pages
 
 When creating links in the body of a documentation page that point to another
 page of documentation, either make sure the link is relative and pointing to the
 `.md` extension OR use the file path starting starting after the `docs`
 directory. So you would link to `docs/devops/email.md` with
 `[link text](/devops/email.md)`.
+
+### 4. Submit for review
+
+First, make sure you've built and reviewed your documentation locally (`npm run dev`) and
+confirmed that your links work properly. Submit your changes as a pull request
+on the [a3-docs](https://github.com/apostrophecms/a3-docs/)
+repository. Please include as much context for the change as is reasonable in
+the PR description.
+
+

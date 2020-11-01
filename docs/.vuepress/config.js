@@ -12,7 +12,7 @@ module.exports = {
   },
   themeConfig: {
     repo: 'https://github.com/apostrophecms/apostrophe',
-    docsRepo: 'https://github.com/apostrophecms/apostrophe-documentation',
+    docsRepo: 'https://github.com/apostrophecms/a3-docs',
     docsBranch: 'master',
     docsDir: 'docs',
     lastUpdated: 'Last updated',
@@ -21,7 +21,7 @@ module.exports = {
     editLinks: true,
     sidebar,
     feedbackWidget: {
-      docsRepoIssue: 'apostrophecms/apostrophe-documentation'
+      docsRepoIssue: 'apostrophecms/a3-docs'
     },
     logo: '/images/a2-lockup.png',
     nav: [
@@ -30,21 +30,8 @@ module.exports = {
         link: '/'
       },
       {
-        text: 'Getting Started',
-        link: '/getting-started/'
-      },
-      {
-        text: 'Reference',
-        link: '/reference/'
-      },
-      {
         text: 'Community',
         link: 'https://apostrophecms.com/community',
-        rel: false
-      },
-      {
-        text: 'Demo',
-        link: 'http://demo.apostrophecms.com',
         rel: false
       },
       {
