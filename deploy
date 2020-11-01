@@ -4,7 +4,7 @@ if [ -z "$ENV" ]; then
   echo "💁‍♀️ Usage: ENV=staging npm run deploy"
   echo "(or as appropriate)"
   echo
-  rm -r ./dist
+  rm -rf ./dist
   exit 1
 fi
 
