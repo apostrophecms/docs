@@ -6,23 +6,29 @@ title: 'Apostrophe 3 Documentation'
 
 This document assumes a level of familiarity with Apostrophe 2. We suggest building your production projects with the latest stable release of [Apostrophe 2](https://github.com/apostrophecms/apostrophe). This repository reflects our current progress towards a stable 3.0 release, which is scheduled in Q1 of 2021. We're eager to share our progress so far and grateful for any feedback you might have.
 
-### New in Apostrophe 3
+First let's talk about what's new and what is still to come.
 
-- New editing experience
-- lots of cool headless stuff
-- rewritten in vue
-- module architecture
-- etc
+## New in Apostrophe 3 Alpha 1
 
-### Coming Soon in Future Releases
+* **New editing experience.** Powered by Vue, the new editing experience is much faster than in A2. And the design and UX are much improved for use cases like nested widgets.
+* **100% RESTful headless APIs.** While A2 had custom APIs and a separate `apostrophe-headless` module, A3 is powered by RESTful APIs from the ground up.
+* **Better module architecture.** A2 developers told us it was hard to know where to put their code. So in A3, we have a clearer layout for modules. Each module has a clearly defined home for methods, event handlers, Nunjucks helpers, async components, query builders and more.
+* **Async components and lazy loading.** A2 developers often asked why they couldn't fetch content from the database from inside a template. Now you can. The async component pattern delivers this feature without cluttering your templates with complex JavaScript code. Load what you need when you need it.
+* **Un-opinionated on the front end.** A2 shipped with jQuery, lodash, momentjs and more on the front end. Later, we added the lean option to remove these things. A3 takes this one step further: there are no frontend libraries at all sent to logged-out users, except for a very small vanilla JavaScript helper library for core tasks like communicating with Apostrophe and displaying our video widget. The new library is under 10K when delivered with gzip encoding.
 
-- Permissions (all admins)
-- Version History
-- Image Cropping
-- Batch Operations
-- User Roles and Groups
+## Coming Before the 3.0 Final Release
 
-## Prerequisites
+These features are not in alpha 1, but it's important to us that you know they are coming before the final release of 3.0:
+
+* **New permissions system.** A new, simplified permissions system is on its way. However, **just for alpha 1, all logged-in users are treated as admins.**
+* **Drafts for everyone.** In A2, if you wanted to work on your content privately before making it live, the `apostrophe-workflow` module was required. In A3, you explicitly "publish" your changes when they are ready to go live. UX improvements make this process friendly for everyone.
+* **Version history.** In A3 you'll be able to access the publication history of any document and potentially roll back if needed.
+* **Internationalization.** A3 final will ship with optional internationalization both for static text and for dynamic content. We have learned many UX lessons from `apostrophe-workflow` and are simplifying this experience.
+* **Image cropping and focal points.** Standard in 2.x, these features are still in the works for 3.x.
+* **Relationships with more than one type.** "Polymorphic joins," a popular feature added late in the 2.x series, will reappear in 3.x before the final release.
+* **And more.** We have a rich ecosystem of plug-in modules for A2, and  those modules will be ported to A3 as appropriate.
+
+# Prerequisites
 
 Apostrophe 3 introduces a number of new features and APIs, but the server requirements are the same as before. This document assumes you're running on **macOS**. As always, we recommend installing the following with [Homebrew](https://brew.sh/).
 
@@ -39,7 +45,7 @@ Apostrophe 3 introduces a number of new features and APIs, but the server requir
 When you make code changes the boilerplate project will automatically restart and refresh the browser. If you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.* 
 :::
 
-## Getting Started
+# Getting Started
 
 Clone the Apostrophe 3 Boilerplate project give your project a name of its own. Legal characters consist of letters, digits and dashes. We're assuming **myproject** as a name here. Be sure to give the admin a user and password when prompted. 
 
@@ -54,12 +60,16 @@ npm run dev
 Once installed, the application will run at [http://localhost:3000/](http://localhost:3000/), and you will be able to login with the admin credentials you provided in the previous step at [http://localhost:3000/](http://localhost:3000/)login.
 
 ::: tip Note: 
-Currently, all edits made contextually are automatically saved. We're introducing an Edit Mode in our next released, which will offer a direct "save" option and remove automatic saving.
+Currently, all edits made contextually are automatically saved. We're introducing an Edit Mode in our next release, which will offer a direct "save" option and remove automatic saving.
 :::
 
-## Developing in Apostrophe 3
+# Developing in Apostrophe 3
 
-Apostrophe 3 introduces several changes to module architecture and schemas. Lets start by taking a look at our home page and discuss the major differences. Even the home page has its own module, `@apostrophecms/home-page`. We're just configuring it here, so we don't have to use `extend`.
+Apostrophe 3 introduces several changes to module architecture. Let's start by taking a look at our home page and discuss the major differences.
+
+## The home page
+
+Even the home page has its own module, `@apostrophecms/home-page`. We're just configuring it here in this project-level `index.js` file, so we don't have to use `extend`.
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -118,16 +128,21 @@ module.exports = {
 ```
 
 ### Modules
+
 - Project-level modules have been moved from `./lib/modules` to  `./modules`
 - Apostrophe's core modules like `@apostrophecms/home-page` are namespaced now, just like newer npm modules. This is true even for modules that ship inside a "bundle" such as the `apostrophe` npm module.
 
-### Schemas
+### Options
 
-- Ordinary module options like `label` now reside in an `options` property.
-- Every area must be configured as part of the schema for a page-type or piece-type.
-- Fields are added to the module with the new `fields` syntax. New fields are added via the `add` property.
-- You can also `remove` fields by passing an array for `remove`.
+Ordinary module options like `label` now reside in an `options` property, not at the top level.
+
+### Fields
+
+- Fields are added to the module with the new `fields` syntax. New fields are added via the `add` sub-property of `fields`. If a module extends another module, they cascade, so you get all of the fields.
 - For convenience, fields are now configured as an object, rather than an array.
+- Every area must be configured as a field of the appropriate page type or piece type.
+- You can also `remove` fields by passing an array as the `remove` sub-property of `fields`. This is useful for removing unwanted fields inherited from the module you extended.
+- The `group` option is used to group fields into tabs in the editor. This cascades, too, so we don't have to spell out every group we inherit every time.
 
 ### Templates
 
@@ -146,7 +161,7 @@ The following is our template for the homepage. There are a few important change
 {% endblock %}
 ```
 
-### Standard Widgets
+## Standard Widgets
 
 There are more standard widgets. Try adding more sub-properties to `widgets` in `index.js`:
 
@@ -161,7 +176,7 @@ widgets: {
 ...
 ```
 
-#### Configuring the Image Widget
+### Image Widget
 
 Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
 
@@ -187,8 +202,9 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 .full-width-image { 
   max-width: 100%; 
 }
+```
 
-### Custom widgets
+## Custom widgets
 
 Let's add a two-column layout widget to the site:
 
@@ -269,14 +285,16 @@ module.exports = {
 }
 ```
 
-**Differences from Apostrophe 2**
+Here are the notable differences from A2 for custom widgets:
 
 * Our custom widget modules extend `@apostrophecms/widget-type`.
-* Simple options like `label` go inside `options` rather than the top-level.
+* Simple options like `label` go inside `options` rather than at the top level.
 * Just like with pages, we use `fields` to configure our fields. However, `group` is not used.
 * Just like with pages, any sub-areas must be specified in `index.js`.
 * Apostrophe is not supplying CSS classes, so we supply our own.
 * We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
+
+Custom widgets can also make great use of async components, which we'll talk about later.
 
 ## Building Page tree navigation
 
