@@ -185,7 +185,7 @@ mkdir -p modules/two-column-widget/views
     'two-column': {}
 ```
 
-```javascript
+```js
 // in modules/two-column-widget/index.js
 
 module.exports = {
@@ -197,16 +197,16 @@ module.exports = {
     add: {
       left: {
         type: 'area',
-        label: 'Left',
+        label: 'Column One',
         options: {
           // You can copy from the "main" area in home-page/index.js
         }
       },
       right: {
         type: 'area',
-        label: 'Right',
+        label: 'Column Two',
         options: {
-          // Same as for "left"
+          // You can copy from the "main" area in home-page/index.js
         }
       },
     }
@@ -214,41 +214,49 @@ module.exports = {
 }
 ```
 
-```nunjucks
+```js
 {# in modules/two-column-widgets/views/widget.html #}
-<div class="two-column-widget">
-  <div class="two-column-widget-left">
-    {% area data.widget, 'left' %}
+<div class="two-column-layout-container">
+  <div class="two-column-layout column-one">
+    {% area data.widget, 'columnOne' %}
   </div>
-  <div class="two-column-widget-right">
-    {% area data.widget, 'right' %}
+  <div class="two-column-layout column-two">
+    {% area data.widget, 'columnTwo' %}
   </div>
 </div>
 ```
 
 ```scss
 // in src/index.scss
-.two-column-widget {
+.two-column-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
 }
 
-.two-column-widget-left, .two-column-widget-right {
+.two-column-layout {
   display: flex;
   flex-direction: column;
   flex-basis: 100%;
   flex: 1;
 }
+
+.column-one {
+  order: 1;
+}
+
+.column-two {
+  order: 2;
+}
 ```
 
-**"What's changed from A2 in this code?"**
+**Differences from Apostrophe 2**
 
 * Our custom widget modules extend `@apostrophecms/widget-type`.
-* Simple options like `label` go inside `options`, not at top level.
-* Just like with pages, we use `field` to configure our fields more easily than in 2.x. However, `group` is not used.
+* Simple options like `label` go inside `options` rather than the top-level.
+* Just like with pages, we use `field` to configure our fields. However, `group` is not used.
 * Just like with pages, any sub-areas must be specified in `index.js`.
-* There are no automatic CSS classes for widgets, so we supply our own. A3 tries hard not to interfere with your frontend code.
-* We can nest widgets even more deeply than this if we wish. In A3 there are no real limits on nesting apart from common sense.
+* There are no automatic CSS classes for widgets, so we supply our own.
+* We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
 
