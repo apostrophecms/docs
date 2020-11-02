@@ -4,29 +4,51 @@ title: 'Apostrophe 3 Documentation'
 
 # Introduction
 
-This document assumes a level of familiarity with Apostrophe 2. We suggest building your production projects with the latest stable release of [Apostrophe 2](https://github.com/apostrophecms/apostrophe). This repository reflects our current progress towards a stable 3.0 release, which is scheduled in Q1 of 2021. We're eager to share our progress so far and grateful for any feedback you might have.
+This document assumes a level of familiarity with Apostrophe 2. We suggest building your production projects with the latest stable release of [Apostrophe 2](https://github.com/apostrophecms/apostrophe). This reflects our current progress towards a stable 3.0 release, which is scheduled in Q1 of 2021. We're eager to share our progress so far and grateful for any feedback you might have.
 
 First let's talk about what's new and what is still to come.
 
 ## New in Apostrophe 3 Alpha 1
 
-* **New editing experience.** Powered by Vue, the new editing experience is much faster than in A2. And the design and UX are much improved for use cases like nested widgets.
-* **100% RESTful headless APIs.** While A2 had custom APIs and a separate `apostrophe-headless` module, A3 is powered by RESTful APIs from the ground up.
-* **Better module architecture.** A2 developers told us it was hard to know where to put their code. So in A3, we have a clearer layout for modules. Each module has a clearly defined home for methods, event handlers, Nunjucks helpers, async components, query builders and more.
-* **Async components and lazy loading.** A2 developers often asked why they couldn't fetch content from the database from inside a template. Now you can. The async component pattern delivers this feature without cluttering your templates with complex JavaScript code. Load what you need when you need it.
-* **Un-opinionated on the front end.** A2 shipped with jQuery, lodash, momentjs and more on the front end. Later, we added the lean option to remove these things. A3 takes this one step further: there are no frontend libraries at all sent to logged-out users, except for a very small vanilla JavaScript helper library for core tasks like communicating with Apostrophe and displaying our video widget. The new library is under 10K when delivered with gzip encoding.
+### 100% RESTful Headless APIs 
+While A2 had custom APIs and a separate `apostrophe-headless` module, A3 is powered by RESTful APIs from the ground up.
+
+### New Editing Experience
+Powered by Vue, the new editing experience is much faster than in A2. We've completely overhauled the design and UX with superior editor interactions.
+
+### Improved Module Architecture
+A2 developers told us it was hard to know where to put their code. So in A3, we have a clearer layout for modules. Each module has a clearly defined home for methods, event handlers, Nunjucks helpers, async components, query builders and more.
+
+### Async Components & Lazy Loading
+A2 developers often asked why they couldn't fetch content from the database from inside a template. Now you can. The async component pattern delivers this feature without cluttering your templates with complex JavaScript code. Load what you need when you need it.
+
+### Un-opinionated Front-end
+A2 shipped with jQuery, lodash, momentjs and more. Later, we added the lean option to remove these things. A3 takes this one step further: there are no frontend libraries at all sent to logged-out users, except for a very small vanilla JavaScript helper library for core tasks like communicating with Apostrophe and displaying our video widget. The new library is under 10K when delivered with gzip encoding.
 
 ## Coming Before the 3.0 Final Release
 
 These features are not in alpha 1, but it's important to us that you know they are coming before the final release of 3.0:
 
-* **New permissions system.** A new, simplified permissions system is on its way. However, **just for alpha 1, all logged-in users are treated as admins.**
-* **Drafts for everyone.** In A2, if you wanted to work on your content privately before making it live, the `apostrophe-workflow` module was required. In A3, you explicitly "publish" your changes when they are ready to go live. UX improvements make this process friendly for everyone.
-* **Version history.** In A3 you'll be able to access the publication history of any document and potentially roll back if needed.
-* **Internationalization.** A3 final will ship with optional internationalization both for static text and for dynamic content. We have learned many UX lessons from `apostrophe-workflow` and are simplifying this experience.
-* **Image cropping and focal points.** Standard in 2.x, these features are still in the works for 3.x.
-* **Relationships with more than one type.** "Polymorphic joins," a popular feature added late in the 2.x series, will reappear in 3.x before the final release.
-* **And more.** We have a rich ecosystem of plug-in modules for A2, and  those modules will be ported to A3 as appropriate.
+### New Permissions System 
+A new, simplified permissions system is on its way. However, **for alpha 1, all logged-in users are treated as admins.**
+
+### Drafts for Everyone
+In A2, if you wanted to work on your content privately before making it live, the `apostrophe-workflow` module was required. In A3, you explicitly "publish" your changes when they are ready to go live. UX improvements make this process friendly for everyone.
+
+### Version History
+In A3 you'll be able to access the publication history of any document and potentially roll back if needed.
+
+### Internationalization
+A3 final will ship with optional internationalization both for static text and for dynamic content. We have learned many UX lessons from `apostrophe-workflow` and are simplifying this experience.
+
+### Image Cropping & Focal Points
+Standard in 2.x, these features are still in the works for 3.x.
+
+### Polymorphic Relationships
+Formally "Polymorphic joins," a popular feature added late in the 2.x series, will reappear in 3.x before the final release.
+
+### And More 
+We have a rich ecosystem of plug-in modules for A2, and  those modules will be ported to A3 as appropriate.
 
 # Prerequisites
 
@@ -148,18 +170,17 @@ Ordinary module options like `label` now reside in an `options` property, not at
 
 The following is our template for the homepage. There are a few important changes to templates in Apostrophe 3, but the syntax should be familiar.
 
-- Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
-- You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template you just pass the page and the name of the area.
-
 ```js
 // modules/@apostrophecms/home-page/views/page.html
-
 {% extends "layout.html" %}
 
 {% block main %}
   {% area data.page, 'main' %}
 {% endblock %}
 ```
+
+- Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
+- You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template, you just pass the page and the name of the area.
 
 ## Standard Widgets
 
@@ -180,7 +201,7 @@ widgets: {
 
 Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
 
-```
+```sh
 mkdir modules/@apostrophecms/image-widget
 ```
 
@@ -203,43 +224,37 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
   max-width: 100%; 
 }
 ```
+* A3 doesn't impose its own asset pipeline on you. This boilerplate project contains a simple webpack configuration.
 
-**"What's changed from A2 in this code?"**
+::: tip Note: 
+The image widget only accepts one image. A3 comes with a still image widget, but it doesn't come with a slideshow widget as in A2
+:::
 
-* The image widget only accepts one image. A3 comes with a still image widget, but it doesn't come with a slideshow widget, because everyone has their own preferred slideshow library. You can make your own widget that uses a relationship with images, or an array field, and write a widget player (TODO: document custom widgets, A3 widget players).
+## Front-end Assets
 
-* A3 doesn't impose its own asset pipeline on you. Instead, the boilerplate project contains a simple webpack configuration. We'll talk about this more in the next section.
+Apostrophe 3, we don't impose any decisions on you about the front end. Instead, Apostrophe automatically imports **any .js files in the `ui/public` folder of any module** into its own asset bundle, **without any compilation or changes.** This is tailor-made for pushing the output of your own webpack pipeline. The boilerplate follows our recomended strategy: **use webpack to build your assets, and push the end result to Apostrophe's own asset pipeline.** However, you can follow whatever organizing pattern that works best for you or your team.
 
-## Frontend assets in Apostrophe 3
+-  The `dev` task in `package.json` runs `webpack`, which compiles `src/index.js` according to the rules in `webpack.config.js`. If you don't like these rules you can change them.
+-  `src/index.scss` (written in [SASS](https://sass-lang.com/)) is imported by `src/index.js`, allowing the browser to load just one file for both.
+-  At the end of the build, the bundled assets are written to `modules/asset/ui/public/sites.js`.
+-  Then the `dev` task runs the `@apostrophecms/asset:build` task, which compiles Apostrophe's own assets. In addition, **any `.js` files in the `ui/public` folder of any module are automatically included in the frontend build.**
 
-In Apostrophe 2, Apostrophe compiled your stylesheets as LESS files and bundled your `.js` files. Developers called `pushAsset` to tell Apostrophe about their assets. But by 2020, most developers just pushed the end result of their own preferred webpack pipeline.
+## Page Types
 
-So in Apostrophe 3, we don't impose any decisions on you about the front end. Instead, Apostrophe just automatically imports **any .js files in the `ui/public` folder of any module** into its own asset bundle, **without any compilation or changes.** This is tailor-made for pushing the output of your own webpack pipeline.
+Let's make a new `default` page template for building additional pages on our site. To save space, we won't include things that are the same as in the home page module.
 
-The boilerplate project contains a good example of this:
-
-* The `dev` task in `package.json` runs `webpack`, which compiles `src/index.js` according to the rules in `webpack.config.js`. If you don't like these rules you can change them; it's project-level code.
-* `src/index.scss` (written in [SASS](https://sass-lang.com/)) is imported by `src/index.js`, allowing the browser to load just one file for both.
-* At the end of the build, the bundled assets are written to `modules/asset/ui/public/sites.js`.
-* Then the `dev` task runs the `@apostrophecms/asset:build` task, which compiles Apostrophe's own assets. In addition, **any `.js` files in the `ui/public` folder of any module are automatically included in the frontend build.**
-* This is our recommended strategy: **use webpack to build your assets, and push the end result to Apostrophe's own asset pipeline.** But you can do it any way you want, including pushing your own `script` and `link` tags in an override of the `extraHead` nunjucks block in your layout template (you could do this in `views/layout.html` in your project).
-
-## Adding page types in A3
-
-Our site only has a home page template. Let's make a separate `default` template for additional pages. To save space, we won't include things that are the same as in the home page module.
+```sh
+# Create a folder for our home page module and its template
+mkdir -p modules/default-page/views
+```
 
 ```javascript
 // in app.js, after the other modules, configure a new one
     'default-page': {}
 ```
 
-```bash
-# Create a folder for our home page module and its template
-mkdir -p modules/default-page/views
-```
-
 ```javascript
-// in modules/default-page/index.js, configure the new module
+// in modules/default-page/index.js
 module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
@@ -263,9 +278,8 @@ module.exports = {
 };
 ```
 
-```javascript
-// in modules/@apostrophecms/page/index.js, add the new page
-// type to the list of choices
+```js
+// in modules/@apostrophecms/page/index.js
 
 module.exports = {
   options: {
@@ -273,9 +287,10 @@ module.exports = {
       {
         name: '@apostrophecms/home-page',
         label: 'Home'
-      },
+      },   
+      // add the new page type to the list of choices
       {
-        name: 'default-page',
+        name: 'default-page', 
         label: 'Default'
       },
     ]
@@ -283,8 +298,8 @@ module.exports = {
 };
 ```
 
-```nunjucks
-{# in modules/default-page/views/page.html #}
+```js
+{# modules/default-page/views/page.html #}
 
 {% extends "layout.html" %}
 
@@ -293,14 +308,16 @@ module.exports = {
 {% endblock %}
 ```
 
-**"What's changed from A2 in this code?"**
+### Differences from A2
 
-* Every page type needs a module to hold its configuration.
-* The template for the page lives inside that module.
-* Note the `extend` property. We need this property because we are creating a new module that extends (subclasses) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We didn't need it for the home page because that module already exists in the core.*
-* Every editable content area must be a configured field in the appropriate module, and the template just pulls it into the page.
+- Every page type needs a module to hold its configuration.
+- The template for the page lives inside that module.
+- Note the `extend` property. We need this property because we are creating a new module that extends (subclasses) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We didn't need it for the home page because that module already exists in the core.*
+- Every editable content area must be a configured field in the appropriate module, and the template just pulls it into the page.
 
-> This module is our own project-level module, so we **do not** use the `@apostrophecms` namespace in its name.
+::: tip Note:
+This module is our own project-level module, so we **do not** use the `@apostrophecms` namespace in its name.
+::: 
 
 ## Custom widgets
 
@@ -383,7 +400,7 @@ module.exports = {
 }
 ```
 
-Here are the notable differences from A2 for custom widgets:
+### Differences from A2
 
 * Our custom widget modules extend `@apostrophecms/widget-type`.
 * Simple options like `label` go inside `options` rather than at the top level.
@@ -392,19 +409,17 @@ Here are the notable differences from A2 for custom widgets:
 * Apostrophe is not supplying CSS classes, so we supply our own.
 * We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
 
-Custom widgets can also make great use of async components, which we'll talk about later.
-
-## Building Page tree navigation
+## Page tree Navigation
 
 Building a page tree in Apostrophe 3 is largely the same as you would in Apostrophe 2. For a quick refresh:
 
-* `data.home` is the home page.
-* `data.home._children` contains its top-level children (tabs).
-* `data.page` is the current page.
-* `data.page._children` contains the children of the current page.
-* `data.page._ancestors[data.page._ancestors.length - 1]._children` contains the peers of the current page, including itself.
-* `data.page._ancestors` contains the ancestors of `data.page`.
-* By default, one level of `_children` are available on each ancestor, including the home page, and on `data.page` itself. If you want more for dropdown menus, you can configure the `@apostrophecms/page` module to give you more:
+- `data.home` is the home page.
+- `data.home._children` contains its top-level children (tabs).
+- `data.page` is the current page.
+- `data.page._children` contains the children of the current page.
+- `data.page._ancestors[data.page._ancestors.length - 1]._children` contains the peers of the current page, including itself.
+- `data.page._ancestors` contains the ancestors of `data.page`.
+- By default, one level of `_children` are available on each ancestor, including the home page, and on `data.page` itself. If you want more for dropdown menus, you can configure the `@apostrophecms/page` module to give you more:
 
 ```js
 // in modules/@apostrophecms/page/index.js
@@ -423,5 +438,3 @@ module.exports = {
   }
 }
 ```
-
-Of course, the more you load, the more time it takes.
