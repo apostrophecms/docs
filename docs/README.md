@@ -169,3 +169,35 @@ Now you can add CSS so images don't run off the page. Add this to `./src/index.s
 > A3 comes with a still image widget, but it doesn't come with a slideshow widget, because everyone has their own preferred slideshow library. You can make your own widget that uses a relationship with images, or an array field, and write a widget player (TODO: document A3 widget players).
 
 When you make code changes the boilerplate project will automatically restart and refresh the browser. *Alpha note: if you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.*
+
+## Building page tree navigation in A3
+
+This part hasn't changed much, so just a quick overview for returning A2 developers who want to build site navigation in their layout templates:
+
+* `data.home` is the home page.
+* `data.home._children` contains its top-level children (tabs).
+* `data.page` is the current page.
+* `data.page._children` contains the children of the current page.
+* `data.page._ancestors[data.page._ancestors.length - 1]._children` contains the peers of the current page, including itself.
+* `data.page._ancestors` contains the ancestors of `data.page`.
+* By default, one level of `_children` are available on each ancestor, including the home page, and on `data.page` itself. If you want more for dropdown menus, you can configure the `@apostrophecms/page` module to give you more:
+
+```javascript
+// in modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    ancestors: {
+      // Children of ancestors of `data.page`
+      children: {
+        depth: 2
+      }
+    },
+    // Children of `data.page`
+    children: {
+      depth: 2
+    }
+  }
+}
+```
+
+Of course, the more you load, the more time it takes.
