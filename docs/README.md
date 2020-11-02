@@ -24,7 +24,7 @@ This document assumes a level of familiarity with Apostrophe 2. We suggest build
 
 ## Prerequisites
 
-Apostrophe 3 introduces a number of new features and APIs, but the server requirements are the same as before. This document assumes you're running on macOS**.** As always, we recommend installing the following with [Homebrew](https://brew.sh/).
+Apostrophe 3 introduces a number of new features and APIs, but the server requirements are the same as before. This document assumes you're running on **macOS**. As always, we recommend installing the following with [Homebrew](https://brew.sh/).
 
 | Sotfware | Minimum Version |
 | ------------- | ------------- |
@@ -41,7 +41,7 @@ When you make code changes the boilerplate project will automatically restart an
 
 ## Getting Started
 
-Clone the Apostrophe 3 Boilerplate project give your project a name of its own. Legal characters consist of letters, digits and dashes. We're assuming **myproject** here. Be sure to give the admin a user and password when prompted. 
+Clone the Apostrophe 3 Boilerplate project give your project a name of its own. Legal characters consist of letters, digits and dashes. We're assuming **myproject** as a name here. Be sure to give the admin a user and password when prompted. 
 
 ```bash
 git clone https://github.com/apostrophecms/a3-boilerplate myproject
@@ -59,7 +59,7 @@ Currently, all edits made contextually are automatically saved. We're introducin
 
 ## Developing in Apostrophe 3
 
-Apostrophe 3 introduces several changes to module architecture and schemas. Lets start by taking a look at our home page and discuss the major differences. 
+Apostrophe 3 introduces several changes to module architecture and schemas. Lets start by taking a look at our home page and discuss the major differences. Even the home page has its own module, `@apostrophecms/home-page`. We're just configuring it here, so we don't have to use `extend`.
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -118,7 +118,6 @@ module.exports = {
 ```
 
 ### Modules
-
 - Project-level modules have been moved from `./lib/modules` to  `./modules`
 - Apostrophe's core modules like `@apostrophecms/home-page` are namespaced now, just like newer npm modules. This is true even for modules that ship inside a "bundle" such as the `apostrophe` npm module.
 
@@ -145,7 +144,6 @@ The following is our template for the homepage. There are a few important change
 {% block main %}
   {% area data.page, 'main' %}
 {% endblock %}
-
 ```
 
 ### Widgets
@@ -157,9 +155,9 @@ Try adding more sub-properties to `widgets` in `index.js`:
 
 ...
 widgets: {
-	'@apostrophecms/video': {},
-	'@apostrophecms/raw-html': {},
-	'@apostrophecms/image': {}
+  '@apostrophecms/video': {},
+  '@apostrophecms/raw-html': {},
+  '@apostrophecms/image': {}
 ...
 ```
 
@@ -180,7 +178,6 @@ module.exports = {
     className: 'full-width-image'
   }
 };
-
 ```
 
 Now, you can add CSS so images don't run off the page. Add this to `./src/index.scss`:
@@ -190,5 +187,4 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 .full-width-image { 
   max-width: 100%; 
 }
-
 ```
