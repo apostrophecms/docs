@@ -1,52 +1,68 @@
 ---
-title: 'A3 Docs Home'
+title: 'Apostrophe 3 Documentation'
 ---
-
-> Apostrophe 3 is currently in its alpha 1 release. You should build production projects with [Apostrophe 2](https://docs.apostrophecms.org).
 
 # Introduction
 
-This document is for Apostrophe 2.x developers who wish to try out Apostrophe 3.x and give feedback. We look forward to your input!
+This document assumes a level of familiarity with Apostrophe 2. We suggest building your production projects with the latest stable release of [Apostrophe 2](https://github.com/apostrophecms/apostrophe). This repository reflects our current progress towards a stable 3.0 release, which is scheduled in Q1 of 2021. We're eager to share our progress so far and grateful for any feedback you might have.
+
+### New in Apostrophe 3
+
+- New editing experience
+- lots of cool headless stuff
+- rewritten in vue
+- module architecture
+- etc
+
+### Coming Soon in Future Releases
+
+- Permissions (all admins)
+- Version History
+- Image Cropping
+- Batch Operations
+- User Roles and Groups
+
+## Prerequisites
+
+Apostrophe 3 introduces a number of new features and APIs, but the server requirements are the same as before. This document assumes you're running on macOS**.** As always, we recommend installing the following with [Homebrew](https://brew.sh/).
+
+| Sotfware | Minimum Version |
+| ------------- | ------------- |
+| Git  ||
+| Xcode  ||
+| Node.js | 10.x |
+| npm  | 6.x  |
+| MongoDB  | 3.6  |
+| Imagemagick (optional)  ||
+
+::: tip Note: 
+When you make code changes the boilerplate project will automatically restart and refresh the browser. If you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.* 
+:::
 
 ## Getting Started
 
-Grab the boilerplate project and give your project a name of its own. We're assuming `myproject` here. Replace that with your own project name wherever you see it. Use a short name with only letters, digits and dashes.
+Clone the Apostrophe 3 Boilerplate project give your project a name of its own. Legal characters consist of letters, digits and dashes. We're assuming **myproject** here. Be sure to give the admin a user and password when prompted. 
 
-```
+```bash
 git clone https://github.com/apostrophecms/a3-boilerplate myproject
 cd myproject
-npm install
 node app @apostrophecms/user:add admin
+npm install
 npm run dev
 ```
 
-> Be sure to give the admin user a password when prompted.
+Once installed, the application will run at [http://localhost:3000/](http://localhost:3000/), and you will be able to login with the admin credentials you provided in the previous step at [http://localhost:3000/](http://localhost:3000/)login.
 
-Now you can [view the site here on your own computer](http://localhost:3000).
+::: tip Note: 
+Currently, all edits made contextually are automatically saved. We're introducing an Edit Mode in our next released, which will offer a direct "save" option and remove automatic saving.
+:::
 
-To edit the site, [log in here](http://localhost:3000/login). Click on the text on the page to start editing. **Be sure to try selecting the text;** you have many formatting options which appear only when text is selected.
+## Developing in Apostrophe 3
 
-> You don't have to "save" anything because your changes are saved right away. However we plan to introduce a more intentional save button in alpha 2.
+Apostrophe 3 introduces several changes to module architecture and schemas. Lets start by taking a look at our home page and discuss the major differences. 
 
-## Making your project your own
-
-First **edit `app.js` and change `shortName` to `myproject`** (replace with the folder name of your own project).
-
-Then, to push your project to your own github, cut it loose from ours:
-
-```
-git remote rm origin
-```
-
-Now create a `myproject` repo on your own github account and follow their directions to "push an existing repository from the command line."
-
-## Editable content areas in Apostrophe 3
-
-### `index.js` for the home page
-
-You'll find this in `modules/@apostrophecms/home-page/index.js`:
-
-```javascript
+```jsx
+// modules/@apostrophecms/home-page/index.js
 module.exports = {
   options: {
     label: 'Home Page'
@@ -101,71 +117,69 @@ module.exports = {
 };
 ```
 
-**"What's changed from A2 in this code?"**
+### Modules
 
-* Project-level modules now reside in `./modules`, not `./lib/modules`.
+- Project-level modules have been moved from `./lib/modules` to  `./modules`
+- Apostrophe's core modules like `@apostrophecms/home-page` are namespaced now, just like newer npm modules. This is true even for modules that ship inside a "bundle" such as the `apostrophe` npm module.
 
-* Apostrophe's core modules like `@apostrophecms/home-page` are namespaced now, just like newer npm modules. This is true even for modules that ship inside a "bundle" such as the `apostrophe` npm module.
+### Schemas
 
-* Even the home page has its own module, `@apostrophecms/home-page`. We're just configuring it here, so we don't have to use `extend`. But we will when we add a new page type to the site.
+- Ordinary module options like `label` now reside in an `options` property.
+- Every area must be configured as part of the schema for a page-type or piece-type.
+- Fields are added to the module with the new `fields` syntax. New fields are added via the `add` property.
+- You can also `remove` fields by passing an array for `remove`.
+- For convenience, fields are now configured as an object, rather than an array.
 
-* Ordinary module options like `label` now go in an `options` property, not at the top level.
+### Templates
 
-* Every area must be configured as part of the schema for a page type or piece type.
+The following is our template for the homepage. There are a few important changes to templates in Apostrophe 3, but the syntax should be familiar.
 
-* Fields are added to the module with the new `fields` feature. New fields go in the `add` property. You can also `remove` fields by passing an array for `remove`. For convenience, fields are now configured as an object, rather than an array.
+- Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
+- You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template you just pass the page and the name of the area.
 
-### The template for the home page
+```jsx
+// modules/@apostrophecms/home-page/views/page.html
 
-Check out `modules/@apostrophecms/home-page/views/page.html`:
-
-```
 {% extends "layout.html" %}
 
 {% block main %}
   {% area data.page, 'main' %}
 {% endblock %}
+
 ```
 
-**"What's changed from A2 in this code?"**
-
-1. Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
-
-2. You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template you just pass the page and the name of the area.
-
-### Adding more standard widgets
+### Widgets
 
 Try adding more sub-properties to `widgets` in `index.js`:
 
-```javascript
-'@apostrophecms/video': {},
-'@apostrophecms/raw-html': {},
-'@apostrophecms/image': {}
+```jsx
+// modules/@apostrophecms/home-page/index.js
+
+...
+widgets: {
+	'@apostrophecms/video': {},
+	'@apostrophecms/raw-html': {},
+	'@apostrophecms/image': {}
+...
 ```
 
-You will also need to configure a CSS class for the image widget, because A3 does not impose strong opinions on your front end code. First make a folder for project-level configuration of the image-widget module:
+**Configuring a Widget**
+
+Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus its necessary to configure them properly with CSS classes for styling. In this example, we'll configure our image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
 
 ```
 mkdir modules/@apostrophecms/image-widget
-```
-
-Then you can configure it:
 
 ```
-// in modules/@apostrophecms/image-widget/index.js
+
+Then, you can configure it by creating an `index.js` file in that directory.
+
+```jsx
+// modules/@apostrophecms/image-widget/index.js
 module.exports = {
   options: {
-    className: 'a3-widget-image'
+    className: 'home-image'
   }
 };
+
 ```
-
-Now you can add CSS so images don't run off the page. Add this to `./src/index.scss`:
-
-.a3-widget-image {
-  max-width: 100%;
-}
-
-> A3 comes with a still image widget, but it doesn't come with a slideshow widget, because everyone has their own preferred slideshow library. You can make your own widget that uses a relationship with images, or an array field, and write a widget player (TODO: document A3 widget players).
-
-When you make code changes the boilerplate project will automatically restart and refresh the browser. *Alpha note: if you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.*
