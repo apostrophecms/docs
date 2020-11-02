@@ -146,9 +146,9 @@ The following is our template for the homepage. There are a few important change
 {% endblock %}
 ```
 
-### Widgets
+### Standard Widgets
 
-Try adding more sub-properties to `widgets` in `index.js`:
+There are more standard widgets. Try adding more sub-properties to `widgets` in `index.js`:
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -156,14 +156,14 @@ Try adding more sub-properties to `widgets` in `index.js`:
 ...
 widgets: {
   '@apostrophecms/video': {},
-  '@apostrophecms/raw-html': {},
+  '@apostrophecms/html': {},
   '@apostrophecms/image': {}
 ...
 ```
 
-**Configuring a Widget**
+#### Configuring the Image Widget
 
-Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure our image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
+Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
 
 ```
 mkdir modules/@apostrophecms/image-widget
@@ -187,4 +187,95 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 .full-width-image { 
   max-width: 100%; 
 }
+
+### Custom widgets
+
+Let's add a two-column layout widget to the site:
+
+```bash
+mkdir -p modules/two-column-widget/views
 ```
+
+```js
+// in modules/@apostrophecms/home-page/index.js
+// Add our new widget to the "widgets" property for
+// the "main" area
+    'two-column': {}
+```
+
+```js
+// in modules/two-column-widget/index.js
+
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Two Column',
+  },
+  fields: {
+    add: {
+      left: {
+        type: 'area',
+        label: 'Column One',
+        options: {
+          // You can copy from the "main" area in home-page/index.js
+        }
+      },
+      right: {
+        type: 'area',
+        label: 'Column Two',
+        options: {
+          // You can copy from the "main" area in home-page/index.js
+        }
+      },
+    }
+  }
+}
+```
+
+```js
+{# in modules/two-column-widgets/views/widget.html #}
+<div class="two-column-layout-container">
+  <div class="two-column-layout column-one">
+    {% area data.widget, 'columnOne' %}
+  </div>
+  <div class="two-column-layout column-two">
+    {% area data.widget, 'columnTwo' %}
+  </div>
+</div>
+```
+
+```scss
+// in src/index.scss
+.two-column-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.two-column-layout {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+.column-one {
+  order: 1;
+}
+
+.column-two {
+  order: 2;
+}
+```
+
+**Differences from Apostrophe 2**
+
+* Our custom widget modules extend `@apostrophecms/widget-type`.
+* Simple options like `label` go inside `options` rather than the top-level.
+* Just like with pages, we use `fields` to configure our fields. However, `group` is not used.
+* Just like with pages, any sub-areas must be specified in `index.js`.
+* Apostrophe is not supplying CSS classes, so we supply our own.
+* We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
+
+
