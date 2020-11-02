@@ -61,7 +61,7 @@ Currently, all edits made contextually are automatically saved. We're introducin
 
 Apostrophe 3 introduces several changes to module architecture and schemas. Lets start by taking a look at our home page and discuss the major differences. 
 
-```jsx
+```js
 // modules/@apostrophecms/home-page/index.js
 module.exports = {
   options: {
@@ -137,7 +137,7 @@ The following is our template for the homepage. There are a few important change
 - Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
 - You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template you just pass the page and the name of the area.
 
-```jsx
+```js
 // modules/@apostrophecms/home-page/views/page.html
 
 {% extends "layout.html" %}
@@ -152,7 +152,7 @@ The following is our template for the homepage. There are a few important change
 
 Try adding more sub-properties to `widgets` in `index.js`:
 
-```jsx
+```js
 // modules/@apostrophecms/home-page/index.js
 
 ...
@@ -165,7 +165,7 @@ widgets: {
 
 **Configuring a Widget**
 
-Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus its necessary to configure them properly with CSS classes for styling. In this example, we'll configure our image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
+Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure our image-widget to have a class. Start by creating a directory for project-level configuration. Using your terminal:
 
 ```
 mkdir modules/@apostrophecms/image-widget
@@ -173,12 +173,22 @@ mkdir modules/@apostrophecms/image-widget
 
 Then, you can configure it by creating an `index.js` file in that directory.
 
-```jsx
+```js
 // modules/@apostrophecms/image-widget/index.js
 module.exports = {
   options: {
-    className: 'home-image'
+    className: 'full-width-image'
   }
 };
+
+```
+
+Now, you can add CSS so images don't run off the page. Add this to `./src/index.scss`:
+
+```scss
+// ./src/index.scss
+.full-width-image { 
+  max-width: 100%; 
+}
 
 ```
