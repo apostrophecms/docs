@@ -169,3 +169,86 @@ Now you can add CSS so images don't run off the page. Add this to `./src/index.s
 > A3 comes with a still image widget, but it doesn't come with a slideshow widget, because everyone has their own preferred slideshow library. You can make your own widget that uses a relationship with images, or an array field, and write a widget player (TODO: document A3 widget players).
 
 When you make code changes the boilerplate project will automatically restart and refresh the browser. *Alpha note: if you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.*
+
+## Custom widgets in A3
+
+Let's add a two-column layout widget to the site:
+
+```bash
+mkdir -p modules/two-column-widget/views
+```
+
+```javascript
+// in modules/@apostrophecms/home-page/index.js
+// Add our new widget to the "widgets" property for
+// the "main" area
+    'two-column': {}
+```
+
+```javascript
+// in modules/two-column-widget/index.js
+
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Two Column',
+  },
+  field: {
+    add: {
+      left: {
+        type: 'area',
+        label: 'Left',
+        options: {
+          // You can copy from the "main" area in home-page/index.js
+        }
+      },
+      right: {
+        type: 'area',
+        label: 'Right',
+        options: {
+          // Same as for "left"
+        }
+      },
+    }
+  }
+}
+```
+
+```nunjucks
+{# in modules/two-column-widgets/views/widget.html #}
+<div class="two-column-widget">
+  <div class="two-column-widget-left">
+    {% area data.widget, 'left' %}
+  </div>
+  <div class="two-column-widget-right">
+    {% area data.widget, 'right' %}
+  </div>
+</div>
+```
+
+```scss
+// in src/index.scss
+.two-column-widget {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.two-column-widget-left, .two-column-widget-right {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+```
+
+**"What's changed from A2 in this code?"**
+
+* Our custom widget modules extend `@apostrophecms/widget-type`.
+* Simple options like `label` go inside `options`, not at top level.
+* Just like with pages, we use `field` to configure our fields more easily than in 2.x. However, `group` is not used.
+* Just like with pages, any sub-areas must be specified in `index.js`.
+* There are no automatic CSS classes for widgets, so we supply our own. A3 tries hard not to interfere with your frontend code.
+* We can nest widgets even more deeply than this if we wish. In A3 there are no real limits on nesting apart from common sense.
+
