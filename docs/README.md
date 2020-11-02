@@ -169,7 +169,6 @@ Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus 
 
 ```
 mkdir modules/@apostrophecms/image-widget
-
 ```
 
 Then, you can configure it by creating an `index.js` file in that directory.
