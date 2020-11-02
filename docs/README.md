@@ -294,5 +294,36 @@ Here are the notable differences from A2 for custom widgets:
 * Apostrophe is not supplying CSS classes, so we supply our own.
 * We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
 
-Custom widgets can also make great use of async components, which we'll talk about in a moment.
+Custom widgets can also make great use of async components, which we'll talk about later.
 
+## Building Page tree navigation
+
+Building a page tree in Apostrophe 3 is largely the same as you would in Apostrophe 2. For a quick refresh:
+
+* `data.home` is the home page.
+* `data.home._children` contains its top-level children (tabs).
+* `data.page` is the current page.
+* `data.page._children` contains the children of the current page.
+* `data.page._ancestors[data.page._ancestors.length - 1]._children` contains the peers of the current page, including itself.
+* `data.page._ancestors` contains the ancestors of `data.page`.
+* By default, one level of `_children` are available on each ancestor, including the home page, and on `data.page` itself. If you want more for dropdown menus, you can configure the `@apostrophecms/page` module to give you more:
+
+```js
+// in modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    ancestors: {
+      // Children of ancestors of `data.page`
+      children: {
+        depth: 2
+      }
+    },
+    // Children of `data.page`
+    children: {
+      depth: 2
+    }
+  }
+}
+```
+
+Of course, the more you load, the more time it takes.
