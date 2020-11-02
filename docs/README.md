@@ -170,9 +170,9 @@ Now you can add CSS so images don't run off the page. Add this to `./src/index.s
 
 When you make code changes the boilerplate project will automatically restart and refresh the browser. *Alpha note: if you get a "port in use" error, press control-C and start `npm run dev` again. We're tracking down how to reliably reproduce this issue.*
 
-## Building page tree navigation in A3
+## Building Page tree navigation
 
-This part hasn't changed much, so just a quick overview for returning A2 developers who want to build site navigation in their layout templates:
+Building a page tree in Apostrophe 3 is largely the same as you would in Apostrophe 2. For a quick refresh:
 
 * `data.home` is the home page.
 * `data.home._children` contains its top-level children (tabs).
@@ -182,7 +182,7 @@ This part hasn't changed much, so just a quick overview for returning A2 develop
 * `data.page._ancestors` contains the ancestors of `data.page`.
 * By default, one level of `_children` are available on each ancestor, including the home page, and on `data.page` itself. If you want more for dropdown menus, you can configure the `@apostrophecms/page` module to give you more:
 
-```javascript
+```js
 // in modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
