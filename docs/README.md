@@ -174,11 +174,11 @@ When you make code changes the boilerplate project will automatically restart an
 
 Let's add a two-column layout widget to the site:
 
-```bash
+```sh
 mkdir -p modules/two-column-widget/views
 ```
 
-```javascript
+```js
 // in modules/@apostrophecms/home-page/index.js
 // Add our new widget to the "widgets" property for
 // the "main" area
@@ -257,6 +257,6 @@ module.exports = {
 * Simple options like `label` go inside `options` rather than the top-level.
 * Just like with pages, we use `field` to configure our fields. However, `group` is not used.
 * Just like with pages, any sub-areas must be specified in `index.js`.
-* There are no automatic CSS classes for widgets, so we supply our own.
+* Apostrophe is not supplying CSS classes, so we supply our own.
 * We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
 
