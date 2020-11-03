@@ -1,12 +1,12 @@
 ---
-title: "Major Changes from A2 to A3"
+title: "Major Changes"
 ---
 
-# Major Changes from A2 to A3
+# Major Changes
 
-Here are the big changes from A2 to A3. We strongly recommend reading this section.
+A3 introduces several major changes to the development experience. If you're familiar with A2, we strongly recommend you read through this section before [getting started](starting-your-project).
 
-## Project layout and naming conventions
+## Directory Structure & Module Naming
 
 ### Modules have moved
 
@@ -14,23 +14,23 @@ The `./lib/modules` folder is now simply `./modules`.
 
 ### Core modules are namespaced
 
-The `apostrophe-pages` module is now `@apostrophecms/page`. So when you configure it at project level, you now do that in `./modules/@apostrophecms/page/index.js`. The same applies to other core modules. This convention comes from NPM namespaces.
+All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this for your own projects in `./modules/@apostrophecms/page/index.js`. This convention is borrowed from NPM namespaces.
 
-Your project specific modules **do not** need a namespace. However if you publish a module to npm we do recommend using a namespace. NPM namespaces always start with `@`.
+::: tip Note:
+Your project specific modules should not use the `@apostrophecms` namespace. However if you publish a module to npm we do recommend using a namespace. NPM namespaces always start with `@`.
+:::
 
-### Core modules are lowercase
+### Core modules are lowercase and singular
 
 All of the A3 core modules now have lowercase names. This means the `name` option is no longer necessary for piece and widget types. `@apostrophecms/user` is both the name of the module and the `type` property of a user doc in the database. For widget types, the module name now ends in `-widget`, but `-widget` should still be omitted for brevity when adding it to an area.
 
-### Command line tasks use the new module names
+Command line tasks also use the new module names. For example, **the `apostrophe-users:add` task is now `@apostrophecms/user:add`**.
 
-The `apostrophe-users:add` task is now `@apostrophecms/user:add`.
-
-## Areas and pages
+## Areas & Pages
 
 ### Page types are always modules
 
-In A3 every page type has a corresponding module. The home page, which always exists, is powered by the `@apostrophecms/home-page` module. You'll see that module configured in your boilerplate project.
+In A3 every page type has a corresponding module. The home page, which always exists, is powered by the `@apostrophecms/home-page` module. This is already configured in the [A3 Boilerplate]().
 
 ### Areas are always fields
 
@@ -40,29 +40,25 @@ In A3 areas are always declared as fields of a page type, widget type or array f
 
 Since areas are now declared as fields, templates now just pull them in with:
 
-```
+```js
 {% area data.page, 'areaName' %}
 ```
 
 Notice that `apos.area` has been replaced with a custom Nunjucks tag.
 
-### Singletons are "gone"
+### Singletons are gone
 
-The old `singleton` field type and `apos.singleton` helper are "gone" in A3. We're putting that in quotes because you can simply pass the `max: 1` option and set up only one widget type when configuring an area field. Apostrophe still provides an appropriate UI.
+The old `singleton` field type and `apos.singleton` helper are gone in A3. You can simply pass the `max: 1` option and declare a single widget type when configuring an area field. Apostrophe still provides an appropriate UI for content-editors.
 
-## Frontend code
+## Front End Assets
 
 While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser by default, A3 is very unopinionated on the front end. The only JavaScript we push for logged-out site visitors is a tiny vanilla JavaScript library (under 10k gzipped) that provides conveniences for writing widget players and tools for communication with the Apostrophe server. For more information, see [front end assets](front-end-assets.md).
 
-## `app.js` format
+## Module Format
 
-You won't notice too many changes here, except for the new module names, and the need to nest module options in an `options` property as described below.
+A3 has a new module format designed to help developers understand how to structure their code and eliminate common hassles in development.
 
-## Module format (`index.js` changes)
-
-A3 has a new module format designed to help developers understand where to put their code and eliminate common hassles in development.
-
-We'll describe the new sections here, but the right way to understand it is by example, so [definitely check out the module format example page](/module-format-example.md).
+We'll describe the new sections here, but be sure to take a closer look by following the example on the [module format example](/module-format-example.md) page.
 
 ### `fields`
 
@@ -70,7 +66,7 @@ For the modules that power piece, page and widget types, "schema fields" have mo
 
 ### `columns` and `filters`
 
-For piece types, `columns` and `filters` work much like `fields`. These features are called "cascades" and it is possible to add more.
+For piece-types, `columns` and `filters` work much like `fields`. These features are called "cascades" and it is possible to add more.
 
 ### `options`
 
@@ -108,9 +104,9 @@ You can create ordinary Express routes with `(req, req)` arguments too. There is
 
 The `handlers` section provides a home for promise event handlers. These are grouped together by event name and given individual names so that you can use `extendHandlers` to tweak what happens in a handler you inherited from a base class.
 
-In 3.x, promise events support inheritance: if the piece type module `product` emits an `beforeInsert` event, you can listen for that specifically as `product:beforeInsert`, or as `@apostrophecms/piece-type:beforeInsert`, or even `@apostrophecms/doc-type:beforeInsert` which will catch `beforeInsert` events on all pages and pieces in Apostrophe.
+In 3.x, promise events support inheritance: if the piece-type module `product` emits an `beforeInsert` event, you can listen for that specifically as `product:beforeInsert`, or as `@apostrophecms/piece-type:beforeInsert`, or even `@apostrophecms/doc-type:beforeInsert` which will catch `beforeInsert` events on all pages and pieces in Apostrophe.
 
-This provides a flexible replacement for the empty piece type methods like `beforeInsert` designed just for overriding that A2 provided.
+This provides a flexible replacement for the empty piece-type methods like `beforeInsert` designed just for overriding that A2 provided.
 
 On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](async-components.md) are usually a better answer.
 

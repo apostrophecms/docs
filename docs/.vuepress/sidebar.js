@@ -1,9 +1,8 @@
 module.exports = [
   '/whats-new.md',
   '/coming-soon.md',
-  '/system-requirements.md',
-  '/starting-your-project.md',
   '/major-changes.md',
+  '/starting-your-project.md',
   '/module-format-example.md',
   '/front-end-assets.md',
   '/widgets-and-templates.md',

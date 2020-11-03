@@ -1,8 +1,8 @@
 ---
-title: "REST APIs for Pieces and Pages"
+title: "REST APIs"
 ---
 
-# REST APIs for Pieces and Pages
+# REST APIs
 
 TODO, be sure to talk about the temporary alpha 1 limitations
 
