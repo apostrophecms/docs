@@ -86,19 +86,19 @@ The new [async components](async-components.md) feature lets you fetch content o
 
 ### `apiRoutes` and `extendApiRoutes`
 
-The `apiRoutes` section allows Express routes to be written as simple async functions that return a value, which is sent for you as JSON. You can send HTTP errors by throwing exceptions. This produces less buggy, more reliable code. Just like with methods, you can extend a route you inherited with `extendApiRoutes`.
+The `apiRoutes` section allows Express routes to be written as simple async functions that return a value.
+
+If the value is an object or array, it is sent as JSON, otherwise it is sent as-is which is useful for HTML fragments. This pattern produces less buggy, more reliable code.
+
+Just like with methods, you can extend a route you inherited with `extendApiRoutes`.
 
 ### `renderRoutes` and `extendRenderRoutes`
 
 Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly. 
 
-### `htmlRoutes` and `extendHtmlRoutes`
-
-If you like the idea of `renderRoutes` but don't want to render a Nunjucks template, you can return your own HTML string with these.
-
 ### `restApiRoutes` and `extendRestApiRoutes`
 
-Handy for those creating new RESTful APIs. Allows you to declare `getAll`, `getOne`, `post`, `delete` and `patch` routes in an intuitive way. These return a value or throw an exception just like `apiRoutes`. However, note that pieces and pages automatically have REST APIs in 3.x.
+Handy for those creating new RESTful APIs. Allows you to declare `GET` (for all), `GET` (for one), `POST`, `PUT`, `PATCH` and `DELETE`f routes in an intuitive way. These return a value or throw an exception just like `apiRoutes`. However, note that pieces and pages automatically have REST APIs in 3.x.
 
 ### `routes`
 
@@ -113,6 +113,10 @@ In 3.x, promise events support inheritance: if the piece type module `product` e
 This provides a flexible replacement for the empty piece type methods like `beforeInsert` designed just for overriding that A2 provided.
 
 On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](async-components.md) are usually a better answer.
+
+### Queries
+
+In modules for piece and page types, the `queries` section replaces the Apostrophe 2.x "cursors" feature. When making a database query with Apostrophe, you can chain together the query "builders" declared in the `builders` sub-section, then finish the job with the query "methods" declared in the `builders` sub-section. Most of the time you'll just need those you inherit from `@apostrophecms/doc-type`, such as `and`, `project`, and `toArray`.
 
 ### Middleware
 
