@@ -1,7 +1,6 @@
 module.exports = [
   '/whats-new.md',
   '/coming-soon.md',
-  '/system-requirements.md',
   '/starting-your-project.md',
   '/major-changes.md',
   '/module-format-example.md',
