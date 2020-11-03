@@ -259,7 +259,10 @@ module.exports = {
   queries(self, query) {
     return {
       builders: {
-        belowAverage(query) {
+        // This builder can be used to filter products in a query
+        // like this one:
+        // await self.apos.product.find(req, {}).belowAverage(true).toArray();
+        belowAverage: {
           // finalize is called at the time the query
           // is about to be processed by the database
           finalize() {
@@ -275,7 +278,7 @@ module.exports = {
               });
             }
           },
-          // If you provide this, the builder can be invoked
+          // If you provide this, the builder can also be invoked
           // via the module's REST API as a query string parameter,
           // e.g. ?belowAverage=1
           launder(value) {
