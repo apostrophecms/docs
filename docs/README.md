@@ -12,12 +12,11 @@ This document reflects our current progress towards a stable 3.0 release, which 
 
 *Note:* if you skim the rest, make sure you read "System Requirements," "Starting Your Project" and "Major Changes."
 
-* [What's New](whats-new.md)
+* [New in A3](whats-new.md)
 * [Coming Soon](coming-soon.md)
-* [System Requirements](system-requirements.md)
+* [Major Changes](major-changes.md)
 * [Starting Your Project](starting-your-project.md)
-* [Major Changes From A2 to A3](major-changes.md)
-* [Module Format Example](module-format-example.md)
+* [Module Format](module-format-example.md)
 * [Front-End Assets](front-end-assets.md)
 * [Widgets and Templates](widgets-and-templates.md)
 * [Custom Widgets](custom-widgets.md)

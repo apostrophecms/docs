@@ -1,7 +1,7 @@
 const sidebar = require('./sidebar');
 
 module.exports = {
-  title: 'ApostropheCMS Developer Documentation',
+  title: 'Apostrophe 3 Documentation',
   plugins: {
     '@vuepress/google-analytics': {
       ga: 'UA-106613728-3'
@@ -23,7 +23,7 @@ module.exports = {
     feedbackWidget: {
       docsRepoIssue: 'apostrophecms/a3-docs'
     },
-    logo: '/images/a2-lockup.png',
+    logo: '/images/apos-dark.png',
     nav: [
       {
         text: 'Docs Home',

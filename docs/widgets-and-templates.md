@@ -4,11 +4,11 @@ title: "Widgets and Templates"
 
 # Widgets and Templates
 
-This section looks at how to add content areas and widgets to your pages, using the home page as an example. Later we'll look at how to add more [custom page types](custom-page-types.md) beyond the home page.
+This section looks at how to add content areas and widgets to your pages, using the home page as an example. We cover how to add more page-type in the [custom page types](custom-page-types.md) section.
 
-## The home page template
+## Home Page Template
 
-The following is our template for the homepage. There are a few important changes to templates in Apostrophe 3, but the syntax should be familiar.
+The following is our template for the homepage. There are a few [important changes](major-changes) to templates in Apostrophe 3, but the syntax should be familiar.
 
 ```js
 // modules/@apostrophecms/home-page/views/page.html
@@ -20,12 +20,12 @@ The following is our template for the homepage. There are a few important change
 ```
 
 - Areas are added to the template with the new `area` nunjucks tag. There is no `apos.area` helper function anymore.
-- You don't configure the area here. You do that in the `index.js` file for the page type or piece type. In the template, you just pass the page and the name of the area.
+- You no longer configure the area here. This is done exclusively in the `index.js` file for the page-type or piece-type. In the template, just pass the page and the name of the area.
 - `apos.singleton` is gone too, but you can pass the `max: 1` option when configuring an area field.
 
 ## Adding Standard Widgets
 
-There are more standard widgets. Try adding more sub-properties to the `widgets` subproperty of the `main` area in `index.js`:
+We're continuing to offer a few standard widgets. Try adding more sub-properties to the `widgets` subproperty of the `main` area in `index.js`:
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -38,7 +38,7 @@ widgets: {
 ...
 ```
 
-These all work great out of the box, except you'll note that images can push beyond the page. Apostrophe 3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class.
+These all work great out of the box, but note that images can push beyond the page. A3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class.
 
 ### Configuring the Image Widget
 
@@ -68,10 +68,10 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 }
 ```
 
-A3 doesn't impose its own asset pipeline on you. This boilerplate project contains a simple webpack configuration. We'll talk about that next in [front end assets](front-end-assets.md).
+A3 doesn't impose its own asset pipeline on you. The [A3 boilerplate]() utilizes a simple webpack configuration, which we cover in the [front end assets](front-end-assets.md) section.
 
 ::: tip Note: 
-The image widget only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets.md), it doesn't come with a slideshow widget like in A2.
+The image widget now only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets.md), it doesn't come with a slideshow widget like in A2.
 :::
 
 ### Configuring the Video Widget
