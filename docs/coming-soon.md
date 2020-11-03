@@ -4,24 +4,24 @@ title: "Coming Soon"
 
 # Coming Before the 3.0 Stable Release
 
-The following features are not in our alpha 1 release, but we promise, they're coming very soon. We'll be releasing these on a rolling basis as we continue our path to a stable release in Q1 2021.
+The following features are not in our `alpha-1` release, but we promise, they're coming very soon. We'll be releasing these on a rolling basis as we continue our path to a stable release in Q1 2021.
 
 ### New Permissions System 
-A new, simplified permissions system is on its way. However, **for alpha 1, all logged-in users are treated as admins.** Again, that's just for alpha 1.
+A new, simplified permissions system is on its way. However, **for`alpha-1`, all logged-in users are treated as admins.** Again, that's just for `alpha-1`.
 
-### Edit Mode, Workflow and Publication
-In A2, if you're not using the `apostrophe-workflow` module, your changes can become visible as you type them. In Alpha 1, this is also true, but in the stable release there will be an explicit "Edit Mode", and a clear way to create draft documents. In addition you'll be able to expressly "Publish" your work when it is ready to be seen or submit it to someone else for approval. We'll also be bringing a new "Editing Canvas" that improves the user experience of editing in other ways.
+### Edit Mode, Drafts and Publishing
+In A2, if you're not using [apostrophe-workflow](https://github.com/apostrophecms/apostrophe-workflow), your changes are saved as you author them. This remains true in `alpha-1`, but in the stable release there will be an explicit "Edit Mode", and a clear way to create draft documents. In addition you'll be able to expressly "Publish" your work when it is ready to be seen or submit it to someone else for approval. We'll also be bringing a new "Editing Canvas" that improves the user experience of editing in other ways.
 
 ### Clearer Contexts for On-Page Editing
-In A3 alpha 1, you can edit a global footer or a piece that was pulled into the page by a widget right on the page. But that content doesn't really "live" there. This feature generates more confusion than the feature is worth. In A3 stable, we will instead offer affordances to help users get to the right place to edit "foreign" content.
+In `alpha-1`, you can edit a global footer or a piece that was pulled into the page by a widget right on the page. But that content doesn't really "live" there. This feature generates more confusion than the feature is worth. In our stable release, we will instead offer affordances to help users get to the right place to edit "foreign" content.
 
 ### Version History
 In the stable release of A3 you'll be able to access the publication history of any document and roll back to a previously published version if needed.
 
 ### API keys & Bearer Tokens for REST APIs
-While A3 already includes [REST APIs](/rest-apis.md) for all page and piece types, these are currently best for read-only access to public information, or for use by frontend applications built right into an Apostrophe site, such as Apostrophe's own admin UI. This is because write access is currently only available after logging into Apostrophe and receiving a session cookie, while many client applications prefer to use an API key or bearer token. These options will be added before 3.0 stable.
+While A3 already includes [REST APIs](/rest-apis.md) for all page and piece types, these are currently best for read-only access to public information, or for use by frontend applications built right into an Apostrophe site, such as Apostrophe's own admin UI. This is because write access is currently only available after logging into Apostrophe and receiving a session cookie, while many client applications prefer to use an API key or bearer token. These options will be added before our stable release.
 
-### Areas won't always be in every dialog box
+### In-Context Only Areas
 Right now, all editable Areas appear in every dialog box. In our stable release, you'll have the option to disable this for content you only want editable on the page.
 
 ### Internationalization

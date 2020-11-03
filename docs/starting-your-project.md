@@ -35,5 +35,5 @@ npm run dev
 Once installed, the application will run at [http://localhost:3000/](http://localhost:3000/), and you will be able to login with the admin credentials you provided in the previous step at [http://localhost:3000/login](http://localhost:3000/login).
 
 ::: tip Note:
-When you make changes, the boilerplate project will automatically restart and refresh the browser. If you get a "port in use" error in your terminal, press control-C and start npm run dev again. We're tracking down how to reliably reproduce this issue.*
+When you make changes, the boilerplate project will automatically restart and refresh the browser. If you get a "port in use" error in your terminal, press control-C and start npm run dev again. We're tracking down how to reliably reproduce this issue.
 :::

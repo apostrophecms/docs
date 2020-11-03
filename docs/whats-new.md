@@ -1,5 +1,5 @@
 ---
-title: "New in Apostrophe 3"
+title: "New in A3"
 ---
 
 # A Brand New Apostrophe
