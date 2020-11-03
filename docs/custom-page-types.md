@@ -4,7 +4,7 @@ title: "Custom Page Types"
 
 # Custom Page Types
 
-Let's make a new `default` page template for building additional pages on our site. To save space, we won't include things that are the same as in the [home page module](widgets-and-templates).
+Let's make a new `default` page template for building additional pages on our site. To save space, we won't include things that are the same as in the [home page module](widgets-and-templates.md).
 
 ```sh
 # Create a folder for our home page module and its template
@@ -77,7 +77,7 @@ module.exports = {
 
 * Every page type needs a module to hold its configuration.
 * The template for the page lives inside that module.
-* Note the `extend` property. We need this property because we are creating a new module that extends (subclasses) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We didn't need it when configuring the home page because that module already exists in the core.*
+* Note the `extend` property. We need this property because we are creating a new module that extends (subclasses.md) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We didn't need it when configuring the home page because that module already exists in the core.*
 * Every editable content area must be a configured field in the appropriate module, and the template just pulls it into the page.
 
 ::: tip Note:

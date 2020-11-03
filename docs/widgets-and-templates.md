@@ -4,7 +4,7 @@ title: "Widgets and Templates"
 
 # Widgets and Templates
 
-This section looks at how to add content areas and widgets to your pages, using the home page as an example. Later we'll look at how to add more [custom page types](custom-page-types) beyond the home page.
+This section looks at how to add content areas and widgets to your pages, using the home page as an example. Later we'll look at how to add more [custom page types](custom-page-types.md) beyond the home page.
 
 ## The home page template
 
@@ -68,10 +68,10 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 }
 ```
 
-A3 doesn't impose its own asset pipeline on you. This boilerplate project contains a simple webpack configuration. We'll talk about that next in [front end assets](front-end-assets).
+A3 doesn't impose its own asset pipeline on you. This boilerplate project contains a simple webpack configuration. We'll talk about that next in [front end assets](front-end-assets.md).
 
 ::: tip Note: 
-The image widget only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets), it doesn't come with a slideshow widget like in A2.
+The image widget only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets.md), it doesn't come with a slideshow widget like in A2.
 :::
 
 ### Configuring the Video Widget

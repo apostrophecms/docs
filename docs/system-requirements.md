@@ -11,4 +11,4 @@ While Apostrophe 3 introduces a number of new features and APIs, we still rely o
 | Node.js | 10.x | Or better 
 | npm  | 6.x  | Or better
 | MongoDB  | 3.6  | Or better
-| Imagemagick (optional)  | Any | GIF support, faster image uploads
+| Imagemagick (optional.md)  | Any | GIF support, faster image uploads

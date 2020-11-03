@@ -7,7 +7,7 @@ title: "Page tree Navigation"
 Building a page tree in Apostrophe 3 is largely the same as in Apostrophe 2. For a quick refresh:
 
 - `data.home` is the home page.
-- `data.home._children` contains its top-level children (tabs).
+- `data.home._children` contains its top-level children (tabs.md).
 - `data.page` is the current page.
 - `data.page._children` contains the children of the current page.
 - `data.page._ancestors[data.page._ancestors.length - 1]._children` contains the peers of the current page, including itself.

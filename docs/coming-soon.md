@@ -19,7 +19,7 @@ In A2 and A3 alpha 1, you can edit a global footer or a piece that was pulled in
 In the final release of A3 you'll be able to access the publication history of any document and roll back to a previously published version if needed.
 
 ## API keys and bearer tokens for REST APIs
-While A3 already includes [REST APIs](/rest-apis) for all page and piece types, these are currently best for read-only access to public information, or for use by frontend applications built right into an Apostrophe site, such as Apostrophe's own admin UI. This is because write access is currently only available after logging into Apostrophe and receiving a session cookie, while many client applications prefer to use an api key or bearer token. These options will be added before 3.0 final.
+While A3 already includes [REST APIs](/rest-apis.md) for all page and piece types, these are currently best for read-only access to public information, or for use by frontend applications built right into an Apostrophe site, such as Apostrophe's own admin UI. This is because write access is currently only available after logging into Apostrophe and receiving a session cookie, while many client applications prefer to use an api key or bearer token. These options will be added before 3.0 final.
 
 ## Areas won't always be in every dialog box
 Right now, all editable areas appear in every dialog box, for instance "page settings" or the piece editor. In A3 final you'll have the option to disable this for those that should only be editable on the page.

@@ -4,7 +4,7 @@ title: "What's New in Apostrophe 3"
 
 # What's New in Apostrophe 3
 
-> Also see [coming soon](coming-soon) for features that haven't made it into A3 yet, but are planned for the final release.
+> Also see [coming soon](coming-soon.md) for features that haven't made it into A3 yet, but are planned for the final release.
 
 ## 100% RESTful Headless APIs 
 While A2 had custom APIs and a separate `apostrophe-headless` module, A3 is powered by RESTful APIs from the ground up.

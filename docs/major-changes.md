@@ -34,7 +34,7 @@ In A3 every page type has a corresponding module. The home page, which always ex
 
 ### Areas are always fields
 
-In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](standard-widgets) for examples.
+In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](standard-widgets.md) for examples.
 
 ### Area template syntax has changed
 
@@ -52,7 +52,7 @@ The old `singleton` field type and `apos.singleton` helper are "gone" in A3. We'
 
 ## Frontend code
 
-While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser by default, A3 is very unopinionated on the front end. The only JavaScript we push for logged-out site visitors is a tiny vanilla JavaScript library (under 10k gzipped) that provides conveniences for writing widget players and tools for communication with the Apostrophe server. For more information, see [front end assets](front-end-assets).
+While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser by default, A3 is very unopinionated on the front end. The only JavaScript we push for logged-out site visitors is a tiny vanilla JavaScript library (under 10k gzipped) that provides conveniences for writing widget players and tools for communication with the Apostrophe server. For more information, see [front end assets](front-end-assets.md).
 
 ## `app.js` format
 
@@ -62,7 +62,7 @@ You won't notice too many changes here, except for the new module names, and the
 
 A3 has a new module format designed to help developers understand where to put their code and eliminate common hassles in development.
 
-We'll describe the new sections here, but the right way to understand it is by example, so [definitely check out the module format example page](/module-format-example).
+We'll describe the new sections here, but the right way to understand it is by example, so [definitely check out the module format example page](/module-format-example.md).
 
 ### `fields`
 
@@ -82,7 +82,7 @@ Methods are now declared in the `methods` section. Using the "super pattern" to 
 
 ### `components` and `extendComponents`
 
-The new [async components](async-components) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
+The new [async components](async-components.md) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
 
 ### `apiRoutes` and `extendApiRoutes`
 
@@ -90,7 +90,7 @@ The `apiRoutes` section allows Express routes to be written as simple async func
 
 ### `renderRoutes` and `extendRenderRoutes`
 
-Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components) feature which is more SEO-friendly. 
+Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly. 
 
 ### `htmlRoutes` and `extendHtmlRoutes`
 
@@ -112,7 +112,7 @@ In 3.x, promise events support inheritance: if the piece type module `product` e
 
 This provides a flexible replacement for the empty piece type methods like `beforeInsert` designed just for overriding that A2 provided.
 
-On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](async-components) are usually a better answer.
+On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](async-components.md) are usually a better answer.
 
 ### Middleware
 

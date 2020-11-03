@@ -68,7 +68,7 @@ module.exports = {
       // first argument. Calling `_super` calls the original method.
       // If you don't need that, just declare the method again in `methods`.
       generate(_super, i) {
-        const piece = _super(i);
+        const piece = _super(i.md);
         piece.price = Math.random() * 100;
         return piece;
       };
