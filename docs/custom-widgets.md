@@ -95,7 +95,7 @@ module.exports = {
 }
 ```
 
-## Differences from A2
+### Major changes from A2
 
 * Our custom widget modules extend `@apostrophecms/widget-type`.
 * Simple options like `label` go inside `options` rather than at the top level.

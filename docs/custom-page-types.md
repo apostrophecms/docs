@@ -71,9 +71,11 @@ module.exports = {
 {% endblock %}
 ```
 
-> To actually add a new page to the site, click "Page Tree," then "New Page." Note that for now, you are not immediately taken to the new page when you save it. You can navigate manually or via "Page Tree."
+::: tip Note:
+To actually add a new page to the site, click "Page Tree," then "New Page." Note that for now, you are not immediately taken to the new page when you save it. You can navigate manually or via "Page Tree."
+:::
 
-## Differences from A2
+### Major changes from A2
 
 * Every page type needs a module to hold its configuration.
 * The template for the page lives inside that module.
