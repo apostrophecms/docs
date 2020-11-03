@@ -1,5 +1,5 @@
 ---
-title: "Page tree Navigation"
+title: "Page Tree Navigation"
 ---
 
 # Page Tree Navigation

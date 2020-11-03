@@ -40,7 +40,7 @@ In A3 areas are always declared as fields of a page type, widget type or array f
 
 Since areas are now declared as fields, templates now just pull them in with:
 
-```nunjucks
+```
 {% area data.page, 'areaName' %}
 ```
 

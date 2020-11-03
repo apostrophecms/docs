@@ -1,4 +1,4 @@
-const { sidebar } = require('./sidebar.json');
+const sidebar = require('./sidebar');
 
 module.exports = {
   title: 'ApostropheCMS Developer Documentation',
