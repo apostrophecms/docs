@@ -57,7 +57,7 @@ module.exports = {
   // another module via our alias, `self.apos.product`
   methods(self, options) {
     return {
-      async averagePrice() {
+      async averagePrice(req) {
         let sum = 0;
         const products = await self.find(req).toArray();
         if (!products.length) {
@@ -268,8 +268,9 @@ module.exports = {
           finalize() {
             // Make sure this filter was actually invoked first
             if (query.get('belowAverage')) {
-              // See method example above
-              const average = await self.averagePrice();
+              // See method example above. `req` is available
+              // as `query.req`
+              const average = await self.averagePrice(query.req);
               // Merge in more MongoDB criteria
               query.and({
                 price: {
@@ -293,7 +294,10 @@ module.exports = {
   // Usually used to import third-party middleware into Apostrophe.
   // For your own code, you will find it is usually better to write a
   // handler, or await a method if the middleware is needed in just one
-  // route
+  // route. `ours` could also be an object with a `before` property
+  // and a `middleware` property, in which case it would run `before`
+  // the middleware of the module with the specified name
+
   middleware(self, options) {
     return {
       ours(req, res, next) {
@@ -306,5 +310,42 @@ module.exports = {
     };
   }
 
+}
+```
+
+## Breaking up modules into multiple files
+
+This is sometimes done in A2 to keep the file manageable in size. You can do the same trick in A3, breaking the module down into its sections:
+
+```js
+// in ./modules/product/index.js
+module.exports = {
+  // ...
+  methods: require('./methods.js'),
+  apiRoutes: require('./api-routes.js')
+};
+```
+
+```js
+// in methods.js, in the same folder
+module.exports = (self, options) => {
+  return {
+    async averagePrice(req) {
+      // ...
+    }
+  };
+};
+```
+
+```js
+// in api-routes.js, in the same folder
+module.exports = (self, options) => {
+  return {
+    get: {
+      async cheapest(req) {
+        ...
+      }
+    }
+  };
 }
 ```
