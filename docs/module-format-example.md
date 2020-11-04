@@ -22,6 +22,9 @@ module.exports = {
     pluralLabel: 'Products'
   },
 
+  // `fields` can optionally be a function that takes (self, options)
+  // and returns an object, if you need access to the options to decide
+  // what fields to include
   fields: {
     // Replaces `addFields`
     add: {
@@ -51,7 +54,9 @@ module.exports = {
   async init(self, options) {},
 
   // Methods that can be invoked on `self`, or from
-  // another module via our alias, `self.apos.product`
+  // another module via our alias, `self.apos.product`.
+  // `self` refers to this module, `options` contains the
+  // option settings configured for it
   methods(self, options) {
     return {
       async averagePrice(req) {
@@ -105,6 +110,22 @@ module.exports = {
         };
       }
     }
+  },
+
+  // Helper functions. These can be called from Nunjucks
+  // templates, i.e. `{{ apos.product.discountPrice(data.product) }}`
+  //
+  // They may NOT be async functions. For that see async
+  // components above.
+  //
+  // `extendHelpers` is also supported, like `extendMethods`
+
+  helpers(self, options) {
+    return {
+      discountPrice(product) {
+        return '$' + (product.price * 0.90).toFixed(2);
+      }
+    };
   },
 
   // apiRoutes lets us write Express routes that just return

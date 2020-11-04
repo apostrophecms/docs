@@ -121,6 +121,15 @@ Methods are now declared in the `methods` section. Using the "super pattern" to 
 
 The new [async components](async-components.md) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
 
+### `helpers` and `extendHelpers`
+
+As in A2, A3 supports Nunjucks helper functions. These are configured in
+the `helpers` section.
+
+Note that **helper functions are still synchronous.
+They still may not use await or do any asynchronous work.** For those use
+cases, use `components` instead.
+
 ### `apiRoutes` and `extendApiRoutes`
 
 The `apiRoutes` section allows Express routes to be written as simple async functions that return a value.
