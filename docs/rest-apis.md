@@ -200,6 +200,35 @@ Pages are challenging to represent RESTfully because of the page tree. Normally 
 }
 ```
 
+### `GET /api/v1/@apostrophecms/page/:docId`
+
+Returns an individual page as a JSON object:
+
+```js
+{
+  "_id": "ckgs04kh6000b6fecsfjp95w0",
+  "type": "default-page",
+  "title": "About",
+  "slug": "/about",
+  "main": {
+    "_id": "ckgs02ri400043h5xrb73a9x7",
+    "items": [
+      {
+        "_id": "ckgs14nsp00013h5xnpvnjhve",
+        "type": "@apostrophecms/rich-text",
+        "content": "<p>This is the page about our company and how remarkably wonderful and modest we are.<p>"
+      }
+    ],
+    "metaType": "area"
+  },
+  "rank": 0,
+  "path": "ckgrzqh5a000bx7ecn4hpskk7/ckgs04kh6000b6fecsfjp95w0",
+  "level": 1,
+  "_url": "/about",
+  "_children": []
+}
+```
+
 ### `POST /api/v1/@apostrophecms/page`
 
 **Requires login.** POSTs a new page to the server. Works just like POSTing a piece, with the following addition:
