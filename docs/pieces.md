@@ -320,11 +320,11 @@ Notice that `builders` is nested in the `queries` section. There is also a `meth
 
 * `choices` should be provided if we want our query builder to work in the `filters` section and appear in the "Manage Pieces" dialog box in the "Filters" dropdown. It may be an `async` function, if needed. If your query builder has the same name as a field and you do not implement `choices`, Apostrophe will offer all of the distinct values of that field as the choices.
 
-## REST APIs for pieces
+## REST APIs for Pieces
 
 REST APIs are automatically made available for piece types. For more information, see [REST APIs](rest-apis.md).
 
-## Pieces and widgets
+## Pieces and Widgets
 
 Of course, it's helpful to be able to display pieces anywhere in your project. Sometimes you won't want a browseable piece page at all, or you may want to "tease" that piece as the "featured product" on the home page, and so on.
 
@@ -369,10 +369,10 @@ module.exports = {
 {% endfor %}
 ```
 
-## Async components
+## Async Components
 
 Pieces often implement async components as an easy way to display them on the page in a variety of contexts, including both widgets and fixed placements in the page template. This is particularly useful when a simple relationship field does not meet the need. For more information, see [async components](async-components.md).
 
-## Piece pages
+## Piece Pages
 
 As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any website that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
