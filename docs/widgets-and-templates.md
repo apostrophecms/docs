@@ -63,14 +63,14 @@ Now, you can add CSS so images don't run off the page. Add this to `./src/index.
 
 ```scss
 // ./src/index.scss
-.full-width-image { 
-  max-width: 100%; 
+.full-width-image {
+  max-width: 100%;
 }
 ```
 
 A3 doesn't impose its own asset pipeline on you. The [A3 boilerplate]() utilizes a simple webpack configuration, which we cover in the [front end assets](front-end-assets.md) section.
 
-::: tip Note: 
+::: tip Note:
 The image widget now only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets.md), it doesn't come with a slideshow widget like in A2.
 :::
 
