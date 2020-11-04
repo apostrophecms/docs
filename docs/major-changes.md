@@ -26,6 +26,12 @@ All of the A3 core modules now have lowercase names. This means the `name` optio
 
 Command line tasks also use the new module names. For example, **the `apostrophe-users:add` task is now `@apostrophecms/user:add`**.
 
+## Tags
+
+In A2, every document has a `tags` field. In A3, this field no longer exists.
+
+Your pieces that benefit from the idea of "tagging" should have a relationship (formerly known as a join) to a piece type that you add to your project for that purpose. For instance, A3 ships with "image-tag" and "file-tag" piece types. Image and file pieces specifically have a relationship with these types. Other documents do not.
+
 ## Areas & Pages
 
 ### Page types are always modules

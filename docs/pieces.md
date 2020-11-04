@@ -337,7 +337,7 @@ In A2, a "pieces widget" was provided as a standard feature, with several filter
 
 Here is a simple example:
 
-```
+```js
 // in ./app.js
 modules: {
   // ...
@@ -346,7 +346,7 @@ modules: {
 }
 ```
 
-```
+```js
 // in ./modules/product-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
@@ -367,7 +367,7 @@ module.exports = {
 };
 ```
 
-```
+```markup
 {# in ./modules/product-widget/views/widget.html #}
 {% for product in data.widget._products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</a></h4>
