@@ -4,11 +4,11 @@ title: "Piece Pages"
 
 # Piece Pages
 
-The most intuitive example of a piece page is an index of products: if the individual [piece](pieces.md) is one product, then the piece page is the product home page, where all of the posts can be discovered, paginated, filtered and explored. In addition, piece pages are responsible for serving the individual page for each piece.
+The most intuitive example is a blog: if the individual [piece](pieces.md) is one blog post, then the piece page is the blog's home page, where all of the posts can be discovered, paginated, filtered and explored. In addition,  "piece pages" are responsible for serving the individual webpage for each piece.
 
 If the project has a piece module called `product`, then that module provides a way to create, edit, manage and query pieces. If the project has a piece page module called `product-page`, then that module provides a way to browse and view the pieces.
 
-In general piece modules are concerned with *editing and APIs*, while piece page modules are concerned with *browsing as part of a website or application.* For developers familiar with the "model / view / controller" pattern: **piece modules are the model layer for your content type, while piece page modules are the view layer.**
+In general piece modules are concerned with *editing and APIs*, while piece page modules are concerned with *browsing as part of a website* For developers familiar with the "model / view / controller" pattern: **piece modules are the model layer for your content type, while piece page modules are the view layer.**
 
 Some projects just need a widget module for each piece, but most will want to let users view a page for each one, or at least browse and paginate through a complete list. That's where piece pages shine.
 
@@ -67,7 +67,7 @@ module.exports = {
 };
 ```
 
-```js
+```django
 {# in ./modules/product-page/views/index.html #}
 
 {% import '@apostrophecms/pager:macros.html' as pager with context %}
@@ -82,7 +82,7 @@ module.exports = {
 {% endblock %}
 ```
 
-```js
+```django
 {# in ./modules/product-page/views/show.html #}
 {% extends "layout.html" %}
 {% set product = data.piece %}
@@ -154,7 +154,7 @@ module.exports = {
 };
 ```
 
-```js
+```django
 {# in ./modules/product-page/views/index.html #}
 
 {# ... add this before the list of products #}
