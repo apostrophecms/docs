@@ -16,7 +16,7 @@ In addition, Apostrophe provides web APIs for uploading attachments, logging in 
 
 In the `3.0.0-alpha.1` release, APIs marked "login required" can only be accessed after logging into Apostrophe. The login API creates a session cookie which must be retained and sent back with future requests. While effective for editing a website, this is not typical practice for headless applications.
 
-Before the final release of 3.0, we will also incorporate support for both api keys and bearer tokens. The former are suitable for API calls from other websites, while the latter are more secure for use in native apps.
+Before the final release of 3.0, we will also incorporate support for both API keys and bearer tokens. The former are suitable for API calls from other websites, while the latter are more secure for use in native apps.
 
 ## REST APIs for Pieces
 
@@ -197,6 +197,35 @@ Pages are challenging to represent RESTfully because of the page tree. Normally 
       "_children": []
     }, // ... more child pages
   ]
+}
+```
+
+### `GET /api/v1/@apostrophecms/page/:docId`
+
+Returns an individual page as a JSON object:
+
+```js
+{
+  "_id": "ckgs04kh6000b6fecsfjp95w0",
+  "type": "default-page",
+  "title": "About",
+  "slug": "/about",
+  "main": {
+    "_id": "ckgs02ri400043h5xrb73a9x7",
+    "items": [
+      {
+        "_id": "ckgs14nsp00013h5xnpvnjhve",
+        "type": "@apostrophecms/rich-text",
+        "content": "<p>This is the page about our company and how remarkably wonderful and modest we are.<p>"
+      }
+    ],
+    "metaType": "area"
+  },
+  "rank": 0,
+  "path": "ckgrzqh5a000bx7ecn4hpskk7/ckgs04kh6000b6fecsfjp95w0",
+  "level": 1,
+  "_url": "/about",
+  "_children": []
 }
 ```
 

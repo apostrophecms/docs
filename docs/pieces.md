@@ -255,7 +255,7 @@ As a REST API query, you can write:
 GET /api/v1/product?title=This%20exact%20title
 ```
 
-And if you're browsing a [product pieces page](pieces-page.md), you can add it to the query string there as well:
+And if you're browsing a product pieces page, you can add it to the query string there as well:
 
 ```
 /product?title=This%20exact%20title
@@ -375,4 +375,4 @@ Pieces often implement async components as an easy way to display them on the pa
 
 ## Piece Pages
 
-As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any website that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
+As referred to above, while they are not needed in every case, piece pages are a crucial companion to pieces for any website that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
