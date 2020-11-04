@@ -10,14 +10,14 @@ While Apostrophe 3 introduces a number of new features and APIs, we still rely o
 | ------------- | ------------- | -----
 | Git  | Any
 | Xcode  | Current | Only needed on macOS
-| Node.js | 10.x | Or better 
+| Node.js | 10.x | Or better
 | npm  | 6.x  | Or better
 | MongoDB  | 3.6  | Or better
-| Imagemagick (optional.md)  | Any | GIF support, faster image uploads
+| Imagemagick (optional)  | Any | GIF support, faster image uploads
 
 ## A3 Boilerplate
 
-To get started, clone the Apostrophe 3 Boilerplate project and give your project a name of its own. Legal names consist of letters, digits and dashes. We're assuming **myproject** as a name here. When prompted, set a password for the admin user.
+We created a small boilerplate project to help you get started quickly. To use that, clone the Apostrophe 3 Boilerplate project and give your project a name of its own. Legal names consist of letters, digits and dashes. We're assuming `myproject` as a name here. When prompted, set a password for the admin user.
 
 ```bash
 git clone https://github.com/apostrophecms/a3-boilerplate myproject

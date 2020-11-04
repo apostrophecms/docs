@@ -32,7 +32,7 @@ In A2, every document has a `tags` field. In A3, this field no longer exists.
 
 Your pieces that benefit from the idea of "tagging" should have a relationship (formerly known as a join) to a piece type that you add to your project for that purpose. For instance, A3 ships with "image-tag" and "file-tag" piece types. Image and file pieces specifically have a relationship with these types. Other documents do not.
 
-## Areas & Pages
+## Areas and Pages
 
 ### Page types are always modules
 
@@ -131,7 +131,7 @@ Just like with methods, you can extend a route you inherited with `extendApiRout
 
 ### `renderRoutes` and `extendRenderRoutes`
 
-Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly. 
+Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly.
 
 ### `restApiRoutes` and `extendRestApiRoutes`
 
@@ -139,7 +139,7 @@ Handy for those creating new RESTful APIs. Allows you to declare `GET` (for all)
 
 ### `routes`
 
-You can create ordinary Express routes with `(req, req)` arguments too. There is no "extendRoutes" since Express routes do not lend themselves to that pattern.
+You can create ordinary Express routes with `(req, res)` arguments too. There is no "extendRoutes" since Express routes do not lend themselves to that pattern.
 
 ### `handlers` and `extendHandlers`
 
