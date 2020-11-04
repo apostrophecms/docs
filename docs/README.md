@@ -2,6 +2,8 @@
 title: 'Apostrophe 3 Alpha Release Documentation'
 ---
 
+# Apostrophe 3 Alpha Release Documentation
+
 ## Introduction
 
 This document assumes a level of familiarity with Apostrophe 2. We suggest building your production projects with the latest stable release of [Apostrophe 2](https://docs.apostrophecms.org), especially if you are just beginning your journey with ApostropheCMS.

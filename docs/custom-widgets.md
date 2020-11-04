@@ -10,6 +10,10 @@ Let's add a two-column layout widget to the site:
 mkdir -p modules/two-column-widget/views
 ```
 
+:::tip
+"Layout widgets" are normal Apostrophe widgets. It is a term of art in Apostrophe development for widget types created solely to visually structure nested content.
+:::
+
 ```js
 // in modules/@apostrophecms/home-page/index.js
 //
@@ -43,14 +47,16 @@ module.exports = {
         type: 'area',
         label: 'Column One',
         options: {
-          // You can copy from the "main" area in home-page/index.js
+          // You can copy the `widgets` option from the `main` area in
+          // home-page/index.js
         }
       },
       right: {
         type: 'area',
         label: 'Column Two',
         options: {
-          // You can copy from the "main" area in home-page/index.js
+          // You can copy the `widgets` option from the `main` area in
+          // home-page/index.js
         }
       },
     }
@@ -58,7 +64,7 @@ module.exports = {
 }
 ```
 
-```js
+```django
 {# in modules/two-column-widgets/views/widget.html #}
 <div class="two-column-layout-container">
   <div class="two-column-layout column-one">
@@ -100,6 +106,6 @@ module.exports = {
 * Our custom widget modules extend `@apostrophecms/widget-type`.
 * Simple options like `label` go inside `options` rather than at the top level.
 * Just like with pages, we use `fields` to configure our fields. However, `group` is not used for widgets.
-* Just like with pages, any sub-areas must be specified in `index.js`.
+* Just like with pages, any areas in a widget must be defined in `index.js`.
 * Apostrophe is not supplying CSS classes, so we supply our own in the template if desired.
 * We can nest widgets even more deeply than this if we wish. In A3 there is no technical limit on nesting, apart from common sense.
