@@ -22,13 +22,13 @@ We created a small boilerplate project to help you get started quickly. To use t
 ```bash
 git clone https://github.com/apostrophecms/a3-boilerplate myproject
 cd myproject
+npm install
 node app @apostrophecms/user:add admin
 ```
 
 Now run:
 
 ```bash
-npm install
 npm run dev
 ```
 
