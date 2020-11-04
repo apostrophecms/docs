@@ -50,6 +50,41 @@ Notice that `apos.area` has been replaced with a custom Nunjucks tag.
 
 The old `singleton` field type and `apos.singleton` helper are gone in A3. You can simply pass the `max: 1` option and declare a single widget type when configuring an area field. Apostrophe still provides an appropriate UI for content-editors.
 
+## "Joins" are now "relationships"
+
+In A2, relationships between two piece or page types were referred to as "joins." In A3 they are simply called "relationships." Here is an example of a relationship field in A3:
+
+```javascript
+_products: {
+  label: 'Products',
+  type: 'relationship',
+  withType: 'product'
+}
+```
+
+Notice we do not write `joinByArray`. In A3, all relationships are "one to many," although you may specify `max: 1` if you wish.
+
+However, `relationshipReverse` fields are still available and work just like `joinByArrayReverse` in A2.
+
+## `array` fields have changed
+
+The `array` schema field type is still available, but the syntax has been updated to match the new syntax for modules:
+
+```js
+features: {
+  label: 'Features',
+  type: 'array',
+  fields: {
+    add: {
+      title: {
+        label: 'Title',
+        type: 'string'
+      }
+    }
+  }
+}
+```
+
 ## Front End Assets
 
 While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser by default, A3 is very unopinionated on the front end. The only JavaScript we push for logged-out site visitors is a tiny vanilla JavaScript library (under 10k gzipped) that provides conveniences for writing widget players and tools for communication with the Apostrophe server. For more information, see [front end assets](front-end-assets.md).
@@ -58,7 +93,7 @@ While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser 
 
 A3 has a new module format designed to help developers understand how to structure their code and eliminate common hassles in development.
 
-We'll describe the new sections here, but be sure to take a closer look by following the example on the [module format example](/module-format-example.md) page.
+We'll briefly describe the new sections here, but be sure to take a closer look by following the example on the [module format example](/module-format-example.md) page.
 
 ### `fields`
 

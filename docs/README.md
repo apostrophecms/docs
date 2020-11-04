@@ -23,5 +23,6 @@ This document reflects our current progress towards a stable 3.0 release, which 
 * [Custom Page Types](custom-page-types.md)
 * [Page Tree Navigation](page-tree-navigation.md)
 * [Pieces](pieces.md)
+* [Piece Pages](piece-pages.md)
 * [Async Components](async-components.md)
 * [REST APIs for Pieces and Pages](rest-apis.md)
