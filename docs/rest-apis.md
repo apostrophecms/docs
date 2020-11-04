@@ -2,7 +2,7 @@
 title: "REST APIs"
 ---
 
-# REST APIs in A3
+# REST APIs
 
 REST APIs are a common component of headless applications, including Jamstack applications. In A2, Apostrophe provided these via the optional [apostrophe-headless](https://npmjs.com/package/apostrophe-headless) module.
 
@@ -22,7 +22,7 @@ Before the final release of 3.0, we will also incorporate support for both api k
 
 All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to logged-in users for security reasons. However you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
 
-```javascript
+```js
 // in ./module/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
