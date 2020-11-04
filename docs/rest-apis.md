@@ -16,7 +16,7 @@ In addition, Apostrophe provides web APIs for uploading attachments, logging in 
 
 In the `3.0.0-alpha.1` release, APIs marked "login required" can only be accessed after logging into Apostrophe. The login API creates a session cookie which must be retained and sent back with future requests. While effective for editing a website, this is not typical practice for headless applications.
 
-Before the final release of 3.0, we will also incorporate support for both api keys and bearer tokens. The former are suitable for API calls from other websites, while the latter are more secure for use in native apps.
+Before the final release of 3.0, we will also incorporate support for both API keys and bearer tokens. The former are suitable for API calls from other websites, while the latter are more secure for use in native apps.
 
 ## REST APIs for Pieces
 
