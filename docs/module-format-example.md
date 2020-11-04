@@ -10,14 +10,14 @@ The new A3 module format is best understood by reviewing a complete example with
 // modules/product/index.js
 module.exports = {
 
-  // Let us write `apos.product` instead of `apos.modules.product`
-  alias: 'product',
-
   // Inherit from this "base class" module
   extend: '@apostrophecms/piece-type',
 
   // Options that formerly went at top level go here
   options: {
+    // Lets us write `apos.product` in other modules,
+    // instead of `apos.modules.product`
+    alias: 'product',
     label: 'Product',
     pluralLabel: 'Products'
   },
@@ -44,6 +44,14 @@ module.exports = {
       pricing: {
         label: 'Pricing',
         fields: [ 'price', 'tax' ]
+      }
+    }
+  },
+
+  filters: {
+    add: {
+      belowAverage: {
+        label: 'Below Average'
       }
     }
   },
@@ -82,10 +90,10 @@ module.exports = {
       // If you don't need to call the original method, just declare
       // the method again in `methods`.
       generate(_super, i) {
-        const piece = _super(i.md);
+        const piece = _super(i);
         piece.price = Math.random() * 100;
         return piece;
-      };
+      }
     };
   },
 
@@ -104,12 +112,12 @@ module.exports = {
       async latest(req, data) {
         const products = await self.find(req).sort({
           createdAt: -1
-        }).limit(data.max || 5)).toArray();
+        }).limit(data.max || 5).toArray();
         return {
           products
         };
       }
-    }
+    };
   },
 
   // Helper functions. These can be called from Nunjucks
@@ -162,7 +170,7 @@ module.exports = {
           };
         }
       }
-    }
+    };
   },
 
   // Piece types already have REST APIs in A3!
@@ -173,37 +181,39 @@ module.exports = {
   // extendRestApiRoutes is also useful when inheriting from
   // a base class, and works just like `extendMethods`
 
-  restApiRoutes(self, options) {
-    return {
-      // GET /api/v1/product
-      async getAll(req) {
-        ...
-        return {
-          results
-        };
-      },
-      // GET /api/v1/product/:docId
-      async getOne(req, _id) {
-        ...
-        return result;
-      },
-      // PATCH /api/v1/product/:docId
-      async patch(req, _id) {
-        ...
-        return result;
-      },
-      // PUT /api/v1/product/:docId
-      async put(req, _id) {
-        ...
-        return result;
-      },
-      // DELETE /api/v1/product/:docId
-      async delete(req, _id) {
-        ...
-        return result;
-      }
-    };
-  },
+  // restApiRoutes(self, options) {
+  //   return {
+  //     // GET /api/v1/product
+  //     async getAll(req) {
+  //       // Get real data from somewhere
+  //       const results = [];
+  //       return {
+  //         results
+  //       };
+  //     },
+  //     // GET /api/v1/product/:docId
+  //     async getOne(req, _id) {
+  //       // Get real data from somewhere
+  //       const result = {};
+  //       return result;
+  //     },
+  //     // PATCH /api/v1/product/:docId
+  //     async patch(req, _id) {
+  //       // Modify an object somewhere
+  //       return {};
+  //     },
+  //     // PUT /api/v1/product/:docId
+  //     async put(req, _id) {
+  //       // Replace an object somewhere
+  //       return {};
+  //     },
+  //     // DELETE /api/v1/product/:docId
+  //     async delete(req, _id) {
+  //       // Delete an object somewhere
+  //       return;
+  //     }
+  //   };
+  // },
 
   // Like components, `renderRoutes` invoke a Nunjucks template
   // of the same name. Unlike components, they do so in response
@@ -215,9 +225,11 @@ module.exports = {
       get: {
         // Accessible via GET as /api/v1/product/latest
         async latest(req) {
-          // ... See the `components` example
+          const products = await self.find(req).sort({
+            createdAt: -1
+          }).limit(self.apos.launder.integer(req.query.max) || 5).toArray();
           return {
-            product
+            products
           };
         }
       }
@@ -234,11 +246,14 @@ module.exports = {
         //
         // Accessible as `/api/v1/product/redirect`
         async redirect(req, res) {
-          // ... find the product first, then:
+          // ... find the product in the database first, then:
+          const product = {
+            _url: '/pretend-url'
+          };
           return res.redirect(product._url);
         }
       }
-    }
+    };
   },
 
   // Handlers ("promise event handlers" in 2.x) let us do work in
@@ -248,8 +263,8 @@ module.exports = {
   handlers(self, options) {
     return {
       // Since this event is emitted by the same module,
-      // we do not have to write `product:beforeInsert`
-      'beforeInsert': {
+      // we do not have to write `'product:beforeInsert'`
+      beforeInsert: {
         async applyTax(req, piece) {
           piece.totalPrice = piece.price * (1.0 + (piece.tax / 100));
         }
@@ -270,9 +285,10 @@ module.exports = {
         async beforeAnyPieceIsInserted(req, piece) {
           // This code would run when ANY piece is inserted,
           // since all piece types extend `@apostrophecms/piece-type`
+          console.log('something is being inserted');
         }
-      },
-    }
+      }
+    };
   },
 
   queries(self, query) {
@@ -333,6 +349,7 @@ module.exports = {
     return {
       ours(req, res, next) {
         // Restrict access by IP address, in a crude way
+        const whitelist = [ '127.0.0.1', '::1' ];
         if (!whitelist.includes(req.connection.remoteAddress)) {
           return res.status(403).send('forbidden');
         }
@@ -341,7 +358,7 @@ module.exports = {
     };
   }
 
-}
+};
 ```
 
 ## Breaking up modules into multiple files
