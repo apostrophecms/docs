@@ -10,7 +10,7 @@ While these solutions work and are appropriate for some use cases they can be ha
 
 So in A3, we've taken inspiration from Rails, Symfony and other frameworks. Starting in A3, Nunjucks templates can invoke "async components," like this:
 
-```markup
+```django
 {# in ./modules/@apostrophecms/home-page/views/page.html #}
 <h3>Our Latest Product</h3>
 {% component 'product:latest.html' with { max: 1 } %}
@@ -38,7 +38,7 @@ module.exports = {
 
 Then Apostrophe passes the returned object as `data` to the `latest.html` Nunjucks template in the same module:
 
-```markup
+```django
 {# in ./modules/product/views/latest.html #}
 {% for product in data.products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</h4>
