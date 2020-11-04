@@ -4,7 +4,7 @@ title: "Custom Page Types"
 
 # Custom Page Types
 
-Let's make a new `default` page template for building additional pages on our site. To save space, we won't include things that are the same as in the [home page module](widgets-and-templates.md). This module is our own project-level module, so we do not use the @apostrophecms namespace in its name.
+Let's make a new `default` page template for adding additional pages on our site. To save space, we won't include things that are the same as in the [home page module](widgets-and-templates.md). This module is our own project-level module, so we do not use the @apostrophecms namespace in its name.
 
 ```sh
 # Create a folder for our home page module and its template
@@ -28,14 +28,17 @@ module.exports = {
       main: {
         type: 'area',
         options: {
-          // You can paste the same options used for the "main"
-          // area of the home page here
+          // You can copy the `widgets` option from the `main` area in
+          // home-page/index.js
         }
       }
     },
     group: {
       // Group the fields into tabs.
-      // Same as the home page example above
+      areas: {
+        label: 'Flexible Content',
+        fields: ['main']
+      }
     }
   }
 };
@@ -50,10 +53,10 @@ module.exports = {
       {
         name: '@apostrophecms/home-page',
         label: 'Home'
-      },   
+      },
       // add the new page type to the list of choices
       {
-        name: 'default-page', 
+        name: 'default-page',
         label: 'Default'
       },
     ]
@@ -61,7 +64,7 @@ module.exports = {
 };
 ```
 
-```js
+```django
 {# modules/default-page/views/page.html #}
 
 {% extends "layout.html" %}
@@ -75,5 +78,5 @@ module.exports = {
 
 * Every page type needs a module to hold its configuration.
 * The template for the page lives inside that module.
-* Note the `extend` property. We need this property because we are creating a new module that extends (subclasses.md) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We didn't need it when configuring the home page because that module already exists in the core.*
+* Note the `extend` property. We need this property because we are creating a new module that extends (subclasses.md) a core apostrophe module. `@apostrophecms/page-type` is the "base class" for page type modules. *We don't need it when customizing the home page configuration because that module already exists in the core.*
 * Every editable content area must be a configured field in the appropriate module, and the template just pulls it into the page.
