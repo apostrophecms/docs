@@ -40,7 +40,7 @@ In A3 every page type has a corresponding module. The home page, which always ex
 
 ### Areas are always fields
 
-In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](standard-widgets.md) for examples.
+In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](widgets-and-templates.md) for examples.
 
 ### Area template syntax has changed
 
