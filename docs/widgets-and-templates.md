@@ -44,7 +44,7 @@ These all work great out of the box, but note that images can push beyond the pa
 
 Start by creating a directory for project-level configuration of the module. Using your terminal:
 
-```sh
+```bash
 mkdir modules/@apostrophecms/image-widget
 ```
 
