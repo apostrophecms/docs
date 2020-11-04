@@ -26,7 +26,7 @@ All of the A3 core modules now have lowercase names. This means the `name` optio
 
 Command line tasks also use the new module names. For example, **the `apostrophe-users:add` task is now `@apostrophecms/user:add`**.
 
-## Areas & Pages
+## Areas and Pages
 
 ### Page types are always modules
 
@@ -90,7 +90,7 @@ Just like with methods, you can extend a route you inherited with `extendApiRout
 
 ### `renderRoutes` and `extendRenderRoutes`
 
-Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly. 
+Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly.
 
 ### `restApiRoutes` and `extendRestApiRoutes`
 
@@ -98,7 +98,7 @@ Handy for those creating new RESTful APIs. Allows you to declare `GET` (for all)
 
 ### `routes`
 
-You can create ordinary Express routes with `(req, req)` arguments too. There is no "extendRoutes" since Express routes do not lend themselves to that pattern.
+You can create ordinary Express routes with `(req, res)` arguments too. There is no "extendRoutes" since Express routes do not lend themselves to that pattern.
 
 ### `handlers` and `extendHandlers`
 

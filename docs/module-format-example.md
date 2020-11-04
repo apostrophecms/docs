@@ -6,7 +6,7 @@ title: "Module Format Example"
 
 The new A3 module format is best understood by reviewing a complete example with all of the sections.
 
-> As experienced A2 developers will know, this is "what goes in `index.js`."
+As experienced A2 developers will know, this is "what goes in `index.js`."
 
 ```js
 // modules/product/index.js
@@ -36,9 +36,9 @@ module.exports = {
         label: 'Tax'
       }
     },
-    // Replaces `removeFields`. Can remove inherited fields here if desired
+    // Replaces `removeFields`. You can remove inherited fields here if desired.
     remove: [],
-    // Replaces `arrangeFields`. Groups fields into tabs
+    // Replaces `arrangeFields`. Groups fields into tabs in the editor modal.
     group: {
       pricing: {
         label: 'Pricing',
@@ -50,7 +50,6 @@ module.exports = {
   // This is only run when Apostrophe first
   // starts up. Formerly known as `afterConstruct`.
   // Can use "await".
-
   async init(self, options) {},
 
   // Methods that can be invoked on `self`, or from
@@ -77,7 +76,8 @@ module.exports = {
       // Extend a method we inherited from `@apostrophecms/piece-type`.
       // The arguments are the same, plus `_super` is always the
       // first argument. Calling `_super` calls the original method.
-      // If you don't need that, just declare the method again in `methods`.
+      // If you don't need to call the original method, just declare
+      // the method again in `methods`.
       generate(_super, i) {
         const piece = _super(i.md);
         piece.price = Math.random() * 100;
@@ -85,7 +85,7 @@ module.exports = {
       };
     };
   },
-  
+
   // Async components. These allow us to fetch data from
   // inside any template in an SEO-friendly way
   //
@@ -163,22 +163,22 @@ module.exports = {
           results
         };
       },
-      // GET /api/v1/product/some_doc_id
+      // GET /api/v1/product/:docId
       async getOne(req, _id) {
         ...
         return result;
       },
-      // PATCH /api/v1/product/some_doc_id
+      // PATCH /api/v1/product/:docId
       async patch(req, _id) {
         ...
         return result;
       },
-      // PUT /api/v1/product/some_doc_id
+      // PUT /api/v1/product/:docId
       async put(req, _id) {
         ...
         return result;
       },
-      // DELETE /api/v1/product/some_doc_id
+      // DELETE /api/v1/product/:docId
       async delete(req, _id) {
         ...
         return result;
@@ -211,7 +211,7 @@ module.exports = {
         // Old-fashioned Express route. Useful if you need
         // to directly respond via `res.redirect`, or stream a
         // response. Return value is ignored, you *must*
-        // respond via `res`
+        // respond via `res`.
         //
         // Accessible as `/api/v1/product/redirect`
         async redirect(req, res) {
@@ -269,7 +269,7 @@ module.exports = {
             // Make sure this filter was actually invoked first
             if (query.get('belowAverage')) {
               // See method example above. `req` is available
-              // as `query.req`
+              // as `query.req`.
               const average = await self.averagePrice(query.req);
               // Merge in more MongoDB criteria
               query.and({
@@ -281,7 +281,7 @@ module.exports = {
           },
           // If you provide this, the builder can also be invoked
           // via the module's REST API as a query string parameter,
-          // e.g. ?belowAverage=1
+          // e.g. `?belowAverage=1`.
           launder(value) {
             return self.apos.launder.boolean(value);
           }
