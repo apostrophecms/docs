@@ -8,7 +8,7 @@ The most intuitive example is a blog: if the individual [piece](pieces.md) is on
 
 If the project has a piece module called `product`, then that module provides a way to create, edit, manage and query pieces. If the project has a piece page module called `product-page`, then that module provides a way to browse and view the pieces.
 
-In general piece modules are concerned with *editing and APIs*, while piece page modules are concerned with *browsing as part of a website* For developers familiar with the "model / view / controller" pattern: **piece modules are the model layer for your content type, while piece page modules are the view layer.**
+In general piece modules are concerned with *editing and APIs*, while piece page modules are concerned with *browsing as part of a website*. For developers familiar with the "model / view / controller" pattern: **piece modules are the model layer for your content type, while piece page modules are the view layer.**
 
 Some projects just need a widget module for each piece, but most will want to let users view a page for each one, or at least browse and paginate through a complete list. That's where piece pages shine.
 
