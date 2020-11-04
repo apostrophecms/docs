@@ -14,7 +14,7 @@ is about *contributing to* the documentation.
 
 Clone the repo.
 
-```sh
+```bash
 $ git clone https://github.com/apostrophecms/a3-docs.git
 $ cd a3-docs
 ```

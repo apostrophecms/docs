@@ -2,21 +2,16 @@
 title: "Pieces"
 ---
 
-# Pieces in A3
+# Pieces
+What is a Piece?
 
-:::  tip Note:
-<!-- I realize that for alpha 1 our audience is more familiar with Apostrophe, but this is a topic that comes up even among people who know a lot about Apostrophe, so I'd like this note to stay in. So if you have a
-concern with it, work with me to make it better, don't remove it. -Tom -->
-**"What's a piece?"**
+As experienced A2 developers know, a piece type module defines structure and behavior for a single type of content, such as blog posts, products, or events. If you have hundreds of documents of the same type, that's a piece. If you want to let the user view them in a certain sorting order, that's a piece. If the same item might be appropriate to display on many different pages, that's a piece. Blog posts, events and products are all excellent examples. Less obvious examples include "category" or "tag" content types that serve to create a taxonomy for other pieces.
 
-As experienced A2 developers know, **pieces are suitable for content types that behave more like a blog, a spreadsheet or a database table, and less like pages in a tree.** If you have hundreds of documents of the same kind and you'll need to help the user browse and paginate through them all, that's a piece. If you'll want to let the user view them in a certain sorting order, that's a piece. If the same item might be appropriate to display on many different pages, that's a piece. Blog posts, events and products are all excellent examples. Less obvious examples include "category" or "tag" content types that serve to create a taxonomy for other pieces.
+Apostrophe provides both pieces and "[piece pages](piece-pages.md)," which afford your users a way to browse, filter, paginate and discover pieces of a particular kind. For more information about using piece pages, see the [piece pages section](piece-pages.md).
 
-Apostrophe provides both pieces and "[piece pages](piece-pages.md)," which afford your users a way to browse, filter, paginate and discover pieces of a particular kind. For more information about using piece pages to help users explore your pieces, see the [piece pages section](piece-pages.md).
-:::
+## Pieces By Example
 
-## Pieces by example
-
-In A3, pieces work similarly to in 2.x, with a few important changes. Most of them are demonstrated in the [new module format example](module-format-example.md), which you should definitely check out. Here's a shorter version focused specifically on features that make sense for pieces:
+In A3, pieces work similarly to in 2.x, with a few important changes. Most of them are demonstrated in the [new module format example](module-format-example.md). Here's a shorter version focused specifically on features that make sense for pieces:
 
 ```js
 // modules/product/index.js
@@ -109,7 +104,7 @@ module.exports = {
       };
     };
   },
- 
+
   handlers(self, options) {
     return {
       'beforeInsert': {
@@ -156,7 +151,7 @@ module.exports = {
 }
 ```
 
-## Major changes from A2
+## Major Changes From A2
 
 ### Piece types extend `@apostrophecms/piece-type`
 
@@ -202,9 +197,9 @@ In A2, methods were added in `construct`, which no longer exists. In A3, your cu
 
 #### Extending methods: generating example pieces
 
-Sometimes we want to extend an existing method we inherited from our base class, while still taking advantage of it. In A2 we did that "by hand," saving the old method in a variable. This was not intuitive for new developers.
+Sometimes we want to extend an existing method we inherited from our base class. In A2 we did that by saving the old method in a variable. This was not intuitive for new developers.
 
-A3 modules replace this with the `extendMethods` section, which provides a clear pattern. In the example above, the `generate` method is extended to generate a random `price`. Notice that `_super` is always the first argument here. Invoking it calls the old version of the method, as part of our implementation of the new one.
+A3 modules replace this process with the `extendMethods` section, providing a clear pattern. In the example above, the `generate` method is extended to generate a random `price`. Notice that `_super` is always the first argument. Invoking it calls the old version of the method, as part of our implementation of the new one.
 
 This allows us to run:
 
@@ -216,7 +211,7 @@ To generate test products with prices as well as titles.
 
 ### Handlers
 
-In A2, pieces had initially empty methods like `beforeInsert` and `afterUpdate` that were invoked as part of those operations. This was useful, but could be bug-prone when piece types extended each other.
+In A2, pieces had empty methods, such as `beforeInsert` and `afterUpdate`, that were invoked as part of respective operations for devs to use as hooks. This was useful, but could be bug-prone when piece types extended each other.
 
 Later in the A2 era, "promise events" were added to Apostrophe. These provided a way to listen for any insert or update operation on any type of document. But, each promise event handler had to specifically check `doc.type` to make sure it was relevant.
 
@@ -248,19 +243,19 @@ On the other hand, if we were interested in `beforeInsert` events emitted by *al
 
 First, some good news: in both A2 and A3, you usually don't have to write any custom code to filter a database query, filter a REST API query or even filter pieces right in the query string while browsing a [piece-page](piece-page.md). That's because Apostrophe automatically provides a "query builder" (formerly known as a "cursor filter") for most field types.
 
-So if I want to look for an exact match on the `title` field in server-side JavaScript, I can write this:
+So if you want to look for an exact match on the `title` field in server-side JavaScript, you can try this:
 
 ```js
 const product = await self.find(req).title('This exact title').toObject();
 ```
 
-As a REST API query, I can write:
+As a REST API query, you can write:
 
 ```
 GET /api/v1/product?title=This%20exact%20title
 ```
 
-And if I'm browsing a [product pieces page](pieces-page.md), I can add it to the query string there too:
+And if you're browsing a [product pieces page](pieces-page.md), you can add it to the query string there as well:
 
 ```
 /product?title=This%20exact%20title
@@ -272,7 +267,7 @@ In addition to standard query builders for most fields you add, you can also use
 
 #### Custom query builders
 
-Sometimes we do want to add another query builder on our own. Here's an example query builder that filters our products to *return only those whose price is below average:*
+Sometimes you might want to add another query builder on your own. Here's an example query builder that filters our products to *return only those whose price is below average:*
 
 ```js
   queries(self, query) {
@@ -315,7 +310,7 @@ Sometimes we do want to add another query builder on our own. Here's an example 
 Notice that `builders` is nested in the `queries` section. There is also a `methods` section, which is added to less often. It is primarily used to define new final endpoints for queries, like the `toArray` and `toObject` methods.
 :::
 
-These are the important sub-sections of a query builder:
+**These are the important sub-sections of a query builder:**
 
 * `def` sets the default value for the query builder. `query.get('belowAverage')` will return this if the query builder is not called by the developer or included in the query string.
 
@@ -325,15 +320,15 @@ These are the important sub-sections of a query builder:
 
 * `choices` should be provided if we want our query builder to work in the `filters` section and appear in the "Manage Pieces" dialog box in the "Filters" dropdown. It may be an `async` function, if needed. If your query builder has the same name as a field and you do not implement `choices`, Apostrophe will offer all of the distinct values of that field as the choices.
 
-## REST APIs for pieces
+## REST APIs for Pieces
 
 REST APIs are automatically made available for piece types. For more information, see [REST APIs](rest-apis.md).
 
-## Pieces and widgets
+## Pieces and Widgets
 
-Of course, it's helpful to be able to display pieces anywhere on the site. Sometimes we don't want a browseable piece page at all, sometimes we want to "tease" that piece as the "featured product" on the home page, and so on.
+Of course, it's helpful to be able to display pieces anywhere in your project. Sometimes you won't want a browseable piece page at all, or you may want to "tease" that piece as the "featured product" on the home page, and so on.
 
-In A2, a "pieces widget" was provided as a standard feature, with several filtering options for the user. However, users didn't use most of these options and found the presentation to be confusing. In many projects, developers just created their own widget with a simple "relationship" field (formerly known as a "join"). In A3 this is the approach we are recommending so far.
+In A2, a "pieces widget" was provided as a standard feature, with several filtering options for the user. However, users didn't use most of these options and found the presentation to be confusing. In many projects, developers just created their own widget with a simple "relationship" field (formerly known as a "join"). In A3 this is the approach we are recommending.
 
 Here is a simple example:
 
@@ -367,17 +362,17 @@ module.exports = {
 };
 ```
 
-```markup
+```django
 {# in ./modules/product-widget/views/widget.html #}
 {% for product in data.widget._products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</a></h4>
 {% endfor %}
 ```
 
-## Async components
+## Async Components
 
 Pieces often implement async components as an easy way to display them on the page in a variety of contexts, including both widgets and fixed placements in the page template. This is particularly useful when a simple relationship field does not meet the need. For more information, see [async components](async-components.md).
 
-## Piece pages
+## Piece Pages
 
-As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any website that allows pieces to be browsed by the user. See the [piece pages](piece-pages.md) section to get started.
+As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any website that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
