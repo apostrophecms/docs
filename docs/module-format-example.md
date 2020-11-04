@@ -4,9 +4,7 @@ title: "Module Format Example"
 
 # Module Format Example
 
-The new A3 module format is best understood by reviewing a complete example with all of the sections.
-
-As experienced A2 developers will know, this is "what goes in `index.js`."
+The new A3 module format is best understood by reviewing a complete example with all of the sections. As experienced A2 developers will know, this code goes in the module's `index.js` file.
 
 ```js
 // modules/product/index.js
