@@ -104,7 +104,7 @@ module.exports = {
       };
     };
   },
- 
+
   handlers(self, options) {
     return {
       'beforeInsert': {
@@ -203,7 +203,7 @@ A3 modules replace this process with the `extendMethods` section, providing a cl
 
 This allows us to run:
 
-```sh
+```bash
 node app product:generate
 ```
 
@@ -211,7 +211,7 @@ To generate test products with prices as well as titles.
 
 ### Handlers
 
-In A2, pieces initially had empty methods like `beforeInsert` and `afterUpdate` that were invoked as part of those operations. This was useful, but could be bug-prone when piece types extended each other.
+In A2, pieces had empty methods, such as `beforeInsert` and `afterUpdate`, that were invoked as part of respective operations for devs to use as hooks. This was useful, but could be bug-prone when piece types extended each other.
 
 Later in the A2 era, "promise events" were added to Apostrophe. These provided a way to listen for any insert or update operation on any type of document. But, each promise event handler had to specifically check `doc.type` to make sure it was relevant.
 
@@ -322,11 +322,11 @@ Notice that `builders` is nested in the `queries` section. There is also a `meth
 
 ## REST APIs for pieces
 
-REST APIs are automatically made available for piece-types. For more information, see [REST APIs](rest-apis.md).
+REST APIs are automatically made available for piece types. For more information, see [REST APIs](rest-apis.md).
 
 ## Pieces and widgets
 
-Of course, it's helpful to be able to display pieces anywhere in your project. Sometimes you won't want a browseable piece page at all, sometimes or you may want to "tease" that piece as the "featured product" on the home page, and so on.
+Of course, it's helpful to be able to display pieces anywhere in your project. Sometimes you won't want a browseable piece page at all, or you may want to "tease" that piece as the "featured product" on the home page, and so on.
 
 In A2, a "pieces widget" was provided as a standard feature, with several filtering options for the user. However, users didn't use most of these options and found the presentation to be confusing. In many projects, developers just created their own widget with a simple "relationship" field (formerly known as a "join"). In A3 this is the approach we are recommending.
 
@@ -375,4 +375,4 @@ Pieces often implement async components as an easy way to display them on the pa
 
 ## Piece pages
 
-As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any project that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
+As referred to above, while they are not needed in every case, [piece pages](piece-pages.md) are a crucial companion to pieces for any website that allows the user to browse an index of pieces. See the [piece pages](piece-pages.md) section to get started.
