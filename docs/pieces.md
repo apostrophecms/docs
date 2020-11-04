@@ -5,7 +5,7 @@ title: "Pieces"
 # Pieces
 What is a Piece?
 
-As experienced A2 delevelopers know, a piece type is a repository for a collection of related content-types or pieces. If you have hundreds of documents of the same type, that's a piece. If you want to let the user view them in a certain sorting order, that's a piece. If the same item might be appropriate to display on many different pages, that's a piece. Blog posts, events and products are all excellent examples. Less obvious examples include "category" or "tag" content types that serve to create a taxonomy for other pieces.
+As experienced A2 developers know, a piece type module defines structure and behavior for a single type of content, such as blog posts, products, or events. If you have hundreds of documents of the same type, that's a piece. If you want to let the user view them in a certain sorting order, that's a piece. If the same item might be appropriate to display on many different pages, that's a piece. Blog posts, events and products are all excellent examples. Less obvious examples include "category" or "tag" content types that serve to create a taxonomy for other pieces.
 
 Apostrophe provides both pieces and "[piece pages](piece-pages.md)," which afford your users a way to browse, filter, paginate and discover pieces of a particular kind. For more information about using piece pages, see the [piece pages section](piece-pages.md).
 
