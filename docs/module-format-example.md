@@ -265,7 +265,7 @@ module.exports = {
         belowAverage: {
           // finalize is called at the time the query
           // is about to be processed by the database
-          finalize() {
+          async finalize() {
             // Make sure this filter was actually invoked first
             if (query.get('belowAverage')) {
               // See method example above. `req` is available
@@ -284,6 +284,18 @@ module.exports = {
           // e.g. `?belowAverage=1`.
           launder(value) {
             return self.apos.launder.boolean(value);
+          },
+          choices() {
+            return [
+              {
+                value: '0',
+                label: 'No'
+              },
+              {
+                value: '1',
+                label: 'Yes'
+              }
+            ];
           }
         }
       }

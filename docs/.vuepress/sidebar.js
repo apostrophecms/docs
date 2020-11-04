@@ -10,6 +10,7 @@ module.exports = [
   '/custom-page-types.md',
   '/page-tree-navigation.md',
   '/pieces.md',
+  '/piece-pages.md',
   '/async-components.md',
   '/rest-apis.md'
 ];
