@@ -37,6 +37,7 @@ Let's add a two-column layout widget to the site.
 ```
 
 ```js
+// in modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
