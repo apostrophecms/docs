@@ -31,3 +31,5 @@ module.exports = {
   }
 }
 ```
+
+Bear in mind that there are tradeoffs between what you choose to load and the performance of the site. `depth: 2` usually does not have a significant performance impact.

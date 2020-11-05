@@ -98,10 +98,10 @@ module.exports = {
   extendMethods(self, options) {
     return {
       generate(_super, i) {
-        const piece = _super(i.md);
+        const piece = _super(i);
         piece.price = Math.random() * 100;
         return piece;
-      };
+      }
     };
   },
 
@@ -111,7 +111,7 @@ module.exports = {
         async applyTax(req, piece) {
           piece.totalPrice = piece.price * (1.0 + (piece.tax / 100));
         }
-      },
+      }
     };
   },
 
@@ -119,7 +119,7 @@ module.exports = {
     return {
       builders: {
         belowAverage: {
-          finalize() {
+          async finalize() {
             if (query.get('belowAverage')) {
               const average = await self.averagePrice(query.req);
               query.and({
@@ -148,7 +148,7 @@ module.exports = {
       }
     };
   }
-}
+};
 ```
 
 ## Major Changes From A2
@@ -274,7 +274,6 @@ Sometimes you might want to add another query builder on your own. Here's an exa
     return {
       builders: {
         belowAverage: {
-          def: false,
           async finalize() {
             if (query.get('belowAverage')) {
               const average = await self.averagePrice(query.req);
@@ -291,11 +290,11 @@ Sometimes you might want to add another query builder on your own. Here's an exa
           choices() {
             return [
               {
-                value: false,
+                value: '0',
                 label: 'No'
               },
               {
-                value: true,
+                value: '1',
                 label: 'Yes'
               }
             ];
@@ -346,6 +345,9 @@ modules: {
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
+    label: 'Product',
+    // Ensure good performance by not loading any fields
+    // we do not need in the widget's rendering of the product
     projection: {
       title: 1,
       _url: 1
@@ -367,6 +369,22 @@ module.exports = {
 {% for product in data.widget._products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</a></h4>
 {% endfor %}
+```
+
+::: tip Note:
+Including the `a` tag here is optional. If you plan to make your pieces browseable on the site with [piece pages](piece-pages.md), then you will usually want to do it. In the absence of piece pages though, there won't be a `_url` property to link to.
+:::
+
+```js
+// in modules/@apostrophecms/home-page/index.js
+
+...
+widgets: {
+  '@apostrophecms/rich-text': { ... },
+  // Other widgets here, then the new one...
+  'product': {}
+}
+...
 ```
 
 ## Async Components
