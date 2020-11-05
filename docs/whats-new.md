@@ -12,6 +12,9 @@ While A2 had custom APIs and a separate `apostrophe-headless` module, A3 is powe
 ### New Editing Experience
 Powered by [Vue](https://vuejs.org/), the new editing experience is much faster than in A2. We've completely overhauled the design and UX with superior editor interactions.
 
+### New Rich Text Editor
+A3 uses the [tiptap](https://tiptap.dev/) rich text editor, a modern Vue-based editor powered by [ProseMirror](https://prosemirror.net/). ProseMirror is a rich text editing framework embraced by many companies, notably including The New York Times.
+
 ### Improved Module Architecture
 A2 developers told us it was hard to learn how to structure their code. So in A3, we have a clearer layout for modules. Each module has a clearly defined home for methods, event handlers, Nunjucks helpers, async components, query builders and more.
 

@@ -15,6 +15,10 @@ In A2, if you're not using [apostrophe-workflow](https://github.com/apostrophecm
 ### Clearer Contexts for On-Page Editing
 In `3.0.0-alpha.1`, you can edit a global footer or a piece that was pulled into the page by a widget right on the page. But that content doesn't really "live" there. This feature generates more confusion than the feature is worth. In another pre-stable release we will instead offer affordances to help users get to the right place to edit "foreign" content.
 
+### Table editing in Tiptap
+
+In `3.0.0-alpha.1`, our rich text editor does not yet support tables, but there is excellent support for tables in Tiptap, and we will be adding this to A3.
+
 ### Version History
 In the stable release of A3 you'll be able to access the publication history of any document and roll back to a previously published version if needed.
 

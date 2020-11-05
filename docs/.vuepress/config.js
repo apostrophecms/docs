@@ -13,7 +13,7 @@ module.exports = {
   themeConfig: {
     repo: 'https://github.com/apostrophecms/a3-boilerplate/',
     docsRepo: 'https://github.com/apostrophecms/a3-docs',
-    docsBranch: 'master',
+    docsBranch: 'main',
     docsDir: 'docs',
     lastUpdated: 'Last updated',
     nextLinks: true,
