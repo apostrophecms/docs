@@ -302,38 +302,42 @@ module.exports = {
 
   restApiRoutes(self, options) {
     return {
-      // GET /api/v1/mydatabase
+      // GET /api/v1/product
       async getAll(req) {
-        // ... await data from a custom database, then ...
+        // Get real data from somewhere
+        const results = [];
         return {
           results
         };
       },
-      // GET /api/v1/mydatabase/:docId
+      // GET /api/v1/product/:docId
       async getOne(req, _id) {
-        // ... await one result from a custom database, then ...
+        // Get real data from somewhere
+        const result = {};
         return result;
       },
-      // PATCH /api/v1/mydatabase/:docId
+      // PATCH /api/v1/product/:docId
       async patch(req, _id) {
-        // ... patch fields in one record in a custom database, then ...
-        return result;
+        // Modify an object somewhere
+        return {};
       },
       // PUT /api/v1/product/:docId
       async put(req, _id) {
-        // Replace one record in a custom database, then ...
-        return result;
+        // Replace an object somewhere
+        return {};
       },
       // DELETE /api/v1/product/:docId
       async delete(req, _id) {
-        // Delete one record from a custom database, then ...
-        return result;
+        // Delete an object somewhere
+        return;
       }
     };
   },
 
-  // apiRoutes are helpful for edge cases that don't
-  // match up well with the REST conventions
+  // apiRoutes are also helpful, for related edge cases that don't
+  // match up well with the REST conventions.
+  // This route becomes accessible as: POST /api/v1/mydatabase/merge
+
   apiRoutes(self, options) {
     return {
       post: {
