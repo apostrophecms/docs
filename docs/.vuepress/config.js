@@ -39,11 +39,7 @@ module.exports = {
         link: 'https://apostrophecms.com',
         rel: false
       }
-    ],
-    algolia: {
-      apiKey: 'e11d95029c6a9ac596343664b7f622e4',
-      indexName: 'apostrophecms'
-    }
+    ]
   },
   head: [
     // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
