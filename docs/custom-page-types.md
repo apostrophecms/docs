@@ -6,11 +6,6 @@ title: "Custom Page Types"
 
 Let's make a new `default` page template for adding additional pages on our site. To save space, we won't include things that are the same as in the [home page module](widgets-and-templates.md). This module is our own project-level module, so we do not use the `@apostrophecms` namespace in its name.
 
-```bash
-# Create a folder for our home page module and its template
-mkdir -p modules/default-page/views
-```
-
 ```javascript
 // in app.js, after the other modules, configure a new one
     'default-page': {}
