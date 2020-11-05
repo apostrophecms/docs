@@ -24,6 +24,7 @@ Here's an example of a piece page module that works with the product piece descr
 // in ./app.js
 require('apostrophe')({
   modules: {
+    // ... other modules ...
     // piece module
     product: {},
     // piece page module
@@ -91,10 +92,12 @@ module.exports = {
   {# The layout already output the title for us #}
   <h4>Price: {{ product.price }}</h4>
   <section>{% area product, 'description' %}</section>
- % endblock %}
+{% endblock %}
 ```
 
 That's all we need to create a basic paginated index page for all of our products, with "virtual" subpages for the individual products, based on the `slug` field of each piece.
+
+So to finish the job, just go to the home page, click "Page Tree," then click "New Page." Choose the "Product Page" type for your page and save, then click the link button in the page tree to jump to the new piece page.
 
 ### Major changes from A2
 
@@ -160,11 +163,22 @@ module.exports = {
 {# ... add this before the list of products #}
 <nav>
   {% for choice in data.piecesFilters.color %}
-    <a
-      class="{{ 'current' if data.query.color == choice.value }}"
-      href="{{ data.url | build({ color: choice.value }) }}"
-    >{{ choice.label }}
-    </a>
+    {% if data.query.color == choice.value %}
+      {# Click to remove the filter #}
+      {{ choice.label }}
+      <a
+        href="{{ data.url | build({ color: null }) }}"
+      >
+        ⓧ
+      </a>
+    {% else %}
+      {# Click to select the filter #}
+      <a
+        href="{{ data.url | build({ color: choice.value }) }}"
+      >
+        {{ choice.label }}
+      </a>
+    {% endif %}
   {% endfor %}
 </nav>
 ```
@@ -177,11 +191,12 @@ The syntax for `piecesFilters` may change before the final 3.x release.
 
 ## Multiple Piece Pages for the Same Piece Type
 
-Rather than filtering on the page, you might prefer to separate page as a "home" for red products, green products, and blue products... or split them up in some other way. It's up to you. The important thing is that you let Apostrophe know how to identify the pieces you want for this particular page. This is different from A2, where this was handled via tags by default.
+Rather than filtering them all on the same page, you might prefer to create separate galleries of red products, green products, and blue products — or split them up into separate piece pages in some other way. It's up to you. The important thing is that you let Apostrophe know how to identify the pieces you want for this particular page. This is different from A2, where this was handled via tags by default.
 
 We'll solve it by adding a `color` field to our piece pages as well, along with logic to browse only matching pieces and assign the right URL to each piece:
 
 ```js
+// In ./modules/product-page/index.js
 // In ./modules/product-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
@@ -230,3 +245,5 @@ Here we've done three things:
 * We've added a `color` field to the piece page itself.
 * We've overridden the `filterByIndexPage` method in order to restrict the `product` pieces to those that match the `color` of this piece page. Notice that we didn't have to write a query builder for `query.color`. All `select` fields automatically have one.
 * We've overridden `chooseParentPage` to pick the first piece page with a `color` setting that matches the `piece`. This helps Apostrophe assign the right `_url` to the piece.
+
+Now we can add three separate product pages via the Page Tree button. Be sure to assign a value to the "Color" field. When you visit that page, you will see only products of the appropriate color. In addition, when you display those products anywhere on the site via a widget, the link for more information will be a virtual subpage of the matching piece page.
