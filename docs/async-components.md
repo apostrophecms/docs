@@ -13,7 +13,7 @@ So in A3, we've taken inspiration from Rails, Symfony and other frameworks. Star
 ```django
 {# in ./modules/@apostrophecms/home-page/views/page.html #}
 <h3>Our Latest Product</h3>
-{% component 'product:latest.html' with { max: 1 } %}
+{% component 'product:latest' with { max: 1 } %}
 ```
 
 When this command is encountered, Apostrophe looks for a "component function" called `latest` in the `product` module and `await`s it:
@@ -24,14 +24,16 @@ module.exports = {
   extend: '@apostrophecms/piece-type',
   // ...
   components(self, options) {
-    async latest(req, data) {
-      const products = await self.find(req).sort({
-        createdAt: -1
-      }).limit(data.max || 5)).toArray();
-      return {
-        products
-      };
-    }    
+    return {
+      async latest(req, data) {
+        const products = await self.find(req).sort({
+          createdAt: -1
+        }).limit(data.max || 5).toArray();
+        return {
+          products
+        };
+      }
+    };
   }
 };
 ```
