@@ -12,7 +12,7 @@ Specifically, Apostrophe provides headless REST APIs for both pieces and pages.
 
 In addition, Apostrophe provides web APIs for uploading attachments, logging in and out, and embedding third-party content via the oEmbed standard.
 
-## Limitations in `3.0.0-alpha.1`: api keys and bearer tokens
+## Limitations in `3.0.0-alpha.1`: API keys and bearer tokens
 
 In the `3.0.0-alpha.1` release, APIs marked "login required" can only be accessed after logging into Apostrophe. The login API creates a session cookie which must be retained and sent back with future requests. While effective for editing a website, this is not typical practice for headless applications.
 
