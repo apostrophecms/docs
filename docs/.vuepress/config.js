@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         text: 'Community',
-        link: 'https://apostrophecms.com/community',
+        link: 'https://apostrophecms.com/get-involved',
         rel: false
       },
       {
