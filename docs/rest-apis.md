@@ -12,11 +12,73 @@ Specifically, Apostrophe provides headless REST APIs for both pieces and pages.
 
 In addition, Apostrophe provides web APIs for uploading attachments, logging in and out, and embedding third-party content via the oEmbed standard.
 
-## Limitations in `3.0.0-alpha.1`: API keys and bearer tokens
+## Authentication: API keys
 
-In the `3.0.0-alpha.1` release, APIs marked "login required" can only be accessed after logging into Apostrophe. The login API creates a session cookie which must be retained and sent back with future requests. While effective for editing a website, this is not typical practice for headless applications.
+Many REST operations require authentication. One way to authenticate is to use an API key.
 
-Before the final release of 3.0, we will also incorporate support for both API keys and bearer tokens. The former are suitable for API calls from other websites, while the latter are more secure for use in native apps.
+API keys are great for server-to-server communication, because they don't expire.
+
+They are unsuitable for browser-side or headless-app use because it is possible for end users to determine the api key and use it for their own purposes. For these roles see "bearer tokens," below.
+
+ Because 3.x has a simpler permissions model, api keys live in just one place: the `@apostrophecms/express` module.
+
+To set up an api key you write:
+
+```
+        '@apostrophecms/express': {
+          options: {
+            apiKeys: {
+              // Use your own api key value, we recommend a strong randomly generated password
+              'my api key here': {
+                role: 'admin'
+              }
+            }
+          }
+        },
+```
+
+Right now `admin` is the only supported role value; any other role will get you an anonymous request, which you could get without an api key. But this will change in the next alpha release when the rest of the permissions model comes in.
+
+To use an API key, just add an `authorization` HTTP header to each request, like this:
+
+```
+ApiKey ACTUAL-TOKEN-GOES-HERE
+```
+
+Alternatively you may pass the api key as the `apikey` or `apiKey` query parameter.
+
+## Authentication: bearer tokens
+
+Bearer tokens are more appropriate for browser use and headless apps. That's because they are tied to a single user account. A user who obtains a bearer token via watching the network panel only has access to the resources they could edit via your app anyway.
+
+To obtain a bearer token, make a POST a request to `/api/v1/login/login`, with the following body properties:
+
+```javascript
+{
+  username: 'username',
+  password: 'password'
+}
+```
+
+You will get back a JSON object with a `token` property:
+
+```javascript
+{
+  token: 'xyz'
+}
+```
+
+Now you can carry out all of the REST API actions that require login by passing an `Authorization` header. This includes POST, PUT, PATCH and DELETE operations. You will also get more complete results from GET operations, including access to documents with `visibility` set to `loginRequired`.
+
+Your `authorization` HTTP header should look like:
+
+```
+Bearer ACTUAL-TOKEN-GOES-HERE
+```
+
+Note the need for the word "Bearer" before the key.
+
+To log out and destroy the token, send a POST request to `/api/v1/login/logout`, with the same `authorization` header. No body properties are required. After logging out, the token is no longer accepted.
 
 ## REST APIs for Pieces
 
@@ -107,15 +169,15 @@ Returns an individual piece as a JSON object:
 
 ### `POST /api/v1/product`
 
-**Requires login.** POSTs a new product to the server. The request body should use the JSON encoding and be in the same format returned above.
+**Authentication required.** POSTs a new product to the server. The request body should use the JSON encoding and be in the same format returned above.
 
 ### `PUT /api/v1/product/:docId`
 
-**Requires login.** PUTs an updated version of the document to the server. The request body should use the JSON encoding and be in the same format returned above. However, **in most cases you should use PATCH**, particularly if you are only interested in updating certain fields.
+**Authentication required.** PUTs an updated version of the document to the server. The request body should use the JSON encoding and be in the same format returned above. However, **in most cases you should use PATCH**, particularly if you are only interested in updating certain fields.
 
 ### `PATCH /api/v1/product:docId`
 
-**Requires login.** Identical to PUT, except that only the properties mentioned in the JSON body are updated. All other properties are left as-is.
+**Authentication required.** Identical to PUT, except that only the properties mentioned in the JSON body are updated. All other properties are left as-is.
 
 In addition, we extend the REST convention with MongoDB-style operators:
 
@@ -231,17 +293,17 @@ Returns an individual page as a JSON object:
 
 ### `POST /api/v1/@apostrophecms/page`
 
-**Requires login.** POSTs a new page to the server. Works just like POSTing a piece, with the following addition:
+**Authentication required.** POSTs a new page to the server. Works just like POSTing a piece, with the following addition:
 
 * You must pass `_position` and `_targetId`. `_targetId` must be the `_id` of an existing page, or one of the convenient shorthands `_trash` and `_home`. `_position` may be `before`, `after`, `firstChild`, or `lastChild`. Alternatively `_position` may be an integer in which case the new page is inserted as a child at that point in the list.
 
 ### `PUT /api/v1/@apostrophecms/page/:docId`
 
-**Requires login.** PUTs an updated version of the page to the server. Works just like `PUT` for pieces, with this exception: you may include `_position` and `_targetId`, although it is not mandatory. If you do not the position in the tree does not change.
+**Authentication required.** PUTs an updated version of the page to the server. Works just like `PUT` for pieces, with this exception: you may include `_position` and `_targetId`, although it is not mandatory. If you do not the position in the tree does not change.
 
 ### `PATCH /api/v1/@apostrophecms/page/:docId`
 
-**Requires login.** Identical to PATCHing a piece, except that you may include `_position` and `_targetId` if you wish to change the position in the tree. To easily move a page into the trash, set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
+**Authentication required.** Identical to PATCHing a piece, except that you may include `_position` and `_targetId` if you wish to change the position in the tree. To easily move a page into the trash, set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
 
 ### `DELETE /api/v1/@apostrophecms/page:docId`
 
@@ -249,7 +311,7 @@ Returns an individual page as a JSON object:
 
 ## PATCHing a document of any type
 
-**Requires login.** As a convenience, you may also `PATCH` a document without specifying the exact module that should handle it:
+**Authentication required.** As a convenience, you may also `PATCH` a document without specifying the exact module that should handle it:
 
 ### `PATCH /api/v1/@apostrophecms/doc/:docId`
 
@@ -257,7 +319,7 @@ In this case the request is routed to the appropriate module. Apostrophe uses th
 
 ## Uploading attachments
 
-**Login required.** You may upload media by making a POST request:
+**Authentication required.** You may upload media by making a POST request:
 
 ```
 POST /api/v1/@apostrophecms/attachment/upload
@@ -267,17 +329,13 @@ When you do so, the encoding should be `multitype/form-data`, and the request bo
 
 If the request is accepted, the response will be a JSON-encoded object suitable for use as the value of a field of type `attachment`. Typical practice is to next `POST` or `PATCH` a piece or page that contains an attachment field, such as the `@apostrophecms/image` piece type.
 
-## Logging in and logging out
+## Logging in and logging out with a session
 
-You may log in and out via these APIs:
+We have already looked at bearer tokens, which are the best way to log in when writing a single-page app or native app. However it is also possible to log in like Apostrophe's own editing UI does, with a session cookie.
 
-### POST /api/v1/@apostrophecms/login/login
+To do that, add `session: true` to the body properties when POSTing to `/api/v1/@apostrophecms/login/login`.
 
-The request body must contain `username` and `password` properties. If a `200` status code is received, a login session has been established, and a session cookie will be included in the response. This cookie must be sent back with future requests that require login.
-
-### POST /api/v1/@apostrophecms/login/logout
-
-**Login required.** If a `200` status code is received, the login session has been terminated and the session cookie is no longer valid for future requests.
+To log out when you have a session cookie, just `POST` to `/api/v1/@apostrophecms/login/logout`. As long as your session cookie is present this will take care of destroying it.
 
 ## Creating Your Own REST APIs
 
