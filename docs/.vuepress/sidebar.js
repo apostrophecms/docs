@@ -2,6 +2,7 @@ module.exports = [
   '/whats-new.md',
   '/coming-soon.md',
   '/major-changes.md',
+  '/upgrade.md',
   '/starting-your-project.md',
   '/module-format-example.md',
   '/front-end-assets.md',
