@@ -4,13 +4,15 @@ title: "Upgrading"
 
 # Upgrading from 3.0.0-alpha.1
 
-For now, the upgrade procedure is:
+Following version `3.0.0-alpha.1` we will use simply the npm tag for versions in the boilerplate for versions prior to the full release, e.g., `alpha`, `beta`. If you downloaded the boilerplate before the `3.0.0-alpha.2` release:
 
-* Edit `package.json`
-* Change `"apostrophe": "3.0.0-alpha.1"` to `"apostrophe": "3.0.0-alpha.2"`
+* Open `package.json`
+* Change `"apostrophe": "3.0.0-alpha.1"` to `"apostrophe": "alpha"`
 * Run `npm install`
 
-After the final release you'll be able to set your dependency to just `3.0.0`, and then you will be able to use `npm update` normally.
+This can be updated to `beta` when a beta release is available.
+
+After the final release you'll be able to set your dependency to just `^3.0.0`, and then you will be able to use `npm update` normally.
 
 # Upgrading from 2.x
 
