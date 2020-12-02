@@ -31,3 +31,31 @@ A2 shipped with jQuery, lodash, momentjs and more. Later, we added the lean opti
 ::: tip Note
 Also see [coming soon](coming-soon.md) for features that haven't made it into A3 yet, but are planned for the final release in Q1 of 2021.
 :::
+
+# What's New in 3.0.0-alpha.2
+
+Alpha 2 added the following:
+
+### API Keys and Bearer Tokens
+
+For better write access during headless app development, we have added support for [api keys and bearer tokens](rest-apis.md) in our REST APIs. Now your native apps, PWAs and so on can write to A3 as easily as they can read from it.
+
+### Edit Mode
+
+When you log in, Apostrophe now starts out in "preview mode." Click "Edit" to enter "edit mode." You can toggle back and forth at any time to see your content without any Apostrophe editing UI.
+
+### Undo / Redo
+
+3.0.0-alpha.2 adds Undo and Redo buttons at the top of the page. Although you can undo text edits with them, these are best used to undo big changes like adding or removing a widget.
+
+::: tip Note
+The standard keyboard shortcuts for Undo and Redo are still available for smaller changes inside the text editor.
+:::
+
+### Foreign Documents
+
+Starting with 3.0.0-alpha.2 users don't edit "foreign" documents, such as a blog post in a widget or a shared global footer on all pages, directly on the page they happen to be looking at. Instead, blog post content can only be edited on the "show page" for that particular post or in the "pieces editor" dialog box for that post. And global content can only be edited in the "global settings" dialog box.
+
+However, users who try to click on this content to edit it "out of context" do receive an invitation to navigate to the appropriate page or dialog box.
+
+These changes make it clearer to users what the real impact of their edits will be. And they will improve the UX of the forthcoming experience for publishing drafts in A3.
