@@ -17,6 +17,7 @@ This document reflects our current progress towards a stable 3.0 release, which 
 * [New in A3](whats-new.md)
 * [Coming Soon](coming-soon.md)
 * [Major Changes](major-changes.md)
+* [Upgrading to 3.0.0-alpha.2](upgrade.md)
 * [Starting Your Project](starting-your-project.md)
 * [Module Format](module-format-example.md)
 * [Front-End Assets](front-end-assets.md)
