@@ -76,10 +76,18 @@ module.exports = {
 
 {% block main %}
   {% for product in data.pieces %}
-    <h4><a href="{{ product._url }}">{{ product.title }}: {{ product.price }}</a></h4>
+    <h2>
+      <a href="{{ product._url }}">{{ product.title }}: {{ product.price }}</a>
+    </h2>
     <section>{% area product, 'description' %}</section>
   {% endfor %}
-  {{ pager.render({ page: data.currentPage, total: data.totalPages }, data.url) }}
+
+  {# The pager macro now takes a `class` option to set `class` attributes. #}
+  {{ pager.render({
+    page: data.currentPage,
+    total: data.totalPages,
+    class: 'my-pager-class'
+  }, data.url) }}
 {% endblock %}
 ```
 
