@@ -10,6 +10,7 @@ module.exports = {
           title: 'REST API',
           path: '/reference/rest-api',
           children: [
+            'reference/rest-api/authentication',
             'reference/rest-api/pieces'
           ]
         }
