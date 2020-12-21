@@ -296,7 +296,7 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ```json
 {
-  // Via "not notation"
+  // Via "dot notation"
   "description.items.0.content": "<p>Update only the rich text.</p>",
   // Same thing via "@ notation," which finds the nested item with that _id
   "@ckgwegpfw00033h5xqlfb74nk.content": "<p>Update only the rich text.</p>"
