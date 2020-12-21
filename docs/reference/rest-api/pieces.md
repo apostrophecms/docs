@@ -39,7 +39,7 @@ You may configure custom filters for a piece type as well. See [the guide on cus
 
 ```javascript
 // Request inside an async function.
-const document = await fetch('http://example.net/api/vi/article?apikey=myapikey', {
+const document = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
   method: 'GET'
 });
 ```
@@ -88,7 +88,7 @@ const document = await fetch('http://example.net/api/vi/article?apikey=myapikey'
 
 ```javascript
 // Request inside an async function.
-const document = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const document = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
   method: 'GET'
 });
 ```
@@ -105,7 +105,7 @@ The successful GET request returns the matching document. See the [piece documen
 // Object with, at a minimum, properties for each required piece field.
 const data = { ... };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/vi/article?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -126,7 +126,7 @@ The successful POST request returns the newly created document. See the [piece d
 // Object with, at a minimum, properties for each required piece field.
 const data = { ... };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ const data = {
   category: 'Nerd Post'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json'
