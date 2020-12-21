@@ -35,6 +35,15 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 
 You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](TODO).
 
+### Request example
+
+```javascript
+// Request inside an async function.
+const document = await fetch('http://example.net/api/vi/article?apikey=myapikey', {
+  method: 'GET'
+});
+```
+
 ### Response
 
 | Property | Type | Description |
@@ -57,8 +66,8 @@ You may configure custom filters for a piece type as well. See [the guide on cus
         "trash": false,
         "visibility": "public",
         "type": "article",
-        "title": "The Powers of the Senate",
-        "slug": "the-powers-of-the-senate",
+        "title": "ES6 and Beyond: modern JavaScript is so worth it",
+        "slug": "es6-and-beyond-modern-javascript-is-so-worth-it",
         // ... additional properties
       },
       // ... up to nine additional documents, by default
@@ -75,7 +84,101 @@ You may configure custom filters for a piece type as well. See [the guide on cus
 |`includeFields` | `?includeFields=title,color,size` | The only fields to include in the response documents |
 |`excludeFields` | `?excludeFields=description,photo` | The fields that should *not* be in the response documents |
 
+### Request example
+
+```javascript
+// Request inside an async function.
+const document = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+  method: 'GET'
+});
+```
+
 ### Response
+
+The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+
+## `POST: /api/v1/:piece-name`
+
+### Request example
+
+```javascript
+// Object with, at a minimum, properties for each required piece field.
+const data = { ... };
+// Request inside an async function.
+const response = await fetch('http://example.net/api/vi/article?apikey=myapikey', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+});
+```
+
+### Response
+
+The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+
+## `PUT: /api/v1/:piece-name/:id`
+
+### Request example
+
+```javascript
+// Object with, at a minimum, properties for each required piece field.
+const data = { ... };
+// Request inside an async function.
+const response = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+});
+```
+
+### Response
+
+The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+
+## `PATCH: /api/v1/:piece-name/:id`
+
+### Request example
+
+```javascript
+// Object with *only* the document fields to overwrite.
+// This example only changes the article's category to "Nerd Post."
+const data = {
+  category: 'Nerd Post'
+};
+// Request inside an async function.
+const response = await fetch('http://example.net/api/vi/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+  method: 'PATCH',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+});
+```
+
+### MongoDB-style requests
+
+The PATCH request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
+
+```json
+{
+  // Via "not notation"
+  "description.items.0.content": "<p>Update just the rich text.</p>",
+  // Same thing via "@ notation," which finds the nested item with that _id
+  "@ckgwegpfw00033h5xqlfb74nk.content": "<p>Update just the rich text.</p>"
+}
+```
+
+### Response
+
+The successful PATCH request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+
+## Piece document response example
+
+### Common properties
 
 | Property | Format | Description |
 |----------|------|-------------|
@@ -91,16 +194,71 @@ You may configure custom filters for a piece type as well. See [the guide on cus
 
 **TODO:** Link to examples of each field's response format.
 
-## `POST: /api/v1/:piece-name`
+## Example
 
-### Request body
-
-## `PUT: /api/v1/:piece-name/:id`
-
-### Request body
-
-## `PATCH: /apoi/v1/:piece-name/:id`
-
-### Request body
-
-PATCH /api/v1/@apostrophecms/doc/:docId
+```json
+{
+  "_id": "ckitdo5oq004pu69kr6oxo6fr",
+  "trash": false,
+  "visibility": "public",
+  "type": "article",
+  "title": "ES6 and Beyond: modern JavaScript is so worth it",
+  "category": "Tech Tips",
+  "slug": "es6-and-beyond-modern-javascript-is-so-worth-it",
+  "main": {
+    "_id": "ckitdnl9l005t2a681hdgry8r",
+    "items": [
+      {
+        "_id": "ckitdo2fl005x2a68ibiv795n",
+        "metaType": "widget",
+        "type": "@apostrophecms/rich-text",
+        "content": "<p>I'm an old dog. I've been coding the web since 1993. So why do I want to teach you new tricks?</p><p>In 1993 I hopped an Amtrak train from Connecticut to Seattle. Three days of the same designated vegetarian meal. Hoo boy. But the scenery was worth the food.</p><p>And on arrival I discovered two beautiful things: coffee, and Seattle's spoken word scene. Yes, I read slam poetry in dive bars. Very punk rock.</p><p>How did that turn out? Well I was, uh, popular with the critics. Audiences, not so much. Hey, I had fun.</p><p>There was one small problem: I didn't yet have a job.</p><p>Fortunately my former employer at Cold Spring Harbor Laboratory on Long Island called me up one day to ask: \"hey, when you said you could rebuild our cell biology visualization software for this new World Wide Web thing... were you joking?\"</p><p>I quickly decided I wasn't joking. And so I worked remotely from Seattle. Over a 14.4kbps modem. That's <em>way slower than bad 3G</em> for you youngins.</p><p>And so I helped take an application that was limited to a handful of researchers with access to high-end workstations (think \"Unix! I know this\" in Jurassic Park) and bring it to anyone with a decent PC and a modem. <em>Slowly</em>. <em>Barely</em>. But still.</p><p>That was a \"new tricks\" moment. And also a punk rock moment. Something that was difficult and reserved for a priesthood with the relevant skills became that much more accessible.</p><p>&hellip;</p>",
+        "_edit": true,
+        "_docId": "ckitdo5oq004pu69kr6oxo6fr"
+      }
+    ],
+    "metaType": "area",
+    "_edit": true,
+    "_docId": "ckitdo5oq004pu69kr6oxo6fr"
+  },
+  "metaType": "doc",
+  "createdAt": "2020-12-17T21:50:45.195Z",
+  "updatedAt": "2020-12-21T17:25:34.339Z",
+  "updatedBy": {
+    "_id": "ckhdsd0hk0003509kchzbdl83",
+    "firstName": "Super",
+    "lastName": "Admin",
+    "username": "admin"
+  },
+  "authorIds": [
+    "ckitdleax002tu69kejca3ho0"
+  ],
+  "_edit": true,
+  "_author": [
+    {
+      "_id": "ckitdleax002tu69kejca3ho0",
+      "trash": false,
+      "disabled": false,
+      "type": "@apostrophecms/user",
+      "firstName": "Tom",
+      "lastName": "Boutell",
+      "title": "Tom Boutell",
+      "slug": "user-tom-boutell",
+      "username": "tom",
+      "email": "tboutell@example.net",
+      "metaType": "doc",
+      "createdAt": "2020-12-17T21:48:36.393Z",
+      "updatedAt": "2020-12-21T17:25:13.940Z",
+      "updatedBy": {
+        "_id": "ckhdsd0hk0003509kchzbdl83",
+        "firstName": "Super",
+        "lastName": "Admin",
+        "username": "admin"
+      },
+      "_edit": true
+    }
+  ],
+  "_url": "http://example.net/blog/es6-and-beyond-modern-javascript-is-so-worth-it",
+  "_parentUrl": "http://example.net/blog"
+}
+```
