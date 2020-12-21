@@ -11,7 +11,8 @@ module.exports = {
           path: '/reference/rest-api',
           children: [
             'reference/rest-api/authentication',
-            'reference/rest-api/pieces'
+            'reference/rest-api/pieces',
+            'reference/rest-api/pages'
           ]
         }
       ]

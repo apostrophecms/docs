@@ -6,19 +6,19 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 
 **Note:** `:piece-name` represents the `name` option for a piece type. For example, you would request all pieces of an `article` piece type with `/api/v1/article`.
 
-| Method | Path | Description |
-|---------|---------|---------|
-|GET | [`/api/v1/:piece-name` ](#get-api-v1-piece-name)| Get all pieces of a given type, paginated.|
-|GET | [`/api/v1/:piece-name/:id` ](#get-api-v1-piece-name-id)| Get a single piece with a specified ID. |
-|POST | [`/api/v1/:piece-name` ](#post-api-v1-piece-name)| Add a new piece of the specified type. |
-|PUT | [`/api/v1/:piece-name/:id` ](#put-api-v1-piece-name-id)| Fully replace a specific piece document. |
-|PATCH | [`/api/v1/:piece-name/:id` ](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document. |
-|DELETE | Not supported | Instead `PATCH` the `trash` property to `true`. |
+| Method | Path | Description | Auth required |
+|---------|---------|---------|---------|
+|GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
+|GET | [`/api/v1/:piece-name/:id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
+|POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
+|PUT | [`/api/v1/:piece-name/:id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
+|PATCH | [`/api/v1/:piece-name/:id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
+|DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
 - `author`: a `relationship` field connected to the `user` piece type
 - `category`: a String field
-- `body`: an `area` field with rich text and image widgets
+- `body`: an `area` field using the rich text widget.
 
 ## `GET: /api/v1/:piece-name`
 
@@ -26,7 +26,7 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`pages` | `?page=2` | The page of results to return |
+|`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
 |`includeFields` | `?includeFields=title,color,size` | The only fields to include in the response documents |
 |`excludeFields` | `?excludeFields=description,photo` | The fields that should *not* be in the response documents |
@@ -99,6 +99,8 @@ The successful GET request returns the matching document. See the [piece documen
 
 ## `POST: /api/v1/:piece-name`
 
+**Authentication required.**
+
 ### Request example
 
 ```javascript
@@ -120,6 +122,8 @@ The successful POST request returns the newly created document. See the [piece d
 
 ## `PUT: /api/v1/:piece-name/:id`
 
+**Authentication required.**
+
 ### Request example
 
 ```javascript
@@ -140,6 +144,8 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
 
 ## `PATCH: /api/v1/:piece-name/:id`
+
+**Authentication required.**
 
 ### Request example
 
@@ -166,9 +172,9 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 ```json
 {
   // Via "not notation"
-  "description.items.0.content": "<p>Update just the rich text.</p>",
+  "description.items.0.content": "<p>Update only the rich text.</p>",
   // Same thing via "@ notation," which finds the nested item with that _id
-  "@ckgwegpfw00033h5xqlfb74nk.content": "<p>Update just the rich text.</p>"
+  "@ckgwegpfw00033h5xqlfb74nk.content": "<p>Update only the rich text.</p>"
 }
 ```
 
@@ -187,14 +193,14 @@ The successful PATCH request returns the newly created document. See the [piece 
 |`trash` | Boolean | Whether the document is "trashed"|
 |`type` | String | The piece type name|
 |`title` | String | The entered title, or name, of the *document*|
-|`slug`| String | A unique, but changeable, |
+|`slug`| String | A unique, but changeable, identifier for the piece|
 |`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's creation date and time|
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
 |Content properties | Variable | Additional properties specific to the piece type and its fields|
 
 **TODO:** Link to examples of each field's response format.
 
-## Example
+### Example
 
 ```json
 {
