@@ -28,8 +28,6 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 |----------|------|-------------|
 |`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
-|`includeFields` | `?includeFields=title,color,size` | The only fields to include in the response documents |
-|`excludeFields` | `?excludeFields=description,photo` | The fields that should *not* be in the response documents |
 
 #### Custom filters
 
@@ -76,13 +74,6 @@ const document = await fetch('http://example.net/api/v1/article?apikey=myapikey'
 ```
 
 ## `GET: /api/v1/:piece-name/:id`
-
-### Query parameters
-
-| Parameter | Example | Description |
-|----------|------|-------------|
-|`includeFields` | `?includeFields=title,color,size` | The only fields to include in the response documents |
-|`excludeFields` | `?excludeFields=description,photo` | The fields that should *not* be in the response documents |
 
 ### Request example
 

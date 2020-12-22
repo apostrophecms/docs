@@ -7,12 +7,13 @@ module.exports = {
       collapsable: false,
       children: [
         {
-          title: 'REST API',
-          path: '/reference/rest-api',
+          title: 'APIs',
+          path: '/reference/api',
           children: [
-            'reference/rest-api/authentication',
-            'reference/rest-api/pieces',
-            'reference/rest-api/pages'
+            'reference/api/authentication',
+            'reference/api/pieces',
+            'reference/api/pages',
+            'reference/api/media'
           ]
         }
       ]

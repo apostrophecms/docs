@@ -1,3 +1,3 @@
 # Reference
 
-- [REST API](rest-api/)
+- [APIs](api/)
