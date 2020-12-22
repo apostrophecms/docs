@@ -165,6 +165,13 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 });
 ```
 
+:::tip
+As a convenience, you may make a PATCH request for any MongoDB document, regardless of type using a catch-all route using the document's `_id` property:
+```
+PATCH /api/v1/@apostrophecms/doc/:id
+```
+:::
+
 ### MongoDB-style requests
 
 The PATCH request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
