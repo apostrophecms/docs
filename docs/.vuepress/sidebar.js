@@ -1,6 +1,31 @@
 module.exports = {
+  '/guide': [
+    {
+      title: 'Guide',
+      path: '/guide',
+      collapsable: false,
+      children: [
+        'guide/whats-new.md',
+        'guide/coming-soon.md',
+        'guide/major-changes.md',
+        'guide/upgrade.md',
+        'guide/starting-your-project.md',
+        'guide/module-format-example.md',
+        'guide/front-end-assets.md',
+        'guide/widgets-and-templates.md',
+        'guide/custom-widgets.md',
+        'guide/custom-page-types.md',
+        'guide/page-tree-navigation.md',
+        'guide/pieces.md',
+        'guide/piece-pages.md',
+        'guide/async-components.md',
+        'guide/rest-apis.md'
+      ]
+    },
+    'reference/'
+  ],
   '/reference': [
-    '/',
+    'guide/',
     {
       title: 'Reference',
       path: '/reference',
@@ -18,23 +43,9 @@ module.exports = {
         }
       ]
     }
-  ],
-  '/': [
-    '/whats-new.md',
-    '/coming-soon.md',
-    '/major-changes.md',
-    '/upgrade.md',
-    '/starting-your-project.md',
-    '/module-format-example.md',
-    '/front-end-assets.md',
-    '/widgets-and-templates.md',
-    '/custom-widgets.md',
-    '/custom-page-types.md',
-    '/page-tree-navigation.md',
-    '/pieces.md',
-    '/piece-pages.md',
-    '/async-components.md',
-    '/rest-apis.md',
-    'reference/'
   ]
+  // '/': [
+  //   'guide/',
+  //   'reference/'
+  // ]
 };
