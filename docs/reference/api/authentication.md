@@ -45,16 +45,23 @@ http://example.net/api/v1/article?apikey=myapikey1029384756
 
 ## Bearer tokens
 
-Bearer tokens are more appropriate for browser use and headless applications because they are tied to a single user account. To obtain a bearer token, make a POST request to `/api/v1/login/login`, with the following body properties:
-
-Example:
+Bearer tokens are more appropriate for browser use and headless applications because they are tied to a single user account. To obtain a bearer token, make a POST request to `/api/v1/login/login`, with the `username` and `password` body properties:
 
 ```javascript
-{
-  username: 'your-username-here',
-  password: 'your-secure-password'
-}
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  body: JSON.stringify({
+    username: 'your-username-here',
+    password: 'your-secure-password'
+  })
+});
 ```
+
+### Response
 
 A successful response will return a JSON object with a `token` property.
 
@@ -78,3 +85,46 @@ Note the need for the word "Bearer" before the key.
 
 To log out and destroy the token, send a POST request to `/api/v1/login/logout`, with the same `authorization` header. No body properties are required. After logging out, the token is no longer accepted.
 `
+
+## Session cookies
+
+You may also log in and use a session cookie, similarly to how Apostrophe itself maintains user sessions. To do so, include `session: true` in the POST request to `/api/v1/@apostrophecms/login/login`.
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  body: JSON.stringify({
+    username: 'your-username-here',
+    password: 'your-secure-password',
+    session: true
+  })
+});
+```
+
+### Response
+
+A successful response will return a session cookie.
+
+### End session
+
+Using the session cookie, send a POST request to `/api/v1/@apostrophecms/login/logout` to end the user session.
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  credentials: 'include',
+  body: JSON.stringify({
+    username: 'your-username-here',
+    password: 'your-secure-password',
+    session: true
+  })
+});
+```
