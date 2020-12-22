@@ -9,10 +9,10 @@ The `@apostrophecms/attachment` module manages all media file upload. Once uploa
 |---------|---------|---------|---------|
 |POST | [`/api/v1/@apostrophecms/attachment/upload`](#post-api-v1-apostrophecms-attachment-upload) | Upload a media file | TRUE |
 |POST | [`/api/v1/@apostrophecms/attachment/crop`](#post-api-v1-apostrophecms-attachment-crop) | Crop an image file | TRUE |
-|GET | [`/api/v1/@apostrophecms/image`](#get-api-v1-apostrophecms-image) | Get an image document with a specified ID | TRUE |
-|POST | [`/api/v1/@apostrophecms/image`](#post-api-v1-apostrophecms-image) | Insert a new image | TRUE |
-|GET | [`/api/v1/@apostrophecms/file`](#get-api-v1-apostrophecms-file) | Get a file document with a specified ID | TRUE |
-|POST | [`/api/v1/@apostrophecms/file`](#post-api-v1-apostrophecms-file) | Insert a new file | TRUE |
+|GET | [`/api/v1/@apostrophecms/image`](#media-get-request) | Get an image document with a specified ID | FALSE |
+|POST | [`/api/v1/@apostrophecms/image`](#media-post-request) | Insert a new image | TRUE |
+|GET | [`/api/v1/@apostrophecms/file`](#media-get-request) | Get a file document with a specified ID | FALSE |
+|POST | [`/api/v1/@apostrophecms/file`](#media-post-request) | Insert a new file | TRUE |
 
 ## `POST: /api/v1/@apostrophecms/attachment/upload`
 
@@ -50,7 +50,7 @@ The successful POST request returns the newly created attachment document.
 |`_url` | String | File URL, if a non-image file |
 |`_urls` | Object | An object with keys for the generated image size variants, if an image file |
 |`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's creation date and time|
-|`docIds` | Array | An array of string IDs that represent image or file documents using this attachment |
+|`docIds` | Array | An array of string IDs that represent image or file documents using this attachment (empty at initial upload) |
 |`extension` | String | The file's file extension, e.g., `png`, `pdf` |
 |`group` | String | The associated file group, including `image` or `office` by default |
 |`height` | Number | Height of the image file, if an image |
@@ -119,75 +119,35 @@ The successful POST request returns the newly created attachment document.
 
 **Authentication required.**
 
-### Request example
+This route uploads a new, cropped version of an existing image. The `crop` object is appended to the `crops` array property of the attachment document.
 
-```javascript
-// Object with, at a minimum, properties for each required piece field.
-const data = { ... };
-// Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
-```
+The `body` of the request should include:
+
+| Property | Format | Description |
+|----------|------|-------------|
+|`_id` | String | The `_id` property of an existing image attachment document |
+|`crop` | Object | An object containing `top`, `left`, `width` and `height` properties |
+
+The newly uploaded image file with have a file name using the `crop` properties as well as the `_id`, `name`, and file extension of the original attachment, formatted as `{_id}-{name}.{top}.{left}.{width}.{height}.{extension}`
 
 ### Response
 
-The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful POST request returns `true`.
 
-## `GET: /api/v1/@apostrophecms/image`
+## Media `GET` request
 
-### Request example
+Endpoints:
 
-```javascript
-// Request inside an async function.
-const document = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
-  method: 'GET'
-});
-```
+- `GET: /api/v1/@apostrophecms/image`
+- `GET: /api/v1/@apostrophecms/file`
 
-### Response
+A GET request for an image or file is generally a normal [piece type GET request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it will also include an `attachment` property, containing an object similar to one returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
 
-The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
-
-## `POST: /api/v1/@apostrophecms/image`
+## Media `POST` request
 
 **Authentication required.**
 
-### Request example
+- `POST: /api/v1/@apostrophecms/image`
+- `POST: /api/v1/@apostrophecms/file`
 
-```javascript
-// Object with, at a minimum, properties for each required piece field.
-const data = { ... };
-// Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(data)
-});
-```
-
-### Response
-
-The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
-
-## `GET: /api/v1/@apostrophecms/file`
-
-### Request example
-
-```javascript
-// Request inside an async function.
-const document = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
-  method: 'GET'
-});
-```
-
-### Response
-
-The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
-```
+A POST request for an image or file is generally a normal [piece type POST request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it must also include an `attachment` property, containing the attachment object returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
