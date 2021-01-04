@@ -291,7 +291,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
 ```
 
 :::tip
-As a convenience, you may make a PATCH request for any MongoDB document, regardless of type using a catch-all route using the document's `_id` property:
+As a convenience, you may make a PATCH request for any Apostrophe document, regardless of type using a catch-all route using the document's `_id` property:
 ```
 PATCH /api/v1/@apostrophecms/doc/:id
 ```
@@ -312,7 +312,7 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body.
+The successful PATCH request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body.
 
 ### Moving pages to the trash
 

@@ -2,7 +2,7 @@
 
 ## API keys
 
-API keys are great for server-to-server communication, because they don't expire. They are unsuitable for client-side requests or use in headless applications because it is possible for end users to determine the API key and use it for their own purposes. For these roles see the section on [bearer tokens below](#bearer-tokens) below.
+API keys are great for server-to-server communication, because they don't expire. They are unsuitable for client-side requests or use in headless applications because it is possible for end users to determine the API key and use it for their own purposes. For these roles see the section on [bearer tokens](#bearer-tokens) below.
 
 Configure API keys as an option in the `@apostrophecms/express` module in `app.js`. Alternately, all `@apostrophecms/express` configuration may be added in a separate `modules/@apostrophecms/express/index.js` file.
 
@@ -88,7 +88,7 @@ To log out and destroy the token, send a POST request to `/api/v1/login/logout`,
 
 ## Session cookies
 
-You may also log in and use a session cookie, similarly to how Apostrophe itself maintains user sessions. To do so, include `session: true` in the POST request to `/api/v1/@apostrophecms/login/login`.
+As an alternative to a bearer token, you may request a session cookie. This is the mechanism Apostrophe's admin user interface uses to log in. Session cookies will automatically persist across tabs, but there is slightly more overhead to each request. To use this method, include `session: true` in the POST request to `/api/v1/@apostrophecms/login/login`.
 
 ```javascript
 // Request inside an async function.
@@ -107,7 +107,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context.
 
 ### End session
 
