@@ -26,18 +26,28 @@ module.exports = {
     logo: '/images/apos-dark.png',
     nav: [
       {
-        text: 'Docs Home',
-        link: '/'
+        text: 'Guide',
+        link: '/guide/'
       },
       {
-        text: 'Community',
-        link: 'https://apostrophecms.com/get-involved',
-        rel: false
+        text: 'Reference',
+        link: '/reference/'
       },
       {
-        text: 'Main Site',
-        link: 'https://apostrophecms.com',
-        rel: false
+        text: 'More',
+        ariaLabel: 'More Apostrophe links',
+        items: [
+          {
+            text: 'Community',
+            link: 'https://apostrophecms.com/get-involved',
+            rel: false
+          },
+          {
+            text: 'Apostrophe Website',
+            link: 'https://apostrophecms.com',
+            rel: false
+          }
+        ]
       }
     ]
   },
