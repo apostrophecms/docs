@@ -4,15 +4,15 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 
 ## Endpoints
 
-**Note:** `:piece-name` represents the `name` option for a piece type. For example, you would request all pieces of an `article` piece type with `/api/v1/article`.
+**Note:** `:piece-type` represents the `name` option for a piece type. For example, you would request all pieces of an `article` piece type with `/api/v1/article`.
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
-|GET | [`/api/v1/:piece-name/:id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
-|POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
-|PUT | [`/api/v1/:piece-name/:id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
-|PATCH | [`/api/v1/:piece-name/:id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
+|GET | [`/api/v1/:piece-type`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
+|GET | [`/api/v1/:piece-type/:id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
+|POST | [`/api/v1/:piece-type`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
+|PUT | [`/api/v1/:piece-type/:id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
+|PATCH | [`/api/v1/:piece-type/:id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
 |DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
@@ -20,7 +20,7 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 - `category`: a String field
 - `body`: an `area` field using the rich text widget.
 
-## `GET: /api/v1/:piece-name`
+## `GET: /api/v1/:piece-type`
 
 ### Query parameters
 
@@ -73,7 +73,7 @@ const document = await fetch('http://example.net/api/v1/article?apikey=myapikey'
   }
 ```
 
-## `GET: /api/v1/:piece-name/:id`
+## `GET: /api/v1/:piece-type/:id`
 
 ### Request example
 
@@ -88,7 +88,7 @@ const document = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 
 The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
 
-## `POST: /api/v1/:piece-name`
+## `POST: /api/v1/:piece-type`
 
 **Authentication required.**
 
@@ -111,7 +111,7 @@ const response = await fetch('http://example.net/api/v1/article?apikey=myapikey'
 
 The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
 
-## `PUT: /api/v1/:piece-name/:id`
+## `PUT: /api/v1/:piece-type/:id`
 
 **Authentication required.**
 
@@ -134,7 +134,7 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 
 The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
 
-## `PATCH: /api/v1/:piece-name/:id`
+## `PATCH: /api/v1/:piece-type/:id`
 
 **Authentication required.**
 
