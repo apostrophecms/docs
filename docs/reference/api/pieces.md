@@ -178,7 +178,7 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
 
 ## Piece document response example
 
