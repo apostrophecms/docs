@@ -27,9 +27,10 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 
 ```javascript
 // Request inside an async function.
-const document = await fetch('http://example.net/api/v1/@apostrophecms/page?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page?apikey=myapikey', {
   method: 'GET'
 });
+const document = response.json();
 ```
 
 ### Page tree response (default)
@@ -185,9 +186,10 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 ```javascript
 // Request inside an async function.
-const document = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
   method: 'GET'
 });
+const document = response.json();
 ```
 
 ### Response
@@ -225,6 +227,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page?apik
   },
   body: JSON.stringify(data)
 });
+const document = response.json();
 ```
 
 ### Response
@@ -260,6 +263,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
   },
   body: JSON.stringify(data)
 });
+const document = response.json();
 ```
 
 ### Response
@@ -288,6 +292,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
   },
   body: JSON.stringify(data)
 });
+const document = response.json();
 ```
 
 :::tip
