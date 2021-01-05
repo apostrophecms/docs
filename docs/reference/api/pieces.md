@@ -20,7 +20,7 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 - `category`: a String field
 - `body`: an `area` field using the rich text widget.
 
-## `GET: /api/v1/:piece-name`
+## `GET /api/v1/:piece-name`
 
 ### Query parameters
 
@@ -76,7 +76,7 @@ const document = response.json();
 
 On error an appropriate HTTP status code is returned.
 
-## `GET: /api/v1/:piece-name/:id`
+## `GET /api/v1/:piece-name/:id`
 
 ### Request example
 
@@ -92,7 +92,7 @@ const document = response.json();
 
 The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `POST: /api/v1/:piece-name`
+## `POST /api/v1/:piece-name`
 
 **Authentication required.**
 
@@ -116,7 +116,7 @@ const document = response.json();
 
 The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT: /api/v1/:piece-name/:id`
+## `PUT /api/v1/:piece-name/:id`
 
 **Authentication required.**
 
@@ -140,7 +140,7 @@ const document = response.json();
 
 The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH: /api/v1/:piece-name/:id`
+## `PATCH /api/v1/:piece-name/:id`
 
 **Authentication required.**
 

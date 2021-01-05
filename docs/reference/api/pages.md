@@ -13,7 +13,7 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 |PATCH | [`/api/v1/@apostrophecms/page/:id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
 |DELETE | Not supported | [See more in PATCH request details.](#moving-pages-to-the-trash) | n/a |
 
-## `GET: /api/v1/@apostrophecms/page`
+## `GET /api/v1/@apostrophecms/page`
 
 ### Query parameters
 
@@ -180,7 +180,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 }
 ```
 
-## `GET: /api/v1/@apostrophecms/page/:id`
+## `GET /api/v1/@apostrophecms/page/:id`
 
 ### Request example
 
@@ -196,7 +196,7 @@ const document = response.json();
 
 The successful GET request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `POST: /api/v1/@apostrophecms/page`
+## `POST /api/v1/@apostrophecms/page`
 
 **Authentication required.**
 
@@ -234,7 +234,7 @@ const document = response.json();
 
 The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT: /api/v1/@apostrophecms/page/:id`
+## `PUT /api/v1/@apostrophecms/page/:id`
 
 ### Required properties
 
@@ -270,7 +270,7 @@ const document = response.json();
 
 The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH: /api/v1/@apostrophecms/page/:id`
+## `PATCH /api/v1/@apostrophecms/page/:id`
 
 **Authentication required.**
 

@@ -15,7 +15,7 @@ For attachments meant to be included in the media or file libraries, metadata an
 |GET | [`/api/v1/@apostrophecms/file`](#media-get-request) | Get a file document with a specified ID | FALSE |
 |POST | [`/api/v1/@apostrophecms/file`](#media-post-request) | Insert a new file | TRUE |
 
-## `POST: /api/v1/@apostrophecms/attachment/upload`
+## `POST /api/v1/@apostrophecms/attachment/upload`
 
 **Authentication required.**
 
@@ -95,7 +95,7 @@ The successful POST request returns the newly created attachment. On error an ap
 }
 ```
 
-## `POST: /api/v1/@apostrophecms/attachment/crop`
+## `POST /api/v1/@apostrophecms/attachment/crop`
 
 **Authentication required.**
 
@@ -118,8 +118,8 @@ The successful POST request returns `true`. On error an appropriate HTTP status 
 
 Endpoints:
 
-- `GET: /api/v1/@apostrophecms/image`
-- `GET: /api/v1/@apostrophecms/file`
+- `GET /api/v1/@apostrophecms/image`
+- `GET /api/v1/@apostrophecms/file`
 
 A GET request for an image or file is generally a normal [piece type GET request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it will also include an `attachment` property, containing an object similar to one returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
 
@@ -127,7 +127,7 @@ A GET request for an image or file is generally a normal [piece type GET request
 
 **Authentication required.**
 
-- `POST: /api/v1/@apostrophecms/image`
-- `POST: /api/v1/@apostrophecms/file`
+- `POST /api/v1/@apostrophecms/image`
+- `POST /api/v1/@apostrophecms/file`
 
 A POST request for an image or file is generally a normal [piece type POST request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it must also include an `attachment` property, containing the attachment object returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
