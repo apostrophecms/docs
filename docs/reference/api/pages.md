@@ -192,7 +192,7 @@ const document = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
 
 ### Response
 
-The successful GET request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body.
+The successful GET request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `POST: /api/v1/@apostrophecms/page`
 
@@ -202,7 +202,7 @@ The successful GET request returns the matching document. See the [page document
 
 | Property | Type | Description |
 |----------|------|-------------|
-|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_trash` are special values for the home page and [trashed section](#moving-pages-to-the-trash), respectively. |
+|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_trash` are optional conveniences for the home page and [trashed section](#moving-pages-to-the-trash), respectively. |
 |`_position` | String | `before`, `after`, `firstChild`, or `lastChild`. This sets the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target.|
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
@@ -229,7 +229,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page?apik
 
 ### Response
 
-The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body.
+The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PUT: /api/v1/@apostrophecms/page/:id`
 
@@ -264,7 +264,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
 
 ### Response
 
-The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body.
+The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PATCH: /api/v1/@apostrophecms/page/:id`
 
@@ -312,7 +312,7 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body.
+The successful PATCH request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ### Moving pages to the trash
 

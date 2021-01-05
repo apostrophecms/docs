@@ -71,6 +71,8 @@ A successful response will return a JSON object with a `token` property.
 }
 ```
 
+On error an appropriate HTTP status code is returned.
+
 ### Usage
 
 Add this token to all REST API requests that require login by passing an `Authorization` header. This includes POST, PUT, PATCH and DELETE operations. You will also get more complete results from GET operations, including access to documents with `visibility` set to `loginRequired`.
@@ -107,7 +109,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. On error an appropriate HTTP status code is returned.
 
 ### End session
 

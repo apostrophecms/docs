@@ -28,7 +28,7 @@ Simple examples of how each field type might be returned in a document from the 
 ```json
 {
   "arrayField": [
-    // Inner object properties and value types depend on the array"s fields
+    // Inner object properties and value types depend on the array's fields
     // definition. They will have the same fields, however.
     // `_id` will be automatically generated and included on every array item.
     {
@@ -48,42 +48,40 @@ Simple examples of how each field type might be returned in a document from the 
 ## attachment
 
 ```json
-attachmentField: {
-    "_id": "ckj0k1t2w000w7u9kb0vdp52u",
+{
+  "attachment": {
+    "_id": "ckhdsopzr0005rt9kn49eyzb5",
     "crop": null,
-    "group": "office",
-    "createdAt": "2020-12-22T22:23:42.972Z",
-    "name": "cms-research",
-    "title": "cms research",
-    "extension": "pdf",
+    "group": "images",
+    "createdAt": "2020-11-11T19:27:11.782Z",
+    "name": "double-rainbow",
+    "title": "double rainbow",
+    "extension": "jpg",
     "type": "attachment",
-    "docIds": [],
+    "docIds": [
+      "ckhdsovk40006rt9kdmxp6bhj"
+    ],
     "trashDocIds": [],
-    "length": {
-        "dev": 16777220,
-        "mode": 33188,
-        "nlink": 1,
-        "uid": 501,
-        "gid": 20,
-        "rdev": 0,
-        "blksize": 4096,
-        "ino": 140261958,
-        "size": 172190,
-        "blocks": 344,
-        "atimeMs": 1608675822963.3257,
-        "mtimeMs": 1608675822966.0984,
-        "ctimeMs": 1608675822966.0984,
-        "birthtimeMs": 1608675822963.3257,
-        "atime": "2020-12-22T22:23:42.963Z",
-        "mtime": "2020-12-22T22:23:42.966Z",
-        "ctime": "2020-12-22T22:23:42.966Z",
-        "birthtime": "2020-12-22T22:23:42.963Z"
-    },
-    "md5": "937a8dd13975a2eec69ae167fbf7e1d3",
-    "ownerId": "ckhdsd0hk0003509kchzbdl83",
+    "length": 644584,
+    // md5 hash of the original file
+    "md5": "f41217031f11e8483ee81e20782f51be",
+    "width": 2560,
+    "height": 1922,
+    "landscape": true,
     "used": true,
-    "_urls": {},
-    "_url": "https://example.net/uploads/attachments/ckj0k1t2w000w7u9kb0vdp52u-cms-research.pdf"
+    "utilized": true,
+    "trash": false,
+    // Non-image files will have a single `_url` property.
+    "_urls": {
+      "max": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.max.jpg",
+      "full": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.full.jpg",
+      "two-thirds": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.two-thirds.jpg",
+      "one-half": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.one-half.jpg",
+      "one-third": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.one-third.jpg",
+      "one-sixth": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.one-sixth.jpg",
+      "original": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.jpg"
+    }
+  }
 }
 ```
 
@@ -164,11 +162,7 @@ attachmentField: {
 ## relationship
 
 ```json
-// This field was named `_relation`
 {
-  "relationIds" : [
-		"ckitdkktu002bu69krdkdu2pj"
-  ],
   "_relation": [
     {
       "_id": "ckitdkktu002bu69krdkdu2pj",
@@ -180,7 +174,7 @@ attachmentField: {
       "title": "Alexander Hamilton",
       "slug": "user-alexander-hamilton",
       "username": "adotham",
-      "email": "aham@treasury.gov",
+      "email": "a.ham@treasury.gov",
       "metaType": "doc",
       "createdAt": "2020-12-17T21:47:58.194Z",
       "updatedAt": "2020-12-17T21:47:58.205Z",

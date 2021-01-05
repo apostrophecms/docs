@@ -1,7 +1,8 @@
 # Media APIs
 
+The `@apostrophecms/attachment` module manages all media file uploading. Once uploaded, an attachment object should typically be added to an Apostrophe piece or page document (including, but not limited to, `@apostrophecms/image` and `@apostrophecms/file` pieces). It is not common, and not generally recommended, to leave uploaded attachments unconnected from any Apostrophe document.
 
-The `@apostrophecms/attachment` module manages all media file upload. Once uploaded, metadata and organization of image and other files are primarily managed through the respective `@apostrophecms/image` and `@apostrophecms/file` piece types. See the [pieces REST API documentation](./pieces.md) for additional information.
+For attachments meant to be included in the media or file libraries, metadata and organization those media are primarily managed through the respective `@apostrophecms/image` and `@apostrophecms/file` piece types. See the [pieces REST API documentation](./pieces.md) for additional information.
 
 ## Endpoints
 
@@ -18,7 +19,7 @@ The `@apostrophecms/attachment` module manages all media file upload. Once uploa
 
 **Authentication required.**
 
-The `body` of the request should be a `FormData` object.
+The `body` of the request should use the `multipart/form-data` encoding, with the file itself uploaded under the name `file`. In a client-side request, the `body` of the request should be a `FormData` object.
 
 ### Request example
 
@@ -42,28 +43,27 @@ const attachment = await fetch('/api/v1/@apostrophecms/attachment/upload', {
 
 ### Response
 
-The successful POST request returns the newly created attachment document.
+The successful POST request returns the newly created attachment. On error an appropriate HTTP status code is returned.
 
 | Property | Format | Description |
 |----------|------|-------------|
-|`_id` | String | A unique and permanent ID for the document |
+|`_id` | String | A unique and permanent ID for the attachment |
 |`_url` | String | File URL, if a non-image file |
 |`_urls` | Object | An object with keys for the generated image size variants, if an image file |
-|`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's creation date and time|
+|`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's creation date and time|
 |`docIds` | Array | An array of string IDs that represent image or file documents using this attachment (empty at initial upload) |
 |`extension` | String | The file's file extension, e.g., `png`, `pdf` |
 |`group` | String | The associated file group, including `image` or `office` by default |
 |`height` | Number | Height of the image file, if an image |
 |`landscape` | Boolean | `true` if an image with landscape aspect ratio |
-|`length` | Object | File stats output from [`fs.stat`](https://nodejs.org/api/fs.html#fs_fs_stat_path_options_callback), including `size` in bytes |
+|`length` | Number | The file size in bytes |
 |`md5` | String | MD5 checksum value for the file |
 |`name` | String | A "slugified" version of the file name (generally lowercased and joined with dashes) |
-|`ownerId` | String | The document ID for the user who uploaded the file |
 |`portrait` | Boolean | `true` if an image with portrait aspect ratio |
 |`title` | String | A "sortified" version of the file name (case-insensitive) |
 |`type` | String | 'attachment' |
 |`trashDocIds` | Array | An array of string IDs that represent image or file documents using this attachment in the trash |
-|`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
+|`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's last update date and time|
 |`width` | Number | Width of the image file, if an image |
 
 ```json
@@ -78,31 +78,11 @@ The successful POST request returns the newly created attachment document.
   "type": "attachment",
   "docIds": [],
   "trashDocIds": [],
-  "length": {
-    "dev": 16777220,
-    "mode": 33188,
-    "nlink": 1,
-    "uid": 501,
-    "gid": 20,
-    "rdev": 0,
-    "blksize": 4096,
-    "ino": 140102237,
-    "size": 10497,
-    "blocks": 24,
-    "atimeMs": 1608659891038.2366,
-    "mtimeMs": 1608659891038.5925,
-    "ctimeMs": 1608659891038.5925,
-    "birthtimeMs": 1608659891038.2366,
-    "atime": "2020-12-22T17:58:11.038Z",
-    "mtime": "2020-12-22T17:58:11.039Z",
-    "ctime": "2020-12-22T17:58:11.039Z",
-    "birthtime": "2020-12-22T17:58:11.038Z"
-  },
+  "length": 10497,
   "md5": "630eeaaecd0bdc07c4a82eeca4c07588",
   "width": 600,
   "height": 106,
   "landscape": true,
-  "ownerId": "ckhdsd0hk0003509kchzbdl83",
   "_urls": {
     "max": "https://example.net/uploads/attachments/ckj0akbxa003vp39kfbxgb8zg-blue-box.max.png",
     "full": "https://example.net/uploads/attachments/ckj0akbxa003vp39kfbxgb8zg-blue-box.full.png",
@@ -128,11 +108,11 @@ The `body` of the request should include:
 |`_id` | String | The `_id` property of an existing image attachment document |
 |`crop` | Object | An object containing `top`, `left`, `width` and `height` properties |
 
-The newly uploaded image file with have a file name using the `crop` properties as well as the `_id`, `name`, and file extension of the original attachment, formatted as `{_id}-{name}.{top}.{left}.{width}.{height}.{extension}`
+The newly uploaded image file will be stored with a file name using the `crop` properties as well as the `_id`, `name`, and file extension of the original attachment, formatted as `{_id}-{name}.{top}.{left}.{width}.{height}.{extension}`
 
 ### Response
 
-The successful POST request returns `true`.
+The successful POST request returns `true`. On error an appropriate HTTP status code is returned.
 
 ## Media `GET` request
 

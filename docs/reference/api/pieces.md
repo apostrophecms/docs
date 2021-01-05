@@ -73,6 +73,8 @@ const document = await fetch('http://example.net/api/v1/article?apikey=myapikey'
   }
 ```
 
+On error an appropriate HTTP status code is returned.
+
 ## `GET: /api/v1/:piece-type/:id`
 
 ### Request example
@@ -86,7 +88,7 @@ const document = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 
 ### Response
 
-The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `POST: /api/v1/:piece-type`
 
@@ -109,7 +111,7 @@ const response = await fetch('http://example.net/api/v1/article?apikey=myapikey'
 
 ### Response
 
-The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PUT: /api/v1/:piece-type/:id`
 
@@ -132,7 +134,7 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 
 ### Response
 
-The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PATCH: /api/v1/:piece-type/:id`
 
@@ -178,7 +180,7 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body.
+The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## Piece document response example
 
