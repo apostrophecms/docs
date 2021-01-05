@@ -205,7 +205,7 @@ The successful GET request returns the matching document. See the [page document
 | Property | Type | Description |
 |----------|------|-------------|
 |`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_trash` are optional conveniences for the home page and [trashed section](#moving-pages-to-the-trash), respectively. |
-|`_position` | String | `before`, `after`, `firstChild`, or `lastChild`. This sets the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target.|
+|`_position` | String, Number | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
 
