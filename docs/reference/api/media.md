@@ -48,7 +48,7 @@ The successful POST request returns the newly created attachment. On error an ap
 | Property | Format | Description |
 |----------|------|-------------|
 |`_id` | String | A unique and permanent ID for the attachment |
-|`_url` | String | File URL, if a non-image file |
+|`_url` | String | The file URL (the original size, if an image) |
 |`_urls` | Object | An object with keys for the generated image size variants, if an image file |
 |`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's creation date and time|
 |`docIds` | Array | An array of string IDs that represent image or file documents using this attachment (empty at initial upload) |
