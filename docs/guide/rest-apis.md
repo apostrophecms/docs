@@ -325,7 +325,7 @@ In this case the request is routed to the appropriate module. Apostrophe uses th
 POST /api/v1/@apostrophecms/attachment/upload
 ```
 
-When you do so, the encoding should be `multitype/form-data`, and the request body should contain one file upload for a field named `file`.
+When you do so, the encoding should be `multipart/form-data`, and the request body should contain one file upload for a field named `file`.
 
 If the request is accepted, the response will be a JSON-encoded object suitable for use as the value of a field of type `attachment`. Typical practice is to next `POST` or `PATCH` a piece or page that contains an attachment field, such as the `@apostrophecms/image` piece type.
 
