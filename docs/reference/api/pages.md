@@ -30,7 +30,7 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 const response = await fetch('http://example.net/api/v1/@apostrophecms/page?apikey=myapikey', {
   method: 'GET'
 });
-const document = response.json();
+const document = await response.json();
 ```
 
 ### Page tree response (default)
@@ -189,7 +189,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
   method: 'GET'
 });
-const document = response.json();
+const document = await response.json();
 ```
 
 ### Response
@@ -227,7 +227,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page?apik
   },
   body: JSON.stringify(data)
 });
-const document = response.json();
+const document = await response.json();
 ```
 
 ### Response
@@ -263,7 +263,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
   },
   body: JSON.stringify(data)
 });
-const document = response.json();
+const document = await response.json();
 ```
 
 ### Response
@@ -292,7 +292,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
   },
   body: JSON.stringify(data)
 });
-const document = response.json();
+const document = await response.json();
 ```
 
 :::tip
