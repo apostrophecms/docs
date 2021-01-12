@@ -141,7 +141,7 @@ Note `pages` and `currentPage`. For performance reasons, not all of the products
 GET /api/v1/product?page=2
 ```
 
-### `GET /api/v1/product/:docId`
+### `GET /api/v1/product/:id`
 
 Returns an individual piece as a JSON object:
 
@@ -171,11 +171,11 @@ Returns an individual piece as a JSON object:
 
 **Authentication required.** POSTs a new product to the server. The request body should use the JSON encoding and be in the same format returned above.
 
-### `PUT /api/v1/product/:docId`
+### `PUT /api/v1/product/:id`
 
 **Authentication required.** PUTs an updated version of the document to the server. The request body should use the JSON encoding and be in the same format returned above. However, **in most cases you should use PATCH**, particularly if you are only interested in updating certain fields.
 
-### `PATCH /api/v1/product:docId`
+### `PATCH /api/v1/product/:id`
 
 **Authentication required.** Identical to PUT, except that only the properties mentioned in the JSON body are updated. All other properties are left as-is.
 
@@ -190,7 +190,7 @@ In addition, we extend the REST convention with MongoDB-style operators:
 }
 ```
 
-### `DELETE /api/v1/product:docId`
+### `DELETE /api/v1/product/:id`
 
 **NOT supported. Instead PATCH the `trash` property to `true`.** Apostrophe never discards your work, so the `DELETE` verb is not applicable. However you may mark any piece as trash by `PATCH`ing that property. You may bring it back later by setting the property to `false`.
 
@@ -262,7 +262,7 @@ Pages are challenging to represent RESTfully because of the page tree. Normally 
 }
 ```
 
-### `GET /api/v1/@apostrophecms/page/:docId`
+### `GET /api/v1/@apostrophecms/page/:id`
 
 Returns an individual page as a JSON object:
 
@@ -297,25 +297,33 @@ Returns an individual page as a JSON object:
 
 * You must pass `_position` and `_targetId`. `_targetId` must be the `_id` of an existing page, or one of the convenient shorthands `_trash` and `_home`. `_position` may be `before`, `after`, `firstChild`, or `lastChild`. Alternatively `_position` may be an integer in which case the new page is inserted as a child at that point in the list.
 
-### `PUT /api/v1/@apostrophecms/page/:docId`
+### `PUT /api/v1/@apostrophecms/page/:id`
 
 **Authentication required.** PUTs an updated version of the page to the server. Works just like `PUT` for pieces, with this exception: you may include `_position` and `_targetId`, although it is not mandatory. If you do not the position in the tree does not change.
 
-### `PATCH /api/v1/@apostrophecms/page/:docId`
+### `PATCH /api/v1/@apostrophecms/page/:id`
 
 **Authentication required.** Identical to PATCHing a piece, except that you may include `_position` and `_targetId` if you wish to change the position in the tree. To easily move a page into the trash, set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
 
-### `DELETE /api/v1/@apostrophecms/page:docId`
+### `DELETE /api/v1/@apostrophecms/page/:id`
 
 **NOT supported.** Instead set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
 
-## PATCHing a document of any type
+## Locale and mode in API calls
 
-**Authentication required.** As a convenience, you may also `PATCH` a document without specifying the exact module that should handle it:
+Once published, most Apostrophe document types have both a draft and a published copy in the database. If you are using multiple locales in your project, there may be documents for each locale as well. The `apos-mode` and `apos-locale` query parameters help support using REST API routes to manage those versions.
 
-### `PATCH /api/v1/@apostrophecms/doc/:docId`
+Passing `draft` or `published` values on `apos-mode` and your locale names on the `apos-locale` parameter tell Apostrophe to execute that request for those versions of the piece or page you are working with. For example, `GET /api/v1/product?apos-mode=draft&apos-locale=fr` will get all the draft and `fr` (French) locale versions of the product documents. These can be used independently, so you can only use `apos-mode` and Apostrophe will use the default locale value. Or only use `apos-locale` and Apostrophe will use `published` for the mode.
 
-In this case the request is routed to the appropriate module. Apostrophe uses this route for in-context editing.
+### Locale and mode in single-document requests
+
+**The exception to those assumed values are with `GET ONE`, `PATCH`, and other requests that include a document `_id` value.** Document IDs include mode and locale information already. `ckgsj5in400d5xi4lb6fu29rh:fr:draft` ends with `:fr:draft`, indicating that it is the `fr` locale and `draft` version of a particular piece or page.
+
+You may still use the `apos-mode` and `apos-locale` parameters with these requests related to existing documents. If the values for those parameters match the document you are requesting, the request will treat it as if the parameters weren't there. If the values differ from the `_id` value, and a version of the document exists for the mode and locale values, the request will apply to the version matching the parameter values.
+
+For example, a `GET` request to `/api/v1/product/ckgsj5in400d5xi4lb6fu29rh:fr:published` will normally return a product document in the `fr` locale and that is published.
+
+If we add an `apos-mode` parameter using the same route, we can get the draft version. So a `GET` request to `/api/v1/product/ckgsj5in400d5xi4lb6fu29rh:fr:published?apos-mode=draft` returns the draft version, even though the route includes the published mode. This allows developers to work on multiple versions of a single document without repeatedly updating the `_id` value in their code.
 
 ## Uploading attachments
 
@@ -368,23 +376,23 @@ module.exports = {
           results
         };
       },
-      // GET /api/v1/product/:docId
+      // GET /api/v1/product/:id
       async getOne(req, _id) {
         // Get real data from somewhere
         const result = {};
         return result;
       },
-      // PATCH /api/v1/product/:docId
+      // PATCH /api/v1/product/:id
       async patch(req, _id) {
         // Modify an object somewhere
         return {};
       },
-      // PUT /api/v1/product/:docId
+      // PUT /api/v1/product/:id
       async put(req, _id) {
         // Replace an object somewhere
         return {};
       },
-      // DELETE /api/v1/product/:docId
+      // DELETE /api/v1/product/:id
       async delete(req, _id) {
         // Delete an object somewhere
         return;
@@ -413,7 +421,7 @@ The resulting APIs are available via:
 
 ```
 GET /api/v1/mydatabase
-GET /api/v1/mydatabase/:docId
+GET /api/v1/mydatabase/:id
 ```
 
 And so on.

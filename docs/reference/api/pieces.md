@@ -28,6 +28,8 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 |----------|------|-------------|
 |`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
 
 #### Custom filters
 
@@ -44,6 +46,8 @@ const document = await response.json();
 ```
 
 ### Response
+
+By default, GET requests return the published and default locale version of each piece.
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -78,6 +82,15 @@ On error an appropriate HTTP status code is returned.
 
 ## `GET /api/v1/:piece-name/:id`
 
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
 ### Request example
 
 ```javascript
@@ -93,6 +106,13 @@ const document = await response.json();
 The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/:piece-name`
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
 
 **Authentication required.**
 
@@ -118,6 +138,15 @@ The successful POST request returns the newly created document. See the [piece d
 
 ## `PUT /api/v1/:piece-name/:id`
 
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
 **Authentication required.**
 
 ### Request example
@@ -142,6 +171,15 @@ The successful PUT request returns the newly created document. See the [piece do
 
 ## `PATCH /api/v1/:piece-name/:id`
 
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
 **Authentication required.**
 
 ### Request example
@@ -162,13 +200,6 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 });
 const document = await response.json();
 ```
-
-:::tip
-As a convenience, you may make a PATCH request for any MongoDB document, regardless of type using a catch-all route using the document's `_id` property:
-```
-PATCH /api/v1/@apostrophecms/doc/:id
-```
-:::
 
 ### MongoDB-style requests
 
