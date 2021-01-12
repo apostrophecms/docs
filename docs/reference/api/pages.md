@@ -22,7 +22,7 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 |`all` | `?all=1` | Set to `1` to include the *entire* page tree, regardless of depth |
 |`flat` | `?flat=1` | Set to `1` to [return page results in an flat array](#flat-array-response) instead of the page tree structure |
 |`children` | `?children=false` | Set to `false` to exclude the `_children` array` |
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request page document versions for that locale. Defaults to the default locale. |
 
 ### Request example
@@ -188,7 +188,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the page document version for that locale. |
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
