@@ -22,6 +22,8 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 |`all` | `?all=1` | Set to `1` to include the *entire* page tree, regardless of depth |
 |`flat` | `?flat=1` | Set to `1` to [return page results in an flat array](#flat-array-response) instead of the page tree structure |
 |`children` | `?children=false` | Set to `false` to exclude the `_children` array` |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request page document versions for that locale. Defaults to the default locale. |
 
 ### Request example
 
@@ -182,6 +184,15 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 ## `GET /api/v1/@apostrophecms/page/:id`
 
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the page document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
 ### Request example
 
 ```javascript
@@ -208,6 +219,13 @@ The successful GET request returns the matching document. See the [page document
 |`_position` | String, Number | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a page as a draft instead of immediately published. Set to `published` or leave it off to insert a published page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request page document versions for that locale. Defaults to the default locale. |
 
 ### Request example
 
@@ -236,6 +254,8 @@ The successful POST request returns the newly created document. See the [page do
 
 ## `PUT /api/v1/@apostrophecms/page/:id`
 
+**Authentication required.**
+
 ### Required properties
 
 | Property | Type | Description |
@@ -244,6 +264,15 @@ The successful POST request returns the newly created document. See the [page do
 |`_position` | String | `before`, `after`, `firstChild`, or `lastChild`. This sets the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target.|
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the page document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -276,6 +305,15 @@ The successful PUT request returns the newly created document. See the [page doc
 
 The PATCH request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page), but that is not required if the page is not being moved.
 
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the page document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
 ### Request example
 
 ```javascript
@@ -294,13 +332,6 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
 });
 const document = await response.json();
 ```
-
-:::tip
-As a convenience, you may make a PATCH request for any Apostrophe document, regardless of type using a catch-all route using the document's `_id` property:
-```
-PATCH /api/v1/@apostrophecms/doc/:id
-```
-:::
 
 ### MongoDB-style requests
 

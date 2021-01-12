@@ -107,14 +107,14 @@ The successful GET request returns the matching document. See the [piece documen
 
 ## `POST /api/v1/:piece-name`
 
+**Authentication required.**
+
 ### Query parameters
 
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
-
-**Authentication required.**
 
 ### Request example
 
@@ -138,6 +138,8 @@ The successful POST request returns the newly created document. See the [piece d
 
 ## `PUT /api/v1/:piece-name/:id`
 
+**Authentication required.**
+
 ### Query parameters
 
 | Parameter | Example | Description |
@@ -146,8 +148,6 @@ The successful POST request returns the newly created document. See the [piece d
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the piece document version for that locale. |
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
-
-**Authentication required.**
 
 ### Request example
 
@@ -171,6 +171,8 @@ The successful PUT request returns the newly created document. See the [piece do
 
 ## `PATCH /api/v1/:piece-name/:id`
 
+**Authentication required.**
+
 ### Query parameters
 
 | Parameter | Example | Description |
@@ -179,8 +181,6 @@ The successful PUT request returns the newly created document. See the [piece do
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the piece document version for that locale. |
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
-
-**Authentication required.**
 
 ### Request example
 
