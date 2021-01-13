@@ -18,7 +18,7 @@ Passing `draft` or `published` values on `apos-mode` and your locale names on th
 
 ### Locale and mode in single-document requests
 
-**The exception to those assumed values are with `GET ONE`, `PATCH`, and other requests that include a document `_id` value.** Document IDs include mode and locale information already. `ckgsj5in400d5xi4lb6fu29rh:fr:draft` ends with `:fr:draft`, indicating that it is the `fr` locale and `draft` version of a particular piece or page.
+**The exception to those assumed values are with `GET`, `PATCH`, and other requests that include a document `_id` value.** Document IDs include mode and locale information already. `ckgsj5in400d5xi4lb6fu29rh:fr:draft` ends with `:fr:draft`, indicating that it is the `fr` locale and `draft` version of a particular piece or page.
 
 You may still use the `apos-mode` and `apos-locale` parameters with these requests related to existing documents. If the values for those parameters match the document you are requesting, the request will treat it as if the parameters weren't there. If the values differ from the `_id` value, and a version of the document exists for the mode and locale values, the request will apply to the version matching the parameter values.
 
