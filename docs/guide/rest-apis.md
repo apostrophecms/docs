@@ -20,9 +20,7 @@ Passing `draft` or `published` values on `apos-mode` and your locale names on th
 
 **The exception to those assumed values are with `GET`, `PATCH`, and other requests that include a document `_id` value.** Document IDs include mode and locale information already. `ckgsj5in400d5xi4lb6fu29rh:fr:draft` ends with `:fr:draft`, indicating that it is the `fr` locale and `draft` version of a particular piece or page.
 
-You may still use the `apos-mode` and `apos-locale` parameters with these requests related to existing documents. If the values for those parameters match the document you are requesting, the request will treat it as if the parameters weren't there. If the values differ from the `_id` value, and a version of the document exists for the mode and locale values, the request will apply to the version matching the parameter values.
-
-For example, a `GET` request to `/api/v1/product/ckgsj5in400d5xi4lb6fu29rh:fr:published` will normally return a product document in the `fr` locale and that is published.
+You may still use the `apos-mode` and `apos-locale` parameters with these requests related to existing documents, however. If present, they will always take precendence. For example, a `GET` request with the document ID `ckgsj5in400d5xi4lb6fu29rh:fr:published` will normally return a product document in the `fr` locale and that is published.
 
 If we add an `apos-mode` parameter using the same route, we can get the draft version. So a `GET` request to `/api/v1/product/ckgsj5in400d5xi4lb6fu29rh:fr:published?apos-mode=draft` returns the draft version, even though the route includes the published mode. This allows developers to work on multiple versions of a single document without repeatedly updating the `_id` value in their code.
 
