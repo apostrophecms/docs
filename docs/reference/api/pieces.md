@@ -11,17 +11,17 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
 |GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
-|GET | [`/api/v1/:piece-name/:id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
+|GET | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
 |POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
-|PUT | [`/api/v1/:piece-name/:id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
-|PATCH | [`/api/v1/:piece-name/:id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
+|PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
+|PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
 |DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
 
 ### Additional piece endpoints
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|POST | [`/api/v1/:piece-name/:id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
+|POST | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
 - `author`: a `relationship` field connected to the `user` piece type
@@ -88,7 +88,7 @@ By default, GET requests return the published and default locale version of each
 
 On error an appropriate HTTP status code is returned.
 
-## `GET /api/v1/:piece-name/:id`
+## `GET /api/v1/:piece-name/:_id`
 
 ### Query parameters
 
@@ -144,7 +144,7 @@ const document = await response.json();
 
 The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT /api/v1/:piece-name/:id`
+## `PUT /api/v1/:piece-name/:_id`
 
 **Authentication required.**
 
@@ -177,7 +177,7 @@ const document = await response.json();
 
 The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH /api/v1/:piece-name/:id`
+## `PATCH /api/v1/:piece-name/:_id`
 
 **Authentication required.**
 
@@ -228,11 +228,11 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `POST /api/v1/:piece-name/:id/publish`
+## `POST /api/v1/:piece-name/:_id/publish`
 
 Publish an existing `draft` mode document in a document set.
 
-The `:id` segement of the route should be one of the following:
+The `:_id` segement of the route should be one of the following:
 - The `_id` property of the draft piece to be published
 - The `_id` property of the published piece to be replaced by the current `draft` version
 - The `aposDocId` property of the pieces in the document set

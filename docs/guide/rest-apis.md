@@ -141,7 +141,7 @@ Note `pages` and `currentPage`. For performance reasons, not all of the products
 GET /api/v1/product?page=2
 ```
 
-### `GET /api/v1/product/:id`
+### `GET /api/v1/product/:_id`
 
 Returns an individual piece as a JSON object:
 
@@ -171,11 +171,11 @@ Returns an individual piece as a JSON object:
 
 **Authentication required.** POSTs a new product to the server. The request body should use the JSON encoding and be in the same format returned above.
 
-### `PUT /api/v1/product/:id`
+### `PUT /api/v1/product/:_id`
 
 **Authentication required.** PUTs an updated version of the document to the server. The request body should use the JSON encoding and be in the same format returned above. However, **in most cases you should use PATCH**, particularly if you are only interested in updating certain fields.
 
-### `PATCH /api/v1/product/:id`
+### `PATCH /api/v1/product/:_id`
 
 **Authentication required.** Identical to PUT, except that only the properties mentioned in the JSON body are updated. All other properties are left as-is.
 
@@ -190,7 +190,7 @@ In addition, we extend the REST convention with MongoDB-style operators:
 }
 ```
 
-### `DELETE /api/v1/product/:id`
+### `DELETE /api/v1/product/:_id`
 
 **NOT supported. Instead PATCH the `trash` property to `true`.** Apostrophe never discards your work, so the `DELETE` verb is not applicable. However you may mark any piece as trash by `PATCH`ing that property. You may bring it back later by setting the property to `false`.
 
@@ -262,7 +262,7 @@ Pages are challenging to represent RESTfully because of the page tree. Normally 
 }
 ```
 
-### `GET /api/v1/@apostrophecms/page/:id`
+### `GET /api/v1/@apostrophecms/page/:_id`
 
 Returns an individual page as a JSON object:
 
@@ -297,15 +297,15 @@ Returns an individual page as a JSON object:
 
 * You must pass `_position` and `_targetId`. `_targetId` must be the `_id` of an existing page, or one of the convenient shorthands `_trash` and `_home`. `_position` may be `before`, `after`, `firstChild`, or `lastChild`. Alternatively `_position` may be an integer in which case the new page is inserted as a child at that point in the list.
 
-### `PUT /api/v1/@apostrophecms/page/:id`
+### `PUT /api/v1/@apostrophecms/page/:_id`
 
 **Authentication required.** PUTs an updated version of the page to the server. Works just like `PUT` for pieces, with this exception: you may include `_position` and `_targetId`, although it is not mandatory. If you do not the position in the tree does not change.
 
-### `PATCH /api/v1/@apostrophecms/page/:id`
+### `PATCH /api/v1/@apostrophecms/page/:_id`
 
 **Authentication required.** Identical to PATCHing a piece, except that you may include `_position` and `_targetId` if you wish to change the position in the tree. To easily move a page into the trash, set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
 
-### `DELETE /api/v1/@apostrophecms/page/:id`
+### `DELETE /api/v1/@apostrophecms/page/:_id`
 
 **NOT supported.** Instead set `_targetId` to `_trash` and `_position` to `lastChild`. You may similarly move pages out of the trash by moving them to a position relative to a page that is not in the trash.
 
@@ -376,23 +376,23 @@ module.exports = {
           results
         };
       },
-      // GET /api/v1/product/:id
+      // GET /api/v1/product/:_id
       async getOne(req, _id) {
         // Get real data from somewhere
         const result = {};
         return result;
       },
-      // PATCH /api/v1/product/:id
+      // PATCH /api/v1/product/:_id
       async patch(req, _id) {
         // Modify an object somewhere
         return {};
       },
-      // PUT /api/v1/product/:id
+      // PUT /api/v1/product/:_id
       async put(req, _id) {
         // Replace an object somewhere
         return {};
       },
-      // DELETE /api/v1/product/:id
+      // DELETE /api/v1/product/:_id
       async delete(req, _id) {
         // Delete an object somewhere
         return;
@@ -421,7 +421,7 @@ The resulting APIs are available via:
 
 ```
 GET /api/v1/mydatabase
-GET /api/v1/mydatabase/:id
+GET /api/v1/mydatabase/:_id
 ```
 
 And so on.

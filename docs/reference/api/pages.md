@@ -9,23 +9,23 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
 |GET | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Get the home page and all other pages structured in the home page's `_children` property | FALSE |
-|GET | [`/api/v1/@apostrophecms/page/:id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID | FALSE |
+|GET | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID | FALSE |
 |POST | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page | TRUE |
-|PUT | [`/api/v1/@apostrophecms/page/:id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document | TRUE |
-|PATCH | [`/api/v1/@apostrophecms/page/:id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
+|PUT | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document | TRUE |
+|PATCH | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
 |DELETE | Not supported | [See more in PATCH request details.](#moving-pages-to-the-trash) | n/a |
 
 ### Additional page endpoints
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|POST | [`/api/v1/@apostrophecms/page/:id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page | TRUE |
 
 <!-- TODOcument -->
-<!-- |GET | [`/api/v1/@apostrophecms/page/:id?locales=1`](#get-api-v1-apostrophecms-page-id-locales-1) | Request the available locales for a specific page | TRUE |
-|POST | [`/api/v1/@apostrophecms/page/:id/export`](#post-api-v1-apostrophecms-page-id-export) | Copy a page from one locale to another | TRUE |
-|POST | [`/api/v1/@apostrophecms/page/:id/revert-draft-to-published`](#post-api-v1-apostrophecms-page-id-revert-draft-to-published) | Revert a draft page to the the state of the published version, if available | TRUE |
-|POST | [`/api/v1/@apostrophecms/page/:id/revert-published-to-previous`](#post-api-v1-apostrophecms-page-id-revert-published-to-previous) | Revert a published page to the previous version, if available | TRUE | -->
+<!-- |GET | [`/api/v1/@apostrophecms/page/:_id?locales=1`](#get-api-v1-apostrophecms-page-id-locales-1) | Request the available locales for a specific page | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/export`](#post-api-v1-apostrophecms-page-id-export) | Copy a page from one locale to another | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/revert-draft-to-published`](#post-api-v1-apostrophecms-page-id-revert-draft-to-published) | Revert a draft page to the the state of the published version, if available | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/revert-published-to-previous`](#post-api-v1-apostrophecms-page-id-revert-published-to-previous) | Revert a published page to the previous version, if available | TRUE | -->
 
 ## `GET /api/v1/@apostrophecms/page`
 
@@ -196,7 +196,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 }
 ```
 
-## `GET /api/v1/@apostrophecms/page/:id`
+## `GET /api/v1/@apostrophecms/page/:_id`
 
 ### Query parameters
 
@@ -266,7 +266,7 @@ const document = await response.json();
 
 The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT /api/v1/@apostrophecms/page/:id`
+## `PUT /api/v1/@apostrophecms/page/:_id`
 
 **Authentication required.**
 
@@ -313,7 +313,7 @@ const document = await response.json();
 
 The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH /api/v1/@apostrophecms/page/:id`
+## `PATCH /api/v1/@apostrophecms/page/:_id`
 
 **Authentication required.**
 
@@ -370,11 +370,11 @@ The successful PATCH request returns the complete patched document. See the [pag
 
 The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
 
-## `POST /api/v1/@apostrophecms/page/:id/publish`
+## `POST /api/v1/@apostrophecms/page/:_id/publish`
 
 Publish an existing `draft` mode document in a document set.
 
-The `:id` segement of the route should be one of the following:
+The `:_id` segement of the route should be one of the following:
 - The `_id` property of the draft page document to be published
 - The `_id` property of the published page document to be replaced by the current `draft` version
 - The `aposDocId` property of the pages in the document set
