@@ -130,3 +130,22 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
   })
 });
 ```
+
+## Allowing public access
+
+All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to authenticated users for security reasons. However you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
+
+```javascript
+// In `/module/product/index.js`
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    publicApiProjection: {
+      title: 1,
+      _url: 1,
+      description: 1,
+      color: 1
+    }
+  }
+};
+```
