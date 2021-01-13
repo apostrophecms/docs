@@ -171,3 +171,7 @@ The new `middleware` section replaces the old `expressMiddleware` property. You 
 In A3, most route-specific custom middleware is better written as an async method `await`ed at the start of the route. Existing third-party middleware can be used on a route-specific basis by passing an array consisting of the middleware and the route function when adding a `route`, `apiRoute`, etc.
 
 There is no "extendMiddleware" since Express middleware does not lend itself to that pattern.
+
+### Tasks
+
+In A3, command line tasks have moved to the new `tasks` module format section. This removes the need to call the `addTask` method, provides clearer code organization and allows for a new `afterModuleInit` flag to optionally run the task and exit immediately after its module is initialized, without waiting for others.
