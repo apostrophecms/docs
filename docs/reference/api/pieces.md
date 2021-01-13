@@ -1,6 +1,6 @@
 # Piece type REST endpoints
 
-Every [piece type](TODO) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
+Every [piece type](#TODO) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
 
 ## Endpoints
 
@@ -41,7 +41,7 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 
 #### Custom filters
 
-You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](TODO).
+You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](#TODO).
 
 ### Request example
 

@@ -1,6 +1,6 @@
 # Page type REST endpoints
 
-All [page types](TODO) use a single set of API endpoints, unlike piece types. Difference in page type will primarily influence returned document properties based on the page type configurations.
+All [page types](#TODO) use a single set of API endpoints, unlike piece types. Difference in page type will primarily influence returned document properties based on the page type configurations.
 
 ## Endpoints
 
