@@ -1,19 +1,27 @@
 # Piece type REST endpoints
 
-Every [piece type](TODO) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
+Every [piece type](#TODO) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
 
 ## Endpoints
 
 **Note:** `:piece-name` represents the name of a piece type module. For example, you would request all pieces of an `article` piece type with `/api/v1/article`.
 
+### REST endpoints
+
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
 |GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
-|GET | [`/api/v1/:piece-name/:id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
+|GET | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
 |POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
-|PUT | [`/api/v1/:piece-name/:id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
-|PATCH | [`/api/v1/:piece-name/:id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
+|PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
+|PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
 |DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
+
+### Additional piece endpoints
+
+| Method | Path | Description | Auth required |
+|---------|---------|---------|---------|
+|POST | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
 - `author`: a `relationship` field connected to the `user` piece type
@@ -28,10 +36,12 @@ Every [piece type](TODO) has built in REST end points that share their overall s
 |----------|------|-------------|
 |`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
 
 #### Custom filters
 
-You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](TODO).
+You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](#TODO).
 
 ### Request example
 
@@ -44,6 +54,8 @@ const document = await response.json();
 ```
 
 ### Response
+
+By default, GET requests return the published and default locale version of each piece.
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -76,13 +88,22 @@ const document = await response.json();
 
 On error an appropriate HTTP status code is returned.
 
-## `GET /api/v1/:piece-name/:id`
+## `GET /api/v1/:piece-name/:_id`
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'GET'
 });
 const document = await response.json();
@@ -95,6 +116,13 @@ The successful GET request returns the matching document. See the [piece documen
 ## `POST /api/v1/:piece-name`
 
 **Authentication required.**
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
 
 ### Request example
 
@@ -116,9 +144,18 @@ const document = await response.json();
 
 The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT /api/v1/:piece-name/:id`
+## `PUT /api/v1/:piece-name/:_id`
 
 **Authentication required.**
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -126,7 +163,7 @@ The successful POST request returns the newly created document. See the [piece d
 // Object with, at a minimum, properties for each required piece field.
 const data = { ... };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -140,9 +177,20 @@ const document = await response.json();
 
 The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH /api/v1/:piece-name/:id`
+## `PATCH /api/v1/:piece-name/:_id`
 
 **Authentication required.**
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the piece document version for that locale. |
+
+If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -153,7 +201,7 @@ const data = {
   category: 'Nerd Post'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json'
@@ -162,13 +210,6 @@ const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69
 });
 const document = await response.json();
 ```
-
-:::tip
-As a convenience, you may make a PATCH request for any MongoDB document, regardless of type using a catch-all route using the document's `_id` property:
-```
-PATCH /api/v1/@apostrophecms/doc/:id
-```
-:::
 
 ### MongoDB-style requests
 
@@ -186,6 +227,40 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 ### Response
 
 The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+
+## `POST /api/v1/:piece-name/:_id/publish`
+
+Publish an existing `draft` mode document in a document set.
+
+The `:_id` segement of the route should be one of the following:
+- The `_id` property of the draft piece to be published
+- The `_id` property of the published piece to be replaced by the current `draft` version
+- The `aposDocId` property of the pieces in the document set
+
+The `body` of the request is ignored.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-locale` | `?apos-locale=fr` | Identify [a valid locale](#TODO) to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+
+### Request example
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/article/ckhdscx5900054z9k88uqs16w:en:draft/publish?apikey=myapikey', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const article = await response.json();
+```
+
+### Response
+
+The successful POST request returns the newly published piece. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## Piece document response example
 

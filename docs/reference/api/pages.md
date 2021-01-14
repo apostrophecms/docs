@@ -1,17 +1,32 @@
 # Page type REST endpoints
 
-All [page types](TODO) use a single set of API endpoints, unlike piece types. Difference in page type will primarily influence returned document properties based on the page type configurations.
+All [page types](#TODO) use a single set of API endpoints, unlike piece types. Difference in page type will primarily influence returned document properties based on the page type configurations.
 
 ## Endpoints
+
+### REST endpoints
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
 |GET | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Get the home page and all other pages structured in the home page's `_children` property | FALSE |
-|GET | [`/api/v1/@apostrophecms/page/:id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID | FALSE |
+|GET | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID | FALSE |
 |POST | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page | TRUE |
-|PUT | [`/api/v1/@apostrophecms/page/:id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document | TRUE |
-|PATCH | [`/api/v1/@apostrophecms/page/:id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
+|PUT | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document | TRUE |
+|PATCH | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
 |DELETE | Not supported | [See more in PATCH request details.](#moving-pages-to-the-trash) | n/a |
+
+### Additional page endpoints
+
+| Method | Path | Description | Auth required |
+|---------|---------|---------|---------|
+|POST | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page | TRUE |
+
+<!-- TODOcument -->
+<!-- |GET | [`/api/v1/@apostrophecms/page/:_id?locales=1`](#get-api-v1-apostrophecms-page-id-locales-1) | Request the available locales for a specific page | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/export`](#post-api-v1-apostrophecms-page-id-export) | Copy a page from one locale to another | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/revert-draft-to-published`](#post-api-v1-apostrophecms-page-id-revert-draft-to-published) | Revert a draft page to the the state of the published version, if available | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/revert-published-to-previous`](#post-api-v1-apostrophecms-page-id-revert-published-to-previous) | Revert a published page to the previous version, if available | TRUE |
+|POST | [`/api/v1/@apostrophecms/page/:_id/unpublish`](#post-api-v1-apostrophecms-page-id-unpublish) | Unpublish the published version of a page | TRUE | -->
 
 ## `GET /api/v1/@apostrophecms/page`
 
@@ -22,6 +37,8 @@ All [page types](TODO) use a single set of API endpoints, unlike piece types. Di
 |`all` | `?all=1` | Set to `1` to include the *entire* page tree, regardless of depth |
 |`flat` | `?flat=1` | Set to `1` to [return page results in an flat array](#flat-array-response) instead of the page tree structure |
 |`children` | `?children=false` | Set to `false` to exclude the `_children` array` |
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request page document versions for that locale. Defaults to the default locale. |
 
 ### Request example
 
@@ -180,13 +197,22 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 }
 ```
 
-## `GET /api/v1/@apostrophecms/page/:id`
+## `GET /api/v1/@apostrophecms/page/:_id`
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the page document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'GET'
 });
 const document = await response.json();
@@ -208,6 +234,13 @@ The successful GET request returns the matching document. See the [page document
 |`_position` | String, Number | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a page as a draft instead of immediately published. Set to `published` or leave it off to insert a published page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request page document versions for that locale. Defaults to the default locale. |
 
 ### Request example
 
@@ -234,7 +267,9 @@ const document = await response.json();
 
 The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PUT /api/v1/@apostrophecms/page/:id`
+## `PUT /api/v1/@apostrophecms/page/:_id`
+
+**Authentication required.**
 
 ### Required properties
 
@@ -244,6 +279,15 @@ The successful POST request returns the newly created document. See the [page do
 |`_position` | String | `before`, `after`, `firstChild`, or `lastChild`. This sets the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target.|
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the page document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -256,7 +300,7 @@ const data = {
   _position: 'lastChild'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -270,11 +314,22 @@ const document = await response.json();
 
 The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
-## `PATCH /api/v1/@apostrophecms/page/:id`
+## `PATCH /api/v1/@apostrophecms/page/:_id`
 
 **Authentication required.**
 
 The PATCH request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page), but that is not required if the page is not being moved.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the page document version for that locale. |
+
+If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -285,7 +340,7 @@ const data = {
   title: 'Organization history'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json'
@@ -294,13 +349,6 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckit
 });
 const document = await response.json();
 ```
-
-:::tip
-As a convenience, you may make a PATCH request for any Apostrophe document, regardless of type using a catch-all route using the document's `_id` property:
-```
-PATCH /api/v1/@apostrophecms/doc/:id
-```
-:::
 
 ### MongoDB-style requests
 
@@ -322,6 +370,40 @@ The successful PATCH request returns the complete patched document. See the [pag
 ### Moving pages to the trash
 
 The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+
+## `POST /api/v1/@apostrophecms/page/:_id/publish`
+
+Publish an existing `draft` mode document in a document set.
+
+The `:_id` segement of the route should be one of the following:
+- The `_id` property of the draft page document to be published
+- The `_id` property of the published page document to be replaced by the current `draft` version
+- The `aposDocId` property of the pages in the document set
+
+The `body` of the request is ignored.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-locale` | `?apos-locale=fr` | Identify [a valid locale](#TODO) to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+
+### Request example
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckhdscx5900054z9k88uqs16w:en:draft/publish?apikey=myapikey', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const document = await response.json();
+```
+
+### Response
+
+The successful POST request returns the newly published document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## Page document response example
 
