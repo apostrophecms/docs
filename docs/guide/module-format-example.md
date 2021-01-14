@@ -356,6 +356,27 @@ module.exports = {
         return next();
       }
     };
+  },
+
+  tasks(self, options) {
+    return {
+      // If the module is named product, then you can
+      // run this CLI task by typing:
+      //
+      // node app product:list
+      list: {
+        usage: 'List the titles of all pieces of this type.',
+        async task(argv) {
+          // Get an req object with admin privileges.
+          // You can also use getAnonReq
+          const req = self.apos.task.getReq();
+          const pieces = await self.find(req).toArray();
+          for (const piece of pieces) {
+            console.log(piece.title);
+          }
+        }
+      }
+    }
   }
 
 };
