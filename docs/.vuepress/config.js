@@ -4,7 +4,7 @@ module.exports = {
   title: 'Apostrophe 3 Documentation',
   plugins: {
     '@vuepress/google-analytics': {
-      ga: 'UA-106613728-3'
+      ga: 'UA-106613728-6'
     },
     sitemap: {
       hostname: 'https://docs.apostrophecms.com'
