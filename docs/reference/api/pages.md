@@ -374,7 +374,9 @@ The trash is part of the overall page tree in order to maintain the nesting stru
 
 ## `GET /:_url?apos-refresh=1`
 
-Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML without the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element.
+Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
+
+**We do not recommend making edits to `refreshLayout.html` for the sake of API requests as this template is critical to normal content editing.**
 
 Specifically, the Nunjucks template blocks included in this rendered markup by default include:
 -  the `beforeMain`, `mainAnchor`, `main`
