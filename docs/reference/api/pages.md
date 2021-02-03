@@ -19,6 +19,7 @@ All [page types](#TODO) use a single set of API endpoints, unlike piece types. D
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
+|GET | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content | FALSE |
 |POST | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page | TRUE |
 
 <!-- TODOcument -->
@@ -370,6 +371,39 @@ The successful PATCH request returns the complete patched document. See the [pag
 ### Moving pages to the trash
 
 The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+
+## `GET /:_url?apos-refresh=1`
+
+Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
+
+**We do not recommend making edits to `refreshLayout.html` for the sake of API requests as this template is critical to normal content editing.**
+<!-- TODO: Add and link to a how-to/guide/recipe about an alternative way to
+customize the response template (e.g., using a custom query param and looking
+for that on `data.query` in the template. We're not documenting alternative
+options to customizing the response template here since this is the reference
+section, not a how-to. -->
+
+Specifically, the Nunjucks template blocks included in this rendered markup by default include:
+-  the `beforeMain`, `mainAnchor`, `main`
+, `afterMain` template blocks
+<!-- TODO: Document the insertion mechanism in the component section. -->
+- [template components](/guide/async-components.md) prepended and appended to the `main` block
+
+The most critical element that is *excluded* is the `head` tag, with all of its stylesheet and script tags.
+
+### Request example
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/some-page?apos-refresh=1', {
+  method: 'GET'
+});
+const document = await response.text();
+```
+
+### Response
+
+Returns the a string of rendered HTML for the requested page.
 
 ## `POST /api/v1/@apostrophecms/page/:_id/publish`
 
