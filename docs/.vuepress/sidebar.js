@@ -31,6 +31,7 @@ module.exports = {
       path: '/reference',
       collapsable: false,
       children: [
+        'reference/glossary',
         {
           title: 'APIs',
           path: '/reference/api',
@@ -45,8 +46,4 @@ module.exports = {
       ]
     }
   ]
-  // '/': [
-  //   'guide/',
-  //   'reference/'
-  // ]
 };
