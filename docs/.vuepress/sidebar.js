@@ -33,7 +33,33 @@ module.exports = {
       children: [
         'reference/glossary',
         {
-          title: 'APIs',
+          title: 'Field types',
+          path: '/reference/field-types',
+          children: [
+            'reference/field-types/area',
+            'reference/field-types/array',
+            'reference/field-types/attachment',
+            'reference/field-types/boolean',
+            'reference/field-types/checkbox',
+            'reference/field-types/color',
+            'reference/field-types/date',
+            'reference/field-types/email',
+            'reference/field-types/float',
+            'reference/field-types/integer',
+            'reference/field-types/oembed',
+            'reference/field-types/password',
+            'reference/field-types/range',
+            'reference/field-types/relationship',
+            'reference/field-types/relationshipreverse',
+            'reference/field-types/select',
+            'reference/field-types/string',
+            'reference/field-types/slug',
+            'reference/field-types/time',
+            'reference/field-types/url'
+          ]
+        },
+        {
+          title: 'API routes',
           path: '/reference/api',
           children: [
             'reference/api/authentication',
