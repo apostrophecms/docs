@@ -45,8 +45,8 @@ contactInfo: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`help` | String | n/a | Help text for the field that will appear with the field's label |
-|`htmlHelp` | String | n/a | Help text with support for HTML markup |
+|`help` | String | n/a | Help text for the content editor |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -58,6 +58,7 @@ contactInfo: {
 - `titleField` can access `relationship` sub-field documents by using dot notation (e.g., `_team[0].mascot`).
 :::
 
+<!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | `false` | If `true`, prevents the user from editing the field value | -->
 

@@ -37,11 +37,11 @@ main: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
 
-<!-- The following settings are likely to return, but are not yet implemented. -->
+<!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | `boolean` | false | If true, it will prevent the field from appearing in a dialog box | -->
 <!-- |readOnly | `boolean` | false | If true, prevents the user from editing the field | | -->
 
-## Area options
+## `options`
 
 Area inputs have additional settings configured in an `options` object:
 
