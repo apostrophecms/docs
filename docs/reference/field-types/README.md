@@ -18,7 +18,7 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[password](/reference/field-types/password.md) | Text entry that obscures input |
 |[range](/reference/field-types/range.md) | A floating point number with a sliding interface |
 |[relationship](/reference/field-types/relationship.md) | One or more related content docs (pieces or pages) |
-|[relationshipReverse](/reference/field-types/relationshipreverse.md) | The "other side" of a doc-to-doc relationship (has no UI) |
+|[relationshipReverse](/reference/field-types/relationship-reverse.md) | The "other side" of a doc-to-doc relationship (has no UI) |
 |[select](/reference/field-types/select.md) | Single value selection with a dropdown interface |
 |[slug](/reference/field-types/slug.md) | Text string value that is converted on save to lowercase and hyphenated |
 |[string](/reference/field-types/string.md) | Simple text string |

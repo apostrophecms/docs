@@ -1,32 +1,41 @@
 # `area`
 
-An `area` field allowed editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). The properties configured in `options` specify the allowed widget types and the configuration for those widgets.
+An `area` field allows editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). The properties configured in `options` specify the allowed widget types and the configuration for those widgets.
 
-## Example
+## Module field definition
+
+All fields in a piece or page module use their object key as their database field name (e.g., `main` below).
 
 ```javascript
-// In a module's `field` option:
-add: {
-  main: {
-    label: 'Main column',
-    type: 'area',
-    options: {
-      widgets: {
-        '@apostrophecms/rich-text': {}
-      }
+// In a module's `fields.add` configuration:
+main: {
+  label: 'Main column',
+  type: 'area',
+  options: {
+    widgets: {
+      '@apostrophecms/rich-text': {}
     }
   }
 }
 ```
+
 ## Settings
+
+### Required
+
 |  Property | Type | Default | Description |
 |---|---|---|---|
-|label | string | | Sets the visible label for the field in the UI. |
-|required | boolean | `false` | If true, the field is mandatory. |
-|type | string | | Specifies the field type |
-|help | string | | Help text for the content editor |
-|htmlHelp | string | | Help text with support for HTML markup | universal |
-|options | object | | An object containing widget configuration. See below. |
+|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`type` | String | n/a | Specifies the field type (`area` for this type) |
+|`options` | Object | n/a | An object containing widget configuration. See below. |
+
+### Optional
+
+|  Property | Type | Default | Description |
+|---|---|---|---|
+|`required` | Boolean | `false` | If true, the field is mandatory. |
+|`help` | String | n/a | Help text for the content editor |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
 
 <!-- The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | `boolean` | false | If true, it will prevent the field from appearing in a dialog box | -->
@@ -39,7 +48,7 @@ Area inputs have additional settings configured in an `options` object:
 ### `max`
 - **Type:** integer
 
-The maxiumum number of widgets allowed in the area.
+The maximum number of widgets allowed in the area.
 
 ```javascript
 add: {
@@ -76,12 +85,7 @@ add: {
       widgets: {
         '@apostrophecms/image': {},
         '@apostrophecms/rich-text': {
-          toolbar: [ 'styles', 'bold', 'italic' ],
-          styles: [
-            { tag: 'p', label: 'Paragraph (P)' },
-            { tag: 'h2', label: 'Section heading' },
-            { tag: 'h3', label: 'Sub-section heading' }
-          ]
+          toolbar: [ 'bold', 'italic' ]
         },
         '@apostrophecms/video': {},
         '@apostrophecms/html': {}
