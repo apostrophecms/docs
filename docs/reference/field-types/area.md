@@ -4,10 +4,8 @@ An `area` field allows editors to add, edit, and arrange a series of [widgets](/
 
 ## Module field definition
 
-The field key (`main` below) will be used as the field "name," and database property.
-
 ```javascript
-// In a module's `fields.add` configuration:
+// Configuring a `main` area field in a module's `fields.add` subsection:
 main: {
   label: 'Main column',
   type: 'area',
