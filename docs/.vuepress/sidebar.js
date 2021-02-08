@@ -56,7 +56,6 @@ module.exports = {
             // 'reference/field-types/slug',
             // 'reference/field-types/time',
             // 'reference/field-types/url',
-            // 'reference/field-types/choices-setting'
           ]
         },
         {
