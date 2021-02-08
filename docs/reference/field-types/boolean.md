@@ -4,9 +4,8 @@ A `boolean` field is a simple "True/False" choice. The value stored in the datab
 
 ## Module field definition
 
-All fields in a piece or page module use their object key as their database field name (e.g., `isSpecial` below).
-
 ```javascript
+// Configuring a `isSpecial` field in a module's `fields.add` subsection:
 isSpecial: {
   label: 'Is this a special item?',
   type: 'boolean'
@@ -17,10 +16,10 @@ isSpecial: {
 
 ### Required
 
-|  Property | Type   | Default | Description | Sub-properties |
-|-----------|-----------|-----------|-----------|------------|---|
-|`label` | String | | Sets the visible label for the field in the UI. | |
-|`type` | String | | Specifies the field type (`boolean` for this type) |  |
+|  Property | Type   | Default | Description |
+|-----------|-----------|-----------|-----------|
+|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`type` | String | n/a | Specifies the field type (`boolean` for this type) |
 
 ### Optional
 
@@ -28,7 +27,7 @@ isSpecial: {
 |-----------|-----------|-----------|-----------|
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
-|`required` | Boolean | false | If `true`, the field is mandatory |
+|`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |[choices](/reference/field-types/field-properties/choices.md) | `array` |  | An array of choices the user can select from. Each must be an object with value and label properties. |  [**showFields**](/reference/field-types/field-properties/choices.md#showfields) | -->

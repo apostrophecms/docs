@@ -8,10 +8,8 @@ See the [relationship](relationship.md) field if you exclusively, or primarily, 
 
 ## Module field definition
 
-All fields in a piece or page module use their object key as their database field name (e.g., `contactInfo` below).
-
 ```javascript
-// In a module's `field.add` configuration:
+// Configuring a `contactInfo` array field in a module's `fields.add` subsection:
 contactInfo: {
   label: 'Contact information',
   type: 'array',
