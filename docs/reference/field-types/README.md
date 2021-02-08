@@ -5,17 +5,18 @@ See below for a list of all of the field types available in Apostrophe along wit
 | Field | Input Description |
 |-------|-------------|
 |[area](/reference/field-types/area.md) | One or more content widgets ([glossary entry](/reference/glossary.md#area))  |
-|[array](/reference/field-types/array.md) | A series of repeating, structured sub-fields using its own [field schema](/reference/glossary.md#schema) |
+|[array](/reference/field-types/array.md) | An array of structured content using its own [field schema](/reference/glossary.md#schema) |
 |[attachment](/reference/field-types/attachment.md) | File upload |
 |[boolean](/reference/field-types/boolean.md) | `true` or `false` |
 |[checkboxes](/reference/field-types/checkbox.md) | Multi-select checkbox options |
 |[color](/reference/field-types/color.md) | Color selection |
-|[date](/reference/field-types/date.md) | Date entry |
+|[date](/reference/field-types/date.md) | Date entry, stored in  YYYY-MM-DD format |
 |[email](/reference/field-types/email.md) | Email address  |
 |[float](/reference/field-types/float.md) | A floating point number |
-|[integer](/reference/field-types/integer.md) | A whole number |
-|[oembed](/reference/field-types/video.md) | URL to be processed to media via [the oEmbed format](https://oembed.com/) |
+|[integer](/reference/field-types/integer.md) | A whole number, whether positive or negative |
+|[oembed](/reference/field-types/video.md) | Media URL to be embedded via [the oEmbed format](https://oembed.com/) |
 |[password](/reference/field-types/password.md) | Text entry that obscures input |
+|[radio](/reference/field-types/radio.md) | Single value selection with a radio input interface |
 |[range](/reference/field-types/range.md) | A floating point number with a sliding interface |
 |[relationship](/reference/field-types/relationship.md) | One or more related content docs (pieces or pages) |
 |[relationshipReverse](/reference/field-types/relationship-reverse.md) | The "other side" of a doc-to-doc relationship (has no UI) |
