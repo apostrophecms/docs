@@ -64,13 +64,13 @@ contactInfo: {
 
 ## Configuring the array field schema
 
-Array field schema are generally configured the same way as the module's overall field schema is configured. The module's schema is configured in the `fields` section in the `add` object. Similarly, Array field schema are configured in `fields` section, using the `add` object to add the actual fields. Both use the field names as keys in the `add` object. Both can contain all field types, including nested `array` fields.
+Array field schemas are generally configured the same way as the module's overall field schema is configured. The module's schema is configured in its `fields` section's `add` subsection. Similarly, Array field schema are configured in a `fields` property, using its `add` subproperty to configure the actual fields. Both use the field names as keys in the `add` object. Both can contain all field types, including nested `array` fields.
 
 Array schema configuration differs from module schema configuration in that _array schemas_ do not use `group` or `remove` settings.
 
 ## Use in templates
 
-Nujucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
+Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
 
 ```django
 <ul>
