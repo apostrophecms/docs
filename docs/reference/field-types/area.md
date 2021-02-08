@@ -4,7 +4,7 @@ An `area` field allows editors to add, edit, and arrange a series of [widgets](/
 
 ## Module field definition
 
-All fields in a piece or page module use their object key as their database field name (e.g., `main` below).
+The field key (`main` below) will be used as the field "name," and database property.
 
 ```javascript
 // In a module's `fields.add` configuration:
@@ -103,13 +103,19 @@ Use the `area` template tag with arguments for the context and the name of the a
 {% area context, area-name %}
 ```
 
-All configuration from the field definition is applied automatically.
+The "context" may be a page, piece, widget, or [array field](/reference/field-types/array.md) item, as referenced in the template. All configuration from the field definition is applied automatically from the relevant schema configuration.
 
 ```django
 <!-- Inserting the `main` area field for a page. -->
 <section>
   {% area data.page, 'main' %}
 </section>
+<!-- Inserting the `photo` area field for array items. -->
+<div>
+  {% for item in data.page.photos %}
+    {% area item, 'photo' %}
+  {% endfor %}
+</div>
 ```
 
 ## More information
