@@ -23,7 +23,7 @@ main: {
 
 |  Property | Type | Default | Description |
 |---|---|---|---|
-|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`area` for this type) |
 |`options` | Object | n/a | An object containing widget configuration. See below. |
 

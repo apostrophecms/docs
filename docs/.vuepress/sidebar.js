@@ -42,10 +42,10 @@ module.exports = {
             'reference/field-types/boolean',
             'reference/field-types/checkbox',
             'reference/field-types/color',
-            'reference/field-types/date'
-            // 'reference/field-types/email',
-            // 'reference/field-types/float',
-            // 'reference/field-types/integer'
+            'reference/field-types/date',
+            'reference/field-types/email',
+            'reference/field-types/float',
+            'reference/field-types/integer'
             // 'reference/field-types/oembed',
             // 'reference/field-types/password',
             // 'reference/field-types/range',

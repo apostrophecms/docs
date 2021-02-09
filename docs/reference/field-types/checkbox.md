@@ -33,13 +33,13 @@ genres: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`choices` | `array` |  n/a | An array of options that the editor can select from. See below. |
-|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`checkbox` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
-|-----------|-----------|-----------|-----------|------------|
+|-----------|-----------|-----------|-----------|
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |

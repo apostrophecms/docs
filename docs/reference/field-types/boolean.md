@@ -18,7 +18,7 @@ isSpecial: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`boolean` for this type) |
 
 ### Optional
