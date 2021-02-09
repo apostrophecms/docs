@@ -9,7 +9,7 @@ See the [relationship](relationship.md) field if you exclusively, or primarily, 
 ## Module field definition
 
 ```javascript
-// Configuring a `contactInfo` array field in a module's `fields.add` subsection:
+// Configuring the `contactInfo` array field in a module's `fields.add` subsection:
 contactInfo: {
   label: 'Contact information',
   type: 'array',

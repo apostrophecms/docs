@@ -9,6 +9,7 @@ You may also use attachment fields directly as well, however **doing so means th
 All fields in a piece or page module use their object key as their database field name (e.g., `resume` below).
 
 ```javascript
+// Configuring the `resume` field in a module's `fields.add` subsection:
 resume: {
   label: 'Resumé',
   type: 'attachment',
