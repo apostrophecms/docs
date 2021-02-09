@@ -48,14 +48,14 @@ module.exports = {
             'reference/field-types/integer',
             'reference/field-types/oembed',
             'reference/field-types/password',
-            'reference/field-types/range'
-            // 'reference/field-types/relationship',
+            'reference/field-types/range',
+            'reference/field-types/relationship'
             // 'reference/field-types/relationship-reverse',
             // 'reference/field-types/select',
             // 'reference/field-types/string',
             // 'reference/field-types/slug',
             // 'reference/field-types/time',
-            // 'reference/field-types/url',
+            // 'reference/field-types/url'
           ]
         },
         {
