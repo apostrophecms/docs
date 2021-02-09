@@ -15,7 +15,6 @@ gpa: {
 ```
 
 ## Settings
-
 ### Required
 
 |  Property | Type   | Default | Description |

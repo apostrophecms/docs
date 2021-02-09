@@ -1,0 +1,57 @@
+# `oembed`
+
+A `oembed` field supports the user in embedding media hosted by any [oembed—compatible hosting site](https://oembed.com/#section7), or any site for which you have provided an [oembetter](https://github.com/apostrophecms/oembetter) filter via the `@apostrophecms/oembed` module. <!-- TODO: document oembetter config for 3.x -->
+
+The field will immediately preview the media embed after entering a valid URL.
+
+The database value of the field will have `url`, `title` and `thumbnail` properties. `title` and `thumbnail` are snapshots from the oembed response at the time the field was saved. `thumbnail` is the URL of a thumbnail image as provided by the oembed response. Developers should retrieve the full embed code in client-side code to get the latest version available.
+
+<!-- TODO: Update following module reference addition. -->
+<!-- [apostrophe-oembed](/reference/modules/apostrophe-oembed/README.md) provides browser-side methods to display the video. See the [apostrophe-video-widgets](/reference/modules/apostrophe-video-widgets/README.md) source code for an example of using these methods to play a video in a `div` element. -->
+
+## Module field definition
+
+```javascript
+// Configuring the `video` field in a module's `fields.add` subsection:
+video: {
+  type: 'oembed',
+  label: 'Featured video'
+}
+```
+
+## Settings
+
+### Required
+
+|  Property | Type   | Default | Description |
+|-----------|-----------|-----------|-----------|
+|`label` | String | n/a | Sets the visible label for the field in the UI |
+|`type` | String | n/a | Specifies the field type (`float` for this type) |
+
+### Optional
+
+|  Property | Type   | Default | Description |
+|-----------|-----------|-----------|-----------|
+|`help` | String | n/a | Help text for the content editor |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup |
+|`required` | Boolean | `false` | If `true`, the field is mandatory |
+
+<!-- TODO: The following settings are likely to return, but are not yet implemented. -->
+<!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
+<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
+
+## Use in templates
+
+Simplest usage could involve simply printing the thumbnail image (if available) and linking to the media:
+
+```django
+{% if data.piece.video and data.piece.video.thumbnail %}
+  {% set video = data.piece.video %}
+  <a href="{{ video.url }}">
+    <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+  </a>
+{% endif %}
+```
+
+The `@apostrophecms/video-widget` widget provides a more full-featured implementation. It includes [a widget player](https://github.com/apostrophecms/apostrophe/blob/de46fc3fd540e2e36faaedada13039cb767d9949/modules/%40apostrophecms/video-widget/ui/public/video.js#L1) that retrieves the full embed code and replaces a placeholder HTML element with that code. See that widget for a suggested implementation.
+<!-- TODO: Update with a link to the main branch once stable -->

@@ -1,16 +1,17 @@
-# `integer`
+# `range`
 
-`integer` fields support whole number input, whether positive or negative. You may set minimum and maximum values using the `min` and `max` options.
+A `range` field provides [range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range) interface for selecting a numeric value, typically represented in the browser as a slider. The `step` option may be used along with `min` and `max`, if desired, to effectively limit the results to integers.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `rating` field in a module's `fields.add` subsection:
-rating: {
-  label: 'Rate the movie from 1-5',
-  type: 'integer',
-  min: 1,
-  max: 5
+// Configuring the `fontSize` field in a module's `fields.add` subsection:
+fontSize: {
+  type: 'range',
+  label: 'Font size',
+  min: 14,
+  max: 32,
+  step: 2
 }
 ```
 
@@ -21,7 +22,7 @@ rating: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`float` for this type) |
+|`type` | String | n/a | Specifies the field type (`range` for this type) |
 
 ### Optional
 
@@ -32,6 +33,7 @@ rating: {
 |`max` | Number | n/a | The maximum allowed value for the field |
 |`min` | Number | n/a | The minimum allowed value for the field |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`step` | Number | 1 | The interval between numbers (it may be a floating point number) |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
@@ -39,14 +41,11 @@ rating: {
 
 ## Use in templates
 
-This example uses a Nunjucks [for tag](https://mozilla.github.io/nunjucks/templating.html#for) and [range function](https://mozilla.github.io/nunjucks/templating.html#range-start-stop-step).
-
 ```django
-{{ data.piece.rating }}
+{{ data.widget.fontSize }}
 
-{# data.piece.stars is a number #}
-Rating:
-{% for i in range(1, data.piece.stars) -%}
-  ⭐️
-{%- endfor %}
+{# data.widget.fontSize is a number #}
+<h2 style="font-size: {{ data.widget.fontSize }}px;">
+  Hello, world
+</h2>
 ```
