@@ -16,9 +16,9 @@ _toppings: {
   label: 'Toppings',
   type: 'relationship',
   withType: 'topping',
-  filters: {
+  builders: {
     // Include only the information you need with a projection
-    projection: {
+    project: {
       title: 1,
       _url: 1
     }
@@ -27,8 +27,9 @@ _toppings: {
 ```
 
 ::: warning NOTE
-**For better performance, it is strongly recommended that you set a projection filter** via the `filters` option, limiting the amount of information fetched about each related doc. You may also call other [cursor filters](/reference/modules/apostrophe-docs/server-apostrophe-cursor.md) by setting subproperties of the `filters` property. This is a useful way to limit the acceptable choices for the join.
+**For better performance, it is strongly recommended that you set a projection filter** via the `builders` option, limiting the amount of information fetched about each related doc. You may also call other query builders by setting subproperties of the `builders` property. This is a useful way to limit the acceptable choices for the join.
 :::
+<!-- TODO: Link "query builders" to more docs on that feature -->
 
 ## Settings
 
@@ -45,13 +46,13 @@ _toppings: {
 |-----------|-----------|-----------|-----------|
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`filters` | Object | n/a | Provide a list of cursor filters to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
-|`idsStorage` | Object | `{}` | Provide a list of cursor filters to limit acceptable options for the join |
+|`builders` | Object | n/a | Query builders to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
+|`idsStorage` | String | n/a | The name of the property in which to store related document IDs. If not set, the IDs property will be based on the field name. |
 |`ifOnlyOne` | Boolean | `false` | If `true`, the related doc data will only be populated if the original document was the only one requested. [See below](#limiting-returned-data-with-ifonlyone) for more. |
 |`min` | Integer |  n/a | The minimum number of related docs required |
 |`max` | Integer |  n/a | The maximum number of related docs allowed |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
-|`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populated-nested-relationships-using-withrelationship) for more. |
+|`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationship) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 
 ::: tip
@@ -67,7 +68,7 @@ If you do not set `withType`, then the name of the field must match the name of 
 
 Often when two Apostrophe documents are connected by a `relationship` field, the original doc only needs one or two properties from the connected doc. For example, an `article` piece may connect to an `author` piece, but only need the author's name and portrait photo. That `author` piece may also contain rich text for a biography, an additional set of photos for a slideshow, and a string field with their home town, but we don't want to send all of that to the `article` piece as it is unnecessary and adds to work done by the server.
 
-A `projection` filter limits the properties of the connected doc that are populated on the original doc. The following configuration would limit the author data to only what we need:
+A `project` query builder limits the properties of the connected doc that are populated on the original doc. The following configuration would limit the author data to only what we need:
 
 ```javascript
 _author: {
@@ -75,8 +76,8 @@ _author: {
   type: 'relationship',
   max: 1, // There's only one author
   // Limiting our data here 👇
-  filters: {
-    projection: {
+  builders: {
+    project: {
       title: 1, // The author's name is entered as its `title`
       photo: 1
     }
@@ -84,7 +85,7 @@ _author: {
 }
 ```
 
-By doing that, we don't get any slideshow, biography, home town, or other data that isn't needed. The projection filter format comes from the similar MongoDB filter.
+By doing that, we don't get any slideshow, biography, home town, or other data that isn't needed. The projection filter format comes from the similar MongoDB projection operator.
 
 ## Limiting returned data with `ifOnlyOne`
 
@@ -102,14 +103,14 @@ _players: {
 }
 ```
 
-## Populated nested relationships using `withRelationship`
+## Populating nested relationships using `withRelationship`
 
 It is not unusual for one piece type to have situations with "nested relationships" across piece types. For example, `team` may have a relationship field connecting to `player` pieces, then `player` pieces connect to `specialty` pieces. Imagine that the players had multiple relationship fields, and suddenly the data populated two levels up on teams could get very large.
 
-By default, these "nested relationships" are excluded. So on the `team` show page, `data.piece._players` would include only `specialitiesIds` by default. With the following configuration, that same piece data would *also* include `_speciaties`, an array of populated specialty objects.
+By default, these "nested relationships" are excluded. So on the `team` show page, `data.piece._players` would include only `specialtiesIds` by default. With the following configuration, that same piece data would *also* include `_specialties`, an array of populated specialty objects.
 
 ```javascript
-// With this configuration, `_players` will include the populated `_specialities` documents rather than only the specialty `_id` values.
+// With this configuration, `_players` will include the populated `_specialties` documents rather than only the specialty `_id` values.
 _players: {
   label: 'Players',
   type: 'relationship',

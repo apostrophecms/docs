@@ -53,5 +53,10 @@ Simplest usage could involve simply printing the thumbnail image (if available) 
 {% endif %}
 ```
 
-The `@apostrophecms/video-widget` widget provides a more full-featured implementation. It includes [a widget player](https://github.com/apostrophecms/apostrophe/blob/de46fc3fd540e2e36faaedada13039cb767d9949/modules/%40apostrophecms/video-widget/ui/public/video.js#L1) that retrieves the full embed code and replaces a placeholder HTML element with that code. See that widget for a suggested implementation.
+More likely, you will want to add the full embed code from the media source. This should be done in client-side Javascript. Apostrophe provides an API route to get that.
+
+<!-- TODO: link to the oembed module's API route reference when available. -->
+Submit a GET request to `/api/v1/@apostrophecms/oembed/query` with the media URL as the `url` query parameter. A successful response will be an object with several properties to help place and style the embed, including an `html` property with the actual HTML markup to embed.
+
+The `@apostrophecms/video-widget` widget provides a full-featured implementation. It includes [a widget player](https://github.com/apostrophecms/apostrophe/blob/de46fc3fd540e2e36faaedada13039cb767d9949/modules/%40apostrophecms/video-widget/ui/public/video.js#L1) that uses that API route to retrieve the full embed code and then replaces a placeholder HTML element with that code. See that widget for a suggested implementation.
 <!-- TODO: Update with a link to the main branch once stable -->
