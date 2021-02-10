@@ -38,7 +38,7 @@ An index page, is a special [page](#page) that is built to display a listing of 
 
 ## Show page
 
-Despite their name these are *not* actually [pages](#page) in the technical sense. They are a feature, enabled by creating an [index page](#index-page), providing individual URLs that display a rendered template for individual [pieces](#piece). **A blog listing is an "index page" and the individual blog post is a "show page."**
+Despite their name, these are not [pages](#page) in the sense of extending the `@apostrophecms/page-type` module. They therefore do not have individual representation in the page tree. They are a feature, enabled by creating an [index page](#index-page), providing individual URLs that display a rendered template for individual [pieces](#piece). **A blog listing is an "index page" and the individual blog post is a "show page."**
 
 Show page templates (`show.html`), do have access to their parent index page's `data.page` object, but they also have access to `data.piece`, which contains all of the data for a particular piece.
 ## Global doc
