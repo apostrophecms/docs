@@ -18,7 +18,8 @@ module.exports = {
           children: [
             'guide/widgets-and-templates/home-page.md',
             'guide/widgets-and-templates/standard-widgets.md',
-            'guide/widgets-and-templates/custom-widgets.md'
+            'guide/widgets-and-templates/custom-widgets.md',
+            'guide/widgets-and-templates/fragments.md'
           ]
         },
         'guide/custom-page-types.md',
