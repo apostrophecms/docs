@@ -12,8 +12,15 @@ module.exports = {
         'guide/starting-your-project.md',
         'guide/module-format-example.md',
         'guide/front-end-assets.md',
-        'guide/widgets-and-templates.md',
-        'guide/custom-widgets.md',
+        {
+          title: 'Widgets and templates',
+          path: '/guide/widgets-and-templates',
+          children: [
+            'guide/widgets-and-templates/home-page.md',
+            'guide/widgets-and-templates/standard-widgets.md',
+            'guide/widgets-and-templates/custom-widgets.md'
+          ]
+        },
         'guide/custom-page-types.md',
         'guide/page-tree-navigation.md',
         'guide/pieces.md',

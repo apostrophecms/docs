@@ -1,8 +1,4 @@
----
-title: "Custom Widgets"
----
-
-# Custom Widgets
+# Custom widgets
 
 Let's add a two-column layout widget to the site.
 
