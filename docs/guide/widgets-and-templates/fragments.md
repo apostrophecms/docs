@@ -28,10 +28,10 @@ One difference from macros is that they are then called using the `render` templ
 
 ```django
 {% render heading() %}
-{# `<h2>This is a heading fragment</h2>` #}
+{# Renders: `<h2>This is a heading fragment</h2>` #}
 ```
 
-You can also pass arguments to macros, which is key to using them across templates. Those arguments can be any data or variables understood by Apostrophe templates (e.g., strings, objects, arrays, etc.).
+You can also pass arguments to fragments, which is key to using them across templates. Those arguments can be any data or variables understood by Apostrophe templates (e.g., strings, objects, arrays, etc.).
 
 ```django
 {% fragment heading(adjective) %}
