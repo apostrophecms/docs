@@ -1,6 +1,6 @@
 # `password`
 
-`password` fields are identical to `string` fields except that the user's input is visually obscured and they do not support the `textarea` option and they are not indexed for search.
+`password` fields are identical to `string` fields except that the user's input is visually obscured, they do not support the `textarea` option, and they are not indexed for search.
 <!-- TODO: Confirm if they are kept from search indexing automatically. -->
 
 ## Module field definition
