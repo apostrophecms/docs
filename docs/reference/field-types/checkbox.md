@@ -40,6 +40,7 @@ genres: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|`def` | Array | n/a | The default value for the field. Values must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |

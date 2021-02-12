@@ -27,6 +27,7 @@ themeColor: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|`def` | String | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
