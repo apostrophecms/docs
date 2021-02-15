@@ -66,6 +66,6 @@ The Nunjucks [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) t
 ```django
 <h2>{{ data.piece.dogName }}</h2>
 <p>
-  {{ data.piece.biography | nl2br | safe }}
+  {{ data.piece.biography | striptags(true) | escape | nl2br }}
 </p>
 ```
