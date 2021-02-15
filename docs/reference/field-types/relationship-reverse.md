@@ -1,5 +1,6 @@
 # `relationshipReverse`
 
+<!-- TODO: This whole page needs to be revisited following successful testing of the `relationshipReverse` field type. -->
 A `relationshipReverse` field allows us to access the "other side" of a doc [relationship](/reference/field-types/relationship.md). There is no editing interface for this field type as the relationship is defined in the paired `relationship` field. `relationshipReverse` fields are a convenience allowing developers to identify Apostrophe documents that have established relationships with a given document.
 
 ## Module field definition
