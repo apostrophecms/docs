@@ -30,8 +30,6 @@ projectSlug: {
 |`def` | String | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`min` | Integer | n/a | Sets the minimum number of characters allowed |
-|`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`page` | Boolean | `false` | If `true`, then slashes are allowed since the slug field is describing a page doc |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
