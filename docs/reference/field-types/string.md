@@ -56,7 +56,7 @@ Setting `sortify: true` creates a parallel version of the field that is more int
 For instance, if your field's `name` is `lastName` and you set `sortify: true`, `lastNameSortified` will automatically be created and used when sorting on the `lastName` field. This provides case-insensitive sorting that also ignores punctuation differences.
 
 ::: tip NOTE
-If you add `sortify: true` to an existing field, existing objects will get the sortified version of the field on the next deployment via the `apostrophe-migrations:migrate` command line task, when the individual Apostrophe documents are saved, or at the next startup when in development on your computer. Migrations like this only need to be run once because on future updates or inserts of a document the sortified property is automatically set.
+If you add `sortify: true` to an existing field, existing objects will get the sortified version of the field on the next deployment via the `apostrophe-migrations:migrate` command line task, when the individual Apostrophe documents are saved, or at the next startup when in development. Migrations like this only need to be run once because on future updates or inserts of a document the sortified property is automatically set.
 :::
 
 ## Use in templates
