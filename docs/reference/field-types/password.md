@@ -29,6 +29,8 @@ secret: {
 |`def` | String | n/a | The default value for the field |
 |`help` | String | | Help text for the content editor |
 |`htmlHelp` | String | | Help text with support for HTML markup |
+|`min` | Integer | n/a | Sets the minimum number of characters allowed |
+|`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | false | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
