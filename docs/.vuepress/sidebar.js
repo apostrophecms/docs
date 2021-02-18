@@ -40,7 +40,7 @@ module.exports = {
             'reference/field-types/array',
             'reference/field-types/attachment',
             'reference/field-types/boolean',
-            'reference/field-types/checkbox',
+            'reference/field-types/checkboxes',
             'reference/field-types/color',
             'reference/field-types/date',
             'reference/field-types/email',
