@@ -1,46 +1,44 @@
-# `color`
+# `float`
 
-`color` fields provides the end user with a color picker interface. They also validate submitted values using [the TinyColor utility](https://github.com/bgrins/TinyColor#isvalid). Colors are saved as strings in [8 digit hex code](https://drafts.csswg.org/css-color/#hex-notation), or `#rrggbbaa`, format.
-
-<!-- TODO: Add vue-color options config documentation once supported. -->
+`float` fields support number input with decimals (floating point numbers). You may set minimum and maximum values using the `min` and `max` options.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `themeColor` field in a module's `fields.add` subsection:
-themeColor: {
-  type: 'color',
-  label: 'Theme color'
+// Configuring the `gpa` field in a module's `fields.add` subsection:
+gpa: {
+  label: 'What was your grade point average (GPA)?',
+  type: 'float',
+  min: 1.0,
+  max: 4.5
 }
 ```
 
 ## Settings
-
 ### Required
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`color` for this type) |
+|`type` | String | n/a | Specifies the field type (`float` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | String | n/a | The default value for the field |
+|`def` | Number | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
+|`max` | Number | n/a | The maximum allowed value for the field |
+|`min` | Number | n/a | The minimum allowed value for the field |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
-
 ## Use in templates
 
 ```django
-<button style="background-color: {{ data.piece.themeColor or '#639' }}">
-  Enhance
-</button>
+GPA: {{ data.piece.gpa }}
 ```

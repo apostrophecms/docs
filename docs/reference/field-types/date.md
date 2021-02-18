@@ -17,14 +17,15 @@ birthday: {
 ### Required
 
 |  Property | Type   | Default | Description |
-|-----------|-----------|-----------|-----------|------------|
-|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|-----------|-----------|-----------|-----------|
+|`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`date` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
-|-----------|-----------|-----------|-----------|------------|
+|-----------|-----------|-----------|-----------|
+|`def` | String | n/a | The default value for the field. Must be in `YYYY-MM-DD` format. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`max` | String | n/a | The maximum allowed date value for the field. Must be a date format (e.g., `YYYY-MM-DD`) |

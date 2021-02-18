@@ -35,7 +35,7 @@ contactInfo: {
 
 |  Property | Type | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`label` | String | n/a | Sets the visible label for the field in the UI. |
+|`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`array` for this type) |
 |`fields` | Object | n/a | The field schema for the array items. See below. |
 
@@ -43,6 +43,7 @@ contactInfo: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|`def` | Array | n/a | The default value for the field. It must comply with the array fields schema. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |

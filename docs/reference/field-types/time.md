@@ -1,16 +1,14 @@
-# `color`
+# `time`
 
-`color` fields provides the end user with a color picker interface. They also validate submitted values using [the TinyColor utility](https://github.com/bgrins/TinyColor#isvalid). Colors are saved as strings in [8 digit hex code](https://drafts.csswg.org/css-color/#hex-notation), or `#rrggbbaa`, format.
-
-<!-- TODO: Add vue-color options config documentation once supported. -->
+`time` fields are text field with UI support, and limitation, for saving time values. Times are stored in 24 hour `HH:MM:SS` format.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `themeColor` field in a module's `fields.add` subsection:
-themeColor: {
-  type: 'color',
-  label: 'Theme color'
+// Configuring the `eventTime` field in a module's `fields.add` subsection:
+eventTime: {
+  label: 'What time is the event?',
+  type: 'time'
 }
 ```
 
@@ -21,13 +19,13 @@ themeColor: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`color` for this type) |
+|`type` | String | n/a | Specifies the field type (`string` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | String | n/a | The default value for the field |
+|`def` | String | n/a | The default value for the field. Must be in `HH:MM:SS` format. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -36,11 +34,14 @@ themeColor: {
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
+::: warning NOTE
+If you do not set `def: null` or `required: true`, the time defaults to the current time.
+:::
 
 ## Use in templates
 
+Times are stored, and will print, in the `HH:MM:SS` format.
+
 ```django
-<button style="background-color: {{ data.piece.themeColor or '#639' }}">
-  Enhance
-</button>
+{{ data.piece.eventTime }}
 ```

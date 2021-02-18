@@ -22,7 +22,7 @@ At a minimum, a doc has unique `_id` and `slug` properties. The `type` property 
 
 A "piece" is a unit of standalone, structured, non-page content in Apostrophe. A piece module extends `@apostrophecms/piece-type`. These include core elements such as images and users, as well as project-specific content, such as events or products.
 
-They are not pages themselves, but can be displayed at individual page URLs if there is a matching piece page type (extending the `@apostrophecms/piece-page-type` module). They could then have individual "show pages" once an "index page" (an often-paginated listing page) of that type is created.
+They are not pages themselves, but can be displayed at individual page URLs if there is a matching pieces page type (extending the `@apostrophecms/piece-page-type` module). They could then have individual [show pages](#show-page) once an [index page](#index-page) (an often-paginated listing page) of that type is created.
 
 ## Page
 
@@ -32,6 +32,15 @@ Their `slug` property begins with `/`, which is only true for pages. A page also
 
 `path` differs from `slug` in that it always reflects the true parent-child relationships between pages in the tree, while `slug` can be edited and shortened if desired so that URLs don't have to contain a lot of slashes to reach a deep page.
 
+## Index page
+
+An index page, is a special [page](#page) that is built to display a listing of [pieces](#piece). Index pages extend the `@apostrophecms/piece-page-type` module. In addition to data available to all pages, index page templates have access to a `data.pieces` array, which contains objects representing individual pieces, limited by the pieces page `perPage` option and the state of pagination. Index pages also have `data.currentPage` and `data.totalPages` number values available to support pagination.
+
+## Show page
+
+Despite their name, these are not [pages](#page) in the sense of extending the `@apostrophecms/page-type` module. They therefore do not have individual representation in the page tree. They are a feature, enabled by creating an [index page](#index-page), providing individual URLs that display a rendered template for individual [pieces](#piece). **A blog listing is an "index page" and the individual blog post is a "show page."**
+
+Show page templates (`show.html`), do have access to their parent index page's `data.page` object, but they also have access to `data.piece`, which contains all of the data for a particular piece.
 ## Global doc
 
 There is a single doc with the slug, `global`, which is always loaded and available to page templates as `data.global`. This is useful for shared, site-wide headers and footers that are editable, etc. It is managed by the `@apostrophecms/global` module.
