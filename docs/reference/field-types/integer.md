@@ -27,6 +27,7 @@ rating: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|`def` | Number | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`max` | Number | n/a | The maximum allowed value for the field |

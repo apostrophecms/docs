@@ -1,6 +1,6 @@
 # `password`
 
-`password` fields are identical to `string` fields except that the user's input is visually obscured and they do not support the `textarea` option and they are not indexed for search.
+`password` fields are identical to `string` fields except that the user's input is visually obscured, they do not support the `textarea` option, and they are not indexed for search.
 <!-- TODO: Confirm if they are kept from search indexing automatically. -->
 
 ## Module field definition
@@ -26,8 +26,11 @@ secret: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|------------|
+|`def` | String | n/a | The default value for the field |
 |`help` | String | | Help text for the content editor |
 |`htmlHelp` | String | | Help text with support for HTML markup |
+|`min` | Integer | n/a | Sets the minimum number of characters allowed |
+|`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | false | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->

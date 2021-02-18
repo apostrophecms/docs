@@ -25,6 +25,7 @@ isSpecial: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|`def` | Boolean | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |

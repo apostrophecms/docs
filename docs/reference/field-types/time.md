@@ -1,44 +1,47 @@
-# `float`
+# `time`
 
-`float` fields support number input with decimals (floating point numbers). You may set minimum and maximum values using the `min` and `max` options.
+`time` fields are text field with UI support, and limitation, for saving time values. Times are stored in 24 hour `HH:MM:SS` format.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `gpa` field in a module's `fields.add` subsection:
-gpa: {
-  label: 'What was your grade point average (GPA)?',
-  type: 'float',
-  min: 1.0,
-  max: 4.5
+// Configuring the `eventTime` field in a module's `fields.add` subsection:
+eventTime: {
+  label: 'What time is the event?',
+  type: 'time'
 }
 ```
 
 ## Settings
+
 ### Required
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`float` for this type) |
+|`type` | String | n/a | Specifies the field type (`string` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | Number | n/a | The default value for the field |
+|`def` | String | n/a | The default value for the field. Must be in `HH:MM:SS` format. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`max` | Number | n/a | The maximum allowed value for the field |
-|`min` | Number | n/a | The minimum allowed value for the field |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
+::: warning NOTE
+If you do not set `def: null` or `required: true`, the time defaults to the current time.
+:::
+
 ## Use in templates
 
+Times are stored, and will print, in the `HH:MM:SS` format.
+
 ```django
-GPA: {{ data.piece.gpa }}
+{{ data.piece.eventTime }}
 ```

@@ -1,36 +1,35 @@
-# `float`
+# `url`
 
-`float` fields support number input with decimals (floating point numbers). You may set minimum and maximum values using the `min` and `max` options.
+`url` adds an editable URL field to the schema.
+
+Apostrophe will detect common mistakes, including leaving off `https://`. Common XSS attack vectors are laundered and discarded. Only "safe" URL schemes, e.g., `http`, `https`, `ftp` and `mailto`, are permitted.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `gpa` field in a module's `fields.add` subsection:
-gpa: {
-  label: 'What was your grade point average (GPA)?',
-  type: 'float',
-  min: 1.0,
-  max: 4.5
+// Configuring the `portfolio` field in a module's `fields.add` subsection:
+portfolio: {
+  label: 'Portfolio URL',
+  type: 'url'
 }
 ```
 
 ## Settings
+
 ### Required
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`float` for this type) |
+|`type` | String | n/a | Specifies the field type (`string` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | Number | n/a | The default value for the field |
+|`def` | String | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`max` | Number | n/a | The maximum allowed value for the field |
-|`min` | Number | n/a | The minimum allowed value for the field |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
@@ -40,5 +39,5 @@ gpa: {
 ## Use in templates
 
 ```django
-GPA: {{ data.piece.gpa }}
+<href="{{ data.piece.portfolio }}">My website</a>
 ```

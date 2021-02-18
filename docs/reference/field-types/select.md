@@ -1,26 +1,26 @@
-# `checkboxes`
+# `select`
 
-A `checkboxes` field allows a list of options where a user can select one or more items. Checkbox items can also be deselected, unlike [radio fields](radio.md).
+A `select` field allows a list of options where a user can select one value.
 
 ## Module field definition
 
 ```javascript
-// Configuring the `genres` field in a module's `fields.add` subsection:
-genres: {
-  label: 'Select the genres that apply to this book',
-  type: 'checkbox',
+// Configuring the `theme` field in a module's `fields.add` subsection:
+theme: {
+  label: 'Select a color scheme for this page',
+  type: 'select',
   choices: [
     {
-      label: 'Romance 🥰',
-      value: 'romance'
+      label: 'Dark 🌚',
+      value: 'dark'
     },
     {
-      label: 'Comedy 🤣',
-      value: 'comedy'
+      label: 'Light 💡',
+      value: 'light'
     },
     {
-      label: 'Crime 😰',
-      value: 'crime'
+      label: 'Dusk 🌆',
+      value: 'dusk'
     }
   ]
 }
@@ -34,13 +34,13 @@ genres: {
 |-----------|-----------|-----------|-----------|
 |`choices` | `array` |  n/a | An array of options that the editor can select from. See below. |
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`checkbox` for this type) |
+|`type` | String | n/a | Specifies the field type (`select` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | Array | n/a | The default value for the field. Values must be from the defined choices' values. |
+|`def` | Varies | n/a | The default value for the field. Must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -48,6 +48,7 @@ genres: {
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
+<!-- |widgetControls | Boolean | false | If `true`, `select` fields can be edited in line on the page if the field is in a widget | | -->
 
 ## `choices` configuration
 
@@ -56,12 +57,8 @@ genres: {
 
 ## Use in templates
 
-The checkbox field data value is stored in an array of the selected options' value. Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) that you can use to loop over the array.
+Select field data is stored as the string `value` property of the selected choice.
 
 ```django
-<ul>
-  {% for genre in data.piece.genres %}
-    <li>{{ genre }}</li>
-  {% endfor %}
-</ul>
+{{ data.page.theme }}
 ```

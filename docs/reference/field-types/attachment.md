@@ -14,7 +14,7 @@ resume: {
   label: 'Resumé',
   type: 'attachment',
   group: 'office'
-},
+}
 ```
 
 ## Settings
