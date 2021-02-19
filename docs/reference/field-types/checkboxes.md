@@ -8,7 +8,7 @@ A `checkboxes` field allows a list of options where a user can select one or mor
 // Configuring the `genres` field in a module's `fields.add` subsection:
 genres: {
   label: 'Select the genres that apply to this book',
-  type: 'checkbox',
+  type: 'checkboxes',
   choices: [
     {
       label: 'Romance 🥰',
@@ -34,7 +34,7 @@ genres: {
 |-----------|-----------|-----------|-----------|
 |`choices` | `array` |  n/a | An array of options that the editor can select from. See below. |
 |`label` | String | n/a | Sets the visible label for the field in the UI |
-|`type` | String | n/a | Specifies the field type (`checkbox` for this type) |
+|`type` | String | n/a | Specifies the field type (`checkboxes` for this type) |
 
 ### Optional
 
@@ -56,7 +56,7 @@ genres: {
 
 ## Use in templates
 
-The checkbox field data value is stored in an array of the selected options' value. Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) that you can use to loop over the array.
+The checkboxes field data value is stored in an array of the selected options' value. Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) that you can use to loop over the array.
 
 ```django
 <ul>

@@ -8,7 +8,7 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[array](/reference/field-types/array.md) | An array of structured content using its own [field schema](/reference/glossary.md#schema) |
 |[attachment](/reference/field-types/attachment.md) | File upload |
 |[boolean](/reference/field-types/boolean.md) | `true` or `false` |
-|[checkboxes](/reference/field-types/checkbox.md) | Multi-select checkbox options |
+|[checkboxes](/reference/field-types/checkboxes.md) | Multi-select checkbox options |
 |[color](/reference/field-types/color.md) | Color selection |
 |[date](/reference/field-types/date.md) | Date entry, stored in  YYYY-MM-DD format |
 |[email](/reference/field-types/email.md) | Email address  |
