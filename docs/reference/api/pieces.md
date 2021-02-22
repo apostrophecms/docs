@@ -38,6 +38,7 @@ Every [piece type](#TODO) has built in REST end points that share their overall 
 |`search` | `?search=shoes` | A search query to filter the response |
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 #### Custom filters
 
@@ -96,6 +97,7 @@ On error an appropriate HTTP status code is returned.
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the piece document version for that locale. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
