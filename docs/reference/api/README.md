@@ -1,4 +1,4 @@
-# API Reference
+# API route reference
 
 - [Authentication API](authentication.md)
 - [Piece type REST API](pieces.md)
