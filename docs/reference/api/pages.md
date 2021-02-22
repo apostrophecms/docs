@@ -287,6 +287,7 @@ The `_position` property uses specific string values rather than index numbers t
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the page document version for that locale. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
