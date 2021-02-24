@@ -15,7 +15,7 @@ Every [piece type](#TODO) has built in REST end points that share their overall 
 |POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
 |PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
 |PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
-|DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
+|DELETE | [`/api/v1/:piece-name/:_id`](#delete-api-v1-piece-name-id) | **Permanently deletes a piece document** | TRUE |
 
 ### Additional piece endpoints
 
@@ -230,11 +230,41 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
+## `DELETE /api/v1/:piece-name/:_id`
+
+**Authentication required.**
+
+This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a PATCH request to set `trash: true` do not permanently delete database documents and are typically better options.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
+### Request example
+
+```javascript
+// Request inside an async function.
+await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+  method: 'DELETE'
+});
+```
+
+### Response
+
+The successful DELETE request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned.
+
 ## `POST /api/v1/:piece-name/:_id/publish`
+
+**Authentication required.**
 
 Publish an existing `draft` mode document in a document set.
 
-The `:_id` segement of the route should be one of the following:
+The `:_id` segment of the route should be one of the following:
 - The `_id` property of the draft piece to be published
 - The `_id` property of the published piece to be replaced by the current `draft` version
 - The `aposDocId` property of the pieces in the document set

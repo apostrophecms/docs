@@ -13,7 +13,7 @@ All [page types](#TODO) use a single set of API endpoints, unlike piece types. D
 |POST | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page | TRUE |
 |PUT | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document | TRUE |
 |PATCH | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page | TRUE |
-|DELETE | Not supported | [See more in PATCH request details.](#moving-pages-to-the-trash) | n/a |
+|DELETE | [`/api/v1/@apostrophecms/page/:_id`](#delete-api-v1-apostrophecms-page-id) | **Permanently deletes a page document** | n/a |
 
 ### Additional page endpoints
 
@@ -22,7 +22,7 @@ All [page types](#TODO) use a single set of API endpoints, unlike piece types. D
 |GET | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content | FALSE |
 |POST | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page | TRUE |
 
-<!-- TODOcument -->
+<!-- TODO document -->
 <!-- |GET | [`/api/v1/@apostrophecms/page/:_id?locales=1`](#get-api-v1-apostrophecms-page-id-locales-1) | Request the available locales for a specific page | TRUE |
 |POST | [`/api/v1/@apostrophecms/page/:_id/export`](#post-api-v1-apostrophecms-page-id-export) | Copy a page from one locale to another | TRUE |
 |POST | [`/api/v1/@apostrophecms/page/:_id/revert-draft-to-published`](#post-api-v1-apostrophecms-page-id-revert-draft-to-published) | Revert a draft page to the the state of the published version, if available | TRUE |
@@ -372,6 +372,47 @@ The successful PATCH request returns the complete patched document. See the [pag
 ### Moving pages to the trash
 
 The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+
+## `DELETE /api/v1/@apostrophecms/page/:_id`
+
+
+**Authentication required.**
+
+This API route **permanently deletes the page database document**. Moving pieces to the trash in the Apostrophe user interface or [using a PATCH request](#moving-pages-to-the-trash) do not permanently delete database documents and are typically better options.
+
+DELETE requests will be rejected if:
+- the ID matches the home page (`slug: '/'`), or
+- the ID matches a page that has sub-pages, or "children," in the page tree structure. You must delete child pages first.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
+### Request example
+
+```javascript
+// Request inside an async function.
+await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+  method: 'DELETE'
+});
+```
+
+### Response
+
+The successful DELETE request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned. If the error is due to one of the rejection cases documented above, a message will be included to that effect, such as:
+
+```
+{
+  "name": "invalid",
+  "data": {},
+  "message": "You must delete the children of this page first."
+}
+```
 
 ## `GET /:_url?apos-refresh=1`
 
