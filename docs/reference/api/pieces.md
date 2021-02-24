@@ -236,6 +236,8 @@ The successful PATCH request returns the complete patched document. See the [pie
 
 This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a PATCH request to set `trash: true` do not permanently delete database documents and are typically better options.
 
+DELETE requests will be rejected if the `_id` matches the draft mode of a page that has an existing published mode document.
+
 ### Query parameters
 
 | Parameter | Example | Description |

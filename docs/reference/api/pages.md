@@ -381,8 +381,9 @@ The trash is part of the overall page tree in order to maintain the nesting stru
 This API route **permanently deletes the page database document**. Moving pieces to the trash in the Apostrophe user interface or [using a PATCH request](#moving-pages-to-the-trash) do not permanently delete database documents and are typically better options.
 
 DELETE requests will be rejected if:
-- the ID matches the home page (`slug: '/'`), or
-- the ID matches a page that has sub-pages, or "children," in the page tree structure. You must delete child pages first.
+- the `_id` matches the draft mode of a page that has an existing published mode document, or
+- the `_id` matches the home page (`slug: '/'`), or
+- the `_id` matches a page that has sub-pages, or "children," in the page tree structure. You must delete child pages first.
 
 ### Query parameters
 
