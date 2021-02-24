@@ -76,6 +76,13 @@ module.exports = {
             'reference/api/media',
             'reference/api/field-formats'
           ]
+        },
+        {
+          title: 'Module configuration',
+          path: '/reference/module-config',
+          children: [
+            'reference/module-config/pieces'
+          ]
         }
       ]
     }
