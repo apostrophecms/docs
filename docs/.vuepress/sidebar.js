@@ -77,13 +77,7 @@ module.exports = {
             'reference/api/field-formats'
           ]
         },
-        {
-          title: 'Module configuration',
-          path: '/reference/module-config',
-          children: [
-            'reference/module-config/pieces'
-          ]
-        }
+        'reference/module-options'
       ]
     }
   ]
