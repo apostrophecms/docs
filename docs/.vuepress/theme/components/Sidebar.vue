@@ -31,8 +31,8 @@ export default {
 <style lang="stylus">
 .sidebar {
   ul {
-    padding: 0;
     margin: 0;
+    padding: 0;
     list-style-type: none;
   }
 
@@ -42,18 +42,19 @@ export default {
 
   .nav-links {
     display: none;
+    padding: 0.5rem 0 0.75rem;
     border-bottom: 1px solid $borderColor;
-    padding: 0.5rem 0 0.75rem 0;
 
     a {
       font-weight: 600;
     }
 
-    .nav-item, .repo-link {
+    .nav-item,
+    .repo-link {
       display: block;
+      padding: 0.5rem 0 0.5rem 1.5rem;
       line-height: 1.25rem;
       font-size: 1.1em;
-      padding: 0.5rem 0 0.5rem 1.5rem;
     }
   }
 
