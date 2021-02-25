@@ -87,7 +87,7 @@ By default, `GET` requests return the published and default locale version of ea
   }
 ```
 
-On error an appropriate HTTP status code is returned.
+In case of an error an appropriate HTTP status code is returned.
 
 ## `GET /api/v1/:piece-name/:_id`
 
@@ -113,7 +113,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `GET` request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `GET` request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/:piece-name`
 
@@ -144,7 +144,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `POST` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PUT /api/v1/:piece-name/:_id`
 
@@ -177,7 +177,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `PUT` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PUT` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PATCH /api/v1/:piece-name/:_id`
 
@@ -228,7 +228,7 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 
 ### Response
 
-The successful `PATCH` request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PATCH` request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `DELETE /api/v1/:piece-name/:_id`
 
@@ -258,7 +258,7 @@ await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:publ
 
 ### Response
 
-The successful `DELETE` request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned.
+The successful `DELETE` request simply responds with a `200` HTTP response status code. In case of an error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/:piece-name/:_id/publish`
 
@@ -294,7 +294,7 @@ const article = await response.json();
 
 ### Response
 
-The successful `POST` request returns the newly published piece. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly published piece. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## Piece document response example
 

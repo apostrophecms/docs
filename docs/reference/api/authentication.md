@@ -71,7 +71,7 @@ A successful response will return a JSON object with a `token` property.
 }
 ```
 
-On error an appropriate HTTP status code is returned.
+In case of an error an appropriate HTTP status code is returned.
 
 ### Usage
 
@@ -109,7 +109,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. On error an appropriate HTTP status code is returned.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error an appropriate HTTP status code is returned.
 
 ### End session
 

@@ -221,7 +221,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `GET` request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `GET` request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/@apostrophecms/page`
 
@@ -266,7 +266,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `POST` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PUT /api/v1/@apostrophecms/page/:_id`
 
@@ -314,7 +314,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `PUT` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PUT` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PATCH /api/v1/@apostrophecms/page/:_id`
 
@@ -367,7 +367,7 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 
 ### Response
 
-The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ### Moving pages to the trash
 
@@ -405,7 +405,7 @@ await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6ox
 
 ### Response
 
-The successful `DELETE` request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned. If the error is due to one of the rejection cases documented above, a message will be included to that effect, such as:
+The successful `DELETE` request simply responds with a `200` HTTP response status code. In case of an error an appropriate HTTP status code is returned. If the error is due to one of the rejection cases documented above, a message will be included to that effect, such as:
 
 ```
 {
@@ -480,7 +480,7 @@ const document = await response.json();
 
 ### Response
 
-The successful `POST` request returns the newly published document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly published document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## Page document response example
 

@@ -43,7 +43,7 @@ const attachment = await fetch('/api/v1/@apostrophecms/attachment/upload', {
 
 ### Response
 
-The successful `POST` request returns the newly created attachment. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created attachment. In case of an error an appropriate HTTP status code is returned.
 
 | Property | Format | Description |
 |----------|------|-------------|
@@ -112,7 +112,7 @@ The newly uploaded image file will be stored with a file name using the `crop` p
 
 ### Response
 
-The successful `POST` request returns `true`. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns `true`. In case of an error an appropriate HTTP status code is returned.
 
 ## Media `GET` request
 
