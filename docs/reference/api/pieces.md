@@ -10,18 +10,18 @@ Every [piece type](#TODO) has built in REST end points that share their overall 
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
-|GET | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
-|POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
-|PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
-|PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
-|DELETE | [`/api/v1/:piece-name/:_id`](#delete-api-v1-piece-name-id) | **Permanently deletes a piece document** | TRUE |
+|`GET` | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
+|`GET` | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
+|`POST` | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
+|`PUT` | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
+|`PATCH` | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
+|`DELETE` | [`/api/v1/:piece-name/:_id`](#delete-api-v1-piece-name-id) | **Permanently deletes a piece document** | TRUE |
 
 ### Additional piece endpoints
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|POST | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
+|`POST` | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
 - `author`: a `relationship` field connected to the `user` piece type
@@ -56,7 +56,7 @@ const document = await response.json();
 
 ### Response
 
-By default, GET requests return the published and default locale version of each piece.
+By default, `GET` requests return the published and default locale version of each piece.
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -113,7 +113,7 @@ const document = await response.json();
 
 ### Response
 
-The successful GET request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `GET` request returns the matching document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/:piece-name`
 
@@ -144,7 +144,7 @@ const document = await response.json();
 
 ### Response
 
-The successful POST request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PUT /api/v1/:piece-name/:_id`
 
@@ -177,7 +177,7 @@ const document = await response.json();
 
 ### Response
 
-The successful PUT request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PUT` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `PATCH /api/v1/:piece-name/:_id`
 
@@ -215,7 +215,7 @@ const document = await response.json();
 
 ### MongoDB-style requests
 
-The PATCH request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
+The `PATCH` request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
 
 ```javascript
 {
@@ -228,15 +228,15 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PATCH` request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## `DELETE /api/v1/:piece-name/:_id`
 
 **Authentication required.**
 
-This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a PATCH request to set `trash: true` do not permanently delete database documents and are typically better options.
+This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a `PATCH` request to set `trash: true` do not permanently delete database documents and are typically better options.
 
-DELETE requests will be rejected if the `_id` matches the draft mode of a page that has an existing published mode document.
+`DELETE` requests will be rejected if the `_id` matches the draft mode of a page that has an existing published mode document.
 
 ### Query parameters
 
@@ -258,7 +258,7 @@ await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:publ
 
 ### Response
 
-The successful DELETE request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned.
+The successful `DELETE` request simply responds with a `200` HTTP response status code. On error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/:piece-name/:_id/publish`
 
@@ -294,7 +294,7 @@ const article = await response.json();
 
 ### Response
 
-The successful POST request returns the newly published piece. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly published piece. See the [piece document response example](#piece-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
 
 ## Piece document response example
 

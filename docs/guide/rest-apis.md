@@ -81,7 +81,7 @@ module.exports = {
 
   // apiRoutes are also helpful, for related edge cases that don't
   // match up well with the REST conventions.
-  // This route becomes accessible as: POST /api/v1/mydatabase/merge
+  // This route becomes accessible as: `POST /api/v1/mydatabase/merge`
 
   apiRoutes(self, options) {
     return {
