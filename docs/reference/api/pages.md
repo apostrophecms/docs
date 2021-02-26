@@ -320,7 +320,7 @@ The successful `PUT` request returns the newly created document. See the [page d
 
 **Authentication required.**
 
-The `PATCH` request may include *both* `_targetId` and `_position` as described in the [`POST` request description](#post-api-v1-apostrophecms-page), but that only required if the page is being moved.
+The `PATCH` request may include *both* `_targetId` and `_position` as described in the [`POST` request description](#post-api-v1-apostrophecms-page), but that is only required if the page is being moved.
 
 ### Query parameters
 
