@@ -75,7 +75,7 @@ In case of an error an appropriate HTTP status code is returned.
 
 ### Usage
 
-Add this token to all REST API requests that require login by passing an `Authorization` header. This includes `POST`, `PUT`, `PATCH` and `DELETE` operations. You will also get more complete results from `GET` operations, including access to documents with `visibility` set to `loginRequired`.
+Add this token to all REST API requests that require login by passing an `Authorization` header. This includes `POST`, `PUT`, `PATCH` and `DELETE` operations. Using authorization for `GET` operations will return more complete results, including access to documents with `visibility` set to `loginRequired`.
 
 Your `authorization` HTTP header should look like:
 
