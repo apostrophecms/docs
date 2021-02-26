@@ -1,8 +1,8 @@
 # Module configuration options
 
-Most Apostrophe module types can be configured with optional settings that change how they can be used and referenced. The sections below describe the options available in all modules as well as those specific to certain module types.
+Most Apostrophe modules, both core and project-level, can be configured with settings that influence functionality without having to write custom Javascript. The sections below describe the options available in all modules as well as those specific to certain module types.
 
-All the settings described here are placed in the `options` configuration object. This often added in the module's `index.js` file, but can also be added where the module is instantiated in the `app.js` file.
+All the settings described here are placed in a module's `options` configuration object. This often added in the respective `index.js` file, but can also be added where the module is instantiated in the `app.js` file.
 
 `index.js` example:
 ```javascript
@@ -144,3 +144,5 @@ You might use that value as a fallback for user-editable fields.
   Title Here
 </h2>
 ```
+
+## Accessing module options
