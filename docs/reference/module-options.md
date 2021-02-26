@@ -97,7 +97,7 @@ Modules' `name` properties are based on the `module` object keys in `app.js` by 
 #### Example
 
 ```javascript
-// In `modules/article-module/index.js`
+// modules/article-module/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -114,7 +114,7 @@ Similar to [`browser`](#browser), the `templateData` module option can be set to
 #### Example
 
 ```javascript
-// In `modules/heading-widget/index.js`
+// modules/heading-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {

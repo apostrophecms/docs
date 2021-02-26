@@ -21,7 +21,7 @@ Just like in A2, piece page modules and piece modules come in pairs. And the nam
 Here's an example of a piece page module that works with the product piece described in the [pieces section](pieces.md):
 
 ```js
-// in ./app.js
+// app.js
 require('apostrophe')({
   modules: {
     // ... other modules ...
@@ -34,8 +34,8 @@ require('apostrophe')({
 ```
 
 ```js
-// in ./modules/page/index.js, add the new page type
-// to the "Type" dropdown for new pages
+// modules/page/index.js
+// Add the new page type to the "Type" dropdown for new pages
 
 module.exports = {
   options: {
@@ -58,8 +58,8 @@ module.exports = {
 ```
 
 ```js
-// In ./modules/product-page/index.js, configure
-// our new piece page type
+// modules/product-page/index.js
+// Configure our new piece page type
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -69,7 +69,7 @@ module.exports = {
 ```
 
 ```django
-{# in ./modules/product-page/views/index.html #}
+{# modules/product-page/views/index.html #}
 
 {% import '@apostrophecms/pager:macros.html' as pager with context %}
 {% extends "layout.html" %}
@@ -92,7 +92,7 @@ module.exports = {
 ```
 
 ```django
-{# in ./modules/product-page/views/show.html #}
+{# modules/product-page/views/show.html #}
 {% extends "layout.html" %}
 {% set product = data.piece %}
 
@@ -120,7 +120,7 @@ So to finish the job, just go to the home page, click "Page Tree," then click "N
 Just like in A2, we can configure `piecesFilters` to offer filtering to our website visitors. Let's start by adding a field to our `product` pieces that's good to filter on:
 
 ```js
-// In ./modules/product/index.js
+// modules/product/index.js
 module.exports = {
   // ...
   fields: {
@@ -150,7 +150,7 @@ module.exports = {
 ```
 
 ```js
-// In ./modules/product-page/index.js
+// modules/product-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -166,7 +166,7 @@ module.exports = {
 ```
 
 ```django
-{# in ./modules/product-page/views/index.html #}
+{# modules/product-page/views/index.html #}
 
 {# ... add this before the list of products #}
 <nav>
@@ -204,8 +204,8 @@ Rather than filtering them all on the same page, you might prefer to create sepa
 We'll solve it by adding a `color` field to our piece pages as well, along with logic to browse only matching pieces and assign the right URL to each piece:
 
 ```js
-// In ./modules/product-page/index.js
-// In ./modules/product-page/index.js
+// modules/product-page/index.js
+// modules/product-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {

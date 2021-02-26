@@ -29,7 +29,7 @@ If we add an `apos-mode` parameter using the same route, we can get the draft ve
 Apostrophe provides many REST APIs, but also provides a convenient way to write your own. You don't need this for pieces or pages, but it can be useful for wrapping your own project-specific backends:
 
 ```js
-// in ./app.js
+// app.js
 require('apostrophe') {
   modules: {
     mydatabase: {}
@@ -38,7 +38,7 @@ require('apostrophe') {
 ```
 
 ```js
-// in ./modules/mydatabase/index.js
+// modules/mydatabase/index.js
 
 module.exports = {
 

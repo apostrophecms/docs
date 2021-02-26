@@ -51,7 +51,7 @@ As shown above, fragments can be defined and used in a single template file. Tha
 For example, you might have an article [index page](/reference/glossary.md#index-page) that will list a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each item in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
 
 ```django
-{# in `modules/article-page/views/item-fragment.html` #}
+{# modules/article-page/views/item-fragment.html #}
 {% fragment teaser(article) %}
   <section>
     <h2>{{ article.title }}</h2>
@@ -65,7 +65,7 @@ For example, you might have an article [index page](/reference/glossary.md#index
 Since the fragment and page template are both in the `article-page` module, we can import it with only the file name using the `{% import %}` template tag.
 
 ```django
-{# in `modules/article-page/views/page.html` #}
+{# modules/article-page/views/page.html #}
 {% import 'item-fragment.html' as articleFragment %}
 
 {% for article in data.pieces %}
@@ -79,7 +79,7 @@ Since the fragment and page template are both in the `article-page` module, we c
 We can import fragments into a separate module by adding the fragment file's module name in the `import` tag. This is what it might look like to import the article teaser fragment into a `press-page` index page template:
 
 ```django
-{# in `modules/press-page/views/page.html` #}
+{# modules/press-page/views/page.html #}
 {# 👇 Importing our fragment from the `article-page` module #}
 {% import 'article-page:item-fragment.html' as importedFragment %}
 
@@ -93,7 +93,7 @@ We can import fragments into a separate module by adding the fragment file's mod
 The root-level `views` directory is directly accessible by all modules. In the page template examples above, we are extending the `layout.html` template without prefixing the file name with a module because it is located at `views/layout.html`. Similarly, you can place fragments directly in the root-level views directory, or in a sub-directory of it, and then import that fragment file without prefixing the file name.
 
 ```django
-{# in `views/fragments/utilities.html #}
+{# views/fragments/utilities.html #}
 {% fragment heading(title) %}
   <h2 class="fancy">{{ title }}</h2>
 {% endfragment %}
