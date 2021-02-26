@@ -44,8 +44,7 @@ require('apostrophe')({
 ## Options for any module
 
 - [`alias`](#alias)
-- [`browser`](#browser)
-<!-- - [`components`](#components) -->
+- [`components`](#components)
 - [`name`](#name)
 - [`templateData`](#templatedata)
 
@@ -70,34 +69,25 @@ module.exports = {
 This `article` module can then be referenced anywhere the `apos` object is present as `apos.article`. Otherwise it would be available via `apos.modules['news-article']`.
 
 
-### `browser`
+### `components`
 
-An object with data to make available for the module in the client (e.g., on `window.modules['browser-name']`).
+The `components` options is an object identifying Vue components to use for the module's related user interface. The keys of this object, and thus the UI being overridden, will vary based on the module type. For example, piece module use `managerModal` and `editorModal` components.
 
-Any module that completely overwrites the `getBrowserData` method, rather than extending it from `@apostrophecms/module`, will not have access to the `browser` option properties (e.g., `@apostrophecms/login`, `@apostrophecms/modal`). The same is true for any custom modules that extend such modules.
+This is an advanced option since it can easily break the user interface.
 
 #### Example
 
 ```javascript
-// In `modules/popup-widget/index.js`
+// modules/@apostrophecms/piece-type/index.js
 module.exports = {
-  extend: '@apostrophecms/widget-type',
   options: {
-    browser: {
-      defaultPopupDelay: 4000
+    components: {
+      managerModal: 'MyCustomPiecesManager'
     }
   },
   // ...
 }
 ```
-
-In client-side Javascript you could then reference `window.apos.modules['popup-widget'].defaultPopupDelay` to get `4000`.
-
-<!-- ### `components`
-
-  The `components` option is used to identify Vue components
-
-  ~ set specific Vue components to be used for this module. (Don't doc?) -->
 
 ### `name`
 
