@@ -1,12 +1,12 @@
 # Module configuration options
 
-Most Apostrophe modules, both core and project-level, can be configured with settings that influence functionality without having to write custom Javascript. The sections below describe the options available in all modules as well as those specific to certain module types.
+Apostrophe modules can be configured with settings that influence functionality without having to write custom Javascript. The sections below describe the options available in all modules as well as those specific to certain module types.
 
-All the settings described here are placed in a module's `options` configuration object. This often added in the respective `index.js` file, but can also be added where the module is instantiated in the `app.js` file.
+All settings described here are placed in a module's `options` configuration object. The `options` object can be added in the module's `index.js` file, as well as where the module is instantiated in the `app.js` file.
 
 `index.js` example:
 ```javascript
-// In `modules/article/index.js`
+// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // 👇 Module configuration options
@@ -22,7 +22,7 @@ module.exports = {
 
 `app.js` example:
 ```javascript
-// In `app.js`
+// app.js
 require('apostrophe')({
   shortName: 'bowling-league-site', // Unique to your project
   modules: {
@@ -50,13 +50,14 @@ require('apostrophe')({
 
 ### `alias`
 
+<!-- TODO: Link to information about the apos object when available. -->
 Set to a string, the `alias` value will be applied to the `apos` object (accessible in many places) as a quick reference to the module.
 set an alias to easily reference the module from other modules. There is no default value.
 
 #### Example
 
 ```javascript
-// In `modules/news-article/index.js`
+// modules/news-article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -91,7 +92,7 @@ module.exports = {
 
 ### `name`
 
-Modules `name` properties are based on the `module` object keys in `app.js` by default. Setting the the `name` option in a module can override this original value for the sake of referencing the module elsewhere.
+Modules' `name` properties are based on the `module` object keys in `app.js` by default. Setting the the `name` option in a module can override this original value for the sake of referencing the module elsewhere.
 
 #### Example
 
