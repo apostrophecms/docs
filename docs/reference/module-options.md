@@ -153,7 +153,7 @@ Option settings in this section apply to all modules that extend `@apostrophecms
 ### `adminOnly`
 
 <!-- TODO: link to permissions docs when available. -->
-If `true`, only users with admin-level permissions may edit this doc type. There is no default value.
+If `true`, only users with the sitewide admin permission can read or write docs of this type. The `@apostrophecms/user` module uses this setting due to its impact on user access. There is no default value.
 
 #### Example
 
@@ -170,7 +170,9 @@ module.exports = {
 
 ### `autopublish`
 
-Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type. The core image and file modules use this option, for example, and it can be useful for such "utility" piece types that need to have a single, predictable state.
+Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type.
+
+The core image and file modules use this option, for example. It eliminates the need for users to think about the distinction between draft and published content while preserving the possibility of translation for different locales.
 
 #### Example
 
@@ -282,18 +284,11 @@ module.exports = {
 
 Option settings in this section apply to all piece modules (those that extend `@apostrophecms/piece-type`).
 
-<!-- - [`createControls`](#createcontrols)
-- [`editControls`](#editcontrols) -->
 - [`pluralLabel`](#plurallabel)
 - [`perPage`](#perpage)
 - [`publicApiProjection`](#publicapiprojection)
 - [`quickCreate`](#quickcreate)
 - [`searchable`](#searchable)
-
-<!-- ### `createControls`
- (don't doc)
-### `editControls`
- (don't doc) -->
 
 ### `pluralLabel`
 
