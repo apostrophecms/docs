@@ -10,26 +10,28 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 
 | Method | Path | Description |
 |---------|---------|---------|
-|GET | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Get the home page and all other pages structured in the home page's `_children` property |
-|GET | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID |
-|POST | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page |
-|PUT | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document |
-|PATCH | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page |
-|DELETE | Not supported | [See more in PATCH request details.](#moving-pages-to-the-trash) |
+|`GET` | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Get the home page and all other pages structured in the home page's `_children` property |
+|`GET` | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID |
+|`POST` | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page |
+|`PUT` | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document |
+|`PATCH` | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page |
+|`DELETE` | [`/api/v1/@apostrophecms/page/:_id`](#delete-api-v1-apostrophecms-page-id) | **Permanently deletes a page document** |
+
 
 ### Additional page endpoints
 
 | Method | Path | Description |
 |---------|---------|---------|---------|
-|GET | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content |
-|POST | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
+|`GET` | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content |
+|`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
-<!-- TODOcument -->
+<!-- TODO: document -->
 <!-- |GET | [`/api/v1/@apostrophecms/page/:_id?locales=1`](#get-api-v1-apostrophecms-page-id-locales-1) | Request the available locales for a specific page |
 |POST | [`/api/v1/@apostrophecms/page/:_id/export`](#post-api-v1-apostrophecms-page-id-export) | Copy a page from one locale to another |
 |POST | [`/api/v1/@apostrophecms/page/:_id/revert-draft-to-published`](#post-api-v1-apostrophecms-page-id-revert-draft-to-published) | Revert a draft page to the the state of the published version, if available |
 |POST | [`/api/v1/@apostrophecms/page/:_id/revert-published-to-previous`](#post-api-v1-apostrophecms-page-id-revert-published-to-previous) | Revert a published page to the previous version, if available |
 |POST | [`/api/v1/@apostrophecms/page/:_id/unpublish`](#post-api-v1-apostrophecms-page-id-unpublish) | Unpublish the published version of a page | -->
+
 
 ## `GET /api/v1/@apostrophecms/page`
 
@@ -56,7 +58,7 @@ const document = await response.json();
 
 ### Page tree response (default)
 
-Pages' relationship to one another is a critical feature. For that reason, by default the "GET all" request returns the home page as a JSON object, including a `_children` array property. That array contains the "top level" pages.
+Pages' relationship to one another is a critical feature. For that reason, by default the `GET` request for multiple pages returns the home page as a JSON object, including a `_children` array property. That array contains the "top level" pages.
 
 ```json
 {
@@ -225,7 +227,7 @@ const document = await response.json();
 
 ### Response
 
-The successful GET request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `GET` request returns the matching document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `POST /api/v1/@apostrophecms/page`
 
@@ -269,7 +271,7 @@ const document = await response.json();
 
 ### Response
 
-The successful POST request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PUT /api/v1/@apostrophecms/page/:_id`
 
@@ -316,11 +318,11 @@ const document = await response.json();
 
 ### Response
 
-The successful PUT request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PUT` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## `PATCH /api/v1/@apostrophecms/page/:_id`
 
-The PATCH request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page), but that is not required if the page is not being moved.
+The `PATCH`request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page), but that is not required if the page is not being moved.
 
 ### Query parameters
 
@@ -355,7 +357,7 @@ const document = await response.json();
 
 ### MongoDB-style requests
 
-The PATCH request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
+The `PATCH` request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
 
 ```json
 {
@@ -368,11 +370,53 @@ The PATCH request body may use MongoDB-style operators. For example, you may use
 
 ### Response
 
-The successful PATCH request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ### Moving pages to the trash
 
 The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+
+## `DELETE /api/v1/@apostrophecms/page/:_id`
+
+
+**Authentication required.**
+
+This API route **Permanently deletes the page database document**. Moving pieces to the trash in the Apostrophe user interface or [using a `PATCH` request](#moving-pages-to-the-trash) do not permanently delete database documents and should be considered.
+
+`DELETE` requests will be rejected if:
+- the `_id` matches the draft mode of a page that has an existing published mode document
+- the `_id` matches the home page (`slug: '/'`)
+- the `_id` matches a page that has sub-pages, or "children," in the page tree structure. You must delete child pages first
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
+|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+
+### Request example
+
+```javascript
+// Request inside an async function.
+await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+  method: 'DELETE'
+});
+```
+
+### Response
+
+The successful `DELETE` request simply responds with a `200` HTTP response status code. In case of an error an appropriate HTTP status code is returned. If the error is due to one of the rejection cases documented above, a message will be included to that effect, such as:
+
+```
+{
+  "name": "invalid",
+  "data": {},
+  "message": "You must delete the children of this page first."
+}
+```
 
 ## `GET /:_url?apos-refresh=1`
 
@@ -442,7 +486,7 @@ const document = await response.json();
 
 ### Response
 
-The successful POST request returns the newly published document. See the [page document response example](#page-document-response-example) below for a sample response body. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly published document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
 ## Page document response example
 
