@@ -43,6 +43,8 @@ require('apostrophe')({
 
 ## Options for any module
 
+Option settings in this section apply to every module in Apostrophe.
+
 - [`alias`](#alias)
 - [`components`](#components)
 - [`name`](#name)
@@ -136,4 +138,107 @@ You might use that value as a fallback for user-editable fields.
 </h2>
 ```
 
-## Accessing module options
+## Options for all doc type modules
+
+Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](glossary.md#doc) modules). These include all piece and page types.
+
+- [`adminOnly`](#adminonly)
+- [`autopublish`](#autopublish)
+- [`label`](#label)
+- [`localized`](#localized)
+- [`slugPrefix`](#slugprefix)
+<!-- - [`contextBar`](#contextbar) -->
+
+### `adminOnly`
+
+<!-- TODO: link to permissions docs when available. -->
+If `true`, only users with admin-level permissions may edit this doc type. There is no default value.
+
+#### Example
+
+```javascript
+// modules/official-memo/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    adminOnly: true
+  },
+  // ...
+}
+```
+
+### `autopublish`
+
+Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type. The core image and file modules use this option, for example, and it can be useful for such "utility" piece types that need to have a single, predictable state.
+
+#### Example
+
+```javascript
+// modules/article-category/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    autopublish: true
+  },
+  // ...
+}
+```
+
+<!-- ### `contextBar` -->
+
+<!-- NOTE: Should we keep this on the secrete menu? (not document) -->
+<!-- If `true`, the second row of the admin bar, the "context bar," will be disabled.
+`true` ~ allows the admin bar context bar row to appear -->
+
+### `label`
+
+`label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals and the page type select field.
+
+If not set, Apostrophe will convert the module `name` meta property to a readable label by splitting the `name` on dashes and underscores, then capitalizing the first letter of each word.
+
+#### Example
+
+```javascript
+// modules/feature/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Featured Article'
+  },
+  // ...
+}
+```
+
+### `localized`
+
+Defaults to `true`. If set to `false`, this doc type will _not_ be included in the locale system. This means there will be only one version of each doc, regardless of whether multiple locales (e.g., for languages or regions) are active. The "users" piece disables localization in this way.
+
+#### Example
+
+```javascript
+// modules/administrative-category/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    localized: false
+  },
+  // ...
+}
+```
+
+### `slugPrefix`
+
+Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can be useful to help prevent slugs, which must be unique for each doc in the database, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
+
+#### Example
+
+```javascript
+// modules/article-category/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    slugPrefix: 'category-'
+  },
+  // ...
+}
+```
