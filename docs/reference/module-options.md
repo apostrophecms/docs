@@ -146,6 +146,7 @@ Option settings in this section apply to all modules that extend `@apostrophecms
 - [`autopublish`](#autopublish)
 - [`label`](#label)
 - [`localized`](#localized)
+- [`sort`](#sort)
 - [`slugPrefix`](#slugprefix)
 <!-- - [`contextBar`](#contextbar) -->
 
@@ -226,6 +227,40 @@ module.exports = {
 }
 ```
 
+### `sort`
+
+The `sort` option for a doc type defines a sorting order for requests to the database for that type. This setting generally follows the [MongoDB `$sort` aggregation](https://docs.mongodb.com/manual/reference/operator/aggregation/sort/) syntax. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
+
+The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns documents based on the `updatedAt` property (the date and time of the last update) in descending order. The `sort` object can have multiple keys for more specific sorting.
+
+#### Example
+
+This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    sort: {
+      priority: 1,
+      updatedAt: -1
+    }
+  },
+  fields: {
+    add: {
+      priority: {
+        type: 'integer',
+        min: 1,
+        max: 5
+      },
+      // ...
+    }
+  }
+  // ...
+}
+```
+
 ### `slugPrefix`
 
 Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can be useful to help prevent slugs, which must be unique for each doc in the database, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
@@ -242,3 +277,118 @@ module.exports = {
   // ...
 }
 ```
+
+## Options for all piece modules
+
+Option settings in this section apply to all piece modules (those that extend `@apostrophecms/piece-type`).
+
+<!-- - [`createControls`](#createcontrols)
+- [`editControls`](#editcontrols) -->
+- [`pluralLabel`](#plurallabel)
+- [`perPage`](#perpage)
+- [`publicApiProjection`](#publicapiprojection)
+- [`quickCreate`](#quickcreate)
+- [`searchable`](#searchable)
+
+<!-- ### `createControls`
+ (don't doc)
+### `editControls`
+ (don't doc) -->
+
+### `pluralLabel`
+
+Similar to `label` for all doc types, the `pluraLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces have unique labels, for example, in the manager modal where it might display "All Articles."
+
+If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
+
+#### Example
+
+```javascript
+// modules/goose/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Goose',
+    pluralLabel: 'Geese'
+  },
+  // ...
+}
+```
+
+### `perPage`
+
+In piece type modules, the `perPage` option, set to an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+
+#### Example
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    perPage: 20 // REST `GET` requests will return 20 pieces per page.
+  },
+  // ...
+}
+```
+
+### `publicApiProjection`
+
+By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
+
+This should be set to an object containing individual field name keys set to `1` for their values. Those fields names included in the `publicApiProjection` object will be returned when the `GET` API requests are made without authentication.
+
+#### Example
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    publicApiProjection: {
+      title: 1,
+      authorName: 1,
+      _url: 1 // 👈 Dynamic properties are allowed
+    }
+  },
+  // ...
+}
+```
+
+Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the title, `authorName`, and `_url` properties.
+
+### `quickCreate`
+
+Setting `quickCreate` to the boolean `true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals. This is a useful setting for the piece types that editors will be adding most often.
+
+#### Example
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    quickCreate: true
+  },
+  // ...
+}
+```
+
+### `searchable`
+
+<!-- TODO: link to documentation of Apostrophe search when available. -->
+By default, all piece types are included in Apostrophe search results. Setting `searchable: false` on a piece type will exclude that piece type from the search results.
+
+#### Example
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    searchable: false
+  },
+  // ...
+}
+```
+
