@@ -1,6 +1,6 @@
 # Piece type REST endpoints
 
-Every [piece type](#TODO) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
+Every [piece type](/reference/glossary.md#piece) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
 
 ## Endpoints
 
@@ -8,20 +8,22 @@ Every [piece type](#TODO) has built in REST end points that share their overall 
 
 ### REST endpoints
 
-| Method | Path | Description | Auth required |
-|---------|---------|---------|---------|
-|GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated| FALSE |
-|GET | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID | FALSE |
-|POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type | TRUE |
-|PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document | TRUE |
-|PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document | TRUE |
-|DELETE | Not supported | Instead `PATCH` the `trash` property to `true` | n/a |
+[Authentication](/reference/api/authentication.md) is required for all requests other than `GET` requests for pieces with defined [`publicApiProjection`](/reference/module-options.md#publicapiprojection).
+
+| Method | Path | Description |
+|---------|---------|---------|
+|GET | [`/api/v1/:piece-name`](#get-api-v1-piece-name)| Get all pieces of a given type, paginated|
+|GET | [`/api/v1/:piece-name/:_id`](#get-api-v1-piece-name-id)| Get a single piece with a specified ID |
+|POST | [`/api/v1/:piece-name`](#post-api-v1-piece-name)| Insert a new piece of the specified type |
+|PUT | [`/api/v1/:piece-name/:_id`](#put-api-v1-piece-name-id)| Fully replace a specific piece document |
+|PATCH | [`/api/v1/:piece-name/:_id`](#patch-api-v1-piece-name-id)| Update only certain fields on a specific document |
+|DELETE | Not supported | Instead `PATCH` the `trash` property to `true` |
 
 ### Additional piece endpoints
 
-| Method | Path | Description | Auth required |
-|---------|---------|---------|---------|
-|POST | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-apostrophecms-piece-name-id-publish) | Publish the draft version of a piece | TRUE |
+| Method | Path | Description |
+|---------|---------|---------|
+|POST | [`/api/v1/:piece-name/:_id/publish`](#post-api-v1-piece-name-id-publish) | Publish the draft version of a piece |
 
 **This guide will use an `article` piece type as an example.** In addition to standard piece fields, this hypothetical piece type has the following fields (for the sake of illustration):
 - `author`: a `relationship` field connected to the `user` piece type
@@ -37,12 +39,14 @@ Every [piece type](#TODO) has built in REST end points that share their overall 
 |`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+<!-- TODO: link to docs about locales when available. -->
 
 #### Custom filters
 
-You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](#TODO).
+You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](/guide/pieces.md#filters-are-also-configured-like-fields).
+<!-- TODO: Update the filters link when the new guide is written. -->
 
 ### Request example
 
@@ -96,8 +100,9 @@ On error an appropriate HTTP status code is returned.
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request the piece document version for that locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the piece document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+<!-- TODO: link to docs about locales when available. -->
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
@@ -117,14 +122,13 @@ The successful GET request returns the matching document. See the [piece documen
 
 ## `POST /api/v1/:piece-name`
 
-**Authentication required.**
-
 ### Query parameters
 
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to request piece document versions for that locale. Defaults to the default locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
+<!-- TODO: link to docs about locales when available. -->
 
 ### Request example
 
@@ -148,14 +152,13 @@ The successful POST request returns the newly created document. See the [piece d
 
 ## `PUT /api/v1/:piece-name/:_id`
 
-**Authentication required.**
-
 ### Query parameters
 
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to replace the piece document version for that locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the piece document version for that locale. |
+<!-- TODO: link to docs about locales when available. -->
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
 
@@ -181,14 +184,13 @@ The successful PUT request returns the newly created document. See the [piece do
 
 ## `PATCH /api/v1/:piece-name/:_id`
 
-**Authentication required.**
-
 ### Query parameters
 
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to update the piece document version for that locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the piece document version for that locale. |
+<!-- TODO: link to docs about locales when available. -->
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
@@ -234,7 +236,7 @@ The successful PATCH request returns the complete patched document. See the [pie
 
 Publish an existing `draft` mode document in a document set.
 
-The `:_id` segement of the route should be one of the following:
+The `:_id` segment of the route should be one of the following:
 - The `_id` property of the draft piece to be published
 - The `_id` property of the published piece to be replaced by the current `draft` version
 - The `aposDocId` property of the pieces in the document set
@@ -245,7 +247,8 @@ The `body` of the request is ignored.
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-locale` | `?apos-locale=fr` | Identify [a valid locale](#TODO) to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+|`apos-locale` | `?apos-locale=fr` | Identify a valid locale to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+<!-- TODO: link to docs about locales when available. -->
 
 ### Request example
 
