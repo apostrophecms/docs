@@ -8,12 +8,12 @@ For attachments meant to be included in the media or file libraries, metadata an
 
 | Method | Path | Description | Auth required |
 |---------|---------|---------|---------|
-|POST | [`/api/v1/@apostrophecms/attachment/upload`](#post-api-v1-apostrophecms-attachment-upload) | Upload a media file | TRUE |
-|POST | [`/api/v1/@apostrophecms/attachment/crop`](#post-api-v1-apostrophecms-attachment-crop) | Crop an image file | TRUE |
-|GET | [`/api/v1/@apostrophecms/image`](#media-get-request) | Get an image document with a specified ID | FALSE |
-|POST | [`/api/v1/@apostrophecms/image`](#media-post-request) | Insert a new image | TRUE |
-|GET | [`/api/v1/@apostrophecms/file`](#media-get-request) | Get a file document with a specified ID | FALSE |
-|POST | [`/api/v1/@apostrophecms/file`](#media-post-request) | Insert a new file | TRUE |
+|`POST` | [`/api/v1/@apostrophecms/attachment/upload`](#post-api-v1-apostrophecms-attachment-upload) | Upload a media file | TRUE |
+|`POST` | [`/api/v1/@apostrophecms/attachment/crop`](#post-api-v1-apostrophecms-attachment-crop) | Crop an image file | TRUE |
+|`GET` | [`/api/v1/@apostrophecms/image`](#media-get-request) | Get an image document with a specified ID | FALSE |
+|`POST` | [`/api/v1/@apostrophecms/image`](#media-post-request) | Insert a new image | TRUE |
+|`GET` | [`/api/v1/@apostrophecms/file`](#media-get-request) | Get a file document with a specified ID | FALSE |
+|`POST` | [`/api/v1/@apostrophecms/file`](#media-post-request) | Insert a new file | TRUE |
 
 ## `POST /api/v1/@apostrophecms/attachment/upload`
 
@@ -43,7 +43,7 @@ const attachment = await fetch('/api/v1/@apostrophecms/attachment/upload', {
 
 ### Response
 
-The successful POST request returns the newly created attachment. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns the newly created attachment. In case of an error an appropriate HTTP status code is returned.
 
 | Property | Format | Description |
 |----------|------|-------------|
@@ -112,7 +112,7 @@ The newly uploaded image file will be stored with a file name using the `crop` p
 
 ### Response
 
-The successful POST request returns `true`. On error an appropriate HTTP status code is returned.
+The successful `POST` request returns `true`. In case of an error an appropriate HTTP status code is returned.
 
 ## Media `GET` request
 
@@ -121,7 +121,7 @@ Endpoints:
 - `GET /api/v1/@apostrophecms/image`
 - `GET /api/v1/@apostrophecms/file`
 
-A GET request for an image or file is generally a normal [piece type GET request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it will also include an `attachment` property, containing an object similar to one returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
+A `GET` request for an image or file is generally a normal [piece type `GET` request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it will also include an `attachment` property, containing an object similar to one returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
 
 ## Media `POST` request
 
@@ -130,4 +130,4 @@ A GET request for an image or file is generally a normal [piece type GET request
 - `POST /api/v1/@apostrophecms/image`
 - `POST /api/v1/@apostrophecms/file`
 
-A POST request for an image or file is generally a normal [piece type POST request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it must also include an `attachment` property, containing the attachment object returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
+A `POST` request for an image or file is generally a normal [piece type `POST` request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it must also include an `attachment` property, containing the attachment object returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).

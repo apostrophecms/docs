@@ -146,10 +146,10 @@ module.exports = {
 
   apiRoutes(self, options) {
     return {
-      // This section contains all the GET routes. Also
+      // This section contains all the `GET` routes. Also
       // supported: `post`, `patch`, `delete`
       get: {
-        // Accessible via GET request to: /api/v1/product/cheapest
+        // Accessible via `GET` request to: /api/v1/product/cheapest
         //
         // Function names like `cheapestOne` become URLs like `cheapest-one`
         //
@@ -223,7 +223,7 @@ module.exports = {
   renderRoutes(self, options) {
     return {
       get: {
-        // Accessible via GET as /api/v1/product/latest
+        // Accessible via `GET` as /api/v1/product/latest
         async latest(req) {
           const products = await self.find(req).sort({
             createdAt: -1
