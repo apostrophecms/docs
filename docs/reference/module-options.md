@@ -45,7 +45,6 @@ require('apostrophe')({
 
 - [`alias`](#alias)
 - [`components`](#components)
-- [`name`](#name)
 - [`templateData`](#templatedata)
 
 ### `alias`
@@ -69,10 +68,13 @@ module.exports = {
 
 This `article` module can then be referenced anywhere the `apos` object is present as `apos.article`. Otherwise it would be available via `apos.modules['news-article']`.
 
+:::tip NOTE
+With the exception of modules present in Apostrophe core at the time of the 3.x stable release, modules distributed via npm should never set `alias` for themselves or assume that it has been set. This is to avoid conflict when multiple modules attempt to use the same alias.
+:::
 
 ### `components`
 
-The `components` options is an object identifying Vue components to use for the module's related user interface. The keys of this object, and thus the UI being overridden, will vary based on the module type. For example, piece module use `managerModal` and `editorModal` components.
+The `components` options is an object identifying Vue components to use for the module's related user interface. The keys of this object, and thus the UI being overridden, will vary based on the module type. For example, piece modules use `managerModal` and `editorModal` components.
 
 This is an advanced option since it can easily break the user interface.
 
@@ -85,23 +87,6 @@ module.exports = {
     components: {
       managerModal: 'MyCustomPiecesManager'
     }
-  },
-  // ...
-}
-```
-
-### `name`
-
-Modules' `name` properties are based on the `module` object keys in `app.js` by default. Setting the the `name` option in a module can override this original value for the sake of referencing the module elsewhere.
-
-#### Example
-
-```javascript
-// modules/article-module/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    name: 'article'
   },
   // ...
 }
