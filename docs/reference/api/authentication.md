@@ -7,7 +7,7 @@ API keys are great for server-to-server communication, because they don't expire
 Configure API keys as an option in the `@apostrophecms/express` module in `app.js`. Alternately, all `@apostrophecms/express` configuration may be added in a separate `modules/@apostrophecms/express/index.js` file.
 
 ```javascript
-// In app.js
+// app.js
 require('apostrophe')({
   modules: {
     '@apostrophecms/express': {
@@ -136,7 +136,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to authenticated users for security reasons. However you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
 
 ```javascript
-// In `/module/product/index.js`
+// module/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {

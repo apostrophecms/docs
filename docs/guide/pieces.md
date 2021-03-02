@@ -332,7 +332,7 @@ In A2, a "pieces widget" was provided as a standard feature, with several filter
 Here is a simple example:
 
 ```js
-// in ./app.js
+// app.js
 modules: {
   // ...
   product: {},
@@ -341,7 +341,7 @@ modules: {
 ```
 
 ```js
-// in ./modules/product-widget/index.js
+// modules/product-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -365,7 +365,7 @@ module.exports = {
 ```
 
 ```django
-{# in ./modules/product-widget/views/widget.html #}
+{# modules/product-widget/views/widget.html #}
 {% for product in data.widget._products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</a></h4>
 {% endfor %}
@@ -376,7 +376,7 @@ Including the `a` tag here is optional. If you plan to make your pieces browseab
 :::
 
 ```js
-// in modules/@apostrophecms/home-page/index.js
+// modules/@apostrophecms/home-page/index.js
 
 ...
 widgets: {

@@ -76,7 +76,8 @@ module.exports = {
             'reference/api/media',
             'reference/api/field-formats'
           ]
-        }
+        },
+        'reference/module-options'
       ]
     }
   ]

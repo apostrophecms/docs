@@ -11,7 +11,7 @@ While these solutions work and are appropriate for some use cases they can be ha
 So in A3, we've taken inspiration from Rails, Symfony and other frameworks. Starting in A3, Nunjucks templates can invoke "async components," like this:
 
 ```django
-{# in ./modules/@apostrophecms/home-page/views/page.html #}
+{# modules/@apostrophecms/home-page/views/page.html #}
 <h3>Our Latest Product</h3>
 {% component 'product:latest' with { max: 1 } %}
 ```
@@ -19,7 +19,7 @@ So in A3, we've taken inspiration from Rails, Symfony and other frameworks. Star
 When this command is encountered, Apostrophe looks for a "component function" called `latest` in the `product` module and `await`s it:
 
 ```js
-// in ./modules/product/index.js
+// modules/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // ...
@@ -41,7 +41,7 @@ module.exports = {
 Then Apostrophe passes the returned object as `data` to the `latest.html` Nunjucks template in the same module:
 
 ```django
-{# in ./modules/product/views/latest.html #}
+{# modules/product/views/latest.html #}
 {% for product in data.products %}
   <h4><a href="{{ product._url }}">{{ product.title }}</h4>
 {% endfor %}

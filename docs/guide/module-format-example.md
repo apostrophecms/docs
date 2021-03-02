@@ -387,7 +387,7 @@ module.exports = {
 This is sometimes done in A2 to keep the file manageable in size. You can do the same trick in A3, breaking the module down into its sections:
 
 ```js
-// in ./modules/product/index.js
+// modules/product/index.js
 module.exports = {
   // ...
   methods: require('./methods.js'),
@@ -396,7 +396,7 @@ module.exports = {
 ```
 
 ```js
-// in methods.js, in the same folder
+// modules/product/methods.js
 module.exports = (self, options) => {
   return {
     async averagePrice(req) {
@@ -407,7 +407,7 @@ module.exports = (self, options) => {
 ```
 
 ```js
-// in api-routes.js, in the same folder
+// modules/product/api-routes.js
 module.exports = (self, options) => {
   return {
     get: {
