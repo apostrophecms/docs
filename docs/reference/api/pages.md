@@ -322,8 +322,6 @@ The successful `PUT` request returns the newly created document. See the [page d
 
 ## `PATCH /api/v1/@apostrophecms/page/:_id`
 
-The `PATCH`request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page). That is only required when moving the page.
-
 ### Query parameters
 
 | Parameter | Example | Description |
@@ -331,6 +329,8 @@ The `PATCH`request may include *both* `_targetId` and `_position` as described i
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the page document version for that locale. |
 <!-- TODO: link to docs about locales when available. -->
+
+If moving a page within the page tree, the `PATCH`request must include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page).
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
