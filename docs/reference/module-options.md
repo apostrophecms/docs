@@ -231,7 +231,7 @@ module.exports = {
 
 ### `sort`
 
-The `sort` option for a doc type defines a sorting order for requests to the database for that type. This setting generally follows the [MongoDB `$sort` aggregation](https://docs.mongodb.com/manual/reference/operator/aggregation/sort/) syntax. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
+The `sort` option for a doc type defines a sorting order for requests to the database for that type. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
 
 The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns documents based on the `updatedAt` property (the date and time of the last update) in descending order. The `sort` object can have multiple keys for more specific sorting.
 
@@ -265,7 +265,7 @@ module.exports = {
 
 ### `slugPrefix`
 
-Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can be useful to help prevent slugs, which must be unique for each doc in the database, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
+Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can prevent slugs, which must be unique to each doc, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
 
 #### Example
 
@@ -292,7 +292,7 @@ Option settings in this section apply to all piece modules (those that extend `@
 
 ### `pluralLabel`
 
-Similar to `label` for all doc types, the `pluraLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces have unique labels, for example, in the manager modal where it might display "All Articles."
+Similar to `label` for all doc types, the `pluraLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces should have unique labels (e.g., "Articles," or "Teams").
 
 If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
 
@@ -312,7 +312,7 @@ module.exports = {
 
 ### `perPage`
 
-In piece type modules, the `perPage` option, set to an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
 
 #### Example
 
@@ -354,7 +354,7 @@ Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) req
 
 ### `quickCreate`
 
-Setting `quickCreate` to the boolean `true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals. This is a useful setting for the piece types that editors will be adding most often.
+Setting `quickCreate: true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals.
 
 #### Example
 
@@ -372,7 +372,7 @@ module.exports = {
 ### `searchable`
 
 <!-- TODO: link to documentation of Apostrophe search when available. -->
-By default, all piece types are included in Apostrophe search results. Setting `searchable: false` on a piece type will exclude that piece type from the search results.
+Setting `searchable: false` on a piece type will exclude that piece type from the results in Apostrophe's built-in search.
 
 #### Example
 

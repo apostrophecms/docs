@@ -1,6 +1,6 @@
 # Piece type REST endpoints
 
-Every [piece type](/reference/glossary.md#piece) has built in REST end points that share their overall structure in common. The exact document properties returned will depend on the piece type's fields.
+Apostrophe provides built-in REST end points for all [piece types](/reference/glossary.md#piece). The exact document properties returned will depend on the piece type's fields.
 
 ## Endpoints
 

@@ -1,6 +1,6 @@
 # Page type REST endpoints
 
-All [page types](/reference/glossary.md#page) use a single set of API endpoints, unlike piece types. Difference in page type will primarily influence returned document properties based on the page type configurations.
+All [page types](/reference/glossary.md#page) use a single set of API endpoints, unlike piece types.
 
 ## Endpoints
 
@@ -10,8 +10,8 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 
 | Method | Path | Description |
 |---------|---------|---------|
-|`GET` | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Get the home page and all other pages structured in the home page's `_children` property |
-|`GET` | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Get a single page with a specified ID |
+|`GET` | [`/api/v1/@apostrophecms/page` ](#get-api-v1-apostrophecms-page)| Fetch the home page and all other pages structured in the home page's `_children` property |
+|`GET` | [`/api/v1/@apostrophecms/page/:_id`](#get-api-v1-apostrophecms-page-id) | Fetch a single page with a specified ID |
 |`POST` | [`/api/v1/@apostrophecms/page`](#post-api-v1-apostrophecms-page) | Insert a new page |
 |`PUT` | [`/api/v1/@apostrophecms/page/:_id`](#put-api-v1-apostrophecms-page-id) | Fully replace a specific page database document |
 |`PATCH` | [`/api/v1/@apostrophecms/page/:_id`](#patch-api-v1-apostrophecms-page-id) | Update only certain fields on a specific page |
@@ -322,7 +322,7 @@ The successful `PUT` request returns the newly created document. See the [page d
 
 ## `PATCH /api/v1/@apostrophecms/page/:_id`
 
-The `PATCH`request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page), but that is not required if the page is not being moved.
+The `PATCH`request may include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page). That is only required when moving the page.
 
 ### Query parameters
 

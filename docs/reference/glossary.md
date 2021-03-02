@@ -47,11 +47,11 @@ There is a single doc with the slug, `global`, which is always loaded and availa
 
 ## Slug
 
-The slug of an Apostrophe doc is a string that uniquely identifies that doc within the database. Apostrophe will enforce that no two docs may have the same slug. Unlike the `_id` property of the database document, slugs _can_ change, however. Apostrophe user interface and REST API will suggest slugs automatically based on the document's title on creation.
+The slug of an Apostrophe doc is a string that uniquely identifies that doc within the database. Apostrophe will enforce that no two docs have the same slug. Slugs _can_ be changed, unlike the `_id` property of the database document. The Apostrophe user interface and REST API will suggest slugs automatically based on the document's title on creation.
 
 If the doc is a page, or a piece with a [show page](#show-page), the slug is used as a component of the page URL. This works differently for pages and pieces.
 
-- [Page](#page) slugs begin with a forward slash and, by default, include sections for their parent pages, e.g., `/previous-page/new-page` for a page titled "New Page" with a parent page of "Previous Page." Editing a page slug will not effect the actual page tree structure, however.
+- [Page](#page) slugs begin with a forward slash and, by default, include sections for their parent pages, e.g., `/previous-page/new-page` for a page titled "New Page" with a parent page of "Previous Page." Editing a page slug will not effect the actual page tree structure.
 - [Piece](#piece) slugs do not begin with a forward slash nor do they include reference to an [index page](#index-page). A piece titled "New Piece" will get the suggested slug of `new-piece` if no other doc has that slug already.
 
 ## Widget
