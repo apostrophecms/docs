@@ -271,7 +271,7 @@ Option settings in this section apply to all piece modules (those that extend `@
 
 - [`pluralLabel`](#plurallabel)
 - [`perPage`](#perpage)
-- [`publicApiProjection`](#publicapiprojection)
+- [`publicApiProjection`](#publicapiprojection-for-pieces)
 - [`quickCreate`](#quickcreate-for-pieces)
 - [`searchable`](#searchable)
 
@@ -312,7 +312,7 @@ module.exports = {
 }
 ```
 
-### `publicApiProjection`
+### `publicApiProjection` (for pieces)
 
 By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
 
@@ -335,7 +335,7 @@ module.exports = {
 }
 ```
 
-Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the title, `authorName`, and `_url` properties.
+Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
 
 ### `quickCreate` (for pieces)
 
@@ -382,9 +382,9 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 | [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
 | [`minimumPark`](#minimumpark) | Array | Override home page default properties when created. |
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
+| [`publicApiProjection`](#publicapiprojection-for-pages) | Object | Set query builder values to be used when pages are served. |
 | [`quickCreate`](#quickcreate-for-pages) | Boolean | Set to `false` to remove pages from the quick create menu. |
 | [`types`](#types) | Array | Set the page types available for new pages. |
-<!-- | [`typeChoices`](#typechoices) | null | Lorem ipsum | -->
 
 ### `builders`
 
@@ -408,7 +408,6 @@ This includes one level of the page's page tree "children" as `_children` and it
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     builders: {
       children: { depth: 2 }
@@ -432,7 +431,6 @@ The home page document is added to all page requests on `req.data.home` so it ca
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     home: { children: false }
   },
@@ -477,7 +475,6 @@ The default is:
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     minimumPark: [
       {
@@ -521,7 +518,6 @@ If added on the top level of the page object, these properties will not be edita
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     park: [
       // The blog page has a permanent slug, title, and type.
@@ -546,6 +542,29 @@ module.exports = {
 }
 ```
 
+### `publicApiProjection` (for pages)
+
+By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
+
+This should be set to an object containing individual field name keys set to `1` for their values. Those fields names included in the `publicApiProjection` object will be returned when the `GET` API requests are made without authentication.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    publicApiProjection: {
+      title: 1,
+      _url: 1 // 👈 Dynamic properties are allowed
+    }
+  },
+  // ...
+}
+```
+
+Unauthenticated [`GET /api/v1/@apostrophecms/page`](api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
+
 ### `quickCreate` (for pages)
 
 Pages are included in the admin bar "quick create" menu by default. Setting `quickCreate: false` on the page module will disable this.
@@ -555,7 +574,6 @@ Pages are included in the admin bar "quick create" menu by default. Setting `qui
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     quickCreate: false
   },
@@ -574,7 +592,6 @@ The `types` array defines the page types available to users when creating or edi
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
-  extend: '@apostrophecms/page',
   options: {
     types: [
       {
@@ -595,6 +612,3 @@ module.exports = {
 }
 ```
 
-<!-- Is this a thing? -->
-<!-- ### `typeChoices`
-~ allowed page types? -->
