@@ -54,7 +54,7 @@ add: {
     label: 'Main column',
     type: 'area',
     options: {
-      max: 1, // ⬅ Limits the area to a single image widget.
+      max: 1, // 👈 Limits the area to a single image widget.
       widgets: {
         '@apostrophecms/image': {}
       }
