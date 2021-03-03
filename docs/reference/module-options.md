@@ -612,3 +612,27 @@ module.exports = {
 }
 ```
 
+## Options for page type modules
+
+Option settings in this section apply to all page types (modules that extend `@apostrophecms/page-type`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`scene`](#scene) | String | Change the "scene" for this page type from the default `'public'`. |
+
+### `scene`
+
+Scenes are contexts in which certain sets of front end assets are delivered. Normally, anonymous site visitors receive only the stylesheets and scripts included in the `'public'` asset scene (those that are placed in the module's `ui/public` directory). If your page will use assets, such as Apostrophe's modals, that are normally reserved for logged-in users you can set `scene: 'apos'` in order to load them with pages of this type.
+
+#### Example
+
+```javascript
+// modules/fancy-form-page/index.js
+module.exports = {
+  extend: '@apostrophecms/page-type',
+  options: {
+    scene: 'apos'
+  },
+  // ...
+}
+```
