@@ -272,7 +272,7 @@ Option settings in this section apply to all piece modules (those that extend `@
 - [`pluralLabel`](#plurallabel)
 - [`perPage`](#perpage)
 - [`publicApiProjection`](#publicapiprojection)
-- [`quickCreate`](#quickcreate)
+- [`quickCreate`](#quickcreate-for-pieces)
 - [`searchable`](#searchable)
 
 ### `pluralLabel`
@@ -337,7 +337,7 @@ module.exports = {
 
 Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the title, `authorName`, and `_url` properties.
 
-### `quickCreate`
+### `quickCreate` (for pieces)
 
 Setting `quickCreate: true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals.
 
@@ -372,3 +372,229 @@ module.exports = {
 }
 ```
 
+## Options for the core page module
+
+Option settings in this section apply to the core page module (`@apostrophecms/page`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`builders`](#builders) | Object | Set query builder values to be used when pages are served. |
+| [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
+| [`minimumPark`](#minimumpark) | Array | Override home page default properties when created. |
+| [`park`](#park) | Array | Set pages to be created on site start with configuration. |
+| [`quickCreate`](#quickcreate-for-pages) | Boolean | Set to `false` to remove pages from the quick create menu. |
+| [`types`](#types) | Array | Set the page types available for new pages. |
+<!-- | [`typeChoices`](#typechoices) | null | Lorem ipsum | -->
+
+### `builders`
+
+<!-- TODO: Update link to a more detailed explanation of builders when
+available. -->
+The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This effects the data available on `req.data.page` (`data.page` in templates). This can be used to get more or less included on that page object depending on the need.
+
+The default value is:
+```javascript
+{
+  children: true,
+  ancestors: { children: true }
+}
+```
+
+This includes one level of the page's page tree "children" as `_children` and its "ancestor" pages each with one level of their child pages on `_ancestors`.
+
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    builders: {
+      children: { depth: 2 }
+    }
+  },
+  // ...
+}
+```
+
+In this example, we are not including ancestor pages and are requesting two levels of child pages (direct children and their direct children).
+
+### `home`
+
+The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. There are two settings for this option to change that behavior. These can offer minor performance improvements for large sites.
+
+- Set `home: false` to disable adding the home page document to the requests.
+- Set`home: { children: false }` to include the home page document, but without the child pages array. If the [`builders` option](#builders) has an `ancestors` property, that will take precedence.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    home: { children: false }
+  },
+  // ...
+}
+```
+
+### `minimumPark`
+
+The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the trash "page" (trash is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
+
+::: warning
+Use with caution. Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example.
+:::
+
+The default is:
+```javascript
+[
+  {
+    slug: '/',
+    parkedId: 'home',
+    _defaults: {
+      title: 'Home',
+      type: '@apostrophecms/home-page'
+    },
+    _children: [
+        {
+        slug: '/trash',
+        parkedId: 'trash',
+        type: '@apostrophecms/trash',
+        trash: true,
+        orphan: true,
+        _defaults: { title: 'Trash' }
+      }
+    ]
+  }
+]
+```
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    minimumPark: [
+      {
+        slug: '/',
+        parkedId: 'home',
+        _defaults: {
+          title: 'Welcome',  // 👈
+          type: 'welcome-page' // 👈
+        },
+        _children: [
+            {
+            slug: '/trash',
+            parkedId: 'trash',
+            type: '@apostrophecms/trash',
+            trash: true,
+            orphan: true,
+            _defaults: { title: 'Trash' }
+          }
+        ]
+      }
+    ]
+  },
+  // ...
+}
+```
+
+### `park`
+
+Use the `park` option to add an array of pages that should be created when the app starts up if they do not already exist. Each page is added as an object with initial properties, including the required `parkedId`.
+
+Required and recommended parked page properties include:
+- `parkedId` (required): A unique ID value used to identify it among parked pages.
+- `slug` (required): The page [slug](/reference/glossary.md#slug). This may be
+- `type` (required): The page type to be used for the parked page.
+- `title` (recommended): The page title. If not set, it will be "New Page."
+
+If added on the top level of the page object, these properties will not be editable through the user interface. Properties other than `parkedId` may be included in a `_defaults` property instead, which will allow them to be edited in the UI.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    park: [
+      // The blog page has a permanent slug, title, and type.
+      {
+        parkedId: 'blogParkedId',
+        slug: '/blog',
+        title: 'Blog',
+        type: 'blog-page'
+      },
+      // The team page has a permanent type, but editable slug and title.
+      {
+        parkedId: 'teamParkedId',
+        type: 'staff-page',
+        _defaults: {
+          slug: '/team',
+          title: 'Our Team',
+        }
+      }
+    ]
+  },
+  // ...
+}
+```
+
+### `quickCreate` (for pages)
+
+Pages are included in the admin bar "quick create" menu by default. Setting `quickCreate: false` on the page module will disable this.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    quickCreate: false
+  },
+  // ...
+}
+```
+
+### `types`
+
+The `types` array defines the page types available to users when creating or editing pages. Each item in the array should have a `label` property and a `name` property, which matches an active page type. If no `types` array is set, only the core "Home" page type will be available.
+
+[Parked pages](#park) may use page types that are not in the `types` option array. This allows developers to do things such as parking a single search page but not allowing users to create additional search pages.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  extend: '@apostrophecms/page',
+  options: {
+    types: [
+      {
+        name: 'default-page',
+        label: 'Default'
+      },
+      {
+        name: 'article-page',
+        label: 'Article Index'
+      }
+      {
+        name: '@apostrophecms/home-page',
+        label: 'Home'
+      }
+    ]
+  },
+  // ...
+}
+```
+
+<!-- Is this a thing? -->
+<!-- ### `typeChoices`
+~ allowed page types? -->
