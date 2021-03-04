@@ -390,7 +390,7 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 
 <!-- TODO: Update link to a more detailed explanation of builders when
 available. -->
-The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This effects the data available on `req.data.page` (`data.page` in templates). This can be used to get more or less included on that page object depending on the need.
+The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This effects the data available on the page object, `req.data.page` (`data.page` in templates).
 
 The default value is:
 ```javascript
@@ -400,7 +400,7 @@ The default value is:
 }
 ```
 
-This includes one level of the page's page tree "children" as `_children` and its "ancestor" pages each with one level of their child pages on `_ancestors`.
+In this example, page objects are loaded with one level of page tree "children" as `_children` and their "ancestor" pages, each with one level of their child pages, on `_ancestors`.
 
 
 #### Example
@@ -421,10 +421,12 @@ In this example, we are not including ancestor pages and are requesting two leve
 
 ### `home`
 
-The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. There are two settings for this option to change that behavior. These can offer minor performance improvements for large sites.
+The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. `home` option settings to offer minor performance improvements for large sites include:
 
-- Set `home: false` to disable adding the home page document to the requests.
-- Set`home: { children: false }` to include the home page document, but without the child pages array. If the [`builders` option](#builders) has an `ancestors` property, that will take precedence.
+| Setting | Description |
+|---------|-------------|
+| `false` | Disables adding the home page document to the requests. |
+| `{ children: false }` | Includes the home page document, but without the child pages array. If the [`builders` option](#builders) has an `ancestors` property, that will take precedence. |
 
 #### Example
 
@@ -506,10 +508,13 @@ module.exports = {
 Use the `park` option to add an array of pages that should be created when the app starts up if they do not already exist. Each page is added as an object with initial properties, including the required `parkedId`.
 
 Required and recommended parked page properties include:
-- `parkedId` (required): A unique ID value used to identify it among parked pages.
-- `slug` (required): The page [slug](/reference/glossary.md#slug). This may be
-- `type` (required): The page type to be used for the parked page.
-- `title` (recommended): The page title. If not set, it will be "New Page."
+
+| Setting | Requirement | Description |
+|---------|-------------|-------------|
+| `parkedId` | Required | A unique ID value used to identify it among parked pages. |
+| `slug` | Required | The page [slug](/reference/glossary.md#slug). |
+| `type` | Required | The page type to be used for the parked page. |
+| `title` | Recommended | The page title. If not set, it will be "New Page." |
 
 If added on the top level of the page object, these properties will not be editable through the user interface. Properties other than `parkedId` may be included in a `_defaults` property instead, which will allow them to be edited in the UI.
 
@@ -713,8 +718,18 @@ module.exports = {
 <!-- TODO: Link to a better query builder guide when available. -->
 `piecesFilters` can be configured as an array of objects to support filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
 
-- Field names whose field types automatically get builders: `string`, `slug`, `boolean`, `checkboxes`, `select`, `integer`, `float`, `url`, `date`, `relationship`
 - Custom query builders configured in an app that include a `launder` method
+- Field names whose field types automatically get builders:
+  - `boolean`
+  - `checkboxes`
+  - `date`
+  - `float`
+  - `integer`
+  - `relationship`
+  - `select`
+  - `slug`
+  - `string`
+  - `url`
 
 When the index page is served, configured filters will be represented on a `req.data.piecesFilters` object (`data.piecesFilters` in the template). If you include `counts: true` in a filter object, the number of pieces matching that filter are included on `req.data.piecesFilters` properties.
 
