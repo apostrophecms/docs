@@ -72,9 +72,11 @@ module.exports = {
 
 Option settings in this section apply to every module in Apostrophe.
 
-- [`alias`](#alias)
-- [`components`](#components)
-- [`templateData`](#templatedata)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
+| [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
+| [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
 ### `alias`
 
@@ -154,12 +156,14 @@ You might use that value as a fallback for user-editable fields.
 
 Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](glossary.md#doc) modules). These include all piece and page types.
 
-- [`adminOnly`](#adminonly)
-- [`autopublish`](#autopublish)
-- [`label`](#label-for-doc-types)
-- [`localized`](#localized)
-- [`sort`](#sort)
-- [`slugPrefix`](#slugprefix)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`adminOnly`](#adminonly) | Boolean | Set to `true` to only allow admins to manage the doc type. |
+| [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`label`](#label-for-doc-types) | String | The readable label for the doc type. |
+| [`localized`](#localized) | Boolean | Set to `false` to not include the doc type in the locale system. |
+| [`sort`](#sort) | Object | Configure sort order for docs of this type. |
+| [`slugPrefix`](#slugprefix) | String | Add a prefix to all slugs for this doc type. |
 <!-- - [`contextBar`](#contextbar) -->
 
 ### `adminOnly`
@@ -296,11 +300,13 @@ module.exports = {
 
 Option settings in this section apply to all piece modules (those that extend `@apostrophecms/piece-type`).
 
-- [`pluralLabel`](#plurallabel)
-- [`perPage`](#perpage)
-- [`publicApiProjection`](#publicapiprojection-for-pieces)
-- [`quickCreate`](#quickcreate-for-pieces)
-- [`searchable`](#searchable)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`publicApiProjection`](#publicapiprojection-for-pieces) | Object | Piece fields to make available via a public REST API route. |
+| [`quickCreate`](#quickcreate-for-pieces) | Boolean | Set to `true` to add the piece type to the quick create menu. |
+| [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
 
 ### `pluralLabel`
 
@@ -672,7 +678,6 @@ module.exports = {
 ## Options for piece page types
 
 Option settings in this section apply to all piece page types (modules that extend `@apostrophecms/piece-page-type`).
-
 
 | Option | Value type | Description |
 |---------|---------|---------|
