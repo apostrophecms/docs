@@ -636,3 +636,178 @@ module.exports = {
   // ...
 }
 ```
+
+## Options for piece page types
+
+Option settings in this section apply to all piece page types (modules that extend `@apostrophecms/piece-page-type`).
+
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`perPage`](#perpage) | Integer | Set the number of pieces to be |
+| [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
+| [`piecesFilters`](#piecesfilters) | null | lorem ipsum |
+| [`piecesModuleName`](#piecesmodulename) | null | lorem ipsum |
+| [`previous`](#previous) | Boolean/Object | Enable and optionally configure the `req.data.previous` object. |
+
+### `perPage`
+
+For piece pages, the `perPage` option, expressed as an integer, defines the number of pieces that will be added to the `req.data.pieces` array when the page is served. The specific pieces in the set will be based on the total number of pieces and the `page` query parameter in the request.
+
+This is, more simply, the number of pieces that will normally be displayed on each page of a [paginated index page](/reference/glossary.md#index-page). This value defaults to 10.
+<!-- TODO: Change index page link to a guide on index pages when available. -->
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    perPage: 12
+  },
+  // ...
+}
+```
+
+### `next`
+
+If set to `true`, Apostrophe will include the next piece, based on the [sort option](#sort), on `req.data.next` when serving a [show page](/reference/glossary.md#show-page). This is useful to add links to a show page directing visitors to the next item in a series (e.g., the next oldest blog post). If not set, `req.data.next` will not be available.
+
+`next` can also be set to an object, which will be used as a query builder for retrieving that next piece document.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    next: true
+  },
+  // ...
+}
+
+// OR
+
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The next article piece would be returned with only the `title`, `_url`,
+    // and `publishedAt` properties.
+    next: {
+      project: {
+        title: 1,
+        _url: 1,
+        publishedAt: 1
+      }
+    }
+  },
+  // ...
+}
+```
+
+### `piecesFilters`
+
+<!-- TODO: Link to a guide on using piece filters when available. -->
+<!-- TODO: Link to a better query builder guide when available. -->
+`piecesFilters` can be configured as an array of objects to support filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
+
+- Field names whose field types automatically get builders: `string`, `slug`, `boolean`, `checkboxes`, `select`, `integer`, `float`, `url`, `date`, `relationship`
+- Custom query builders configured in an app that include a `launder` method
+
+When the index page is served, configured filters will be represented on a `req.data.piecesFilters` object (`data.piecesFilters` in the template). If you include `counts: true` in a filter object, the number of pieces matching that filter are included on `req.data.piecesFilters` properties.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+// 👆
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    piecesFilters: [
+      { name: '_author' },
+      {
+        name: 'category',
+        counts: true
+      }
+    ]
+  },
+  fields: {
+    _author: {
+      type: 'relationship',
+      label: 'Author'
+    },
+    category: {
+      type: 'select',
+      label: 'Category',
+      choices: [
+        // Category choices here
+      ]
+    }
+    // Other fields...
+  },
+  // ...
+}
+```
+
+### `piecesModuleName`
+
+Piece page types are each associated with a single piece type. If named with the pattern, `[piece name]-page`, the associated piece type will be detected automatically. For example, if the `article-page` module extends `@apostrophecms/piece-page-type`, it will automatically be associated with an `article` piece type.
+
+This pattern can be overridden or ignored by explicitly setting `piecesModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+
+#### Example
+
+```javascript
+// modules/team-page/index.js
+// 👆 This module name would look for a piece type named `team` if not for
+// `piecesModuleName`
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    piecesModuleName: 'person'
+  },
+  // Maybe there's code here to group people by team.
+  // ...
+}
+```
+
+### `previous`
+
+If set to `true`, Apostrophe will include the previous piece, based on the [sort option](#sort), on `req.data.previous` when serving a [show page](/reference/glossary.md#show-page). This is useful to add links to a show page directing visitors to the previous item in a series (e.g., the next newest blog post). If not set, `req.data.previous` will not be available.
+
+`previous` can also be set to an object, which will be used as a query builder for retrieving that next piece document.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    previous: true
+  },
+  // ...
+}
+
+// OR
+
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The previous article piece would be returned with only the `title`,
+    // `_url`, and `publishedAt` properties.
+    previous: {
+      project: {
+        title: 1,
+        _url: 1,
+        publishedAt: 1
+      }
+    }
+  },
+  // ...
+}
+```
+
