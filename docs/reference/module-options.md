@@ -930,3 +930,94 @@ module.exports = {
 
 <!-- TODO: Flesh out once questions around scenes are resolve, or delete. -->
 <!-- ### `scene` -->
+
+## Options for the core rich text widget
+
+Option settings in this section apply to the core rich text widget module (`@apostrophecms/rich-text-widget`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`defaultData`](#defaultdata) | Object | Define initial default data for rich text content. |
+| [`defaultOptions`](#defaultoptions) | Object | Configure the rich text toolbar and styles for rich text widgets. |
+| [`editorTools`](#editortools) | Object | Configure rich text tools and their Vue components. |
+
+### `defaultData`
+
+Rich text widgets can start with default content by setting `defaultData` to an object with a `content` property. That value would be a string of text or HTML that all rich text widgets would include when added.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultData: {
+      content: '<p>Replace me</p>'
+    }
+  },
+  // ...
+}
+```
+
+### `defaultOptions`
+
+The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/rich-text-widget/index.js#L15-L45). These can be overridden by setting project-level `defaultOptions`. This configuration object can include one or both of the `toolbar` and `styles` sub-options. If only one of those is included, the other will fall back to the core defaults.
+
+Project-level defaults can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultOptions: {
+      toolbar: [
+        'bold',
+        'italic',
+        'link'
+      ],
+      styles: []
+    }
+  },
+  // ...
+}
+```
+
+<!-- TODO: Link to a guide page about configuring the RTE when available. -->
+
+### `editorTools`
+
+The rich text editor toolbar tools (e.g., "bold," "link," and "underline" buttons) can be reconfigured to have different labels (seen by assistive technologies), different icons, or even new Vue components altogether. `editorTools` can be completely overridden to do this if desired.
+
+::: warning
+Using this option takes full responsibility for the configuration of the rich text editor tools. Use this with caution. If overriding, be sure to include _all_ rich text tools that you will use.
+:::
+
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    editorTools: {
+      styles: {
+        component: 'MyTiptapStyles',
+        label: 'Styles'
+      },
+      '|': { component: 'MyTiptapDivider' },
+      bold: {
+        component: 'MyTiptapButton',
+        label: 'Bold',
+        icon: 'format-bold-icon'
+      },
+      italic: {
+        component: 'MyTiptapButton',
+        label: 'Italic',
+        icon: 'format-italic-icon'
+      },
+      // Many more tools...
+    }
+  },
+  // ...
+}
+```
