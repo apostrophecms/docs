@@ -647,7 +647,7 @@ Option settings in this section apply to all piece page types (modules that exte
 | [`perPage`](#perpage) | Integer | Set the number of pieces to be |
 | [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
 | [`piecesFilters`](#piecesfilters) | Array | Configure pieces filters for index pages. |
-| [`piecesModuleName`](#piecesmodulename) | String | Specify the associated piece type. |
+| [`piecesModuleName`](#piecesmodulename) | String | Specify the associated piece type if it doesn't match the module name. |
 | [`previous`](#previous) | Boolean/Object | Enable and optionally configure the `req.data.previous` object. |
 
 ### `perPage`
