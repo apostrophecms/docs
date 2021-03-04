@@ -43,7 +43,7 @@ require('apostrophe')({
 
 ## Using module options
 
-Most module options in core Apostrophe, and official modules, are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them, if needed. In some cases it is helpful to reference the options object in custom module code. You can do this in any of the module configuration function sections using the `self` argument as `self.options`.
+Most module options in core Apostrophe, and official extension modules, are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them, if needed. In some cases it is helpful to reference the options object in custom module code. You can do this in any of the module configuration function sections using the `self` argument as `self.options`.
 
 For example, if you had a custom piece type, it might look like this:
 
@@ -160,8 +160,8 @@ Option settings in this section apply to all modules that extend `@apostrophecms
 |---------|---------|---------|
 | [`adminOnly`](#adminonly) | Boolean | Set to `true` to only allow admins to manage the doc type. |
 | [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
-| [`label`](#label-for-doc-types) | String | The readable label for the doc type. |
-| [`localized`](#localized) | Boolean | Set to `false` to not include the doc type in the locale system. |
+| [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
+| [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
 | [`sort`](#sort) | Object | Configure sort order for docs of this type. |
 | [`slugPrefix`](#slugprefix) | String | Add a prefix to all slugs for this doc type. |
 <!-- - [`contextBar`](#contextbar) -->
@@ -866,18 +866,16 @@ Option settings in this section apply to all widgets (modules that extend `@apos
 
 | Option | Value type | Description |
 |---------|---------|---------|
-| [`className`](#classname) | String | A project-level class to apply to core widget templates. |
+| [`className`](#classname) | String | Applies a class to core widget templates. |
 | [`icon`](#icon) | String | Select an available icon to include with the label in area menus. |
-| [`label`](#label-for-widgets) | String | The readable label for the widget type. |
+| [`label`](#label-for-widgets) | String | The human-readable label for the widget type. |
 
 <!-- | [`scene`](#scene) | null | description | -->
 <!-- | [`contextual`](#contextual) | Boolean | description | -->
 
 ### `className`
 
-Official Apostrophe widget templates support adding an html class from the `className` module option. The class is applied to the outer, wrapping HTML element in the widget template. This helps developers style the widget in project-level CSS using their namespacing and without targeting Apostrophe data attributes.
-
-This option can be supported in custom, project-level widget templates (referenced with `data.manager.options.className` in template), but it may not be necessary. The option does not automatically have any effect in custom widget templates without use of `data.manager.options.className`.
+Official Apostrophe widget templates support adding an html class from the `className` module option. The class is applied to the outer, wrapping HTML element in the widget template for easy styling.
 
 #### Example
 
@@ -944,7 +942,7 @@ module.exports = {
 
 ### `label` (for widgets)
 
-`label` should be set to a text string to be used in the area menu. If not set, Apostrophe will convert the module `name` meta property to a readable label by removing `-widget` from the end, splitting the `name` on dashes and underscores, then capitalizing the first letter of each word.
+`label` should be set to a text string to be used in the area menu. If not set, Apostrophe will convert the module `name` meta property to a readable label by removing `-widget` from the end, splitting the `name` on dashes and underscores, and capitalizing the first letter of each word.
 
 #### Example
 
@@ -993,9 +991,9 @@ module.exports = {
 
 ### `defaultOptions`
 
-The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/rich-text-widget/index.js#L15-L45). These can be overridden by setting project-level `defaultOptions`. This configuration object can include one or both of the `toolbar` and `styles` sub-options. If only one of those is included, the other will fall back to the core defaults.
+The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/rich-text-widget/index.js#L15-L45). These can be overridden by setting `defaultOptions`. This configuration object can include one or both of the `toolbar` and `styles` sub-options. If only one of those is included, the other will fall back to the core defaults.
 
-Project-level defaults can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
+`defaultOptions` can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
 
 #### Example
 
