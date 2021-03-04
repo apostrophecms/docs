@@ -647,7 +647,7 @@ Option settings in this section apply to all piece page types (modules that exte
 | [`perPage`](#perpage) | Integer | Set the number of pieces to be |
 | [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
 | [`piecesFilters`](#piecesfilters) | Array | Configure pieces filters for index pages. |
-| [`piecesModuleName`](#piecesmodulename) | String | Specify the associated piece type if it doesn't match the module name. |
+| [`pieceModuleName`](#piecesmodulename) | String | Specify the associated piece type if it doesn't match the module name. |
 | [`previous`](#previous) | Boolean/Object | Enable and optionally configure the `req.data.previous` object. |
 
 ### `perPage`
@@ -752,22 +752,22 @@ module.exports = {
 }
 ```
 
-### `piecesModuleName`
+### `pieceModuleName`
 
 Piece page types are each associated with a single piece type. If named with the pattern, `[piece name]-page`, the associated piece type will be detected automatically. For example, if the `article-page` module extends `@apostrophecms/piece-page-type`, it will automatically be associated with an `article` piece type.
 
-This pattern can be overridden or ignored by explicitly setting `piecesModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+This pattern can be overridden or ignored by explicitly setting `pieceModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
 
 #### Example
 
 ```javascript
 // modules/team-page/index.js
 // 👆 This module name would look for a piece type named `team` if not for
-// `piecesModuleName`
+// `pieceModuleName`
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
-    piecesModuleName: 'person'
+    pieceModuleName: 'person'
   },
   // Maybe there's code here to group people by team.
   // ...
