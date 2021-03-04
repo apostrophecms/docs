@@ -129,7 +129,7 @@ Option settings in this section apply to all modules that extend `@apostrophecms
 
 - [`adminOnly`](#adminonly)
 - [`autopublish`](#autopublish)
-- [`label`](#label)
+- [`label`](#label-for-doc-types)
 - [`localized`](#localized)
 - [`sort`](#sort)
 - [`slugPrefix`](#slugprefix)
@@ -178,7 +178,7 @@ module.exports = {
 <!-- If `true`, the second row of the admin bar, the "context bar," will be disabled.
 `true` ~ allows the admin bar context bar row to appear -->
 
-### `label`
+### `label` (for doc types)
 
 `label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals and the page type select field.
 
@@ -826,3 +826,107 @@ module.exports = {
 }
 ```
 
+
+## Options for widget modules
+
+Option settings in this section apply to all widgets (modules that extend `@apostrophecms/widget-type`).
+
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`className`](#classname) | String | A project-level class to apply to core widget templates. |
+| [`icon`](#icon) | String | Select an available icon to include with the label in area menus. |
+| [`label`](#label-for-widgets) | String | The readable label for the widget type. |
+
+<!-- | [`scene`](#scene) | null | description | -->
+<!-- | [`contextual`](#contextual) | Boolean | description | -->
+
+### `className`
+
+Official Apostrophe widget templates support adding an html class from the `className` module option. The class is applied to the outer, wrapping HTML element in the widget template. This helps developers style the widget in project-level CSS using their namespacing and without targeting Apostrophe data attributes.
+
+This option can be supported in custom, project-level widget templates (referenced with `data.manager.options.className` in template), but it may not be necessary. The option does not automatically have any effect in custom widget templates without use of `data.manager.options.className`.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/image-widget/index.js
+module.exports = {
+  options: {
+    className: 'c-image-widget'
+  },
+  // ...
+}
+```
+
+<!-- NOTE: Not ready to document yet. There are elements to this that need to be worked out. -->
+<!--
+### `contextual`
+
+Some widgets, including the core rich text widget, should not be edited in a modal. Setting `contextual: true` on a widget module will tell the user interface, when in edit mode, to load the widget immediately using its associated editor component. `@apostrophecms/rich-text-widget` is the best example of this in core. Widgets that only serve to provide layout for nested areas are another possible use case.
+
+**It is important that the widget type has a [configured `widgetEditor` component](#components) that is built for this purpose.** If there is no such component, the widget editor modal will open immediately on load.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/layout-widget/index.js
+module.exports = {
+  options: {
+    contextual: true,
+    components: {
+      // 👇 This refers to a project-level `MyCustomLayoutWidgetEditor.vue`
+      // component file.
+      widgetEditor: 'MyCustomLayoutWidgetEditor',
+      widget: 'AposWidget'
+    }
+  },
+  // ...
+}
+```
+-->
+
+### `icon`
+
+Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module format example](/guide/module-format-example.md) for how to make new icons available.
+<!-- TODO: Update this to link to a true module section documentation page for `icons`. -->
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    icon: 'pillar'
+  },
+  icons: {
+    pillar: 'Pillar'
+  },
+  // ...
+};
+
+```
+
+!['Area menu with icons next to widget labels'](/images/area-menu-with-icons.png)
+
+### `label` (for widgets)
+
+`label` should be set to a text string to be used in the area menu. If not set, Apostrophe will convert the module `name` meta property to a readable label by removing `-widget` from the end, splitting the `name` on dashes and underscores, then capitalizing the first letter of each word.
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Two Column Layout'
+  },
+  // ...
+};
+
+```
+
+<!-- TODO: Flesh out once questions around scenes are resolve, or delete. -->
+<!-- ### `scene` -->
