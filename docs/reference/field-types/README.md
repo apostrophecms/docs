@@ -19,10 +19,10 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[radio](/reference/field-types/radio.md) | Single value selection with a radio input interface |
 |[range](/reference/field-types/range.md) | A floating point number with a sliding interface |
 |[relationship](/reference/field-types/relationship.md) | One or more related content docs (pieces or pages) |
+|[relationshipReverse](/reference/field-types/relationship-reverse.md) | Reveals the "other side" of a `relationship` |
 |[select](/reference/field-types/select.md) | Single value selection with a dropdown interface |
 |[slug](/reference/field-types/slug.md) | Text string value that is converted on save to lowercase and hyphenated |
 |[string](/reference/field-types/string.md) | Simple text string |
 |[time](/reference/field-types/time.md) | Time entry, stored in HH:MM:SS format |
 |[url](/reference/field-types/url.md) | Text input requiring URL structure |
 
-<!-- |[relationshipReverse](/reference/field-types/relationship-reverse.md) | The "other side" of a doc-to-doc relationship (has no UI) | -->
