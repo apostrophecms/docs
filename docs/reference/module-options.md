@@ -51,6 +51,9 @@ For example, if you had a custom piece type, it might look like this:
 // modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
+  options: {
+    alias: 'article'
+  },
   init (self) {
     const moduleOptions = self.options;
     // ...
@@ -58,10 +61,7 @@ module.exports = {
   methods (self) {
     return {
       logOptions () {
-        console.log('The module options are', self.options);
-        // This would log out any options set on the `article` module
-        // as well as the options it inherits from `@apostrophecms/piece-type`,
-        // `@apostrophecms/doc-type`, and `@apostrophecms/module`
+        console.log('The module alias is ', self.options.alias);
       }
     }
   }
@@ -1022,7 +1022,10 @@ The rich text editor toolbar tools (e.g., "bold," "link," and "underline" button
 
 ::: warning
 Using this option takes full responsibility for the configuration of the rich text editor tools. Use this with caution. If overriding, be sure to include _all_ rich text tools that you will use.
+
+If introducing an editor tool that is not included in core, you will need to create both the Vue component and, often, a [tiptap extension](https://tiptap.dev/docs/guide/extensions.html#installation).
 :::
+<!-- TODO: link to an RTE extension guide when available. -->
 
 
 ```javascript
