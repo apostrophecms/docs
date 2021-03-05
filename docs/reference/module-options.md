@@ -413,7 +413,7 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 |---------|---------|---------|
 | [`builders`](#builders) | Object | Set query builder values to be used when pages are served. |
 | [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
-| [`minimumPark`](#minimumpark) | Array | Override home page default properties when created. |
+| [`minimumPark`](#minimumpark) | Array | Override default parked pages, including the home page. |
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
 | [`publicApiProjection`](#publicapiprojection-for-pages) | Object | Set query builder values to be used when pages are served. |
 | [`quickCreate`](#quickcreate-for-pages) | Boolean | Set to `false` to remove pages from the quick create menu. |
