@@ -43,7 +43,7 @@ require('apostrophe')({
 
 ## Using module options
 
-Most module options in Apostrophe core and official extension modules are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them, if needed. In some cases it is helpful to reference the options object in custom module code. You can do this in any of the module configuration function sections using the `self` argument as `self.options`.
+Most module options in Apostrophe core and official extension modules are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them. In some cases it is helpful to reference the options object in custom module code. You can do this in any of the module configuration function sections using the `self` argument as `self.options`.
 
 For example, if you had a custom piece type, it might look like this:
 
