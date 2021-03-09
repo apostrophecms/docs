@@ -77,6 +77,7 @@ module.exports = {
             'reference/api/field-formats'
           ]
         },
+        'reference/module-overview',
         'reference/module-options'
       ]
     }
