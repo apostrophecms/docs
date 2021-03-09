@@ -390,7 +390,7 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 
 <!-- TODO: Update link to a more detailed explanation of builders when
 available. -->
-The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This effects the data available on the page object, `req.data.page` (`data.page` in templates).
+The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
 
 The default value is:
 ```javascript
@@ -400,7 +400,7 @@ The default value is:
 }
 ```
 
-In this example, page objects are loaded with one level of page tree "children" as `_children` and their "ancestor" pages, each with one level of their child pages, on `_ancestors`.
+In this example, page objects are fetched with one level of page tree "children" as `_children` and their "ancestor" pages, each with one level of their child pages, on `_ancestors`.
 
 
 #### Example
@@ -421,7 +421,7 @@ In this example, we are not including ancestor pages and are requesting two leve
 
 ### `home`
 
-The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. `home` option settings to offer minor performance improvements for large sites include:
+The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. The `home` option offers minor performance improvements for large sites by setting one of the following values:
 
 | Setting | Description |
 |---------|-------------|
@@ -443,9 +443,10 @@ module.exports = {
 ### `minimumPark`
 
 The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the trash "page" (trash is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
+<!-- TODO: Update when the trash is removed from home page children. -->
 
 ::: warning
-Use with caution. Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example.
+Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example. Use with caution.
 :::
 
 The default is:
@@ -716,7 +717,7 @@ module.exports = {
 
 <!-- TODO: Link to a guide on using piece filters when available. -->
 <!-- TODO: Link to a better query builder guide when available. -->
-`piecesFilters` can be configured as an array of objects to support filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
+`piecesFilters`, configured as an array of objects, supports filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
 
 - Custom query builders configured in an app that include a `launder` method
 - Field names whose field types automatically get builders:
@@ -769,9 +770,9 @@ module.exports = {
 
 ### `pieceModuleName`
 
-Piece page types are each associated with a single piece type. If named with the pattern, `[piece name]-page`, the associated piece type will be detected automatically. For example, if the `article-page` module extends `@apostrophecms/piece-page-type`, it will automatically be associated with an `article` piece type.
+Piece page types are each associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be detected automatically. For example, if the `article-page` module extends `@apostrophecms/piece-page-type`, it will automatically be associated with an `article` piece type.
 
-This pattern can be overridden or ignored by explicitly setting `pieceModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+You can override this pattern by explicitly setting `pieceModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
 
 #### Example
 
