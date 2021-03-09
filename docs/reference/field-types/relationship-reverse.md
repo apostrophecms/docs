@@ -35,6 +35,6 @@ _pizzas: {
 
 ## `ifOnlyOne`
 
-The `ifOnlyOne` option can provide a performance improvement if the reverse relationship data is only needed when one piece is queried. Setting it to `true` tells Apostrophe not to look for this extra relationship data in contexts where many pieces are queried (e.g., an [index page](/reference/glossary.md#index-page)).
+The `ifOnlyOne` option can provide a performance improvement if the reverse relationship data is only needed when one piece is queried. For example, in the example above, the pizza relationship data may be only needed on a topping [show page](/reference/glossary.md#show-page), where only one topping is displayed; not on the [index page](/reference/glossary.md#index-page), where many toppings are listed.
 
-For example, in the example above, the pizza relationship data may be only needed on a topping [show page](/reference/glossary.md#show-page), where only one topping is displayed; not on the index page, where many toppings are listed. Setting `ifOnlyOne: true` on the `relationshipReverse` field avoids fetching the relationship data when serving the index page.
+Setting `ifOnlyOne: true` tells Apostrophe not to look for the extra relationship data in those contexts, such as index pages, where many pieces are queried.
