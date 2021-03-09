@@ -1,6 +1,6 @@
 # `relationshipReverse`
 
-Adding a `relationshipReverse` field to a doc type schema reveals Apostrophe docs that have established relationships with a given doc. It is a developer convenience, showing the "other side" of a [`relationship` field](/reference/field-types/relationship.md). There is no editing interface for this field type as the relationship is defined in the paired `relationship` field.
+Adding a `relationshipReverse` field to a doc type schema reveals Apostrophe docs that have established relationships with a given doc. It is a developer convenience, showing the receiving side of a [`relationship` field](/reference/field-types/relationship.md). There is no editing interface for this field type as the relationship is defined in the paired `relationship` field.
 
 Take the example of a website that has a `pizza` piece type with a `relationship` field connecting to its `topping` piece type. Each pizza piece chooses the registered toppings that it has (the relationship is _pizza-to-topping_). The website might also want to list all available toppings on a page and show all pizzas that use each topping (the _topping-to-pizza_ direction). A `relationshipReverse` field could make it easy to find and display that information.
 
@@ -37,4 +37,4 @@ _pizzas: {
 
 The `ifOnlyOne` option can provide a performance improvement if the reverse relationship data is only needed when one piece is queried. Setting it to `true` tells Apostrophe not to look for this extra relationship data in contexts where many pieces are queried (e.g., an [index page](/reference/glossary.md#index-page)).
 
-For example, in the example above, the pizza relationship data may be only needed on a topping [show page](/reference/glossary.md#show-page) (where only one topping is queried); not on the index page, where many toppings are listed. Setting `ifOnlyOne: true` on the `relationshipReverse` field avoids those extra requests when serving the index page.
+For example, in the example above, the pizza relationship data may be only needed on a topping [show page](/reference/glossary.md#show-page), where only one topping is displayed; not on the index page, where many toppings are listed. Setting `ifOnlyOne: true` on the `relationshipReverse` field avoids fetching the relationship data when serving the index page.
