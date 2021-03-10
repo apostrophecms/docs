@@ -12,6 +12,7 @@ Module configuration objects may use the following configuration properties.
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
+| [`instantiate`](#instantiate) | Boolean | No | Prevent a module from being fully instantiated | All |
 
 ### `extend`
 
@@ -246,6 +247,8 @@ modules.export = {
 ```
 
 ### `instantiate`
+
+Set to `false` to prevent the module from being fully instantiated in the application. The primary purpose of this option is to create a base class module that others will [extend](#extend) but that will not be used directly.
 
 ## Customization functions
 
