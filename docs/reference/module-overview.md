@@ -149,6 +149,58 @@ modules.export = {
 ```
 
 ### `filters`
+
+In piece type modules, the `filters` settings configure the pieces manager modal, adding and removing filtering interface (to view only certain pieces). `trash` and `visibility` filters are included by default.
+
+The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self) on the piece type.
+
+#### `add`
+
+An object of filters to add to the piece type. Each filter is an object with its own configuration. Filter properties include:
+
+| Property | Description |
+| ------- | ------- |
+| `label` | Recommended, but not required, to customize the human-readable label. |
+| `inputType` | Choose an input field type for the filter from the following: `radio`, `checkbox`, or `select`. Defaults to `select`. |
+| `choices` | Manually set an array of choices instead of letting Apostrophe find the valid choices from the database. Choices include `label` and `value` properties. |
+| `def` | The default value for the manager filter. |
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  filters: {
+    add: {
+      _category: { // 👈 Referencing a relationship field named `_category`
+        label: 'Article category'
+      },
+      featured: { // 👈 Referencing a boolean field name `featured`
+        labeled: 'Featured',
+        inputType: 'checkbox',
+        def: true,
+        choices: [
+          { value: true, label: 'Show featured' },
+          { value: false, label: 'Hide featured' }
+        ]
+      }
+    }
+  }
+};
+```
+
+#### `remove`
+
+An array of filter names from the base class module to remove.
+
+```javascript
+// modules/spotlight-article/index.js
+modules.export = {
+  extend: 'article',
+  filters: {
+    remove: [ 'featured' ]
+  }
+};
+```
+
 ### `columns` (only for piece types)
 ### `instantiate`
 
