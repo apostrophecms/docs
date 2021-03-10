@@ -11,7 +11,7 @@ Module configuration objects may use the following configuration properties.
 | [`options`](#options) | Object | No | Configure module options | All |
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
-| [`columns`](#filters) | Object | Yes | Configure piece type manager columns | Piece |
+| [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
 
 ### `extend`
 
@@ -150,7 +150,7 @@ modules.export = {
 
 ### `filters`
 
-In piece type modules, the `filters` settings configure the pieces manager modal, adding and removing filtering interface (to view only certain pieces). `trash` and `visibility` filters are included by default.
+In piece type modules, the `filters` setting configures the pieces manager modal, adding and removing filtering interface (to view only certain pieces). `trash` and `visibility` filters are included by default.
 
 The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self) on the piece type.
 
@@ -201,7 +201,50 @@ modules.export = {
 };
 ```
 
-### `columns` (only for piece types)
+### `columns`
+
+In piece type modules, the `columns` setting configures the pieces manager modal, adding and removing the piece listing columns. Default columns include `title`, `updatedAt`, and `visibility`.
+
+#### `add`
+
+An object of columns to add to the piece type manager. Each column is an object with its own configuration. Column properties include:
+
+| Property | Description |
+| ------- | ------- |
+| `label` | Recommended, but not required, to show a column header label. |
+| `component` | An advanced option to use a custom Vue component for table cells in this column. See core components `AposCellBasic` (default) and `AposCellDate` for examples. |
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  extend: '@apostrophecms/piece-type',
+  columns: {
+    // 👇 Adds a column showing when the article was published.
+    add: {
+      lastPublishedAt: {
+        label: 'Published',
+        component: 'AposCellDate'
+      }
+    }
+  }
+};
+```
+
+#### `remove`
+
+An array of column names from the base class module to remove.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  extend: '@apostrophecms/piece-type',
+  columns: {
+    // 👇 Hides the column showing when the article was last updated.
+    remove: [ 'updatedAt' ]
+  }
+};
+```
+
 ### `instantiate`
 
 ## Customization functions
