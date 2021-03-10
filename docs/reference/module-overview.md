@@ -76,6 +76,9 @@ You should not use both `improve` and `extend` in a single module.
 
 
 ### `options`
+
+An object used to add additional, often optional, settings to a module. There are many options available depending on the module type. See the [module configuration options page](/reference/module-options.md) for more information.
+
 ### `fields`
 ### `filters`
 ### `columns` (only for piece types)
