@@ -1,17 +1,17 @@
 # Anatomy of a module
 
-Apostrophe modules are structured to help developers organize their code and write minimal boilerplate code in
+Module configuration objects may use the following configuration properties.
 
 ## Configuration settings
 
-| Setting name | Value type | [Cascades](#cascading-settings) | Description |
-|---------|---------|---------|---------|
-| [`extend`](#extend) | String | No | Name a base class module |
-| [`improve`](#improve) | String | No | Name a module to update its functionality |
-| [`options`](#options) | Object | No | Configure module options |
-| [`fields`](#fields) | Object | Yes | Configure doc type fields |
-| [`filters`](#filters) | Object | Yes | Configure piece type filters |
-| [`columns`](#filters) | Object | Yes | Configure piece type manager columns |
+| Setting name | Value type | [Cascades](#cascading-settings) | Description | Module types |
+| ------- | ------- | ------- | ------- | :-----: |
+| [`extend`](#extend) | String | No | Name a base class module | All |
+| [`improve`](#improve) | String | No | Name a module to update its functionality | All |
+| [`options`](#options) | Object | No | Configure module options | All |
+| [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc |
+| [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
+| [`columns`](#filters) | Object | Yes | Configure piece type manager columns | Piece |
 
 ### `extend`
 
