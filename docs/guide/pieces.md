@@ -309,7 +309,7 @@ Sometimes you might want to add another query builder on your own. Here's an exa
 Notice that `builders` is nested in the `queries` section. There is also a `methods` section, which is added to less often. It is primarily used to define new final endpoints for queries, like the `toArray` and `toObject` methods.
 :::
 
-**These are the important sub-sections of a query builder:**
+**These are the important subsections of a query builder:**
 
 * `def` sets the default value for the query builder. `query.get('belowAverage')` will return this if the query builder is not called by the developer or included in the query string.
 

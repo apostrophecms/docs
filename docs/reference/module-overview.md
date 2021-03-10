@@ -9,7 +9,7 @@ Module configuration objects may use the following configuration properties.
 | [`extend`](#extend) | String | No | Name a base class module | All |
 | [`improve`](#improve) | String | No | Name a module to update its functionality | All |
 | [`options`](#options) | Object | No | Configure module options | All |
-| [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc |
+| [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#filters) | Object | Yes | Configure piece type manager columns | Piece |
 
@@ -80,6 +80,74 @@ You should not use both `improve` and `extend` in a single module.
 An object used to add additional, often optional, settings to a module. There are many options available depending on the module type. See the [module configuration options page](/reference/module-options.md) for more information.
 
 ### `fields`
+
+[Doc type](/reference/glossary.md#doc) modules have some fields configured by default, such as the `title` and `slug` fields. The `fields` setting is used for additional field management.
+
+The `fields` object is configured with subsections: `add`, `remove`, and `group`.
+
+#### `add`
+
+An object of fields to add to the doc type's schema. See the [field type reference](/reference/field-types/README.md) for more on field type configuration.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  fields: {
+    add: {
+      subtitle: {
+        label: 'Subtitle',
+        type: 'string'
+      }
+    }
+  }
+};
+```
+
+#### `remove`
+
+An array of field names from the base class module to remove. Some core doc type fields cannot be removed since they required by core functionality.
+
+```javascript
+// modules/spotlight-article/index.js
+modules.export = {
+  extend: 'article',
+  fields: {
+    remove: [ 'subtitle' ]
+  }
+};
+```
+
+#### `group`
+
+An object of field groups. The groupings are used by editing interface. It _does not apply to widget modules_, which do not have a tabbed interface.
+
+Groups are added as an object with their name as the object key and the following properties:
+- `label`: The visible label (a string) on the interface tab
+- `fields`: An array of field names to include in the group
+
+The `@apostrophecms/doc-type` module groups the default fields in a `basics` group, which you can override. If overriding the `basics` group, you will need to add those core fields to a group in the module. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  fields: {
+    add: {
+      // ...
+    },
+    group: {
+      meta: { // 👈 The group's identifying name is the object key.
+        label: 'Article metadata',
+        fields: [
+          'subtitle',
+          'author',
+          '_category'
+        ]
+      }
+    }
+  }
+};
+```
+
 ### `filters`
 ### `columns` (only for piece types)
 ### `instantiate`
