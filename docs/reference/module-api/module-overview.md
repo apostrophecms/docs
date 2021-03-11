@@ -1,4 +1,4 @@
-# Anatomy of a module
+# Module properties
 
 Module configuration objects may use the following configuration properties.
 
