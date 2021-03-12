@@ -45,7 +45,7 @@ module.exports = {
   // This module does not extend anything. (Technically, it extends
   // @apostrophecms/module, the default base class.)
 
-  restApiRoutes(self, options) {
+  restApiRoutes(self) {
     return {
       // GET /api/v1/product
       async getAll(req) {
@@ -83,7 +83,7 @@ module.exports = {
   // match up well with the REST conventions.
   // This route becomes accessible as: `POST /api/v1/mydatabase/merge`
 
-  apiRoutes(self, options) {
+  apiRoutes(self) {
     return {
       post: {
         async merge(req) {
