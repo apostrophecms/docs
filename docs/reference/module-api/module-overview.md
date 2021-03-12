@@ -63,7 +63,7 @@ Similarly to `extend`, `improve` is used to name another existing module. Instea
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
 
-::: tip NOTE
+::: note
 Within an application, you can alter installed or core module behavior by adding an `index.js` file for it in the `module` directory as if it is a new module. Installed modules cannot share their name with an existing module, so they `improve` those existing modules instead.
 :::
 
@@ -303,6 +303,51 @@ Customization function sections all return an object with properties that add fu
 
 Each of these function sections takes the module, as `self`, as an argument. This provides access to its methods, options, and other properties, as well as those inherited from its base class.
 
+| Function name | Description |
+| ------- | ------- |
+| [`methods`](#methods-self) | Add new methods and override base class methods |
+| [`extendMethods`](#extendmethods-self) | Extend the functionality of base class methods |
+| [`components`](#components-self) | Configure asynchronous template components |
+| [`extendComponents`](#extendcomponents-self) | Extend base class template components |
+| [`helpers`](#helpers-self) | REPLACE-ME |
+| [`extendHelpers`](#extendhelpers-self) | REPLACE-ME |
+| [`apiRoutes`](#apiRoutes-self) | REPLACE-ME |
+| [`extendApiRoutes`](#extendapiroutes-self) | REPLACE-ME |
+| [`restApiRoutes`](#restapiroutes-self) | REPLACE-ME |
+| [`extendRestApiRoutes`](#extendrestapiroutes-self) | REPLACE-ME |
+| [`renderRoutes`](#renderroutes-self) | REPLACE-ME |
+| [`routes`](#routes-self) | REPLACE-ME |
+| [`handlers`](#handlers-self) | REPLACE-ME |
+| [`extendHandlers`](#extendhandlers-self) | REPLACE-ME |
+| [`queries`](#queries-self) | REPLACE-ME |
+| [`extendQueries`](#extendqueries-self) | REPLACE-ME |
+| [`middleware`](#middleware-self) | REPLACE-ME |
+| [`tasks`](#tasks-self) | REPLACE-ME |
+
+### The extension pattern
+
+Several of these sections use an extention pattern (the sections prefixed with "extend"). These sections are used to add functionality to matching features of the module's base class. Functions in `extendMethods` enhance identically named functions in the base class' `methods` section, `extendApiRoutes` enhances API routes from the base class' `apiRoutes`, and so on.
+
+Each individual function included in the extension section takes a `_super` argument in addition to the same arguments as the original function. `_super` is the original function, which should be called within the new extension.
+
+If a piece type included the `insert` in its `extendMethods` section to alter the piece titles, it might look like this:
+
+```javascript
+  enhanceMethods(self) {
+    return {
+      insert(_super, req, piece, options) {
+        piece.title = `🆕 ${piece.title}`;
+
+        _super(req, piece, options);
+      }
+    }
+  }
+```
+
+::: warning
+Extension functions should *always* use the `_super` argument to call the original function. If you want to *completely* overwrite the inherited function, instead add a matching function in the section without the "extend" prefix. For example, we could completely overwrite the `insert` method in our piece type by including our own `insert` function in the `methods` section.
+:::
+
 ### `methods(self)`
 
 Add methods that can be invoked on `self` or from another module on `self.apos.modules['module-name']` or the designated module alias. Returns an object of functions.
@@ -333,8 +378,112 @@ module.exports = {
 ```
 
 #### `extendMethods(self)`
+
+<!-- TODO: Link to module reference section to find existing methods. -->
+Add to the functionality of a method inherited from the base class. This must return an object of functions, similar to [`methods`](#methods-self).
+
+Methods included should take a `_super` argument, followed by the normal arguments of the method being extended. If the original method took only a `req` argument, the extending method should take the arguments `_super, req`.
+
+To maintain the same application, they should return the same type of response as the original method. If the original returned an array of docs, the extension method should return an array of docs.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  extendMethods(self) {
+    return {
+      generate(_super, index) {
+        // Using _super with the original argument to generate a sample piece.
+        const piece = _super(index);
+        // Adding additional functionality.
+        piece.price = Math.random() * 100;
+        // Returning the generated piece, exactly as the original `generate`
+        // method does.
+        return piece;
+      }
+    };
+  }
+};
+```
+
 ### `components(self)`
+
+<!-- TODO: Link to full guide on creating async template components when available. -->
+This function section returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
+
+Each template component function should take the arguments:
+
+| Argument | Description |
+| ------- | ------- |
+| `req` | The request object from the originating template context. |
+| `data` | Data passed into the component where the component is used. |
+
+Information returned by the component function will be available in the associated component template as `data`.
+
+See the [async component guide](/guide/async-components.md) for more usage information.
+
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  // ...
+  components(self, options) {
+    return {
+      // Returning the five most recently created products.
+      async latest(req, data) {
+        const products = await self.find(req)
+          .sort({ createdAt: -1 })
+          .limit(data.max || 5)
+          .toArray();
+
+        return {
+          products
+        };
+      }
+    };
+  }
+};
+
+```
+
 #### `extendComponents(self)`
+
+Add functionality to base class async component functions. This must return an object of functions, similar to [`components`](#components-self).
+
+Extension functions should take the following arguments:
+
+| Argument | Description |
+| ------- | ------- |
+| `_super` | The original component function. See the [extension pattern](#the-extension-pattern). |
+| `req` | The request object from the originating template context. |
+| `data` | Data passed into the component where the component is used. |
+
+Each should return data in the same form as the original component function.
+
+```javascript
+// modules/featured-product/index.js
+module.exports = {
+  extend: 'product',
+  // ...
+  extendComponents(self, options) {
+    return {
+      // Returning the five most recently created products.
+      async latest(_super, req, data) {
+        data.max = (data.max && data.max <= 3) ? data.max : 3;
+
+        const result = _super(req, data);
+
+        return {
+          products: result.products
+        };
+      }
+    };
+  }
+};
+
+```
+
 ### `helpers(self)`
 #### `extendHelpers(self)`
 ### `apiRoutes(self)`
