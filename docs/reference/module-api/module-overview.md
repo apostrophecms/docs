@@ -257,11 +257,81 @@ modules.export = {
 };
 ```
 
-## Customization functions
+## Initialization function
 
 ### `async init(self)`
-### `beforeSuperClass(self)`
+
+This function runs once when the Apostrophe app first start up. It takes the module, as `self`, as an argument.
+
+While [customization functions](#customization-functions) add functionality for the module in specific ways, `init` provides a space for more open code execution. It is useful for setting properties on the module that could not be set in other sections.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  options: {
+    alias: 'product',
+    themeColor: 'blue'
+  },
+  init(self) {
+    // 👇 Making `self.options.themeColor` available on `apos.product.theme`.
+    self.theme = self.options.themeColor;
+
+    // 👇 Adding a data migration related to this module using a method from a
+    // separate module.
+    self.apos.migration.add('blurb', async () => {
+      await self.apos.migration.eachDoc({
+        type: 'product'
+      }, async (doc) => {
+        if ((doc.category) === 'old-category') {
+          doc.category = 'new-category';
+          return self.apos.doc.db.updateOne({
+            _id: doc._id
+          }, {
+            $set: { blurb: doc.category }
+          });
+        }
+      });
+    });
+  }
+};
+```
+
+## Customization functions
+
+Customization function sections all return an object with properties that add functionality related to the module. They may add methods that can be called within the module and elsewhere, event handlers, template helpers, or other features as covered here.
+
+Each of these function sections takes the module, as `self`, as an argument. This provides access to its methods, options, and other properties, as well as those inherited from its base class.
+
 ### `methods(self)`
+
+Add methods that can be invoked on `self` or from another module on `self.apos.modules['module-name']` or the designated module alias. Returns an object of functions.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  methods(self) {
+    return {
+      async averagePrice(req) {
+        let sum = 0;
+        const products = await self.find(req).toArray();
+
+        if (!products.length) {
+          return 0;
+        }
+
+        for (const product of products) {
+          sum += product.price;
+        }
+
+        return sum / products.length;
+      }
+    };
+  }
+};
+```
+
 #### `extendMethods(self)`
 ### `components(self)`
 #### `extendComponents(self)`
