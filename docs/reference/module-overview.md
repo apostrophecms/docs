@@ -16,7 +16,7 @@ Module configuration objects may use the following configuration properties.
 
 ### `extend`
 
-Identify a module by `name` to use as a base class for your custom module. "Extending" a module this way makes all of the functionality and configuration of the base class available in the new module, other than its `name` property.
+Identify a module to use as a base class for your custom module. "Extending" a module this way makes all of the functionality and configuration of the base class available in the new module, other than its `name` property.
 
 The most common base class modules include:
 
@@ -24,6 +24,8 @@ The most common base class modules include:
 - `@apostrophecms/page-type` to add a page type
 - `@apostrophecms/piece-page-type` to add an index page and show pages for a piece type
 - `@apostrophecms/widget-type` to add a widget type
+
+If this property is not set, the module will implicitly extend the base module, `@apostrophecms/module`.
 
 ```javascript
 // modules/custom-piece/index.js
@@ -61,7 +63,11 @@ Similarly to `extend`, `improve` is used to name another existing module. Instea
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
 
-You might include this in a stand-alone module that adds functionality to the `@apostrophecms/image` core module:
+::: tip NOTE
+Within an application, you can alter installed or core module behavior by adding an `index.js` file for it in the `module` directory as if it is a new module. Installed modules cannot share their name with an existing module, so they `improve` those existing modules instead.
+:::
+
+ You might include this in a stand-alone module that adds functionality to the `@apostrophecms/image` core module:
 
 ```javascript
 // index.js
@@ -122,13 +128,13 @@ modules.export = {
 
 #### `group`
 
-An object of field groups. Groupings are used by editing interface. Note that `group` _does not apply to widget modules_.
+An object of field groups. Groupings are used by the editing interface. Note that `group` _does not apply to widget modules_.
 
 Groups are added as an object with their name as the object key and the following properties:
 - `label`: The visible label (a string) for the group
 - `fields`: An array of field names to include in the group
 
-The `@apostrophecms/doc-type` module arranges the default fields in a `basics` group. You can override the `basics` group, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
+The `@apostrophecms/doc-type` module arranges the default fields in two groups: `basics` and `utility`. You can override these groups, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
 
 ```javascript
 // modules/article/index.js
