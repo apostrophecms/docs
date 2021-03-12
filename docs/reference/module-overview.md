@@ -7,7 +7,7 @@ Module configuration objects may use the following configuration properties.
 | Setting name | Value type | [Cascades](#cascading-settings) | Description | Module types |
 | ------- | ------- | ------- | ------- | :-----: |
 | [`extend`](#extend) | String | No | Identify the base class module | All |
-| [`improve`](#improve) | String | No | Identify a module to update its functionality | All |
+| [`improve`](#improve) | String | No | Identify a module to enhance | All |
 | [`options`](#options) | Object | No | Configure module options | All |
 | [`instantiate`](#instantiate) | Boolean | No | Prevent a module from being fully instantiated | All |
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
@@ -56,7 +56,7 @@ modules.export = {
 
 ### `improve`
 
-Similarly to `extend`, `improve` is used to name another existing module. Instead of _adopting_ the existing module's configuration, using `improve` _changes_ the named module's configuration.
+Similarly to `extend`, `improve` is used to name another existing module. Instead of _inheriting_ the existing module's code and configuration in a new module, using `improve` _enhances_ the existing module's code and configuration.
 
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
