@@ -162,7 +162,7 @@ On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as 
 
 ### Queries
 
-In modules for piece and page types, the `queries` section replaces the Apostrophe 2.x "cursors" feature. When making a database query with Apostrophe, you can chain together the query "builders" declared in the `builders` sub-section, then finish the job with the query "methods" declared in the `builders` sub-section. Most of the time you'll just need those you inherit from `@apostrophecms/doc-type`, such as `and`, `project`, and `toArray`.
+In modules for piece and page types, the `queries` section replaces the Apostrophe 2.x "cursors" feature. When making a database query with Apostrophe, you can chain together the query "builders" declared in the `builders` sub-section, then finish the job with the query "methods" declared in the `methods` sub-section. Most of the time you'll just need those you inherit from `@apostrophecms/doc-type` (such as `and`, `project`, and `toArray`) and those automatically defined for you with the same name as each field of your piece or page type.
 
 ### Middleware
 
