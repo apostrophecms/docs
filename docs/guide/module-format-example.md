@@ -377,6 +377,18 @@ module.exports = {
         }
       }
     }
+  },
+
+  // Make SVG icons available for UI configuration if not already included
+  // in core. Icons must be available through the Material Design Icons (MDI)
+  // package: https://www.npmjs.com/package/@mdi/svg.
+  // These are configured as:
+  // 'reference-name-for-apostrophe': 'MaterialDesignIconsName'.
+  // The example below lets this and other modules use the MDI icon "AirHorn"
+  // using the keyword, `airhorn`.
+
+  icons: {
+    'airhorn': 'AirHorn'
   }
 
 };
