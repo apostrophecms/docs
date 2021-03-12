@@ -408,7 +408,6 @@ module.exports = {
 
 ### `components(self)`
 
-<!-- TODO: Link to full guide on creating async template components when available. -->
 This function section returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
 
 Each template component function should take the arguments:
@@ -481,7 +480,6 @@ module.exports = {
     };
   }
 };
-
 ```
 
 ### `helpers(self)`
