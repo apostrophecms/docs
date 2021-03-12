@@ -41,13 +41,44 @@ require('apostrophe')({
 });
 ```
 
+## Using module options
+
+Most module options in Apostrophe core and official extension modules are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them.
+
+Module options can also be referenced directly in custom module code. Module configuration function sections take a `self` argument, which is the module itself. You can then get the options as `self.options`.
+
+For example, if you had a custom piece type, it might look like this:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    alias: 'article'
+  },
+  init (self) {
+    const moduleOptions = self.options;
+    // ...
+  },
+  methods (self) {
+    return {
+      logOptions () {
+        console.log('The module alias is ', self.options.alias);
+      }
+    }
+  }
+}
+```
+
 ## Options for any module
 
 Option settings in this section apply to every module in Apostrophe.
 
-- [`alias`](#alias)
-- [`components`](#components)
-- [`templateData`](#templatedata)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
+| [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
+| [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
 ### `alias`
 
@@ -127,12 +158,14 @@ You might use that value as a fallback for user-editable fields.
 
 Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](glossary.md#doc) modules). These include all piece and page types.
 
-- [`adminOnly`](#adminonly)
-- [`autopublish`](#autopublish)
-- [`label`](#label)
-- [`localized`](#localized)
-- [`sort`](#sort)
-- [`slugPrefix`](#slugprefix)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`adminOnly`](#adminonly) | Boolean | Set to `true` to only allow admins to manage the doc type. |
+| [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
+| [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
+| [`sort`](#sort) | Object | Configure sort order for docs of this type. |
+| [`slugPrefix`](#slugprefix) | String | Add a prefix to all slugs for this doc type. |
 <!-- - [`contextBar`](#contextbar) -->
 
 ### `adminOnly`
@@ -178,7 +211,7 @@ module.exports = {
 <!-- If `true`, the second row of the admin bar, the "context bar," will be disabled.
 `true` ~ allows the admin bar context bar row to appear -->
 
-### `label`
+### `label` (for doc types)
 
 `label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals and the page type select field.
 
@@ -269,11 +302,13 @@ module.exports = {
 
 Option settings in this section apply to all piece modules (those that extend `@apostrophecms/piece-type`).
 
-- [`pluralLabel`](#plurallabel)
-- [`perPage`](#perpage)
-- [`publicApiProjection`](#publicapiprojection)
-- [`quickCreate`](#quickcreate)
-- [`searchable`](#searchable)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`publicApiProjection`](#publicapiprojection-for-pieces) | Object | Piece fields to make available via a public REST API route. |
+| [`quickCreate`](#quickcreate-for-pieces) | Boolean | Set to `true` to add the piece type to the quick create menu. |
+| [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
 
 ### `pluralLabel`
 
@@ -312,7 +347,7 @@ module.exports = {
 }
 ```
 
-### `publicApiProjection`
+### `publicApiProjection` (for pieces)
 
 By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
 
@@ -335,9 +370,9 @@ module.exports = {
 }
 ```
 
-Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the title, `authorName`, and `_url` properties.
+Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
 
-### `quickCreate`
+### `quickCreate` (for pieces)
 
 Setting `quickCreate: true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals.
 
@@ -372,3 +407,653 @@ module.exports = {
 }
 ```
 
+## Options for the core page module
+
+Option settings in this section apply to the core page module (`@apostrophecms/page`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`builders`](#builders) | Object | Set query builder values to be used when pages are served. |
+| [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
+| [`minimumPark`](#minimumpark) | Array | Override default parked pages, including the home page. |
+| [`park`](#park) | Array | Set pages to be created on site start with configuration. |
+| [`publicApiProjection`](#publicapiprojection-for-pages) | Object | Set query builder values to be used when pages are served. |
+| [`quickCreate`](#quickcreate-for-pages) | Boolean | Set to `false` to remove pages from the quick create menu. |
+| [`types`](#types) | Array | Set the page types available for new pages. |
+
+### `builders`
+
+<!-- TODO: Update link to a more detailed explanation of builders when
+available. -->
+The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
+
+The default value is:
+```javascript
+{
+  children: true,
+  ancestors: { children: true }
+}
+```
+
+In this example, page objects are fetched with one level of page tree "children" as `_children` and their "ancestor" pages, each with one level of their child pages, on `_ancestors`.
+
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    builders: {
+      children: { depth: 2 }
+    }
+  },
+  // ...
+}
+```
+
+In this example, we are not including ancestor pages and are requesting two levels of child pages (direct children and their direct children).
+
+### `home`
+
+The home page document is added to all page requests on `req.data.home` so it can be referenced in all page templates. That home page object also includes a `_children` property containing an array of top level page objects. The `home` option offers minor performance improvements for large sites by setting one of the following values:
+
+| Setting | Description |
+|---------|-------------|
+| `false` | Disables adding the home page document to the requests. |
+| `{ children: false }` | Includes the home page document, but without the child pages array. If the [`builders` option](#builders) has an `ancestors` property, that will take precedence. |
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    home: { children: false }
+  },
+  // ...
+}
+```
+
+### `minimumPark`
+
+The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the trash "page" (trash is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
+<!-- TODO: Update when the trash is removed from home page children. -->
+
+::: warning
+Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example. Use with caution.
+:::
+
+The default is:
+```javascript
+[
+  {
+    slug: '/',
+    parkedId: 'home',
+    _defaults: {
+      title: 'Home',
+      type: '@apostrophecms/home-page'
+    },
+    _children: [
+        {
+        slug: '/trash',
+        parkedId: 'trash',
+        type: '@apostrophecms/trash',
+        trash: true,
+        orphan: true,
+        _defaults: { title: 'Trash' }
+      }
+    ]
+  }
+]
+```
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    minimumPark: [
+      {
+        slug: '/',
+        parkedId: 'home',
+        _defaults: {
+          title: 'Welcome',  // 👈
+          type: 'welcome-page' // 👈
+        },
+        _children: [
+            {
+            slug: '/trash',
+            parkedId: 'trash',
+            type: '@apostrophecms/trash',
+            trash: true,
+            orphan: true,
+            _defaults: { title: 'Trash' }
+          }
+        ]
+      }
+    ]
+  },
+  // ...
+}
+```
+
+### `park`
+
+Use the `park` option to add an array of pages that should be created when the app starts up if they do not already exist. Each page is added as an object with initial properties, including the required `parkedId`.
+
+Required and recommended parked page properties include:
+
+| Setting | Requirement | Description |
+|---------|-------------|-------------|
+| `parkedId` | Required | A unique ID value used to identify it among parked pages. |
+| `slug` | Required | The page [slug](/reference/glossary.md#slug). |
+| `type` | Required | The page type to be used for the parked page. |
+| `title` | Recommended | The page title. If not set, it will be "New Page." |
+
+If added on the top level of the page object, these properties will not be editable through the user interface. Properties other than `parkedId` may be included in a `_defaults` property instead, which will allow them to be edited in the UI.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    park: [
+      // The blog page has a permanent slug, title, and type.
+      {
+        parkedId: 'blogParkedId',
+        slug: '/blog',
+        title: 'Blog',
+        type: 'blog-page'
+      },
+      // The team page has a permanent type, but editable slug and title.
+      {
+        parkedId: 'teamParkedId',
+        type: 'staff-page',
+        _defaults: {
+          slug: '/team',
+          title: 'Our Team',
+        }
+      }
+    ]
+  },
+  // ...
+}
+```
+
+### `publicApiProjection` (for pages)
+
+By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
+
+This should be set to an object containing individual field name keys set to `1` for their values. Those fields names included in the `publicApiProjection` object will be returned when the `GET` API requests are made without authentication.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    publicApiProjection: {
+      title: 1,
+      _url: 1 // 👈 Dynamic properties are allowed
+    }
+  },
+  // ...
+}
+```
+
+Unauthenticated [`GET /api/v1/@apostrophecms/page`](api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
+
+### `quickCreate` (for pages)
+
+Pages are included in the admin bar "quick create" menu by default. Setting `quickCreate: false` on the page module will disable this.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    quickCreate: false
+  },
+  // ...
+}
+```
+
+### `types`
+
+The `types` array defines the page types available to users when creating or editing pages. Each item in the array should have a `label` property and a `name` property, which matches an active page type. If no `types` array is set, only the core "Home" page type will be available.
+
+[Parked pages](#park) may use page types that are not in the `types` option array. This allows developers to do things such as parking a single search page but not allowing users to create additional search pages.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    types: [
+      {
+        name: 'default-page',
+        label: 'Default'
+      },
+      {
+        name: 'article-page',
+        label: 'Article Index'
+      }
+      {
+        name: '@apostrophecms/home-page',
+        label: 'Home'
+      }
+    ]
+  },
+  // ...
+}
+```
+
+## Options for page type modules
+
+Option settings in this section apply to all page types (modules that extend `@apostrophecms/page-type`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`scene`](#scene) | String | Change the "scene" for this page type from the default `'public'`. |
+
+### `scene`
+
+Scenes are contexts in which certain sets of front end assets are delivered. Normally, anonymous site visitors receive only the stylesheets and scripts included in the `'public'` asset scene (those that are placed in the module's `ui/public` directory). If your page will use assets, such as Apostrophe's modals, that are normally reserved for logged-in users you can set `scene: 'apos'` in order to load them with pages of this type.
+
+#### Example
+
+```javascript
+// modules/fancy-form-page/index.js
+module.exports = {
+  extend: '@apostrophecms/page-type',
+  options: {
+    scene: 'apos'
+  },
+  // ...
+}
+```
+
+## Options for piece page types
+
+Option settings in this section apply to all piece page types (modules that extend `@apostrophecms/piece-page-type`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`perPage`](#perpage) | Integer | Set the number of pieces to be |
+| [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
+| [`piecesFilters`](#piecesfilters) | Array | Configure pieces filters for index pages. |
+| [`pieceModuleName`](#piecesmodulename) | String | Specify the associated piece type if it doesn't match the module name. |
+| [`previous`](#previous) | Boolean/Object | Enable and optionally configure the `req.data.previous` object. |
+
+### `perPage`
+
+For piece pages, the `perPage` option, expressed as an integer, defines the number of pieces that will be added to the `req.data.pieces` array when the page is served. The specific pieces in the set will be based on the total number of pieces and the `page` query parameter in the request.
+
+This is, more simply, the number of pieces that will normally be displayed on each page of a [paginated index page](/reference/glossary.md#index-page). This value defaults to 10.
+<!-- TODO: Change index page link to a guide on index pages when available. -->
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    perPage: 12
+  },
+  // ...
+}
+```
+
+### `next`
+
+If set to `true`, Apostrophe will include the next piece, based on the [sort option](#sort), on `req.data.next` when serving a [show page](/reference/glossary.md#show-page). This is useful to add links to a show page directing visitors to the next item in a series (e.g., the next oldest blog post). If not set, `req.data.next` will not be available.
+
+`next` can also be set to an object, which will be used as a query builder for retrieving that next piece document.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    next: true
+  },
+  // ...
+}
+
+// OR
+
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The next article piece would be returned with only the `title`, `_url`,
+    // and `publishedAt` properties.
+    next: {
+      project: {
+        title: 1,
+        _url: 1,
+        publishedAt: 1
+      }
+    }
+  },
+  // ...
+}
+```
+
+### `piecesFilters`
+
+<!-- TODO: Link to a guide on using piece filters when available. -->
+<!-- TODO: Link to a better query builder guide when available. -->
+`piecesFilters`, configured as an array of objects, supports filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
+
+- Custom query builders configured in an app that include a `launder` method
+- Field names whose field types automatically get builders:
+  - `boolean`
+  - `checkboxes`
+  - `date`
+  - `float`
+  - `integer`
+  - `relationship`
+  - `select`
+  - `slug`
+  - `string`
+  - `url`
+
+When the index page is served, configured filters will be represented on a `req.data.piecesFilters` object (`data.piecesFilters` in the template). If you include `counts: true` in a filter object, the number of pieces matching that filter are included on `req.data.piecesFilters` properties.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+// 👆
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    piecesFilters: [
+      { name: '_author' },
+      {
+        name: 'category',
+        counts: true
+      }
+    ]
+  },
+  fields: {
+    _author: {
+      type: 'relationship',
+      label: 'Author'
+    },
+    category: {
+      type: 'select',
+      label: 'Category',
+      choices: [
+        // Category choices here
+      ]
+    }
+    // Other fields...
+  },
+  // ...
+}
+```
+
+### `pieceModuleName`
+
+Piece page types are each associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be detected automatically. For example, if the `article-page` module extends `@apostrophecms/piece-page-type`, it will automatically be associated with an `article` piece type.
+
+You can override this pattern by explicitly setting `pieceModuleName` to an active piece type name. Ths can be useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+
+#### Example
+
+```javascript
+// modules/team-page/index.js
+// 👆 This module name would look for a piece type named `team` if not for
+// `pieceModuleName`
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    pieceModuleName: 'person'
+  },
+  // Maybe there's code here to group people by team.
+  // ...
+}
+```
+
+### `previous`
+
+If set to `true`, Apostrophe will include the previous piece, based on the [sort option](#sort), on `req.data.previous` when serving a [show page](/reference/glossary.md#show-page). This is useful to add links to a show page directing visitors to the previous item in a series (e.g., the next newest blog post). If not set, `req.data.previous` will not be available.
+
+`previous` can also be set to an object, which will be used as a query builder for retrieving that next piece document.
+
+#### Example
+
+```javascript
+// modules/article-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    previous: true
+  },
+  // ...
+}
+
+// OR
+
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The previous article piece would be returned with only the `title`,
+    // `_url`, and `publishedAt` properties.
+    previous: {
+      project: {
+        title: 1,
+        _url: 1,
+        publishedAt: 1
+      }
+    }
+  },
+  // ...
+}
+```
+
+
+## Options for widget modules
+
+Option settings in this section apply to all widgets (modules that extend `@apostrophecms/widget-type`).
+
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`className`](#classname) | String | Applies a class to core widget templates. |
+| [`icon`](#icon) | String | Select an available icon to include with the label in area menus. |
+| [`label`](#label-for-widgets) | String | The human-readable label for the widget type. |
+
+<!-- | [`scene`](#scene) | null | description | -->
+<!-- | [`contextual`](#contextual) | Boolean | description | -->
+
+### `className`
+
+Official Apostrophe widget templates support adding an html class from the `className` module option. The class is applied to the outer, wrapping HTML element in the widget template for easy styling.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/image-widget/index.js
+module.exports = {
+  options: {
+    className: 'c-image-widget'
+  },
+  // ...
+}
+```
+
+<!-- NOTE: Not ready to document yet. There are elements to this that need to be worked out. -->
+<!--
+### `contextual`
+
+Some widgets, including the core rich text widget, should not be edited in a modal. Setting `contextual: true` on a widget module will tell the user interface, when in edit mode, to load the widget immediately using its associated editor component. `@apostrophecms/rich-text-widget` is the best example of this in core. Widgets that only serve to provide layout for nested areas are another possible use case.
+
+**It is important that the widget type has a [configured `widgetEditor` component](#components) that is built for this purpose.** If there is no such component, the widget editor modal will open immediately on load.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/layout-widget/index.js
+module.exports = {
+  options: {
+    contextual: true,
+    components: {
+      // 👇 This refers to a project-level `MyCustomLayoutWidgetEditor.vue`
+      // component file.
+      widgetEditor: 'MyCustomLayoutWidgetEditor',
+      widget: 'AposWidget'
+    }
+  },
+  // ...
+}
+```
+-->
+
+### `icon`
+
+Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module format example](/guide/module-format-example.md) for how to make new icons available.
+<!-- TODO: Update this to link to a true module section documentation page for `icons`. -->
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    icon: 'pillar'
+  },
+  icons: {
+    pillar: 'Pillar'
+  },
+  // ...
+};
+
+```
+
+!['Area menu with icons next to widget labels'](/images/area-menu-with-icons.png)
+
+### `label` (for widgets)
+
+`label` should be set to a text string to be used in the area menu. If not set, Apostrophe will convert the module `name` meta property to a readable label by removing `-widget` from the end, splitting the `name` on dashes and underscores, and capitalizing the first letter of each word.
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Two Column Layout'
+  },
+  // ...
+};
+
+```
+
+<!-- TODO: Flesh out once questions around scenes are resolve, or delete. -->
+<!-- ### `scene` -->
+
+## Options for the core rich text widget
+
+Option settings in this section apply to the core rich text widget module (`@apostrophecms/rich-text-widget`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`defaultData`](#defaultdata) | Object | Define initial default data for rich text content. |
+| [`defaultOptions`](#defaultoptions) | Object | Configure the rich text toolbar and styles for rich text widgets. |
+| [`editorTools`](#editortools) | Object | Configure rich text tools and their Vue components. |
+
+### `defaultData`
+
+Rich text widgets can start with default content by setting `defaultData` to an object with a `content` property. That value would be a string of text or HTML that all rich text widgets would include when added.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultData: {
+      content: '<p>Replace me</p>'
+    }
+  },
+  // ...
+}
+```
+
+### `defaultOptions`
+
+The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/rich-text-widget/index.js#L15-L45). These can be overridden by setting `defaultOptions`. This configuration object can include one or both of the `toolbar` and `styles` sub-options. If only one of those is included, the other will fall back to the core defaults.
+
+`defaultOptions` can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultOptions: {
+      toolbar: [
+        'bold',
+        'italic',
+        'link'
+      ],
+      styles: []
+    }
+  },
+  // ...
+}
+```
+
+<!-- TODO: Link to a guide page about configuring the RTE when available. -->
+
+### `editorTools`
+
+The rich text editor toolbar tools (e.g., "bold," "link," and "underline" buttons) can be reconfigured to have different labels (seen by assistive technologies), different icons, or even new Vue components altogether. `editorTools` can be completely overridden to do this if desired.
+
+::: warning
+Using this option takes full responsibility for the configuration of the rich text editor tools. Use this with caution. If overriding, be sure to include _all_ rich text tools that you will use.
+
+If introducing an editor tool that is not included in core, you will need to create both the Vue component and, often, a [tiptap extension](https://tiptap.dev/docs/guide/extensions.html#installation).
+:::
+<!-- TODO: link to an RTE extension guide when available. -->
+
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    editorTools: {
+      styles: {
+        component: 'MyTiptapStyles',
+        label: 'Styles'
+      },
+      '|': { component: 'MyTiptapDivider' },
+      bold: {
+        component: 'MyTiptapButton',
+        label: 'Bold',
+        icon: 'format-bold-icon'
+      },
+      italic: {
+        component: 'MyTiptapButton',
+        label: 'Italic',
+        icon: 'format-italic-icon'
+      },
+      // Many more tools...
+    }
+  },
+  // ...
+}
+```
