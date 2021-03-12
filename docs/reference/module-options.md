@@ -41,13 +41,44 @@ require('apostrophe')({
 });
 ```
 
+## Using module options
+
+Most module options in Apostrophe core and official extension modules are used automatically for specific purposes. No additional work is needed to use them for their original purposes other than configuring them.
+
+Module options can also be referenced directly in custom module code. Module configuration function sections take a `self` argument, which is the module itself. You can then get the options as `self.options`.
+
+For example, if you had a custom piece type, it might look like this:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    alias: 'article'
+  },
+  init (self) {
+    const moduleOptions = self.options;
+    // ...
+  },
+  methods (self) {
+    return {
+      logOptions () {
+        console.log('The module alias is ', self.options.alias);
+      }
+    }
+  }
+}
+```
+
 ## Options for any module
 
 Option settings in this section apply to every module in Apostrophe.
 
-- [`alias`](#alias)
-- [`components`](#components)
-- [`templateData`](#templatedata)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
+| [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
+| [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
 ### `alias`
 
@@ -127,12 +158,14 @@ You might use that value as a fallback for user-editable fields.
 
 Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](glossary.md#doc) modules). These include all piece and page types.
 
-- [`adminOnly`](#adminonly)
-- [`autopublish`](#autopublish)
-- [`label`](#label)
-- [`localized`](#localized)
-- [`sort`](#sort)
-- [`slugPrefix`](#slugprefix)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`adminOnly`](#adminonly) | Boolean | Set to `true` to only allow admins to manage the doc type. |
+| [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
+| [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
+| [`sort`](#sort) | Object | Configure sort order for docs of this type. |
+| [`slugPrefix`](#slugprefix) | String | Add a prefix to all slugs for this doc type. |
 <!-- - [`contextBar`](#contextbar) -->
 
 ### `adminOnly`
@@ -178,7 +211,7 @@ module.exports = {
 <!-- If `true`, the second row of the admin bar, the "context bar," will be disabled.
 `true` ~ allows the admin bar context bar row to appear -->
 
-### `label`
+### `label` (for doc types)
 
 `label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals and the page type select field.
 
@@ -269,11 +302,13 @@ module.exports = {
 
 Option settings in this section apply to all piece modules (those that extend `@apostrophecms/piece-type`).
 
-- [`pluralLabel`](#plurallabel)
-- [`perPage`](#perpage)
-- [`publicApiProjection`](#publicapiprojection-for-pieces)
-- [`quickCreate`](#quickcreate-for-pieces)
-- [`searchable`](#searchable)
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`publicApiProjection`](#publicapiprojection-for-pieces) | Object | Piece fields to make available via a public REST API route. |
+| [`quickCreate`](#quickcreate-for-pieces) | Boolean | Set to `true` to add the piece type to the quick create menu. |
+| [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
 
 ### `pluralLabel`
 
@@ -647,7 +682,6 @@ module.exports = {
 
 Option settings in this section apply to all piece page types (modules that extend `@apostrophecms/piece-page-type`).
 
-
 | Option | Value type | Description |
 |---------|---------|---------|
 | [`perPage`](#perpage) | Integer | Set the number of pieces to be |
@@ -827,3 +861,199 @@ module.exports = {
 }
 ```
 
+
+## Options for widget modules
+
+Option settings in this section apply to all widgets (modules that extend `@apostrophecms/widget-type`).
+
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`className`](#classname) | String | Applies a class to core widget templates. |
+| [`icon`](#icon) | String | Select an available icon to include with the label in area menus. |
+| [`label`](#label-for-widgets) | String | The human-readable label for the widget type. |
+
+<!-- | [`scene`](#scene) | null | description | -->
+<!-- | [`contextual`](#contextual) | Boolean | description | -->
+
+### `className`
+
+Official Apostrophe widget templates support adding an html class from the `className` module option. The class is applied to the outer, wrapping HTML element in the widget template for easy styling.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/image-widget/index.js
+module.exports = {
+  options: {
+    className: 'c-image-widget'
+  },
+  // ...
+}
+```
+
+<!-- NOTE: Not ready to document yet. There are elements to this that need to be worked out. -->
+<!--
+### `contextual`
+
+Some widgets, including the core rich text widget, should not be edited in a modal. Setting `contextual: true` on a widget module will tell the user interface, when in edit mode, to load the widget immediately using its associated editor component. `@apostrophecms/rich-text-widget` is the best example of this in core. Widgets that only serve to provide layout for nested areas are another possible use case.
+
+**It is important that the widget type has a [configured `widgetEditor` component](#components) that is built for this purpose.** If there is no such component, the widget editor modal will open immediately on load.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/layout-widget/index.js
+module.exports = {
+  options: {
+    contextual: true,
+    components: {
+      // 👇 This refers to a project-level `MyCustomLayoutWidgetEditor.vue`
+      // component file.
+      widgetEditor: 'MyCustomLayoutWidgetEditor',
+      widget: 'AposWidget'
+    }
+  },
+  // ...
+}
+```
+-->
+
+### `icon`
+
+Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module format example](/guide/module-format-example.md) for how to make new icons available.
+<!-- TODO: Update this to link to a true module section documentation page for `icons`. -->
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    icon: 'pillar'
+  },
+  icons: {
+    pillar: 'Pillar'
+  },
+  // ...
+};
+
+```
+
+!['Area menu with icons next to widget labels'](/images/area-menu-with-icons.png)
+
+### `label` (for widgets)
+
+`label` should be set to a text string to be used in the area menu. If not set, Apostrophe will convert the module `name` meta property to a readable label by removing `-widget` from the end, splitting the `name` on dashes and underscores, and capitalizing the first letter of each word.
+
+#### Example
+
+```javascript
+// modules/two-column-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Two Column Layout'
+  },
+  // ...
+};
+
+```
+
+<!-- TODO: Flesh out once questions around scenes are resolve, or delete. -->
+<!-- ### `scene` -->
+
+## Options for the core rich text widget
+
+Option settings in this section apply to the core rich text widget module (`@apostrophecms/rich-text-widget`).
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| [`defaultData`](#defaultdata) | Object | Define initial default data for rich text content. |
+| [`defaultOptions`](#defaultoptions) | Object | Configure the rich text toolbar and styles for rich text widgets. |
+| [`editorTools`](#editortools) | Object | Configure rich text tools and their Vue components. |
+
+### `defaultData`
+
+Rich text widgets can start with default content by setting `defaultData` to an object with a `content` property. That value would be a string of text or HTML that all rich text widgets would include when added.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultData: {
+      content: '<p>Replace me</p>'
+    }
+  },
+  // ...
+}
+```
+
+### `defaultOptions`
+
+The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/rich-text-widget/index.js#L15-L45). These can be overridden by setting `defaultOptions`. This configuration object can include one or both of the `toolbar` and `styles` sub-options. If only one of those is included, the other will fall back to the core defaults.
+
+`defaultOptions` can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    defaultOptions: {
+      toolbar: [
+        'bold',
+        'italic',
+        'link'
+      ],
+      styles: []
+    }
+  },
+  // ...
+}
+```
+
+<!-- TODO: Link to a guide page about configuring the RTE when available. -->
+
+### `editorTools`
+
+The rich text editor toolbar tools (e.g., "bold," "link," and "underline" buttons) can be reconfigured to have different labels (seen by assistive technologies), different icons, or even new Vue components altogether. `editorTools` can be completely overridden to do this if desired.
+
+::: warning
+Using this option takes full responsibility for the configuration of the rich text editor tools. Use this with caution. If overriding, be sure to include _all_ rich text tools that you will use.
+
+If introducing an editor tool that is not included in core, you will need to create both the Vue component and, often, a [tiptap extension](https://tiptap.dev/docs/guide/extensions.html#installation).
+:::
+<!-- TODO: link to an RTE extension guide when available. -->
+
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    editorTools: {
+      styles: {
+        component: 'MyTiptapStyles',
+        label: 'Styles'
+      },
+      '|': { component: 'MyTiptapDivider' },
+      bold: {
+        component: 'MyTiptapButton',
+        label: 'Bold',
+        icon: 'format-bold-icon'
+      },
+      italic: {
+        component: 'MyTiptapButton',
+        label: 'Italic',
+        icon: 'format-italic-icon'
+      },
+      // Many more tools...
+    }
+  },
+  // ...
+}
+```
