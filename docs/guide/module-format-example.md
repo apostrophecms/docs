@@ -22,7 +22,7 @@ module.exports = {
     pluralLabel: 'Products'
   },
 
-  // `fields` can optionally be a function that takes (self, options)
+  // `fields` can optionally be a function that takes (self)
   // and returns an object, if you need access to the options to decide
   // what fields to include
   fields: {
@@ -59,13 +59,12 @@ module.exports = {
   // This is only run when Apostrophe first
   // starts up. Formerly known as `afterConstruct`.
   // Can use "await".
-  async init(self, options) {},
+  async init(self) {},
 
   // Methods that can be invoked on `self`, or from
   // another module via our alias, `self.apos.product`.
-  // `self` refers to this module, `options` contains the
-  // option settings configured for it
-  methods(self, options) {
+  // `self` refers to this module.
+  methods(self) {
     return {
       async averagePrice(req) {
         let sum = 0;
@@ -82,7 +81,7 @@ module.exports = {
   },
 
   // Extend methods we inherited from `@apostrophecms/piece-type`
-  extendMethods(self, options) {
+  extendMethods(self) {
     return {
       // Extend a method we inherited from `@apostrophecms/piece-type`.
       // The arguments are the same, plus `_super` is always the
@@ -102,7 +101,7 @@ module.exports = {
   //
   // `extendComponents` is also supported, like `extendMethods`
 
-  components(self, options) {
+  components(self) {
     return {
       // Invoke from any template like this:
       // {% component 'product:latest' with { max: 1 } %}
@@ -128,7 +127,7 @@ module.exports = {
   //
   // `extendHelpers` is also supported, like `extendMethods`
 
-  helpers(self, options) {
+  helpers(self) {
     return {
       discountPrice(product) {
         return '$' + (product.price * 0.90).toFixed(2);
@@ -144,7 +143,7 @@ module.exports = {
   //
   // `extendApiRoutes` is also supported, like extendMethods
 
-  apiRoutes(self, options) {
+  apiRoutes(self) {
     return {
       // This section contains all the `GET` routes. Also
       // supported: `post`, `patch`, `delete`
@@ -181,7 +180,7 @@ module.exports = {
   // extendRestApiRoutes is also useful when inheriting from
   // a base class, and works just like `extendMethods`
 
-  // restApiRoutes(self, options) {
+  // restApiRoutes(self) {
   //   return {
   //     // GET /api/v1/product
   //     async getAll(req) {
@@ -220,7 +219,7 @@ module.exports = {
   // to an HTTP request, and send the rendered markup back
   // to the client
 
-  renderRoutes(self, options) {
+  renderRoutes(self) {
     return {
       get: {
         // Accessible via `GET` as /api/v1/product/latest
@@ -236,7 +235,7 @@ module.exports = {
     };
   },
 
-  routes(self, options) {
+  routes(self) {
     return {
       get: {
         // Old-fashioned Express route. Useful if you need
@@ -260,7 +259,7 @@ module.exports = {
   // response to events. `extendHandlers` is also available and
   // works just like `extendMethods`
 
-  handlers(self, options) {
+  handlers(self) {
     return {
       // Since this event is emitted by the same module,
       // we do not have to write `'product:beforeInsert'`
@@ -345,7 +344,7 @@ module.exports = {
   // and a `middleware` property, in which case it would run `before`
   // the middleware of the module with the specified name
 
-  middleware(self, options) {
+  middleware(self) {
     return {
       ours(req, res, next) {
         // Restrict access by IP address, in a crude way
@@ -358,7 +357,7 @@ module.exports = {
     };
   },
 
-  tasks(self, options) {
+  tasks(self) {
     return {
       // If the module is named product, then you can
       // run this CLI task by typing:
@@ -409,7 +408,7 @@ module.exports = {
 
 ```js
 // modules/product/methods.js
-module.exports = (self, options) => {
+module.exports = (self) => {
   return {
     async averagePrice(req) {
       // ...
@@ -420,7 +419,7 @@ module.exports = (self, options) => {
 
 ```js
 // modules/product/api-routes.js
-module.exports = (self, options) => {
+module.exports = (self) => {
   return {
     get: {
       async cheapest(req) {

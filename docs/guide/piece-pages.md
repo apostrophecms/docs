@@ -233,7 +233,7 @@ module.exports = {
       }
     }
   },
-  methods(self, options) {
+  methods(self) {
     return {
       filterByIndexPage(query, page) {
         if (page.color) {

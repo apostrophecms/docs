@@ -79,7 +79,7 @@ module.exports = {
     }
   },
 
-  methods(self, options) {
+  methods(self) {
     return {
       async averagePrice(req) {
         let sum = 0;
@@ -95,7 +95,7 @@ module.exports = {
     };
   },
 
-  extendMethods(self, options) {
+  extendMethods(self) {
     return {
       generate(_super, i) {
         const piece = _super(i);
@@ -105,7 +105,7 @@ module.exports = {
     };
   },
 
-  handlers(self, options) {
+  handlers(self) {
     return {
       'beforeInsert': {
         async applyTax(req, piece) {
@@ -220,7 +220,7 @@ In A3, **promise events are emitted directly by the appropriate piece type modul
 Instead, we just write a handler:
 
 ```js
-  handlers(self, options) {
+  handlers(self) {
     return {
       'beforeInsert': {
         async applyTax(req, piece) {
