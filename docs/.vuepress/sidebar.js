@@ -58,7 +58,7 @@ module.exports = {
             'reference/field-types/password',
             'reference/field-types/range',
             'reference/field-types/relationship',
-            // 'reference/field-types/relationship-reverse',
+            'reference/field-types/relationship-reverse',
             'reference/field-types/select',
             'reference/field-types/string',
             'reference/field-types/slug',
