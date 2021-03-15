@@ -261,7 +261,8 @@ modules.export = {
 
 ### `async init(self)`
 
-This function runs once when the Apostrophe app first start up. It takes the module, as `self`, as an argument.
+This function runs once when the Apostrophe app first starts up. It takes the module, as `self`, as an argument. To run code on every request, or in other situations when the app is running, see the event handlers documentation.
+<!-- TODO: Link to event handlers guide documentation when available. -->
 
 While [customization functions](#customization-functions) add functionality for the module in specific ways, `init` provides a space for more open code execution. It is useful for setting properties on the module that could not be set in other sections.
 
@@ -284,11 +285,10 @@ module.exports = {
         type: 'product'
       }, async (doc) => {
         if ((doc.category) === 'old-category') {
-          doc.category = 'new-category';
           return self.apos.doc.db.updateOne({
             _id: doc._id
           }, {
-            $set: { blurb: doc.category }
+            $set: { category: 'new-category' }
           });
         }
       });
@@ -333,7 +333,7 @@ Each individual function included in the extension section takes a `_super` argu
 If a piece type included the `insert` in its `extendMethods` section to alter the piece titles, it might look like this:
 
 ```javascript
-  enhanceMethods(self) {
+  extendMethods(self) {
     return {
       insert(_super, req, piece, options) {
         piece.title = `🆕 ${piece.title}`;
