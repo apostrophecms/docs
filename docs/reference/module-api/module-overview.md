@@ -317,8 +317,8 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`extendApiRoutes`](#extendapiroutes-self) | Extend base class API routes |
 | [`renderRoutes`](#renderroutes-self) | Add API routes to return a rendered template |
 | [`routes`](#routes-self) | Add standard Express routes |
-| [`handlers`](#handlers-self) | REPLACE-ME |
-| [`extendHandlers`](#extendhandlers-self) | REPLACE-ME |
+| [`handlers`](#handlers-self) | Add server-side event handlers |
+| [`extendHandlers`](#extendhandlers-self) | Extend base class server-side event handlers |
 | [`queries`](#queries-self) | REPLACE-ME |
 | [`extendQueries`](#extendqueries-self) | REPLACE-ME |
 | [`middleware`](#middleware-self) | REPLACE-ME |
@@ -767,10 +767,70 @@ module.exports = {
 ```
 
 ### `handlers(self)`
+
+The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire.
+<!-- TODO: Link to the reference to or guide on server-side events when available. -->
+
+Events belonging to the same module where the handlers are defined, or from its base class, can be referenced simply by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module where the event fires followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
+
+Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted.
+<!-- TODO: Link to event reference for arguments when available. -->
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  handlers(self) {
+    return {
+      // Responds to `beforeInsert` when emitted by the `product` module
+      beforeInsert: {
+        async applyTax(req, piece) {
+          piece.totalPrice = piece.price * (1.0 + (piece.tax / 100));
+        }
+      },
+      // Response to `beforeInsert` when emitted by *any* piece type
+      '@apostrophecms/piece-type:beforeInsert': {
+        async beforeAnyPieceIsInserted(req, piece) {
+          console.log('Something is being inserted. 📬');
+        }
+      }
+    }
+  }
+};
+```
+
 #### `extendHandlers(self)`
+
+Extend the behavior of existing event handlers (set in `handlers`) in the `extendHandlers` section. This function must return an object as described in [`handlers`](#handlers-self).
+
+Each extended event handler should accept the original function as `_super` followed by its original arguments. Extended handlers will be matched with base class handlers using the same server-side event *and* the same handler name.
+
+```javascript
+// modules/featured-product/index.js
+module.exports = {
+  extend: 'product',
+  // ...
+  handlers(self) {
+    return {
+      // Responds to `beforeInsert` when emitted by the `product` module
+      beforeInsert: {
+        async applyTax(_super, req, piece) {
+          // Add a $2.50 charge before applying taxes.
+          piece.price = piece.price + 2.5;
+
+          await _super(req, piece);
+        }
+      }
+    }
+  }
+};
+```
+
 ### `queries(self)`
 #### `extendQueries(self)`
+
 ### `middleware(self)`
+
 ### `tasks(self)`
 
 ## Core properties, not documented
