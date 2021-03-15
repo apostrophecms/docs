@@ -309,12 +309,12 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`extendMethods`](#extendmethods-self) | Extend the functionality of base class methods |
 | [`components`](#components-self) | Configure asynchronous template components |
 | [`extendComponents`](#extendcomponents-self) | Extend base class template components |
-| [`helpers`](#helpers-self) | REPLACE-ME |
-| [`extendHelpers`](#extendhelpers-self) | REPLACE-ME |
+| [`helpers`](#helpers-self) | Add template helper methods |
+| [`extendHelpers`](#extendhelpers-self) | Extend base class helper methods |
+| [`restApiRoutes`](#restapiroutes-self) | Add custom REST API routes |
+| [`extendRestApiRoutes`](#extendrestapiroutes-self) | Extend base class REST API routes |
 | [`apiRoutes`](#apiRoutes-self) | REPLACE-ME |
 | [`extendApiRoutes`](#extendapiroutes-self) | REPLACE-ME |
-| [`restApiRoutes`](#restapiroutes-self) | REPLACE-ME |
-| [`extendRestApiRoutes`](#extendrestapiroutes-self) | REPLACE-ME |
 | [`renderRoutes`](#renderroutes-self) | REPLACE-ME |
 | [`routes`](#routes-self) | REPLACE-ME |
 | [`handlers`](#handlers-self) | REPLACE-ME |
@@ -538,10 +538,71 @@ module.exports = {
 };
 ```
 
+### `restApiRoutes(self)`
+
+Apostrophe includes a full REST API for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md). Those route handlers can be totally overridden by adding identically named functions to object returned by the `restApiRoutes` function. If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
+
+REST API functions take the route request as an argument (`req`, below);
+Valid names for functions returned by `restApiRoutes` include:
+- `getAll`
+- `getOne`
+- `post`
+- `patch`
+- `put`
+- `delete`
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  restApiRoutes(self) {
+    return {
+      // GET /api/v1/product
+      async getAll(req) {
+        const results = [];
+        // ... populate `results` with product data.
+
+        return {
+          results
+        };
+      }
+    };
+  }
+};
+```
+
+#### `extendRestApiRoutes(self)`
+
+Extend the behavior of existing REST API routes in the `extendRestApiRoutes` section. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
+
+Each extended REST API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing [piece](/reference/api/pieces.md) and [page](/reference/api/pages.md) REST API (e.g., single doc `GET` requests should return a single document object and general `GET` requests should return an object including a `result` array of document objects).
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  extendRestApiRoutes(self) {
+    return {
+      // GET /api/v1/product
+      async getAll(_super, req) {
+        // Get the original function's response (making sure to `await`).
+        const response = await _super(req);
+
+        if (Array.isArray(response.results)) {
+          // Adds a `resultLength` property on the response object.
+          response.resultLength = response.results.length;
+        }
+
+        return response;
+      }
+    };
+  }
+};
+```
+
 ### `apiRoutes(self)`
 #### `extendApiRoutes(self)`
-### `restApiRoutes(self)`
-#### `extendRestApiRoutes(self)`
+
 ### `renderRoutes(self)`
 ### `routes(self)`
 ### `handlers(self)`
