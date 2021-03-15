@@ -315,8 +315,8 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`extendRestApiRoutes`](#extendrestapiroutes-self) | Extend base class REST API routes |
 | [`apiRoutes`](#apiroutes-self) | Add custom API routes or completely override base class API routes |
 | [`extendApiRoutes`](#extendapiroutes-self) | Extend base class API routes |
-| [`renderRoutes`](#renderroutes-self) | REPLACE-ME |
-| [`routes`](#routes-self) | REPLACE-ME |
+| [`renderRoutes`](#renderroutes-self) | Add API routes to return a rendered template |
+| [`routes`](#routes-self) | Add standard Express routes |
 | [`handlers`](#handlers-self) | REPLACE-ME |
 | [`extendHandlers`](#extendhandlers-self) | REPLACE-ME |
 | [`queries`](#queries-self) | REPLACE-ME |
@@ -707,7 +707,65 @@ module.exports = {
 ```
 
 ### `renderRoutes(self)`
+
+Add custom API routes to return rendered templates. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+
+The name of the route dictates the template file that will be rendered. For example the `latest` route in the `product` module's `renderRoutes` section will return the template at `/modules/product/views/latest.html`.
+
+Information returned by the component function will be used in the associated template as `data`.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  renderRoutes(self) {
+    return {
+      get: {
+        // GET /api/v1/product/latest
+        // The route rendered HTML for /modules/product/views/latest.html
+        async latest(req) {
+          const products = await self.find(req)
+            .sort({ createdAt: -1 })
+            .limit(req.query.max || 5)
+            .toArray();
+
+          return {
+            products
+          };
+        }
+      }
+    };
+  }
+};
+```
+
 ### `routes(self)`
+
+Add standard Express routes. The `routes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+
+Each `routes` function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must return using the `res.redirect` or `res.send` methods.
+
+See [Naming routes](#naming-routes) for more on function names and their route URLs.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  renderRoutes(self) {
+    return {
+      get: {
+        // GET /api/v1/product/redirect/:_id
+        async redirect(req, res) {
+          const product = await self.find(req).toObject();
+
+          return res.redirect(product._url);
+        }
+      }
+    };
+  }
+};
+```
+
 ### `handlers(self)`
 #### `extendHandlers(self)`
 ### `queries(self)`
