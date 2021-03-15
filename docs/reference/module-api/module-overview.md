@@ -311,10 +311,10 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`extendComponents`](#extendcomponents-self) | Extend base class template components |
 | [`helpers`](#helpers-self) | Add template helper methods |
 | [`extendHelpers`](#extendhelpers-self) | Extend base class helper methods |
-| [`restApiRoutes`](#restapiroutes-self) | Add custom REST API routes |
+| [`restApiRoutes`](#restapiroutes-self) | Add custom REST API routes or completely override base class REST API routes |
 | [`extendRestApiRoutes`](#extendrestapiroutes-self) | Extend base class REST API routes |
-| [`apiRoutes`](#apiRoutes-self) | REPLACE-ME |
-| [`extendApiRoutes`](#extendapiroutes-self) | REPLACE-ME |
+| [`apiRoutes`](#apiroutes-self) | Add custom API routes or completely override base class API routes |
+| [`extendApiRoutes`](#extendapiroutes-self) | Extend base class API routes |
 | [`renderRoutes`](#renderroutes-self) | REPLACE-ME |
 | [`routes`](#routes-self) | REPLACE-ME |
 | [`handlers`](#handlers-self) | REPLACE-ME |
@@ -427,7 +427,7 @@ See the [async component guide](/guide/async-components.md) for more usage infor
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // ...
-  components(self, options) {
+  components(self) {
     return {
       // Returning the five most recently created products.
       async latest(req, data) {
@@ -465,7 +465,7 @@ Each should return data in the same form as the original component function.
 module.exports = {
   extend: 'product',
   // ...
-  extendComponents(self, options) {
+  extendComponents(self) {
     return {
       // Returning the five most recently created products.
       async latest(_super, req, data) {
@@ -601,7 +601,110 @@ module.exports = {
 ```
 
 ### `apiRoutes(self)`
+
+Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  apiRoutes(self) {
+    return {
+      get: {
+        // GET /api/v1/product/cheapest
+        async cheapest(req) {
+          const product = await self.find(req).sort({
+            price: 1
+          }).toObject();
+          if (!product) {
+            // Browser receives a 404 error
+            throw self.apos.error('notfound', 'No products were found.');
+          }
+          // Response is a JSON object with a `product` property
+          return {
+            product
+          };
+        }
+      }
+    };
+  }
+};
+```
+
+#### Naming routes
+
+If route properties do *not* begin with a forward slash, they can be reached via the pattern: `/api/v1/` followed by the module name, a forward slash, and the API route handler's property name, e.g., `/api/v1/product/cheapest` for the `cheapest` route on the `product` module.
+
+Camel-case names will be converted to kebab case names for the URL: `cheapestOne` becomes `cheapest-one` in the route URL.
+
+You can also use a completely custom URL path by starting the name of the route with a forward slash (`/`). If you do so, nothing will be prefixed to it and it will not be converted to kebab case.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  apiRoutes(self) {
+    return {
+      get: {
+        // GET /api/v1/product/cheapest-one
+        async cheapestOne(req) {
+          // ...
+        },
+        // GET /my-api/cheapest
+        '/my-api/cheapest': async function (req) {
+          // ...
+        }
+      }
+    };
+  }
+};
+```
+
+#### Returning error codes
+
+You can return the `self.apos.error()` method in a route function to return specific error codes. Pass in one of several strings to set a specific error response code:
+
+| Error name | HTTP response code |
+| ---- | ---- |
+| `'invalid'` | 400 |
+| `'forbidden'` | 403 |
+| `'notfound'` | 404 |
+| `'required'` | 422 |
+| `'conflict'` | 409 |
+| `'locked'` | 409 |
+| `'unprocessable'` | 422 |
+| `'unimplemented'` | 501 |
+
+Passing a different value as the first argument to `self.apos.error()` will set the response code to 500.
+<!-- TODO: Link to the method's own documentation page when available for more. -->
+
 #### `extendApiRoutes(self)`
+
+Extend the behavior of existing API routes (set in `apiRoutes`) in the `extendApiRoutes` section. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
+
+Each extended API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing API route.
+
+```javascript
+// modules/featured-product/index.js
+module.exports = {
+  extend: 'product',
+  // ...
+  extendApiRoutes(self) {
+    return {
+      get: {
+        // GET /api/v1/featured-product/cheapest
+        async cheapest(_super, req) {
+          const response = _super(req);
+
+          // Update the response object...
+
+          return response;
+        }
+      }
+    };
+  }
+};
+```
 
 ### `renderRoutes(self)`
 ### `routes(self)`
