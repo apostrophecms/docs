@@ -483,7 +483,61 @@ module.exports = {
 ```
 
 ### `helpers(self)`
+
+The `helpers` section returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates.
+
+Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  options: {
+    alias: 'product'
+  },
+  helpers(self) {
+    return {
+      formatPrice(product) {
+        const price = product.price;
+        return `$${floatPrice.toFixed(2)}`;
+      }
+    };
+  }
+};
+```
+
+Using in a template:
+
+```django
+{# modules/product-page/views/show.html #}
+{{ apos.product.discountPrice(data.piece) }}
+```
+
 #### `extendHelpers(self)`
+
+Add to the functionality of a template helper inherited from the base class. This must return an object of functions, similar to [`helpers`](#helpers-self).
+
+Extended helpers should take a `_super` argument, followed by the normal arguments of the helper being extended. If the original helper took only a `price` argument, the extending function should take the arguments `_super, price`.
+
+To maintain the same application, they should return the same type of response as the original helper. If the original returned a string, the extension should return a string.
+
+```javascript
+// modules/featured-product/index.js
+module.exports = {
+  extend: 'product',
+  // ...
+  extendHelpers(self) {
+    return {
+      formatPrice(_super, product) {
+        const price = _super(product);
+        // 👇 Adds some extra flash to the featured product prices.
+        return `${price} 🤑`;
+      }
+    };
+  }
+};
+```
+
 ### `apiRoutes(self)`
 #### `extendApiRoutes(self)`
 ### `restApiRoutes(self)`
