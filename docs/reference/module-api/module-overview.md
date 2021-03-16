@@ -345,7 +345,7 @@ If a piece type included the `insert` in its `extendMethods` section to alter th
 ```
 
 ::: warning
-Extension functions should *always* use the `_super` argument to call the original function. If you want to *completely* overwrite the inherited function, instead add a matching function in the section without the "extend" prefix. For example, we could completely overwrite the `insert` method in our piece type by including our own `insert` function in the `methods` section.
+Extension functions should *always* use the `_super` argument to call the original function. If you want to *completely* overwrite the inherited function, add a matching function in the section without the "extend" prefix instead. For example, we could completely overwrite the `insert` method in our piece type by including our own `insert` function in the `methods` section.
 :::
 
 ### `methods(self)`
@@ -408,7 +408,7 @@ module.exports = {
 
 ### `components(self)`
 
-This function section returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
+`components` returns an object containing functions that power asynchronous template components. Asynchronous template components allow for async data requests in normally synchronous template rendering.
 
 Each template component function should take the arguments:
 
