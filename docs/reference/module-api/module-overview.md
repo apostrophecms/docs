@@ -484,7 +484,7 @@ module.exports = {
 
 ### `helpers(self)`
 
-The `helpers` section returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
+`helpers` returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
@@ -581,7 +581,7 @@ module.exports = {
 
 #### `extendRestApiRoutes(self)`
 
-Extend the behavior of existing REST API routes in the `extendRestApiRoutes` section. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
+Extend the behavior of existing REST API routes in `extendRestApiRoutes`. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
 
 Each extended REST API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing [piece](/reference/api/pieces.md) and [page](/reference/api/pages.md) REST API (e.g., single doc `GET` requests should return a single document object and general `GET` requests should return an object including a `result` array of document objects).
 
@@ -688,7 +688,7 @@ Passing a different value as the first argument to `self.apos.error()` will set 
 
 #### `extendApiRoutes(self)`
 
-Extend the behavior of existing API routes (set in `apiRoutes`) in the `extendApiRoutes` section. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
+Extend the behavior of existing API routes (set in `apiRoutes`) in `extendApiRoutes`. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
 
 Each extended API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing API route.
 
@@ -783,7 +783,7 @@ module.exports = {
 The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire. Event handlers may be asynchronous (async) functions.
 <!-- TODO: Link to the reference to or guide on server-side events when available. -->
 
-Events belonging to the same module where the handlers are defined, or from its base class, can be referenced simply by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module where the event fires followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
+Events belonging to the same module where the handlers are defined, or from its base class, can be referenced by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module where the event fires followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
 
 Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted.
 <!-- TODO: Link to event reference for arguments when available. -->
