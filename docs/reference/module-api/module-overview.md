@@ -484,7 +484,7 @@ module.exports = {
 
 ### `helpers(self)`
 
-The `helpers` section returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates.
+The `helpers` section returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
@@ -540,7 +540,15 @@ module.exports = {
 
 ### `restApiRoutes(self)`
 
-Apostrophe includes a full REST API for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md). Those route handlers can be totally overridden by adding identically named functions to object returned by the `restApiRoutes` function. If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
+Add a custom REST API for a module. The `restApiRoutes` function takes the module as an argument and returns an object of functions that map to the standard REST API request types. Route functions may be asynchronous (async).
+
+If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
+
+::: warning
+Apostrophe includes a full REST API for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md). These routes are used by the Apostrophe user interface, so **any change in REST API route handlers for piece types or the `@apostrophecms/page` module could break the UI**.
+
+The most likely use for `restApiRoutes` in a project of your own would be to provide a custom REST API to a database or service not already built into Apostrophe. `restApiRoutes` is also not for custom route URLs that don't map to one of the standard REST URLs. If you need to add a custom route in addition to the standard REST API for pieces or pages, [you should do that with `apiRoutes`](#apiroutes-self).
+:::
 
 REST API functions take the route request as an argument (`req`, below);
 Valid names for functions returned by `restApiRoutes` include:
@@ -602,7 +610,7 @@ module.exports = {
 
 ### `apiRoutes(self)`
 
-Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions. Route functions may be asynchronous (async).
 
 ```javascript
 // modules/product/index.js
@@ -741,11 +749,15 @@ module.exports = {
 
 ### `routes(self)`
 
-Add standard Express routes. The `routes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+Add standard Express routes. The `routes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions. Route functions may be asynchronous (async).
 
-Each `routes` function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must return using the `res.redirect` or `res.send` methods.
+Each `routes` function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must generate a response via `res` to avoid leaking resources, typically using the `res.redirect` or `res.send` methods.
 
 See [Naming routes](#naming-routes) for more on function names and their route URLs.
+
+::: tip
+We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes`. They are designed to be easier to use and handle the potential pitfalls of Express routes. There are situation when writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
+:::
 
 ```javascript
 // modules/product/index.js
@@ -768,7 +780,7 @@ module.exports = {
 
 ### `handlers(self)`
 
-The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire.
+The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire. Event handlers may be asynchronous (async) functions.
 <!-- TODO: Link to the reference to or guide on server-side events when available. -->
 
 Events belonging to the same module where the handlers are defined, or from its base class, can be referenced simply by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module where the event fires followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
