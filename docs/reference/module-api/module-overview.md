@@ -662,7 +662,7 @@ module.exports = {
 
 #### Returning error codes
 
-You can return the `self.apos.error()` method in a route function to return specific error codes. Pass in one of several strings to set a specific error response code:
+You can `throw` the `self.apos.error()` method in any route function to return specific error codes as well as log additional information for developers. Pass in one of several strings to set a specific error response code:
 
 | Error name | HTTP response code |
 | ---- | ---- |
