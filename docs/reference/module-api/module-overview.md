@@ -161,7 +161,7 @@ modules.export = {
 
 In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `trash` and `visibility` filters are included by default.
 
-The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self) on the piece type.
+The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 
 #### `add`
 
@@ -319,8 +319,8 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`routes`](#routes-self) | Add standard Express routes |
 | [`handlers`](#handlers-self) | Add server-side event handlers |
 | [`extendHandlers`](#extendhandlers-self) | Extend base class server-side event handlers |
-| [`queries`](#queries-self) | REPLACE-ME |
-| [`extendQueries`](#extendqueries-self) | REPLACE-ME |
+| [`queries`](#queries-self-query) | Add database query methods |
+| [`extendQueries`](#extendqueries-self) | Extend base class database query methods |
 | [`middleware`](#middleware-self) | REPLACE-ME |
 | [`tasks`](#tasks-self) | REPLACE-ME |
 
@@ -838,18 +838,77 @@ module.exports = {
 };
 ```
 
-### `queries(self)`
+### `queries(self, query)`
+
+The `queries` function is part of the Apostrophe API for querying the database. It takes two arguments: the module (`self`) and the query that will be called (`query`). It must return an object. That object can have two properties:
+<!-- TODO: Link to a real guide on using queries when available. This is simply reference. -->
+
+| `queries` properties | Description |
+| ---- | ---- |
+| [`builders`](#builders) | An object of "builders," or chainable methods, that refine the query or otherwise change its behavior prior to execution. |
+| [`methods`](#methods) | An object of method functions that are used to execute some action on the query. |
+
+#### `builders`
+
+Query builders are defined as objects with a set of specific properties available to them. Builders often take an argument or have a default value that is used instead.
+
+| Builder properties | Description |
+| ---- | ---- |
+| `def` | The default value for the builder. |
+| `launder` | A function used to validate values passed as arguments when `applyBuildersSafely` is called on the query. Returns `true` if valid.<br />This is required to use the builder in a REST API query string. |
+| `choices` | A function returning an array of "choice" objects with `value` and `label` properties. This is returned from the `toChoices` query method if set. |
+| `set` | A function to called when the builder is invoked, instead of the default `query.set` method. This should usually include running the `query.set` itself in addition to other work. |
+| `prefinalize` | A function to run before any builder `finalize` steps. Used to alter the query with other builders. |
+| `finalize` | A function to run at the end of the query building phase, prior to being processed by the database. Used to alter the query with other builders. |
+| `after` | A function run to mutate an array of queried items passed in as an argument. This should check for validity prior to mutating. |
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  queries(self, query) {
+    return {
+      builders: {
+        // This builder can be used to filter products in a query like this one:
+        // await self.apos.product.find(req, {}).belowAverage(true).toArray();
+        belowAverage: {
+          async finalize() {
+            // Make sure this filter was actually invoked first
+            if (query.get('belowAverage')) {
+              const average = await self.averagePrice(query.req);
+
+              query.and({
+                price: { $lt: average }
+              });
+            }
+          },
+          // The builder can also be invoked via the module's REST API as a
+          // query string parameter, e.g. `?belowAverage=1`.
+          launder(value) {
+            return self.apos.launder.boolean(value);
+          },
+          // Always provides these two choices when requested, even if no docs
+          // match either value.
+          choices() {
+            return [
+              { value: '0', label: 'No' },
+              { value: '1', label: 'Yes' }
+            ];
+          }
+        }
+      }
+    };
+  }
+};
+```
+
+#### `methods`
+
 #### `extendQueries(self)`
 
 ### `middleware(self)`
 
 ### `tasks(self)`
-
-## Core properties, not documented
-- cascades
-- batchOperations
-- beforeSuperClass
-- afterAllSections
 
 ## "Cascading" settings
 
