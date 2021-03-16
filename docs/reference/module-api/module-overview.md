@@ -851,6 +851,7 @@ The `queries` function is part of the Apostrophe API for querying the database. 
 #### `builders`
 
 Query builders are defined as objects with a set of specific properties available to them. Builders often take an argument or have a default value that is used instead.
+<!-- TODO: Link to a reference of core builders when available. -->
 
 | Builder properties | Description |
 | ---- | ---- |
@@ -903,6 +904,9 @@ module.exports = {
 ```
 
 #### `methods`
+
+An object of methods that can be used to execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
+<!-- TODO: Link to a reference of core builders when available. -->
 
 #### `extendQueries(self)`
 
