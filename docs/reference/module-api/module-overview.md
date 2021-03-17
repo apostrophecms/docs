@@ -863,7 +863,7 @@ Each extended query builder or method should accept the original function as `_s
 
 Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware into Apostrophe.
 
-Note that it can often be simpler to add an event handler for many purposes instead.
+Note that it can often be simpler to add an event handler or `await` a method in an API route instead.
 
 `ours` could also be an object with a `before` property and a `middleware` property, in which case it would run `before` the middleware of the module with the specified name
 
