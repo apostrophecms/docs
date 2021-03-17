@@ -322,7 +322,7 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`queries`](#queries-self-query) | Add database query methods |
 | [`extendQueries`](#extendqueries-self) | Extend base class database query methods |
 | [`middleware`](#middleware-self) | Add standard Express middleware to be called on *every* request. |
-| [`tasks`](#tasks-self) | REPLACE-ME |
+| [`tasks`](#tasks-self) | Add task functions that can be run from the command-line. |
 
 ### The extension pattern
 
@@ -903,6 +903,60 @@ module.exports = {
 ```
 
 ### `tasks(self)`
+
+`tasks` takes the module as an argument and returns an object of functions that define command-line tasks. Task properties include:
+
+
+| Property | Description |
+| ------- | ------- |
+| `usage` | A string describing the task and how to use it. It is printed on the command-line. |
+| `task` | The task function. It maybe asynchronous. |
+| `afterModuleInit` | Set to `true` to run the task after modules are initiated but *before* they are fully "awake".
+| `exitAfter` | Only relevant if `afterModuleInit` is `true`. Set to `false` to *avoid* exiting the Apostrophe process on completion. Uncommon. |
+
+Task functions takes the object `argv` as an argument, which includes the arguments passed after the task command. As documented by the [Boring](https://www.npmjs.com/package/boring) utility:
+
+> When someone types:
+>
+> ```
+> node app jump sideways --foo --bar=whee --super-cool=totally
+> ```
+>
+> You get:
+>
+> ```
+> {
+>   _: [ "jump", "sideways"],
+>   foo: true,
+>   bar: "whee",
+>   "super-cool": "totally"
+> }
+> ```
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  tasks(self, options) {
+    return {
+      // Since the module is named product, then you can run this CLI task by
+      // typing: `node app product:list` in the CLI.
+      list: {
+        usage: 'List the titles of each product.',
+        async task(argv) {
+          // Get an req object with admin privileges. You can also use getAnonReq.
+          const req = self.apos.task.getReq();
+          const pieces = await self.find(req).toArray();
+
+          for (const piece of pieces) {
+            console.log(piece.title);
+          }
+        }
+      }
+    }
+  }
+};
+```
 
 ## "Cascading" settings
 
