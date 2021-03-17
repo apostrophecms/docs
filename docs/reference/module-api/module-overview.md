@@ -937,6 +937,10 @@ module.exports = {
 
 #### `extendQueries(self)`
 
+Extend the behavior of existing event handlers (set in `queries`) in the `extendQueries` section. This function must return an object as described in `queries`.
+
+Each extended query builder or method should accept the original function as `_super` followed by its original arguments, if there are any. Extended query builders and methods will be matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
+
 ### `middleware(self)`
 
 ### `tasks(self)`
