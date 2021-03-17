@@ -850,7 +850,7 @@ The `queries` function is part of the Apostrophe API for querying the database. 
 
 #### `builders`
 
-Query builders are defined as objects with a set of specific properties available to them. Builders often take an argument or have a default value that is used instead.
+Query builders are defined as objects with a set of properties available to them. Builders often take an argument or use a default value.
 <!-- TODO: Link to a reference of core builders when available. -->
 
 | Builder properties | Description |
@@ -858,10 +858,10 @@ Query builders are defined as objects with a set of specific properties availabl
 | `def` | The default value for the builder. |
 | `launder` | A function used to validate values passed as arguments when `applyBuildersSafely` is called on the query. Returns `true` if valid.<br />This is required to use the builder in a REST API query string. |
 | `choices` | A function returning an array of "choice" objects with `value` and `label` properties. This is returned from the `toChoices` query method if set. |
-| `set` | A function to called when the builder is invoked, instead of the default `query.set` method. This should usually include running the `query.set` itself in addition to other work. |
+| `set` | A function called when the builder is invoked instead of the default `query.set` method. The `set` function should include running the `query.set` after other work. |
 | `prefinalize` | A function to run before any builder `finalize` steps. Used to alter the query with other builders. |
 | `finalize` | A function to run at the end of the query building phase, prior to being processed by the database. Used to alter the query with other builders. |
-| `after` | A function run to mutate an array of queried items passed in as an argument. This should check for validity prior to mutating. |
+| `after` | A function run to mutate an array of queried items passed in as an argument. The `after` function should include checking for validity prior to mutating. |
 
 ```javascript
 // modules/product/index.js
@@ -905,7 +905,7 @@ module.exports = {
 
 #### `methods`
 
-An object of methods that can be used to execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
+An object of methods that execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
 <!-- TODO: Link to a reference of core builders when available. -->
 
 #### `extendQueries(self)`
