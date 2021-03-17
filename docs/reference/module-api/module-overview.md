@@ -321,7 +321,7 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`extendHandlers`](#extendhandlers-self) | Extend base class server-side event handlers |
 | [`queries`](#queries-self-query) | Add database query methods |
 | [`extendQueries`](#extendqueries-self) | Extend base class database query methods |
-| [`middleware`](#middleware-self) | REPLACE-ME |
+| [`middleware`](#middleware-self) | Add standard Express middleware to be called on *every* request. |
 | [`tasks`](#tasks-self) | REPLACE-ME |
 
 ### The extension pattern
@@ -474,7 +474,7 @@ Each should return data in the same form as the original component function.
 
 ### `helpers(self)`
 
-`helpers` returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
+`helpers` takes the module as an argument and returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
@@ -849,6 +849,58 @@ Extend the behavior of existing event handlers (set in `queries`) in the `extend
 Each extended query builder or method should accept the original function as `_super` followed by its original arguments, if there are any. Extended query builders and methods will be matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
 
 ### `middleware(self)`
+
+Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware into Apostrophe.
+
+Note that it can often be simpler to add an event handler for many purposes instead.
+
+`ours` could also be an object with a `before` property and a `middleware` property, in which case it would run `before` the middleware of the module with the specified name
+
+```javascript
+// modules/limiter/index.js
+module.exports = {
+  // ...
+  middleware(self, options) {
+    return {
+      ours(req, res, next) {
+        // Restrict access by IP address, in a crude way.
+        const allowlist = [ '127.0.0.1', '::1' ];
+
+        if (!allowlist.includes(req.connection.remoteAddress)) {
+          return res.status(403).send('forbidden');
+        }
+        return next();
+      }
+    };
+  }
+};
+```
+
+If the middleware function must run before another named middleware function, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of a module whose middleware must run after the new function, which is now the value of `middleware`.
+
+```javascript
+// modules/limiter/index.js
+module.exports = {
+  // ...
+  middleware(self, options) {
+    return {
+      ours: {
+        // 👇 Same as above, but with `before` and `middleware` properties.
+        before: '@apostrophecms/login',
+        middleware: function (req, res, next) {
+          // Restrict access by IP address, in a crude way.
+          const allowlist = [ '127.0.0.1', '::1' ];
+
+          if (!allowlist.includes(req.connection.remoteAddress)) {
+            return res.status(403).send('forbidden');
+          }
+          return next();
+        }
+      }
+    };
+  }
+};
+```
 
 ### `tasks(self)`
 
