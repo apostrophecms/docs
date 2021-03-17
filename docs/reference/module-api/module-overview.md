@@ -484,7 +484,7 @@ module.exports = {
 
 ### `helpers(self)`
 
-`helpers` returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
+`helpers` returns an object of functions that add template utility methods. The individual helper methods may accept arguments when called from your templates. Helper functions must run synchronously.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
@@ -619,10 +619,10 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        // GET /api/v1/product/cheapest
-        async cheapest(req) {
+        // GET /api/v1/product/newest
+        async newest(req) {
           const product = await self.find(req).sort({
-            price: 1
+            createdAt: -1
           }).toObject();
           if (!product) {
             // Browser receives a 404 error
@@ -641,9 +641,9 @@ module.exports = {
 
 #### Naming routes
 
-If route properties do *not* begin with a forward slash, they can be reached via the pattern: `/api/v1/` followed by the module name, a forward slash, and the API route handler's property name, e.g., `/api/v1/product/cheapest` for the `cheapest` route on the `product` module.
+If route properties do *not* begin with a forward slash, they can be reached via the pattern: `/api/v1/` followed by the module name, a forward slash, and the API route handler's property name, e.g., `/api/v1/product/newest` for the `newest` route on the `product` module.
 
-Camel-case names will be converted to kebab case names for the URL: `cheapestOne` becomes `cheapest-one` in the route URL.
+Camel-case names will be converted to kebab case names for the URL: `newestThing` becomes `newest-thing` in the route URL.
 
 You can also use a completely custom URL path by starting the name of the route with a forward slash (`/`). If you do so, nothing will be prefixed to it and it will not be converted to kebab case.
 
@@ -654,12 +654,12 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        // GET /api/v1/product/cheapest-one
-        async cheapestOne(req) {
+        // GET /api/v1/product/newest-thing
+        async newestThing(req) {
           // ...
         },
-        // GET /my-api/cheapest
-        '/my-api/cheapest': async function (req) {
+        // GET /my-api/newest
+        '/my-api/newest': async function (req) {
           // ...
         }
       }
@@ -700,8 +700,8 @@ module.exports = {
   extendApiRoutes(self) {
     return {
       get: {
-        // GET /api/v1/featured-product/cheapest
-        async cheapest(_super, req) {
+        // GET /api/v1/featured-product/newest
+        async newest(_super, req) {
           const response = _super(req);
 
           // Update the response object...
