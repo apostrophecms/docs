@@ -330,18 +330,50 @@ Several of these sections use an extention pattern (the sections prefixed with "
 
 Each individual function included in the extension section takes a `_super` argument in addition to the same arguments as the original function. `_super` is the original function, which should be called within the new extension.
 
-If a piece type included the `insert` in its `extendMethods` section to alter the piece titles, it might look like this:
+If a piece type included the `generate` method in its `extendMethods` section to add a price upon generating placeholder docs, it might look like this:
 
 ```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
   extendMethods(self) {
     return {
-      insert(_super, req, piece, options) {
-        piece.title = `🆕 ${piece.title}`;
-
-        _super(req, piece, options);
+      generate(_super, index) {
+        // Using _super with the original argument to generate a sample piece.
+        const piece = _super(index);
+        // Adding additional functionality.
+        piece.price = Math.random() * 100;
+        // Returning the generated piece, exactly as the original `generate`
+        // method does.
+        return piece;
       }
-    }
+    };
   }
+};
+```
+
+Or this, if extending an [async component function](#components-self):
+
+```javascript
+// modules/featured-product/index.js
+module.exports = {
+  extend: 'product',
+  // ...
+  extendComponents(self) {
+    return {
+      // Returning the five most recently created products.
+      async latest(_super, req, data) {
+        data.max = (data.max && data.max <= 3) ? data.max : 3;
+
+        const result = _super(req, data);
+
+        return {
+          products: result.products
+        };
+      }
+    };
+  }
+};
 ```
 
 ::: warning
@@ -385,26 +417,6 @@ Add to the functionality of a method inherited from the base class. This must re
 Methods included should take a `_super` argument, followed by the normal arguments of the method being extended. If the original method took only a `req` argument, the extending method should take the arguments `_super, req`.
 
 To maintain the same application, they should return the same type of response as the original method. If the original returned an array of docs, the extension method should return an array of docs.
-
-```javascript
-// modules/product/index.js
-module.exports = {
-  // ...
-  extendMethods(self) {
-    return {
-      generate(_super, index) {
-        // Using _super with the original argument to generate a sample piece.
-        const piece = _super(index);
-        // Adding additional functionality.
-        piece.price = Math.random() * 100;
-        // Returning the generated piece, exactly as the original `generate`
-        // method does.
-        return piece;
-      }
-    };
-  }
-};
-```
 
 ### `components(self)`
 
@@ -460,28 +472,6 @@ Extension functions should take the following arguments:
 
 Each should return data in the same form as the original component function.
 
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendComponents(self) {
-    return {
-      // Returning the five most recently created products.
-      async latest(_super, req, data) {
-        data.max = (data.max && data.max <= 3) ? data.max : 3;
-
-        const result = _super(req, data);
-
-        return {
-          products: result.products
-        };
-      }
-    };
-  }
-};
-```
-
 ### `helpers(self)`
 
 `helpers` returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
@@ -520,23 +510,6 @@ Add to the functionality of a template helper inherited from the base class. Thi
 Extended helpers should take a `_super` argument, followed by the normal arguments of the helper being extended. If the original helper took only a `price` argument, the extending function should take the arguments `_super, price`.
 
 To maintain the same application, they should return the same type of response as the original helper. If the original returned a string, the extension should return a string.
-
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendHelpers(self) {
-    return {
-      formatPrice(_super, product) {
-        const price = _super(product);
-        // 👇 Adds some extra flash to the featured product prices.
-        return `${price} 🤑`;
-      }
-    };
-  }
-};
-```
 
 ### `restApiRoutes(self)`
 
@@ -584,29 +557,6 @@ module.exports = {
 Extend the behavior of existing REST API routes in `extendRestApiRoutes`. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
 
 Each extended REST API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing [piece](/reference/api/pieces.md) and [page](/reference/api/pages.md) REST API (e.g., single doc `GET` requests should return a single document object and general `GET` requests should return an object including a `result` array of document objects).
-
-```javascript
-// modules/product/index.js
-module.exports = {
-  // ...
-  extendRestApiRoutes(self) {
-    return {
-      // GET /api/v1/product
-      async getAll(_super, req) {
-        // Get the original function's response (making sure to `await`).
-        const response = await _super(req);
-
-        if (Array.isArray(response.results)) {
-          // Adds a `resultLength` property on the response object.
-          response.resultLength = response.results.length;
-        }
-
-        return response;
-      }
-    };
-  }
-};
-```
 
 ### `apiRoutes(self)`
 
@@ -691,28 +641,6 @@ Passing a different value as the first argument to `self.apos.error()` will set 
 Extend the behavior of existing API routes (set in `apiRoutes`) in `extendApiRoutes`. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
 
 Each extended API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing API route.
-
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendApiRoutes(self) {
-    return {
-      get: {
-        // GET /api/v1/featured-product/cheapest
-        async cheapest(_super, req) {
-          const response = _super(req);
-
-          // Update the response object...
-
-          return response;
-        }
-      }
-    };
-  }
-};
-```
 
 ### `renderRoutes(self)`
 
@@ -816,27 +744,6 @@ module.exports = {
 Extend the behavior of existing event handlers (set in `handlers`) in the `extendHandlers` section. This function must return an object as described in [`handlers`](#handlers-self).
 
 Each extended event handler should accept the original function as `_super` followed by its original arguments. Extended handlers will be matched with base class handlers using the same server-side event *and* the same handler name.
-
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  handlers(self) {
-    return {
-      // Responds to `beforeInsert` when emitted by the `product` module
-      beforeInsert: {
-        async applyTax(_super, req, piece) {
-          // Add a $2.50 charge before applying taxes.
-          piece.price = piece.price + 2.5;
-
-          await _super(req, piece);
-        }
-      }
-    }
-  }
-};
-```
 
 ### `queries(self, query)`
 
