@@ -908,6 +908,33 @@ module.exports = {
 An object of methods that execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
 <!-- TODO: Link to a reference of core builders when available. -->
 
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  queries(self, query) {
+    return {
+      methods: {
+        // Adds a query method to deliver a random doc that meets the query
+        // criteria.
+        async toRandomObject() {
+          await query.finalize();
+
+          const pipeline = [
+            { $match: query.get('criteria') },
+            { $sample: { size: 1 } }
+          ];
+          const result = await self.apos.doc.db.aggregate(pipeline)
+            .toArray();
+
+          return result[0];
+        }
+      }
+    };
+  }
+};
+```
+
 #### `extendQueries(self)`
 
 ### `middleware(self)`
