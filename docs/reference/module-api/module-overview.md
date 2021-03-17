@@ -846,7 +846,7 @@ The `queries` function is part of the Apostrophe API for querying the database. 
 | `queries` properties | Description |
 | ---- | ---- |
 | [`builders`](#builders) | An object of "builders," or chainable methods, that refine the query or otherwise change its behavior prior to execution. |
-| [`methods`](#methods) | An object of method functions that are used to execute some action on the query. |
+| [`methods`](#methods) | An object of method functions that execute some action on the query. |
 
 #### `builders`
 
