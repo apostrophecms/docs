@@ -1,6 +1,9 @@
 # Module properties
 
-Module configuration objects may use the following configuration properties.
+Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
+- [Configuration settings](#configuration-settings): Static module settings. They generally cannot make use of other module settings.
+- [Initialization function](#initialization-function): A function that runs once when the Apostrophe app first starts up.
+- [Customization functions](#customization-functions): Settings via functions that at least have access to the module itself as an argument. They often make use of other settings.
 
 ## Configuration settings
 
@@ -13,6 +16,14 @@ Module configuration objects may use the following configuration properties.
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
+
+
+### "Cascading" settings
+
+Many Apostrophe module sections are structured as objects with `add`, `remove` and (sometimes), `group` properties. This pattern allows these settings to "cascade" from the base classes through to project level classes. The subsections help Apostrophe manage inherited options without requiring those inherited options to be re-declared by developers.
+
+If new setting options are needed, they go in `add`. If base class setting options are no longer wanted, they go in `remove`. And in some cases where grouping happens in the interface, they can be organized in `group`.
+
 
 ### `extend`
 
@@ -958,6 +969,3 @@ module.exports = {
 };
 ```
 
-## "Cascading" settings
-
-What does cascading mean?
