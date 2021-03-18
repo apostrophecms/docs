@@ -344,7 +344,7 @@ Several of these sections use an extension pattern. The sections prefixed with `
 
 Each function included in an extension section takes the function it is extending as the first argument (`_super`, below) in addition to the original arguments.
 
-If a piece type included the `generate` method in its `extendMethods` section to add a price upon generating placeholder docs, it might look like this:
+The following example updates the `generate` method in the `extendMethods` section to add a placeholder `price` upon creation.
 
 ```javascript
 // modules/product/index.js
@@ -355,19 +355,19 @@ module.exports = {
       // The original `generate` function only takes `index` as an argument.
       generate(_super, index) {
         // Using _super with the original argument to generate a sample piece.
-        const piece = _super(index);
+        const product = _super(index);
         // Adding additional functionality.
-        piece.price = Math.random() * 100;
-        // Returning the generated piece, exactly as the original `generate`
-        // method does.
-        return piece;
+        product.price = Math.random() * 100;
+        // Returning the generated product piece, exactly as the original
+        // `generate` method does.
+        return product;
       }
     };
   }
 };
 ```
 
-Or this, if extending a [REST API function](#restapiroutes-self):
+This example shows another example, extending a [REST API function](#restapiroutes-self):
 
 ```javascript
 // modules/product/index.js
