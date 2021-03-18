@@ -1,7 +1,7 @@
 # Module properties
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
-- [Configuration settings](#configuration-settings): Static module settings. These generally cannot use other module settings.
+- [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
 - [Initialization function](#initialization-function): A function that runs once during application startup.
 - [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
@@ -22,8 +22,7 @@ Module configuration objects may use the following configuration properties. The
 
 Many Apostrophe module sections are structured as objects with `add`, `remove`, and sometimes `group` properties. This pattern allows these settings to "cascade" from the base classes through to project level classes. The subsections help Apostrophe manage inherited settings without requiring those inherited settings be re-declared by developers.
 
-If new setting options are needed, they go in `add`. If base class setting options are no longer wanted, they go in `remove`. And in some cases where grouping happens in the interface, they can be organized in `group`.
-
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface.
 
 ### `extend`
 
@@ -891,7 +890,7 @@ module.exports = {
 };
 ```
 
-If the middleware function must run before another named middleware function, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of a module whose middleware must run after the new function, which is now the value of `middleware`.
+If the middleware function must run before another specific module's middleware, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of the module whose middleware must run after the new function, which is now the value of `middleware`.
 
 ```javascript
 // modules/limiter/index.js
@@ -931,13 +930,13 @@ module.exports = {
 
 Task functions takes the object `argv` as an argument, which includes the arguments passed after the task command. As documented by the [Boring](https://www.npmjs.com/package/boring) utility:
 
-> When someone types:
+> Input:
 >
 > ```
 > node app jump sideways --foo --bar=whee --super-cool=totally
 > ```
 >
-> You get:
+> Response:
 >
 > ```
 > {
@@ -954,8 +953,8 @@ module.exports = {
   // ...
   tasks(self, options) {
     return {
-      // Since the module is named product, then you can run this command
-      // line task by typing: `node app product:list` in the CLI.
+      // Since the module is named product, you can run this command line
+      // task by typing: `node app product:list` in the CLI.
       list: {
         usage: 'List the titles of each product.',
         async task(argv) {
