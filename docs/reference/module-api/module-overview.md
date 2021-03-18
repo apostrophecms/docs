@@ -333,13 +333,16 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`queries`](#queries-self-query) | Add database query methods |
 | [`extendQueries`](#extendqueries-self) | Extend base class database query methods |
 | [`middleware`](#middleware-self) | Add standard Express middleware to be called on *every* request. |
-| [`tasks`](#tasks-self) | Add task functions that can be run from the command-line. |
+| [`tasks`](#tasks-self) | Add task functions that can be run from the CLI. |
 
 ### The extension pattern
 
-Several of these sections use an extention pattern (the sections prefixed with "extend"). These sections are used to add functionality to matching features of the module's base class. Functions in `extendMethods` enhance identically named functions in the base class' `methods` section, `extendApiRoutes` enhances API routes from the base class' `apiRoutes`, and so on.
+Several of these sections use an extension pattern. The sections prefixed with `extend` add functionality to base class sections without the prefix. For example:
 
-Each individual function included in the extension section takes a `_super` argument in addition to the same arguments as the original function. `_super` is the original function, which should be called within the new extension.
+- functions in `extendMethods` enhance identically named functions in the base class' `methods` section, and
+- `extendApiRoutes` enhances API routes from the base class' `apiRoutes`
+
+Each function included in an extension section takes the function it is extending as the first argument (`_super`, below) in addition to the original arguments.
 
 If a piece type included the `generate` method in its `extendMethods` section to add a price upon generating placeholder docs, it might look like this:
 
@@ -349,6 +352,7 @@ module.exports = {
   // ...
   extendMethods(self) {
     return {
+      // The original `generate` function only takes `index` as an argument.
       generate(_super, index) {
         // Using _super with the original argument to generate a sample piece.
         const piece = _super(index);
@@ -363,24 +367,24 @@ module.exports = {
 };
 ```
 
-Or this, if extending an [async component function](#components-self):
+Or this, if extending a [REST API function](#restapiroutes-self):
 
 ```javascript
-// modules/featured-product/index.js
+// modules/product/index.js
 module.exports = {
-  extend: 'product',
   // ...
-  extendComponents(self) {
+  extendRestApiRoutes(self) {
     return {
-      // Returning the five most recently created products.
-      async latest(_super, req, data) {
-        data.max = (data.max && data.max <= 3) ? data.max : 3;
+      // The original function only takes a `req` argument.
+      async getAll(_super, req) {
+        // Get the original function's response (making sure to `await`).
+        const response = await _super(req);
 
-        const result = _super(req, data);
-
-        return {
-          products: result.products
-        };
+        if (Array.isArray(response.results)) {
+          // Adds a `resultLength` property on the response object.
+          response.resultLength = response.results.length;
+        }
+        return response;
       }
     };
   }
