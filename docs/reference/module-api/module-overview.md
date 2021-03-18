@@ -1,9 +1,9 @@
 # Module properties
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
-- [Configuration settings](#configuration-settings): Static module settings. They generally cannot make use of other module settings.
-- [Initialization function](#initialization-function): A function that runs once when the Apostrophe app first starts up.
-- [Customization functions](#customization-functions): Settings via functions that at least have access to the module itself as an argument. They often make use of other settings.
+- [Configuration settings](#configuration-settings): Static module settings. These generally cannot use other module settings.
+- [Initialization function](#initialization-function): A function that runs once during application startup.
+- [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
 ## Configuration settings
 
@@ -20,7 +20,7 @@ Module configuration objects may use the following configuration properties. The
 
 ### "Cascading" settings
 
-Many Apostrophe module sections are structured as objects with `add`, `remove` and (sometimes), `group` properties. This pattern allows these settings to "cascade" from the base classes through to project level classes. The subsections help Apostrophe manage inherited options without requiring those inherited options to be re-declared by developers.
+Many Apostrophe module sections are structured as objects with `add`, `remove`, and sometimes `group` properties. This pattern allows these settings to "cascade" from the base classes through to project level classes. The subsections help Apostrophe manage inherited settings without requiring those inherited settings be re-declared by developers.
 
 If new setting options are needed, they go in `add`. If base class setting options are no longer wanted, they go in `remove`. And in some cases where grouping happens in the interface, they can be organized in `group`.
 
