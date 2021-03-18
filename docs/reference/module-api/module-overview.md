@@ -435,7 +435,7 @@ To maintain the same application, they should return the same type of response a
 
 ### `components(self)`
 
-This function section returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
+Returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
 
 Each template component function should take the arguments:
 
@@ -861,15 +861,15 @@ module.exports = {
 
 Extend the behavior of existing event handlers (set in `queries`) in the `extendQueries` section. This function must return an object as described in `queries`.
 
-Each extended query builder or method should accept the original function as `_super` followed by its original arguments, if there are any. Extended query builders and methods will be matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
+Each extended query builder or method should accept the original function as `_super` followed by its original arguments. Extended query builders and methods will be matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
 
 ### `middleware(self)`
 
-Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware into Apostrophe.
+Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware.
 
-Note that it can often be simpler to add an event handler or `await` a method in an API route instead.
+Note that it is often better to add an event handler or `await` a method in an API route instead.
 
-`ours` could also be an object with a `before` property and a `middleware` property, in which case it would run `before` the middleware of the module with the specified name
+`checkIp` could also be an object with a `before` property and a `middleware` property, in which case it would run `before` the middleware of the module with the specified name
 
 ```javascript
 // modules/limiter/index.js
@@ -877,7 +877,7 @@ module.exports = {
   // ...
   middleware(self, options) {
     return {
-      ours(req, res, next) {
+      checkIp(req, res, next) {
         // Restrict access by IP address, in a crude way.
         const allowlist = [ '127.0.0.1', '::1' ];
 
@@ -899,7 +899,7 @@ module.exports = {
   // ...
   middleware(self, options) {
     return {
-      ours: {
+      checkIp: {
         // 👇 Same as above, but with `before` and `middleware` properties.
         before: '@apostrophecms/login',
         middleware: function (req, res, next) {
@@ -919,14 +919,14 @@ module.exports = {
 
 ### `tasks(self)`
 
-`tasks` takes the module as an argument and returns an object of functions that define command-line tasks. Task properties include:
+`tasks` takes the module as an argument and returns an object of functions that define command line tasks. Task properties include:
 
 
 | Property | Description |
 | ------- | ------- |
-| `usage` | A string describing the task and how to use it. It is printed on the command-line. |
-| `task` | The task function. It maybe asynchronous. |
-| `afterModuleInit` | Set to `true` to run the task after modules are initiated but *before* they are fully "awake".
+| `usage` | A string describing the task and how to use it. It is printed on the command line. |
+| `task` | The task function. Can be asynchronous. |
+| `afterModuleInit` | Set to `true` to run the task after modules are initiated but *before* they are fully active.
 | `exitAfter` | Only relevant if `afterModuleInit` is `true`. Set to `false` to *avoid* exiting the Apostrophe process on completion. Uncommon. |
 
 Task functions takes the object `argv` as an argument, which includes the arguments passed after the task command. As documented by the [Boring](https://www.npmjs.com/package/boring) utility:
@@ -954,8 +954,8 @@ module.exports = {
   // ...
   tasks(self, options) {
     return {
-      // Since the module is named product, then you can run this CLI task by
-      // typing: `node app product:list` in the CLI.
+      // Since the module is named product, then you can run this command
+      // line task by typing: `node app product:list` in the CLI.
       list: {
         usage: 'List the titles of each product.',
         async task(argv) {
