@@ -1,15 +1,26 @@
 module.exports = {
+  '/getting-started': [
+    {
+      title: 'Getting Started',
+      path: '/getting-started',
+      collapsable: false,
+      children: [
+        'getting-started/whats-new.md',
+        'getting-started/major-changes.md',
+        'getting-started/upgrade.md',
+        'getting-started/coming-soon.md'
+      ]
+    },
+    'guide/',
+    'reference/'
+  ],
   '/guide': [
+    'getting-started/',
     {
       title: 'Guide',
       path: '/guide',
       collapsable: false,
       children: [
-        'guide/whats-new.md',
-        'guide/coming-soon.md',
-        'guide/major-changes.md',
-        'guide/upgrade.md',
-        'guide/starting-your-project.md',
         'guide/module-format-example.md',
         'guide/front-end-assets.md',
         {
@@ -33,6 +44,7 @@ module.exports = {
     'reference/'
   ],
   '/reference': [
+    'getting-started/',
     'guide/',
     {
       title: 'Reference',
