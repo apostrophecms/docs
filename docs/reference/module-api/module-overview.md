@@ -20,7 +20,7 @@ Module configuration objects may use the following configuration properties. The
 
 ### "Cascading" settings
 
-Many Apostrophe module sections are structured as objects with `add`, `remove`, and sometimes `group` properties. This pattern allows these settings to "cascade" from the base classes through to project level classes. The subsections help Apostrophe manage inherited settings without requiring those inherited settings be re-declared by developers.
+Many Apostrophe module sections are structured as objects with `add`, `remove`, and `group` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
 
 Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface.
 
@@ -860,15 +860,13 @@ module.exports = {
 
 Extend the behavior of existing event handlers (set in `queries`) in the `extendQueries` section. This function must return an object as described in `queries`.
 
-Each extended query builder or method should accept the original function as `_super` followed by its original arguments. Extended query builders and methods will be matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
+Each extended query builder or method should accept the original function as `_super` followed by its original arguments. Extended query builders and methods should be nested in the `builders` or `methods` object, as in [`queries`](#queries-self-query), and are matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
 
 ### `middleware(self)`
 
-Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware.
+Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware if it should be called on every request.
 
-Note that it is often better to add an event handler or `await` a method in an API route instead.
-
-`checkIp` could also be an object with a `before` property and a `middleware` property, in which case it would run `before` the middleware of the module with the specified name
+Note that if you are considering authoring your own middleware, it is often better to add an event handler or `await` a method in the appropriate API route instead.
 
 ```javascript
 // modules/limiter/index.js
@@ -890,7 +888,7 @@ module.exports = {
 };
 ```
 
-If the middleware function must run before another specific module's middleware, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of the module whose middleware must run after the new function, which is now the value of `middleware`.
+If the middleware function must run before another specific module's middleware, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of the module whose middleware must run after the new function. Set `middleware` to the new middleware function.
 
 ```javascript
 // modules/limiter/index.js
@@ -918,8 +916,7 @@ module.exports = {
 
 ### `tasks(self)`
 
-`tasks` takes the module as an argument and returns an object of functions that define command line tasks. Task properties include:
-
+`tasks` takes the module as an argument and returns an object of command line task definitions. Task properties include:
 
 | Property | Description |
 | ------- | ------- |
@@ -933,17 +930,17 @@ Task functions takes the object `argv` as an argument, which includes the argume
 > Input:
 >
 > ```
-> node app jump sideways --foo --bar=whee --super-cool=totally
+> node app my-module:runIt taskOption --foo --bar=baz --use-color=green
 > ```
 >
 > Response:
 >
 > ```
 > {
->   _: [ "jump", "sideways"],
+>   _: [ "runIt", "taskOption"],
 >   foo: true,
->   bar: "whee",
->   "super-cool": "totally"
+>   bar: "baz",
+>   "use-color": "green"
 > }
 > ```
 
