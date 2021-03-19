@@ -840,7 +840,7 @@ module.exports = {
 
 ### `queries(self, query)`
 
-The `queries` function is part of the Apostrophe API for querying the database. It takes two arguments: the module (`self`) and the query that is being constructed (`query`). It must return an object. That object can have two properties:
+The `queries` function registers custom query builders and methods. It takes two arguments: the module (`self`) and the query that is being constructed (`query`). It must return an object. That object can have two properties:
 <!-- TODO: Link to a real guide on using queries when available. This is simply reference. -->
 
 | `queries` properties | Description |
@@ -861,7 +861,7 @@ Query builders are defined as objects with a set of properties available to them
 | `set` | A function called when the builder is invoked instead of the default `query.set` method. The `set` function should include running the `query.set` after other work. |
 | `prefinalize` | A function to run before any builder `finalize` steps. Used to alter the query with other builders. |
 | `finalize` | A function to run at the end of the query building phase, prior to being processed by the database. Used to alter the query with other builders. |
-| `after` | A function run to mutate an array of queried items passed in as an argument. The `after` function should return out immediately if the builder was not used on the query. |
+| `after` | A function run to mutate an array of queried items passed in as an argument. The `after` function should use `query.get` to confirm that the builder was used on the query. |
 
 ```javascript
 // modules/product/index.js
