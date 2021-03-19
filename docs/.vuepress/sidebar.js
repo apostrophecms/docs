@@ -1,7 +1,7 @@
 module.exports = {
   '/getting-started': [
     {
-      title: 'Getting Started',
+      title: 'Getting started',
       path: '/getting-started',
       collapsable: false,
       children: [
