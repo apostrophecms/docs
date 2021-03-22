@@ -51,8 +51,7 @@ module.exports = {
         'guide/pieces.md',
         'guide/piece-pages.md',
         'guide/async-components.md',
-        'guide/rest-apis.md',
-        'guide/coming-soon.md'
+        'guide/rest-apis.md'
       ]
     },
     'reference/'
