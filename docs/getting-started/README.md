@@ -60,7 +60,7 @@ npm install
 # Or `yarn install`, if you prefer. We'll stick to npm commands.
 ```
 
-Before starting up you'll need to create a user so that you can to log in, both to edit the site and create additional users. After running the following command, Apostrophe will ask you to enter a password for this user.
+Before starting up you'll need to create an admin-level user so that you can to log in. After running the following command, Apostrophe will ask you to enter a password for this user.
 
 ```bash
 node app @apostrophecms/user:add my-user
