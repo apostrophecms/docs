@@ -26,7 +26,7 @@ ImageMagick is optional, but recommended. It provides the `convert` and `identif
 
 <!-- ## TODO: The Apostrophe CLI tool -->
 
-## Setting up your Apostrophe project
+## Creating a project
 
 <!-- TODO: Update with CLI info when ready. -->
 The easiest way to get started with Apostrophe is to use the starter boilerplate project. On the command line, clone the boilerplate:
@@ -60,7 +60,7 @@ npm install
 # Or `yarn install`, if you prefer. We'll stick to npm commands.
 ```
 
-You could start the site up now, but you'll need to create the first user if you want to log in. After running the command, Apostrophe will ask you to enter a password for this user.
+Before starting up you'll need to create a user so that you can to log in, both to edit the site and create additional users. After running the following command, Apostrophe will ask you to enter a password for this user.
 
 ```bash
 node app @apostrophecms/user:add my-user
