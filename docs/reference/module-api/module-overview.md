@@ -930,14 +930,14 @@ Task functions takes the object `argv` as an argument, which includes the argume
 > Input:
 >
 > ```
-> node app my-module:runIt taskOption --foo --bar=baz --use-color=green
+> node app my-module:run-it taskOption --foo --bar=baz --use-color=green
 > ```
 >
 > Response:
 >
 > ```
 > {
->   _: [ "runIt", "taskOption"],
+>   _: [ "my-module:run-it", "taskOption"],
 >   foo: true,
 >   bar: "baz",
 >   "use-color": "green"
