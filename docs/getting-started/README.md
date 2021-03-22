@@ -41,7 +41,7 @@ If you want to change the project directory name, please do so. We will continue
 There is a CLI tool for Apostrophe 2 with commands to create projects, among other tasks. That will support Apostrophe 3 closer to the 3.0 stable release.
 :::
 
-Open the project directory in your code editor. We'll want to change one line before starting up so the database is created correctly. In the `app.js` file, find the `shortname` setting and change it to match your project (only letters, digits, hyphens and/or underscores). By default, this will be the name of your database:
+Open the `app.js` file in the root project directory. Find the `shortname` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
 
 ```javascript
 // app.js
@@ -67,8 +67,8 @@ node app @apostrophecms/user:add my-user
 # Replace `my-user` with the name you want for your first user.
 ```
 
-Start the site with `node app.js` and your site should be running at [http://localhost:3000](http://localhost:3000). You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login)
+Start the site with `npm run dev`. The app will then watch for changes, then restart the app and refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
 
 ::: tip
-If you are doing active development on the project, you can also start the site with `npm run dev`. The app will then watch for changes, then restart the app and refresh the browser when it detects any.
+If you are starting the site in a production or do not want the process to watch for changes, start the site with `node app.js`.
 :::
