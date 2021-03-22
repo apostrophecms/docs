@@ -72,3 +72,7 @@ Start the site with `node app.js` and your site should be running at [http://loc
 ::: tip
 If you are doing active development on the project, you can also start the site with `npm run dev`. The app will then watch for changes, then restart the app and refresh the browser when it detects any.
 :::
+
+## Next step
+
+Now that Apostrophe is installed, go ahead and start building using the essentials [guide](/guide/). You can also continue getting to know Apostrophe in the [technical overview](/getting-started/technical-overview.md).

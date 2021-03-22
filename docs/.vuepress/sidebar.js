@@ -5,6 +5,7 @@ module.exports = {
       path: '/getting-started',
       collapsable: false,
       children: [
+        'getting-started/technical-overview.md',
         'getting-started/whats-new.md',
         'getting-started/major-changes.md',
         'getting-started/upgrade.md',
