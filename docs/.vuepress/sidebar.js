@@ -5,11 +5,22 @@ module.exports = {
       path: '/getting-started',
       collapsable: false,
       children: [
-        'getting-started/technical-overview.md',
-        'getting-started/whats-new.md',
-        'getting-started/major-changes.md',
-        'getting-started/upgrade.md',
-        'getting-started/coming-soon.md'
+        'getting-started/technical-overview.md'
+      ]
+    },
+    'migration/',
+    'guide/',
+    'reference/'
+  ],
+  '/migration': [
+    'getting-started/',
+    {
+      title: 'Coming from A2',
+      path: '/migration',
+      collapsable: false,
+      children: [
+        'migration/major-changes.md',
+        'migration/upgrade.md'
       ]
     },
     'guide/',
@@ -17,6 +28,7 @@ module.exports = {
   ],
   '/guide': [
     'getting-started/',
+    'migration/',
     {
       title: 'Guide',
       path: '/guide',
@@ -39,13 +51,15 @@ module.exports = {
         'guide/pieces.md',
         'guide/piece-pages.md',
         'guide/async-components.md',
-        'guide/rest-apis.md'
+        'guide/rest-apis.md',
+        'guide/coming-soon.md'
       ]
     },
     'reference/'
   ],
   '/reference': [
     'getting-started/',
+    'migration/',
     'guide/',
     {
       title: 'Reference',
