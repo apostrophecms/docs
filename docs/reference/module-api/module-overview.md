@@ -1,6 +1,9 @@
 # Module properties
 
-Module configuration objects may use the following configuration properties.
+Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
+- [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
+- [Initialization function](#initialization-function): A function that runs once during application startup.
+- [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
 ## Configuration settings
 
@@ -13,6 +16,13 @@ Module configuration objects may use the following configuration properties.
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
+
+
+### "Cascading" settings
+
+Many Apostrophe module sections are structured as objects with `add`, `remove`, and `group` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
+
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface.
 
 ### `extend`
 
@@ -161,7 +171,7 @@ modules.export = {
 
 In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `trash` and `visibility` filters are included by default.
 
-The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self) on the piece type.
+The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 
 #### `add`
 
@@ -319,29 +329,65 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 | [`routes`](#routes-self) | Add standard Express routes |
 | [`handlers`](#handlers-self) | Add server-side event handlers |
 | [`extendHandlers`](#extendhandlers-self) | Extend base class server-side event handlers |
-| [`queries`](#queries-self) | REPLACE-ME |
-| [`extendQueries`](#extendqueries-self) | REPLACE-ME |
-| [`middleware`](#middleware-self) | REPLACE-ME |
-| [`tasks`](#tasks-self) | REPLACE-ME |
+| [`queries`](#queries-self-query) | Add database query methods |
+| [`extendQueries`](#extendqueries-self) | Extend base class database query methods |
+| [`middleware`](#middleware-self) | Add standard Express middleware to be called on *every* request. |
+| [`tasks`](#tasks-self) | Add task functions that can be run from the CLI. |
 
 ### The extension pattern
 
-Several of these sections use an extention pattern (the sections prefixed with "extend"). These sections are used to add functionality to matching features of the module's base class. Functions in `extendMethods` enhance identically named functions in the base class' `methods` section, `extendApiRoutes` enhances API routes from the base class' `apiRoutes`, and so on.
+Several of these sections use an extension pattern. The sections prefixed with `extend` add functionality to base class sections without the prefix. For example:
 
-Each individual function included in the extension section takes a `_super` argument in addition to the same arguments as the original function. `_super` is the original function, which should be called within the new extension.
+- functions in `extendMethods` enhance identically named functions in the base class' `methods` section, and
+- `extendApiRoutes` enhances API routes from the base class' `apiRoutes`
 
-If a piece type included the `insert` in its `extendMethods` section to alter the piece titles, it might look like this:
+Each function included in an extension section takes the function it is extending as the first argument (`_super`, below) in addition to the original arguments.
+
+The following example updates the `generate` method in the `extendMethods` section to add a placeholder `price` upon creation.
 
 ```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
   extendMethods(self) {
     return {
-      insert(_super, req, piece, options) {
-        piece.title = `🆕 ${piece.title}`;
-
-        _super(req, piece, options);
+      // The original `generate` function only takes `index` as an argument.
+      generate(_super, index) {
+        // Using _super with the original argument to generate a sample piece.
+        const product = _super(index);
+        // Adding additional functionality.
+        product.price = Math.random() * 100;
+        // Returning the generated product piece, exactly as the original
+        // `generate` method does.
+        return product;
       }
-    }
+    };
   }
+};
+```
+
+This example shows another example, extending a [REST API function](#restapiroutes-self):
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  extendRestApiRoutes(self) {
+    return {
+      // The original function only takes a `req` argument.
+      async getAll(_super, req) {
+        // Get the original function's response (making sure to `await`).
+        const response = await _super(req);
+
+        if (Array.isArray(response.results)) {
+          // Adds a `resultLength` property on the response object.
+          response.resultLength = response.results.length;
+        }
+        return response;
+      }
+    };
+  }
+};
 ```
 
 ::: warning
@@ -386,29 +432,9 @@ Methods included should take a `_super` argument, followed by the normal argumen
 
 To maintain the same application, they should return the same type of response as the original method. If the original returned an array of docs, the extension method should return an array of docs.
 
-```javascript
-// modules/product/index.js
-module.exports = {
-  // ...
-  extendMethods(self) {
-    return {
-      generate(_super, index) {
-        // Using _super with the original argument to generate a sample piece.
-        const piece = _super(index);
-        // Adding additional functionality.
-        piece.price = Math.random() * 100;
-        // Returning the generated piece, exactly as the original `generate`
-        // method does.
-        return piece;
-      }
-    };
-  }
-};
-```
-
 ### `components(self)`
 
-This function section returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
+Returns an object containing functions that power asynchronous template components. These template components allow for asynchronous data requests in normally synchronous template rendering.
 
 Each template component function should take the arguments:
 
@@ -460,31 +486,9 @@ Extension functions should take the following arguments:
 
 Each should return data in the same form as the original component function.
 
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendComponents(self) {
-    return {
-      // Returning the five most recently created products.
-      async latest(_super, req, data) {
-        data.max = (data.max && data.max <= 3) ? data.max : 3;
-
-        const result = _super(req, data);
-
-        return {
-          products: result.products
-        };
-      }
-    };
-  }
-};
-```
-
 ### `helpers(self)`
 
-`helpers` returns an object of functions that add template utility methods. The individual helper methods may accept arguments when called from your templates. Helper functions must run synchronously.
+`helpers` takes the module as an argument and returns an object of functions that add template utility methods. The individual helper methods may take any arguments that you plan to pass them in templates. Helper functions must run synchronously.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
@@ -520,23 +524,6 @@ Add to the functionality of a template helper inherited from the base class. Thi
 Extended helpers should take a `_super` argument, followed by the normal arguments of the helper being extended. If the original helper took only a `price` argument, the extending function should take the arguments `_super, price`.
 
 To maintain the same application, they should return the same type of response as the original helper. If the original returned a string, the extension should return a string.
-
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendHelpers(self) {
-    return {
-      formatPrice(_super, product) {
-        const price = _super(product);
-        // 👇 Adds some extra flash to the featured product prices.
-        return `${price} 🤑`;
-      }
-    };
-  }
-};
-```
 
 ### `restApiRoutes(self)`
 
@@ -584,29 +571,6 @@ module.exports = {
 Extend the behavior of existing REST API routes in `extendRestApiRoutes`. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
 
 Each extended REST API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing [piece](/reference/api/pieces.md) and [page](/reference/api/pages.md) REST API (e.g., single doc `GET` requests should return a single document object and general `GET` requests should return an object including a `result` array of document objects).
-
-```javascript
-// modules/product/index.js
-module.exports = {
-  // ...
-  extendRestApiRoutes(self) {
-    return {
-      // GET /api/v1/product
-      async getAll(_super, req) {
-        // Get the original function's response (making sure to `await`).
-        const response = await _super(req);
-
-        if (Array.isArray(response.results)) {
-          // Adds a `resultLength` property on the response object.
-          response.resultLength = response.results.length;
-        }
-
-        return response;
-      }
-    };
-  }
-};
-```
 
 ### `apiRoutes(self)`
 
@@ -691,28 +655,6 @@ Passing a different value as the first argument in `self.apos.error()` will set 
 Extend the behavior of existing API routes (set in `apiRoutes`) in `extendApiRoutes`. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
 
 Each extended API route function should accept the original function as `_super` and the `req` request object. Your extended API route function should return data in a similar format to the existing API route.
-
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  extendApiRoutes(self) {
-    return {
-      get: {
-        // GET /api/v1/featured-product/newest
-        async newest(_super, req) {
-          const response = _super(req);
-
-          // Update the response object...
-
-          return response;
-        }
-      }
-    };
-  }
-};
-```
 
 ### `renderRoutes(self)`
 
@@ -817,20 +759,209 @@ Extend the behavior of existing event handlers (set in `handlers`) in the `exten
 
 Each extended event handler should accept the original function as `_super` followed by its original arguments. Extended handlers will be matched with base class handlers using the same server-side event *and* the same handler name.
 
-```javascript
-// modules/featured-product/index.js
-module.exports = {
-  extend: 'product',
-  // ...
-  handlers(self) {
-    return {
-      // Responds to `beforeInsert` when emitted by the `product` module
-      beforeInsert: {
-        async applyTax(_super, req, piece) {
-          // Add a $2.50 charge before applying taxes.
-          piece.price = piece.price + 2.5;
+### `queries(self, query)`
 
-          await _super(req, piece);
+The `queries` function registers custom query builders and methods. It takes two arguments: the module (`self`) and the query that is being constructed (`query`). It must return an object. That object can have two properties:
+<!-- TODO: Link to a real guide on using queries when available. This is simply reference. -->
+
+| `queries` properties | Description |
+| ---- | ---- |
+| [`builders`](#builders) | An object of "builders," or chainable methods, that refine the query or otherwise change its behavior prior to execution. |
+| [`methods`](#methods) | An object of method functions that execute some action on the query. |
+
+#### `builders`
+
+Query builders are defined as objects with a set of properties available to them. Builders often take an argument or use a default value.
+<!-- TODO: Link to a reference of core builders when available. -->
+
+| Builder properties | Description |
+| ---- | ---- |
+| `def` | The default value for the builder. |
+| `launder` | A function used to validate values passed as arguments when `applyBuildersSafely` is called on the query. Returns `true` if valid.<br />This is required to use the builder in a REST API query string. |
+| `choices` | A function returning an array of "choice" objects with `value` and `label` properties. This is returned from the `toChoices` query method if set. |
+| `set` | A function called when the builder is invoked instead of the default `query.set` method. The `set` function should include running the `query.set` after other work. |
+| `prefinalize` | A function to run before any builder `finalize` steps. Used to alter the query with other builders. |
+| `finalize` | A function to run at the end of the query building phase, prior to being processed by the database. Used to alter the query with other builders. |
+| `after` | A function run to mutate an array of queried items passed in as an argument. The `after` function should use `query.get` to confirm that the builder was used on the query. |
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  queries(self, query) {
+    return {
+      builders: {
+        // This builder can be used to filter products in a query like this one:
+        // await self.apos.product.find(req, {}).belowAverage(true).toArray();
+        belowAverage: {
+          async finalize() {
+            // Make sure this filter was actually invoked first
+            if (query.get('belowAverage')) {
+              const average = await self.averagePrice(query.req);
+
+              query.and({
+                price: { $lt: average }
+              });
+            }
+          },
+          // The builder can also be invoked via the module's REST API as a
+          // query string parameter, e.g. `?belowAverage=1`.
+          launder(value) {
+            return self.apos.launder.boolean(value);
+          },
+          // Always provides these two choices when requested, even if no docs
+          // match either value.
+          choices() {
+            return [
+              { value: '0', label: 'No' },
+              { value: '1', label: 'Yes' }
+            ];
+          }
+        }
+      }
+    };
+  }
+};
+```
+
+#### `methods`
+
+An object of methods that execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
+<!-- TODO: Link to a reference of core builders when available. -->
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  queries(self, query) {
+    return {
+      methods: {
+        // Adds a query method to deliver a random doc that meets the query
+        // criteria.
+        async toRandomObject() {
+          await query.finalize();
+
+          const pipeline = [
+            { $match: query.get('criteria') },
+            { $sample: { size: 1 } }
+          ];
+          const result = await self.apos.doc.db.aggregate(pipeline)
+            .toArray();
+
+          return result[0];
+        }
+      }
+    };
+  }
+};
+```
+
+#### `extendQueries(self)`
+
+Extend the behavior of existing event handlers (set in `queries`) in the `extendQueries` section. This function must return an object as described in `queries`.
+
+Each extended query builder or method should accept the original function as `_super` followed by its original arguments. Extended query builders and methods should be nested in the `builders` or `methods` object, as in [`queries`](#queries-self-query), and are matched with the base class builder or method using the same name. Methods should return data in a similar format to the existing API route.
+
+### `middleware(self)`
+
+Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware if it should be called on every request.
+
+Note that if you are considering authoring your own middleware, it is often better to add an event handler or `await` a method in the appropriate API route instead.
+
+```javascript
+// modules/limiter/index.js
+module.exports = {
+  // ...
+  middleware(self, options) {
+    return {
+      checkIp(req, res, next) {
+        // Restrict access by IP address, in a crude way.
+        const allowlist = [ '127.0.0.1', '::1' ];
+
+        if (!allowlist.includes(req.connection.remoteAddress)) {
+          return res.status(403).send('forbidden');
+        }
+        return next();
+      }
+    };
+  }
+};
+```
+
+If the middleware function must run before another specific module's middleware, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of the module whose middleware must run after the new function. Set `middleware` to the new middleware function.
+
+```javascript
+// modules/limiter/index.js
+module.exports = {
+  // ...
+  middleware(self, options) {
+    return {
+      checkIp: {
+        // 👇 Same as above, but with `before` and `middleware` properties.
+        before: '@apostrophecms/login',
+        middleware: function (req, res, next) {
+          // Restrict access by IP address, in a crude way.
+          const allowlist = [ '127.0.0.1', '::1' ];
+
+          if (!allowlist.includes(req.connection.remoteAddress)) {
+            return res.status(403).send('forbidden');
+          }
+          return next();
+        }
+      }
+    };
+  }
+};
+```
+
+### `tasks(self)`
+
+`tasks` takes the module as an argument and returns an object of command line task definitions. Task properties include:
+
+| Property | Description |
+| ------- | ------- |
+| `usage` | A string describing the task and how to use it. It is printed on the command line. |
+| `task` | The task function. Can be asynchronous. |
+| `afterModuleInit` | Set to `true` to run the task after modules are initiated but *before* they are fully active.
+| `exitAfter` | Only relevant if `afterModuleInit` is `true`. Set to `false` to *avoid* exiting the Apostrophe process on completion. Uncommon. |
+
+Task functions takes the object `argv` as an argument, which includes the arguments passed after the task command. As documented by the [Boring](https://www.npmjs.com/package/boring) utility:
+
+> Input:
+>
+> ```
+> node app my-module:run-it taskOption --foo --bar=baz --use-color=green
+> ```
+>
+> Response:
+>
+> ```
+> {
+>   _: [ "my-module:run-it", "taskOption"],
+>   foo: true,
+>   bar: "baz",
+>   "use-color": "green"
+> }
+> ```
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  // ...
+  tasks(self, options) {
+    return {
+      // Since the module is named product, you can run this command line
+      // task by typing: `node app product:list` in the CLI.
+      list: {
+        usage: 'List the titles of each product.',
+        async task(argv) {
+          // Get an req object with admin privileges. You can also use getAnonReq.
+          const req = self.apos.task.getReq();
+          const pieces = await self.find(req).toArray();
+
+          for (const piece of pieces) {
+            console.log(piece.title);
+          }
         }
       }
     }
@@ -838,19 +969,3 @@ module.exports = {
 };
 ```
 
-### `queries(self)`
-#### `extendQueries(self)`
-
-### `middleware(self)`
-
-### `tasks(self)`
-
-## Core properties, not documented
-- cascades
-- batchOperations
-- beforeSuperClass
-- afterAllSections
-
-## "Cascading" settings
-
-What does cascading mean?
