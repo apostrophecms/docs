@@ -349,8 +349,8 @@ module.exports = {
     return {
       ours(req, res, next) {
         // Restrict access by IP address, in a crude way
-        const whitelist = [ '127.0.0.1', '::1' ];
-        if (!whitelist.includes(req.connection.remoteAddress)) {
+        const allowlist = [ '127.0.0.1', '::1' ];
+        if (!allowlist.includes(req.connection.remoteAddress)) {
           return res.status(403).send('forbidden');
         }
         return next();
