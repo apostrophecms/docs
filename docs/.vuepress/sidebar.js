@@ -2,9 +2,9 @@ module.exports = {
   '/guide': [
     {
       title: 'Guide',
-      path: '/guide',
       collapsable: false,
       children: [
+        'guide/introduction.md',
         'guide/whats-new.md',
         'guide/coming-soon.md',
         'guide/major-changes.md',
@@ -33,7 +33,7 @@ module.exports = {
     'reference/'
   ],
   '/reference': [
-    'guide/',
+    'guide/introduction.md',
     {
       title: 'Reference',
       path: '/reference',
