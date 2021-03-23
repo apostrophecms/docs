@@ -41,7 +41,7 @@ If you want to change the project directory name, please do so. We will continue
 There is a CLI tool for Apostrophe 2 with commands to create projects, among other tasks. That will support Apostrophe 3 closer to the 3.0 stable release.
 :::
 
-Open the project directory in your code editor. We'll want to change one line before starting up so the database is created correctly. In the `app.js` file, find the `shortname` setting and change it to match your project (only letters, digits, hyphens and/or underscores). By default, this will be the name of your database:
+Open the `app.js` file in the root project directory. Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
 
 ```javascript
 // app.js
@@ -60,17 +60,17 @@ npm install
 # Or `yarn install`, if you prefer. We'll stick to npm commands.
 ```
 
-Before starting up you'll need to create a user so that you can to log in, both to edit the site and create additional users. After running the following command, Apostrophe will ask you to enter a password for this user.
+Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
 
 ```bash
-node app @apostrophecms/user:add my-user
+node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
 
-Start the site with `node app.js` and your site should be running at [http://localhost:3000](http://localhost:3000). You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login)
+Start the site with `npm run dev`. The app will then watch for changes in client-side code, then restart the app and refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
 
 ::: tip
-If you are doing active development on the project, you can also start the site with `npm run dev`. The app will then watch for changes, then restart the app and refresh the browser when it detects any.
+If you are starting the site in a production or do not want the process to watch for changes, start the site with `node app.js`.
 :::
 
 ## Next step

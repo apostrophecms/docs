@@ -103,7 +103,14 @@ module.exports = {
             'reference/api/field-formats'
           ]
         },
-        'reference/module-options'
+        {
+          title: 'Module API',
+          path: '/reference/module-api',
+          children: [
+            'reference/module-api/module-overview',
+            'reference/module-api/module-options'
+          ]
+        }
       ]
     }
   ]
