@@ -583,10 +583,10 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        // GET /api/v1/product/cheapest
-        async cheapest(req) {
+        // GET /api/v1/product/newest
+        async newest(req) {
           const product = await self.find(req).sort({
-            price: 1
+            createdAt: -1
           }).toObject();
           if (!product) {
             // Browser receives a 404 error
@@ -605,11 +605,11 @@ module.exports = {
 
 #### Naming routes
 
-If route properties do *not* begin with a forward slash, they can be reached via the pattern: `/api/v1/` followed by the module name, a forward slash, and the API route handler's property name, e.g., `/api/v1/product/cheapest` for the `cheapest` route on the `product` module.
+If route properties do *not* begin with a forward slash, they can be reached via the pattern: `/api/v1/` followed by the module name, a forward slash, and the API route handler's property name, e.g., `/api/v1/product/newest` for the `newest` route on the `product` module.
 
-Camel-case names will be converted to kebab case names for the URL: `cheapestOne` becomes `cheapest-one` in the route URL.
+Camel-case names will be converted to kebab case names for the URL: `newestThing` becomes `newest-thing` in the route URL.
 
-You can also use a completely custom URL path by starting the name of the route with a forward slash (`/`). If you do so, nothing will be prefixed to it and it will not be converted to kebab case.
+Beginning the name of a route with a forward slash (`/`) will allow you to create a completely custom URL path. Custom URL paths will not be prefixed or converted to kebab case.
 
 ```javascript
 // modules/product/index.js
@@ -618,12 +618,12 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        // GET /api/v1/product/cheapest-one
-        async cheapestOne(req) {
+        // GET /api/v1/product/newest-thing
+        async newestThing(req) {
           // ...
         },
-        // GET /my-api/cheapest
-        '/my-api/cheapest': async function (req) {
+        // GET /my-api/newest
+        '/my-api/newest': async function (req) {
           // ...
         }
       }
@@ -634,7 +634,7 @@ module.exports = {
 
 #### Returning error codes
 
-You can `throw` the `self.apos.error()` method in any route function to return specific error codes as well as log additional information for developers. Pass in one of several strings to set a specific error response code:
+You can `throw` the `self.apos.error()` method in any route function to return specific error codes and log additional information for developers. Pass in one of several strings to set a specific error response code:
 
 | Error name | HTTP response code |
 | ---- | ---- |
@@ -647,14 +647,14 @@ You can `throw` the `self.apos.error()` method in any route function to return s
 | `'unprocessable'` | 422 |
 | `'unimplemented'` | 501 |
 
-Passing a different value as the first argument to `self.apos.error()` will set the response code to 500.
+Passing a different value as the first argument in `self.apos.error()` will set the response code to 500.
 <!-- TODO: Link to the method's own documentation page when available for more. -->
 
 #### `extendApiRoutes(self)`
 
 Extend the behavior of existing API routes (set in `apiRoutes`) in `extendApiRoutes`. This function must return an object as described in [`apiRoutes`](#apiroutes-self).
 
-Each extended API route function should accept the original function as `_super` and the `req` request object. They should return data in a similar format to the existing API route.
+Each extended API route function should accept the original function as `_super` and the `req` request object. Your extended API route function should return data in a similar format to the existing API route.
 
 ### `renderRoutes(self)`
 
@@ -698,7 +698,7 @@ Each `routes` function takes the Express arguments `req` (the [request object](h
 See [Naming routes](#naming-routes) for more on function names and their route URLs.
 
 ::: tip
-We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes`. They are designed to be easier to use and handle the potential pitfalls of Express routes. There are situation when writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
+We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes` as they handle the potential pitfalls of Express routes. There are situations where writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
 :::
 
 ```javascript
@@ -725,7 +725,7 @@ module.exports = {
 The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire. Event handlers may be asynchronous (async) functions.
 <!-- TODO: Link to the reference to or guide on server-side events when available. -->
 
-Events belonging to the same module where the handlers are defined, or from its base class, can be referenced by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module where the event fires followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
+Events belonging to the same module where the handlers are defined, or from its base class, can be referenced by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module that emits the event followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
 
 Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted.
 <!-- TODO: Link to event reference for arguments when available. -->
