@@ -73,6 +73,6 @@ Start the site with `npm run dev`. The app will then watch for changes in client
 If you are starting the site in a production or do not want the process to watch for changes, start the site with `node app.js`.
 :::
 
-## Next step
+## Next steps
 
-Now that Apostrophe is installed, go ahead and start building using the essentials [guide](/guide/). You can also continue getting to know Apostrophe in the [technical overview](/getting-started/technical-overview.md).
+Now that Apostrophe is installed, you're ready to start building. Check out the essentials [guide](/guide/) to get started or read more about Apostrophe's inner workings in the [technical overview](/getting-started/technical-overview.md).
