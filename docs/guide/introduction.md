@@ -22,6 +22,36 @@ Each module defines a specific set of functionality, from governing the database
 
 All modules use [the same API](/reference/module-api/). That shared foundation means that you can give your blog post module powerful features, such as custom command line tasks and API routes. It's the same foundation the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
 
+### Setting up a module
+
+Modules are organized in a folder at the root of a project appropriately named `modules`. Each module gets its own directory inside that with an `index.js` file that contains its configurations. So the blog post code would being in the file:
+
+```
+modules/blog-post/index.js
+```
+
+The module code itself would then be defined in an object, assigned to `module.exports`. This may look familiar if you know [CommonJS](https://nodejs.org/api/modules.html#modules_modules_commonjs_modules) patterns.
+
+```javascript
+// modules/blog-post/index.js
+module.exports = {
+  // ...
+}
+```
+
+The final step to this minimalist module example is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its own `modules` property.
+
+```js
+// app.js
+require('apostrophe')({
+  modules: {
+    'blog-post': {}
+  }
+});
+```
+
+There is more to do to make modules useful, but that is all it takes to get them running.
+
 ### Module inheritance
 
 Inheritance is the glue of the module system. Every module, other than the root module, extends another one. This means that your blog post module, which extends the "piece type" module, has a huge set of features you never have to write.
@@ -40,7 +70,6 @@ The rest of the documentation will include many specific, practical examples of 
   - It is easy to extend another module to use a variety of built-in features
 
 ## MOAR
-- Initializing modules for your app
 - Altering options and behavior of installed and core modules (create an index.js in project)
 
 ::: tip
