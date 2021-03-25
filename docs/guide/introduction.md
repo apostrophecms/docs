@@ -97,4 +97,39 @@ The rest of the documentation will include many specific, practical examples of 
 
 ## Content schemas
 
-Nulla vitae elit libero, a pharetra augue. Nullam quis risus eget urna mollis ornare vel eu leo. Maecenas sed diam eget risus varius blandit sit amet non magna. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
+The content field schema is another key concept that most Apostrophe development will use. The "schema" here simply refers to definition of fields allowed in a particular context (e.g., a page, piece, or widget type). This is important so that the user interface knows what fields to show editors. It also tells both the UI and server how to validate data for that context.
+
+Our blog post module might look something like this with its field schema:
+
+```javascript
+// modules/blog-post/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  fields: {
+    add: {
+      authorName: {
+        label: 'Author name',
+        type: 'string'
+      },
+      body: {
+        label: 'Blog post body',
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {}
+          }
+        }
+      }
+    },
+    group: {
+      blogFields: [ 'authorName', 'body' ]
+    }
+  }
+};
+```
+
+The `fields` setting is the parent property for the schema configuration. In this case, it has two subsections: `add`, where fields are added to the schema, and `group`, which organizes the fields for the user interface.
+
+Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section. In both cases, there are default fields, such as `title`, that are added and grouped for you already.
+
+There are other elements to schemas, but that is generally how developers define them. There is additional reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/).
