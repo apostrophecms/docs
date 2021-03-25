@@ -17,7 +17,7 @@ ApostropheCMS is a full-featured, open source CMS built with Node.js that seeks 
 
 ## Documentation sections
 
-- [**Guide**](/guide/README.md): A walkthrough for Apostrophe 3 features, differences from version 2, and more.
+- [**Guide**](/guide/introduction.md): A walkthrough for Apostrophe 3 features, differences from version 2, and more.
 - [**Reference**](/reference/README.md): Detailed reference sections for developers.
 
 ## About ApostropheCMS
