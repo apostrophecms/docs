@@ -63,18 +63,37 @@ module.exports = {
 };
 ```
 
-More than that, it means you can easily customize that "piece type" module in your project. You will see those changes not only in your blog post content type, but also in every other module that shares the same parent.
+More than that, it means you can easily customize that core ["piece type"](/reference/glossary.md#piece) module (`@apostrophecms/piece-type`) in your project. That will not only apply changes to the project's blog post content type, but also every piece type in Apostrophe core.
+
+Configuring a core or installed module is as simple as creating an `index.js` file for the module in your project. For example, we might want to log the title of every piece when it is published. We would then create the file:
+
+```
+modules/@apostrophecms/piece-type/index.js
+```
+
+Then add the event handler:
+
+```javascript
+// modules/@apostrophecms/piece-type/index.js
+module.exports = {
+  handlers(self) {
+    return {
+      afterPublish: {
+        logPublished (req, data) {
+          console.log(`Published ${data.published.title}`);
+        }
+      }
+    };
+  }
+};
+```
+
+Since every piece type extends that module, they all get the benefits of changes to it. And in the project code we only need to include our changes. All the rest of the module's code is untouched.
 
 The rest of the documentation will include many specific, practical examples of these ideas. For now a couple of main takeaways are:
   - The module API supports a consistent code structure regardless of the module's functionality
-  - It is easy to extend another module to use a variety of built-in features
-
-## MOAR
-- Altering options and behavior of installed and core modules (create an index.js in project)
-
-::: tip
-Breaking up modules into multiple files
-:::
+  - It is easy to extend another module to use built-in features
+  - Core and installed modules can also be configured in a project without disrupting inheritance
 
 ## Content schemas
 
