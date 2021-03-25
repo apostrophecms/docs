@@ -10,9 +10,9 @@ ApostropheCMS is a modern, open source, content management system. It's Javascri
 - a great UI for creating content, including in-context editing
 - robust localization to support any number of language or locale content variations
 
-For developers, it offers a site building API that gives you the power to fully customize the website experience without needing to be a Node.js expert. For content editors, the _true_ WYSIWYG experience supports improved editorial flow. In short, it recognizes pain points on both sides of the CMS experience and relieves them.
+For developers, it offers a site building API that gives you the power to fully customize the website experience without needing to be a Node.js expert. For content editors, the _true_ WYSIWYG experience supports improved editorial flow.
 
-We can start getting to know that system with two foundational concepts: modules and content schemas.
+In short, it recognizes pain points on both sides of the CMS experience and relieves them.
 
 ## The module system
 
