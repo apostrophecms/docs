@@ -31,9 +31,9 @@ module.exports = {
     'migration/',
     {
       title: 'Guide',
-      path: '/guide',
       collapsable: false,
       children: [
+        'guide/introduction.md',
         'guide/module-format-example.md',
         'guide/front-end-assets.md',
         {
