@@ -67,8 +67,8 @@ node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
 
-Start the site with `npm run dev`. The app will then watch for changes in client-side code, then restart the app and refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
+Start the site with `npm run dev`. The app will then watch for changes in client-side code, rebuilds it, then refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
 
 ::: tip
-If you are starting the site in a production or do not want the process to watch for changes, start the site with `node app.js`.
+If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js`.
 :::
