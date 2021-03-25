@@ -11,7 +11,7 @@ module.exports = {
         'getting-started/coming-soon.md'
       ]
     },
-    'guide/introduction.md',
+    'guide/',
     'reference/'
   ],
   '/guide': [
@@ -45,7 +45,7 @@ module.exports = {
   ],
   '/reference': [
     'getting-started/',
-    'guide/introduction.md',
+    'guide/',
     {
       title: 'Reference',
       path: '/reference',
