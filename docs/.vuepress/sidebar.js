@@ -11,16 +11,16 @@ module.exports = {
         'getting-started/coming-soon.md'
       ]
     },
-    'guide/',
+    'guide/introduction.md',
     'reference/'
   ],
   '/guide': [
     'getting-started/',
     {
       title: 'Guide',
-      path: '/guide',
       collapsable: false,
       children: [
+        'guide/introduction.md',
         'guide/module-format-example.md',
         'guide/front-end-assets.md',
         {
@@ -45,7 +45,7 @@ module.exports = {
   ],
   '/reference': [
     'getting-started/',
-    'guide/',
+    'guide/introduction.md',
     {
       title: 'Reference',
       path: '/reference',
