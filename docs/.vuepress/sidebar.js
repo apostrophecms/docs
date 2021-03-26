@@ -34,9 +34,7 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/introduction.md',
-        'guide/pieces.md',
         'guide/custom-page-types.md',
-        'guide/piece-pages.md',
         'guide/page-tree-navigation.md',
         {
           title: 'Widgets and templates',
@@ -48,6 +46,8 @@ module.exports = {
             'guide/widgets-and-templates/fragments.md'
           ]
         },
+        'guide/pieces.md',
+        'guide/piece-pages.md',
         'guide/front-end-assets.md',
         'guide/async-components.md',
         'guide/rest-apis.md'
