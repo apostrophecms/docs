@@ -92,12 +92,5 @@ module.exports = {
         'reference/module-api/module-options'
       ]
     }
-    // {
-    //   title: 'Reference',
-    //   // path: '/reference',
-    //   collapsable: false,
-    //   children: [
-    //   ]
-    // }
   ]
 };
