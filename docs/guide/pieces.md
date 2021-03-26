@@ -70,6 +70,9 @@ module.exports = {
       basics: {
         label: 'Basics',
         fields: [ 'title', 'price', 'description', 'image' ]
+        // 👆 'title' is included here because it is in the default `basics`
+        // group for all piece types. Since we are replacing that group, we
+        // include it ourselves.
       }
     }
   }
