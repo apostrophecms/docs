@@ -1,15 +1,39 @@
 module.exports = {
+  '/getting-started': [
+    {
+      title: 'Getting started',
+      path: '/getting-started',
+      collapsable: false,
+      children: [
+        'getting-started/technical-overview.md'
+      ]
+    },
+    'migration/',
+    'guide/',
+    'reference/'
+  ],
+  '/migration': [
+    'getting-started/',
+    {
+      title: 'Coming from A2',
+      path: '/migration',
+      collapsable: false,
+      children: [
+        'migration/major-changes.md',
+        'migration/upgrade.md'
+      ]
+    },
+    'guide/',
+    'reference/'
+  ],
   '/guide': [
+    'getting-started/',
+    'migration/',
     {
       title: 'Guide',
       collapsable: false,
       children: [
         'guide/introduction.md',
-        'guide/whats-new.md',
-        'guide/coming-soon.md',
-        'guide/major-changes.md',
-        'guide/upgrade.md',
-        'guide/starting-your-project.md',
         'guide/module-format-example.md',
         'guide/front-end-assets.md',
         {
@@ -33,7 +57,9 @@ module.exports = {
     'reference/'
   ],
   '/reference': [
-    'guide/introduction.md',
+    'getting-started/',
+    'migration/',
+    'guide/',
     {
       title: 'Reference',
       path: '/reference',
