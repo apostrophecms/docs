@@ -1,4 +1,4 @@
-# Getting started
+# Setting up
 
 ## System requirements
 

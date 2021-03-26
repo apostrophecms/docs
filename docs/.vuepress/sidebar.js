@@ -1,34 +1,22 @@
 module.exports = {
-  '/getting-started': [
+  '/guide': [
     {
       title: 'Getting started',
-      path: '/getting-started',
       collapsable: false,
       children: [
-        'getting-started/technical-overview.md'
+        'guide/setting-up.md',
+        'guide/technical-overview.md'
       ]
     },
-    'migration/',
-    'guide/',
-    'reference/'
-  ],
-  '/migration': [
-    'getting-started/',
     {
       title: 'Coming from A2',
-      path: '/migration',
       collapsable: false,
       children: [
-        'migration/major-changes.md',
-        'migration/upgrade.md'
+        'guide/new-apostrophe.md',
+        'guide/major-changes.md',
+        'guide/upgrade.md'
       ]
     },
-    'guide/',
-    'reference/'
-  ],
-  '/guide': [
-    'getting-started/',
-    'migration/',
     {
       title: 'Guide',
       collapsable: false,
@@ -57,8 +45,6 @@ module.exports = {
     'reference/'
   ],
   '/reference': [
-    'getting-started/',
-    'migration/',
     'guide/',
     {
       title: 'Reference',
