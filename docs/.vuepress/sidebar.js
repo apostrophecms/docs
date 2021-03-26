@@ -34,8 +34,10 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/introduction.md',
-        'guide/module-format-example.md',
-        'guide/front-end-assets.md',
+        'guide/pieces.md',
+        'guide/custom-page-types.md',
+        'guide/piece-pages.md',
+        'guide/page-tree-navigation.md',
         {
           title: 'Widgets and templates',
           path: '/guide/widgets-and-templates',
@@ -46,10 +48,7 @@ module.exports = {
             'guide/widgets-and-templates/fragments.md'
           ]
         },
-        'guide/custom-page-types.md',
-        'guide/page-tree-navigation.md',
-        'guide/pieces.md',
-        'guide/piece-pages.md',
+        'guide/front-end-assets.md',
         'guide/async-components.md',
         'guide/rest-apis.md'
       ]
@@ -108,7 +107,8 @@ module.exports = {
           path: '/reference/module-api',
           children: [
             'reference/module-api/module-overview',
-            'reference/module-api/module-options'
+            'reference/module-api/module-options',
+            'reference/module-api/example.md'
           ]
         }
       ]

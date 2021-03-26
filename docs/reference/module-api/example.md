@@ -1,8 +1,4 @@
----
-title: "Module Format Example"
----
-
-# Module Format Example
+# Module format example
 
 The new A3 module format is best understood by reviewing a complete example with all of the sections. As experienced A2 developers will know, this code goes in the module's `index.js` file.
 
