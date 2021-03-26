@@ -5,10 +5,22 @@ module.exports = {
       path: '/getting-started',
       collapsable: false,
       children: [
-        'getting-started/whats-new.md',
-        'getting-started/major-changes.md',
-        'getting-started/upgrade.md',
-        'getting-started/coming-soon.md'
+        'getting-started/technical-overview.md'
+      ]
+    },
+    'migration/',
+    'guide/',
+    'reference/'
+  ],
+  '/migration': [
+    'getting-started/',
+    {
+      title: 'Coming from A2',
+      path: '/migration',
+      collapsable: false,
+      children: [
+        'migration/major-changes.md',
+        'migration/upgrade.md'
       ]
     },
     'guide/',
@@ -16,6 +28,7 @@ module.exports = {
   ],
   '/guide': [
     'getting-started/',
+    'migration/',
     {
       title: 'Guide',
       collapsable: false,
@@ -45,6 +58,7 @@ module.exports = {
   ],
   '/reference': [
     'getting-started/',
+    'migration/',
     'guide/',
     {
       title: 'Reference',
