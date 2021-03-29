@@ -1,34 +1,22 @@
 module.exports = {
-  '/getting-started': [
+  '/guide': [
     {
       title: 'Getting started',
-      path: '/getting-started',
       collapsable: false,
       children: [
-        'getting-started/technical-overview.md'
+        'guide/setting-up.md',
+        'guide/technical-overview.md'
       ]
     },
-    'migration/',
-    'guide/',
-    'reference/'
-  ],
-  '/migration': [
-    'getting-started/',
     {
       title: 'Coming from A2',
-      path: '/migration',
       collapsable: false,
       children: [
-        'migration/major-changes.md',
-        'migration/upgrade.md'
+        'guide/new-apostrophe.md',
+        'guide/major-changes.md',
+        'guide/upgrade.md'
       ]
     },
-    'guide/',
-    'reference/'
-  ],
-  '/guide': [
-    'getting-started/',
-    'migration/',
     {
       title: 'Guide',
       collapsable: false,
@@ -52,65 +40,56 @@ module.exports = {
         'guide/async-components.md',
         'guide/rest-apis.md'
       ]
-    },
-    'reference/'
+    }
   ],
   '/reference': [
-    'getting-started/',
-    'migration/',
-    'guide/',
+    'reference/glossary',
     {
-      title: 'Reference',
-      path: '/reference',
+      title: 'Field types',
+      path: '/reference/field-types',
+      children: [
+        'reference/field-types/area',
+        'reference/field-types/array',
+        'reference/field-types/attachment',
+        'reference/field-types/boolean',
+        'reference/field-types/checkboxes',
+        'reference/field-types/color',
+        'reference/field-types/date',
+        'reference/field-types/email',
+        'reference/field-types/float',
+        'reference/field-types/integer',
+        'reference/field-types/oembed',
+        'reference/field-types/password',
+        'reference/field-types/range',
+        'reference/field-types/relationship',
+        'reference/field-types/relationship-reverse',
+        'reference/field-types/select',
+        'reference/field-types/string',
+        'reference/field-types/slug',
+        'reference/field-types/time',
+        'reference/field-types/url'
+      ]
+    },
+    {
+      title: 'API routes',
+      path: '/reference/api',
       collapsable: false,
       children: [
-        'reference/glossary',
-        {
-          title: 'Field types',
-          path: '/reference/field-types',
-          children: [
-            'reference/field-types/area',
-            'reference/field-types/array',
-            'reference/field-types/attachment',
-            'reference/field-types/boolean',
-            'reference/field-types/checkboxes',
-            'reference/field-types/color',
-            'reference/field-types/date',
-            'reference/field-types/email',
-            'reference/field-types/float',
-            'reference/field-types/integer',
-            'reference/field-types/oembed',
-            'reference/field-types/password',
-            'reference/field-types/range',
-            'reference/field-types/relationship',
-            'reference/field-types/relationship-reverse',
-            'reference/field-types/select',
-            'reference/field-types/string',
-            'reference/field-types/slug',
-            'reference/field-types/time',
-            'reference/field-types/url'
-          ]
-        },
-        {
-          title: 'API routes',
-          path: '/reference/api',
-          children: [
-            'reference/api/authentication',
-            'reference/api/pieces',
-            'reference/api/pages',
-            'reference/api/media',
-            'reference/api/field-formats'
-          ]
-        },
-        {
-          title: 'Module API',
-          path: '/reference/module-api',
-          children: [
-            'reference/module-api/module-overview',
-            'reference/module-api/module-options',
-            'reference/module-api/example.md'
-          ]
-        }
+        'reference/api/authentication',
+        'reference/api/pieces',
+        'reference/api/pages',
+        'reference/api/media',
+        'reference/api/field-formats'
+      ]
+    },
+    {
+      title: 'Module API',
+      path: '/reference/module-api',
+      collapsable: false,
+      children: [
+        'reference/module-api/module-overview',
+        'reference/module-api/module-options',
+        'reference/module-api/example.md'
       ]
     }
   ]
