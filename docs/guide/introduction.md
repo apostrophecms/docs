@@ -97,9 +97,9 @@ The rest of the documentation will include many specific, practical examples of 
 
 ## Content schemas
 
-The content field schema is another key concept that most Apostrophe development will use. The "schema" here simply refers to definition of fields allowed in a particular context (e.g., a page, piece, or widget type). This is important so that the user interface knows what fields to show editors. It also tells both the UI and server how to validate data for that context.
+The content field schema is another key concept in Apostrophe. The "schema" simply refers to the content fields for a particular page, piece, or widget type. In addition to setting fields for the user interface, it supports data validation.
 
-Our blog post module might look something like this with its field schema:
+Our blog post module's schema might look something like this:
 
 ```javascript
 // modules/blog-post/index.js
@@ -128,11 +128,11 @@ module.exports = {
 };
 ```
 
-The `fields` setting is the parent property for the schema configuration. In this case, it has two subsections: `add`, where fields are added to the schema, and `group`, which organizes the fields for the user interface.
+Content schemas are configured in the `fields` setting. In this case, `fields` has two subsections: `add`, where fields are added to the schema, and `group`, which organizes the fields for the user interface.
 
-Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section. In both cases, there are default fields, such as `title`, that are added and grouped for you already.
+Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section.
 
-See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/) for additional information.
+See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/) for more information.
 
 ### Using existing field groups
 
