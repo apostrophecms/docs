@@ -22,7 +22,7 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/introduction.md',
-        'guide/custom-page-types.md',
+        'guide/pages.md',
         'guide/page-tree-navigation.md',
         {
           title: 'Widgets and templates',
