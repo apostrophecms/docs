@@ -40,16 +40,7 @@ module.exports = {
     nav: [
       {
         text: 'Guide',
-        items: [
-          {
-            text: 'Getting Started',
-            link: '/getting-started/'
-          },
-          {
-            text: 'Guide',
-            link: '/guide/'
-          }
-        ]
+        link: '/guide/introduction.md'
       },
       {
         text: 'Reference',
