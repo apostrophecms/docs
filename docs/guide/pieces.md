@@ -1,8 +1,8 @@
 # Pieces
 
-"Pieces" in Apostrophe are standalone, structured content that has an assigned piece type. That type is what defines how the piece is structured, how end users interact with it, and how it might interact with other content. Blog posts, events, and people profiles are all common examples of piece types.
+"Piece types" are classifications for standalone, structured content. Each database document created with a piece type module is known as a "piece". The piece type defines how pieces are structured, how end users interact with them, and how they might interact with other content. Blog posts, events, and people profiles are all common examples of piece types.
 
-General use cases for pieces include:
+Use cases for pieces include:
 - Content that will be listed using pagination, such as **articles in a blog**
 - Content of a particular type that will help to organize other content, such as **teams that connect to people pieces**
 - Content that will be selectively displayed based on end user input, such as **products on a store's website**
