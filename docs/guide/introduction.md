@@ -132,4 +132,61 @@ The `fields` setting is the parent property for the schema configuration. In thi
 
 Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section. In both cases, there are default fields, such as `title`, that are added and grouped for you already.
 
-There are other elements to schemas, but that is generally how developers define them. There is additional reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/).
+See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/) for additional information.
+
+### Using existing field groups
+
+Fields that a piece type inherits will likely already be in field groups. This is certainly true for the default fields, `title`, `slug`, and `visibility`. You can add new fields into these groups and rearrange them if needed. There are a few things to keep in mind as you do.
+
+**It's fairly simple to see what the existing groups are.** Working with inherited fields and field groups is harder when you don't know what they are. You can log them in your terminal easily from the new module's [initialization function](/reference/module-api/module-overview.md#initialization-function).
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  init (self) {
+    console.log(self.fieldsGroups);
+
+    // Output:
+    // {
+    //   basics: { label: 'Basics', fields: [ 'title' ] },
+    //   utility: { fields: [ 'slug' ] },
+    //   permissions: { label: 'Permissions', fields: [ 'visibility' ], last: true }
+    // }
+  }
+};
+```
+
+The `init` function runs once on start up and has access to the module as an argument. By the time it runs, the field groups have been compiled into an object named `fieldsGroups`. If you haven't added any fields yet you can log this to see what you are working with.
+
+::: note
+You will see a `trash` field in the log output. The interface does not show this as a normal field, but
+:::
+
+**If you name an existing field group in your configuration, the fields in that group will be ungrouped.** For example, `title` is in the default "Basics" group. If you add a `basics` group in your field configuration and do not include `title` in its `fields` array, it will no longer be in any group. Fields that are not part of any group will appear in an "Ungrouped" tab in the interface.
+
+As in the example above, you could include `title` with the "Basics" group along with new fields.
+
+```js
+// modules/product/index.js
+module.exports = {
+  // ...
+  fields: {
+    add: {
+      // ...
+    },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: [ 'title', 'price', 'description', 'image' ]
+      }
+    }
+  }
+};
+```
+
+**You don't need a `basics` group.** There is nothing special about "Basics." It is a default group name, but if you place all of the fields from that group (or any inherited group) in a new one the group will no longer appear in the UI.
+
+`utility` _is_ a special group. It places fields in the right column of the content editor interface. You are allowed to add fields to that group and move existing fields.
+
+![The utility field group](/images/fields-utility-highlight.jpg)
