@@ -1,17 +1,17 @@
 # Pieces
 
-"Piece types" are classifications for standalone, structured content. Each database document created with a piece type module is known as a "piece". The piece type defines how pieces are structured, how end users interact with them, and how they might interact with other content. Blog posts, events, and people profiles are all common examples of piece types.
+"Piece types" are classifications for standalone, structured content. Individual entries created with a piece type are known as "pieces". The piece type defines how pieces are structured, how end users interact with them, and how they might interact with other content. Products, events, and authors are all common examples of piece types.
 
 Use cases for pieces include:
-- Content that will be listed using pagination, such as **articles in a blog**
-- Content of a particular type that will help to organize other content, such as **teams that connect to people pieces**
-- Content that will be selectively displayed based on end user input, such as **products on a store's website**
+- Articles in a blog
+- Authors to associate with multiple articles
+- Individual products in a store
 
-Pieces are distinct from "pages" in Apostrophe in that they do not inherently have an internal hierarchy: generally speaking, one piece is not the "parent" of another of the same type. Pieces also do not necessarily have dedicated web pages for each one. In the "teams" and "people" example, there may be a web page for each team, but the people are only displayed within those team pages -- not on their own pages.
+Unlike Apostrophe ["pages"](/guide/pages.md), pieces do not always have a dedicated web page. In the "articles" and "authors" example, there would be a web page for each article, but there may not be a page for each author.
 
 ## Creating a piece type
 
-Each piece type has its own module in the codebase. At the most basic level, the only critical configuration for a piece type module is to extend the `@apostrophecms/piece-type` module. Adding only that configuration, and instantiating the module in `app.js`, you will get a piece type that you can use to create new pieces.
+You can create a new piece type by adding a module that extends the `@apostrophecms/piece-type` module. After instantiating in `app.js`, a piece type that had no other configuration would have the default fields **title**, **slug**, and **visibility**.
 
 ```js
 // modules/product/index.js
@@ -30,9 +30,7 @@ require('apostrophe')({
 });
 ```
 
-If you did nothing more than that, this product content would only have the fields that all pieces get by default: **title**, **slug**, and **visibility** (whether public or requiring login). There are cases where that is enough, but more often you will add additional configuration.
-
-A more realistic product piece module might also include [schema fields](/reference/field-types/) for the product price, description, and photo, as well as explicit labels for the UI.
+A more realistic product piece might also include [fields](/reference/field-types/) for the product price, description, and photo, as well as explicit labels for the UI.
 
 ```js
 // modules/product/index.js
