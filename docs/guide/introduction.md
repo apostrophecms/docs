@@ -18,13 +18,13 @@ In short, it recognizes pain points on both sides of the CMS experience and reli
 
 Apostrophe code is organized in a system of modules. Modules are the building blocks we use to build Apostrophe projects — as well as the CMS itself.
 
-Each module defines a specific set of functionality, from configuring blog post fields  to governing internationalization. Common Apostrophe project modules will define custom content types, page types, or editable widget types.
+Each module defines a specific set of functionality, from configuring blog post fields to governing internationalization. Common Apostrophe project modules will define custom content types, page types, or editable widget types.
 
-All modules use [the same API](/reference/module-api/). That shared foundation means that you can give your blog post module powerful features, such as custom command line tasks and API routes. It's the same foundation the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
+All modules use [the same API](/reference/module-api/). That shared foundation means that all have access to powerful features, such as custom command line tasks and API routes. It's the same API the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
 
 ### Setting up a module
 
-Modules are organized in a folder at the root of a project appropriately named `modules`. Each module has a dedicated directory inside that with an `index.js` file that contains its configurations. So you would define a blog post module in the file:
+Modules are organized in a folder at the root of a project appropriately named `modules`. Each module has a dedicated directory with an `index.js` file that contains its configurations. So you would define a blog post module in the file:
 
 ```
 modules/blog-post/index.js
@@ -39,7 +39,7 @@ module.exports = {
 }
 ```
 
-The final step to this minimalist module example is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its own `modules` property.
+The final step to this minimalist module example is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its `modules` object.
 
 ```js
 // app.js
@@ -54,7 +54,7 @@ The module API supports many different configuration options. See the [module AP
 
 ### Module inheritance
 
-Inheritance is the glue of the module system. Every module, other than the root module, extends another one. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, has a huge set of features you never have to write.
+Inheritance is the glue of the module system. Every module, other than the root module, extends another module. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
 
 ```javascript
 // modules/blog-post/index.js
