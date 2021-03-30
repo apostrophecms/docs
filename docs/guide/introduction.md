@@ -136,7 +136,7 @@ See the reference documentation on [the `fields` setting](/reference/module-api/
 
 ### Using existing field groups
 
-Fields that a piece type inherits will likely already be in field groups. This is certainly true for the default fields, `title`, `slug`, and `visibility`. You can add new fields into these groups and rearrange them if needed. There are a few things to keep in mind as you do.
+Fields that a piece type inherits will likely already be in field groups. This includes the default fields `title`, `slug`, and `visibility`. You can add new fields into these groups and rearrange them if needed. There are a few things to keep in mind as you do.
 
 **It's fairly simple to see what the existing groups are.** Working with inherited fields and field groups is harder when you don't know what they are. You can log them in your terminal easily from the new module's [initialization function](/reference/module-api/module-overview.md#initialization-function).
 
@@ -160,7 +160,7 @@ module.exports = {
 The `init` function runs once on start up and has access to the module as an argument. By the time it runs, the field groups have been compiled into an object named `fieldsGroups`. If you haven't added any fields yet you can log this to see what you are working with.
 
 ::: note
-You will see a `trash` field in the log output. The interface does not show this as a normal field, but
+You will see a `trash` field in the log output. The interface does not show this as a normal field, but it is registered as one to support editing via the REST API.
 :::
 
 **If you name an existing field group in your configuration, the fields in that group will be ungrouped.** For example, `title` is in the default "Basics" group. If you add a `basics` group in your field configuration and do not include `title` in its `fields` array, it will no longer be in any group. Fields that are not part of any group will appear in an "Ungrouped" tab in the interface.
