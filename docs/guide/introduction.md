@@ -5,7 +5,7 @@
 ApostropheCMS is a modern, open source, content management system. It's Javascript from front to back, with a Vue.js user interface and Node.js on the server. Importantly, it has everything you might want from a modern CMS, including:
 
 - a headless API built-in
-- a content schema API to easily create any kind of content types you need
+- a content schema API to create any kind of content types you need
 - extensibility through a module ecosystem
 - a great UI for creating content, including in-context editing
 - robust localization to support any number of language or locale content variations
@@ -63,7 +63,7 @@ module.exports = {
 };
 ```
 
-More than that, it means you can easily customize that core ["piece type"](/reference/glossary.md#piece) module (`@apostrophecms/piece-type`) in your project. That will not only apply changes to the project's blog post content type, but also every piece type in Apostrophe core.
+More than that, it means you can customize that core ["piece type"](/reference/glossary.md#piece) module (`@apostrophecms/piece-type`) in your project. That will not only apply changes to the project's blog post content type, but also every piece type in Apostrophe core.
 
 Configuring a core or installed module is as simple as creating an `index.js` file for the module in your project. For example, we might want to log the title of every piece when it is published. We would then create the file:
 
@@ -138,7 +138,9 @@ See the reference documentation on [the `fields` setting](/reference/module-api/
 
 Fields that a piece type inherits will likely already be in field groups. This includes the default fields `title`, `slug`, and `visibility`. You can add new fields into these groups and rearrange them if needed. There are a few things to keep in mind as you do.
 
-**It's fairly simple to see what the existing groups are.** Working with inherited fields and field groups is harder when you don't know what they are. You can log them in your terminal easily from the new module's [initialization function](/reference/module-api/module-overview.md#initialization-function).
+#### It's fairly simple to see what the existing groups are
+
+ Working with inherited fields and field groups can be difficult when you don't know what they are. You can make it easier by logging them in your terminal from the module's [initialization function](/reference/module-api/module-overview.md#initialization-function).
 
 ```javascript
 // modules/product/index.js
@@ -163,7 +165,9 @@ The `init` function runs once on start up and has access to the module as an arg
 You will see a `trash` field in the log output. The interface does not show this as a normal field, but it is registered as one to support editing via the REST API.
 :::
 
-**If you name an existing field group in your configuration, the fields in that group will be ungrouped.** For example, `title` is in the default "Basics" group. If you add a `basics` group in your field configuration and do not include `title` in its `fields` array, it will no longer be in any group. Fields that are not part of any group will appear in an "Ungrouped" tab in the interface.
+#### Reusing an inherited group's name will ungroup its original fields
+
+For example, `title` is in the default "Basics" group. If you add a `basics` group in your field configuration and do not include `title` in its `fields` array, it will no longer be in any group. Fields that are not part of any group will appear in an "Ungrouped" tab in the interface.
 
 As in the example above, you could include `title` with the "Basics" group along with new fields.
 
@@ -185,7 +189,9 @@ module.exports = {
 };
 ```
 
-**You don't need a `basics` group.** There is nothing special about "Basics." It is a default group name, but if you place all of the fields from that group (or any inherited group) in a new one the group will no longer appear in the UI.
+#### You don't need a `basics` group
+
+There is nothing special about "Basics." It is a default group name, but if you place all of the fields from that group (or any inherited group) in a new one the group will no longer appear in the UI.
 
 `utility` _is_ a special group. It places fields in the right column of the content editor interface. You are allowed to add fields to that group and move existing fields.
 
