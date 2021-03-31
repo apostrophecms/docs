@@ -211,6 +211,8 @@ Apostrophe templates have data available to add navigation based on the page tre
 | `data.page._ancestors` | Page data for pages one level *above* the active page. |
 | `data.page._children` | Page data for pages one level *below* the active page. |
 
+By default, one level of children are available on each ancestor, as well as on the home page and `data.page`.
+
 With that available data, we could construct navigation for the website header using the Nunjucks `{% for %}` loop tag. The `layout.html` `beforeMain` block could look like:
 
 ```django

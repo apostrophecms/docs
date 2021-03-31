@@ -23,7 +23,6 @@ module.exports = {
       children: [
         'guide/introduction.md',
         'guide/pages.md',
-        'guide/page-tree-navigation.md',
         {
           title: 'Widgets and templates',
           path: '/guide/widgets-and-templates',
