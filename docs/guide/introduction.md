@@ -24,7 +24,7 @@ All modules use [the same API](/reference/module-api/). That shared foundation m
 
 ### Setting up a module
 
-Modules are organized in a folder at the root of a project appropriately named `modules`. Each module has a dedicated directory with an `index.js` file that contains its configurations. So you would define a blog post module in the file:
+Modules are organized in a folder at the root of a project named `modules`. Each module has a dedicated directory with an `index.js` file that contains its configurations. For example, you would define a blog post module in the file:
 
 ```
 modules/blog-post/index.js
@@ -39,7 +39,7 @@ module.exports = {
 }
 ```
 
-The final step to this minimalist module example is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its `modules` object.
+The final step to use this blog post module is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its `modules` object.
 
 ```js
 // app.js
