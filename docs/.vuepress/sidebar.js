@@ -22,6 +22,8 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/introduction.md',
+        'guide/modules.md',
+        'guide/content-schema.md',
         'guide/custom-page-types.md',
         'guide/page-tree-navigation.md',
         {
