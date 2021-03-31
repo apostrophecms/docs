@@ -1,7 +1,3 @@
----
-title: "Coming from A2"
----
-
 # A Brand New Apostrophe
 
 Apostrophe 3 introduces a number of new features for developers and content-editors. Its been re-engineered from the ground-up to provide a best-in-class experience for organizations large and small.
