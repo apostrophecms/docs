@@ -46,6 +46,27 @@ module.exports = {
   '/reference': [
     'reference/glossary',
     {
+      title: 'API routes',
+      path: '/reference/api',
+      collapsable: false,
+      children: [
+        'reference/api/authentication',
+        'reference/api/pieces',
+        'reference/api/pages',
+        'reference/api/media',
+        'reference/api/field-formats'
+      ]
+    },
+    {
+      title: 'Module API',
+      path: '/reference/module-api',
+      collapsable: false,
+      children: [
+        'reference/module-api/module-overview',
+        'reference/module-api/module-options'
+      ]
+    },
+    {
       title: 'Field types',
       path: '/reference/field-types',
       children: [
@@ -69,27 +90,6 @@ module.exports = {
         'reference/field-types/slug',
         'reference/field-types/time',
         'reference/field-types/url'
-      ]
-    },
-    {
-      title: 'API routes',
-      path: '/reference/api',
-      collapsable: false,
-      children: [
-        'reference/api/authentication',
-        'reference/api/pieces',
-        'reference/api/pages',
-        'reference/api/media',
-        'reference/api/field-formats'
-      ]
-    },
-    {
-      title: 'Module API',
-      path: '/reference/module-api',
-      collapsable: false,
-      children: [
-        'reference/module-api/module-overview',
-        'reference/module-api/module-options'
       ]
     }
   ]
