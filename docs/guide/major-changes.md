@@ -36,7 +36,9 @@ Your pieces that benefit from the idea of "tagging" should have a relationship (
 
 ### Page types are always modules
 
-In A3 every page type has a corresponding module. The home page, which always exists, is powered by the `@apostrophecms/home-page` module. This is already configured in the [A3 Boilerplate](https://github.com/apostrophecms/a3-boilerplate/).
+In A3 every page type has a corresponding module. Page templates live in the page type module rather than in the base page module.
+
+The home page, which always exists, is powered by the `@apostrophecms/home-page` module. This is already configured in the [A3 Boilerplate](https://github.com/apostrophecms/a3-boilerplate/).
 
 ### Areas are always fields
 
