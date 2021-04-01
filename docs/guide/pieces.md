@@ -1,6 +1,6 @@
 # Pieces
 
-"Piece types" are classifications for standalone, structured content. Individual entries created with a piece type are known as "pieces". The piece type defines how pieces are structured, how end users interact with them, and how they might interact with other content. Products, events, and authors are all common examples of piece types.
+"Piece types" are classifications for standalone, structured content. Individual entries created with a piece type are known as "pieces". Products, events, and authors are all common examples of piece types. The piece type defines how pieces are structured, how end users interact with them, and how they might interact with other content.
 
 Use cases for pieces include:
 - Articles in a blog
