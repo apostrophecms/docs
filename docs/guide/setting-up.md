@@ -51,7 +51,7 @@ require('apostrophe')({
   // ...
 ```
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret). The boilerplate has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The boilerplate has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
 ```javascript
 // app.js
