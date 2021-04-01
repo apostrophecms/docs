@@ -24,7 +24,7 @@ require('apostrophe')({
 ```
 
 <!-- TODO: Replace area field link to a guide page when available. -->
-If we add a subtitle field and an [area field](/reference/field-types/area.md) for rich text and images, the Default page type would look like:
+If we add a string field for the subtitle and an [area field](/reference/field-types/area.md) for rich text and images, the Default page type would look like:
 
 ```js
 // modules/default-page/index.js
@@ -58,9 +58,10 @@ See the [content schema](/guide/introduction.md#content-schemas) page for more o
 
 ## Page template essentials
 
-You will need to add a template file for each page type. The only exception to that rule is if your page type module extends another page type that already has a template.
+Each page type requires a template. The only exception to that rule is if a page type extends another page type that already has a template.
 
-Page templates are added in a `views` directory in the module as `page.html`. The template for the previous example's default page would be `modules/default-page/views/page.html`. A very simple page template for the Default page might look like this:
+Page templates are added in a `views` directory for the page type as `page.html`. The template for the previous example's default page would be `modules/default-page/views/page.html`. A very simple page template for the Default page might look like this:
+<!-- TODO: Consider adding a file tree component when available. -->
 
 ```django
 {# modules/default-page/views/page.html #}
@@ -120,9 +121,7 @@ The layout template might look something like this:
 {% endblock %}
 ```
 
-Apostrophe uses the Nunjucks template language, which has a [block system](https://mozilla.github.io/nunjucks/templating.html#block) for injecting markup into lower-level templates. The block system involves placing a `block` tag in the root-level template file, then using those blocks in higher-level templates to insert markup.
-
-In the Default page example, the layout template's `beforeMain` and `afterMain` blocks are not replaced, so rendered Default pages use that markup as-is. The Default page template does use the `main` block, so the layout template's version is replaced.
+Apostrophe uses the Nunjucks template language, which has a [block system](https://mozilla.github.io/nunjucks/templating.html#block) for injecting markup into lower-level templates. The block system involves placing a `block` tag in the root-level template file, then using those blocks in higher-level templates to insert markup. Since we used the `main` block here it will overwrite the layout template's `main` block.
 
 ### Page data is on `data.page`
 
@@ -168,7 +167,7 @@ This is a special tag in Apostrophe used to let editors add and manage content w
 
 ![A page editing modal with the type field highlighted](/images/page-type-select.jpg)
 
-This is a core module option, but you can add your own configuration by giving it an `index.js` file in your project code: `modules/@apostrophecms/page/index.js`. You'll then configure it's `types` option with all page types you want to allow.
+This is a core module option, but you can add your own configuration by giving it an `index.js` file in your project: `modules/@apostrophecms/page/index.js`. You'll then configure it's `types` option with all page types you want to allow.
 
 ```javascript
 // modules/@apostrophecms/page/index.js
