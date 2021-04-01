@@ -40,6 +40,10 @@ The configuration above shows a landing page type with one area field named `mai
 
 ![The landing page main area with the menu open, showing available widgets](/images/area-in-context.jpg)
 
+### Leave `-widget` out of area configuration
+
+If you dig into the Apostrophe code, or read the guide to custom widget types, you may already know that widget module names end with `-widget`, such as `@apostrophecms/rich-text-widget`. This suffix is left off when configuring areas. The area knows these are widgets already and it does not seem necessary to require developers don't need to write it over and over.
+
 ### Limiting the number of widgets in an area
 
 To limit the number of widgets allowed in a specific area, include a `max` option.
@@ -70,4 +74,74 @@ introduction: {
     max: 1
   }
 }
+```
+
+## Adding areas to templates
+
+Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
+
+```django
+{% area context, name %}
+```
+
+The **context** refers to the data object that the area field belongs to. This could be the a page, a piece, or a widget. In the landing page example above, the `main` area belongs to a landing page. In that case, the context would be that page's data object in the template: `data.page`.
+
+```django
+{% area data.page, main %}
+```
+
+The template tag knows to use the area data on `data.page.main`, check for the widgets allowed in that area, and render the area using the correct widget templates.
+
+### Passing context options
+
+Any widget options that the server needs to know about must be included in the area field configuration. For example, you can configure the rich text widget to use particular formatting controls. The server needs to know those to properly validate user input.
+
+```javascript
+main: {
+  type: 'area',
+  options: {
+    widgets: {
+      '@apostrophecms/rich-text': {
+        toolbar: [
+          'bold',
+          'italic',
+          'strike',
+          'link'
+        ]
+      }
+    }
+  }
+}
+```
+
+::: note
+Learn more about rich text options in [the section on core widgets](/guide/areas-and-widgets/core-widgets.md).
+:::
+
+In other situations, you may want to **specify options in a template that apply to that context**, but not to other places where the area is displayed. One example of this is the `sizes` attribute for the core image widget's `img` tag. Since it is used to tell browsers what file versions to use in a responsive image, that may be different when that image is used as a small thumbnail as opposed to when it is a larger featured photo.
+
+These can be added in an object after the area tag arguments using the `with` keyword.
+
+```django
+{% area data.page, 'main' with {
+  '@apostrophecms/image': {
+    sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
+  }
+} %}
+```
+
+The object following `with` should include keys matching widget type names, without the `-widget` suffix (e.g., the `@apostrophecms/image`). The context template will pass those options into the proper widget template as `data.contextOptions`. In the example above, the core image widget template, *and only that template*, would be able to use the data as:
+
+```django
+{{ data.contextOptions.sizes }}
+```
+
+Any context options for widget types not allowed in the area are ignored. So in this next example, since the area is not configured to use a `fake-widget`, that option would not be passed into any widget templates.
+
+```django
+{% area data.page, 'main' with {
+  'fake': {
+    color: 'blue'
+  }
+} %}
 ```
