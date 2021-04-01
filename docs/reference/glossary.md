@@ -62,7 +62,7 @@ A widget is a single section of content in an [area](#area) that can usually be 
 
 An area is a special field in a piece or page where you can add any number of widgets of any type, as configured for that piece or page type. Editors can add, edit, move, and remove widgets within the area. Widgets in the area maintain their order for consistent displaying.
 
-Areas are inserted into your templates using the [`area` template tag](/guide/widgets-and-templates.md#home-page-template). They are implemented by the `@apostrophecms/area` module.
+Areas are inserted into your templates using the [`area` template tag](/guide/areas-and-widgets/). They are implemented by the `@apostrophecms/area` module.
 
 ## Template
 
