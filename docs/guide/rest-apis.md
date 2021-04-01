@@ -29,7 +29,7 @@ If we add an `apos-mode` parameter using the same route, we can get the draft ve
 Apostrophe provides many REST APIs, but also provides a convenient way to write your own. You don't need this for pieces or pages, but it can be useful for wrapping your own project-specific backends:
 
 ```js
-// in ./app.js
+// app.js
 require('apostrophe') {
   modules: {
     mydatabase: {}
@@ -38,14 +38,14 @@ require('apostrophe') {
 ```
 
 ```js
-// in ./modules/mydatabase/index.js
+// modules/mydatabase/index.js
 
 module.exports = {
 
   // This module does not extend anything. (Technically, it extends
   // @apostrophecms/module, the default base class.)
 
-  restApiRoutes(self, options) {
+  restApiRoutes(self) {
     return {
       // GET /api/v1/product
       async getAll(req) {
@@ -81,9 +81,9 @@ module.exports = {
 
   // apiRoutes are also helpful, for related edge cases that don't
   // match up well with the REST conventions.
-  // This route becomes accessible as: POST /api/v1/mydatabase/merge
+  // This route becomes accessible as: `POST /api/v1/mydatabase/merge`
 
-  apiRoutes(self, options) {
+  apiRoutes(self) {
     return {
       post: {
         async merge(req) {

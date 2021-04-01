@@ -8,12 +8,13 @@ Let's add a two-column layout widget to the site.
 
 
 ```javascript
-// in app.js, after the other modules, configure a new one
+// app.js
+// After the other modules, configure a new one
     'two-column-widget': {}
 ```
 
 ```js
-// in modules/@apostrophecms/home-page/index.js
+// modules/@apostrophecms/home-page/index.js
 //
 // Add our new widget to the "widgets" property for
 // the "main" area
@@ -33,7 +34,7 @@ Let's add a two-column layout widget to the site.
 ```
 
 ```js
-// in modules/two-column-widget/index.js
+// modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -63,7 +64,7 @@ module.exports = {
 ```
 
 ```django
-{# in modules/two-column-widget/views/widget.html #}
+{# modules/two-column-widget/views/widget.html #}
 <div class="two-column-layout-container">
   <div class="two-column-layout column-one">
     {% area data.widget, 'columnOne' %}
@@ -75,7 +76,7 @@ module.exports = {
 ```
 
 ```scss
-// in src/index.scss or a file imported by it
+// src/index.scss or a file imported by it
 .two-column-layout-container {
   display: flex;
   flex-direction: row;

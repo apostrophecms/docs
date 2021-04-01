@@ -14,7 +14,7 @@ Modules created at project level live in subdirectories of `/modules`. For examp
 
 A "doc" refers to a content-related document in Apostrophe's database. They are in the `aposDocs` MongoDB collection.
 
-Docs contain various properties, including [areas](#area), as described by a schema configured for their **document types**. Each doc type will extend `@apostrophecms/piece-type`, `@apostrophecms/page-type`, `@apostrophecms/piece-page-type`, or another doc type that itself extends one of those core modules.
+Docs contain various properties, including [areas](#area), as described by a schema configured for their **document types** (or "doc type"). Each doc type will extend `@apostrophecms/piece-type`, `@apostrophecms/page-type`, `@apostrophecms/piece-page-type`, or another doc type that itself extends one of those core modules.
 
 At a minimum, a doc has unique `_id` and `slug` properties. The `type` property identifies the doc type and determines what other behaviors it might have. The `@apostrophecms/doc` module provides methods for working with docs, including the `apos.docs.getManager(doc.type)` method, which returns a reference to the module suited to working with that type of document.
 
@@ -44,6 +44,15 @@ Show page templates (`show.html`), do have access to their parent index page's `
 ## Global doc
 
 There is a single doc with the slug, `global`, which is always loaded and available to page templates as `data.global`. This is useful for shared, site-wide headers and footers that are editable, etc. It is managed by the `@apostrophecms/global` module.
+
+## Slug
+
+The slug of an Apostrophe doc is a string that uniquely identifies that doc within the database. Apostrophe will enforce that no two docs have the same slug. Slugs _can_ be changed, unlike the `_id` property of the database document. The Apostrophe user interface and REST API will suggest slugs automatically based on the document's title on creation.
+
+If the doc is a page, or a piece with a [show page](#show-page), the slug is used as a component of the page URL. This works differently for pages and pieces.
+
+- [Page](#page) slugs begin with a forward slash and, by default, include sections for their parent pages, e.g., `/previous-page/new-page` for a page titled "New Page" with a parent page of "Previous Page." Editing a page slug will not effect the actual page tree structure.
+- [Piece](#piece) slugs do not begin with a forward slash nor do they include reference to an [index page](#index-page). A piece titled "New Piece" will get the suggested slug of `new-piece` if no other doc has that slug already.
 
 ## Widget
 

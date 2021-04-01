@@ -2,14 +2,27 @@ const sidebar = require('./sidebar');
 
 module.exports = {
   title: 'Apostrophe 3 Documentation',
-  plugins: {
-    '@vuepress/google-analytics': {
-      ga: 'UA-106613728-6'
-    },
-    sitemap: {
-      hostname: 'https://docs.apostrophecms.com'
-    }
-  },
+  plugins: [
+    [
+      '@vuepress/google-analytics',
+      {
+        ga: 'UA-106613728-6'
+      }
+    ],
+    [
+      'sitemap',
+      { hostname: 'https://docs.apostrophecms.com' }
+    ],
+    [
+      'vuepress-plugin-container',
+      {
+        type: 'note',
+        defaultTitle: {
+          '/': 'NOTE'
+        }
+      }
+    ]
+  ],
   themeConfig: {
     repo: 'https://github.com/apostrophecms/a3-boilerplate/',
     docsRepo: 'https://github.com/apostrophecms/a3-docs',
@@ -27,7 +40,7 @@ module.exports = {
     nav: [
       {
         text: 'Guide',
-        link: '/guide/'
+        link: '/guide/introduction.md'
       },
       {
         text: 'Reference',

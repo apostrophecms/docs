@@ -11,14 +11,15 @@ This module is our own project-level module, so we do not use the `@apostrophecm
 Here's how we activate the module in `app.js`:
 
 ```javascript
-// in app.js, after the other modules, configure a new one
+// app.js, after the other modules
+// Configure a new one
     'default-page': {}
 ```
 
 And here's the configuration in `modules/default-page/index.js`, leaving out things that are identical to the home page configuration:
 
 ```javascript
-// in modules/default-page/index.js
+// modules/default-page/index.js
 module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
@@ -51,7 +52,7 @@ module.exports = {
 In our configuration of the `@apostrophecms/page` module, which manages the entire page tree, we add our new page type to the list of choices:
 
 ```js
-// in modules/@apostrophecms/page/index.js
+// modules/@apostrophecms/page/index.js
 
 module.exports = {
   options: {

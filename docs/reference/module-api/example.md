@@ -1,8 +1,4 @@
----
-title: "Module Format Example"
----
-
-# Module Format Example
+# Module format example
 
 The new A3 module format is best understood by reviewing a complete example with all of the sections. As experienced A2 developers will know, this code goes in the module's `index.js` file.
 
@@ -22,7 +18,7 @@ module.exports = {
     pluralLabel: 'Products'
   },
 
-  // `fields` can optionally be a function that takes (self, options)
+  // `fields` can optionally be a function that takes (self)
   // and returns an object, if you need access to the options to decide
   // what fields to include
   fields: {
@@ -59,13 +55,12 @@ module.exports = {
   // This is only run when Apostrophe first
   // starts up. Formerly known as `afterConstruct`.
   // Can use "await".
-  async init(self, options) {},
+  async init(self) {},
 
   // Methods that can be invoked on `self`, or from
   // another module via our alias, `self.apos.product`.
-  // `self` refers to this module, `options` contains the
-  // option settings configured for it
-  methods(self, options) {
+  // `self` refers to this module.
+  methods(self) {
     return {
       async averagePrice(req) {
         let sum = 0;
@@ -82,7 +77,7 @@ module.exports = {
   },
 
   // Extend methods we inherited from `@apostrophecms/piece-type`
-  extendMethods(self, options) {
+  extendMethods(self) {
     return {
       // Extend a method we inherited from `@apostrophecms/piece-type`.
       // The arguments are the same, plus `_super` is always the
@@ -102,7 +97,7 @@ module.exports = {
   //
   // `extendComponents` is also supported, like `extendMethods`
 
-  components(self, options) {
+  components(self) {
     return {
       // Invoke from any template like this:
       // {% component 'product:latest' with { max: 1 } %}
@@ -128,7 +123,7 @@ module.exports = {
   //
   // `extendHelpers` is also supported, like `extendMethods`
 
-  helpers(self, options) {
+  helpers(self) {
     return {
       discountPrice(product) {
         return '$' + (product.price * 0.90).toFixed(2);
@@ -144,12 +139,12 @@ module.exports = {
   //
   // `extendApiRoutes` is also supported, like extendMethods
 
-  apiRoutes(self, options) {
+  apiRoutes(self) {
     return {
-      // This section contains all the GET routes. Also
+      // This section contains all the `GET` routes. Also
       // supported: `post`, `patch`, `delete`
       get: {
-        // Accessible via GET request to: /api/v1/product/cheapest
+        // Accessible via `GET` request to: /api/v1/product/cheapest
         //
         // Function names like `cheapestOne` become URLs like `cheapest-one`
         //
@@ -181,7 +176,7 @@ module.exports = {
   // extendRestApiRoutes is also useful when inheriting from
   // a base class, and works just like `extendMethods`
 
-  // restApiRoutes(self, options) {
+  // restApiRoutes(self) {
   //   return {
   //     // GET /api/v1/product
   //     async getAll(req) {
@@ -220,10 +215,10 @@ module.exports = {
   // to an HTTP request, and send the rendered markup back
   // to the client
 
-  renderRoutes(self, options) {
+  renderRoutes(self) {
     return {
       get: {
-        // Accessible via GET as /api/v1/product/latest
+        // Accessible via `GET` as /api/v1/product/latest
         async latest(req) {
           const products = await self.find(req).sort({
             createdAt: -1
@@ -236,7 +231,7 @@ module.exports = {
     };
   },
 
-  routes(self, options) {
+  routes(self) {
     return {
       get: {
         // Old-fashioned Express route. Useful if you need
@@ -260,7 +255,7 @@ module.exports = {
   // response to events. `extendHandlers` is also available and
   // works just like `extendMethods`
 
-  handlers(self, options) {
+  handlers(self) {
     return {
       // Since this event is emitted by the same module,
       // we do not have to write `'product:beforeInsert'`
@@ -345,12 +340,12 @@ module.exports = {
   // and a `middleware` property, in which case it would run `before`
   // the middleware of the module with the specified name
 
-  middleware(self, options) {
+  middleware(self) {
     return {
       ours(req, res, next) {
         // Restrict access by IP address, in a crude way
-        const whitelist = [ '127.0.0.1', '::1' ];
-        if (!whitelist.includes(req.connection.remoteAddress)) {
+        const allowlist = [ '127.0.0.1', '::1' ];
+        if (!allowlist.includes(req.connection.remoteAddress)) {
           return res.status(403).send('forbidden');
         }
         return next();
@@ -358,7 +353,7 @@ module.exports = {
     };
   },
 
-  tasks(self, options) {
+  tasks(self) {
     return {
       // If the module is named product, then you can
       // run this CLI task by typing:
@@ -377,6 +372,18 @@ module.exports = {
         }
       }
     }
+  },
+
+  // Make SVG icons available for UI configuration if not already included
+  // in core. Icons must be available through the Material Design Icons (MDI)
+  // package: https://www.npmjs.com/package/@mdi/svg.
+  // These are configured as:
+  // 'reference-name-for-apostrophe': 'MaterialDesignIconsName'.
+  // The example below lets this and other modules use the MDI icon "AirHorn"
+  // using the keyword, `airhorn`.
+
+  icons: {
+    'airhorn': 'AirHorn'
   }
 
 };
@@ -387,7 +394,7 @@ module.exports = {
 This is sometimes done in A2 to keep the file manageable in size. You can do the same trick in A3, breaking the module down into its sections:
 
 ```js
-// in ./modules/product/index.js
+// modules/product/index.js
 module.exports = {
   // ...
   methods: require('./methods.js'),
@@ -396,8 +403,8 @@ module.exports = {
 ```
 
 ```js
-// in methods.js, in the same folder
-module.exports = (self, options) => {
+// modules/product/methods.js
+module.exports = (self) => {
   return {
     async averagePrice(req) {
       // ...
@@ -407,8 +414,8 @@ module.exports = (self, options) => {
 ```
 
 ```js
-// in api-routes.js, in the same folder
-module.exports = (self, options) => {
+// modules/product/api-routes.js
+module.exports = (self) => {
   return {
     get: {
       async cheapest(req) {
