@@ -26,19 +26,21 @@ module.exports = {
         'guide/content-schema.md',
         'guide/pages.md',
         {
-          title: 'Widgets and templates',
-          path: '/guide/widgets-and-templates',
+          title: 'Areas and widgets',
+          // What are widgets and areas and how you configure them
+          path: '/guide/areas-and-widgets',
           children: [
-            'guide/widgets-and-templates/home-page.md',
-            'guide/widgets-and-templates/standard-widgets.md',
-            'guide/widgets-and-templates/custom-widgets.md',
-            'guide/widgets-and-templates/fragments.md'
+            'guide/areas-and-widgets/core-widgets.md',
+            'guide/areas-and-widgets/custom-widgets.md'
+            // - Basic creation
+            // - Widget players
           ]
         },
         'guide/pieces.md',
         'guide/piece-pages.md',
         'guide/front-end-assets.md',
         'guide/async-components.md',
+        'guide/template-fragments.md',
         'guide/rest-apis.md'
       ]
     }
