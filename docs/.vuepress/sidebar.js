@@ -24,8 +24,7 @@ module.exports = {
         'guide/introduction.md',
         'guide/modules.md',
         'guide/content-schema.md',
-        'guide/custom-page-types.md',
-        'guide/page-tree-navigation.md',
+        'guide/pages.md',
         {
           title: 'Widgets and templates',
           path: '/guide/widgets-and-templates',
