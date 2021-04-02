@@ -31,15 +31,16 @@ export default {
 </script>
 
 <style lang="stylus">
-@require '../styles/wrapper.styl';
+@import '../styles/wrapper';
 
 .page {
-  padding-bottom: 2rem;
   display: block;
+  padding-bottom: 2rem;
 }
 
 .page-footer {
   @extend $wrapper;
+
   padding-bottom: 0;
 }
 </style>

@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "stylelint-config-apostrophe",
+    "stylelint-plugin-stylus/standard"
+  ],
+  "plugins": [
+    "stylelint-plugin-stylus"
+  ],
+  "rules": {
+    "at-rule-disallowed-list": ["each", "function"],
+    "stylus/semicolon": "always",
+    "stylus/pythonic": "never",
+    "stylus/declaration-colon": "always",
+    "stylus/selector-list-comma": "always"
+  }
+}
