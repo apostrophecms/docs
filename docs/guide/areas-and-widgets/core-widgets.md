@@ -1,81 +1,159 @@
-# Configuring the standard widgets
+# Core widgets
 
-We're continuing to offer a few standard widgets. The provided `index.js` in our boilerplate project includes all four:
+Apostrophe comes with some content widgets you can use in areas right away. See below for their descriptions and options.
+
+| Common name/label | Widget reference | What is it? |
+| ------ | ------ | ------ |
+| Rich text | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
+| Image | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
+| Video | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
+| Raw HTML | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
+
+## General core widget options
+
+These options apply to all core Apostrophe widgets. They will not automatically have any effect on custom widget types and may not for installed widgets either.
+
+| Option | Value type | Description |
+|---------|---------|---------|
+| `className` | String | A CSS class to add to the widget's outer wrapper |
+
+## Rich text widget
+
+There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field.
 
 ```js
 // modules/@apostrophecms/home-page/index.js
-
-...
-widgets: {
-  '@apostrophecms/rich-text': { ... },
-  '@apostrophecms/video': {},
-  '@apostrophecms/html': {},
-  '@apostrophecms/image': {}
-...
+module.exports = {
+  fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {
+              // 👇 Toolbar configuration
+              toolbar: ['styles', 'bold', 'italic'],
+              // 👇 Styles configuration
+              styles: [
+                {
+                  tag: 'p',
+                  label: 'Paragraph (P)'
+                },
+                {
+                  tag: 'h2',
+                  label: 'Heading 2 (H2)'
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    // ...
+  }
+};
 ```
 
-## Configuring the rich text widget
+### Configuring the toolbar
 
-The rich text widget does have a standard configuration, but in most cases you'll want to decide what HTML tags and styles to allow, just as we've done in the boilerplate project.
+To add formatting tools to the rich text toolbar, add their names to the `toolbar` array. The available tools include:
 
-For your reference, here is a configuration that includes all of the currently supported features.
+| Tool name | What is it? |
+| --------- | ----------- |
+| 'styles' | A drop down list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
+| `'bold'` | Bold text |
+| `'italic'` | Italicize text |
+| `'strike'` | Strikethrough |
+| `'link'` | Add a link |
+| `'horizontal_rule'` | Add a visual horizontal rule |
+| `'bullet_list'` | Convert text to a bulleted list |
+| `'ordered_list'` | Convert text to a numbered list |
+| `'blockquote'` | Convert text to a block quote |
+| `'code_block'` | Convert text to a code quote |
+| `'undo'` | Undo the last change |
+| `'redo'` | Redo the last undone change |
+| `'|'` | Add a visual separator to the toolbar (not a formatting action) |
 
-::: tip Note:
-We don't recommend throwing in every possible setting. Most users know the keyboard shortcuts for "undo" and "redo" which are always available.
+<!-- TODO: Add a link to the how-to on adding your own tools when available. -->
+
+### Configuring text styles
+
+When you add the `'styles'` formatting tool, you can configure an array of text styles for editors to apply. These must include an HTML tag and a label for the menu. They may also include a CSS class.
+
+A single style including class might look like:
+
+```javascript
+{
+  label: 'Centered heading',
+  tag: 'h2',
+  class: 'centered'
+}
+```
+
+You can use the same tag in several styles with various CSS classes.
+
+::: note
+Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
-```js
-widgets: {
-  '@apostrophecms/rich-text': {
+<!-- TODO: Link to how-to about configuring sanitize-html for pasting in rich text -->
+
+### Default configuration
+
+There is default configuration for rich text widgets so you do not necessarily need to configure yours. That configuration is:
+
+```javascript
+{
+  toolbar: [
+    'styles',
+    'bold',
+    'italic',
+    'strike',
+    'link',
+    'bullet_list',
+    'ordered_list',
+    'blockquote'
+  ],
+  styles: [
+    {
+      tag: 'p',
+      label: 'Paragraph (P)'
+    },
+    {
+      tag: 'h2',
+      label: 'Heading 2 (H2)'
+    },
+    {
+      tag: 'h3',
+      label: 'Heading 3 (H3)'
+    },
+    {
+      tag: 'h4',
+      label: 'Heading 4 (H4)'
+    }
+  ]
+},
+```
+
+If your rich text settings only include one of the two sections (`toolbar` and `styles`), the default for the other will be used. In other words, if your configuration only changes `styles`, the `toolbar` option from the defaults will apply.
+
+**You can also set your own defaults.** If you use the same rich text options in all or most of your areas, you can configure these option on the `@apostrophecms/rich-text-widget` module as opposed to on individual areas.
+
+```javascript
+// modules/@apostrophecms/rich-text-widget
+module.exports = {
+  options: {
     toolbar: [
-      'styles',
-      // Visual separator between groups
-      '|',
-      'bold',
-      'italic',
-      'strike',
-      '|',
-      'link',
-      'horizontal_rule',
-      'bullet_list',
-      'ordered_list',
-      '|',
-      'blockquote',
-      'code_block',
-      '|',
-      'undo',
-      'redo'
+      // Your default formatting tools
     ],
     styles: [
-      {
-        tag: 'p',
-        label: 'Paragraph (P)'
-      },
-      {
-        tag: 'h3',
-        label: 'Heading 3 (H3)'
-      },
-      {
-        tag: 'h4',
-        label: 'Heading 4 (H4)'
-      }
-      {
-        tag: 'h4',
-        class: 'centered',
-        label: 'Heading 4 Centered (H4)'
-      }
+      // Your own default styles
     ]
   }
 }
 ```
 
-Notice that the `styles` section can be used to set both tags and CSS classes. The same tag can appear several times in `styles`, with various CSS classes.
-
-::: tip Note:
-Adding the class `centered` won't actually center your text by itself. You would need to write appropriate CSS. In the boilerplate project you can do that in `./src/index.scss`, or a file imported by it.
-:::
-
-## Configuring the image widget
+## Image widget
 
 The image widget does work right out of the box, but notice that images can push beyond the page. A3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class.
 
@@ -117,11 +195,11 @@ Unlike in A2, we don't have to specify the `size` option when using the image wi
 
 For fine-grained control in legacy browsers, `size` option can still be set to `one-sixth`, `one-third`, `one-half`, `two-thirds`, `full` or `max` (1600 pixels wide) when adding the widget to an area.
 
-## Configuring the video widget
+## Video widget
 
 While the video widget looks better out of the box, you can configure a `className` option for that as well if you wish.
 
-## Configuring the HTML widget
+## HTML widget
 
 There's nothing to configure! But, note that if you paste a bad embed code that breaks the tag balancing of the markup or otherwise damages the page, you will need a way to get control back.
 
