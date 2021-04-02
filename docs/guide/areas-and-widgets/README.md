@@ -1,10 +1,10 @@
 # Areas and widgets
 
-**Areas** are core to Apostrophe's in-context editing experience. They are special fields where editors can add one or more content widgets. A **widget** is a section of structured content, such as a block of rich text, an image slideshow, or a grid of featured products. Together, these two features let editors add custom and advanced content to a website, move it around, and edit it &ndash; all within a defined modal that maintains the content design.
+**Areas** are core to Apostrophe's in-context editing experience. They are special fields where editors can add one or more content widgets. A **widget** is a section of structured content, such as a block of rich text, an image slideshow, or a grid of featured products. Together, these two features let editors add custom and advanced content to a website, move it around, and edit it &ndash; all within a model that maintains the content design.
 
 ## Basic area configuration
 
-Like other fields, you will configure an area as part of the [field schema](/guide/content-schema.md) for a page or piece type. Apostrophe comes with several widgets that you can use right away, including ones for adding rich text, inserting an image, and embedding a video.
+Like other fields, you will configure an area as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`. Every area requires a `widgets` option to configure the allowed widget types. This example includes three core widget types.
 
 ```js
 // modules/landing-page/index.js
@@ -35,8 +35,6 @@ module.exports = {
   }
 };
 ```
-
-The configuration above shows a landing page type with one area field named `main`. Every area needs a `widgets` option that identifies the widget types allowed there. This example includes three widget of the core widget types, which would then be available to editors to add and arrange.
 
 ![The landing page main area with the menu open, showing available widgets](/images/area-in-context.jpg)
 
@@ -94,7 +92,7 @@ The template tag knows to use the area data on `data.page.main`, check for the w
 
 ### Passing context options
 
-Any widget options that the server needs to know about must be included in the area field configuration. For example, you can configure the rich text widget to use particular formatting controls. The server needs to know those to properly validate user input.
+Most widget options must be included in the area field configuration. For example, you can configure the rich text widget to use particular formatting controls. The server uses these options to properly validate user input.
 
 ```javascript
 main: {
@@ -118,7 +116,7 @@ main: {
 Learn more about rich text options in [the section on core widgets](/guide/areas-and-widgets/core-widgets.md).
 :::
 
-In other situations, you may want to **specify options in a template that apply to that context**, but not to other places where the area is displayed. One example of this is the `sizes` attribute for the core image widget's `img` tag. Since it is used to tell browsers what file versions to use in a responsive image, that may be different when that image is used as a small thumbnail as opposed to when it is a larger featured photo.
+In other situations, you may need to **pass the widget *template* options that only apply to a specific context** and not everwhere the area is shown. One example of this is the `sizes` attribute for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.
 
 These can be added in an object after the area tag arguments using the `with` keyword.
 
@@ -136,12 +134,4 @@ The object following `with` should include keys matching widget type names, with
 {{ data.contextOptions.sizes }}
 ```
 
-Any context options for widget types not allowed in the area are ignored. So in this next example, since the area is not configured to use a `fake-widget`, that option would not be passed into any widget templates.
-
-```django
-{% area data.page, 'main' with {
-  'fake': {
-    color: 'blue'
-  }
-} %}
-```
+Any context options for widget types not allowed in the area are ignored.
