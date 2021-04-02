@@ -45,15 +45,33 @@ Open the `app.js` file in the root project directory. Find the `shortName` setti
 
 ```javascript
 // app.js
-const path = require('path');
-
 require('apostrophe')({
   shortName: 'apos-app', // 👈
   modules: {
   // ...
 ```
 
-Excellent. Back in your terminal we'll install dependencies:
+You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The boilerplate has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+
+```javascript
+// app.js
+require('apostrophe')({
+  shortName: 'apos-app',
+  modules: {
+    '@apostrophecms/express': {
+      options: {
+        session: {
+          // ⚠️ If this still says `undefined`, set a real secret (a random
+          // string)!
+          secret: undefined
+        }
+      }
+    },
+    // ...
+  }
+```
+
+Excellent! Back in your terminal we'll install dependencies:
 
 ```bash
 npm install
