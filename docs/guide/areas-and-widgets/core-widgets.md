@@ -4,54 +4,37 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 | Common name/label | Widget reference | What is it? |
 | ------ | ------ | ------ |
-| Rich text | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
-| Image | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
-| Video | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
-| Raw HTML | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
-
-## General core widget options
-
-These options apply to all core Apostrophe widgets. They will not automatically have any effect on custom widget types and may not for installed widgets either.
-
-| Option | Value type | Description |
-|---------|---------|---------|
-| `className` | String | A CSS class to add to the widget's outer wrapper |
+| [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
+| [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
+| [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
+| [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
 
 ## Rich text widget
+
+The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field.
 
 ```js
 // modules/@apostrophecms/home-page/index.js
-module.exports = {
-  fields: {
-    add: {
-      main: {
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {
-              // 👇 Toolbar configuration
-              toolbar: ['styles', 'bold', 'italic'],
-              // 👇 Styles configuration
-              styles: [
-                {
-                  tag: 'p',
-                  label: 'Paragraph (P)'
-                },
-                {
-                  tag: 'h2',
-                  label: 'Heading 2 (H2)'
-                }
-              ]
-            }
-          }
-        }
+// In area field configuration options
+widgets: {
+  '@apostrophecms/rich-text': {
+    // 👇 Toolbar configuration
+    toolbar: ['styles', 'bold', 'italic'],
+    // 👇 Styles configuration
+    styles: [
+      {
+        tag: 'p',
+        label: 'Paragraph (P)'
+      },
+      {
+        tag: 'h2',
+        label: 'Heading 2 (H2)'
       }
-    },
-    // ...
+    ]
   }
-};
+}
 ```
 
 ### Configuring the toolbar
@@ -155,45 +138,64 @@ module.exports = {
 
 ## Image widget
 
-The image widget does work right out of the box, but notice that images can push beyond the page. A3 does not impose any front-end opinions regarding widgets, and thus it's necessary to configure them properly with CSS classes for styling. In this example, we'll configure the image-widget to have a class.
+The image widget supports displaying a single image including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
 
-Start by creating a directory for project-level configuration of the `@apostrophecms/image-widget` module. Using your terminal:
-
-```bash
-mkdir modules/@apostrophecms/image-widget
-```
-
-Then, you can configure it by creating an `index.js` file in that directory:
+<!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
 ```js
-// modules/@apostrophecms/image-widget/index.js
-module.exports = {
-  options: {
-    className: 'full-width-image'
-  }
-};
-```
-
-Now, you can add CSS so images don't run off the page. Add this to `./src/index.scss`:
-
-```scss
-// ./src/index.scss
-.full-width-image {
-  max-width: 100%;
+// modules/@apostrophecms/home-page/index.js
+// In area field configuration options
+widgets: {
+  '@apostrophecms/image': {}
 }
 ```
 
-A3 doesn't impose its own asset pipeline on you. The [A3 boilerplate]() utilizes a simple webpack configuration, which we cover in the [front end assets](front-end-assets.md) section.
+### Customizing responsive image sizes
 
-::: tip Note:
-The image widget now only accepts one image. A3 comes with a still image widget, but because we are [less opinionated on the front end](front-end-assets.md), it doesn't come with a slideshow widget like in A2.
-:::
+<!-- TODO: link to attachment module srcset method when reference is available. -->
+The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) value.
 
-### Sizing the image to suit the placement
+This configuration is applied as a template option, rather than in server-side code, since the value generally depends on the context where it's appied. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets/#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
-Unlike in A2, we don't have to specify the `size` option when using the image widget. That's because in A3, our image widget uses the [srcset](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) feature of HTML5. A regular `src` attribute is still provided as a fallback for IE11 users. The fallback default size is `full` (1140 pixels wide), but images up to 1600 pixels wide will be served automatically if appropriate. To avoid slowing the page down, the original is not served.
+```django
+{% area data.page, 'main' with {
+  '@apostrophecms/image': {
+    sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
+  }
+} %}
+```
 
-For fine-grained control in legacy browsers, `size` option can still be set to `one-sixth`, `one-third`, `one-half`, `two-thirds`, `full` or `max` (1600 pixels wide) when adding the widget to an area.
+See below for the image variant sizes that Apostrophe generates by default.
+
+### Specifying the fallback size
+
+Most browsers will use the responsive `srcset` attribute to find the right image file to display. Older browsers may need the static `src` attribute value. By default Apostrophe uses the `full` image variant, no larger than 1140px
+by 1140px, for the `src` value.
+
+You can change this in the area field widget options, using another image size name.
+
+```js
+// modules/@apostrophecms/home-page/index.js
+// In area field configuration options
+widgets: {
+  '@apostrophecms/image': {
+    size: 'one-half'
+  }
+}
+```
+
+The sizes available by default are:
+
+| Name | Maximum width | Maximum height |
+| ------ | ------ | ------ |
+| `max` | 1600px | 1600px |
+| `full` | 1140px | 1140px |
+| `two-thirds` | 760px | 760px |
+| `one-half` | 570px | 700px |
+| `one-third` | 380px | 700px |
+| `one-sixth` | 190px | 350px |
+
+The final image size name is `original`, which delivers the original image file. This should be used carefully since it could be very large and slow to download.
 
 ## Video widget
 
@@ -204,3 +206,47 @@ While the video widget looks better out of the box, you can configure a `classNa
 There's nothing to configure! But, note that if you paste a bad embed code that breaks the tag balancing of the markup or otherwise damages the page, you will need a way to get control back.
 
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
+
+## Setting a CSS class on core widgets
+
+It is a front end development best practice to have a consistent `class` naming system, regardless of what that system is. There are two options to set classes on core widgets to support this practice and avoid overwriting the whole template to do so.
+
+You can add a `className` option to either the widget module or the widget options in an area field. That value will be added to the outer-most HTML element in core widget templates. If both are set, the `className` property on the area configuration will be used.
+
+Configuring on the module widget level:
+
+```js
+// app.js
+require('apostrophe') {
+  modules: {
+    '@apostrophecms/video-widget': {
+      options: {
+        className: 'project-video-class'
+      }
+    }
+  }
+};
+```
+
+Configuring on the area field widget options:
+
+```js
+// modules/@apostrophecms/home-page/index.js
+module.exports = {
+  fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/video': {
+              className: 'area-video-class'
+            }
+          }
+        }
+      }
+    },
+    // ...
+  }
+};
+```
