@@ -199,11 +199,22 @@ The final image size name is `original`, which delivers the original image file.
 
 ## Video widget
 
-While the video widget looks better out of the box, you can configure a `className` option for that as well if you wish.
+The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default. The widget uses the oEmbed data format, so you can find a full list of supported services [on the oEmbed website](https://oembed.com/#section7).
 
 ## HTML widget
 
-There's nothing to configure! But, note that if you paste a bad embed code that breaks the tag balancing of the markup or otherwise damages the page, you will need a way to get control back.
+**...or, how to get access to the editing interface when embedded HTML breaks it.**
+
+The HTML widget allows content editors to embed raw HTML directly into a template. This can be helpful if they may need to add third-party features (e.g., sign-up forms). This can also be very dangerous since there are no limits to what they can add. Bad Javascript in embedded HTML can break the user interface, making it impossible to remove the bad code.
+
+**Think carefully before providing this widget option to editors and make them aware of the risks.**
+
+There is a safety mechanism in case things do go wrong. If embedded HTML breaks the Apostrophe interface, append the query parameter `safemode=1` to the end of the URL. The HTML widget will not render its contents and editors will be able to edit it to remove or fix the embed.
+
+```
+https://example.net/broken-page?safemode=1
+```
+
 
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
 
