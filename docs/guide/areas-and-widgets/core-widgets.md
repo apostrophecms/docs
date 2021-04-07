@@ -39,20 +39,20 @@ widgets: {
 
 ### Configuring the toolbar
 
-To add formatting tools to the rich text toolbar, add their names to the `toolbar` array. The available tools include:
+To add formatting tools to the rich text toolbar, add their names to the `toolbar` array. The available formatting options include:
 
 | Tool name | What is it? |
 | --------- | ----------- |
-| 'styles' | A drop down list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
+| 'styles' | A list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
 | `'bold'` | Bold text |
 | `'italic'` | Italicize text |
-| `'strike'` | Strikethrough |
+| `'strike'` | Strikethrough text |
 | `'link'` | Add a link |
 | `'horizontal_rule'` | Add a visual horizontal rule |
-| `'bullet_list'` | Convert text to a bulleted list |
-| `'ordered_list'` | Convert text to a numbered list |
-| `'blockquote'` | Convert text to a block quote |
-| `'code_block'` | Convert text to a code quote |
+| `'bullet_list'` | Bulleted list |
+| `'ordered_list'` | Numbered list |
+| `'blockquote'` | Block quote |
+| `'code_block'` | Code block |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
 | `'|'` | Add a visual separator to the toolbar (not a formatting action) |
@@ -61,7 +61,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 
 ### Configuring text styles
 
-When you add the `'styles'` formatting tool, you can configure an array of text styles for editors to apply. These must include an HTML tag and a label for the menu. They may also include a CSS class.
+When you add the `'styles'` formatting tool, you can configure an array of text styles. These must include an HTML tag and a label for the menu interface. They may also include a CSS class.
 
 A single style including class might look like:
 
@@ -81,9 +81,7 @@ Including a class with a style will not automatically apply any styles. You stil
 
 <!-- TODO: Link to how-to about configuring sanitize-html for pasting in rich text -->
 
-### Default configuration
-
-There is default configuration for rich text widgets so you do not necessarily need to configure yours. That configuration is:
+### Default rich text configuration
 
 ```javascript
 {
@@ -118,9 +116,9 @@ There is default configuration for rich text widgets so you do not necessarily n
 },
 ```
 
-If your rich text settings only include one of the two sections (`toolbar` and `styles`), the default for the other will be used. In other words, if your configuration only changes `styles`, the `toolbar` option from the defaults will apply.
+You can configure only one of the two sections (`toolbar` or `styles`), and use the default configuration for the other.
 
-**You can also set your own defaults.** If you use the same rich text options in all or most of your areas, you can configure these option on the `@apostrophecms/rich-text-widget` module as opposed to on individual areas.
+**You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring configure these options on the `@apostrophecms/rich-text-widget` module.
 
 ```javascript
 // modules/@apostrophecms/rich-text-widget
@@ -155,7 +153,7 @@ widgets: {
 <!-- TODO: link to attachment module srcset method when reference is available. -->
 The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) value.
 
-This configuration is applied as a template option, rather than in server-side code, since the value generally depends on the context where it's appied. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets/#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
+This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets/#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
 ```django
 {% area data.page, 'main' with {
@@ -203,7 +201,7 @@ The core video widget accepts a video URL and fetches the embed code to display 
 
 ## HTML widget
 
-**...or, how to get access to the editing interface when embedded HTML breaks it.**
+**Or: How to get access to the editing interface when embedded HTML breaks it.**
 
 The HTML widget allows content editors to embed raw HTML directly into a template. This can be helpful if they may need to add third-party features (e.g., sign-up forms). This can also be very dangerous since there are no limits to what they can add. Bad Javascript in embedded HTML can break the user interface, making it impossible to remove the bad code.
 
@@ -220,9 +218,7 @@ To do that, access the page with `?safemode=1` at the end of the URL. Then you w
 
 ## Setting a CSS class on core widgets
 
-It is a front end development best practice to have a consistent `class` naming system, regardless of what that system is. There are two options to set classes on core widgets to support this practice and avoid overwriting the whole template to do so.
-
-You can add a `className` option to either the widget module or the widget options in an area field. That value will be added to the outer-most HTML element in core widget templates. If both are set, the `className` property on the area configuration will be used.
+There are two options to set classes on core widgets. You can add a `className` option to **either the widget module or the widget options in an area field**. That value will be added to the outer-most HTML element in core widget templates. If both are set, the `className` property on the area configuration will be used.
 
 Configuring on the module widget level:
 
