@@ -13,3 +13,11 @@ ApostropheCMS is a modern, open source, content management system. It's Javascri
 For developers, it offers a site building API that gives you the power to fully customize the website experience without needing to be a Node.js expert. For content editors, the _true_ WYSIWYG experience supports improved editorial flow.
 
 In short, it recognizes pain points on both sides of the CMS experience and relieves them.
+
+## Give it a test run
+
+Please [try the Apostrophe demo](https://demo.apos3.dev/) for yourself if you haven't yet. That hands-on experience will provide valuable context as you learn about building with Apostrophe. Take notice of key features, including:
+
+- in-context editing
+- switching between "Published" and "Draft" modes
+- content creation through the admin menu

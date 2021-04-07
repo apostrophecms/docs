@@ -42,7 +42,7 @@ The home page, which always exists, is powered by the `@apostrophecms/home-page`
 
 ### Areas are always fields
 
-In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](widgets-and-templates.md) for examples.
+In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](/guide/areas-and-widgets/core-widgets.md) for examples.
 
 ### Area template syntax has changed
 
