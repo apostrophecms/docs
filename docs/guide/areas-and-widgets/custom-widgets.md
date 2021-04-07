@@ -1,116 +1,103 @@
 # Custom widgets
 
-Let's add a two-column layout widget to the site.
+Creating new widget options in addition to the [core widgets](/guide/areas-and-widgets/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.
 
-:::tip
-"Layout widgets" are normal Apostrophe widgets. It is a term of art in Apostrophe development for widget types created solely to visually structure nested content.
-:::
+## Creating a widget type
 
+Adding a new widget type involves create a new module that extends the `@apostrophecms/widget-type` module. It also needs to have a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schemas.md) with the appropriate fields.
 
-```javascript
-// app.js
-// After the other modules, configure a new one
-    'two-column-widget': {}
-```
+We will use the example of a two column **"layout widget."** It is a fairly common and relatively simple use case that allows editors to visually align content in a row. This version of a layout widget consists of two areas next to one another. Each will allow either rich text and image widgets nested inside.
 
-```js
-// modules/@apostrophecms/home-page/index.js
-//
-// Add our new widget to the "widgets" property for
-// the "main" area
-  fields: {
-    add: {
-      main: {
-        ...
-        options: {
-          widgets: {
-            ...
-            'two-column': {}
-          }
-        }
-      }
-    }
-  }
-```
+First create the module configuration file, extend the core widget type module, and add a widget label for editors. If you do not add a label, Apostrophe will attempt to generate one for the UI based on the module's name.
+
+**The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This two-column widget is named `two-column-widget`.
 
 ```js
 // modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
-    label: 'Two Column'
+    label: 'Two column'
   },
+  // 👇 The widget type's field schema
   fields: {
     add: {
+      // 👇 The first column area
       columnOne: {
         type: 'area',
         label: 'Column One',
         options: {
-          // You can copy the `widgets` option from the `main` area in
-          // home-page/index.js
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
         }
       },
+      // 👇 The second column area
       columnTwo: {
         type: 'area',
         label: 'Column Two',
         options: {
-          // You can copy the `widgets` option from the `main` area in
-          // home-page/index.js
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
         }
       }
     }
   }
 };
+
 ```
+
+You may notice there is no `group` property to the field schema. The widget editing interface does not have field groups, so it is not necessary here.
+
+You can then add this module to the `app.js` file to instantiate it.
+
+```js
+// app.js
+require('apostrophe')({
+  shortName: 'my-website',
+  modules: {
+    'two-column-widget': {}
+  }
+});
+```
+
+## Widget templates
+
+Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
 
 ```django
 {# modules/two-column-widget/views/widget.html #}
-<div class="two-column-layout-container">
-  <div class="two-column-layout column-one">
+<section class="two-col">
+  <div class="two-col__column">
     {% area data.widget, 'columnOne' %}
   </div>
-  <div class="two-column-layout column-two">
+  <div class="two-col__column">
     {% area data.widget, 'columnTwo' %}
   </div>
-</div>
+</section>
 ```
+
+**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets/#passing-context-options) passed in are available on `data.contextOptions`.
+
+::: note
+Here are some two-column styles for people following along.
 
 ```scss
 // src/index.scss or a file imported by it
-.two-column-layout-container {
+.two-col {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   width: 100%;
 }
 
-.two-column-layout {
+.two-col__column {
   display: flex;
   flex-direction: column;
-  flex-basis: 100%;
   flex: 1;
 }
-
-.column-one {
-  order: 1;
-}
-
-.column-two {
-  order: 2;
-}
 ```
+:::
 
-## Editing improvements
-
-When working with a nested layout widget like this, you'll sometimes want to add another widget inside the left or right column. At other times, you'll want to add another widget at the top level, such as another two-column or one-column widget, like this one. In A2 this could be challenging.
-
-To help you resolve this, A3 displays a "breadcrumb trail" indicating the nesting of the widgets. If you are looking at the controls for the lower, nested level, you can click on "Two Column" to see the controls at the higher level instead.
-
-## Major changes from A2
-
-* Our custom widget modules extend `@apostrophecms/widget-type`.
-* Simple options like `label` go inside `options` rather than at the top level.
-* Just like with pages, we use `fields` to configure our fields. However, `group` is not used for widgets.
-* Just like with pages, any areas in a widget must be defined in `index.js`.
-* Apostrophe is not supplying CSS classes, so we supply our own in the template if desired.
-* We can nest widgets even more deeply than this if we wish and contextual editing on the page remains available. In A3 there is no technical limit on nesting, apart from common sense.
