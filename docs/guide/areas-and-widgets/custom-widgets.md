@@ -101,3 +101,106 @@ Here are some two-column styles for people following along.
 ```
 :::
 
+## Client-side Javascript for widgets
+
+When adding client-side Javascript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
+
+We can use the example of a basic collapsible section widget, `collapse-widget`. It will hide detail text until a user clicks the header/button.
+
+::: details Example collapsible widget code
+**Module configuration**
+```javascript
+// modules/collapse-widget/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Collapsible section'
+  },
+  fields: {
+    add: {
+      heading: {
+        type: 'string',
+        required: true
+      },
+      detail: {
+        type: 'string',
+        required: true,
+        textarea: true
+      }
+    }
+  }
+};
+```
+
+**Module template**
+
+```django
+{# modules/collapse-widget/views/widget.html #}
+<section data-collapser class="collapser">
+  <h2>
+    <button data-collapser-button aria-expanded="false">
+      {{ data.widget.heading }}
+    </button>
+  </h2>
+  <div hidden data-collapser-detail>
+    {# `nlbr` and `safe` are core Nunjucks tag filters #}
+    {{ data.widget.description | nlbr | safe }}
+  </div>
+</section>
+```
+
+**Module styles** (see [front end assets guide](/guide/front-end-assets.md))
+
+```css
+.collapser__detail {
+  display: none;
+
+  &.is-active {
+    display: block;
+  }
+}
+```
+:::
+
+Widget player code can be added in any client-side Javascript file in a module's `ui/public/` directory. In this example it would be in `modules/collapse-widget/ui/public/collapser.js` (the file name does not matter, as long as it is a `.js` file).
+
+The player code is added to an object of widget players, `apos.util.widgetPlayers` using the widgets name, excluding the `-widget` suffix. It is an object with two properties:
+
+| Property | Description |
+| -------- | ----------- |
+| `selector` | A string selector for the player to find the widget as you would use in [`document.querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector). |
+| `player` | A function that takes the matching widget DOM element as an argument. |
+
+```javascript
+// modules/collapse-widget/ui/public/collapser.js
+apos.util.widgetPlayers.collapser = {
+  selector: '[data-collapser]',
+  player: function (el) {
+    // ...
+  }
+};
+```
+
+With some code to manage showing and hiding the detail, it would look like:
+
+```javascript
+apos.util.widgetPlayers.accordion = {
+  selector: '[data-collapser]',
+  player: function (el) {
+    // Find our button
+    const btn = el.querySelector('[data-collapser-button]');
+    // Find our hidden text
+    const target = el.querySelector('[data-collapser-detail]');
+
+    btn.onclick = () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      // Update the button's aria attribute
+      btn.setAttribute('aria-expanded', !expanded);
+      // Update the `hidden` attribute on the detail
+      target.hidden = expanded;
+    };
+  }
+};
+```
+
+[Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapser example.
