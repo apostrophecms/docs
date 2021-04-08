@@ -28,6 +28,7 @@ eventTime: {
 |`def` | String | n/a | The default value for the field. Must be in `HH:MM:SS` format. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
+|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
