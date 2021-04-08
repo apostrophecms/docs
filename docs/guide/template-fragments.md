@@ -6,7 +6,7 @@ permalink: '/guide/template-fragments'
 
 [Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) are great tools for sharing template code across files. They have one significant limitation, however, in that they run synchronously. If you include template tags in them that run asynchronously, those tags will seem to not run at all when it comes to rendering.
 
-This poses a challenge when using the new [async components](/guide/async-components.md/async-components.md) in Apostrophe 3. In addition, the [area syntax changed](/guide/major-changes.md#areas-and-pages) to support those async components, so areas won't work in synchronous macros either. To enable developers to continue writing maintainable, [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) code, A3 has a new feature, **fragments**.
+This poses a challenge when using the new [async components](/guide/async-components) in Apostrophe 3. In addition, the [area syntax changed](/guide/major-changes.md#areas-and-pages) to support those async components, so areas won't work in synchronous macros either. To enable developers to continue writing maintainable, [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) code, A3 has a new feature, **fragments**.
 
 ## Macros are still supported
 

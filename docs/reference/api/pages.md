@@ -213,7 +213,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
 <!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -293,7 +293,7 @@ The `_position` property uses specific string values rather than index numbers t
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -334,7 +334,7 @@ If moving a page within the page tree, the `PATCH`request must include *both* `_
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -395,7 +395,7 @@ This API route **Permanently deletes the page database document**. Moving pieces
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis.md#locale-and-mode-in-single-document-requests).
+Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
 
 ### Request example
 
@@ -435,7 +435,7 @@ Specifically, the Nunjucks template blocks included in this rendered markup by d
 -  the `beforeMain`, `mainAnchor`, `main`
 , `afterMain` template blocks
 <!-- TODO: Document the insertion mechanism in the component section. -->
-- [template components](/guide/async-components.md) prepended and appended to the `main` block
+- [template components](/guide/async-components) prepended and appended to the `main` block
 
 The most critical element that is *excluded* is the `head` tag, with all of its stylesheet and script tags.
 
