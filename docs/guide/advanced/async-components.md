@@ -1,5 +1,5 @@
 ---
-title: "Async Components"
+permalink: '/guide/async-components'
 ---
 
 # Async Components

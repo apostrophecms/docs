@@ -32,16 +32,21 @@ module.exports = {
           children: [
             'guide/areas-and-widgets/core-widgets.md',
             'guide/areas-and-widgets/custom-widgets.md'
-            // - Basic creation
-            // - Widget players
           ]
         },
         'guide/pieces.md',
         'guide/piece-pages.md',
-        'guide/front-end-assets.md',
-        'guide/async-components.md',
-        'guide/template-fragments.md',
-        'guide/rest-apis.md'
+        'guide/front-end-assets.md'
+      ]
+    },
+    {
+      title: 'Advanced topics',
+      collapsable: false,
+      children: [
+        'guide/advanced/rest-apis.md',
+        'guide/advanced/conditional-fields.md',
+        'guide/advanced/async-components.md',
+        'guide/template-fragments'
       ]
     }
   ],

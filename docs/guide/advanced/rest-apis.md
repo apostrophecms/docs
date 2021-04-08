@@ -1,5 +1,5 @@
 ---
-title: "REST APIs"
+permalink: '/guide/rest-apis'
 ---
 
 # REST APIs

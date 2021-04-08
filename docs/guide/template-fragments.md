@@ -1,3 +1,7 @@
+---
+permalink: '/guide/template-fragments'
+---
+
 # Fragments are the new macros
 
 [Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) are great tools for sharing template code across files. They have one significant limitation, however, in that they run synchronously. If you include template tags in them that run asynchronously, those tags will seem to not run at all when it comes to rendering.

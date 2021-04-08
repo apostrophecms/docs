@@ -37,6 +37,77 @@ Each property in the `add` object is a field you are including in the schema. Ea
 
 See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/) for more information.
 
+## Conditional fields
+
+Schema fields may be conditional on the value of other fields in the same schema. The conditions are added in an **`if` setting** on a field. The conditions must be an object with keys matching the names of other fields in the same schema. The condition values must match the sibling field values *exactly* to pass.
+
+::: note
+Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans. This is subject to change.
+:::
+
+
+In the following case, if the `seenMovie` field is set to `true`, the rating field will be displayed.
+
+```javascript
+// A field schema's `add` configuration
+add: {
+  seenMovie: {
+    label: 'Have you seen this movie?',
+    type: 'boolean'
+  },
+  rating: {
+    label: 'Rate the movie from 1-5',
+    type: 'integer',
+    min: 1,
+    max: 5,
+    if: {
+      seenMovie: true
+    }
+  }
+}
+```
+
+The `if` setting may contain more than one condition. In the next example, `seenMovie` must be `true` *and* `relationship` must be `'none'` for the rating field to appear.
+
+```javascript
+// A field schema's `add` configuration
+add: {
+  seenMovie: {
+    label: 'Have you seen this movie?',
+    type: 'boolean'
+  },
+  relationship: {
+    label: 'What is your relationship to the filmmakers?',
+    type: 'select',
+    choices: [
+      {
+        label: 'Family',
+        value: 'family'
+      },
+      {
+        label: 'Friend',
+        value: 'friend'
+      },
+      {
+        label: 'None',
+        value: 'none'
+      }
+    ]
+  },
+  rating: {
+    label: 'Rate the movie from 1-5',
+    type: 'integer',
+    min: 1,
+    max: 5,
+    if: {
+      seenMovie: true,
+      relationship: 'none'
+    }
+  }
+}
+```
+
+
 ## Using existing field groups
 
 Fields that a piece type inherits will likely already be in field groups. This includes the default fields `title`, `slug`, and `visibility`. You can add new fields into these groups and rearrange them if needed. There are a few things to keep in mind as you do.
