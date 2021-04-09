@@ -33,6 +33,8 @@ add: {
 }
 ```
 
+## Multiple required conditions
+
 **The `if` setting may contain more than one condition.** When there is more than one, all conditions must be met before the field will be active.
 
 In the next example, `seenMovie` must be `true` *and* `relationship` must be `'none'` for the rating field to appear.
@@ -48,18 +50,7 @@ add: {
     label: 'What is your relationship to the filmmakers?',
     type: 'select',
     choices: [
-      {
-        label: 'Family',
-        value: 'family'
-      },
-      {
-        label: 'Friend',
-        value: 'friend'
-      },
-      {
-        label: 'None',
-        value: 'none'
-      }
+      // Various relationship options, including "none"...
     ]
   },
   rating: {
@@ -71,6 +62,39 @@ add: {
     if: {
       seenMovie: true,
       relationship: 'none'
+    }
+  }
+}
+```
+
+## Independent conditions using `$or`
+
+Condition rules may be independent of one another as well. Add separate condition rules in an array using the key `$or` to show the field if any of the condition groups pass.
+
+In this example, the rating field will display if *either* `seenMovie` or `uninformedOpinion` is true.
+
+```javascript
+// A field schema's `add` configuration
+add: {
+  seenMovie: {
+    label: 'Have you seen this movie?',
+    type: 'boolean'
+  },
+  uninformedOpinion: {
+    label: 'Do you have an uninformed opinion about the movie?',
+    type: 'boolean'
+  },
+  rating: {
+    label: 'Rate the movie from 1-5',
+    type: 'integer',
+    min: 1,
+    max: 5,
+    // 👇 Including multiple independent conditions.
+    if: {
+      $or: [
+        { seenMovie: true },
+        { uninformedOpinion: true }
+      ]
     }
   }
 }
