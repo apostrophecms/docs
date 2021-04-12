@@ -73,7 +73,7 @@ add: {
 | -------------------- | ---------- | ----------- |
 | [`$or`](#or) | Array | The `$or` condition passes if any of the array conditions pass |
 
-## `$or`
+### `$or`
 
 Condition rules may be independent of one another. Add separate condition rules in an array using the key `$or` to show the field if any of the condition groups pass.
 
