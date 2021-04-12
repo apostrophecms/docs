@@ -7,7 +7,7 @@ permalink: '/guide/conditional-fields'
 When defining a field schema, you may make fields conditional on other field values using the `if` setting. Until the `if` setting conditions are met, the field will be hidden. The conditions must be an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass.
 
 ::: note
-Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans. This is subject to change.
+Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans.
 :::
 
 In the following case, if the `seenMovie` field is set to `true`, the rating field will be displayed.
