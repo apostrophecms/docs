@@ -37,7 +37,7 @@ add: {
 
 **The `if` setting may contain more than one condition.** When there is more than one, all conditions must be met before the field will be active.
 
-In the next example, `seenMovie` must be `true` *and* `relationship` must be `'none'` for the rating field to appear.
+In the next example, `seenMovie` must be `true` *and* `connection` must be `'none'` for the rating field to appear.
 
 ```javascript
 // A field schema's `add` configuration
@@ -46,7 +46,7 @@ add: {
     label: 'Have you seen this movie?',
     type: 'boolean'
   },
-  relationship: {
+  connection: {
     label: 'What is your relationship to the filmmakers?',
     type: 'select',
     choices: [
@@ -61,15 +61,21 @@ add: {
     // 👇 Two conditions that both must be met
     if: {
       seenMovie: true,
-      relationship: 'none'
+      connection: 'none'
     }
   }
 }
 ```
 
-## Independent conditions using `$or`
+## Special conditional operators
 
-Condition rules may be independent of one another as well. Add separate condition rules in an array using the key `$or` to show the field if any of the condition groups pass.
+| Conditional operator | Value type | Description |
+| -------------------- | ---------- | ----------- |
+| [`$or`](#or) | Array | The `$or` condition passes if any of the array conditions pass |
+
+## `$or`
+
+Condition rules may be independent of one another. Add separate condition rules in an array using the key `$or` to show the field if any of the condition groups pass.
 
 In this example, the rating field will display if *either* `seenMovie` or `uninformedOpinion` is true.
 
