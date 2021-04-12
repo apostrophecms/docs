@@ -1,8 +1,10 @@
 # Piece index and show pages
 
-When pieces need their own web pages, adding a **piece index page** is how we do it. These index pages are added similarly to other [pages](/guide/pages.md) with a few important differences. In brief, these page modules have two separate template files and additional data available in templates.
+**Piece index pages** allow editors to add pages listing pieces of a particular type. They also allow pieces to have their own web pages -- known as **show pages** in Apostrophe. Show pages are automatically available once an index page and pieces of the matching piece type are created.
 
-Piece page modules extend `@apostrophecms/piece-page-type`.
+Index pages are added similarly to other [pages](/guide/pages.md) with a few important differences. Basically, these page modules have **1)** two separate template files and **2)** additional piece data available in templates. Piece page modules extend `@apostrophecms/piece-page-type`.
+
+## Creating a piece page module
 
 A common use for these is a **blog**. The related piece type in that case might come from the `article` piece module (refer to [the pieces guide](/guide/pieces.md#creating-a-piece-type) for more on that). **The piece page would then be a module named `article-page`.**
 
@@ -42,6 +44,8 @@ Index page templates look very similar to other page templates. Look for the new
 {% import '@apostrophecms/pager:macros.html' as pager with context %}
 
 {% block main %}
+  <h1>{{ data.page.title }}</h1>
+
   {% for article in data.pieces %}
     <article>
       <h2>
@@ -110,19 +114,36 @@ Other than the class, the pager macro code above will rarely change.
 
 ## The show page template
 
+As a reminder, show pages are the web pages for individual pieces, rendered from `show.html` templates. This template uses a very standard page template structure. Assuming our `article` piece type example has a single `main` area, it could look like this:
+
 ```django
-{# modules/product-page/views/show.html #}
+{# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
-{% set product = data.piece %}
 
 {% block main %}
-  {# The layout already output the title for us #}
-  <h4>Price: {{ product.price }}</h4>
-  <section>{% area product, 'description' %}</section>
+  <h1>{{ data.piece.title }}
+  <section>
+    {% area data.piece, 'main' %}
 {% endblock %}
 ```
 
-That's all we need to create a basic paginated index page for all of our products, with "virtual" subpages for the individual products, based on the `slug` field of each piece.
+Instead of `data.page`, this template is using `data.piece` to access the piece data. In most other ways they work the same way as any other page template. There are some other special data available in show page templates:
 
-So to finish the job, just go to the home page, click "Page Tree," then click "New Page." Choose the "Product Page" type for your page and save, then click the link button in the page tree to jump to the new piece page.
+| Property | What is it? |
+| -------- | ----------- |
+| `piece` | The document object for the featured piece. In a blog, this would be a single article. |
+| `page` | In show page templates, `data.page` still exists, but refers to the index page |
+| `previous` | If using the [`previous: true` option](/reference/module-api/module-options.md#previous), `data.previous` is the previous piece based on the [sort](/reference/module-api/module-options.md#sort) |
+| `next` | If using the [`next: true` option](/reference/module-api/module-options.md#next), `data.next` is the next piece based on the [sort](/reference/module-api/module-options.md#sort) |
 
+## Index and show page URL basics
+
+Index page URLs, like other page URLs, generally are constructed from the base domain/URL (the home page URL) plus their slug. Page slugs include forward slashes and, by default, the path of their parent page, if they have one.
+
+If the home page URL was `https://example.rocks` and the "Articles" index page had the slug `/articles`, the "Articles" page URL would be **`https://example.rocks/articles`**. This is the way all Apostrophe pages work.
+
+Show pages are extensions of their index page. To that end, their URLs are the index page url plus the piece slug. Piece slugs do not have slashes or look like a URL path on their own since pieces can be used in many ways.
+
+Consider an article "How to write Javascript." Apostrophe would generate the slug `how-to-write-javascript` based on the title. With the index page url `https://example.rocks/articles` and that slug, the show page URL would be **`https://example.rocks/articles/how-to-write-javascript`**.
+
+The structure of index and show page URLs is one of the most clear ways to understand how show pages depend on index pages. Even if this does not seem terribly complex, it is important to understand that relationship.
