@@ -147,3 +147,16 @@ Show pages are extensions of their index page. To that end, their URLs are the i
 Consider an article "How to write Javascript." Apostrophe would generate the slug `how-to-write-javascript` based on the title. With the index page url `https://example.rocks/articles` and that slug, the show page URL would be **`https://example.rocks/articles/how-to-write-javascript`**.
 
 The structure of index and show page URLs is one of the most clear ways to understand how show pages depend on index pages. Even if this does not seem terribly complex, it is important to understand that relationship.
+
+::: note
+You may create multiple index pages of a particular type. If you do, the related piece show pages can be accessed at URLs based on any of the index pages. So if you create one articles index page with the slug `/articles` and another with `/news`, both of these URLs will go to the same article:
+
+- `https://example.rocks/articles/how-to-write-javascript`
+- `https://example.rocks/news/how-to-write-javascript`
+
+This can be used to create index pages that are filtered to list different pieces (e.g., articles on different topics).
+
+Even if any of the index page URL paths can be used to reach a particular show page, the piece will have a primary `_url` property when requested (e.g., in a `GET` API request). That primary URL is generated using the index page identified using the `chooseParentPage` method on `@apostrophecms/piece-page-type`. By default it simply returns the first index page created, but you can override that method to choose a matching index page another way.
+
+<!-- TODO: Link to the piece page module reference page `chooseParentPage` method when available. -->
+:::
