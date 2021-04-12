@@ -19,16 +19,16 @@ secret: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|------------|
-|`label` | String | | Sets the visible label for the field in the UI |
-|`type` | String | | Specifies the field type (`password` for this type) |
+|`label` | String | n/a | Sets the visible label for the field in the UI |
+|`type` | String | n/a | Specifies the field type (`password` for this type) |
 
 ### Optional
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|------------|
 |`def` | String | n/a | The default value for the field |
-|`help` | String | | Help text for the content editor |
-|`htmlHelp` | String | | Help text with support for HTML markup |
+|`help` | String | n/a | Help text for the content editor |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | false | If `true`, the field is mandatory |

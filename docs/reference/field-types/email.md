@@ -25,8 +25,8 @@ workEmail: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|------------|
-|`help` | String | | Help text for the content editor |
-|`htmlHelp` | String | | Help text with support for HTML markup |
+|`help` | String | n/a | Help text for the content editor |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`required` | Boolean | false | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->

@@ -445,7 +445,7 @@ Each template component function should take the arguments:
 
 Information returned by the component function will be available in the associated component template as `data`.
 
-See the [async component guide](/guide/async-components.md) for more usage information.
+See the [async component guide](/guide/async-components) for more usage information.
 
 
 ```javascript
