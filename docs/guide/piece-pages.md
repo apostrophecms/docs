@@ -74,7 +74,9 @@ We'll review each template's features next.
 
 Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module).
 
-Before we go any further, make sure you have reviewed the [page type guide](/guide/pages.md). Everything there also applies to index pages and templating is mostly the same for show pages as well.
+🛑 Hold up. ✋
+
+You've reviewed the [page type guide](/guide/pages.md), right? The sections below will highlight the special features of index and show page templates. For general page template syntax, see that page type guide.
 
 ## The index page template
 
