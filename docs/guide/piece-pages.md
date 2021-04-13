@@ -1,35 +1,78 @@
 # Piece index and show pages
 
-**Piece index pages** allow editors to add pages listing pieces of a particular type. They also allow pieces to have their own web pages -- known as **show pages** in Apostrophe. Show pages are automatically available once an index page and pieces of the matching piece type are created.
+**Index pages** list pieces of a particular type. Once one is created, each individual piece automatically has its own web page, known in Apostrophe as a **show page**. If you're familiar with blogs, you know this model all too well.
 
-Index pages are added similarly to other [pages](/guide/pages.md) with a few important differences. Basically, these page modules have **1)** two separate template files and **2)** additional piece data available in templates. Piece page modules extend `@apostrophecms/piece-page-type`.
+This feature set is powered by the `@apostrophecms/piece-page-type` module (because you're creating a *page type* that displays *pieces*, get it?).
 
-## Creating a piece page module
+Index pages support all features from [pages](/guide/pages.md), then add on some special features. In short, those are:
 
-A common use for these is a **blog**. The related piece type in that case might come from the `article` piece module (refer to [the pieces guide](/guide/pieces.md#creating-a-piece-type) for more on that). **The piece page would then be a module named `article-page`.**
+- Two template files: one for index pages and one for show pages
+- Additional piece data available in templates
+
+## Creating a piece page type
+
+There are two critical steps to adding a new module for a piece page type:
+
+1. Extend `@apostrophecms/piece-page-type`
+2. Specify what piece type should be shown on the page
+
+Extending the right module is simple enough. These modules use the property:
+
+```javascript
+`extend: '@apostrophecms/piece-page-type',`
+```
+
+Identifying the piece type can be done two ways: **using a module naming convention** or **using the `pieceModuleName` setting**. We can look at both options using a blog as our example.
+
+### Matching a piece type using naming
+
+In this example, the piece type is `article`, since "articles" are the individual things that make up a blog. You can then name the piece page type as `article-page` and Apostrophe will automatically know that the two modules go together. (In case you missed the trick there, the piece page name is: piece type + `-page`.)
+
+The piece page module then looks like:
 
 ```javascript
 // modules/article-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
-    label: 'Articles Page'
+    label: 'Blog page'
   }
 };
 ```
 
-You would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module). You could also add a field schema or other features as on page type modules.
+One benefit of this approach is that the codebase folders for the piece type and piece page type will be next to one another alphabetically. This tends to be the choice of the Apostrophe core team.
 
-::: tip
-Piece page modules are not required to be named using the piece name plus `-page` suffix. If they are named like that the associated piece type will be found automatically. If you want to name it different, or if you need more than one piece page type for a single piece type, use the [`piecesModuleName` option](/reference/module-api/module-options.md#piecemodulename) to identify the correct piece type.
-:::
+![Screenshot of code directories "article" and "article-page"](/images/piece-page-modules.png)
 
-Instead of a single `page.html` template, this module gets two templates.
+### Specifying the piece type with `pieceModuleName`
+
+This method allows you to name the module whatever you want since you are specifically identifying a piece type. Set the [`pieceModuleName` option](/reference/module-api/module-options.md#piecemodulename) to the piece type name and Apostrophe make the right connection.
+
+```javascript
+// modules/blog-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    label: 'Blog page',
+    pieceModuleName: 'article'
+  }
+};
+```
+
+Either method works well and you may find both options useful depending on the situation.
+
+### Add template files and instantiate
+
+Piece page types use two templates, both added in the module's `views` directory (e.g., `modules/article-page/views/`).
 
 | Template file name | What is it? |
 | ------------------ | ----------- |
-| `index.html` | Template for listing pieces using `data.pieces` (the **"index page**) |
-| `show.html` | Template to display individual piece information using `data.piece` (a **"show page"**) |
+| `index.html` | Template for listing pieces (the **"index page**) |
+| `show.html` | Template to display an individual piece (a **"show page"**) |
+
+We'll review each template's features next.
+
+Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module).
 
 Before we go any further, make sure you have reviewed the [page type guide](/guide/pages.md). Everything there also applies to index pages and templating is mostly the same for show pages as well.
 
