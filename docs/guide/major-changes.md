@@ -121,7 +121,7 @@ Methods are now declared in the `methods` section. Using the "super pattern" to 
 
 ### `components` and `extendComponents`
 
-The new [async components](async-components.md) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
+The new [async components](/guide/async-components) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
 
 ### `helpers` and `extendHelpers`
 
@@ -142,7 +142,7 @@ Just like with methods, you can extend a route you inherited with `extendApiRout
 
 ### `renderRoutes` and `extendRenderRoutes`
 
-Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async-components](async-components.md) feature which is more SEO-friendly.
+Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async components](/guide/async-components) feature which is more SEO-friendly.
 
 ### `restApiRoutes` and `extendRestApiRoutes`
 
@@ -160,7 +160,7 @@ In 3.x, promise events support inheritance: if the piece-type module `product` e
 
 This provides a flexible replacement for the empty piece-type methods like `beforeInsert` designed just for overriding that A2 provided.
 
-On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](async-components.md) are usually a better answer.
+On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](/guide/async-components) are usually a better answer.
 
 ### Queries
 

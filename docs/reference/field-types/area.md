@@ -33,7 +33,8 @@ main: {
 |---|---|---|---|
 |`required` | Boolean | `false` | If true, the field is mandatory. |
 |`help` | String | n/a | Help text for the content editor |
-|`htmlHelp` | String | n/a | Help text with support for HTML markup | universal |
+|`htmlHelp` | String | n/a | Help text with support for HTML markup |
+|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | `boolean` | false | If true, it will prevent the field from appearing in a dialog box | -->
