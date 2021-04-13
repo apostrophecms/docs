@@ -80,7 +80,7 @@ You've reviewed the [page type guide](/guide/pages.md), right? The sections belo
 
 ## The index page template
 
-Index page templates look very similar to other page templates. Look for the new features in this example blog index page.
+Index page templates look very similar to other page templates.
 
 ```django
 {# modules/article-page/views/index.html #}
@@ -109,7 +109,7 @@ Index page templates look very similar to other page templates. Look for the new
 
 ### `data.pieces` and other unique `data` properties
 
-The first new thing there is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
+The first new thing here is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
 
 ```django
 {% for article in data.pieces %}
@@ -121,15 +121,13 @@ The first new thing there is the `import` statement, but we'll get back to that.
 {% endfor %}
 ```
 
-In addition to standard information, index page templates have access to `data.pieces`, which is an array of piece document objects. They will contain the title and URL as shown here, but also contain other piece data. This lets you do things like adding thumbnail images to listed items.
-
-Since it's an array, we use the [Nunjucks `for` tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over the pieces.
+Index page templates have access to `data.pieces`, which is an array of piece docs. Since it's an array, we use the [Nunjucks `for` tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over the pieces.
 
 The `data` object properties unique to index pages are:
 
 | Property | What is it? |
 | -------- | ----------- |
-| `pieces` | An array of piece data objects for the current set of results |
+| `pieces` | An array of piece docs for the current set of results |
 | `currentPage` | A number representing what page of results is shown, starting with `1` |
 | `totalPages` | The total number of results pages there are |
 | `totalPieces` | The total number of pieces across all result pages |
@@ -146,20 +144,23 @@ The `data` object properties unique to index pages are:
 }, data.url) }}
 ```
 
-Index pages do not list every single piece in a single view. That could quickly become a problem. Instead, they include *ten* pieces on `data.pieces` at a time (by default).
+By default, index pages will include up to *ten* pieces on `data.pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-2) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
 
-The pager macro is a special template using the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature. This particular macro accepts two arguments:
+Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager macro is a special template using the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature. This particular macro accepts two arguments:
 
-- an object with the `currentPage` and `totalPages` values, described above, as well as an optional CSS class for the pager wrapper
-- the page URL, using `data.url`
-
-Other than the class, the pager macro code above will rarely change.
-
-**You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-2) on the module. The data passed to templates will all update, so you don't need to make any other adjustments.
+1. an object with the `currentPage` and `totalPages` values, described above, as well as an optional CSS class for the pager wrapper
+```javascript
+{
+  page: data.currentPage,
+  total: data.totalPages,
+  class: 'my-pager-class' // Optional
+}
+```
+2. the page URL, `data.url`
 
 ## The show page template
 
-As a reminder, show pages are the web pages for individual pieces, rendered from `show.html` templates. This template uses a very standard page template structure. Assuming our `article` piece type example has a single `main` area, it could look like this:
+Show pages are the web pages for individual pieces, rendered from `show.html` templates. Assuming our `article` piece type example has a single `main` area, it could look like this:
 
 ```django
 {# modules/article-page/views/show.html #}
@@ -172,7 +173,7 @@ As a reminder, show pages are the web pages for individual pieces, rendered from
 {% endblock %}
 ```
 
-Instead of `data.page`, this template is using `data.piece` to access the piece data. In most other ways they work the same way as any other page template. There are some other special data available in show page templates:
+Instead of `data.page`, this template is using `data.piece` to access the piece data. There are some other special data available in show page templates:
 
 | Property | What is it? |
 | -------- | ----------- |
@@ -185,7 +186,7 @@ Instead of `data.page`, this template is using `data.piece` to access the piece 
 
 Index page URLs, like other page URLs, generally are constructed from the base domain/URL (the home page URL) plus their slug. Page slugs include forward slashes and, by default, the path of their parent page, if they have one.
 
-If the home page URL was `https://example.rocks` and the "Articles" index page had the slug `/articles`, the "Articles" page URL would be **`https://example.rocks/articles`**. This is the way all Apostrophe pages work.
+If the home page URL was `https://example.rocks` and the "Articles" index page had the slug `/articles`, the "Articles" page URL would be **`https://example.rocks/articles`**.
 
 Show pages are extensions of their index page. To that end, their URLs are the index page url plus the piece slug. Piece slugs do not have slashes or look like a URL path on their own since pieces can be used in many ways.
 
@@ -194,7 +195,7 @@ Consider an article "How to write Javascript." Apostrophe would generate the slu
 The structure of index and show page URLs is one of the most clear ways to understand how show pages depend on index pages. Even if this does not seem terribly complex, it is important to understand that relationship.
 
 ::: note
-You may create multiple index pages of a particular type. If you do, the related piece show pages can be accessed at URLs based on any of the index pages. So if you create one articles index page with the slug `/articles` and another with `/news`, both of these URLs will go to the same article:
+You may create multiple index pages of a particular type. If you do, the related piece show pages can be accessed at URLs based on any of the index pages. For example, if you create one articles index page with the slug `/articles` and another with `/news`, both of these URLs will go to the same article:
 
 - `https://example.rocks/articles/how-to-write-javascript`
 - `https://example.rocks/news/how-to-write-javascript`
