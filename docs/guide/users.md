@@ -34,6 +34,14 @@ Users can log into Apostrophe websites at the `/login` URL path for the website.
 
 ![The Apostrophe login page with username and password fields](/images/users-login.png)
 
+### Restricting content access
+
+Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see.
+
+You can require login access to view specific pages or pieces using the visibility field, labeled **"Who can view this?"** This field is found in the "Permissions" editor tab by default.
+
+![A page editor interface showing the permission tab and "who can view this" field](/images/users-visibility.png)
+
 ## User roles
 
 Users are assigned one of four **user roles**. Each role is assigned a set of permissions that cover typical content editing, review, and administration duties.
