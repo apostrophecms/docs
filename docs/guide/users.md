@@ -2,16 +2,39 @@
 
 A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the website. Beyond that, users get specific sets of permissions based on the **role** they are assigned. More on that to come.
 
-The first and most important thing to know with regards to permissions is that **only admin users can create and manage other users.**
-
 ## Adding new users
 
-The only requirements when
-- Users intro
-  - Adding users in the UI
-  - Adding users on the command line
-- Logging into Apostrophe
-- User roles
+If you want to do anything with your Apostrophe website, you will need users. There are two main ways to add them: using the command-line task or through the user interface.
+
+### Adding users with the CLI task
+
+The CLI task for adding users is primarily useful to add the very first admin user. The command is:
+
+```bash
+node app @apostrophecms/user:add my-user admin
+```
+
+The two final arguments passed to the task are, in order, the new username (`my-user`) and the user role (`admin`).
+
+### Adding users through the UI
+
+Once you have that first user, you have the option to add new ones through the user interface. The first and most important thing to know is that **only admin users can create and manage other users.** The admin user created with the CLI command above will have this ability.
+
+Open the users manager interface by clicking the "Users" button in the admin menu.
+
+![The admin menu at the top of the browser window with the Users button highlighted](/images/users-admin-bar.png)
+
+When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," role, and username. Also fill in the "Password" field so they can log into the website and save.
+
+![A user editor modal with values filled in for our user, "Sam Wilson"](/images/users-editor.png)
+
+## Logging into an Apostrophe website
+
+Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
+
+![The Apostrophe login page with username and password fields](/images/users-login.png)
+
+## User roles
   - guest
   - contributor
   - editor
