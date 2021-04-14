@@ -35,7 +35,12 @@ Users can log into Apostrophe websites at the `/login` URL path for the website.
 ![The Apostrophe login page with username and password fields](/images/users-login.png)
 
 ## User roles
-  - guest
-  - contributor
-  - editor
-  - admin
+
+Users are assigned one of four **user roles**. Each role is assigned a set of permissions that cover typical content editing, review, and administration duties.
+
+| User role | What can they do? |
+| --------- | ----------------- |
+| **Guest** | Guest users can log into the website and view content with their visibility set to "Login required." They cannot edit any content or view unpublished content. |
+| **Contributor** | Contributors may create, edit, and archive content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
+| **Editor** | Editors have all the permissions of contributors. They can also *publish* content. They cannot take any action on users. |
+| **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may manage users, including resetting passwords. |
