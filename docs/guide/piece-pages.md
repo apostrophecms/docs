@@ -26,7 +26,7 @@ Identifying the piece type can be done two ways: **using a module naming convent
 
 ### Matching a piece type using naming
 
-In this example, the piece type is `article`, since "articles" are the individual things that make up a blog. You can then name the piece page type as `article-page` and Apostrophe will automatically know that the two modules go together. (In case you missed the trick there, the piece page name is: piece type + `-page`.)
+In this example, the piece type is `article`, since "articles" are the individual entries that make up a blog. If you name the piece page type `article-page`, Apostrophe will automatically know that the two modules go together. (In case you missed the trick there, the piece page name is: piece type + `-page`.)
 
 The piece page module then looks like:
 
@@ -160,7 +160,9 @@ Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager
 
 ## The show page template
 
-Show pages are the web pages for individual pieces, rendered from `show.html` templates. Assuming our `article` piece type example has a single `main` area, it could look like this:
+Show pages are the web pages for individual pieces, rendered from `show.html` templates. Instead of `data.page`, the template uses `data.piece` to access the piece data.
+
+Assuming our `article` piece type example has a single `main` area, it could look like this:
 
 ```django
 {# modules/article-page/views/show.html #}
@@ -173,12 +175,12 @@ Show pages are the web pages for individual pieces, rendered from `show.html` te
 {% endblock %}
 ```
 
-Instead of `data.page`, this template is using `data.piece` to access the piece data. There are some other special data available in show page templates:
+There are some other special data available in show page templates:
 
 | Property | What is it? |
 | -------- | ----------- |
 | `piece` | The document object for the featured piece. In a blog, this would be a single article. |
-| `page` | In show page templates, `data.page` still exists, but refers to the index page |
+| `page` | In show page templates, `data.page` refers to the index page |
 | `previous` | If using the [`previous: true` option](/reference/module-api/module-options.md#previous), `data.previous` is the previous piece based on the [sort](/reference/module-api/module-options.md#sort) |
 | `next` | If using the [`next: true` option](/reference/module-api/module-options.md#next), `data.next` is the next piece based on the [sort](/reference/module-api/module-options.md#sort) |
 
