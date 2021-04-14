@@ -1,257 +1,210 @@
----
-title: "Piece Pages"
----
+# Piece index and show pages
 
-# Piece Pages
+**Index pages** list pieces of a particular type. Once one is created, each individual piece automatically has its own web page, known in Apostrophe as a **show page**. If you're familiar with blogs, you know this model all too well.
 
-The most intuitive example is a blog: if the individual [piece](pieces.md) is one blog post, then the piece page is the blog's home page, where all of the posts can be discovered, paginated, filtered and explored. In addition,  "piece pages" are responsible for serving the individual webpage for each piece.
+This feature set is powered by the `@apostrophecms/piece-page-type` module (because you're creating a *page type* that displays *pieces*, get it?).
 
-If the project has a piece module called `product`, then that module provides a way to create, edit, manage and query pieces. If the project has a piece page module called `product-page`, then that module provides a way to browse and view the pieces.
+Index pages support all features from [pages](/guide/pages.md), then add on some special features. In short, those are:
 
-In general piece modules are concerned with *editing and APIs*, while piece page modules are concerned with *browsing as part of a website*. For developers familiar with the "model / view / controller" pattern: **piece modules are the model layer for your content type, while piece page modules are the view layer.**
+- Two template files: one for index pages and one for show pages
+- Additional piece data available in templates
 
-Some projects just need a widget module for each piece, but most will want to let users view a page for each one, or at least browse and paginate through a complete list. That's where piece pages shine.
+## Creating a piece page type
 
-## Piece Pages by Example
+There are two critical steps to adding a new module for a piece page type:
 
-In A3, piece pages work much like 2.x, with a few important changes. Most of those changes are described by the the [new module format](module-format-example.md).
+1. Extend `@apostrophecms/piece-page-type`
+2. Specify what piece type should be shown on the page
 
-Just like in A2, piece page modules and piece modules come in pairs. And the name of the piece page module automatically determines which piece module it works together with. So we don't need very much code in our actual module in order to get started.
+Extending the right module is simple enough. These modules use the property:
 
-Here's an example of a piece page module that works with the product piece described in the [pieces section](pieces.md):
-
-```js
-// app.js
-require('apostrophe')({
-  modules: {
-    // ... other modules ...
-    // piece module
-    product: {},
-    // piece page module
-    'product-page': {}
-  }
-});
+```javascript
+`extend: '@apostrophecms/piece-page-type',`
 ```
 
-```js
-// modules/page/index.js
-// Add the new page type to the "Type" dropdown for new pages
+Identifying the piece type can be done two ways: **using a module naming convention** or **using the `pieceModuleName` setting**. We can look at both options using a blog as our example.
 
-module.exports = {
-  options: {
-    types: [
-      {
-        name: 'default-page',
-        label: 'Default'
-      },
-      {
-        name: 'product-page',
-        label: 'Product Index'
-      },
-      {
-        name: '@apostrophecms/home-page',
-        label: 'Home'
-      }
-    ]
-  }
-};
-```
+### Matching a piece type using naming
 
-```js
-// modules/product-page/index.js
-// Configure our new piece page type
+In this example, the piece type is `article`, since "articles" are the individual entries that make up a blog. If you name the piece page type `article-page`, Apostrophe will automatically know that the two modules go together. (In case you missed the trick there, the piece page name is: piece type + `-page`.)
+
+The piece page module then looks like:
+
+```javascript
+// modules/article-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
-    label: 'Product Index Page'
+    label: 'Blog page'
   }
 };
 ```
 
-```django
-{# modules/product-page/views/index.html #}
+One benefit of this approach is that the codebase folders for the piece type and piece page type will be next to one another alphabetically. This tends to be the choice of the Apostrophe core team.
 
-{% import '@apostrophecms/pager:macros.html' as pager with context %}
+![Screenshot of code directories "article" and "article-page"](/images/piece-page-modules.png)
+
+### Specifying the piece type with `pieceModuleName`
+
+This method allows you to name the module whatever you want since you are specifically identifying a piece type. Set the [`pieceModuleName` option](/reference/module-api/module-options.md#piecemodulename) to the piece type name and Apostrophe make the right connection.
+
+```javascript
+// modules/blog-page/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    label: 'Blog page',
+    pieceModuleName: 'article'
+  }
+};
+```
+
+Either method works well and you may find both options useful depending on the situation.
+
+### Add template files and instantiate
+
+Piece page types use two templates, both added in the module's `views` directory (e.g., `modules/article-page/views/`).
+
+| Template file name | What is it? |
+| ------------------ | ----------- |
+| `index.html` | Template for listing pieces (the **"index page**) |
+| `show.html` | Template to display an individual piece (a **"show page"**) |
+
+We'll review each template's features next.
+
+Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module).
+
+🛑 Hold up. ✋
+
+You've reviewed the [page type guide](/guide/pages.md), right? The sections below will highlight the special features of index and show page templates. For general page template syntax, see that page type guide.
+
+## The index page template
+
+Index page templates look very similar to other page templates.
+
+```django
+{# modules/article-page/views/index.html #}
+
 {% extends "layout.html" %}
+{% import '@apostrophecms/pager:macros.html' as pager with context %}
 
 {% block main %}
-  {% for product in data.pieces %}
-    <h2>
-      <a href="{{ product._url }}">{{ product.title }}: {{ product.price }}</a>
-    </h2>
-    <section>{% area product, 'description' %}</section>
+  <h1>{{ data.page.title }}</h1>
+
+  {% for article in data.pieces %}
+    <article>
+      <h2>
+        <a href="{{ article._url }}">{{ article.title }}</a>
+      </h2>
+    </article>
   {% endfor %}
 
-  {# The pager macro now takes a `class` option to set `class` attributes. #}
   {{ pager.render({
     page: data.currentPage,
     total: data.totalPages,
-    class: 'my-pager-class'
+    class: 'blog-pager'
   }, data.url) }}
 {% endblock %}
 ```
 
+### `data.pieces` and other unique `data` properties
+
+The first new thing here is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
+
 ```django
-{# modules/product-page/views/show.html #}
+{% for article in data.pieces %}
+  <article>
+    <h2>
+      <a href="{{ article._url }}">{{ article.title }}</a>
+    </h2>
+  </article>
+{% endfor %}
+```
+
+Index page templates have access to `data.pieces`, which is an array of piece docs. Since it's an array, we use the [Nunjucks `for` tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over the pieces.
+
+The `data` object properties unique to index pages are:
+
+| Property | What is it? |
+| -------- | ----------- |
+| `pieces` | An array of piece docs for the current set of results |
+| `currentPage` | A number representing what page of results is shown, starting with `1` |
+| `totalPages` | The total number of results pages there are |
+| `totalPieces` | The total number of pieces across all result pages |
+
+### Pagination
+
+```django
+{% import '@apostrophecms/pager:macros.html' as pager with context %}
+
+{{ pager.render({
+  page: data.currentPage,
+  total: data.totalPages,
+  class: 'blog-pager'
+}, data.url) }}
+```
+
+By default, index pages will include up to *ten* pieces on `data.pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-2) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
+
+Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager macro is a special template using the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature. This particular macro accepts two arguments:
+
+1. an object with the `currentPage` and `totalPages` values, described above, as well as an optional CSS class for the pager wrapper
+```javascript
+{
+  page: data.currentPage,
+  total: data.totalPages,
+  class: 'my-pager-class' // Optional
+}
+```
+2. the page URL, `data.url`
+
+## The show page template
+
+Show pages are the web pages for individual pieces, rendered from `show.html` templates. Instead of `data.page`, the template uses `data.piece` to access the piece data.
+
+Assuming our `article` piece type example has a single `main` area, it could look like this:
+
+```django
+{# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
-{% set product = data.piece %}
 
 {% block main %}
-  {# The layout already output the title for us #}
-  <h4>Price: {{ product.price }}</h4>
-  <section>{% area product, 'description' %}</section>
+  <h1>{{ data.piece.title }}
+  <section>
+    {% area data.piece, 'main' %}
 {% endblock %}
 ```
 
-That's all we need to create a basic paginated index page for all of our products, with "virtual" subpages for the individual products, based on the `slug` field of each piece.
+There are some other special data available in show page templates:
 
-So to finish the job, just go to the home page, click "Page Tree," then click "New Page." Choose the "Product Page" type for your page and save, then click the link button in the page tree to jump to the new piece page.
+| Property | What is it? |
+| -------- | ----------- |
+| `piece` | The document object for the featured piece. In a blog, this would be a single article. |
+| `page` | In show page templates, `data.page` refers to the index page |
+| `previous` | If using the [`previous: true` option](/reference/module-api/module-options.md#previous), `data.previous` is the previous piece based on the [sort](/reference/module-api/module-options.md#sort) |
+| `next` | If using the [`next: true` option](/reference/module-api/module-options.md#next), `data.next` is the next piece based on the [sort](/reference/module-api/module-options.md#sort) |
 
-### Major changes from A2
+## Index and show page URL basics
 
-* In A3, we extend `@apostrophecms/piece-page-type`.
+Index page URLs, like other page URLs, generally are constructed from the base domain/URL (the home page URL) plus their slug. Page slugs include forward slashes and, by default, the path of their parent page, if they have one.
 
-* In A3, there are no tags, so there is no "with these tags" feature to limit what is displayed on a particular piece page. However, you can do this yourself as described later.
+If the home page URL was `https://example.rocks` and the "Articles" index page had the slug `/articles`, the "Articles" page URL would be **`https://example.rocks/articles`**.
 
-* Infinite scroll and refresh-free filtering don't currently exist in A3. Since A3 is much less opinionated on the front end, they probably won't be part of the core, but they may come back at some point as an optional module.
+Show pages are extensions of their index page. To that end, their URLs are the index page url plus the piece slug. Piece slugs do not have slashes or look like a URL path on their own since pieces can be used in many ways.
 
-## Filtering pieces on the Piece Page
+Consider an article "How to write Javascript." Apostrophe would generate the slug `how-to-write-javascript` based on the title. With the index page url `https://example.rocks/articles` and that slug, the show page URL would be **`https://example.rocks/articles/how-to-write-javascript`**.
 
-Just like in A2, we can configure `piecesFilters` to offer filtering to our website visitors. Let's start by adding a field to our `product` pieces that's good to filter on:
+The structure of index and show page URLs is one of the most clear ways to understand how show pages depend on index pages. Even if this does not seem terribly complex, it is important to understand that relationship.
 
-```js
-// modules/product/index.js
-module.exports = {
-  // ...
-  fields: {
-    add: {
-      // ... add this as one more field
-      color: {
-        type: 'select',
-        label: 'Color',
-        choices: [
-          {
-            value: 'red',
-            label: 'Red'
-          },
-          {
-            value: 'green',
-            label: 'Green'
-          },
-          {
-            value: 'blue',
-            label: 'Blue'
-          }
-        ]
-      }
-    }
-  }
-};
-```
+::: note
+You may create multiple index pages of a particular type. If you do, the related piece show pages can be accessed at URLs based on any of the index pages. For example, if you create one articles index page with the slug `/articles` and another with `/news`, both of these URLs will go to the same article:
 
-```js
-// modules/product-page/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-page-type',
-  options: {
-    label: 'Product Index Page',
-    piecesFilters: [
-      {
-        name: 'color',
-        label: 'Color'
-      }
-    ]
-  }
-};
-```
+- `https://example.rocks/articles/how-to-write-javascript`
+- `https://example.rocks/news/how-to-write-javascript`
 
-```django
-{# modules/product-page/views/index.html #}
+This can be used to create index pages that are filtered to list different pieces (e.g., articles on different topics).
 
-{# ... add this before the list of products #}
-<nav>
-  {% for choice in data.piecesFilters.color %}
-    {% if data.query.color == choice.value %}
-      {# Click to remove the filter #}
-      {{ choice.label }}
-      <a
-        href="{{ data.url | build({ color: null }) }}"
-      >
-        ⓧ
-      </a>
-    {% else %}
-      {# Click to select the filter #}
-      <a
-        href="{{ data.url | build({ color: choice.value }) }}"
-      >
-        {{ choice.label }}
-      </a>
-    {% endif %}
-  {% endfor %}
-</nav>
-```
+Even if any of the index page URL paths can be used to reach a particular show page, the piece will have a primary `_url` property when requested (e.g., in a `GET` API request). That primary URL is generated using the index page identified using the `chooseParentPage` method on `@apostrophecms/piece-page-type`. By default it simply returns the first index page created, but you can override that method to choose a matching index page another way.
 
-:::  tip Note:
-You won't see any choices for the filter unless you actually have products that have been assigned a color via the color field we just added. Similarly, if you add more than one filter, you will never see filter combinations that produce zero results.
-
-The syntax for `piecesFilters` may change before the final 3.x release.
+<!-- TODO: Link to the piece page module reference page `chooseParentPage` method when available. -->
 :::
-
-## Multiple Piece Pages for the Same Piece Type
-
-Rather than filtering them all on the same page, you might prefer to create separate galleries of red products, green products, and blue products — or split them up into separate piece pages in some other way. It's up to you. The important thing is that you let Apostrophe know how to identify the pieces you want for this particular page. This is different from A2, where this was handled via tags by default.
-
-We'll solve it by adding a `color` field to our piece pages as well, along with logic to browse only matching pieces and assign the right URL to each piece:
-
-```js
-// modules/product-page/index.js
-// modules/product-page/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-page-type',
-  options: {
-    label: 'Product Index Page'
-  },
-  fields: {
-    add: {
-      color: {
-        type: 'select',
-        label: 'Color',
-        choices: [
-          {
-            value: 'red',
-            label: 'Red'
-          },
-          {
-            value: 'green',
-            label: 'Green'
-          },
-          {
-            value: 'blue',
-            label: 'Blue'
-          }
-        ]
-      }
-    }
-  },
-  methods(self) {
-    return {
-      filterByIndexPage(query, page) {
-        if (page.color) {
-          query.color(page.color);
-        }
-      },
-      chooseParentPage(pages, piece) {
-        return pages.find(page => page.color === piece.color);
-      }
-    };
-  }
-};
-```
-
-Here we've done three things:
-
-* We've added a `color` field to the piece page itself.
-* We've overridden the `filterByIndexPage` method in order to restrict the `product` pieces to those that match the `color` of this piece page. Notice that we didn't have to write a query builder for `query.color`. All `select` fields automatically have one.
-* We've overridden `chooseParentPage` to pick the first piece page with a `color` setting that matches the `piece`. This helps Apostrophe assign the right `_url` to the piece.
-
-Now we can add three separate product pages via the Page Tree button. Be sure to assign a value to the "Color" field. When you visit that page, you will see only products of the appropriate color. In addition, when you display those products anywhere on the site via a widget, the link for more information will be a virtual subpage of the matching piece page.
