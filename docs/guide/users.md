@@ -1,6 +1,6 @@
 # Users and user roles
 
-A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the website. Beyond that, users get specific sets of permissions based on the **role** they are assigned. More on that to come.
+A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the editing interface. Beyond that, users get specific sets of permissions based on the **role** they are assigned.
 
 ## Adding new users
 
@@ -14,7 +14,7 @@ The CLI task for adding users is primarily useful to add the very first admin us
 node app @apostrophecms/user:add my-user admin
 ```
 
-The two final arguments passed to the task are, in order, the new username (`my-user`) and the user role (`admin`).
+The two final arguments passed to the task are, in order, the new username (`my-user`) and the [user role](#user-roles) (`admin`).
 
 ### Adding users through the UI
 
@@ -24,7 +24,7 @@ Open the users manager interface by clicking the "Users" button in the admin men
 
 ![The admin menu at the top of the browser window with the Users button highlighted](/images/users-admin-bar.png)
 
-When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," role, and username. Also fill in the "Password" field so they can log into the website and save.
+When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), and username. Also fill in the "Password" field so they can log into the website and save.
 
 ![A user editor modal with values filled in for our user, "Sam Wilson"](/images/users-editor.png)
 
@@ -49,6 +49,6 @@ Users are assigned one of four **user roles**. Each role is assigned a set of pe
 | User role | What can they do? |
 | --------- | ----------------- |
 | **Guest** | Guest users can log into the website and view content with their visibility set to "Login required." They cannot edit any content or view unpublished content. |
-| **Contributor** | Contributors may create, edit, and archive content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
+| **Contributor** | Contributors may create and edit content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
 | **Editor** | Editors have all the permissions of contributors. They can also *publish* content. They cannot take any action on users. |
-| **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may manage users, including resetting passwords. |
+| **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to  reset passwords. |
