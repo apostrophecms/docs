@@ -24,7 +24,7 @@ Open the users manager interface by clicking the "Users" button in the admin men
 
 ![The admin menu at the top of the browser window with the Users button highlighted](/images/users-admin-bar.png)
 
-When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), and username. Also fill in the "Password" field so they can log into the website and save.
+When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), username, and password.
 
 ![A user editor modal with values filled in for our user, "Sam Wilson"](/images/users-editor.png)
 
@@ -33,14 +33,6 @@ When the manager opens, click the "New User" button to open a fresh content edit
 Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
 
 ![The Apostrophe login page with username and password fields](/images/users-login.png)
-
-### Restricting content access
-
-Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see.
-
-You can require login access to view specific pages or pieces using the visibility field, labeled **"Who can view this?"** This field is found in the "Permissions" editor tab by default.
-
-![A page editor interface showing the permission tab and "who can view this" field](/images/users-visibility.png)
 
 ## User roles
 
@@ -52,3 +44,10 @@ Users are assigned one of four **user roles**. Each role is assigned a set of pe
 | **Contributor** | Contributors may create and edit content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
 | **Editor** | Editors have all the permissions of contributors. They can also *publish* content. They cannot take any action on users. |
 | **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to  reset passwords. |
+
+::: note
+Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see. The "Guest" role can be used for that.
+
+Require login access to view specific pages or pieces using the visibility field, labeled **"Who can view this?"** This field is found in the "Permissions" editor tab by default.
+
+![A page editor interface showing the permission tab and "who can view this" field](/images/users-visibility.png)
