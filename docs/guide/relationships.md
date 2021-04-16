@@ -171,6 +171,40 @@ Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If
 <p>Topic: {{ data.piece._topics[0] }}</p>
 ```
 
-### Reading the relationship from the "reverse" side
+## Reading the relationship from the "reverse" side
 
-Relationships are directional, but you can still read the relationship from either direction with the right configuration.
+Relationships are directional, but you can still read the relationship from the opposite direction using a `reverseRelationship` field. A `reverseRelationship` field must be reflecting an existing `relationship` field. **It has no user interface or property in database documents.** It is simply a signal for Apostrophe to populate data when fetching a document.
+
+In the example above of articles and topics, you might want to give each topic their own page showing every article using that topic. To do that, add a `relationshipReverse` field to the topic piece type:
+
+```javascript
+// modules/topic/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  fields: {
+    add: {
+      _articles: {
+        type: 'relationshipReverse',
+        withType: 'article',
+        reverseOf: '_topics'
+      }
+    }
+  }
+};
+```
+
+You don't need to use a fields `group` setting here since the `relationshipReverse` field has no user interface.
+
+This field is identifying the connected doc type with the `withType` setting, then the matching `relationship` field on that doc type with the `reverseOf` setting. See [more about `relationshipReverse` configuration](/reference/field-types/relationship-reverse.md) in the field type reference page.
+
+With this field in place, you could display connected articles in a topics show page the same way you displayed article topics above.
+
+```django
+{# module/topic-pages/views/show.html #}
+<p>Articles:</p>
+<ul>
+  {% for article in data.piece._articles %}
+    <li>{{ article.title }}</li>
+  {% endfor %}
+</ul>
+```
