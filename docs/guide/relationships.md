@@ -171,6 +171,9 @@ Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If
 <p>Topic: {{ data.piece._topics[0] }}</p>
 ```
 
+<!--
+TODO: Uncomment this section once reverse relationships are fixed in core so we can confirm behavior.
+
 ## Reading the relationship from the "reverse" side
 
 Relationships are directional, but you can still read the relationship from the opposite direction using a `reverseRelationship` field. A `reverseRelationship` field must be reflecting an existing `relationship` field. **It has no user interface or property in database documents.** It is simply a signal for Apostrophe to populate data when fetching a document.
@@ -208,3 +211,6 @@ With this field in place, you could display connected articles in a topics show 
   {% endfor %}
 </ul>
 ```
+
+-->
+
