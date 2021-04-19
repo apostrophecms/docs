@@ -40,7 +40,7 @@ module.exports = {
 ```
 
 ::: note
-For the purposes of this guide, we will focus on the piece type code. If following along, refer to the [pieces guide](/guide/pieces.md) for more information on adding piece types, including instantiating the modules.
+Refer to the [pieces guide](/guide/pieces.md) for more information on adding piece types.
 :::
 
 Then we can add a "Topics" piece type. Since it is only used for categorization, it doesn't need any special fields.
@@ -99,15 +99,15 @@ Like with all fields, we identify the field type, `type: 'relationship'`, and gi
 In the case of a relationship field, the `_id` of the connected doc is saved. Since that connected doc may change, the actual data will be fetched when the relationship is used so it is always up to date.
 :::
 
-## Connecting related docs in the interface
+## Creating relationships in the interface
 
-When someone creates or edits an article, the editor will now include a relationship field. They can type in the name of a topic or use the "Browse" button to view the full list of topics to choose.
+Once a relationship field is added to the schema, the editor will now include a relationship field. They can type in the name of a topic or use the "Browse" button to view the full list of topics to choose.
 
 ![The topics relationship field](/images/relationship-autocomplete.png)
 
 ![The chooser interface for the topics relationship field](/images/relationship-chooser.png)
 
-## Limiting the number of connected docs
+## Limiting the number of relationships
 
 Sometimes a doc should only connect to one other doc through a relationship field. Other times you may want to require a minimum number of relationships. Both can be achieved using the `min` and `max` settings on relationship fields.
 
@@ -174,9 +174,9 @@ Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If
 <!--
 TODO: Uncomment this section once reverse relationships are fixed in core so we can confirm behavior.
 
-## Reading the relationship from the "reverse" side
+## Reverse relationships
 
-Relationships are directional, but you can still read the relationship from the opposite direction using a `reverseRelationship` field. A `reverseRelationship` field must be reflecting an existing `relationship` field. **It has no user interface or property in database documents.** It is simply a signal for Apostrophe to populate data when fetching a document.
+Relationships are directional, but you can still read the relationship from the opposite direction using a `reverseRelationship` field. A `reverseRelationship` field must reflect an existing `relationship` field. **It has no user interface or property in database documents.** It is simply a signal for Apostrophe to populate data when fetching a document.
 
 In the example above of articles and topics, you might want to give each topic their own page showing every article using that topic. To do that, add a `relationshipReverse` field to the topic piece type:
 
@@ -213,4 +213,3 @@ With this field in place, you could display connected articles in a topics show 
 ```
 
 -->
-
