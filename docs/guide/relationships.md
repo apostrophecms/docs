@@ -109,7 +109,7 @@ Once a relationship field is added to the schema, the editor will now include a 
 
 ## Limiting the number of relationships
 
-Sometimes a doc should only connect to one other doc through a relationship field. Other times you may want to require a minimum number of relationships. Both can be achieved using the `min` and `max` settings on relationship fields.
+You can configure a minimum and/or maximum number of doc relationships on a relationship field using the `min` and `max` settings.
 
 Setting `max: 1` on a relationship field will only allow one such connection.
 
@@ -196,7 +196,9 @@ module.exports = {
 };
 ```
 
+::: tip
 You don't need to use a fields `group` setting here since the `relationshipReverse` field has no user interface.
+:::
 
 This field is identifying the connected doc type with the `withType` setting, then the matching `relationship` field on that doc type with the `reverseOf` setting. See [more about `relationshipReverse` configuration](/reference/field-types/relationship-reverse.md) in the field type reference page.
 
