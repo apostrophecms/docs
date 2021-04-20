@@ -26,7 +26,7 @@ _toppings: {
 }
 ```
 
-::: warning NOTE
+::: tip
 **For better performance, it is strongly recommended that you set a projection filter** via the `builders` option, limiting the amount of information fetched about each related doc. You may also call other query builders by setting subproperties of the `builders` property. This is a useful way to limit the acceptable choices for the join.
 :::
 <!-- TODO: Link "query builders" to more docs on that feature -->
