@@ -36,6 +36,7 @@ module.exports = {
         },
         'guide/pieces.md',
         'guide/piece-pages.md',
+        'guide/relationships.md',
         'guide/users.md',
         'guide/front-end-assets.md'
       ]
