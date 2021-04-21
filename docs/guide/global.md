@@ -6,7 +6,7 @@ Editable content or settings used across your app can be managed through the **g
 - a special ID for a third-party service, such as Google Analytics
 - social media account URLs
 
-The global doc is a special [piece](/guide/pieces.md): it is created automatically and there is only ever one. It is configured through the `@apostrophecms/global` piece type module.
+The global doc is a special [piece](/guide/pieces.md): it is created automatically and there can only be one. It is configured through the `@apostrophecms/global` piece type module.
 
 To demonstrate, we may want to display an organizational Github URL in the website footer and a "Contact" page. We can add that to the global doc as we would on any other piece type.
 
