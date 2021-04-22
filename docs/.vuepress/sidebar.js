@@ -38,6 +38,16 @@ module.exports = {
         'guide/piece-pages.md',
         'guide/global.md',
         'guide/relationships.md',
+        {
+          title: 'Templating',
+          // What are widgets and areas and how you configure them
+          path: '/guide/templating',
+          children: [
+            'guide/templating/syntax.md',
+            'guide/templating/async-components.md',
+            'guide/templating/fragments.md'
+          ]
+        },
         'guide/users.md',
         'guide/front-end-assets.md'
       ]
@@ -47,9 +57,7 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/advanced/rest-apis.md',
-        'guide/advanced/conditional-fields.md',
-        'guide/advanced/async-components.md',
-        'guide/template-fragments'
+        'guide/advanced/conditional-fields.md'
       ]
     }
   ],
