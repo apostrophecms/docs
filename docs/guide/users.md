@@ -4,7 +4,7 @@ A **"user"** in Apostrophe is an account (usually for a human or benevolent robo
 
 ## Adding new users
 
-If you want to do anything with your Apostrophe website, you will need users. There are two main ways to add them: using the command-line task or through the user interface.
+If you want to do anything with your Apostrophe website, you will need users. There are two main ways to add them: using the command line task or through the user interface.
 
 ### Adding users with the CLI task
 
