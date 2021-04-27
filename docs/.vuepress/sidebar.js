@@ -40,12 +40,10 @@ module.exports = {
         'guide/relationships.md',
         {
           title: 'Templating',
-          // What are widgets and areas and how you configure them
-          path: '/guide/templating',
           children: [
-            'guide/templating/syntax.md',
-            'guide/templating/async-components.md',
-            'guide/templating/fragments.md'
+            'guide/templating.md',
+            'guide/fragments.md',
+            'guide/async-components.md'
           ]
         },
         // 'guide/users.md',
