@@ -48,7 +48,7 @@ module.exports = {
             'guide/templating/fragments.md'
           ]
         },
-        'guide/users.md',
+        // 'guide/users.md',
         'guide/front-end-assets.md'
       ]
     },
