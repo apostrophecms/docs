@@ -92,7 +92,16 @@ The [layout template example](#layout-templates) above demonstrates one way that
 
 The `layout.html` template code above inherits all of the markup and template blocks of the `outerLayout.html` template from Apostrophe core. When it uses the `beforeMain` and `afterMain` blocks, those *replace* the matching blocks from the inherited template.
 
-Going forward, a page template would extend `layout.html`. That *page template* may also use blocks from `outerLayout.html`, replacing them (such as the `main` block).
+Going forward, a page template would extend `layout.html`. That *page template* may also use blocks from `outerLayout.html`, **replacing those blocks** (such as the `main` block below).
+
+```django
+{# modules/default-page/views/page.html #}
+{% extends "layout.html" %}{# 👈 Our template extension #}
+
+{% block main %}
+  {% area data.page, 'mainContent' %}
+{% endblock %}
+```
 
 **You can also *add to* template block content, rather than completely replace it.** To do this, include a `super()` render tag at the beginning of a block. `super()` will render as the contents of the inherited block.
 
