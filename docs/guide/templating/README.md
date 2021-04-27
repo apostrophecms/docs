@@ -147,11 +147,42 @@ That footer template would render as part of the layout template.
 
 See more about including templates [in the Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html#include).
 
-
 ### Referencing templates across modules
 
-The `include` and `extends` tags in the examples above reference [global templates](#global-templates) that are directly in the root `views` directory. As such, they simply name the file: e.g., `{% extends layout.html %}`.
+The `include` and `extends` tags in the examples above name [global templates](#global-templates) that are directly in the root `views` directory. As such, they simply name the file: e.g., `{% extends layout.html %}` or `{% include footer.html %}`.
 
+In some cases, we will need to use a template file that is [in a module's `views` directory](#module-templates). In that case, we need to provide additional information so Apostrophe can find that template.
+
+For example, we may have a default page type that includes a sidebar we want to use on a certain other page types:
+
+```django
+{# modules/default-page/views/page.html #}
+{% extends "layout.html" %}
+
+{% block main %}
+  {# 👇 Sidebar that we'll reuse. #}
+  <aside>
+    {# Sidebar content... #}
+  <aside />
+  {# 👇 Content area that we'll replace. #}
+  {% block content %}
+    {% area data.page, 'main' %}
+  {% endblock %}
+{% endblock %}
+```
+
+If we add a contact page type that will use that same sidebar, we can `extend` the default page template rather than the global layout template. That way we can replace only the `content` block. To do this, the `{% extend %}` tag will include the name of the default page module:
+
+```django
+{% extends "default-page:page.html" %}
+
+{% block content %}
+  <h1>Contact info</h1>
+  {# Contact information... #}
+{% endblock %}
+```
+
+`{% extends "default-page:page.html" %}` tells Apostrophe that we are using the `page.html` template file that belongs to the `default-page` module. You could use a module template with the `include` tag the same way.
 
 ::: tip
 The Nunjucks templating language includes many tags and tools you can use in Apostrophe templates. These include:
