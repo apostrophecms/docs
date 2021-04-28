@@ -93,6 +93,7 @@ module.exports = {
         'reference/field-types/integer',
         'reference/field-types/oembed',
         'reference/field-types/password',
+        'reference/field-types/radio',
         'reference/field-types/range',
         'reference/field-types/relationship',
         'reference/field-types/relationship-reverse',
