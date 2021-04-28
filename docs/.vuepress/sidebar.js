@@ -36,9 +36,10 @@ module.exports = {
         },
         'guide/pieces.md',
         'guide/piece-pages.md',
+        'guide/global.md',
         'guide/relationships.md',
-        'guide/users.md',
-        'guide/client-side-assets.md',
+        // 'guide/users.md',
+        'guide/front-end-assets.md',
         'guide/static-assets.md'
       ]
     },
@@ -93,6 +94,7 @@ module.exports = {
         'reference/field-types/integer',
         'reference/field-types/oembed',
         'reference/field-types/password',
+        'reference/field-types/radio',
         'reference/field-types/range',
         'reference/field-types/relationship',
         'reference/field-types/relationship-reverse',
