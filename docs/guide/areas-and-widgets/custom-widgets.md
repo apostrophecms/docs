@@ -204,3 +204,32 @@ apos.util.widgetPlayers.accordion = {
 ```
 
 [Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapser example.
+
+### Using widget data in players
+
+These widget players do not know anything about the data in the widget. If we want to use widget data in your player code, we will need to provide it.
+
+On the other hand, template files *do* have access to the data. One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
+
+For example, we could change our collapser widget code to include a possible `color` field value:
+
+```django
+{# modules/collapse-widget/views/widget.html #}
+<section data-collapser data-color="{{ data.widget.color }}" class="collapser">
+  {# The rest of the code is the same... #}
+</section>
+```
+
+We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could
+
+```javascript
+apos.util.widgetPlayers.accordion = {
+  selector: '[data-collapser]',
+  player: function (el) {
+    const color = el.dataset.color || 'purple'
+    // The rest of the code is the same...
+  }
+};
+```
+
+The player *does* have access to the widget's wrapping element, so we use `el.dataset.color` to access the color data we stored on `data-color`.
