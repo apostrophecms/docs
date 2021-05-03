@@ -2,93 +2,38 @@
 
 Templates are where code and content turn into web pages people can actually see and use. Apostrophe templates use the Nunjucks templating language and generally look like normal HTML markup with special tags and variables sprinkled throughout to render data.
 
-Template files go in `views` directories, either in individual module directories or at the project root.
+Template files go in `views` directories, either as module subdirectories or at the project root.
 
-## Global templates
+![Screenshot of a file directory highlighting a default-page module views directory and the global views directory](/images/templating-views-dirs.jpg)
 
-Global templates go in a `views` directory at the project root. Generally speaking, templates in the root `views` directory are either:
-
-1. layout templates, such as `layout.html`
-2. used in many other template, such as [fragments or macros](/guide/templating/fragments.md)
-
-### Layout templates
-
-Layout templates are the most common global templates. As the name suggests, these **provide the outer structure for pages**. While individual page type templates insert data for the pages, the main layout template will likely include sitewide features. **Website navigation and footers** are both usually in the layout template. They might also include markup for the page's `<head>` tag and wrapping elements for the main page content.
-
-**Let's look at a simple layout template file at `views/layout.html`.**
-
-```django
-{# views/layout.html #}
-{% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
-
-{# 👇 Inserting markup into a lower level template block #}
-{% block beforeMain %}
-<div>{# Open page wrapper #}
-  <header>
-    <img src="/images/logo.png" alt="Organization logo">
-    <nav>{# Website navigation #}</nav>
-    {% if not data.user %}<a href="/login">Login</a>{% endif %}
-  </header>
-  <main>{# Open main tag #}
-{% endblock %}
-
-{% block afterMain %}
-  </main>{# Close main tag #}
-  <footer class="bp-footer">
-    <p>
-      © Apostrophe Technology, Inc.
-    </p>
-  </footer>
-</div>{# Close page wrapper #}
-{% endblock %}
-```
-
-You might notice is that this does not have essential web page elements such as a `head` or `body` tag. The first thing this module does is extend another template:
-
-```django
-{% extends data.outerLayout %}
-```
-
-This references a lower level layout template from Apostrophe core that includes those critical HTML elements, markup required by Apostrophe, and template block structure that `layout.html` and other templates use. ([See that file on Github](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
-
-The layout template then includes two template blocks, **`beforeMain` and `afterMain`**. These two are before and after the `main` block in the base layout template linked above. By using them here, they override the blocks in the base template. They are great places to put the site navigation, site footer, and other markup that should always wrap the main content of the page.
-
-::: note NOTES
-The `main` block is used in page templates for the main content of a page. You can see it used [in the page templating guide](/guide/pages.md#page-template-essentials).
-
-`layout.html` is a naming convention in Apostrophe, but is not a required file name. The most important things to remember are that it must extend `data.outerLayout` and that page templates will extend it by whatever name you give it.
-:::
-
-Your app's `layout.html` file will likely include these elements, but could also include others as well. The base layout template (`data.outerLayout`) also includes blocks to add markup various places in the `head` tag and at the end of the `body` tag, in addition to other locations.
-
-## Module templates
-
-Module templates go in a `views` directory directly inside the module folder. For example, the module and `views` directory paths for a slideshow widget might be:
-
-```
-modules/slideshow-widget/
-modules/slideshow-widget/views/
-```
-
-It's widget template would be at the file path:
-
-```
-modules/slideshow-widget/views/widget.html
-```
-
-**Widgets and pages** (including [piece pages](/guide/piece-pages.md)) have their own special templates. For detailed discussion of each of those, see the [widget](/guide/areas-and-widgets/custom-widgets.md#widget-templates), [page](/guide/pages.md#page-template-essentials), and [piece page](/guide/piece-pages.md#the-index-page-template) templating guides.
-
-You may place template in any module type; not only those mentioned above. Module template files, other than those special ones, can also be *named* however you like. Those special template files are simply the ones that Apostrophe looks for automatically.
+The root `views` directory will usually contain layout templates or fragment templates. Templates in modules' `views` directories will usually be used only for their respective modules. [Widget](/guide/areas-and-widgets/custom-widgets.md#widget-templates), [page](/guide/pages.md#page-template-essentials), and [piece page](/guide/piece-pages.md#the-index-page-template) templates are the main examples of that.
 
 ## How templates work together
 
+To paraphrase John Donne, no template is an island. Templates will always be used as a system. We do this with the **`extends`**, **`include`**, and **[`import`](/guide/fragments.md)** tags.
+
 ### Extending templates
 
-The [layout template example](#layout-templates) above demonstrates one way that templates work together: **"extending" one another**. As shown above, when you use the `{% extends %}` tag in a template, it will inherit all of the markup and template blocks of the template it is extending.
+When you use the `{% extends %}` tag in a template, it will inherit all of the markup and template blocks of the template it is extending. Any template blocks used in the *extending* template will replace matching blocks in the *extended* template.
 
-The `layout.html` template code above inherits all of the markup and template blocks of the `outerLayout.html` template from Apostrophe core. When it uses the `beforeMain` and `afterMain` blocks, those *replace* the matching blocks from the inherited template.
+For example, the layout template will often be structured like this:
 
-Going forward, a page template would extend `layout.html`. That *page template* may also use blocks from `outerLayout.html`, **replacing those blocks** (such as the `main` block below).
+```django
+{# views/layout.html #}
+{% extends data.outerLayout %}
+
+{% block beforeMain %}
+  {# Page header markup and the main content area opening tag... #}
+{% endblock %}
+
+{% block main %}{% endblock %}
+
+{% block afterMain %}
+  {# The main content area closing tag and page footer... #}
+{% endblock %}
+```
+
+Individual page type templates will extend that layout:
 
 ```django
 {# modules/default-page/views/page.html #}
@@ -98,6 +43,12 @@ Going forward, a page template would extend `layout.html`. That *page template* 
   {% area data.page, 'mainContent' %}
 {% endblock %}
 ```
+
+`page.html` *inherits* all of the markup and template blocks of `layout.html`. When it uses the `main` block, that *replaces* only the matching block from `layout.html`.
+
+::: note
+You may have noticed that the layout template above also extends another template. `data.outerLayout` is a core, base level template. See the [layout template](/guide/layout-template.md) guide for more on that.
+:::
 
 **You can also *add to* template block content, rather than completely replace it.** To do this, include a `super()` render tag at the beginning of a block. `super()` will render as the contents of the inherited block.
 
@@ -145,11 +96,11 @@ See more about including templates [in the Nunjucks documentation](https://mozil
 
 ### Referencing templates across modules
 
-The `include` and `extends` tags in the examples above name [global templates](#global-templates) that are directly in the root `views` directory. As such, they simply name the file: e.g., `{% extends layout.html %}` or `{% include footer.html %}`.
+The `include` and `extends` tags in the examples above name "global templates," which are in the root `views` directory. As such, we can simply reference by file name: e.g., `{% extends layout.html %}` or `{% include footer.html %}`.
 
-In some cases, we will need to use a template file that is [in a module's `views` directory](#module-templates). In that case, we need to provide additional information so Apostrophe can find that template.
+In some cases, **we will need to extend or include a template file that belongs to a specific module**. In that case, we need to provide additional information so Apostrophe can find that template.
 
-For example, we may have a default page type that includes a sidebar we want to use on a certain other page types:
+For example, we may have a default page type that includes a sidebar we want to use in other page types:
 
 ```django
 {# modules/default-page/views/page.html #}
@@ -167,7 +118,7 @@ For example, we may have a default page type that includes a sidebar we want to 
 {% endblock %}
 ```
 
-If we add a contact page type that will use that same sidebar, we can `extend` the default page template rather than the global layout template. That way we can replace only the `content` block. To do this, the `{% extend %}` tag will include the name of the default page module:
+Let's extend it in a contact page type to reuse that sidebar. We will only replace the `content` block. To do this, the `{% extend %}` tag must include the name of the default page module:
 
 ```django
 {% extends "default-page:page.html" %}
@@ -178,7 +129,7 @@ If we add a contact page type that will use that same sidebar, we can `extend` t
 {% endblock %}
 ```
 
-`{% extends "default-page:page.html" %}` tells Apostrophe that we are using the `page.html` template file that belongs to the `default-page` module. You could use a module template with the `include` tag the same way.
+`{% extends "default-page:page.html" %}` tells Apostrophe that we are using the `page.html` template file that belongs to the `default-page` module. The same pattern applies when using the `include` tag.
 
 ::: tip
 The Nunjucks templating language includes many tags and tools you can use in Apostrophe templates. These include:

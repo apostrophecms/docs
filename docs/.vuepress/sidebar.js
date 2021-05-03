@@ -42,6 +42,7 @@ module.exports = {
           title: 'Templating',
           children: [
             'guide/templating.md',
+            'guide/layout-template.md',
             'guide/fragments.md',
             'guide/async-components.md'
           ]
