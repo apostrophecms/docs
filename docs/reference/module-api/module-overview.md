@@ -17,7 +17,6 @@ Module configuration objects may use the following configuration properties. The
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
 
-
 ### "Cascading" settings
 
 Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
@@ -88,7 +87,6 @@ modules.export = {
 ```
 
 You should not use both `improve` and `extend` in a single module. If "improving" an existing module, that existing module has already taken care of the "extending."
-
 
 ### `options`
 
@@ -468,7 +466,6 @@ Information returned by the component function will be available in the associat
 
 See the [async component guide](/guide/async-components) for more usage information.
 
-
 ```javascript
 // modules/product/index.js
 module.exports = {
@@ -679,7 +676,7 @@ Each extended API route function should accept the original function as `_super`
 
 ### `renderRoutes(self)`
 
-Add custom API routes to return rendered templates. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+Add custom API routes to return rendered templates. The `renderRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
 
 The name of the route dictates the template file that will be rendered. For example the `latest` route in the `product` module's `renderRoutes` section will return the template at `/modules/product/views/latest.html`.
 
@@ -726,7 +723,7 @@ We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using
 // modules/product/index.js
 module.exports = {
   // ...
-  renderRoutes(self) {
+  routes(self) {
     return {
       get: {
         // GET /api/v1/product/redirect/:_id
