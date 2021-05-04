@@ -758,7 +758,7 @@ A route in the `apiRoutes`, `restApiRoutes`, `renderRoutes`, and `routes` sectio
 | Property | What is it? |
 | -------- | ----------- |
 | `route` | A route function that accepts a request as its argument |
-| `before` | Identify the middleware from a particular module. Used if the route function should execute before particular middleware runs. Format: `middleware:nameOfModule` |
+| `before` | Identify a module's middleware or routes. Used if the route function should be registered before particular middleware or other routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
 
 ### `handlers(self)`
 
