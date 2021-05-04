@@ -20,9 +20,9 @@ Module configuration objects may use the following configuration properties. The
 
 ### "Cascading" settings
 
-Many Apostrophe module sections are structured as objects with `add`, `remove`, and `group` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
+Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
 
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface.
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface. `order` only applies to columns, arranging columns in a particular order.
 
 ### `extend`
 
@@ -263,6 +263,27 @@ modules.export = {
   columns: {
     // 👇 Hides the column showing when the article was last updated.
     remove: [ 'updatedAt' ]
+  }
+};
+```
+
+#### `order`
+
+An array of column names to sort the columns in a particular order. This will often include default columns.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  extend: '@apostrophecms/piece-type',
+  columns: {
+    add: {
+      _topic: {
+        label: 'Topic',
+        component: 'MyCustomRelationshipCell' // (See components info below)
+      }
+    }
+    // 👇 Orders the new `_topic` column among default piece columns.
+    order: [ 'title', 'labels', '_topic', 'updatedAt' ]
   }
 };
 ```
