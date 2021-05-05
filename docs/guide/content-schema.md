@@ -1,6 +1,6 @@
 # Content schemas
 
-The content field schema is another key concept in Apostrophe. The "schema" simply refers to the content fields for a particular page, piece, or widget type. In addition to setting fields for the user interface, it supports data validation.
+The content **field schema** is another key concept in Apostrophe. The "schema" simply refers to the fields for a particular content type. In addition to setting fields for the user interface, it supports data validation.
 
 Our blog post module's schema might look something like this:
 
@@ -8,6 +8,7 @@ Our blog post module's schema might look something like this:
 // modules/blog-post/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
+  // 👇 The field schema
   fields: {
     add: {
       authorName: {
@@ -16,6 +17,8 @@ module.exports = {
       },
       body: {
         label: 'Blog post body',
+        // The `area` field type supports dynamic content widgets. It is
+        // covered in the "Areas and widgets" guide section.
         type: 'area',
         options: {
           widgets: {
@@ -55,8 +58,7 @@ module.exports = {
     // Output:
     // {
     //   basics: { label: 'Basics', fields: [ 'title' ] },
-    //   utility: { fields: [ 'slug' ] },
-    //   permissions: { label: 'Permissions', fields: [ 'visibility' ], last: true }
+    //   utility: { fields: [ 'slug', 'visibility' ] }
     // }
   }
 };
@@ -65,7 +67,7 @@ module.exports = {
 The `init` function runs once on start up and has access to the module as an argument. By the time it runs, the field groups have been compiled into an object named `fieldsGroups`. If you haven't added any fields yet you can log this to see what you are working with.
 
 ::: note
-You will see a `trash` field in the log output. The interface does not show this as a normal field, but it is registered as one to support editing via the REST API.
+You would see an `archived` field in the log output with this addition. The interface does not show that as a normal field, but it is registered as one to support editing via the REST API.
 :::
 
 ### Reusing an inherited group's name will ungroup its original fields
@@ -96,6 +98,6 @@ module.exports = {
 
 There is nothing special about "Basics." It is a default group name, but if you place all of the fields from that group (or any inherited group) in a new one the group will no longer appear in the UI.
 
-`utility` _is_ a special group. It places fields in the right column of the content editor interface. You are allowed to add fields to that group and move existing fields.
+`utility` _is_ a special group. It places fields in the right column of the content editor interface. By default, it includes "meta" fields, such as the slug and visibility fields. You are allowed to add fields to that group and move existing fields.
 
 ![The utility field group](/images/fields-utility-highlight.jpg)
