@@ -209,7 +209,7 @@ apos.util.widgetPlayers.accordion = {
 
 Widget players do not have direct access to any *widget data*. If we want to use widget data in the player, we need to pass it in.
 
-Template files, On the other hand, *do* have access to widget data (they are rendered on the server). One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
+Template files on the other hand, *do* have access to widget data (they are rendered on the server). One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
 
 For example, we could change our collapse widget to include a `color` field value:
 
