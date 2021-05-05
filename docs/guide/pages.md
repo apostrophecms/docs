@@ -165,7 +165,11 @@ This is a special tag in Apostrophe used to let editors add and manage content w
 
 [The widget guide](/guide/widgets-and-templates/README.md) will go deeper into using areas.
 
- ## Activating page types
+::: tip
+To overwrite the home page type template, create a template file for it at  `modules/@apostrophecms/home-page/views/page.html` and add template markup.
+:::
+
+## Activating page types
 
  There is one more step to make a page type available to use: You'll need to add it to the core page module's `type` option. This configures the "Type" field for pages.
 

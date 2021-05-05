@@ -43,7 +43,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 
 | Tool name | What is it? |
 | --------- | ----------- |
-| 'styles' | A list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
+| `'styles'` | A list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
 | `'bold'` | Bold text |
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
@@ -121,7 +121,7 @@ You can configure only one of the two sections (`toolbar` or `styles`), and use 
 **You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring configure these options on the `@apostrophecms/rich-text-widget` module.
 
 ```javascript
-// modules/@apostrophecms/rich-text-widget
+// modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
   options: {
     toolbar: [
@@ -197,7 +197,9 @@ The final image size name is `original`, which delivers the original image file.
 
 ## Video widget
 
-The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default. The widget uses the oEmbed data format, so you can find a full list of supported services [on the oEmbed website](https://oembed.com/#section7).
+The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default.
+
+<!-- TODO: Link to the `allowList` option on the oembed module once module references are available. -->
 
 ## HTML widget
 
