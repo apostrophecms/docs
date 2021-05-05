@@ -18,7 +18,7 @@ Modules are organized in a folder at the root of a project named `modules`. Each
 modules/blog-post/index.js
 ```
 
-The module configuration is in an object, assigned to `module.exports`. This may look familiar if you know [CommonJS](https://nodejs.org/api/modules.html#modules_modules_commonjs_modules) patterns.
+The module configuration is in an object, assigned to `module.exports`. This may look familiar if you know CommonJS patterns or have worked with Node.js before.
 
 ```javascript
 // modules/blog-post/index.js
@@ -42,7 +42,7 @@ The module API supports many different configuration options. See the [module AP
 
 ## Module inheritance
 
-Inheritance is the glue of the module system. Every module, other than the root module, extends another module. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
+Inheritance is the glue of the module system. Every module either extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
 
 ```javascript
 // modules/blog-post/index.js
@@ -51,7 +51,11 @@ module.exports = {
 };
 ```
 
-More than that, it means you can customize that core piece type module (`@apostrophecms/piece-type`) in your project. Configuring the piece type module will apply changes to every piece type in Apostrophe core as well as piece types you've created yourself.
+Even if a module does not include an `extend` setting, it will extend `@apostrophecms/module`, which provides useful features such as template rendering and API routes support.
+
+Additionally, the inheritance system allows us to customize a core piece type module (e.g., `@apostrophecms/piece-type`) in a project and see those changes in all modules that extend it. That includes every module that extends it in Apostrophe core as well.
+
+## Configuring core and installed modules
 
 Configuring a core or installed module is as simple as creating an `index.js` file for the module in your project. For example, we might want to log the title of every piece when it is published. We would then create the file:
 
