@@ -105,7 +105,7 @@ Here are some two-column styles for people following along.
 
 When adding client-side Javascript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
 
-We can use the example of a basic collapsible section widget, `collapse-widget`. It will hide detail text until a user clicks the header/button.
+We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
 
 ::: details Example collapsible widget code
 **Module configuration**
@@ -203,15 +203,15 @@ apos.util.widgetPlayers.accordion = {
 };
 ```
 
-[Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapser example.
+[Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapsible example.
 
 ### Using widget data in players
 
-These widget players do not know anything about the data in the widget. If we want to use widget data in your player code, we will need to provide it.
+Widget players do not have direct access to any *widget data*. If we want to use widget data in the player, we need to pass it in.
 
-On the other hand, template files *do* have access to the data. One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
+Template files, On the other hand, *do* have access to widget data (they are rendered on the server). One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
 
-For example, we could change our collapser widget code to include a possible `color` field value:
+For example, we could change our collapse widget to include a `color` field value:
 
 ```django
 {# modules/collapse-widget/views/widget.html #}
@@ -220,7 +220,7 @@ For example, we could change our collapser widget code to include a possible `co
 </section>
 ```
 
-We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could
+We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could get the value with the wrapper element's `dataset` property.
 
 ```javascript
 apos.util.widgetPlayers.accordion = {
