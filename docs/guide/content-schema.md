@@ -1,4 +1,4 @@
-# Content schemas
+# Content field schemas
 
 The content **field schema** is another key concept in Apostrophe. The "schema" simply refers to the fields for a particular content type. In addition to setting fields for the user interface, it supports data validation.
 
