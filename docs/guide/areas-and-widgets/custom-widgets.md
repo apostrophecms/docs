@@ -85,8 +85,8 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 ::: note
 Here are some two-column styles for people following along.
 
-```scss
-// src/index.scss or a file imported by it
+```css
+/* modules/two-column-widget/ui/public/styles.css */
 .two-col {
   display: flex;
   flex-flow: row wrap;
@@ -105,7 +105,7 @@ Here are some two-column styles for people following along.
 
 When adding client-side Javascript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
 
-We can use the example of a basic collapsible section widget, `collapse-widget`. It will hide detail text until a user clicks the header/button.
+We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
 
 ::: details Example collapsible widget code
 **Module configuration**
@@ -203,4 +203,43 @@ apos.util.widgetPlayers.accordion = {
 };
 ```
 
-[Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapser example.
+[Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapsible example.
+
+### Using widget data in players
+
+Widget players do not have direct access to any *widget data*. If we want to use widget data in the player, we need to pass it in.
+
+Template files on the other hand, *do* have access to widget data (they are rendered on the server). One good way to use data in a widget player is to insert it as a data attribute value in the template. The player can then look for that data attribute.
+
+For example, we could change our collapse widget to include a `color` field value:
+
+```django
+{# modules/collapse-widget/views/widget.html #}
+<section data-collapser data-color="{{ data.widget.color }}" class="collapser">
+  {# The rest of the code is the same... #}
+</section>
+```
+
+We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could get the value with the wrapper element's `dataset` property.
+
+```javascript
+apos.util.widgetPlayers.accordion = {
+  selector: '[data-collapser]',
+  player: function (el) {
+    const color = el.dataset.color || 'purple'
+    // The rest of the code is the same...
+  }
+};
+```
+
+The player *does* have access to the widget's wrapping element, so we use `el.dataset.color` to access the color data we stored on `data-color`.
+
+::: tip
+We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a string first. Use the `jsonAttribute` template filter to do this.
+
+```django
+<div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
+```
+
+The value will be converted to a string and escaped. The original value can retrieved in the player with `JSON.parse`.
+:::

@@ -1,6 +1,6 @@
 # Users and user roles
 
-A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the editing interface. Beyond that, users get specific sets of permissions based on the **role** they are assigned.
+A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the application. Beyond that, users get specific sets of permissions based on the **role** they are assigned.
 
 ## Adding new users
 
@@ -40,14 +40,23 @@ Users are assigned one of four **user roles**. Each role is assigned a set of pe
 
 | User role | What can they do? |
 | --------- | ----------------- |
-| **Guest** | Guest users can log into the website and view content with their visibility set to "Login required." They cannot edit any content or view unpublished content. |
-| **Contributor** | Contributors may create and edit content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
-| **Editor** | Editors have all the permissions of contributors. They can also *publish* content. They cannot take any action on users. |
-| **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to  reset passwords. |
+| **Guest** | Guest users can log into the website and view content with visibility set to "Login required." They cannot edit any content or view unpublished content. |
+| **Contributor** | Contributors may create and edit content, including the global doc. They cannot upload files (i.e., images, PDFs) or take any action on users. |
+| **Editor** | Editors have all the permissions of contributors. They can also *publish* content and upload files. They cannot take any action on users. |
+| **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to reset passwords through the user interface. |
 
 ::: note
+We can also change passwords through the command line task below. The `username` argument will be the username of the account you are updating.
+
+```bash
+node app @apostrophecms/user:change-password username
+```
+:::
+
+::: tip
 Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see. The "Guest" role can be used for that.
 
 Require login access to view specific pages or pieces using the visibility field, labeled **"Who can view this?"** This field is found in the "Permissions" editor tab by default.
 
 ![A page editor interface showing the permission tab and "who can view this" field](/images/users-visibility.png)
+:::
