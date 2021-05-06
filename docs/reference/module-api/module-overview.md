@@ -569,7 +569,14 @@ module.exports = {
 };
 ```
 
-If including a route option, use an object. See the [route options](#route-options) section for more.
+REST API routes that effect a single, existing document also take the document `_id` property as an argument. These include `getOne`, `patch`, `put`, and `delete`.
+```javascript
+async getOne(req, _id) {
+  // ...
+}
+```
+
+If using a route option, set the route name to an object. See the [route options](#route-options) section for more.
 
 If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
 
@@ -729,7 +736,7 @@ module.exports = {
   routes(self) {
     return {
       get: {
-        // GET /api/v1/product/redirect/:_id
+        // GET /api/v1/product/redirect
         async redirect(req, res) {
           const product = await self.find(req).toObject();
 
@@ -758,7 +765,7 @@ A route in the `apiRoutes`, `restApiRoutes`, `renderRoutes`, and `routes` sectio
 | Property | What is it? |
 | -------- | ----------- |
 | `route` | A route function that accepts a request as its argument |
-| `before` | Identify a module's middleware or routes. Used if the route function should be registered before particular middleware or other routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
+| `before` | Identify another module's middleware or routes. Used if the route function should be registered before particular middleware or other routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
 
 ### `handlers(self)`
 
