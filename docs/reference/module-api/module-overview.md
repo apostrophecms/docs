@@ -17,12 +17,11 @@ Module configuration objects may use the following configuration properties. The
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
 
-
 ### "Cascading" settings
 
-Many Apostrophe module sections are structured as objects with `add`, `remove`, and `group` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
+Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
 
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface.
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface. `order` only applies to columns, arranging columns in a particular order.
 
 ### `extend`
 
@@ -88,7 +87,6 @@ modules.export = {
 ```
 
 You should not use both `improve` and `extend` in a single module. If "improving" an existing module, that existing module has already taken care of the "extending."
-
 
 ### `options`
 
@@ -263,6 +261,27 @@ modules.export = {
   columns: {
     // 👇 Hides the column showing when the article was last updated.
     remove: [ 'updatedAt' ]
+  }
+};
+```
+
+#### `order`
+
+An array of column names to sort the columns in a particular order. This will often include default columns.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  extend: '@apostrophecms/piece-type',
+  columns: {
+    add: {
+      _topic: {
+        label: 'Topic',
+        component: 'MyCustomRelationshipCell' // (See components info below)
+      }
+    }
+    // 👇 Orders the new `_topic` column among default piece columns.
+    order: [ 'title', 'labels', '_topic', 'updatedAt' ]
   }
 };
 ```
@@ -447,7 +466,6 @@ Information returned by the component function will be available in the associat
 
 See the [async component guide](/guide/async-components) for more usage information.
 
-
 ```javascript
 // modules/product/index.js
 module.exports = {
@@ -526,24 +544,9 @@ To maintain the same application, they should return the same type of response a
 
 ### `restApiRoutes(self)`
 
-Add a custom REST API for a module. The `restApiRoutes` function takes the module as an argument and returns an object of functions that map to the standard REST API request types. Route functions may be asynchronous (async).
+Add a custom REST API for a module. The `restApiRoutes` function takes the module as an argument and returns an object of properties that map to the standard REST API request types.
 
-If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
-
-::: warning
-Apostrophe includes a full REST API for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md). These routes are used by the Apostrophe user interface, so **any change in REST API route handlers for piece types or the `@apostrophecms/page` module could break the UI**.
-
-The most likely use for `restApiRoutes` in a project of your own would be to provide a custom REST API to a database or service not already built into Apostrophe. `restApiRoutes` is also not for custom route URLs that don't map to one of the standard REST URLs. If you need to add a custom route in addition to the standard REST API for pieces or pages, [you should do that with `apiRoutes`](#apiroutes-self).
-:::
-
-REST API functions take the route request as an argument (`req`, below);
-Valid names for functions returned by `restApiRoutes` include:
-- `getAll`
-- `getOne`
-- `post`
-- `patch`
-- `put`
-- `delete`
+Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
 
 ```javascript
 // modules/product/index.js
@@ -565,6 +568,31 @@ module.exports = {
 };
 ```
 
+REST API routes that affect a single, existing document also take the document `_id` property as an argument. These include `getOne`, `patch`, `put`, and `delete`.
+```javascript
+async getOne(req, _id) {
+  // ...
+}
+```
+
+If specifying any extra options for your route, set the route name to an object. See the [route options](#route-options) section for more.
+
+If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
+
+::: warning
+Apostrophe includes a full REST API for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md). These routes are used by the Apostrophe user interface, so **any change in REST API route handlers for piece types or the `@apostrophecms/page` module could break the UI**. `restApiRoutes` should more likely be used in a project to provide a custom REST API to a database or service not already built into Apostrophe.
+
+`restApiRoutes` is also not for custom route URLs that don't map to one of the standard REST URLs. If you need to add a custom route in addition to the standard REST API for pieces or pages, [you should do that with `apiRoutes`](#apiroutes-self).
+:::
+
+Valid names for functions returned by `restApiRoutes` include:
+- `getAll`
+- `getOne`
+- `post`
+- `patch`
+- `put`
+- `delete`
+
 #### `extendRestApiRoutes(self)`
 
 Extend the behavior of existing REST API routes in `extendRestApiRoutes`. This function must return an object of functions. See [`restApiRoutes`](#restapiroutes-self) for the valid function names.
@@ -573,7 +601,9 @@ Each extended REST API route function should accept the original function as `_s
 
 ### `apiRoutes(self)`
 
-Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions. Route functions may be asynchronous (async).
+Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those HTTP verb properties should be set to an object of routes.
+
+Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
 
 ```javascript
 // modules/product/index.js
@@ -601,6 +631,8 @@ module.exports = {
   }
 };
 ```
+
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
 #### Naming routes
 
@@ -657,11 +689,11 @@ Each extended API route function should accept the original function as `_super`
 
 ### `renderRoutes(self)`
 
-Add custom API routes to return rendered templates. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions.
+Add custom API routes to return rendered templates. The `renderRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those HTTP verb properties should be set to an object of routes.
 
 The name of the route dictates the template file that will be rendered. For example the `latest` route in the `product` module's `renderRoutes` section will return the template at `/modules/product/views/latest.html`.
 
-Information returned by the component function will be used in the associated template as `data`.
+**Information returned by the route function will be used in the associated template as `data`.** Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
 
 ```javascript
 // modules/product/index.js
@@ -688,26 +720,22 @@ module.exports = {
 };
 ```
 
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
+
 ### `routes(self)`
 
-Add standard Express routes. The `routes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those properties should be set to an object of functions. Route functions may be asynchronous (async).
+Add standard Express routes. The `routes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those HTTP verb properties should be set to an object of routes.
 
-Each `routes` function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must generate a response via `res` to avoid leaking resources, typically using the `res.redirect` or `res.send` methods.
-
-See [Naming routes](#naming-routes) for more on function names and their route URLs.
-
-::: tip
-We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes` as they handle the potential pitfalls of Express routes. There are situations where writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
-:::
+Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
 
 ```javascript
 // modules/product/index.js
 module.exports = {
   // ...
-  renderRoutes(self) {
+  routes(self) {
     return {
       get: {
-        // GET /api/v1/product/redirect/:_id
+        // GET /api/v1/product/redirect
         async redirect(req, res) {
           const product = await self.find(req).toObject();
 
@@ -718,6 +746,25 @@ module.exports = {
   }
 };
 ```
+
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
+
+Each route function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must generate a response via `res` to avoid leaking resources, typically using the `res.redirect` or `res.send` methods.
+
+See [Naming routes](#naming-routes) for more on function names and their route URLs.
+
+::: tip
+We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes` as they handle the potential pitfalls of Express routes. There are situations where writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
+:::
+
+### Route options
+
+A route in the `apiRoutes`, `restApiRoutes`, `renderRoutes`, and `routes` sections (as well as their `extend` variations) may include options to govern particular behavior. If so, it should be configured as an object rather than a function. That object should include a `route` property in addition to the options:
+
+| Property | What is it? |
+| -------- | ----------- |
+| `route` | A route function that accepts a request as its argument |
+| `before` | Identify another module's middleware or routes. Used if the route function should be registered before a particular module's middleware or routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
 
 ### `handlers(self)`
 

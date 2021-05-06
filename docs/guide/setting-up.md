@@ -21,7 +21,7 @@ which convert && which identify
 ```
 
 ::: tip NOTE
-ImageMagick is optional, but recommended. It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If you do not install it Apostrophe can still handle image uploads, though more slowly, using [Jimp](https://www.npmjs.com/package/jimp).
+ImageMagick is optional, but recommended. It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If you do not install it Apostrophe can still handle image uploads, though more slowly.
 :::
 
 <!-- ## TODO: The Apostrophe CLI tool -->
