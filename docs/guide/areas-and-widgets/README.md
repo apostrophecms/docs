@@ -79,13 +79,13 @@ introduction: {
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
 
 ```django
-{% area context, name %}
+{% area context, 'name' %}
 ```
 
-The **context** refers to the data object that the area field belongs to. This could be the a page, a piece, or a widget. In the landing page example above, the `main` area belongs to a landing page. In that case, the context would be that page's data object in the template: `data.page`.
+The **context** refers to the data object that the area field belongs to. This could be a page, a piece, or a widget. In the landing page example above, the `main` area belongs to a landing page. In that case, the context would be that page's data object in the template: `data.page`.
 
 ```django
-{% area data.page, main %}
+{% area data.page, 'main' %}
 ```
 
 The template tag knows to use the area data on `data.page.main`, check for the widgets allowed in that area, and render the area using the correct widget templates.
