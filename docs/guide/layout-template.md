@@ -70,5 +70,5 @@ The layout template and any page, index page, or show page template could use th
 ::: note NOTES
 The `beforeMain`, `main`, and `afterMain` blocks are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside those blocks will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related Javascript belongs in a [widget player](/docs/guide/areas-and-widgets/custom-widgets.md#client-side-javascript-for-widgets).
 
-`layout.html` is a naming convention in Apostrophe, but is not a required file name. The most important things to remember are that it must extend `data.outerLayout` and that page templates will extend it by whatever name you give it.
+`layout.html` is a naming convention in Apostrophe, but is not a required file name. You can name it anything you like. Just remember to  extend `data.outerLayout` and update page templates to extend it by its new name.
 :::
