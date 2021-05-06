@@ -85,8 +85,8 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 ::: note
 Here are some two-column styles for people following along.
 
-```scss
-// src/index.scss or a file imported by it
+```css
+/* modules/two-column-widget/ui/public/styles.css */
 .two-col {
   display: flex;
   flex-flow: row wrap;

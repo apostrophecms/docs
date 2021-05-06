@@ -1,10 +1,10 @@
 # Pages and page types
 
-Every page on the an Apostrophe website is assigned a **"page type"**. The page type tells Apostrophe **what template to use** to render the page and **what configuration to apply**. Configurations will often at least include the content schema for the page type.
+Every page in an Apostrophe website is assigned a **"page type"**. The page type tells Apostrophe **what template to use** to render the page and **what configuration to apply**. Configurations will often at least include the field schema for the page type.
 
 ## Creating a page type
 
-Apostrophe core only includes a "Home page" type with minimal functionality. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`.
+Apostrophe core only includes a "Home page" type with some basic default content options. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`.
 
 ```js
 // modules/default-page/index.js
@@ -54,7 +54,11 @@ module.exports = {
 };
 ```
 
-See the [content schema](/guide/introduction.md#content-schemas) page for more on configuring fields.
+See the [field schema](/guide/content-schema.md) page for more on configuring fields.
+
+::: tip
+We can add functionality to the default home page type by adding a configuration file for it at `modules/@apostrophecms/home-page/index.js`. Add new fields to it as in the example above and this core page type will be ready for additional content possibilities. Or it will be once we update its page template... See below.
+:::
 
 ## Page template essentials
 
@@ -161,7 +165,11 @@ This is a special tag in Apostrophe used to let editors add and manage content w
 
 [The widget guide](/guide/widgets-and-templates/README.md) will go deeper into using areas.
 
- ## Activating page types
+::: tip
+To overwrite the home page type template, create a template file for it at  `modules/@apostrophecms/home-page/views/page.html` and add template markup.
+:::
+
+## Activating page types
 
  There is one more step to make a page type available to use: You'll need to add it to the core page module's `type` option. This configures the "Type" field for pages.
 

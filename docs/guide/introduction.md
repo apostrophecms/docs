@@ -5,7 +5,7 @@
 ApostropheCMS is a modern, open source, content management system. It's Javascript from front to back, with a Vue.js user interface and Node.js on the server. Importantly, it has everything you might want from a modern CMS, including:
 
 - a headless API built-in
-- a content schema API to create any kind of content types you need
+- a field schema API to create any kind of content types you need
 - extensibility through a module ecosystem
 - a great UI for creating content, including in-context editing
 - robust localization to support any number of language or locale content variations
