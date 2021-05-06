@@ -42,7 +42,7 @@ The module API supports many different configuration options. See the [module AP
 
 ## Module inheritance
 
-Inheritance is the glue of the module system. Every module either extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
+Inheritance is the glue of the module system. Every module extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
 
 ```javascript
 // modules/blog-post/index.js
