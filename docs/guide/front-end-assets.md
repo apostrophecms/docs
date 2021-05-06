@@ -24,7 +24,7 @@ While this is very flexible and particularly useful when developing Apostrophe i
 
 ## Libraries
 
-A3 includes a very small library of front-end utility code for easy implementation of widget players and communication with the Apostrophe server. As an example of the library's use, check out the official A3 video widget player [source code](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/%40apostrophecms/util/ui/public/video.js).
+A3 includes a very small library of front-end utility code for easy implementation of widget players and communication with the Apostrophe server. As an example of the library's use, check out the official A3 video widget player [source code](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/%40apostrophecms/video-widget/ui/public/video.js).
 
 ::: tip Note:
 Since that player has to be compatible with any frontend build, it uses only IE11-compatible JavaScript, and passes callbacks. If your build, like the one in our boilerplate, uses `babel` or doesn't support IE11 then you may `await` the `apos.http.get` method instead.
