@@ -469,7 +469,6 @@ module.exports = {
     };
   }
 };
-
 ```
 
 #### `extendComponents(self)`
@@ -888,7 +887,16 @@ module.exports = {
 };
 ```
 
-If the middleware function must run before another specific module's middleware, set the returned object key to an object with `before` and `middleware` properties. `before` would be set to the name of the module whose middleware must run after the new function. Set `middleware` to the new middleware function.
+#### Middleware options
+
+ If including options, set the middleware name to an object with the property `middleware` set to the function. Each option will be a property on the object.
+
+| Option | What is it? |
+| -------- | ----------- |
+| `before` | The name of another module if *this* middleware must run *before* the named module's middleware. |
+| `url` | The URL path that should use this middleware. If none is provided, the middleware applies to all paths. This may be a string, RegEx, or array of paths. [See ExpressJS docs for examples.](https://expressjs.com/en/4x/api.html#path-examples)  |
+
+Example using the `before` option:
 
 ```javascript
 // modules/limiter/index.js
