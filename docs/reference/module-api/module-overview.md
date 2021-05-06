@@ -534,6 +534,10 @@ Using in a template:
 {{ apos.product.discountPrice(data.piece) }}
 ```
 
+::: tip
+`helpers` can also be set to an array of [module method](#methods-self) names. That can be useful to use the same method in server-side code and as a template helper.
+:::
+
 #### `extendHelpers(self)`
 
 Add to the functionality of a template helper inherited from the base class. This must return an object of functions, similar to [`helpers`](#helpers-self).
