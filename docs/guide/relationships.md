@@ -94,9 +94,11 @@ Like with all fields, we identify the field type, `type: 'relationship'`, and gi
 | **`builders`** | Field query builders, specifically using the `project` filter. This limits the data that is fetched from the connected doc. It is optional, but recommended for improved performance. [See the relationship field reference for detail.](/reference/field-types/relationship.md#filtering-related-document-properties) |
 
 ::: note
-**Why does the field name start with an underscore?** You may have noticed that the field name is `_topics`, *not* simply `topics`. Field names that begin with an underscore indicate that a *reference* will be saved to the database document, not all the data being referenced.
+**Why does the field name start with an underscore?** You may have noticed that the field name is `_topics`, *not* simply `topics`. Field names that begin with an underscore indicate that a *reference* will be saved to the database document instead of the actual data being referenced.
 
 In the case of a relationship field, the `_id` of the connected doc is saved. Since that connected doc may change, the actual data will be fetched when the relationship is used so it is always up to date.
+
+`_id` is another example of a document property that begins with an underscore. Pieces' `_url` is as well. This pattern generally indicates that a property should not be updated directly when a document is saved using APIs. `_id` is a permanent unique identifier and others are populated by Apostrophe when the document is loaded.
 :::
 
 ## Creating relationships in the interface
@@ -168,8 +170,14 @@ Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If
 
 ```django
 {# module/article-pages/views/show.html #}
-<p>Topic: {{ data.piece._topics[0] }}</p>
+{% if data.piece._topics.length > 0 %}
+  <p>Topic: {{ data.piece._topics[0] }}</p>
+{% endif %}
 ```
+
+::: warning
+Even if the relationship has `min: 1` set, requiring one selection, never assume that the relationship is populated in templates. If the selected item is archived at some point the field will become empty.
+:::
 
 <!--
 TODO: Uncomment this section once reverse relationships are fixed in core so we can confirm behavior.
