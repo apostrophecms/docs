@@ -569,14 +569,14 @@ module.exports = {
 };
 ```
 
-REST API routes that effect a single, existing document also take the document `_id` property as an argument. These include `getOne`, `patch`, `put`, and `delete`.
+REST API routes that affect a single, existing document also take the document `_id` property as an argument. These include `getOne`, `patch`, `put`, and `delete`.
 ```javascript
 async getOne(req, _id) {
   // ...
 }
 ```
 
-If using a route option, set the route name to an object. See the [route options](#route-options) section for more.
+If specifying any extra options for your route, set the route name to an object. See the [route options](#route-options) section for more.
 
 If you simply wish to add to the existing behavior of the REST API routes, see [`extendRestApiRoutes`](#extendrestapiroutes-self).
 
@@ -633,7 +633,7 @@ module.exports = {
 };
 ```
 
-If including a route option, use an object. See the [route options](#route-options) section for more.
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
 #### Naming routes
 
@@ -721,7 +721,7 @@ module.exports = {
 };
 ```
 
-If including a route option, use an object. See the [route options](#route-options) section for more.
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
 ### `routes(self)`
 
@@ -748,7 +748,7 @@ module.exports = {
 };
 ```
 
-If including a route option, use an object. See the [route options](#route-options) section for more.
+If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
 Each route function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must generate a response via `res` to avoid leaking resources, typically using the `res.redirect` or `res.send` methods.
 
@@ -765,7 +765,7 @@ A route in the `apiRoutes`, `restApiRoutes`, `renderRoutes`, and `routes` sectio
 | Property | What is it? |
 | -------- | ----------- |
 | `route` | A route function that accepts a request as its argument |
-| `before` | Identify another module's middleware or routes. Used if the route function should be registered before particular middleware or other routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
+| `before` | Identify another module's middleware or routes. Used if the route function should be registered before a particular module's middleware or routes. Format as `middleware:nameOfModule` for middleware or `nameOfModule` for routes. |
 
 ### `handlers(self)`
 
