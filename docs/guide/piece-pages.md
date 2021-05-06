@@ -46,7 +46,7 @@ One benefit of this approach is that the codebase folders for the piece type and
 
 ### Specifying the piece type with `pieceModuleName`
 
-This method allows you to name the module whatever you want since you are specifically identifying a piece type. Set the [`pieceModuleName` option](/reference/module-api/module-options.md#piecemodulename) to the piece type name and Apostrophe make the right connection.
+This method allows you to name the module whatever you want since you are specifically identifying a piece type. Set the [`pieceModuleName` option](/reference/module-api/module-options.md#piecemodulename) to the piece type name and Apostrophe makes the right connection.
 
 ```javascript
 // modules/blog-page/index.js
@@ -74,9 +74,10 @@ We'll review each template's features next.
 
 Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module).
 
-🛑 Hold up. ✋
+::: warning 🛑 Hold up. ✋
 
 You've reviewed the [page type guide](/guide/pages.md), right? The sections below will highlight the special features of index and show page templates. For general page template syntax, see that page type guide.
+:::
 
 ## The index page template
 
@@ -169,9 +170,10 @@ Assuming our `article` piece type example has a single `main` area, it could loo
 {% extends "layout.html" %}
 
 {% block main %}
-  <h1>{{ data.piece.title }}
+  <h1>{{ data.piece.title }}</h1>
   <section>
     {% area data.piece, 'main' %}
+  </section>
 {% endblock %}
 ```
 
@@ -204,7 +206,7 @@ You may create multiple index pages of a particular type. If you do, the related
 
 This can be used to create index pages that are filtered to list different pieces (e.g., articles on different topics).
 
-Even if any of the index page URL paths can be used to reach a particular show page, the piece will have a primary `_url` property when requested (e.g., in a `GET` API request). That primary URL is generated using the index page identified using the `chooseParentPage` method on `@apostrophecms/piece-page-type`. By default it simply returns the first index page created, but you can override that method to choose a matching index page another way.
+Even if any of the index page URL paths can be used to reach a particular show page, the piece will have a primary `_url` property when requested (e.g., in a `GET` API request). That primary URL is generated using the index page identified using the `chooseParentPage` method on `@apostrophecms/piece-page-type` (and modules that extend it). By default it simply returns the first index page created, but you can override that method to choose a matching index page another way.
 
 <!-- TODO: Link to the piece page module reference page `chooseParentPage` method when available. -->
 :::
