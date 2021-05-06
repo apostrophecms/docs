@@ -894,7 +894,7 @@ module.exports = {
 | Option | What is it? |
 | -------- | ----------- |
 | `before` | The name of another module if *this* middleware must run *before* the named module's middleware. |
-| `url` | The URL path that should use this middleware. If none is provide, the middleware applies to all paths. This may be a string, RegEx, or array of paths. [See ExpressJS docs for examples.](https://expressjs.com/en/4x/api.html#path-examples)  |
+| `url` | The URL path that should use this middleware. If none is provided, the middleware applies to all paths. This may be a string, RegEx, or array of paths. [See ExpressJS docs for examples.](https://expressjs.com/en/4x/api.html#path-examples)  |
 
 Example using the `before` option:
 
