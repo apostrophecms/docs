@@ -50,6 +50,8 @@ Individual page type templates will extend that layout:
 You may have noticed that the layout template above also extends another template. `data.outerLayout` is a core, base level template. See the [layout template](/guide/layout-template.md) guide for more on that.
 :::
 
+#### The `super()` tag
+
 **You can also *add to* template block content, rather than completely replace it.** To do this, include a `super()` render tag at the beginning of a block. `super()` will render as the contents of the inherited block.
 
 For example, this may be in your layout file:
