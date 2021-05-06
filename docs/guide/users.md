@@ -41,8 +41,8 @@ Users are assigned one of four **user roles**. Each role is assigned a set of pe
 | User role | What can they do? |
 | --------- | ----------------- |
 | **Guest** | Guest users can log into the website and view content with visibility set to "Login required." They cannot edit any content or view unpublished content. |
-| **Contributor** | Contributors may create and edit content, including the global doc. They cannot publish anything that does not publish automatically (e.g., images, files). They cannot take any action on users. |
-| **Editor** | Editors have all the permissions of contributors. They can also *publish* content. They cannot take any action on users. |
+| **Contributor** | Contributors may create and edit content, including the global doc. They cannot upload files (i.e., images, PDFs) or take any action on users. |
+| **Editor** | Editors have all the permissions of contributors. They can also *publish* content and upload files. They cannot take any action on users. |
 | **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to reset passwords through the user interface. |
 
 ::: note
