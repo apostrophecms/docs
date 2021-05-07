@@ -27,11 +27,10 @@ module.exports = {
         'guide/pages.md',
         {
           title: 'Areas and widgets',
-          // What are widgets and areas and how you configure them
-          path: '/guide/areas-and-widgets',
           children: [
-            'guide/areas-and-widgets/core-widgets.md',
-            'guide/areas-and-widgets/custom-widgets.md'
+            'guide/areas-and-widgets',
+            'guide/core-widgets.md',
+            'guide/custom-widgets.md'
           ]
         },
         'guide/pieces.md',
