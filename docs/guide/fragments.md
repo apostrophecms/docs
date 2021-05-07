@@ -1,7 +1,3 @@
----
-permalink: '/guide/template-fragments'
----
-
 # Fragments are the new macros
 
 [Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) are great tools for sharing template code across files. They have one significant limitation, however, in that they run synchronously. If you include template tags in them that run asynchronously, those tags will seem to not run at all when it comes to rendering.
@@ -118,7 +114,7 @@ Then to import that fragment into any page or widget template the import tag wou
 In comparing fragments to macros, it is worth noting a couple of macro features that are not *yet* supported in fragments.
 
 
-### Default parameter values
+<!-- ### Default parameter values
 
 Macros can include default values for their arguments. This is not currently available in fragments. As a work-around, you can set variables in fragments that are overwritten if the argument is provided.
 
@@ -129,11 +125,11 @@ Macros can include default values for their arguments. This is not currently ava
     My favorite emoji is {{ fav }}
   </p>
 {% endfragment %}
-```
+``` -->
 
 ### `with context`
 
-You can add `with context` on the end of a macro import to make everything available in a template also available to the file it is importing. In Apostrophe, this can be useful to make the full `data` object available in macros. This is also not yet available in fragments.
+You can add `with context` on the end of a macro import to make everything available in a template also available to the file it is importing. In Apostrophe, this can be useful to make the full `data` object available in macros. This is not yet available in fragments.
 
 Instead, make sure to pass the data needed in the fragment into the render tag declaration. Fragments can take multiple arguments.
 

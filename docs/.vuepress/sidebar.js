@@ -27,17 +27,25 @@ module.exports = {
         'guide/pages.md',
         {
           title: 'Areas and widgets',
-          // What are widgets and areas and how you configure them
-          path: '/guide/areas-and-widgets',
           children: [
-            'guide/areas-and-widgets/core-widgets.md',
-            'guide/areas-and-widgets/custom-widgets.md'
+            'guide/areas-and-widgets',
+            'guide/core-widgets.md',
+            'guide/custom-widgets.md'
           ]
         },
         'guide/pieces.md',
         'guide/piece-pages.md',
         'guide/global.md',
         'guide/relationships.md',
+        {
+          title: 'Templating',
+          children: [
+            'guide/templating.md',
+            'guide/layout-template.md',
+            'guide/fragments.md',
+            'guide/async-components.md'
+          ]
+        },
         'guide/users.md',
         'guide/front-end-assets.md'
         // 'guide/static-assets.md'
@@ -48,9 +56,7 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/advanced/rest-apis.md',
-        'guide/advanced/conditional-fields.md',
-        'guide/advanced/async-components.md',
-        'guide/template-fragments'
+        'guide/advanced/conditional-fields.md'
       ]
     }
   ],
