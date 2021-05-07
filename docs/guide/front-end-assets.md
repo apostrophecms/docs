@@ -269,3 +269,106 @@ There is also a `runPlayers` method on `apos.util`. That is run for us using `ap
 :::
 
 ### HTTP request methods
+
+These are all available in the browser on `apos.util`, e.g., `apos.util.addClass(el, 'is-active')`. They include wrappers for common browser APIs, classic DOM traversal methods, and Apostrophe-specific utilities.
+
+| Method | What is it? |
+| -------- | ----------- |
+| `get` | Send a `GET` request. |
+| `post` | Send a `POST` request. |
+| `patch` | Send a `PATCH` request. |
+| `put` | Send a `PUT` request. |
+| `delete` | Send a `DELETE` request. |
+| `remote` | The HTTP request method that powers other request methods. |
+| `parseQuery` | NULL |
+| `addQueryToUrl` | NULL |
+
+#### `get(url, options, callback)`
+
+Send a `GET` request. The response will be returned via a Promise unless a callback is included. Query string data may be in `options.qs`. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+| Argument | What is it? |
+| -------- | ----------- |
+| `url` | The path to a resource or service  |
+| `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. |
+| `callback` | An optional callback function receiving when not using Promises. Receives `error` and `result` arguments. |
+
+```javascript
+async function logArticles() {
+  let articles;
+
+  try {
+    articles = await apos.http.get('/api/v1/article');
+    console.info(articles);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+logArticles();
+```
+
+#### `post(url, options, callback)`
+
+Send a `POST` request. The response will be returned via a Promise unless a callback is included. `POST` body data should be in `options.body`. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+See [the `get` method](#get-url-options-callback) for argument details and a related example.
+
+#### `patch(url, options, callback)`
+
+Send a `PATCH` request. The response will be returned via a Promise unless a callback is included. `PATCH` body data should be in `options.body`. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+See [the `get` method](#get-url-options-callback) for argument details and a related example.
+
+#### `put(url, options, callback)`
+
+Send a `PUT` request. The response will be returned via a Promise unless a callback is included. `PUT` body data should be in `options.body`. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+See [the `get` method](#get-url-options-callback) for argument details and a related example.
+
+#### `delete(url, options, callback)`
+
+Send a `DELETE` request. The response will be returned via a Promise unless a callback is included. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+See [the `get` method](#get-url-options-callback) for argument details and a related example.
+
+#### `remote(method, url, options, callback)`
+
+Send an HTTP request with a specific method to the given URL, returning the response body. The response will be returned via a Promise unless a callback is included. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+
+::: note
+**This method is used to power the individual HTTP request methods. We recommend using those instead.** They will produce the same result as using `remote` and including the proper HTTP method name.
+:::
+
+| Argument | What is it? |
+| -------- | ----------- |
+| `method` | An HTTP method name: `GET`, `POST`, `PUT`, `PATCH`, or `DELETE`  |
+| `url` | The path to a resource or service  |
+| `options` | Request options. See below. |
+| `callback` | An optional callback function receiving when not using Promises. Receives `error` and `result` arguments. |
+
+| Options | What is it? |
+| ------- | ----------- |
+| `qs` | An object of query string parameters set to values. It does not support recursion. |
+| `body` | The request body. If an object or array it is sent as JSON. Otherwise sent as-is, unless the `send` option is set to `'json'`. |
+| `send` | Set to `'json'` to *always* send the request body as JSON, even if a `FormData` object or non-object. This is not necessary when the body is a normal object. |
+| `parse` | Set to `'json'` to *always* parse the response as JSON. Otherwise the response body is parsed as JSON only if the `Content-Type` is `application/json`. |
+| `headers` | An object containing HTTP header names and values. |
+| `draft` | If `true`, always add `aposMode=draft` to the query string, creating one if needed. |
+| `csrf` | Set to `false` to prevent sending the `X-XSRF-TOKEN` header when talking to the same site. |
+| `fullResponse` | If `true`, return an object with `status`, `headers` and `body` properties, rather than returning the body directly. The individual `headers` are canonicalized to lowercase names. If there are duplicate headers after canonicalizing only the last value is returned. If a header appears multiple times an array is returned for it. |
+| `downloadProgress` | Optional. A function accepting `received` and `total` arguments. It may never be called. If called, `received` will be the bytes sent so far and `total` will be the total bytes to be received. If the total is unknown, it will be `null` |
+| `uploadProgress` | Optional. A function accepting `sent` and `total` arguments. It may never be called. If it is called, `sent` will be the bytes sent so far and `total` will be the total bytes to be sent. If the total is unknown, it will be `null`. |
+
+If the status code is greater than 400 an error is thrown. The error object will be similar to a `fullResponse` object, with a `status` property.
+
+If the URL is site-relative (starts with `/`) it will be requested from the Apostrophe site itself.
+
+::: tip
+Just before the `XMLHttpRequest` is sent, this method emits an event matching the HTTP method. For example, `apos-before-post` for `POST` requests, `apos-before-get` for `GET` requests, etc. The event object has `uri`, `data` and `request` properties. `request` is the `XMLHttpRequest` object.
+
+You can use this to set custom headers on all requests, for example.
+:::
+
+#### `parseQuery()`
+#### `addQueryToUrl()`
