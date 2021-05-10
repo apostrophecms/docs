@@ -42,8 +42,8 @@ module.exports = {
           children: [
             'guide/templating.md',
             'guide/layout-template.md',
-            'guide/fragments.md',
-            'guide/async-components.md'
+            'guide/async-components.md',
+            'guide/fragments.md'
           ]
         },
         'guide/users.md',
