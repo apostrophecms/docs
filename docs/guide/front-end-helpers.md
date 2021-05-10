@@ -184,14 +184,14 @@ These are all available in the browser on `apos.util`, e.g., `apos.util.addClass
 
 | Method | What is it? |
 | -------- | ----------- |
-| `get` | Send a `GET` request. |
-| `post` | Send a `POST` request. |
-| `patch` | Send a `PATCH` request. |
-| `put` | Send a `PUT` request. |
-| `delete` | Send a `DELETE` request. |
-| `remote` | The HTTP request method that powers other request methods. |
-| `parseQuery` | NULL |
-| `addQueryToUrl` | NULL |
+| [`get`](#get-url-options-callback) | Send a `GET` request. |
+| [`post`](#post-url-options-callback) | Send a `POST` request. |
+| [`patch`](#patch-url-options-callback) | Send a `PATCH` request. |
+| [`put`](#put-url-options-callback) | Send a `PUT` request. |
+| [`delete`](#delete-url-options-callback) | Send a `DELETE` request. |
+| [`remote`](#remotemet-hod-url-options-callback) | The HTTP request method that powers other request methods. |
+| [`parseQuery`](#parsequery-query) | Parses a URL query string, returning an object of parameters. |
+| [`addQueryToUrl`](#addquerytourl-url-data) | Returns a URL with data object properties added as a query string. |
 
 ### `get(url, options, callback)`
 
@@ -199,7 +199,7 @@ Send a `GET` request. The response will be returned via a Promise unless a callb
 
 | Argument | What is it? |
 | -------- | ----------- |
-| `url` | The path to a resource or service  |
+| `url` | The path to a resource or service |
 | `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. |
 | `callback` | An optional callback function receiving when not using Promises. Receives `error` and `result` arguments. |
 
@@ -280,5 +280,40 @@ Just before the `XMLHttpRequest` is sent, this method emits an event matching th
 You can use this to set custom headers on all requests, for example.
 :::
 
-### `parseQuery()`
-### `addQueryToUrl()`
+### `parseQuery(query)`
+
+Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-refresh=1`). The argument should not include a URL. The leading question mark (`?`) is allowed but not required. A parameter with no value will be set to `null`.
+
+| Argument | What is it? |
+| -------- | ----------- |
+| `query` | A url query parameter |
+
+```javascript
+const queryParams = apos.http.parseQuery(location.search);
+```
+
+::: note
+`apos.http.parseQuery()` supports query parameter objects and arrays, as well as bracket nesting. Object and array values will be stored as strings and need additional parsing as JSON.
+
+```
+?foo={bar:0} ✅
+?foo=[bar,baz] ✅
+?foo[bar]=0 ✅
+```
+:::
+
+### `addQueryToUrl(url, data)`
+
+Returns a URL with data object properties added as a query string. This supports data object values as objects and arrays. If `data` is an empty object no query string is added. **If the URL already includes a query string it is discarded and replaced.**
+
+| Argument | What is it? |
+| -------- | ----------- |
+| `url` | A url |
+| `data` | An object with data to convert to a query string |
+
+```javascript
+const updatedUrl = apos.http.addQueryToUrl(location.href, {
+  theme: 'dark',
+  'search-complete': 1
+});
+```
