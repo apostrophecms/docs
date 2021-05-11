@@ -1,7 +1,3 @@
----
-permalink: '/guide/async-components'
----
-
 # Async Components
 
 In A2, developers often struggled to dynamically load the custom content they wanted on their pages. There were two common solutions: widget module `load` methods, and `apostrophe-pages:beforeSend` promise events (now known as `@apostrophecms/page:beforeSend`).
