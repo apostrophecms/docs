@@ -50,6 +50,22 @@ Fragment arguments can be any data or template variables understood by Apostroph
 {% render authorCredit(data.piece._author) %}
 ```
 
+<!-- ::: tip
+Fragments also support keyword arguments, another [feature of Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#keyword-arguments). They can be used to establish default argument values as well as to skip positional arguments.
+
+```django
+{% fragment listNumbers(first, second, third=3, fourth=4) %}
+  <p>{{ first }} {{ second }} {{ third }} {{ fourth }}</p>
+{% endfragment %}
+
+{% render listNumbers(1, 2) %}
+{# Renders: `<p>1 2 3 4</p> #}
+
+{% render listNumbers(1, third=9) %}
+{# Renders: `<p>1  9 4</p> #}
+```
+::: -->
+
 ::: warning
 It is possible to pass the entire `data` object into a fragment as an argument. That is usually excessive, however. It's generally a better idea to be more specific with what you pass into a fragment.
 :::
@@ -172,3 +188,4 @@ This might render something like:
   Fun fact: The first ever ice cream sundae was served in Two Rivers, Wisconsin in 1881.
 </aside>
 ```
+
