@@ -3,7 +3,7 @@
 We will often find that template code is reused across multiple files or that it simply gets overly complicated for a single file. **Template fragments** help solve this by splitting template code into smaller, managable pieces that can be used in other templates.
 
 ::: note
-If you are already familiar with the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature, fragments are very similar. Fragments are a new feature specific to Apostrophe to support asynchronous template tags, such as [async components](/guide/async-components.md) and the updated [area](/guide/areas-and-widgets.md#adding-areas-to-templates) tag. If the code does *not* use either async components or areas, macros are also fine to use.
+If you are already familiar with the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature, fragments are very similar. Fragments are a new feature specific to Apostrophe to support asynchronous template tags, such as the [area](/guide/areas-and-widgets.md#adding-areas-to-templates) tag and [async components](/guide/async-components.md). If the code does *not* use either async components or areas, macros are also fine to use.
 
 The only macros feature currently unavailable or unreplaced for fragments is passing the template context using `with context`. This is planned for fragments as well.
 :::
