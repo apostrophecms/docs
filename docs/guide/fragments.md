@@ -76,7 +76,7 @@ The examples above simply render the fragments by name since they were defined i
 
 ### Importing within the same module or the root `views` directory
 
-As when we `include` or `extend` another template file, when that file is in the root `views` directory or from the same module as where we're working, we only need to name the file or relative file path.
+As when we `include` or `extend` another template file, when that file is in the project root `views` directory or from the same module as where we're working, we only need to name the file or relative file path.
 
 For example, you might have an article [index page](/guide/piece-pages.md) that lists a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each article in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
 
@@ -119,7 +119,7 @@ Unlike importing and extending templates, when importing, the fragment is a prop
 ```
 :::
 
-Similarly, **when fragment files are in the root-level `views` directory** or a sub-directory of it, we can import the fragment with only the file path from that `views` directory.
+Similarly, **when fragment files are in the root-level `views` directory** or a sub-directory of it, we can import the fragment with only the relative file path from that `views` directory.
 
 The global fragment file:
 
@@ -170,7 +170,7 @@ In addition to passing arguments, it is possible to pass markup directly from a 
 {% endfragment %}
 ```
 
-When using the fragment, a template would use a `{% rendercall %}` instead of `{% render %}`.
+When using the fragment, a template would use `{% rendercall %}` instead of `{% render %}`.
 
 ```django
 {# modules/default-page/views/page.html #}
