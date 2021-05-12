@@ -291,17 +291,12 @@ Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-
 | `query` | A url query string |
 
 ```javascript
-const queryParams = apos.http.parseQuery(location.search);
+const simpleParams = apos.http.parseQuery('?refresh=true&number=7');
+const nestedParams = apos.http.parseQuery('?product%5Bprice%5D=50&product%5Bname%5D=Cheese')
 ```
 
 ::: note
-`apos.http.parseQuery()` supports query parameter objects and arrays, as well as bracket nesting. Object and array values will be stored as strings and need additional parsing as JSON.
-
-```
-?foo={bar:0} ✅
-?foo=[bar,baz] ✅
-?foo[bar]=0 ✅
-```
+`apos.http.parseQuery()` supports query parameter objects and arrays (when escaped), as well as bracket nesting.
 :::
 
 ### `addQueryToUrl(url, data)`
