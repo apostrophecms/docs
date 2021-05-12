@@ -288,7 +288,7 @@ Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-
 
 | Argument | What is it? |
 | -------- | ----------- |
-| `query` | A url query parameter |
+| `query` | A url query string |
 
 ```javascript
 const queryParams = apos.http.parseQuery(location.search);
