@@ -1,10 +1,10 @@
 # Front end helper methods
 
-Apostrophe provides a small library of front-end utility methods to support implementing client-side Javascript. These can be useful in widget players, for example. [General utility methods](#general-utility-methods) area available on `apos.util` and [HTTP request methods](#http-request-methods) are available on `apos.http`.
+Apostrophe provides a small library of front-end utility methods to support implementing client-side JavaScript. These can be useful in widget players, for example. [General utility methods](#general-utility-methods) area available on `apos.util` and [HTTP request methods](#http-request-methods) are available on `apos.http`.
 
 ## General utility methods
 
-These are all available in the browser on `apos.util`, e.g., `apos.util.addClass(el, 'is-active')`. They include wrappers for common browser APIs, classic DOM traversal methods, and Apostrophe-specific utilities.
+These are all available in the browser on `apos.util`, e.g., `apos.util.addClass(el, 'is-active')`. They include wrappers for common browser APIs, classic DOM traversal methods, and Apostrophe-specific utilities. They are also compatible with all modern browsers as well as Internet Explorer 11.
 
 | Method | What is it? |
 | -------- | ----------- |
@@ -16,7 +16,7 @@ These are all available in the browser on `apos.util`, e.g., `apos.util.addClass
 | [`getCookie`](#getcookie-name) | Get the value of a browser cookie. |
 | [`onReadyAndRefresh`](#onreadyandrefresh-fn) | Runs the function passed in when Apostrophe refreshes page content during editing.
 | [`removeClass`](#removeclass-el-classname) | Remove a class from a DOM element, if present. |
-| [`sameSite`](#samesite-uri) | Returns `true` if the URI pass in matches the same website as the current page. |
+| [`sameSite`](#samesite-uri) | Returns `true` if a URI argument matches the same website as the current page. |
 
 ### `addClass(el, className)`
 
@@ -33,7 +33,7 @@ const myElement = document.querySelector('[data-my-element]');
 apos.util.addClass(myElement, 'is-active');
 ```
 
-### `assign(target, src1, src2, ...`
+### `assign(target, src1, src2, ...)`
 
 Assigns properties from one or more source objects to a target object. Uses [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) when available. Supports browsers without the matching native method.
 
@@ -72,8 +72,10 @@ Get the file URL for an Apostrophe attachment object. Optionally pass an options
 
 | Options | What is it? |
 | -------- | ----------- |
-| `crop` | an object of image cropping coordinates with `left`, `top` and `width` properties (usually populated from the cropping UI and included on the image object) |
 | `size` | an image size name to retrieve, such as one of the [standard image file variations](/guide/core-widgets.md#specifying-the-fallback-size) |
+
+<!-- TODO: Add this line back when the cropping UI is available. -->
+<!-- | `crop` | an object of image cropping coordinates with `left`, `top` and `width` properties (usually populated from the cropping UI and included on the image object) | -->
 
 ```javascript
 // Getting an image attachment object after stashing the stringified object
@@ -132,7 +134,7 @@ apos.util.getCookie('cookiename');
 
 ### `onReadyAndRefresh(fn)`
 
-Runs the function passed in when Apostrophe refreshes page content during editing. When logged out it will run the function on initial page load. This is not necessary in [widget players](/guide/custom-widgets.md#client-side-javascript-for-widgets).
+Runs the function passed in when the page loads as well as when Apostrophe refreshes page content during editing. When logged out it will run the function on initial page load. This is not necessary in [widget players](/guide/custom-widgets.md#client-side-javascript-for-widgets).
 
 | Argument | What is it? |
 | -------- | ----------- |
@@ -163,7 +165,7 @@ apos.util.removeClass(myElement, 'is-hidden');
 
 ### `sameSite(uri)`
 
-Returns `true` if the URI pass in matches the same website (same host and port) as the current page. This is used some HTTP utility methods.
+Returns `true` if the URI pass in matches the same website (same host and port) as the current page. This is used in some HTTP utility methods.
 
 | Argument | What is it? |
 | -------- | ----------- |
@@ -180,7 +182,7 @@ There is also a `runPlayers` method on `apos.util`. That is run for us using `ap
 
 ## HTTP request methods
 
-These are all available in the browser on `apos.util`, e.g., `apos.util.addClass(el, 'is-active')`. They include wrappers for common browser APIs, classic DOM traversal methods, and Apostrophe-specific utilities.
+These are all available in the browser on `apos.http`, e.g., `apos.http.get('/api/v1/article')`. They include for specific HTTP request method utilities as well as other helpers for making HTTP requests.
 
 | Method | What is it? |
 | -------- | ----------- |
@@ -201,7 +203,7 @@ Send a `GET` request. The response will be returned via a Promise unless a callb
 | -------- | ----------- |
 | `url` | The path to a resource or service |
 | `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. |
-| `callback` | An optional callback function receiving when not using Promises. Receives `error` and `result` arguments. |
+| `callback` | An optional callback function, required when not using Promises. Receives `error` and `result` arguments. |
 
 ```javascript
 async function logArticles() {
@@ -220,7 +222,7 @@ logArticles();
 
 ### `post(url, options, callback)`
 
-Send a `POST` request. The response will be returned via a Promise unless a callback is included. `POST` body data should be in `options.body`. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+Send a `POST` request. The response will be returned via a Promise unless a callback is included. `options.body` should be an object containing properties to be passed as `POST` body data.. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
 
 See [the `get` method](#get-url-options-callback) for argument details and a related example.
 
@@ -259,7 +261,7 @@ Send an HTTP request with a specific method to the given URL, returning the resp
 
 | Options | What is it? |
 | ------- | ----------- |
-| `qs` | An object of query string parameters set to values. It does not support recursion. |
+| `qs` | An object of query string parameters set to values. |
 | `body` | The request body. If an object or array it is sent as JSON. Otherwise sent as-is, unless the `send` option is set to `'json'`. |
 | `send` | Set to `'json'` to *always* send the request body as JSON, even if a `FormData` object or non-object. This is not necessary when the body is a normal object. |
 | `parse` | Set to `'json'` to *always* parse the response as JSON. Otherwise the response body is parsed as JSON only if the `Content-Type` is `application/json`. |
@@ -282,7 +284,7 @@ You can use this to set custom headers on all requests, for example.
 
 ### `parseQuery(query)`
 
-Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-refresh=1`). The argument should not include a URL. The leading question mark (`?`) is allowed but not required. A parameter with no value will be set to `null`.
+Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-refresh=1`). The argument should only include the query string part of a URL. The leading question mark (`?`) is allowed but not required. A parameter with no value will be set to `null`.
 
 | Argument | What is it? |
 | -------- | ----------- |

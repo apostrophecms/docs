@@ -2,7 +2,7 @@
 
 ## What is ApostropheCMS?
 
-ApostropheCMS is a modern, open source, content management system. It's Javascript from front to back, with a Vue.js user interface and Node.js on the server. Importantly, it has everything you might want from a modern CMS, including:
+ApostropheCMS is a modern, open source, content management system. It's JavaScript from front to back, with a Vue.js user interface and Node.js on the server. Importantly, it has everything you might want from a modern CMS, including:
 
 - a headless API built-in
 - a field schema API to create any kind of content types you need
