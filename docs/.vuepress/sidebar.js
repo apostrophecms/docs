@@ -42,7 +42,6 @@ module.exports = {
           children: [
             'guide/templating.md',
             'guide/layout-template.md',
-            'guide/async-components.md',
             'guide/fragments.md'
           ]
         },
@@ -54,8 +53,9 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
-        'guide/advanced/rest-apis.md',
-        'guide/advanced/conditional-fields.md'
+        'guide/rest-apis.md',
+        'guide/conditional-fields.md',
+        'guide/async-components.md'
       ]
     }
   ],
