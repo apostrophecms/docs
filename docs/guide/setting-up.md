@@ -6,7 +6,7 @@
 | ------------- | ------------- |
 | [Node.js](https://nodejs.org/en/) | 12.x+ |
 | [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 3.6+ |
-| [ImageMagick](https://imagemagick.org/script/download.php#macosx) (optional) | Any |
+| [ImageMagick](https://imagemagick.org/script/download.php) (optional) | Any |
 
 See the links above to install each. To check that these are installed in your environment, try the following commands:
 
