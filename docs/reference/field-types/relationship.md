@@ -57,7 +57,9 @@ _toppings: {
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 
 ::: tip
-If you do not set `withType`, then the name of the field must match the name of the related type, with a leading `_` (underscore), and *optional* trailing `s` added (e.g., `_article` or `_articles` to connect to the `article` piece type).
+To create relationships with pages, use `withType: '@apostrophecms/any-page-type'`.
+
+If `withType` is not set the name of the field must match the name of the related type, with a leading `_` (underscore), and *optional* trailing `s` added (e.g., `_article` or `_articles` to connect to the `article` piece type).
 :::
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
