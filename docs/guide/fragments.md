@@ -1,22 +1,16 @@
-# Fragments are the new macros
+# Template fragments
 
-[Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) are great tools for sharing template code across files. They have one significant limitation, however, in that they run synchronously. If you include template tags in them that run asynchronously, those tags will seem to not run at all when it comes to rendering.
+We will often find that template code is reused across multiple files or that it simply gets overly complicated for a single file. **Template fragments** help solve this by splitting template code into smaller, managable pieces that can be used in other templates.
 
-This poses a challenge when using the new [async components](/guide/async-components) in Apostrophe 3. In addition, the [area syntax changed](/guide/major-changes.md#areas-and-pages) to support those async components, so areas won't work in synchronous macros either. To enable developers to continue writing maintainable, [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) code, A3 has a new feature, **fragments**.
+::: note
+If you are already familiar with the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature, fragments are very similar. Fragments are a new feature specific to Apostrophe to support asynchronous template tags, such as the [area](/guide/areas-and-widgets.md#adding-areas-to-templates) tag and [async components](/guide/async-components.md). If the code does *not* use either async components or areas, macros are also fine to use.
 
-## Macros are still supported
-
-Before getting into fragment's syntax, it is important to make one thing clear right away:
-
-**Macros aren't disabled or deprecated in A3.** Macros are still useful, and there is no great reason to force legacy projects to refactor macros that do not include areas already. Apostrophe developers can still use macros as they have been for simple and synchronous use cases.
-
-As you'll see, fragment syntax intentionally mimics macro syntax. It shouldn't be too difficult to refactor macros as fragments if you choose. In fact, **the current best practice recommendation is to only use fragments**. The primary reason for this is simply so that you only need to remember one syntax. Fragments can do ([nearly](#fragment-limitations)) everything that macros can do, so it might be simpler to use that one feature rather than have to think each time which one you should use.
+The only macros feature currently unavailable or unreplaced for fragments is passing the template context using `with context`. This is planned for fragments as well.
+:::
 
 ## Using fragments
 
-With that out of the way, how do they work?
-
-Fragments are defined with the `{% fragment %}` template tag, followed by a name for the fragment. The fragment closes with the `{% endfragment %}` tag.
+We define fragments by putting template markup between `{% fragment %}` and `{% endfragment %}` tags. The opening tag should also include a name for the fragment.
 
 ```django
 {% fragment heading() %}
@@ -24,38 +18,74 @@ Fragments are defined with the `{% fragment %}` template tag, followed by a name
 {% endfragment %}
 ```
 
-One difference from macros is that they are then called using the `render` template tag:
+To use the fragment in a template, reference it by name using the `{% render %}` tag:
 
 ```django
 {% render heading() %}
 {# Renders: `<h2>This is a heading fragment</h2>` #}
 ```
 
-You can also pass arguments to fragments, which is key to using them across templates. Those arguments can be any data or variables understood by Apostrophe templates (e.g., strings, objects, arrays, etc.).
+We can also pass arguments to fragments, allowing us to reuse them across templates with different data.
 
 ```django
 {% fragment heading(adjective) %}
   <h2>This is a {{ adjective }} fragment</h2>
 {% endfragment %}
 
+{# 👇 Passing in a string argument #}
 {% render heading('cool') %}
-{# Renders: `<h2>This is a cool fragment</h2>` #}
 ```
 
-## Importing fragments
+Fragment arguments can be any data or template variables understood by Apostrophe templates (e.g., strings, objects, arrays, etc.). It can often be useful to pass a [doc object](/reference/glossary.md#doc) to a macro to render its areas, especially when docs are referenced in [relationships](/guide/relationships.md).
 
-As shown above, fragments can be defined and used in a single template file. That can be useful to break up complicated markup, but it is often better to put the fragment into its own file for reuse or to improve mantainability. Like any template file, fragments are placed in a module's `views` directory, or the root-level `views` directory in an Apostrophe project.
+```django
+{% fragment authorCredit(author) %}
+  <div>
+    <p>By {{ author.title }}</p>
+    {% area author, 'photo' %}
+  </div>
+{% endfragment %}
 
-### Importing within a single module
+{# 👇 Passing in a piece object from a relationship field #}
+{% render authorCredit(data.piece._author) %}
+```
 
-For example, you might have an article [index page](/reference/glossary.md#index-page) that will list a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each item in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
+<!-- ::: tip
+Fragments also support keyword arguments, another [feature of Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#keyword-arguments). They can be used to establish default argument values as well as to skip positional arguments.
+
+```django
+{% fragment listNumbers(first, second, third=3, fourth=4) %}
+  <p>{{ first }} {{ second }} {{ third }} {{ fourth }}</p>
+{% endfragment %}
+
+{% render listNumbers(1, 2) %}
+{# Renders: `<p>1 2 3 4</p> #}
+
+{% render listNumbers(1, third=9) %}
+{# Renders: `<p>1  9 4</p> #}
+```
+::: -->
+
+::: warning
+It is possible to pass the entire `data` object into a fragment as an argument. That is usually excessive, however. It's generally a better idea to be more specific with what you pass into a fragment.
+:::
+
+## Importing fragments across files
+
+The examples above simply render the fragments by name since they were defined in the same file. That can be useful sometimes, but it is more common to define fragments in different files from where they are used. This works very similarly to how template files are [extended or included](/guide/templating.md#referencing-templates-across-modules) across files. In this case, we use the `{% import %}` tag.
+
+### Importing within the same module or the root `views` directory
+
+As when we `include` or `extend` another template file, when that file is in the project root `views` directory or from the same module as where we're working, we only need to name the file or relative file path.
+
+For example, you might have an article [index page](/guide/piece-pages.md) that lists a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each article in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
 
 ```django
 {# modules/article-page/views/item-fragment.html #}
+{# 👇 Accepting an argument with the article data object #}
 {% fragment teaser(article) %}
   <section>
     <h2>{{ article.title }}</h2>
-    {# 👇 Adding the article's `teaser` area field #}
     {% area article, 'teaser' %}
     <a href="{{ article._url }}">Read more</a>
   </section>
@@ -65,7 +95,7 @@ For example, you might have an article [index page](/reference/glossary.md#index
 Since the fragment and page template are both in the `article-page` module, we can import it with only the file name using the `{% import %}` template tag.
 
 ```django
-{# modules/article-page/views/page.html #}
+{# modules/article-page/views/index.html #}
 {% import 'item-fragment.html' as articleFragment %}
 
 {% for article in data.pieces %}
@@ -74,23 +104,24 @@ Since the fragment and page template are both in the `article-page` module, we c
 {% endfor %}
 ```
 
-### Importing from a different module
-
-We can import fragments into a separate module by adding the fragment file's module name in the `import` tag. This is what it might look like to import the article teaser fragment into a `press-page` index page template:
+::: note
+Unlike importing and extending templates, when importing, the fragment is a property of the imported file, e.g, `articleFragment.teaser()`. This allow us to define multiple fragments in a single file, then import the one file and use any inside it.
 
 ```django
-{# modules/press-page/views/page.html #}
-{# 👇 Importing our fragment from the `article-page` module #}
-{% import 'article-page:item-fragment.html' as importedFragment %}
+{# modules/article-page/views/show.html #}
+{% import 'fragments.html' as articleFragments %}
 
-{% for article in data.pieces %}
-  {% render importedFragment.teaser(article) %}
-{% endfor %}
+<h1>{{ data.piece.title }}</h1>
+{# Maybe one fragment in the file has author credit markup: #}
+{% render articleFragments.author(data.piece._author) %}
+{# And another handles the article topic tags: #}
+{% render articleFragments.topicTags(data.piece.tags) %}
 ```
+:::
 
-### Importing from the global `views` directory
+Similarly, **when fragment files are in the root-level `views` directory** or a sub-directory of it, we can import the fragment with only the relative file path from that `views` directory.
 
-The root-level `views` directory is directly accessible by all modules. In the page template examples above, we are extending the `layout.html` template without prefixing the file name with a module because it is located at `views/layout.html`. Similarly, you can place fragments directly in the root-level views directory, or in a sub-directory of it, and then import that fragment file without prefixing the file name.
+The global fragment file:
 
 ```django
 {# views/fragments/utilities.html #}
@@ -99,50 +130,62 @@ The root-level `views` directory is directly accessible by all modules. In the p
 {% endfragment %}
 ```
 
-Then to import that fragment into any page or widget template the import tag would look exactly as if the fragment was in the same module.
+Importing the fragment into any page or widget template would look exactly as if the fragment was in the same module.
 
 ```django
 {# In any page or widget template file #}
-{% import 'utilities.html' as utilityFragments %}
+{% import 'fragments/utilities.html' as utils %}
 
-{% render utilityFragments.heading('Organization history') %}
-{# This renders `<h2 class="fancy">Organization history</h2>` #}
+{% render utils.heading('Organization history') %}
+{# Renders: `<h2 class="fancy">Organization history</h2>` #}
 ```
 
-## Fragment limitations
+### Importing from a different module
 
-In comparing fragments to macros, it is worth noting a couple of macro features that are not *yet* supported in fragments.
-
-
-<!-- ### Default parameter values
-
-Macros can include default values for their arguments. This is not currently available in fragments. As a work-around, you can set variables in fragments that are overwritten if the argument is provided.
+To import template fragments from one module into templates of another module, include the fragment file's module name in the `import` tag. This is what it might look like to import the article teaser fragment from above into a `press-page` index page template:
 
 ```django
-{% fragment emojiFact(emoji) %}
-  {% set fav = emoji or '🦤' %}
-  <p>
-    My favorite emoji is {{ fav }}
-  </p>
-{% endfragment %}
-``` -->
+{# modules/press-page/views/index.html #}
+{# 👇 Importing our fragment from the `article-page` module #}
+{% import 'article-page:item-fragment.html' as importedFragment %}
 
-### `with context`
-
-You can add `with context` on the end of a macro import to make everything available in a template also available to the file it is importing. In Apostrophe, this can be useful to make the full `data` object available in macros. This is not yet available in fragments.
-
-Instead, make sure to pass the data needed in the fragment into the render tag declaration. Fragments can take multiple arguments.
-
-```django
 {% for article in data.pieces %}
-  {#
-    Including `data.page.themeColor` since the fragment won't automatically
-    have access to `data.page`
-  #}
-  {% render articleFragments.teaser(article, data.page.themeColor) %}
+  {% render importedFragment.teaser(article) %}
 {% endfor %}
 ```
 
-::: warning
-It is possible to pass the entire `data` object into a fragment as an argument. That is usually excessive, however, and could lead to a false sense of completeness. Unlike `with context`, passing `data` still leaves out any template variables set in the page template, for example. It's generally a better idea to be more specific with what you pass into a fragment.
-:::
+In this case, the file name is prefixed with `article-page:`, indicating the source module for the template fragment.
+
+## Inserting markup with `rendercall`
+
+In addition to passing arguments, it is possible to pass markup directly from a template into a fragment it is using. The fragment must first include `rendercaller()`. This will be the location where the calling template will insert markup.
+
+```django
+{# /views/fragments/utilities.html #}
+{% fragment highlighter %}
+  <aside class="highlight">
+    {# 👇The inserted markup will slot in here, inside the `aside` tags. #}
+    {{ rendercaller() }}
+  </aside>
+{% endfragment %}
+```
+
+When using the fragment, a template would use `{% rendercall %}` instead of `{% render %}`.
+
+```django
+{# modules/default-page/views/page.html #}
+{% import 'fragments/utilities.html' as utilities %}
+
+{% rendercall utilities.highlighter() %}
+  Fun fact: {{ data.page.funFact }}
+{% endrendercall %}
+```
+
+This might render something like:
+
+```html
+<aside class="highlight">
+  Fun fact: The first ever ice cream sundae was served in Two Rivers, Wisconsin in 1881.
+</aside>
+```
+
