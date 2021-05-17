@@ -124,12 +124,14 @@ You can configure only one of the two sections (`toolbar` or `styles`), and use 
 // modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
   options: {
-    toolbar: [
-      // Your default formatting tools
-    ],
-    styles: [
-      // Your own default styles
-    ]
+    defaultOptions: {
+      toolbar: [
+        // Your default formatting tools
+      ],
+      styles: [
+        // Your own default styles
+      ]
+    }
   }
 }
 ```
