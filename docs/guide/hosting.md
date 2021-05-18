@@ -41,7 +41,7 @@ Apostrophe includes performance enhancements when in "production mode." In produ
 
 ### Run multiple processes
 
-Running the website on multiple server processes is always a good idea in the production environment. We recommend running at least two. Also make sure not to run more processes than you have CPU cores available (see your hosting plan).
+Running the website on multiple server processes is always a good idea in the production environment. You should run at least two processes to guarantee availability if one process is restarting, even if you only have one CPU core. If you have more than two CPU cores, you may run additional processes, one per additional core. If you have a lot of capacity, you might want to reserve a core for MongoDB.
 
 We recommend using a utility such as [PM2](https://pm2.keymetrics.io/) to start and run these processes. PM2 will also restart the processes in the rare case of a crash.
 
