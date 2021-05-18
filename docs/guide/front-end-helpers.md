@@ -182,7 +182,7 @@ There is also a `runPlayers` method on `apos.util`. That is run for us using `ap
 
 ## HTTP request methods
 
-These are all available in the browser on `apos.http`, e.g., `apos.http.get('/api/v1/article')`. They include for specific HTTP request method utilities as well as other helpers for making HTTP requests.
+These are all available in the browser on `apos.http`, e.g., `apos.http.get('/api/v1/article')`. TThey include utility methods to make requests with each HTTP method (GET, POST,PATCH, PUT and DELETE) as well as other helpers for making HTTP requests.
 
 | Method | What is it? |
 | -------- | ----------- |
@@ -222,7 +222,7 @@ logArticles();
 
 ### `post(url, options, callback)`
 
-Send a `POST` request. The response will be returned via a Promise unless a callback is included. `options.body` should be an object containing properties to be passed as `POST` body data.. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
+Send a `POST` request. The response will be returned via a Promise unless a callback is included. `options.body` should be an object containing properties to be passed as `POST` body data. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
 
 See [the `get` method](#get-url-options-callback) for argument details and a related example.
 
