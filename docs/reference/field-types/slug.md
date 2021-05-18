@@ -28,6 +28,7 @@ projectSlug: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`def` | String | n/a | The default value for the field |
+|`following` | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
