@@ -90,7 +90,7 @@ Like with all fields, we identify the field type, `type: 'relationship'`, and gi
 
 | New properties | What is it? |
 | -------------- | ----------- |
-| **`withType`** | This identifies the Apostrophe doc type that can connect on the field |
+| **`withType`** | This identifies the Apostrophe doc type that can connect on the field. If connecting to pages, use `@apostrophecms/any-page-type`. |
 | **`builders`** | Field query builders, specifically using the `project` filter. This limits the data that is fetched from the connected doc. It is optional, but recommended for improved performance. [See the relationship field reference for detail.](/reference/field-types/relationship.md#filtering-related-document-properties) |
 
 ::: note

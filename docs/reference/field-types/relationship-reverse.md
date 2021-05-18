@@ -33,6 +33,12 @@ _pizzas: {
 |`ifOnlyOne` | Boolean | `false` | If `true`, it will only reveal the relationship data if the doc query returned only one document. [See below](#ifonlyone) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 
+::: tip
+For relationships with pages, use `withType: '@apostrophecms/any-page-type'`.
+
+If `withType` is not set the name of the field must match the name of the related type, with a leading `_` (underscore), and *optional* trailing `s` added (e.g., `_article` or `_articles` to connect to the `article` piece type).
+:::
+
 ## `ifOnlyOne`
 
 The `ifOnlyOne` option can provide a performance improvement if the reverse relationship data is only needed when one piece is queried. For example, in the example above, the pizza relationship data may be only needed on a topping [show page](/reference/glossary.md#show-page), where only one topping is displayed; not on the [index page](/reference/glossary.md#index-page), where many toppings are listed.
