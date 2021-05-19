@@ -57,6 +57,13 @@ module.exports = {
         'guide/conditional-fields.md',
         'guide/async-components.md'
       ]
+    },
+    {
+      title: 'Hosting',
+      collapsable: false,
+      children: [
+        'guide/hosting.md'
+      ]
     }
   ],
   '/reference': [
