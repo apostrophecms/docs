@@ -1,4 +1,4 @@
-# Upgrading from Apostrophe 2.x
+# Coming from Apostrophe 2.x
 
 The 3.x major version of Apostrophe has many things to offer developers familiar with Apostrophe 2. It has a totally new UI, clearer module configuration, and many quality of life improvements, large and small. There are also some breaking changes, including in the general directory structure, so be sure to review the information below before upgrading codebases.
 
@@ -34,179 +34,48 @@ A3 uses the [tiptap](https://tiptap.dev/) rich text editor, a modern, open sourc
 
 ## Breaking changes
 
-A3 introduces several major changes to the development experience. If you're familiar with A2, we strongly recommend you read through this section before [getting started](starting-your-project).
+### Codebase structure and module naming
 
-### Directory Structure & Module Naming
+- The modules directory moved from `/lib/modules` to `/modules` since there was little need for the additional nesting.
+- All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this in projects in `/modules/@apostrophecms/page/index.js`.
 
-#### Modules have moved
-
-The `./lib/modules` folder is now simply `./modules`.
-
-#### Core modules are namespaced
-
-All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this for your own projects in `./modules/@apostrophecms/page/index.js`. This convention is borrowed from NPM namespaces.
-
-::: tip Note:
-Your project specific modules should not use the `@apostrophecms` namespace. However if you publish a module to npm we do recommend using a namespace. NPM namespaces always start with `@`.
+::: note
+Your project specific modules should not use the `@apostrophecms` namespace to avoid future collisions.
 :::
 
-#### Core modules are lowercase and singular
-
-All of the A3 core modules now have lowercase names. This means the `name` option is no longer necessary for piece and widget types. `@apostrophecms/user` is both the name of the module and the `type` property of a user doc in the database. For widget types, the module name now ends in `-widget`, but `-widget` should still be omitted for brevity when adding it to an area.
-
-Command line tasks also use the new module names. For example, **the `apostrophe-users:add` task is now `@apostrophecms/user:add`**.
-
-### Tags
-
-In A2, every document has a `tags` field. In A3, this field no longer exists.
-
-Your pieces that benefit from the idea of "tagging" should have a relationship (formerly known as a join) to a piece type that you add to your project for that purpose. For instance, A3 ships with "image-tag" and "file-tag" piece types. Image and file pieces specifically have a relationship with these types. Other documents do not.
-
-### Areas and Pages
-
-#### Page types are always modules
-
-In A3 every page type has a corresponding module. Page templates live in the page type module rather than in the base page module.
-
-The home page, which always exists, is powered by the `@apostrophecms/home-page` module. This is already configured in the [A3 Boilerplate](https://github.com/apostrophecms/a3-boilerplate/).
-
-#### Areas are always fields
-
-In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](/guide/areas-and-widgets/core-widgets.md) for examples.
-
-#### Area template syntax has changed
-
-Since areas are now declared as fields, templates now just pull them in with:
-
-```js
-{% area data.page, 'areaName' %}
-```
-
-Notice that `apos.area` has been replaced with a custom Nunjucks tag.
-
-#### Singletons are gone
-
-The old `singleton` field type and `apos.singleton` helper are gone in A3. You can simply pass the `max: 1` option and declare a single widget type when configuring an area field. Apostrophe still provides an appropriate UI for content-editors.
-
-### "Joins" are now "relationships"
-
-In A2, relationships between two piece or page types were referred to as "joins." In A3 they are simply called "relationships." Here is an example of a relationship field in A3:
-
-```javascript
-_products: {
-  label: 'Products',
-  type: 'relationship',
-  withType: 'product'
-}
-```
-
-Notice we do not write `joinByArray`. In A3, all relationships are "one to many," although you may specify `max: 1` if you wish.
-
-However, `relationshipReverse` fields are still available and work just like `joinByArrayReverse` in A2.
-
-### `array` fields have changed
-
-The `array` schema field type is still available, but the syntax has been updated to match the new syntax for modules:
-
-```js
-features: {
-  label: 'Features',
-  type: 'array',
-  fields: {
-    add: {
-      title: {
-        label: 'Title',
-        type: 'string'
-      }
-    }
-  }
-}
-```
-
-### Front End Assets
-
-While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser by default, A3 is very unopinionated on the front end. The only JavaScript we push for logged-out site visitors is a tiny vanilla JavaScript library (under 10k gzipped) that provides conveniences for writing widget players and tools for communication with the Apostrophe server. For more information, see [front end assets](front-end-assets.md).
-
-### Module Format
-
-A3 has a new module format designed to help developers understand how to structure their code and eliminate common hassles in development.
-
-We'll briefly describe the new sections here, but be sure to take a closer look by following the example on the [module format example](/module-format-example.md) page.
-
-#### `fields`
-
-For the modules that power piece, page and widget types, "schema fields" have moved to a new `fields` property with `add`, `remove` and `group` sub-properties, using object rather than array syntax. `fields` sections cascade through subclasses, so you can just add more when you extend another module.
-
-#### `columns` and `filters`
-
-For piece-types, `columns` and `filters` work much like `fields`. These features are called "cascades" and it is possible to add more.
-
-#### `options`
-
-Ordinary options like `label` have moved to a top-level `options` property.
-
-#### `methods` and `extendMethods`
-
-Methods are now declared in the `methods` section. Using the "super pattern" to extend methods gets easier with the new `extendMethods` section. Methods are a useful way to structure code that is called by more than one route, event handler, async component or even the `init` function.
-
-#### `components` and `extendComponents`
-
-The new [async components](/guide/async-components) feature lets you fetch content on the fly from inside your page templates. Async components are a recommended replacement for most common uses of the old `apostrophe-pages:beforeSend` promise event handler. Async components are async functions whose return values are passed to a Nunjucks template of the same name. The result is rendered at the point in the page where `{% component "module-name:componentName" with { data... } %}` was called. The async function receives `(req, data)` so it can work with information passed by the template.
-
-#### `helpers` and `extendHelpers`
-
-As in A2, A3 supports Nunjucks helper functions. These are configured in
-the `helpers` section.
-
-Note that **helper functions are still synchronous.
-They still may not use await or do any asynchronous work.** For those use
-cases, use `components` instead.
-
-#### `apiRoutes` and `extendApiRoutes`
-
-The `apiRoutes` section allows Express routes to be written as simple async functions that return a value.
-
-If the value is an object or array, it is sent as JSON, otherwise it is sent as-is which is useful for HTML fragments. This pattern produces less buggy, more reliable code.
-
-Just like with methods, you can extend a route you inherited with `extendApiRoutes`.
-
-#### `renderRoutes` and `extendRenderRoutes`
-
-Like `apiRoutes`, but the returned object is passed to a Nunjucks template of the same name in your module, and the resulting markup is sent to the browser. This is great for HTML fragments, but also check out the new [async components](/guide/async-components) feature which is more SEO-friendly.
-
-#### `restApiRoutes` and `extendRestApiRoutes`
-
-Handy for those creating new RESTful APIs. Allows you to declare `GET` (for all), `GET` (for one), `POST`, `PUT`, `PATCH` and `DELETE`f routes in an intuitive way. These return a value or throw an exception just like `apiRoutes`. However, note that pieces and pages automatically have REST APIs in 3.x.
-
-#### `routes`
-
-You can create ordinary Express routes with `(req, res)` arguments too. There is no "extendRoutes" since Express routes do not lend themselves to that pattern.
-
-#### `handlers` and `extendHandlers`
-
-The `handlers` section provides a home for promise event handlers. These are grouped together by event name and given individual names so that you can use `extendHandlers` to tweak what happens in a handler you inherited from a base class.
-
-In 3.x, promise events support inheritance: if the piece-type module `product` emits an `beforeInsert` event, you can listen for that specifically as `product:beforeInsert`, or as `@apostrophecms/piece-type:beforeInsert`, or even `@apostrophecms/doc-type:beforeInsert` which will catch `beforeInsert` events on all pages and pieces in Apostrophe.
-
-This provides a flexible replacement for the empty piece-type methods like `beforeInsert` designed just for overriding that A2 provided.
-
-On the other hand, `@apostrophecms/page:beforeSend` will not be listened for as often as its A2 equivalent because [async components](/guide/async-components) are usually a better answer.
-
-#### Queries
-
-In modules for piece and page types, the `queries` section replaces the Apostrophe 2.x "cursors" feature. When making a database query with Apostrophe, you can chain together the query "builders" declared in the `builders` subsection, then finish the job with the query "methods" declared in the `methods` subsection. Most of the time you'll just need those you inherit from `@apostrophecms/doc-type`, such as `and`, `project`, and `toArray`.
-
-#### Middleware
-
-The new `middleware` section replaces the old `expressMiddleware` property. You can configure any number of named Express middleware functions, which are called on **all** requests, in the order modules are initialized. You can also schedule your middleware to run `before` that of another module.
-
-In A3, most route-specific custom middleware is better written as an async method `await`ed at the start of the route. Existing third-party middleware can be used on a route-specific basis by passing an array consisting of the middleware and the route function when adding a `route`, `apiRoute`, etc.
-
-There is no "extendMiddleware" since Express middleware does not lend itself to that pattern.
-
-#### Tasks
-
-In A3, command line tasks have moved to the new `tasks` module format section. This removes the need to call the `addTask` method, provides clearer code organization and allows for a new `afterModuleInit` flag to optionally run the task and exit immediately after its module is initialized, without waiting for others.
+- Official doc type modules are now singular as well.
+- Due to core module name changes, the `name` option is no longer necessary (or functional). The module names now exactly match the document `type` property (e.g., `@apostrophecms/user`, `@apostrophecms/image`).
+
+### Updated UI and module architecture
+
+- Most any user interface customizations based on the A2 jQuery code will no longer work.
+- [As noted above](#other-notable-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
+- Due to the module architecture changes, all modules in an A2 project would need to be refactored when migrating to A3. Most configurations and methods will be reusable, but they will need to be rearranged. See the [module reference](/reference/module-api/module-overview.md) for details. Here are some highlights:
+  - Module field schemas now use an object structure on the `fields` property. It has `add`, `remove`, and `group` subproperties to replace A2's `addFields`, `removeFields`, and `arrangeFields`.
+  - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, `remove`, and `order` subproperties. This replaces A2's `addColumns` property.
+  - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, and `remove` subproperties. This replaces A2's `addFilters` property.
+  - Many module options that were top level properties in A2 (e.g., `label`, `alias`, `sort`) are now subproperties of `options`. These include all options with primitive value (e.g., booleans, string, numbers) in addition to select object or array options. See the [module options reference](/reference/module-api/module-options.md).
+  - The A2 `self.addHelper()` method used to add Nunjucks helper functions is replaced by the `helpers` section in module configuration.
+  - The A2 `self.apiRoute()` method used to add a custom API route is replaced by the `apiRoutes` section in module configuration.
+  - The A2 `self.renderRoute()` method used to add a custom template rendering route is replaced by the `renderRoutes` section in module configuration.
+  - The A2 `self.route()` method used to add a custom Express route is replaced by the `routes` section in module configuration.
+  - The A2 `self.on()` method that watched for Apostrophe server-side promise events is replaced by the `handlers` section in module configuration.
+  - The A2 `self.addFilter()` method used to add MongoDB cursor filters is replaced by the `queries` section and its `builders` subsection in module configuration.
+  - The A2 `self.expressMiddleware()` method for adding Express middleware functions is replaced by the `middleware` section in module configuration.
+  - The A2 `self.addTask()` method for adding CLI tasks is replaced by the `tasks` section in module configuration.
+
+### Areas and pages
+
+- Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
+- Areas must be declared as fields in the [content field schema](/guide/content-schema.md). They will no longer work if simply added to template files without being registered.
+- The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the object of widget configuration since that is now done in module config.
+- Area "singletons" are no longer a separate field type or template helper. They were always simply areas that only allowed one widget. With the other area changes, there is not much benefit to having that feature over adding the `max: 1` option to an area field.
+
+### Other module configuration changes
+
+- In A2, relationships between two piece or page types were referred to as "joins." In A3 they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundementally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter).
+- [The `array` field type](/reference/field-types/array.md) uses a new syntax for adding its field schema, matching the new module field schema syntax.
+- The `tags` field from A2 no longer exists. In most cases we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
 
 ## Upgrading from 3.0.0-alpha.1
 
