@@ -9,15 +9,6 @@ module.exports = {
       ]
     },
     {
-      title: 'Coming from A2',
-      collapsable: false,
-      children: [
-        'guide/new-apostrophe.md',
-        'guide/major-changes.md',
-        'guide/upgrade.md'
-      ]
-    },
-    {
       title: 'Guide',
       collapsable: false,
       children: [
@@ -71,7 +62,8 @@ module.exports = {
       children: [
         'guide/hosting.md'
       ]
-    }
+    },
+    'guide/upgrading.md'
   ],
   '/reference': [
     'reference/glossary',
