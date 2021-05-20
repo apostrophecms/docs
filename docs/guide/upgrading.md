@@ -32,6 +32,8 @@ A3 uses the [tiptap](https://tiptap.dev/) rich text editor, a modern, open sourc
 - A3 completely removes the jQuery, lodash, and Moment.js libraries that were pushed to browsers by default. There is now only [a small set of helper methods](/guide/front-end-helpers.md).
 - In addition to the classic template macros, there are now [fragments](/guide/fragments.md). These are compatible with the new async components, unlike macros.
 
+There are additional features planned for Apostrophe 3. Keep an eye on the [product roadmap](https://apostrophecms.productboard.com/portal/1-product-portal/tabs/1690f4df-bbbe-4d8d-aad0-42e4f1ff7643) for more on those.
+
 ## Breaking changes
 
 ### Codebase structure and module naming
@@ -76,23 +78,3 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
 - In A2, relationships between two piece or page types were referred to as "joins." In A3 they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundementally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter).
 - [The `array` field type](/reference/field-types/array.md) uses a new syntax for adding its field schema, matching the new module field schema syntax.
 - The `tags` field from A2 no longer exists. In most cases we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
-
-## Upgrading from 3.0.0-alpha.1
-
-Following version `3.0.0-alpha.1` we will use simply the npm tag for versions in the boilerplate for versions prior to the full release, e.g., `alpha`, `beta`. If you downloaded the boilerplate before the `3.0.0-alpha.2` release:
-
-* Open `package.json`
-* Change `"apostrophe": "3.0.0-alpha.1"` to `"apostrophe": "alpha"`
-* Run `npm install`
-
-This can be updated to `beta` when a beta release is available.
-
-After the final release you'll be able to set your dependency to just `^3.0.0`, and then you will be able to use `npm update` normally.
-
-## Upgrading from 2.x
-
-Upgrading from 2.x will be possible in the final, stable release of A3. We will provide content migration tools, and eventually code migration tools as well. Certainly some effort will be required from developers to complete a migration from A2 to A3, however we are committed to making this process as smooth as possible. In the meantime, A2 is a long term support (LTS) release we are standing behind through 2023.
-
-## Coming soon...
-
-The core team is continually adding and tweaking features in Apostrophe 3. Check in on [the product roadmap](https://apostrophecms.productboard.com/portal/1-product-portal/tabs/1690f4df-bbbe-4d8d-aad0-42e4f1ff7643) to learn about some of the big features and the estimated timeline.
