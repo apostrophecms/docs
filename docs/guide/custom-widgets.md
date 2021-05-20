@@ -101,9 +101,9 @@ Here are some two-column styles for people following along.
 ```
 :::
 
-## Client-side Javascript for widgets
+## Client-side JavaScript for widgets
 
-When adding client-side Javascript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
+When adding client-side JavaScript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
 
 We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
 
@@ -162,7 +162,7 @@ module.exports = {
 ```
 :::
 
-Widget player code can be added in any client-side Javascript file in a module's `ui/public/` directory. In this example it would be in `modules/collapse-widget/ui/public/collapser.js` (the file name does not matter, as long as it is a `.js` file).
+Widget player code can be added in any client-side JavaScript file in a module's `ui/public/` directory. In this example it would be in `modules/collapse-widget/ui/public/collapser.js` (the file name does not matter, as long as it is a `.js` file).
 
 The player code is added to an object of widget players, `apos.util.widgetPlayers` using the widgets name, excluding the `-widget` suffix. It is an object with two properties:
 

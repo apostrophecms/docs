@@ -1,31 +1,85 @@
----
-title: "Front-end Assets"
----
+# Front end CSS and JavaScript
 
-# Front-end Assets
+ApostropheCMS approaches CSS and client-side JavaScript by trying to taking care of as much of the hard parts as possible. To that end, the developers main job is to **put their CSS and client-side JavaScript into `ui/public` directories**. Apostrophe will then:
+  - Concatenate all CSS and JS in `ui/public` directories
+  - Deliver the code to browsers in one CSS and one JavaScript file, either:
+    - with the editing UI if the browser is logged in, or
+    - without the editing UI if logged out
 
-In A3 we don't impose any decisions on developers about the front end. Instead, A3 automatically imports any `.js` files in the `ui/public` folder of any module into the Apostrophe asset bundle, **without any compilation or changes.** This is tailor-made for pushing the output of your own build tool's pipeline to A3 as a final step.
+## Placing client-side code
 
-## Boilerplate
+CSS and JavaScript files need to be placed in **any module's `ui/public` directory**. You can put client-side code in a single module directory (e.g., after running your own build process) or across many modules.
 
-The [A3 boilerplate](https://github.com/apostrophecms/a3-boilerplate/) follows our recomended strategy: 1) use webpack to build your assets, and 2) push the end result to A3's asset pipeline. However, you can follow whatever organizing pattern that works best for you or your orgnization.
+For example, if we had a global CSS file, `site.css`, we might create an `assets` module for this purpose and place it at:
 
-**Here is how it works in our boilerplate project**:
+```
+modules/assets/ui/public/site.css
+```
 
--  The `dev` npm script in `package.json` runs project-level `webpack`, which compiles `src/index.js` according to the rules in `webpack.config.js`. If you don't like these rules you can change them.
--  `src/index.scss` (written in [Sass](https://sass-lang.com/)) is imported by `src/index.js`, allowing the browser to load just one file for both.
--  At the end of the build, the bundled assets are written to `modules/asset/ui/public/sites.js`.
--  Then the `dev` script runs A3's `@apostrophecms/asset:build` task, which compiles Apostrophe's own assets. In addition, **any `.js` files in the `ui/public` folder of any module are automatically included in the frontend build.**
-- Whenever code changes are made, `nodemon` is used to automatically restart this cycle and refresh the browser after a successful restart.
+You could instead add code for an individual widget type as shown in the [custom widget guide](/guide/areas-and-widgets/custom-widgets.md#client-side-javascript-for-widgets). That example's JavaScript code was placed at:
 
-::: tip Note:
-While this is very flexible and particularly useful when developing Apostrophe itself or modules that add more admin UI to it, we know it's a bit slow for typical site projects. We plan to update our boilerplate to use a different strategy in which Apostrophe's own build process is not repeated each time.
+```
+modules/collapse-widget/ui/public/collapser.js
+```
+
+Regardless of the file's name, it will be included in the complete file. Apostrophe will concatenate CSS together in one file and JavaScript together in another file.
+
+::: tip
+If you have your own build process using something like webpack or Gulp you will likely end up with a single JavaScript file and and single CSS file. For the sake of code organization, it can help to output those files into a generic module such as `modules/assets` rather than one of the piece type or page type directories.
+
+In this case, the `assets` module may not have any additional code and even may not have an `index.js` file (though it certainly could). As long as it is instantiated in `apps.js`, the client-side assets will be found.
 :::
 
-## Libraries
+Client side code will be recompiled **when the app starts up** or if **the build task runs**. Tools like [nodemon](https://www.npmjs.com/package/nodemon) are helpful to watch for code changes and restart the app for automatic recompiling. The CLI command to run the build task manually is `node app @apostrophecms/asset:build`.
 
-A3 includes a very small library of front-end utility code for easy implementation of widget players and communication with the Apostrophe server. As an example of the library's use, check out the official A3 video widget player [source code](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/%40apostrophecms/video-widget/ui/public/video.js).
+## Ordering the output files
 
-::: tip Note:
-Since that player has to be compatible with any frontend build, it uses only IE11-compatible JavaScript, and passes callbacks. If your build, like the one in our boilerplate, uses `babel` or doesn't support IE11 then you may `await` the `apos.http.get` method instead.
+If you spread the client-side code across modules it will be concatenated in the order they are instantiated in `app.js`. For example, let's say you have JavaScript files in `modules/sing-widget/ui/public` and `modules/dance-widget/ui/public`.
+
+The `sing-widget` sings:
+
+```javascript
+// `modules/sing-widget/ui/public/singing.js
+console.log('🧑‍🎤🎶');
+```
+
+And the `dance-widget` dances:
+
+```javascript
+// `modules/dance-widget/ui/public/dancing.js
+console.log('🕺🏻💃🏽');
+```
+
+If your module's configuration in `app.js` includes this:
+
+```javascript
+// app.js
+'sing-widget': {},
+'dance-widget': {},
+```
+
+The output will **sing** before it **dances**. If the modules are instantiated in the opposite order:
+
+```javascript
+// app.js
+'dance-widget': {},
+'sing-widget': {},
+```
+
+the output will **dance** before it **sings**.
+
+::: note The Boilerplate
+The [Apostrophe 3 boilerplate](https://github.com/apostrophecms/a3-boilerplate/) follows our recommended strategy:
+1. use webpack to build your assets
+2. push the end result to A3's asset pipeline
+
+**Here is how development works using our boilerplate project**:
+
+-  The `dev` npm script in `package.json` runs a project-level webpack build, which compiles `src/index.js` according to the rules in `webpack.config.js`.
+-  `src/index.scss` (written in [Sass](https://sass-lang.com/)) is imported by `src/index.js`, allowing the browser to load one file for both CSS and JS.
+-  At the end of the build, the bundled assets are written to `modules/asset/ui/public/sites.js`.
+- Any `.js` files in the `ui/public` folder of any module are automatically included in the frontend build.
+- Whenever code changes are made, `nodemon` automatically restarts this cycle and refresh the browser after a successful restart.
+
+None of those specifics are required for Apostrophe. You can follow whatever organizing pattern works best for you or your organization.
 :::

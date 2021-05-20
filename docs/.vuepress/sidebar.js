@@ -46,7 +46,14 @@ module.exports = {
           ]
         },
         'guide/users.md',
-        'guide/front-end-assets.md'
+        {
+          title: 'Front end code',
+          children: [
+            'guide/front-end-assets.md',
+            'guide/front-end-helpers.md'
+          ]
+        }
+        // 'guide/static-assets.md'
       ]
     },
     {

@@ -207,7 +207,7 @@ The core video widget accepts a video URL and fetches the embed code to display 
 
 **Or: How to get access to the editing interface when embedded HTML breaks it.**
 
-The HTML widget allows content editors to embed raw HTML directly into a template. This can be helpful if they may need to add third-party features (e.g., sign-up forms). This can also be very dangerous since there are no limits to what they can add. Bad Javascript in embedded HTML can break the user interface, making it impossible to remove the bad code.
+The HTML widget allows content editors to embed raw HTML directly into a template. This can be helpful if they may need to add third-party features (e.g., sign-up forms). This can also be very dangerous since there are no limits to what they can add. Bad JavaScript in embedded HTML can break the user interface, making it impossible to remove the bad code.
 
 **Think carefully before providing this widget option to editors and make them aware of the risks.**
 

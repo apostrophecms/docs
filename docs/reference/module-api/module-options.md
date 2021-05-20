@@ -1,6 +1,6 @@
 # Module configuration options
 
-Apostrophe modules can be configured with settings that influence functionality without having to write custom Javascript. The sections below describe the options available in all modules as well as those specific to certain module types.
+Apostrophe modules can be configured with settings that influence functionality without having to write custom JavaScript. The sections below describe the options available in all modules as well as those specific to certain module types.
 
 All settings described here are placed in a module's `options` configuration object. The `options` object can be added in the module's `index.js` file, as well as where the module is instantiated in the `app.js` file.
 
