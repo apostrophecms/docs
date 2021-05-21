@@ -4,7 +4,7 @@ Creating new widget options in addition to the [core widgets](/guide/areas-and-w
 
 ## Creating a widget type
 
-Adding a new widget type involves creating a new module that extends the `@apostrophecms/widget-type` module. It also requires a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schemas.md) with the appropriate fields.
+Adding a new widget type involves creating a new module that extends the `@apostrophecms/widget-type` module. It also requires a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schema.md) with the appropriate fields.
 
 We will use the example of a two column **"layout widget."** It is a fairly common and relatively simple use case that allows editors to visually align content in a row. This version of a layout widget consists of two areas next to one another. Each will allow either rich text and image widgets nested inside.
 

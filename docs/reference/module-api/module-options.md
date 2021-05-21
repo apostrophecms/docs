@@ -156,7 +156,7 @@ You might use that value as a fallback for user-editable fields.
 
 ## Options for all doc type modules
 
-Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](glossary.md#doc) modules). These include all piece and page types.
+Option settings in this section apply to all modules that extend `@apostrophecms/doc-type` ([doc type](/reference/glossary.md#doc) modules). These include all piece and page types.
 
 | Option | Value type | Description |
 |---------|---------|---------|
@@ -332,7 +332,7 @@ module.exports = {
 
 ### `perPage`
 
-In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
 
 #### Example
 
@@ -370,7 +370,7 @@ module.exports = {
 }
 ```
 
-Unauthenticated [`GET /api/v1/article`](api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
+Unauthenticated [`GET /api/v1/article`](/reference/api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
 
 ### `quickCreate` (for pieces)
 
@@ -604,7 +604,7 @@ module.exports = {
 }
 ```
 
-Unauthenticated [`GET /api/v1/@apostrophecms/page`](api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
+Unauthenticated [`GET /api/v1/@apostrophecms/page`](/reference/api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
 
 ### `quickCreate` (for pages)
 

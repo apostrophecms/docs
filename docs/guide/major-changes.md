@@ -4,7 +4,7 @@ title: "Major Changes"
 
 # Major Changes
 
-A3 introduces several major changes to the development experience. If you're familiar with A2, we strongly recommend you read through this section before [getting started](starting-your-project).
+A3 introduces several major changes to the development experience. If you're familiar with A2, we strongly recommend you read through this section before [getting started](/guide/setting-up.md).
 
 ## Directory Structure & Module Naming
 
@@ -42,7 +42,7 @@ The home page, which always exists, is powered by the `@apostrophecms/home-page`
 
 ### Areas are always fields
 
-In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](/guide/areas-and-widgets/core-widgets.md) for examples.
+In A3 areas are always declared as fields of a page type, widget type or array field. They are not declared "on the fly" in page templates. See [standard widgets](/guide/core-widgets.md) for examples.
 
 ### Area template syntax has changed
 
@@ -101,7 +101,7 @@ While A2 pushed `jQuery`, `lodash`, `momentjs`, `async` and more to the browser 
 
 A3 has a new module format designed to help developers understand how to structure their code and eliminate common hassles in development.
 
-We'll briefly describe the new sections here, but be sure to take a closer look by following the example on the [module format example](/module-format-example.md) page.
+We'll briefly describe the new sections here, but be sure to take a closer look by following the [module reference](/reference/module-api/README.md) section.
 
 ### `fields`
 

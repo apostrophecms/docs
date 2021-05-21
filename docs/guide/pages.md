@@ -163,7 +163,7 @@ This is a special tag in Apostrophe used to let editors add and manage content w
 
 ![A page with the area menu opened](/images/page-area.jpg)
 
-[The widget guide](/guide/widgets-and-templates/README.md) will go deeper into using areas.
+We'll explore areas more in [the areas guide](/guide/areas-and-widgets.md).
 
 ::: tip
 To overwrite the home page type template, create a template file for it at  `modules/@apostrophecms/home-page/views/page.html` and add template markup.
