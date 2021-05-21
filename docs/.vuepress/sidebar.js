@@ -92,8 +92,7 @@ module.exports = {
       collapsable: false,
       children: [
         'reference/module-api/module-overview',
-        'reference/module-api/module-options',
-        'reference/module-api/example.md'
+        'reference/module-api/module-options'
       ]
     },
     {
