@@ -60,7 +60,6 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
-        'guide/rest-apis.md',
         'guide/conditional-fields.md',
         'guide/async-components.md'
       ]
