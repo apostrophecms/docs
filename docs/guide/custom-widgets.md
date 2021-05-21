@@ -1,6 +1,6 @@
 # Custom widgets
 
-Creating new widget options in addition to the [core widgets](/guide/areas-and-widgets/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.
+Creating new widget options in addition to the [core widgets](/guide/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.
 
 ## Creating a widget type
 
@@ -80,7 +80,7 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 </section>
 ```
 
-**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets/#passing-context-options) passed in are available on `data.contextOptions`.
+**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available on `data.contextOptions`.
 
 ::: note
 Here are some two-column styles for people following along.
