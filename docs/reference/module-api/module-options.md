@@ -921,8 +921,7 @@ module.exports = {
 
 ### `icon`
 
-Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module format example](/guide/module-format-example.md) for how to make new icons available.
-<!-- TODO: Update this to link to a true module section documentation page for `icons`. -->
+Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/3.0/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module settings reference](/reference/module-api/module-overview.md#icons) for how to make new icons available.
 
 #### Example
 

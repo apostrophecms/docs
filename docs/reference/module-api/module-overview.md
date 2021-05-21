@@ -16,6 +16,7 @@ Module configuration objects may use the following configuration properties. The
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
+| [`icons`](#icons) | Object | No | Register a Material Design icon for the UI | All |
 
 ### "Cascading" settings
 
@@ -282,6 +283,24 @@ modules.export = {
     }
     // 👇 Orders the new `_topic` column among default piece columns.
     order: [ 'title', 'labels', '_topic', 'updatedAt' ]
+  }
+};
+```
+
+
+### `icons`
+
+Many icons from the [Material Design Icons](https://materialdesignicons.com/) library are already available in Apostrophe for things like [widget menu labels](/reference/module-api/module-options.md#icon). Additional icons can be made available through the `icons` setting object.
+
+Each property key will be the name to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
+
+```javascript
+// index.js
+modules.export = {
+  // ...
+  icons: {
+    airhorn: 'AirHorn',
+    expander: 'ArrowUpDownBoldOutline'
   }
 };
 ```
