@@ -16,7 +16,7 @@ For example, if we had a global CSS file, `site.css`, we might create an `assets
 modules/assets/ui/public/site.css
 ```
 
-You could instead add code for an individual widget type as shown in the [custom widget guide](/guide/areas-and-widgets/custom-widgets.md#client-side-javascript-for-widgets). That example's JavaScript code was placed at:
+You could instead add code for an individual widget type as shown in the [custom widget guide](/guide/custom-widgets.md#client-side-javascript-for-widgets). That example's JavaScript code was placed at:
 
 ```
 modules/collapse-widget/ui/public/collapser.js
