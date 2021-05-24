@@ -155,7 +155,7 @@ widgets: {
 <!-- TODO: link to attachment module srcset method when reference is available. -->
 The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) value.
 
-This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets/#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
+This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets.md#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
 ```django
 {% area data.page, 'main' with {

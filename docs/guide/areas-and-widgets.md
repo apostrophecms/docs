@@ -113,7 +113,7 @@ main: {
 ```
 
 ::: note
-Learn more about rich text options in [the section on core widgets](/guide/areas-and-widgets/core-widgets.md).
+Learn more about rich text options in [the section on core widgets](/guide/core-widgets.md).
 :::
 
 In other situations, you may need to **pass the widget *template* options that only apply to a specific context**. One example of this is the [`sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.

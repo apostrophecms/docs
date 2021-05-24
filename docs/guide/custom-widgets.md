@@ -1,10 +1,10 @@
 # Custom widgets
 
-Creating new widget options in addition to the [core widgets](/guide/areas-and-widgets/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.
+Creating new widget options in addition to the [core widgets](/guide/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.
 
 ## Creating a widget type
 
-Adding a new widget type involves creating a new module that extends the `@apostrophecms/widget-type` module. It also requires a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schemas.md) with the appropriate fields.
+Adding a new widget type involves creating a new module that extends the `@apostrophecms/widget-type` module. It also requires a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schema.md) with the appropriate fields.
 
 We will use the example of a two column **"layout widget."** It is a fairly common and relatively simple use case that allows editors to visually align content in a row. This version of a layout widget consists of two areas next to one another. Each will allow either rich text and image widgets nested inside.
 
@@ -80,7 +80,7 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 </section>
 ```
 
-**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets/#passing-context-options) passed in are available on `data.contextOptions`.
+**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available on `data.contextOptions`.
 
 ::: note
 Here are some two-column styles for people following along.

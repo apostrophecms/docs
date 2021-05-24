@@ -47,7 +47,7 @@ Once the global doc is configured with fields, it will be added to the admin bar
 ```
 
 ::: warning
-Since the global doc is available in every template it can be tempting to add all kinds of data to it. This can eventually lead to performance problems since **the whole global doc is fetched for templates on every page request**. If it contains a lot of [content areas](/guide/areas-and-widgets/) and has [relationships](/guide/relationships.md) with other docs, that one request can get very large.
+Since the global doc is available in every template it can be tempting to add all kinds of data to it. This can eventually lead to performance problems since **the whole global doc is fetched for templates on every page request**. If it contains a lot of [content areas](/guide/areas-and-widgets.md) and has [relationships](/guide/relationships.md) with other docs, that one request can get very large.
 
 A basic guideline is that things should only be added to the global doc if they are used in *at least* 50% of pages.
 :::
