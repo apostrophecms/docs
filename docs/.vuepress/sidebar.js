@@ -50,11 +50,6 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
-        {
-          title: 'Working with media 🆕',
-          children: [
-          ]
-        },
         'guide/conditional-fields.md',
         ['guide/async-components.md', 'Async components 🆕']
       ]
