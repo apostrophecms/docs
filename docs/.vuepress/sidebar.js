@@ -42,6 +42,7 @@ module.exports = {
           children: [
             'guide/templating.md',
             'guide/layout-template.md',
+            ['guide/template-data.md', 'Template data 🆕'],
             'guide/fragments.md'
           ]
         },
