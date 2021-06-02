@@ -13,7 +13,7 @@ All fields in a piece or page module use their object key as their database fiel
 resume: {
   label: 'Resumé',
   type: 'attachment',
-  group: 'office'
+  fileGroup: 'office'
 }
 ```
 
@@ -30,17 +30,17 @@ resume: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`group` | String | n/a | Can be set to `image` or `office` to limit the file types that can be uploaded. See more below. |
+|`fileGroup` | String | n/a | Can be set to `images` or `office` to limit the file types that can be uploaded. See more below. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
-<!-- |`aspectRatio` | Array | n/a | Only applies to image files. If set to an array like `[ 2, 1 ]`, the image must have that aspect ratio and will be autocropped if the user does not manually crop. Only suitable if group is images. | -->
+<!-- |`aspectRatio` | Array | n/a | Only applies to image files. If set to an array like `[ 2, 1 ]`, the image must have that aspect ratio and will be autocropped if the user does not manually crop. Only suitable if fileGroup is images. | -->
 <!-- |`contextual` | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
-<!-- |`crop` | Boolean | `false` | Only applies to image files. If `true`, the user may crop the attachment. Only suitable if group is images. | -->
-<!-- |`minSize` | Array | n/a | Only applies to image files. if set to an array like `[ 640, 480 ]`, the image must have at least the specified minimum width and height. Only suitable if group is images. | -->
+<!-- |`crop` | Boolean | `false` | Only applies to image files. If `true`, the user may crop the attachment. Only suitable if fileGroup is images. | -->
+<!-- |`minSize` | Array | n/a | Only applies to image files. if set to an array like `[ 640, 480 ]`, the image must have at least the specified minimum width and height. Only suitable if fileGroup is images. | -->
 <!-- |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value | -->
 
 ::: warning NOTE
@@ -49,7 +49,7 @@ The uploaded files are stored in a web-accessible folder, however their file nam
 
 ## Custom file groups
 
-Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` option of the `@apostrophecms/attachment` module. Those custom groups names can then be used for an attachment field's `group` setting.
+Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` option of the `@apostrophecms/attachment` module. Those custom groups names can then be used for an attachment field's `fileGroup` setting.
 
 <!-- TODO: Link to the attachment module page for this instead once available. -->
 

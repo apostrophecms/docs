@@ -2,77 +2,15 @@
 
 There are a few ways to configure a field schema to allow editors to select images or other media files.
 
-1. Attachment fields
-2. Relationship fields to the image or file piece types
-3. Area fields with the image widget
+3. [An image widget](#the-image-widget-option)
+1. [An attachment field](#the-attachment-field-option)
+4. [A relationship field](#the-relationship-field-option)
 
 In addition to covering the main ways to allow editors to choose files for their content, we'll also look at how to use the data from each approach in templates. We'll focus on how developers would get the file URL plus critical image information for generating markup.
 
-## The attachment field option
-
-The [attachment field](/reference/field-types/attachment.md) is the direct route for uploading any type of file (e.g., image, PDF) to the file system. It is a fairly simple field that does not do much more than upload the file.
-
-Importantly, a file uploaded through an attachment field *will not appear in either the media library* or the general file manager. If the image or file is meant to be reused, this will not be best. However if the file should only be associated with one particular page or piece it can work well. Uploading resumés associated with job applicants is one such example.
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  // ...
-  fields: {
-    add: {
-      fileUpload: {
-        label: 'File upload',
-        type: 'attachment',
-        fileGroup: 'office'
-      }
-    }
-  }
-};
-```
-
-![an attachment field](/images/media-attachment.png)
-
-### Using attachment field values in templates
-
-Getting file information from an attachment field value is simpler than the other options since you have immediate access to the attachment object. If the field on a piece type is called `fileUpload`, the attachment object is `data.piece.fileUpload` in a show page template.
-
-For image attachments, there will be an object of URLs on the `_urls` property. Apostrophe generates multiple sizes of each uploaded image as discussed [regarding the image widget](/guide/core-widgets.md#image-widget). For "office" files (e.g., PDFs) there is one `_url` property.
-
-In either case, there is a helper method available in templates to retrieve the url: `apos.attachment.url()`. For "office" attachments, simply pass the attachment object into the method.
-
-```django
-{# modules/article-page/views/show.html #}
-{% set fileUrl = apos.attachment.url(data.piece.fileUpload) %}
-
-<a href="{{ fileUrl }}">Download</a>
-```
-
-For image attachments, doing the same thing will return the URL for the `full` image size by default. You can pass an options object as a second argument with its `size` property set to another image size to get a different URL back.
-
-```django
-{# modules/article-page/views/show.html #}
-
-{% set imgUrl = apos.attachment.url(data.piece.photoUpload, {
-  size: 'one-third'
-}) %}
-
-<img src="{{ imgUrl }}" alt="" />
-```
-
-[Responsive images](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) are very important for cross-device support these days. Getting each image size to populate the `srcset` attribute for an image would get repetitive very quickly even using the `apos.attachment.url()` method. For that, there is a dedicated `apos.image.srcset()` method. Pass in the attachment object as an argument and it will return a `srcset` value with all sizes included.
-
-```django
-{# modules/article-page/views/show.html #}
-{% set srcset = apos.attachment.srcset(data.piece.photoUpload) %}
-
-<img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
-```
-
-Notice that in the examples above **the alt text is not included when using an attachment field**. Since alt text should be populated in most all instances, the other two options will usually be better for images.
-
 ## The image widget option
 
-The core [image widget](/guide/core-widgets.md#image-widget) is another good way to allow editors to select an image. If we want to use the provided image widget template to render it as HTML, it's definitely the right choice. Once the editor selects an image, the full image is displayed in the editor interface.
+The core [image widget](/guide/core-widgets.md#image-widget) is a good way to allow editors to select an image. If we want to use the provided image widget template to render it as HTML, it's definitely the right choice. Once the editor selects an image, the full image is displayed in the editor interface.
 
 ```javascript
 // modules/article/index.js
@@ -107,6 +45,68 @@ If presenting an image using the image widget and its template, the process is n
 ```
 
 Done. The core image widget is design to render a responsive image with alt text (if it was entered for the image). When that is all that's needed this is a great option.
+
+## The attachment field option
+
+The [attachment field](/reference/field-types/attachment.md) is the direct route for uploading any type of file (e.g., image, PDF) to the file system. It is a fairly simple field that does not do much more than upload the file.
+
+Importantly, a file uploaded through an attachment field *will not appear in either the media library* or the general file manager. If the image or file is meant to be reused, this will not be best. However if the file should only be associated with one particular page or piece it can work well. Uploading resumés associated with job applicants is one such example.
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  // ...
+  fields: {
+    add: {
+      fileUpload: {
+        label: 'File upload',
+        type: 'attachment',
+        fileGroup: 'office'
+      }
+    }
+  }
+};
+```
+
+![an attachment field](/images/media-attachment.png)
+
+### Using attachment field values in templates
+
+Getting file information from an attachment field value is simpler than the other options since you have immediate access to the attachment object. If the field on a piece type is called `fileUpload`, the attachment object is `data.piece.fileUpload` in a show page template.
+
+For image attachments, there will be an object of URLs on the `_urls` property. Apostrophe generates multiple sizes of each uploaded image as discussed [regarding the image widget](/guide/core-widgets.md#image-widget). For non-image files (e.g., .docx, .pdf, .txt) there is one `_url` property.
+
+In either case, there is a helper method available in templates to retrieve the url: `apos.attachment.url()`. For non-image attachments, simply pass the attachment object into the method.
+
+```django
+{# modules/article-page/views/show.html #}
+{% set fileUrl = apos.attachment.url(data.piece.fileUpload) %}
+
+<a href="{{ fileUrl }}">Download</a>
+```
+
+For image attachments, doing the same thing will return the URL for the `full` image size by default. You can pass an options object as a second argument with its `size` property set to another image size to get a different URL back.
+
+```django
+{# modules/article-page/views/show.html #}
+
+{% set imgUrl = apos.attachment.url(data.piece.photoUpload, {
+  size: 'one-third'
+}) %}
+
+<img src="{{ imgUrl }}" alt="" />
+```
+
+[Responsive images](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) are very important for cross-device support these days. Getting each image size to populate the `srcset` attribute for an image would get repetitive very quickly even using the `apos.attachment.url()` method. For that, there is a dedicated `apos.image.srcset()` method. Pass in the attachment object as an argument and it will return a `srcset` value with all sizes included.
+
+```django
+{# modules/article-page/views/show.html #}
+{% set srcset = apos.attachment.srcset(data.piece.photoUpload) %}
+
+<img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
+```
+
+Notice that in the examples above **the alt text is not included when using an attachment field**. If inserting images with the attachment field we would need to provide alt text with another field. The other two options will usually be better for images since they support metadata such as the alt text.
 
 ## The relationship field option
 
