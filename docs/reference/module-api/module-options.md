@@ -493,17 +493,15 @@ The default is:
     _defaults: {
       title: 'Home',
       type: '@apostrophecms/home-page'
-    },
-    _children: [
-        {
-        slug: '/trash',
-        parkedId: 'trash',
-        type: '@apostrophecms/trash',
-        trash: true,
-        orphan: true,
-        _defaults: { title: 'Trash' }
-      }
-    ]
+    }
+  },
+  {
+    slug: '/archive',
+    parkedId: 'archive',
+    type: '@apostrophecms/archive-page',
+    archived: true,
+    orphan: true,
+    title: 'Archive'
   }
 ]
 ```
@@ -521,17 +519,15 @@ module.exports = {
         _defaults: {
           title: 'Welcome',  // 👈
           type: 'welcome-page' // 👈
-        },
-        _children: [
-            {
-            slug: '/trash',
-            parkedId: 'trash',
-            type: '@apostrophecms/trash',
-            trash: true,
-            orphan: true,
-            _defaults: { title: 'Trash' }
-          }
-        ]
+        }
+      },
+      {
+        slug: '/archive',
+        parkedId: 'archive',
+        type: '@apostrophecms/archive-page',
+        archived: true,
+        orphan: true,
+        title: 'Archive'
       }
     ]
   },
