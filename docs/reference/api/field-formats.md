@@ -61,7 +61,7 @@ Simple examples of how each field type might be returned in a document from the 
     "docIds": [
       "ckhdsovk40006rt9kdmxp6bhj"
     ],
-    "trashDocIds": [],
+    "archivedDocIds": [],
     "length": 644584,
     // md5 hash of the original file
     "md5": "f41217031f11e8483ee81e20782f51be",
@@ -70,7 +70,7 @@ Simple examples of how each field type might be returned in a document from the 
     "landscape": true,
     "used": true,
     "utilized": true,
-    "trash": false,
+    "archived": false,
     // Non-image files will have a single `_url` property.
     "_urls": {
       "max": "https://example.net/uploads/attachments/ckhdsopzr0005rt9kn49eyzb5-double-rainbow.max.jpg",
@@ -166,7 +166,7 @@ Simple examples of how each field type might be returned in a document from the 
   "_relation": [
     {
       "_id": "ckitdkktu002bu69krdkdu2pj",
-      "trash": false,
+      "archived": false,
       "disabled": false,
       "type": "@apostrophecms/user",
       "firstName": "Alexander",

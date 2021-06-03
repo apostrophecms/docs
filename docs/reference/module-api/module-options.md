@@ -477,8 +477,7 @@ module.exports = {
 
 ### `minimumPark`
 
-The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the trash "page" (trash is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
-<!-- TODO: Update when the trash is removed from home page children. -->
+The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the archive "page" (the archive is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
 
 ::: warning
 Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example. Use with caution.
