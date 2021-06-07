@@ -477,10 +477,10 @@ module.exports = {
 
 ### `minimumPark`
 
-The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the archive "page" (the archive is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
+The `minimumPark` option sets the initial defaults for the home page and archive "page" (the page archive). This should normally be left as it is. A possible use case for changing this might be when building an installable module meant to change the defaults for all websites that use it.
 
 ::: warning
-Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example. Use with caution.
+Configuring this poorly, especially by leaving out one of the two required pages, will break page functionality. In almost every situation it is better to use the [`park`](#park) option instead, including for updating home page properties.
 :::
 
 The default is:
