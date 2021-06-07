@@ -48,11 +48,11 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
 | `'link'` | Add a link |
-| `'horizontal_rule'` | Add a visual horizontal rule |
-| `'bullet_list'` | Bulleted list |
-| `'ordered_list'` | Numbered list |
+| `'horizontalRule'` | Add a visual horizontal rule |
+| `'bulletList'` | Bulleted list |
+| `'orderedList'` | Numbered list |
 | `'blockquote'` | Block quote |
-| `'code_block'` | Code block |
+| `'codeBlock'` | Code block |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
 | `'|'` | Add a visual separator to the toolbar (not a formatting action) |
@@ -91,8 +91,8 @@ Including a class with a style will not automatically apply any styles. You stil
     'italic',
     'strike',
     'link',
-    'bullet_list',
-    'ordered_list',
+    'bulletList',
+    'orderedList',
     'blockquote'
   ],
   styles: [
