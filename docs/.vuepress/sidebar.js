@@ -45,7 +45,6 @@ module.exports = {
           ]
         },
         ['guide/media.md', 'Working with images and media 🆕']
-        // 'guide/static-assets.md'
       ]
     },
     {
