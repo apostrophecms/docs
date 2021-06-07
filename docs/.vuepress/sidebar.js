@@ -43,8 +43,8 @@ module.exports = {
             ['guide/front-end-assets.md', 'Front end CSS and JS 🆕'],
             ['guide/front-end-helpers.md', 'Front end helper methods 🆕']
           ]
-        }
-        // 'guide/static-assets.md'
+        },
+        ['guide/media.md', 'Working with images and media 🆕']
       ]
     },
     {
