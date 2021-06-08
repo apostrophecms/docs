@@ -38,6 +38,12 @@ themeColor: {
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
+### Options
+General options you can pass to a `color` field.
+| Option | Type | Default | Description |
+|---------------|------|---------|-------------|
+| `format` | String | `hex8` | The color string format to be saved. Possible options are "rgb", "prgb", "hex6", "hex3", "hex8", "name", "hsl", "hsv". |
+
 ### Color picker options
 
 The color picker interface can be configured to present editors with different selection options. The configuration should go in the `options` property as `pickerOptions`. The picker options are below.
