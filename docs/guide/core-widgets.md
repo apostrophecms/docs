@@ -53,6 +53,10 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'orderedList'` | Numbered list |
 | `'blockquote'` | Block quote |
 | `'codeBlock'` | Code block |
+| `'alignLeft'` | Text Align Left |
+| `'alignCenter'` | Text Align Center |
+| `'alignRight'` | Text Align Right |
+| `'alignJustify'` | Text Align Justify |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
 | `'|'` | Add a visual separator to the toolbar (not a formatting action) |
