@@ -38,12 +38,33 @@ themeColor: {
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
-### Options
-General options you can pass to a `color` field.
-| Option | Type | Default | Description |
-|---------------|------|---------|-------------|
-| `format` | String | `hex8` | The color string format to be saved. Possible options are: `rgb`, `prgb`, `hex6`, `hex3`, `hex8`, `hsl`, `hsv` |
-| `pickerOptions` | Object | See below | Options that effect the picker UI |
+### `options`
+
+Color fields have additional settings configured in an `options` object:
+
+#### `format`
+
+The color string format saved to the database. Possible options are:
+
+- `rgb`
+- `prgb`
+- `hex6`
+- `hex3`
+- `hex8`
+- `hsl`
+- `hsv`
+
+The default value is [`hex8`](https://www.npmjs.com/package/tinycolor2#hex-8-digit-rgba-hex).
+
+```javascript
+backgroundColor: {
+  type: 'color',
+  label: 'Background color',
+  options: {
+    format: 'rgb'
+  }
+}
+```
 
 #### `pickerOptions`
 
@@ -77,6 +98,7 @@ backgroundColor: {
   }
 }
 ```
+
 ##### `disableAlpha`
 - **Type:** Boolean
 
