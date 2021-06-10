@@ -42,20 +42,19 @@ themeColor: {
 General options you can pass to a `color` field.
 | Option | Type | Default | Description |
 |---------------|------|---------|-------------|
-| `format` | String | `hex8` | The color string format to be saved. Possible options are "rgb", "prgb", "hex6", "hex3", "hex8", "name", "hsl", "hsv". |
+| `format` | String | `hex8` | The color string format to be saved. Possible options are: `rgb`, `prgb`, `hex6`, `hex3`, `hex8`, `hsl`, `hsv` |
+| `pickerOptions` | Object | See below | Options that effect the picker UI |
 
-### Color picker options
+#### `pickerOptions`
 
 The color picker interface can be configured to present editors with different selection options. The configuration should go in the `options` property as `pickerOptions`. The picker options are below.
 
-| Picker option | Type | Default | Description |
-|---------------|------|---------|-------------|
-| `presetColors` | Array | See note | An array of color values (strings) |
-| `disableAlpha` | Boolean | `false` | Set to `true` to disable the alpha range input |
-| `disableFields` | Boolean | `false` | Set to `true` to disable the color value fields |
+##### `presetColors`
+- **Type:** Array
 
-::: note
-The default `presetColors` are:
+An array of color values, used as swatches.
+
+- **Default Value:**
 
 ```javascript
 [
@@ -64,7 +63,8 @@ The default `presetColors` are:
   '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
 ]
 ```
-:::
+
+- **Usage**
 
 ```javascript
 backgroundColor: {
@@ -76,6 +76,26 @@ backgroundColor: {
     }
   }
 }
+```
+##### `disableAlpha`
+- **Type:** Boolean
+
+Control alpha transparency with a range input.
+
+*Default value*
+
+```javascript
+false
+```
+##### `disableFields`
+- **Type:** Boolean
+
+Control color value with string inputs (Hex & RGBA).
+
+*Default value*
+
+```javascript
+false
 ```
 
 ## Use in templates
