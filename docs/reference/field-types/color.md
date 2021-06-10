@@ -38,18 +38,44 @@ themeColor: {
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
-### Color picker options
+### `options`
+
+Color fields have additional settings configured in an `options` object:
+
+#### `format`
+
+The color string format saved to the database. Possible options are:
+
+- `rgb`
+- `prgb`
+- `hex6`
+- `hex3`
+- `hex8`
+- `hsl`
+- `hsv`
+
+The default value is [`hex8`](https://www.npmjs.com/package/tinycolor2#hex-8-digit-rgba-hex).
+
+```javascript
+backgroundColor: {
+  type: 'color',
+  label: 'Background color',
+  options: {
+    format: 'rgb'
+  }
+}
+```
+
+#### `pickerOptions`
 
 The color picker interface can be configured to present editors with different selection options. The configuration should go in the `options` property as `pickerOptions`. The picker options are below.
 
-| Picker option | Type | Default | Description |
-|---------------|------|---------|-------------|
-| `presetColors` | Array | See note | An array of color values (strings) |
-| `disableAlpha` | Boolean | `false` | Set to `true` to disable the alpha range input |
-| `disableFields` | Boolean | `false` | Set to `true` to disable the color value fields |
+##### `presetColors`
+- **Type:** Array
 
-::: note
-The default `presetColors` are:
+An array of color values, used as swatches.
+
+- **Default Value:**
 
 ```javascript
 [
@@ -58,7 +84,8 @@ The default `presetColors` are:
   '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
 ]
 ```
-:::
+
+- **Usage**
 
 ```javascript
 backgroundColor: {
@@ -70,6 +97,27 @@ backgroundColor: {
     }
   }
 }
+```
+
+##### `disableAlpha`
+- **Type:** Boolean
+
+Control alpha transparency with a range input.
+
+*Default value*
+
+```javascript
+false
+```
+##### `disableFields`
+- **Type:** Boolean
+
+Control color value with string inputs (Hex & RGBA).
+
+*Default value*
+
+```javascript
+false
 ```
 
 ## Use in templates
