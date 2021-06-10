@@ -190,9 +190,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
     {
       "_id": "ckhdscx6000084z9k56lybljw",
       "visibility": "public",
-      "type": "@apostrophecms/trash",
-      "title": "Trash",
-      "slug": "/trash",
+      "type": "@apostrophecms/archive-page",
+      "title": "Archive",
+      "slug": "/archive",
       // ...
       "rank": 3,
       "path": "ckhdscx5900054z9k88uqs16w/ckhdscx6000084z9k56lybljw",
@@ -235,7 +235,7 @@ The successful `GET` request returns the matching document. See the [page docume
 
 | Property | Type | Description |
 |----------|------|-------------|
-|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_trash` are optional conveniences for the home page and [trashed section](#moving-pages-to-the-trash), respectively. |
+|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_archive` are optional conveniences for the home page and [archived section](#moving-pages-to-the-archive), respectively. |
 |`_position` | String, Number | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
@@ -372,16 +372,16 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 
 The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
-### Moving pages to the trash
+### Moving pages to the archive
 
-The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+The archive is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `archived` property to set `true`. Instead, set `_targetId` to `_archive` and `_position` to `lastChild` (or another position within the archive). You may similarly move pages out of the archive by moving them to a position relative to another page that is not in the archive.
 
 ## `DELETE /api/v1/@apostrophecms/page/:_id`
 
 
 **Authentication required.**
 
-This API route **Permanently deletes the page database document**. Moving pieces to the trash in the Apostrophe user interface or [using a `PATCH` request](#moving-pages-to-the-trash) do not permanently delete database documents and should be considered.
+This API route **Permanently deletes the page database document**. Moving pieces to the archive in the Apostrophe user interface or [using a `PATCH` request](#moving-pages-to-the-archive) do not permanently delete database documents and should be considered.
 
 `DELETE` requests will be rejected if:
 - the `_id` matches the draft mode of a page that has an existing published mode document
@@ -506,7 +506,7 @@ The successful `POST` request returns the newly published document. See the [pag
 |`slug`| String | A unique, but changeable, identifier for the page|
 |`rank` | Number | The order in which the page appears in the page tree under its parent. The first child page among its siblings will be `0`. |
 |`title` | String | The entered title, or name, of the *document*|
-|`trash` | Boolean | Whether the document is "trashed"|
+|`archived` | Boolean | Whether the document is archived|
 |`type` | String | The piece type name|
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
 |`visibility` | String | The visibility setting, controlling public availability|
@@ -529,7 +529,7 @@ The successful `POST` request returns the newly published document. See the [pag
     "level": 1,
     "metaType": "doc",
     "createdAt": "2020-11-23T16:34:05.894Z",
-    "trash": false,
+    "archived": false,
     "titleSortified": "about us",
     "updatedAt": "2020-12-21T20:34:02.636Z",
     "historicUrls": [
@@ -585,7 +585,7 @@ The successful `POST` request returns the newly published document. See the [pag
             "path": "ckhdscx5900054z9k88uqs16w",
             "metaType": "doc",
             "createdAt": "2020-11-11T19:17:53.998Z",
-            "trash": false,
+            "archived": false,
             "titleSortified": "home pager",
             "updatedAt": "2020-12-21T20:37:56.066Z",
             "historicUrls": [

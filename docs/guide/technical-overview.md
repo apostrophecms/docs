@@ -17,7 +17,7 @@ There are a few directories and top-level files that are especially important in
 | ------ | ------ |
 | `app.js` | The heart of the application. This is where you tell Apostrophe what modules are in your project and set a few top-level parameters. |
 | `/modules` | All project-level [modules](/reference/glossary.md#module) and configuration for installed modules. |
-| `/public` | Public, static files. Apostrophe will generate specific directories inside, but you can also use it as needed.  |
+| `/public` | Public, static files (not managed through the CMS). Apostrophe will generate specific directories inside, but you can also use it as needed.  |
 | `/views` | Template files that do not belong to any one module. Apostrophe looks for site wrapper templates here, including `layout.html`. |
 
 ::: tip

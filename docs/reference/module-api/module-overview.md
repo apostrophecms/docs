@@ -20,7 +20,7 @@ Module configuration objects may use the following configuration properties. The
 
 ### "Cascading" settings
 
-Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project level classes without requiring those settings be declared again.
+Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
 
 Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface. `order` only applies to columns, arranging columns in a particular order.
 
@@ -123,7 +123,7 @@ modules.export = {
 
 #### `remove`
 
-An array of field names from the base class module to remove. Some default fields cannot be removed since they required by core functionality (e.g., `title`, `slug`, `trash`, `visibility`).
+An array of field names from the base class module to remove. Some default fields cannot be removed since they required by core functionality (e.g., `title`, `slug`, `visibility`).
 
 ```javascript
 // modules/spotlight-article/index.js
@@ -168,7 +168,7 @@ modules.export = {
 
 ### `filters`
 
-In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `trash` and `visibility` filters are included by default.
+In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default.
 
 The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 

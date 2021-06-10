@@ -79,7 +79,7 @@ By default, `GET` requests return the published and default locale version of ea
     "results": [
       {
         "_id": "ckitdo5oq004pu69kr6oxo6fr",
-        "trash": false,
+        "archived": false,
         "visibility": "public",
         "type": "article",
         "title": "ES6 and Beyond: modern JavaScript is so worth it",
@@ -236,7 +236,7 @@ The successful `PATCH` request returns the complete patched document. See the [p
 
 **Authentication required.**
 
-This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a `PATCH` request to set `trash: true` do not permanently delete database documents and should be considered.
+This API route **permanently deletes the piece database document**. Moving pieces to the archive in the Apostrophe user interface or using a `PATCH` request to set `archived: true` do not permanently delete database documents and should be considered.
 
 `DELETE` requests will be rejected if the `_id` matches the draft mode of a page that has an existing published mode document.
 
@@ -307,7 +307,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 |----------|------|-------------|
 |`_id` | String | A unique and permanent ID for the document|
 |`visibility` | String | The visibility setting, controlling public availability|
-|`trash` | Boolean | Whether the document is "trashed"|
+|`archived` | Boolean | Whether the document is archived |
 |`type` | String | The piece type name|
 |`title` | String | The entered title, or name, of the *document*|
 |`slug`| String | A unique, but changeable, identifier for the piece|
@@ -322,7 +322,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 ```json
 {
   "_id": "ckitdo5oq004pu69kr6oxo6fr",
-  "trash": false,
+  "archive": false,
   "visibility": "public",
   "type": "article",
   "title": "ES6 and Beyond: modern JavaScript is so worth it",
@@ -360,7 +360,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
   "_author": [
     {
       "_id": "ckitdleax002tu69kejca3ho0",
-      "trash": false,
+      "archive": false,
       "disabled": false,
       "type": "@apostrophecms/user",
       "firstName": "Tom",

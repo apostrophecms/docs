@@ -9,15 +9,6 @@ module.exports = {
       ]
     },
     {
-      title: 'Coming from A2',
-      collapsable: false,
-      children: [
-        'guide/new-apostrophe.md',
-        'guide/major-changes.md',
-        'guide/upgrade.md'
-      ]
-    },
-    {
       title: 'Guide',
       collapsable: false,
       children: [
@@ -50,11 +41,11 @@ module.exports = {
         {
           title: 'Front end code',
           children: [
-            'guide/front-end-assets.md',
-            'guide/front-end-helpers.md'
+            ['guide/front-end-assets.md', 'Front end CSS and JS 🆕'],
+            ['guide/front-end-helpers.md', 'Front end helper methods 🆕']
           ]
-        }
-        // 'guide/static-assets.md'
+        },
+        ['guide/media.md', 'Working with images and media 🆕']
       ]
     },
     {
@@ -62,16 +53,17 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/conditional-fields.md',
-        'guide/async-components.md'
+        ['guide/async-components.md', 'Async components 🆕']
       ]
     },
     {
       title: 'Hosting',
       collapsable: false,
       children: [
-        'guide/hosting.md'
+        ['guide/hosting.md', 'Hosting in production 🆕']
       ]
-    }
+    },
+    ['guide/upgrading.md', 'Coming from 2.x 🆕']
   ],
   '/reference': [
     'reference/glossary',
