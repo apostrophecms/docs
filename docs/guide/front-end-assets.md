@@ -100,7 +100,7 @@ module.exports = {
 };
 ```
 
-This configures Apostrophe to compile two JavaScript bundles: one for Internet Explorer 11 users, and one for everyone else. The Internet Explorer 11 bundle contains code compiled with `babel` in order to add support for missing features, as well as "polyfills" for missing functions.
+This configures Apostrophe to compile two JavaScript bundles: one for Internet Explorer 11 users, and one for everyone else. The Internet Explorer 11 bundle contains code compiled with `babel` in order to add support for missing features, as well as polyfills for missing functions.
 
 That makes the bundle larger, but Apostrophe serves a separate, small and fast bundle to non-IE11 users, so there is **no performance penalty** for them.
 
