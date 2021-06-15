@@ -1,17 +1,17 @@
 # Front end CSS and JavaScript
 
-ApostropheCMS approaches CSS and client-side JavaScript by trying to taking care of as much of the hard parts as possible. To that end, the developers main job is to **put their Sass CSS and client-side JavaScript into `ui/src/index.scss` and `ui/src/index.js` files in the relevant module**. Apostrophe will then:
-  - Interpret [Sass SCSS](https://sass-lang.com/guide) directives, which extend CSS with new features like nested selectors
-  - Optionally use `babel` to automatically compile modern JavaScript into an Internet Explorer 11-compatible form
+ApostropheCMS approaches CSS and client-side JavaScript by trying to taking care of as much of the hard parts as possible. To that end, the developers main job is to **put their SCSS and client-side JavaScript into `ui/src/index.scss` and `ui/src/index.js` files in the relevant module**. Apostrophe will then:
+  - Compile [SCSS](https://sass-lang.com/guide) from `*.scss` files to CSS
+  - Optionally use Babel to automatically compile modern JavaScript into an Internet Explorer 11-compatible form
   - Interpret all `import` statements and deliver the code to browsers in one CSS and one JavaScript file, either:
     - with the editing UI if the browser is logged in, or
     - without the editing UI if logged out
 
 ## Placing client-side code
 
-Sass SCSS and JavaScript files need to be placed in **any module's `ui/src/index.scss` and `ui/src/index.js` files**, or files imported from them. You can put client-side code in a single module directory (e.g., using `import` statements) or spread it across many modules.
+SCSS and JavaScript files need to be placed in **any module's `ui/src/index.scss` and `ui/src/index.js` files**, or files imported from them. You can put client-side code in a single module directory (e.g., using `import` statements) or spread it across many modules.
 
-For example, if we had a global Sass SCSS file, `site.scss`, we might create an `asset` module for this purpose and place the Sass SCSS file at:
+For example, if we had a global SCSS file, `site.scss`, we might create an `asset` module for this purpose and place the SCSS file at:
 
 ```
 modules/asset/ui/src/index.scss
@@ -77,7 +77,7 @@ the output will **dance** before it **sings**.
 A funny thing about JavaScript `import` statements: they don't guarantee any order in which the files are loaded. To fix that, Apostrophe requires you to export a function from each `ui/src/index.js` file so that it can call them in the order the modules are initialized.
 :::
 
-## Ordering the Sass SCSS files
+## Ordering the SCSS files
 
 Rules found in or imported by `ui/src/index.scss` files are compiled in the order the modules are activated in `app.js`.
 
@@ -120,10 +120,10 @@ The basic idea is that your build process should produce just one output `.js` f
 
 Here's how it works in a typical project with its own build process:
 
-- The project's JavaScript and styles are in a `src` folder at the root of the project, which always contains at least `index.js` and often `index.scss` as starting points, assuming that Sass SCSS files are part of your build process.
+- The project's JavaScript and styles are in a `src` folder at the root of the project, which always contains at least `index.js` and often `index.scss` as starting points, assuming that SCSS files are part of your build process.
 - The `dev` npm script in `package.json` runs your build process. If you're using webpack, that script might compile `src/index.js` and `src/index.scss` according to the rules in `webpack.config.js`.
 - At the end of the build, the bundled assets are written to `modules/asset/ui/public/sites.js`.
 - Any `.js` files Apostrophe finds in the `ui/public` folder of any module are automatically included in the asset bundle served to the visitor.
 - Whenever code changes are made, `nodemon` automatically restarts this cycle and refreshes the browser after a successful restart.
 
-But you don't have to use Sass, Webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
+But you don't have to use SCSS, Webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
