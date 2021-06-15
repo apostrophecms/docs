@@ -83,6 +83,7 @@ module.exports = {
       title: 'Module API',
       path: '/reference/module-api',
       collapsable: false,
+      sidebarDepth: 2,
       children: [
         'reference/module-api/module-overview',
         'reference/module-api/module-options'
