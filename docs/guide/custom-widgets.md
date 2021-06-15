@@ -12,6 +12,14 @@ First create the module configuration file, extend the core widget type module, 
 
 **The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This two-column widget is named `two-column-widget`.
 
+::: tip
+Generate the starter code using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) with the command:
+
+```bash
+apos add widget two-column
+```
+:::
+
 ```js
 // modules/two-column-widget/index.js
 module.exports = {
@@ -106,6 +114,14 @@ Here are some two-column styles for people following along.
 When adding client-side JavaScript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
 
 We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
+
+::: tip
+When using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) to create a widget type, include widget player starter code with the `--player` option.
+
+```bash
+apos add widget collapse --player
+```
+:::
 
 ::: details Example collapsible widget code
 **Module configuration**
