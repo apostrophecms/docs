@@ -126,4 +126,4 @@ Here's how it works in a typical project with its own build process:
 - Any `.js` files Apostrophe finds in the `ui/public` folder of any module are automatically included in the asset bundle served to the visitor.
 - Whenever code changes are made, `nodemon` automatically restarts this cycle and refreshes the browser after a successful restart.
 
-But you don't have to use SCSS, Webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
+But you don't have to use SCSS, webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
