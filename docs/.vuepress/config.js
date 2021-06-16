@@ -49,7 +49,8 @@ module.exports = {
           },
           {
             text: 'Apostrophe 2',
-            link: 'https://v2.docs.apostrophecms.org'
+            link: 'https://v2.docs.apostrophecms.org',
+            target: '_self'
           }
         ]
       },
