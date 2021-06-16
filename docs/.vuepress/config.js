@@ -24,7 +24,8 @@ module.exports = {
     ]
   ],
   themeConfig: {
-    repo: 'https://github.com/apostrophecms/a3-boilerplate/',
+    // Disabled to move into dropdown nav
+    // repo: 'https://github.com/apostrophecms/apostrophe',
     docsRepo: 'https://github.com/apostrophecms/a3-docs',
     docsBranch: 'main',
     docsDir: 'docs',
@@ -39,25 +40,64 @@ module.exports = {
     logo: '/images/apos-dark.png',
     nav: [
       {
-        text: 'Guide',
-        link: '/guide/introduction.md'
+        text: 'Versions',
+        ariaLabel: 'Apostrophe versions',
+        items: [
+          {
+            text: 'Apostrophe 3',
+            link: '/'
+          },
+          {
+            text: 'Apostrophe 2',
+            link: 'https://v2.docs.apostrophecms.org'
+          }
+        ]
       },
       {
-        text: 'Reference',
-        link: '/reference/'
+        text: 'Sections',
+        ariaLabel: 'Documentation sections',
+        items: [
+          {
+            text: 'Getting started',
+            link: '/guide/setting-up.md'
+          },
+          {
+            text: 'Guide',
+            link: '/guide/introduction.md'
+          },
+          {
+            text: 'Reference',
+            link: '/reference/'
+          }
+        ]
       },
       {
         text: 'More',
         ariaLabel: 'More Apostrophe links',
         items: [
           {
-            text: 'Community',
-            link: 'https://apostrophecms.com/get-involved',
+            text: 'Main site',
+            link: 'https://apostrophecms.com',
             rel: false
           },
           {
-            text: 'Apostrophe Website',
-            link: 'https://apostrophecms.com',
+            text: 'GitHub',
+            link: 'https://github.com/apostrophecms/apostrophe',
+            re: false
+          },
+          {
+            text: 'Discord',
+            link: 'http://chat.apostrophecms.org/',
+            rel: false
+          },
+          {
+            text: 'Forum',
+            link: 'https://github.com/apostrophecms/apostrophe/discussions',
+            rel: false
+          },
+          {
+            text: 'Stack Overflow',
+            link: 'https://stackoverflow.com/questions/tagged/apostrophe-cms',
             rel: false
           }
         ]
