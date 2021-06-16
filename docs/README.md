@@ -1,5 +1,5 @@
 ---
-title: 'Apostrophe 3 Beta Release Documentation'
+title: 'Apostrophe 3 Documentation'
 ---
 
 <div align="center">
@@ -9,7 +9,7 @@ title: 'Apostrophe 3 Beta Release Documentation'
   <h1 align="center">ApostropheCMS</h1>
 </div>
 
-## Apostrophe 3 Beta Release Documentation
+## Apostrophe 3 Documentation
 
 ApostropheCMS is a full-featured, open source CMS built with Node.js that seeks to empower organizations by combining in-context editing and headless architecture in a full-stack JS environment.
 

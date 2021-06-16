@@ -25,10 +25,6 @@ require('apostrophe')({
     // ...
 ```
 
-:::tip NOTE
-Right now `admin` is the only supported role value for API requests. Any other role will result in an anonymous request, which is the same as using no API key. This will change in the next alpha release when the rest of the permissions model comes in.
-:::
-
 ### Usage
 
 Add an `authorization` [HTTP header](https://javascript.info/fetch#request-headers) to each request:
