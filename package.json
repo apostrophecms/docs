@@ -1,6 +1,6 @@
 {
-  "name": "apostrophe-documentation",
-  "version": "2.0.0-alpha",
+  "name": "a3-docs",
+  "version": "1.0.0",
   "description": "",
   "private": true,
   "main": "index.js",
