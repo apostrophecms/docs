@@ -24,7 +24,8 @@ module.exports = {
     ]
   ],
   themeConfig: {
-    repo: 'https://github.com/apostrophecms/apostrophe',
+    // Disabled to move into dropdown nav
+    // repo: 'https://github.com/apostrophecms/apostrophe',
     docsRepo: 'https://github.com/apostrophecms/a3-docs',
     docsBranch: 'main',
     docsDir: 'docs',
@@ -39,8 +40,18 @@ module.exports = {
     logo: '/images/apos-dark.png',
     nav: [
       {
-        text: 'v2 Docs',
-        link: 'https://v2.docs.apostrophecms.org'
+        text: 'Versions',
+        ariaLabel: 'Apostrophe versions',
+        items: [
+          {
+            text: 'Apostrophe 3',
+            link: '/'
+          },
+          {
+            text: 'Apostrophe 2',
+            link: 'https://v2.docs.apostrophecms.org'
+          }
+        ]
       },
       {
         text: 'Sections',
@@ -68,6 +79,11 @@ module.exports = {
             text: 'Main site',
             link: 'https://apostrophecms.com',
             rel: false
+          },
+          {
+            text: 'GitHub',
+            link: 'https://github.com/apostrophecms/apostrophe',
+            re: false
           },
           {
             text: 'Discord',
