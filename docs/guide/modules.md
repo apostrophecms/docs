@@ -51,6 +51,14 @@ module.exports = {
 };
 ```
 
+::: tip
+Since this is a piece type, you could add this file from your project root with starting code using the CLI with the command:
+
+```bash
+apos add piece blog-post
+```
+:::
+
 Even if a module does not include an `extend` setting, it will extend `@apostrophecms/module`, which provides useful features such as template rendering and API routes support.
 
 Additionally, the inheritance system allows us to customize a core piece type module (e.g., `@apostrophecms/piece-type`) in a project and see those changes in all modules that extend it. That includes every module that extends it in Apostrophe core as well.

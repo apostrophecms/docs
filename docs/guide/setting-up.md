@@ -24,22 +24,36 @@ which convert && which identify
 ImageMagick is optional, but recommended. It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If you do not install it Apostrophe can still handle image uploads, though more slowly.
 :::
 
-<!-- ## TODO: The Apostrophe CLI tool -->
+## The Apostrophe CLI tool
+
+There is [an official CLI](https://www.npmjs.com/package/@apostrophecms/cli) for quickly setting up starter code for your Apostrophe project. Once in a project it can also help add new module code with a single command so you can focus on the unique parts rather than copying or remembering boilerplate. Keep an eye out for updates once it is installed since it will continue to evolve to help with additional tasks.
+
+Install the CLI tool:
+
+```bash
+npm install @apostrophecms/cli
+# Or `yarn install`, if you prefer. We'll stick to npm commands.
+```
+
+Once installed you have access to the `apos` command. Simply use that command, or `apos --help`, to see a list of additional commands anytime.
+
+**The CLI is not required** to work with Apostrophe. It primarily makes developing with Apostrophe faster and takes care of the more repetitive tasks during development.
 
 ## Creating a project
 
-<!-- TODO: Update with CLI info when ready. -->
-The easiest way to get started with Apostrophe is to use the starter boilerplate project. On the command line, clone the boilerplate:
+The easiest way to get started with Apostrophe is to use the official starter project. If you have the CLI installed, go into your normal projects directory and use the command:
+
+``` bash
+apos create apos-app
+```
+
+Or *without the CLI*, clone the boilerplate:
 
 ```bash
 git clone https://github.com/apostrophecms/a3-boilerplate apos-app
 ```
 
 If you want to change the project directory name, please do so. We will continue referring to `apos-app`.
-
-::: tip NOTE
-There is a CLI tool for Apostrophe 2 with commands to create projects, among other tasks. That will support Apostrophe 3 closer to the 3.0 stable release.
-:::
 
 Open the `app.js` file in the root project directory. Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
 
@@ -51,31 +65,24 @@ require('apostrophe')({
   // ...
 ```
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The boilerplate has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The starter has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
 ```javascript
-// app.js
-require('apostrophe')({
-  shortName: 'apos-app',
-  modules: {
-    '@apostrophecms/express': {
-      options: {
-        session: {
-          // ⚠️ If this still says `undefined`, set a real secret (a random
-          // string)!
-          secret: undefined
-        }
-      }
-    },
-    // ...
+// modules/@apostrophecms/express/index.js
+module.exports = {
+  options: {
+    session: {
+      // If this still says `undefined`, set a real secret!
+      secret: undefined
+    }
   }
+};
 ```
 
 Excellent! Back in your terminal we'll install dependencies:
 
 ```bash
 npm install
-# Or `yarn install`, if you prefer. We'll stick to npm commands.
 ```
 
 Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.

@@ -13,6 +13,14 @@ Unlike Apostrophe ["pages"](/guide/pages.md), pieces do not always have a dedica
 
 You can create a new piece type by adding a module that extends the `@apostrophecms/piece-type` module. After instantiating in `app.js`, a piece type that had no other configuration would have the default fields **title**, **slug**, and **visibility**.
 
+::: tip
+Generate the starter code for a piece type using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) with the command:
+
+```bash
+apos add piece product
+```
+:::
+
 ```js
 // modules/product/index.js
 module.exports = {
