@@ -1,0 +1,33 @@
+
+@import "~prism-themes/themes/prism-night-owl.css"
+
+.code-copy svg {
+  width: 16px;
+  right: 1.5rem;
+}
+
+div[class*="language-"] {
+  background-color: black;
+}
+
+.theme-default-content pre[class*="language-"] {
+  padding-top: 60px;
+}
+
+div[class^="language-"]:before {
+  color: #ead358;
+  font-weight: 700;
+  top: 1em;
+  right: auto;
+  left: 1.5em;
+}
+
+div[class^="language-"]:after {
+  content: '';
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: #ffffff40;
+}

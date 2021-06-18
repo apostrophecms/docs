@@ -4,6 +4,14 @@ module.exports = {
   title: 'Apostrophe 3 Documentation',
   plugins: [
     [
+      'vuepress-plugin-code-copy',
+      {
+        align: 'top',
+        color: '#ead358',
+        staticIcon: true
+      }
+    ],
+    [
       '@vuepress/google-analytics',
       {
         ga: 'UA-106613728-6'
