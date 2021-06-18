@@ -23,6 +23,11 @@ module.exports = {
       }
     ]
   ],
+  markdown: {
+    extendMarkdown: md => {
+      md.use(require('markdown-it-attrs'));
+    }
+  },
   themeConfig: {
     // Disabled to move into dropdown nav
     // repo: 'https://github.com/apostrophecms/apostrophe',
