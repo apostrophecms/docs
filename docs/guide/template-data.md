@@ -23,12 +23,12 @@ The table below lists the data properties available from Apostrophe core as well
 | `home` | The data object for the home page. | <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
 | `locale` | The active locale.| <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
 | `manager` | In widget templates, the widget module manager object. | <AposTag text="Widgets" :tagStyle="1"/> |
-| `next` | If `next: true` is set on the piece page type, the data object for the next piece in sort order. | <AposTag text="Show pages" :tagStyle="0"/> |
+| `next` | If [`next: true` is set on the piece page type](/reference/module-api/module-options.md#next), the data object for the next piece in sort order. | <AposTag text="Show pages" :tagStyle="0"/> |
 | `options` | | <AposTag text="Widgets" :tagStyle="1"/> |
 | `outerLayout` | A reference path to the outer layout template. Used in [layout templates](/guide/layout-template.md). | <AposTag text="All pages"/> |
 | `page` | A data object for the active page *or* the index page in show page templates. | <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
 | `piece` | The piece data object in a show page template. | <AposTag text="Show pages" :tagStyle="0"/> |
-| `previous` | If `previous: true` is set on the piece page type, the data object for the previous piece in sort order. | <AposTag text="Show pages" :tagStyle="0"/> |
+| `previous` | If [`previous: true` is set on the piece page type](/reference/module-api/module-options.md#previous), the data object for the previous piece in sort order. | <AposTag text="Show pages" :tagStyle="0"/> |
 | `query` | An object of query parameters from the request URL. | <AposTag text="All pages"/> |
 | `scene` | A string indicating the active "scene," or general user context. Either `'public'` or `'apos'`. | <AposTag text="All pages"/> |
 | `slug` | The active page's slug. | <AposTag text="All pages"/> |
