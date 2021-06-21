@@ -4,6 +4,14 @@ module.exports = {
   title: 'Apostrophe 3 Documentation',
   plugins: [
     [
+      'vuepress-plugin-code-copy',
+      {
+        align: 'top',
+        color: '#ead358',
+        staticIcon: true
+      }
+    ],
+    [
       '@vuepress/google-analytics',
       {
         ga: 'UA-106613728-6'
@@ -23,6 +31,11 @@ module.exports = {
       }
     ]
   ],
+  markdown: {
+    extendMarkdown: md => {
+      md.use(require('markdown-it-attrs'));
+    }
+  },
   themeConfig: {
     // Disabled to move into dropdown nav
     // repo: 'https://github.com/apostrophecms/apostrophe',
