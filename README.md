@@ -67,4 +67,4 @@ on the [a3-docs](https://github.com/apostrophecms/a3-docs/)
 repository. Please include as much context for the change as is reasonable in
 the PR description.
 
-
+## Notes
