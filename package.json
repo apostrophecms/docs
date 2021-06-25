@@ -26,11 +26,11 @@
     "stylelint": "^13.11.0",
     "stylelint-config-apostrophe": "^1.0.0",
     "stylelint-plugin-stylus": "^0.10.0",
-    "vuepress": "^1.5.4"
-  },
-  "dependencies": {
+    "vuepress": "^1.5.4",
     "esm": "^3.2.25",
     "markdown-it-attrs": "^4.0.0",
+    "@vuepress/plugin-google-analytics": "^1.5.4",
+    "vuepress-plugin-sitemap": "^2.3.1",
     "vuepress-theme-apostrophe": "git://github.com/apostrophecms/vuepress-theme-apostrophe.git"
   }
 }

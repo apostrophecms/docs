@@ -3,6 +3,20 @@ const sidebar = require('./sidebar');
 module.exports = {
   title: 'Apostrophe 3 Documentation',
   theme: 'apostrophe',
+  plugins: [
+    [
+      '@vuepress/google-analytics',
+      {
+        ga: 'UA-106613728-6'
+      }
+    ],
+    [
+      'sitemap',
+      {
+        hostname: 'https://docs.apostrophecms.com'
+      }
+    ]
+  ],
   markdown: {
     extendMarkdown: md => {
       md.use(require('markdown-it-attrs'));
