@@ -2,15 +2,8 @@ const sidebar = require('./sidebar');
 
 module.exports = {
   title: 'Apostrophe 3 Documentation',
+  theme: 'apostrophe',
   plugins: [
-    [
-      'vuepress-plugin-code-copy',
-      {
-        align: 'top',
-        color: '#ead358',
-        staticIcon: true
-      }
-    ],
     [
       '@vuepress/google-analytics',
       {
@@ -19,15 +12,8 @@ module.exports = {
     ],
     [
       'sitemap',
-      { hostname: 'https://docs.apostrophecms.com' }
-    ],
-    [
-      'vuepress-plugin-container',
       {
-        type: 'note',
-        defaultTitle: {
-          '/': 'NOTE'
-        }
+        hostname: 'https://v3.docs.apostrophecms.org'
       }
     ]
   ],
