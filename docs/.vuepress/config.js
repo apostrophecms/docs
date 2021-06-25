@@ -13,7 +13,7 @@ module.exports = {
     [
       'sitemap',
       {
-        hostname: 'https://docs.apostrophecms.com'
+        hostname: 'https://v3.docs.apostrophecms.org'
       }
     ]
   ],
