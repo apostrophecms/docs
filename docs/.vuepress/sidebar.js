@@ -33,7 +33,7 @@ module.exports = {
           children: [
             'guide/templating.md',
             'guide/layout-template.md',
-            ['guide/template-data.md', 'Template data 🆕'],
+            [ 'guide/template-data.md', 'Template data 🆕' ],
             'guide/fragments.md'
           ]
         },
@@ -41,11 +41,11 @@ module.exports = {
         {
           title: 'Front end code',
           children: [
-            ['guide/front-end-assets.md', 'Front end CSS and JS 🆕'],
-            ['guide/front-end-helpers.md', 'Front end helper methods 🆕']
+            [ 'guide/front-end-assets.md', 'Front end CSS and JS 🆕' ],
+            [ 'guide/front-end-helpers.md', 'Front end helper methods 🆕' ]
           ]
         },
-        ['guide/media.md', 'Working with images and media 🆕']
+        [ 'guide/media.md', 'Working with images and media 🆕' ]
       ]
     },
     {
@@ -53,17 +53,18 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/conditional-fields.md',
-        ['guide/async-components.md', 'Async components 🆕']
+        [ 'guide/async-components.md', 'Async components 🆕' ]
       ]
     },
     {
       title: 'Hosting',
       collapsable: false,
       children: [
-        ['guide/hosting.md', 'Hosting in production 🆕']
+        [ 'guide/hosting.md', 'Hosting in production 🆕' ]
       ]
     },
-    ['guide/upgrading.md', 'Coming from 2.x 🆕']
+    [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ],
+    [ 'guide/contribution.md', 'Contribution guide 🆕' ]
   ],
   '/reference': [
     'reference/glossary',

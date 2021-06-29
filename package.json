@@ -32,5 +32,8 @@
     "@vuepress/plugin-google-analytics": "^1.5.4",
     "vuepress-plugin-sitemap": "^2.3.1",
     "vuepress-theme-apostrophe": "git://github.com/apostrophecms/vuepress-theme-apostrophe.git"
+  },
+  "dependencies": {
+    "markdown-it": "^12.0.6"
   }
 }
