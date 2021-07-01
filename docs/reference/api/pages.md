@@ -41,7 +41,6 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 |----------|------|-------------|
 |`all` | `?all=1` | Set to `1` to include the *entire* page tree, regardless of depth |
 |`flat` | `?flat=1` | Set to `1` to [return page results in an flat array](#flat-array-response) instead of the page tree structure |
-|`children` | `?children=false` | Set to `false` to exclude the `_children` array` |
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request page document versions for that locale. Defaults to the default locale. |
 <!-- TODO: link to docs about locales when available. -->
