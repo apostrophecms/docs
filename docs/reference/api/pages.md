@@ -211,6 +211,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
@@ -290,7 +291,6 @@ The `_position` property uses specific string values rather than index numbers t
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the page document version for that locale. |
-|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
 Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
