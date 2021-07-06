@@ -64,7 +64,8 @@ module.exports = {
         [ 'guide/hosting.md', 'Hosting in production 🆕' ]
       ]
     },
-    [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ]
+    [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ],
+    [ 'guide/contribution.md', 'Contribution guide 🆕' ]
   ],
   '/reference': [
     'reference/glossary',
