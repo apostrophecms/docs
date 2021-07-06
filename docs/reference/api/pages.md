@@ -22,7 +22,7 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 
 | Method | Path | Description |
 |---------|---------|---------|---------|
-|`GET` | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content |
+|`GET` | [`/:_url?aposRefresh=1`](#get-url-aposrefresh-1) | Get a page's rendered content |
 |`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
 <!-- TODO: document -->
@@ -418,9 +418,9 @@ The successful `DELETE` request simply responds with a `200` HTTP response statu
 }
 ```
 
-## `GET /:_url?apos-refresh=1`
+## `GET /:_url?aposRefresh=1`
 
-Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
+Including the `aposRefresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
 
 Authentication is not required for this API route if `:_url` is a public URL.
 
@@ -443,7 +443,7 @@ The most critical element that is *excluded* is the `head` tag, with all of its 
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/some-page?apos-refresh=1', {
+const response = await fetch('http://example.net/some-page?aposRefresh=1', {
   method: 'GET'
 });
 const document = await response.text();
