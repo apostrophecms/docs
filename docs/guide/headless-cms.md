@@ -1,6 +1,6 @@
 # Using Apostrophe as a headless CMS
 
-Apostrophe is fully featured as a traditional CMS (with some non-traditional features). It is also immediately ready for use as a headless CMS. There are many scenarios where Apostrophe works well as a headless CMS, including:
+Apostrophe is fully featured as a traditional CMS. It is also immediately ready for use as a headless CMS. There are many scenarios where Apostrophe works well in a decoupled architecture, including:
 
 - We may want to use Apostrophe to serve webpages normally, but also use the website data in another context, such as a mobile app.
 - We may want to go fully headless with a front end like Gatsby or Gridsome while also allowing editors to use Apostrophe's in-context editing.
@@ -148,21 +148,21 @@ GET https://example.rocks/api/v1/@apostrophecms/page?flat=1&all=1apikey=000apike
 
 Using an object of JSON-like data from a REST API is very normal from a headless CMS. Traditionally the application's "head" (such as a single page Vue.js, React, or Angular application) would use that structured data to display product, event, or similar content information. It is less common for a headless CMS to deliver page content that is tied to particular HTML markup and layout. More often, landing page text and images might be coded directly into the app code or otherwise not be from the same data source.
 
-Apostrophe support both approaches. The in-context editing features and [widget areas](/guide/areas-and-widgets.md) give editors more control over content, but in it's default form areas are fairly incomprehensible data objects. It is when they are rendered with the widget template files that they are fully realized.
+Apostrophe supports both approaches. The in-context editing features and [widget areas](/guide/areas-and-widgets.md) give editors more control over content, but in its default form areas are fairly incomprehensible data objects. When areas are rendered as HTML from widget template files they are fully realized and easier to use.
 
-**In any Apostrophe REST API single-document `GET` ("get one") request, include the `?render-areas=1` query parameter.** Each area field in the response will have a `_rendered` property with a string of HTML instead of the `items` array of widget objects.
+**In any Apostrophe REST API single-document `GET` ("get one") request, include the `?render-areas=1` query parameter.** This will return the page document as JSON. Each area field in the response will have a `_rendered` property with a string of HTML instead of the `items` array of widget objects. This could be useful if we mostly want to insert the rendered area HTML into an existing template system.
 
 ```
 GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published?apikey=000apikey123&render-areas=1
 ```
 
-If we wanted to get the full page as HTML rendered using the page templates, we could make a `GET` request to the page URL (basically what browsers do).
+If we wanted to get the full page as HTML rendered using the page templates, we could make a `GET` request to the page URL (basically what browsers do). This is only good if we are not trying to insert it into other templates.
 
 ```
 GET https://example.rocks/about-us
 ```
 
- More likely we would only want the unique page content (without the `head` tag and outer wrapper elements), which we can get by adding the `aposRefresh=1` query parameter. It will include only the HTML markup for the page template.
+ More likely we would only want the unique page content (without the `head` tag and outer wrapper elements), which we can get by adding the `aposRefresh=1` query parameter. It will include only the HTML markup for the page template. This is great for using Apostrophe page templates inside an external page wrapper (e.g., `head` tag, site header, and site footer).
 
 ```
 GET https://example.rocks/about-us?aposRefresh=1
@@ -175,3 +175,7 @@ As official platform-specific plugins are made available they will be added here
 ### Gatsby source plugin
 
 [Gatsby](https://gatsbyjs.com/) is a very popular static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
+
+::: note
+Direct GraphQL support is on the product roadmap for Apostrophe. If you are interested in that feature, [please indicate that on the product roadmap card](https://portal.productboard.com/apostrophecms/1-product-roadmap/c/44-graphql-api) so we can properly prioritize it.
+:::
