@@ -211,9 +211,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -291,9 +291,9 @@ The `_position` property uses specific string values rather than index numbers t
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the page document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -328,13 +328,13 @@ The successful `PUT` request returns the newly created document. See the [page d
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
 If moving a page within the page tree, the `PATCH`request must include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page).
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -395,7 +395,8 @@ This API route **Permanently deletes the page database document**. Moving pieces
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 

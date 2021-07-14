@@ -283,7 +283,7 @@ module.exports = {
 
 ### `slugPrefix`
 
-Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can prevent slugs, which must be unique to each doc, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
+Set `slugPrefix` to a string to prepend all [slugs](/reference/glossary.md#slug) for docs of this type. This can prevent slugs, which must be unique to each doc, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
 
 #### Example
 
@@ -423,9 +423,8 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 
 ### `builders`
 
-<!-- TODO: Update link to a more detailed explanation of builders when
-available. -->
-The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
+<!-- TODO: Update builders with link to a more detailed explanation of builders when available. -->
+The `builders` option can be used to apply any existing query builders when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
 
 The default value is:
 ```javascript
