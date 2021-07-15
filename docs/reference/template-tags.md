@@ -1,6 +1,6 @@
 # Template tags
 
-Template tags add additional functionality to Apostrophe templates. The tags described below are specific to Apostrophe, though they use the standard Nunjucks syntax: `{% tagName %}`. See standard tags in the [Nunjucks reference](https://mozilla.github.io/nunjucks/templating.html#tags).
+Apostrophe template tags add additional functionality to templates, such as inserting widget areas, async components, and template fragments. The tags described below are specific to Apostrophe, though they use the standard Nunjucks syntax: `{% tagName %}`. See standard tags in the [Nunjucks reference](https://mozilla.github.io/nunjucks/templating.html#tags).
 
 If a template tag takes multiple arguments they will be comma-separated. Additional context data may be included after a `with` keyword. See `area` below for examples of both.
 
@@ -16,7 +16,7 @@ If a template tag takes multiple arguments they will be comma-separated. Additio
 
 ## `area`
 
-The `area` tag inserts an area field into the template. The area field [must already be configured](/guide/areas-and-widgets.md#basic-area-configuration) in the page
+The `area` tag inserts an area field into the template. The area field [must already be configured](/guide/areas-and-widgets.md#basic-area-configuration) in the page.
 
 ### Usage
 
@@ -26,6 +26,10 @@ The `area` tag inserts an area field into the template. The area field [must alr
 
 **Example:**
 ```django
+{# Without context options (most typical) #}
+{% area data.page, 'sidebar' %}
+
+{# Including context options #}
 {% area data.page, 'main' with {
   '@apostrophecms/image': {
     sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
@@ -49,14 +53,18 @@ The context options object is added after area tag arguments following the `with
 
 Context options are optional for all core and official Apostrophe widget types.
 
-## component
+::: note
+Context options are not the best place for most widget configuration. That should be done in the [area field configuration](/reference/field-types/area.md#widgets). Context options are used to override that with options that only apply to the specific template context.
+:::
+
+## `component`
 
 The `component` tag inserts an asynchronous component into the template. See the [async components guide](/guide/async-components.md) for more on using this feature.
 
 ### Usage
 
 ```django
-{% component 'moduleName:componentName' with data %}
+{% component 'module:componentName' with data %}
 ```
 
 **Example:**
@@ -66,15 +74,15 @@ The `component` tag inserts an asynchronous component into the template. See the
 
 ### Arguments
 
-#### `moduleName:componentName`
+#### `module:componentName`
 
 The primary argument is a combination of the name of a module name and the name of an async component from that module, separated by a colon. All async components belong to a specific module, though multiple modules may have components with the same name.
 
 #### `data` (optional)
 
-The data argument, following the `with` keyword, is available in the async component template as `data`. It can be any data type, however it is a best practice to make it an object with subproperties so using the values are clearer in templates.
+The data argument, following the `with` keyword, is available in the async component template as `data`. It can be any data type, however it is a best practice to use an object with subproperties.
 
-## fragment
+## `fragment`
 
 The `fragment` tag *declares* a template fragment that will be inserted elsewhere with [`render`](#render) or [`rendercall`](#rendercall). See the [template fragments guide](/guide/fragments.md) for more on using this feature.
 
@@ -83,7 +91,7 @@ This tag must be closed with an `endfragment` tag.
 ### Usage
 
 ```django
-{% fragment name(arguments) %}
+{% fragment name(parameters) %}
   {# Fragment markup #}
 {% endfragment %}
 ```
@@ -102,6 +110,7 @@ This tag must be closed with an `endfragment` tag.
   <section class="o-card">
     <h2>{{ data.heading }}</h2>
     <div>
+      {# `rendercaller` connects to the `rendercall` tag below. #}
       {{ rendercaller() }}
     </div>
   </section>
@@ -110,11 +119,11 @@ This tag must be closed with an `endfragment` tag.
 
 ### Arguments
 
-#### `name()`
+#### `name(parameters)`
 
 The fragment name used to reference it in `render` and `rendercall` tags. It should be written as a function with parentheses. The parentheses may include argument names if needed, which would be referenced in variable brackets.
 
-## render
+## `render`
 
 The `render` tag is used to insert a [fragment](/guide/fragments.md) in a template.
 
@@ -131,13 +140,13 @@ The `render` tag is used to insert a [fragment](/guide/fragments.md) in a templa
 
 ### Arguments
 
-#### `name()`
+#### `name(arguments)`
 
 The name of the fragment to render. It may include a source reference [if the fragment was imported](/guide/fragments.md#importing-fragments-across-files) (e.g., `source.button()`). The parentheses following the name may take arguments to pass into the fragment.
 
-## rendercall
+## `rendercall`
 
-Similar to `render`, `rendercall` tag is used to insert a fragment in a template. `rendercall` is used when [injecting markup into a fragment as well](/guide/fragments.md#inserting-markup-with-rendercall).
+Similar to `render`, `rendercall` tag is used to insert a fragment in a template. `rendercall` is used when [injecting markup into a fragment as well](/guide/fragments.md#inserting-markup-with-rendercall). The markup inside this tag is added in a fragment where it has a `rendercaller()` call.
 
 This tag must be closed with an `endrendercall` tag.
 
@@ -158,7 +167,7 @@ This tag must be closed with an `endrendercall` tag.
 
 ### Arguments
 
-#### `name()`
+#### `name(arguments)`
 
 The name of the fragment to render. It may include a source reference [if the fragment was imported](/guide/fragments.md#importing-fragments-across-files) (e.g., `source.card()`). The parentheses following the name may take arguments to pass into the fragment.
 
