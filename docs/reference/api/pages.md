@@ -22,7 +22,7 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 
 | Method | Path | Description |
 |---------|---------|---------|---------|
-|`GET` | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content |
+|`GET` | [`/:_url?aposRefresh=1`](#get-url-aposrefresh-1) | Get a page's rendered content |
 |`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
 <!-- TODO: document -->
@@ -212,9 +212,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -291,9 +291,10 @@ The `_position` property uses specific string values rather than index numbers t
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -328,13 +329,13 @@ The successful `PUT` request returns the newly created document. See the [page d
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
 If moving a page within the page tree, the `PATCH`request must include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page).
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -395,7 +396,8 @@ This API route **Permanently deletes the page database document**. Moving pieces
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -418,9 +420,9 @@ The successful `DELETE` request simply responds with a `200` HTTP response statu
 }
 ```
 
-## `GET /:_url?apos-refresh=1`
+## `GET /:_url?aposRefresh=1`
 
-Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
+Including the `aposRefresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
 
 Authentication is not required for this API route if `:_url` is a public URL.
 
@@ -443,7 +445,7 @@ The most critical element that is *excluded* is the `head` tag, with all of its 
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/some-page?apos-refresh=1', {
+const response = await fetch('http://example.net/some-page?aposRefresh=1', {
   method: 'GET'
 });
 const document = await response.text();
