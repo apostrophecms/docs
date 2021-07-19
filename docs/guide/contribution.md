@@ -57,6 +57,10 @@ Not good:
   - **"settings"**: Nested module properties that are required, but not top-level (thus "nested"), are "settings." `fields.add`, `fields.group` are "settings."
   - **"options"**: When *not required*, these nested module properties are called "options." Most of these properties are inside the `options` object.
 
+### Text formatting
+
+- The first time a major concept is mentioned in a guide about that concept it should be **bolded**. So we should not bold "page" in the guide about pieces, but we should bold "piece" and "piece type."
+
 ### Code style
 
 #### Identify the file for code blocks
