@@ -91,7 +91,7 @@ You should not use both `improve` and `extend` in a single module. If "improving
 
 ### `options`
 
-An object used to add additional, often optional, settings to a module. There are many options available depending on the module type. See the [module configuration options page](/reference/module-options.md) for more information.
+An object used to add additional, often optional, settings to a module. There are many options available depending on the module type. See the [module configuration options page](/reference/module-api/module-options.md) for more information.
 
 ### `instantiate`
 
@@ -483,7 +483,7 @@ Each template component function should take the arguments:
 
 Information returned by the component function will be available in the associated component template as `data`.
 
-See the [async component guide](/guide/async-components) for more usage information.
+See the [async component guide](/guide/async-components.md) for more usage information.
 
 ```javascript
 // modules/product/index.js

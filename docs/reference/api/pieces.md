@@ -102,9 +102,9 @@ In case of an error an appropriate HTTP status code is returned.
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the piece document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -158,9 +158,9 @@ The successful `POST` request returns the newly created document. See the [piece
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the piece document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -190,11 +190,11 @@ The successful `PUT` request returns the newly created document. See the [piece 
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the piece document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -245,9 +245,10 @@ This API route **permanently deletes the piece database document**. Moving piece
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
