@@ -179,9 +179,6 @@ Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If
 Even if the relationship has `min: 1` set, requiring one selection, never assume that the relationship is populated in templates. If the selected item is archived at some point the field will become empty.
 :::
 
-<!--
-TODO: Uncomment this section once reverse relationships are fixed in core so we can confirm behavior.
-
 ## Reverse relationships
 
 Relationships are directional, but you can still read the relationship from the opposite direction using a `reverseRelationship` field. A `reverseRelationship` field must reflect an existing `relationship` field. **It has no user interface or property in database documents.** It is simply a signal for Apostrophe to populate data when fetching a document.
@@ -205,7 +202,7 @@ module.exports = {
 ```
 
 ::: tip
-You don't need to use a fields `group` setting here since the `relationshipReverse` field has no user interface.
+You don't need to use a fields `group` setting here since the `relationshipReverse` field has no user interface. There is no `label` for the same reason.
 :::
 
 This field is identifying the connected doc type with the `withType` setting, then the matching `relationship` field on that doc type with the `reverseOf` setting. See [more about `relationshipReverse` configuration](/reference/field-types/relationship-reverse.md) in the field type reference page.
@@ -221,5 +218,3 @@ With this field in place, you could display connected articles in a topics show 
   {% endfor %}
 </ul>
 ```
-
--->

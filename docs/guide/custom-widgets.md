@@ -12,6 +12,14 @@ First create the module configuration file, extend the core widget type module, 
 
 **The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This two-column widget is named `two-column-widget`.
 
+::: tip
+Generate the starter code using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) with the command:
+
+```bash
+apos add widget two-column
+```
+:::
+
 ```js
 // modules/two-column-widget/index.js
 module.exports = {
@@ -86,7 +94,7 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 Here are some two-column styles for people following along.
 
 ```css
-/* modules/two-column-widget/ui/public/styles.css */
+/* modules/two-column-widget/ui/src/styles.scss */
 .two-col {
   display: flex;
   flex-flow: row wrap;
@@ -106,6 +114,14 @@ Here are some two-column styles for people following along.
 When adding client-side JavaScript for widget interaction, add a widget "player" to contain that code. The player will run only when the widget is used. It will also run when the editable area of the page is refreshed during editing.
 
 We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
+
+::: tip
+When using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) to create a widget type, include widget player starter code with the `--player` option.
+
+```bash
+apos add widget collapse --player
+```
+:::
 
 ::: details Example collapsible widget code
 **Module configuration**
@@ -162,9 +178,9 @@ module.exports = {
 ```
 :::
 
-Widget player code can be added in any client-side JavaScript file in a module's `ui/public/` directory. In this example it would be in `modules/collapse-widget/ui/public/collapser.js` (the file name does not matter, as long as it is a `.js` file).
+Widget player code can be added in any module's `ui/src/index.js` file, or a file imported by it. In this example it would be in `modules/collapse-widget/ui/src/index.js`.
 
-The player code is added to an object of widget players, `apos.util.widgetPlayers` using the widgets name, excluding the `-widget` suffix. It is an object with two properties:
+The player code is added to an object of widget players, `apos.util.widgetPlayers` using the widget's name, excluding the `-widget` suffix. It is an object with two properties:
 
 | Property | Description |
 | -------- | ----------- |
@@ -172,34 +188,38 @@ The player code is added to an object of widget players, `apos.util.widgetPlayer
 | `player` | A function that takes the matching widget DOM element as an argument. |
 
 ```javascript
-// modules/collapse-widget/ui/public/collapser.js
-apos.util.widgetPlayers.collapser = {
-  selector: '[data-collapser]',
-  player: function (el) {
-    // ...
-  }
+// modules/collapse-widget/ui/src/index.js
+export default () => {
+  apos.util.widgetPlayers.collapser = {
+    selector: '[data-collapser]',
+    player: function (el) {
+      // ...
+    }
+  };
 };
 ```
 
 With some code to manage showing and hiding the detail, it would look like:
 
 ```javascript
-apos.util.widgetPlayers.accordion = {
-  selector: '[data-collapser]',
-  player: function (el) {
-    // Find our button
-    const btn = el.querySelector('[data-collapser-button]');
-    // Find our hidden text
-    const target = el.querySelector('[data-collapser-detail]');
+export default () => {
+  apos.util.widgetPlayers.accordion = {
+    selector: '[data-collapser]',
+    player: function (el) {
+      // Find our button
+      const btn = el.querySelector('[data-collapser-button]');
+      // Find our hidden text
+      const target = el.querySelector('[data-collapser-detail]');
 
-    btn.onclick = () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      // Update the button's aria attribute
-      btn.setAttribute('aria-expanded', !expanded);
-      // Update the `hidden` attribute on the detail
-      target.hidden = expanded;
-    };
-  }
+      btn.onclick = () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        // Update the button's aria attribute
+        btn.setAttribute('aria-expanded', !expanded);
+        // Update the `hidden` attribute on the detail
+        target.hidden = expanded;
+      };
+    }
+  };
 };
 ```
 
@@ -223,12 +243,14 @@ For example, we could change our collapse widget to include a `color` field valu
 We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could get the value with the wrapper element's `dataset` property.
 
 ```javascript
-apos.util.widgetPlayers.accordion = {
-  selector: '[data-collapser]',
-  player: function (el) {
-    const color = el.dataset.color || 'purple'
-    // The rest of the code is the same...
-  }
+export default () => {
+  apos.util.widgetPlayers.accordion = {
+    selector: '[data-collapser]',
+    player: function (el) {
+      const color = el.dataset.color || 'purple'
+      // The rest of the code is the same...
+    }
+  };
 };
 ```
 

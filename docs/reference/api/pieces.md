@@ -79,7 +79,7 @@ By default, `GET` requests return the published and default locale version of ea
     "results": [
       {
         "_id": "ckitdo5oq004pu69kr6oxo6fr",
-        "trash": false,
+        "archived": false,
         "visibility": "public",
         "type": "article",
         "title": "ES6 and Beyond: modern JavaScript is so worth it",
@@ -102,9 +102,9 @@ In case of an error an appropriate HTTP status code is returned.
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the piece document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -158,9 +158,9 @@ The successful `POST` request returns the newly created document. See the [piece
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the piece document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -190,11 +190,11 @@ The successful `PUT` request returns the newly created document. See the [piece 
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the piece document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -236,7 +236,7 @@ The successful `PATCH` request returns the complete patched document. See the [p
 
 **Authentication required.**
 
-This API route **permanently deletes the piece database document**. Moving pieces to the trash in the Apostrophe user interface or using a `PATCH` request to set `trash: true` do not permanently delete database documents and should be considered.
+This API route **permanently deletes the piece database document**. Moving pieces to the archive in the Apostrophe user interface or using a `PATCH` request to set `archived: true` do not permanently delete database documents and should be considered.
 
 `DELETE` requests will be rejected if the `_id` matches the draft mode of a page that has an existing published mode document.
 
@@ -245,9 +245,10 @@ This API route **permanently deletes the piece database document**. Moving piece
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -307,7 +308,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 |----------|------|-------------|
 |`_id` | String | A unique and permanent ID for the document|
 |`visibility` | String | The visibility setting, controlling public availability|
-|`trash` | Boolean | Whether the document is "trashed"|
+|`archived` | Boolean | Whether the document is archived |
 |`type` | String | The piece type name|
 |`title` | String | The entered title, or name, of the *document*|
 |`slug`| String | A unique, but changeable, identifier for the piece|
@@ -322,7 +323,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 ```json
 {
   "_id": "ckitdo5oq004pu69kr6oxo6fr",
-  "trash": false,
+  "archive": false,
   "visibility": "public",
   "type": "article",
   "title": "ES6 and Beyond: modern JavaScript is so worth it",
@@ -360,7 +361,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
   "_author": [
     {
       "_id": "ckitdleax002tu69kejca3ho0",
-      "trash": false,
+      "archive": false,
       "disabled": false,
       "type": "@apostrophecms/user",
       "firstName": "Tom",

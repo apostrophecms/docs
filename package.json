@@ -1,6 +1,6 @@
 {
-  "name": "apostrophe-documentation",
-  "version": "2.0.0-alpha",
+  "name": "a3-docs",
+  "version": "1.0.0",
   "description": "",
   "private": true,
   "main": "index.js",
@@ -16,8 +16,7 @@
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/plugin-google-analytics": "^1.5.4",
-    "eslint": "^6.8.0",
+    "eslint": "^7.1.0",
     "eslint-config-apostrophe": "^3.2.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.22.0",
@@ -27,10 +26,14 @@
     "stylelint": "^13.11.0",
     "stylelint-config-apostrophe": "^1.0.0",
     "stylelint-plugin-stylus": "^0.10.0",
-    "vuepress": "^1.5.4"
+    "vuepress": "^1.5.4",
+    "esm": "^3.2.25",
+    "markdown-it-attrs": "^4.0.0",
+    "@vuepress/plugin-google-analytics": "^1.5.4",
+    "vuepress-plugin-sitemap": "^2.3.1",
+    "vuepress-theme-apostrophe": "git://github.com/apostrophecms/vuepress-theme-apostrophe.git"
   },
   "dependencies": {
-    "esm": "^3.2.25",
-    "vuepress-plugin-sitemap": "^2.3.1"
+    "markdown-it": "^12.0.6"
   }
 }

@@ -284,7 +284,7 @@ You can use this to set custom headers on all requests, for example.
 
 ### `parseQuery(query)`
 
-Returns a data object from parsing a URL query string (e.g., `?theme=light&apos-refresh=1`). The argument should only include the query string part of a URL. The leading question mark (`?`) is allowed but not required. A parameter with no value will be set to `null`.
+Returns a data object from parsing a URL query string (e.g., `?theme=light&aposRefresh=1`). The argument should only include the query string part of a URL. The leading question mark (`?`) is allowed but not required. A parameter with no value will be set to `null`.
 
 | Argument | What is it? |
 | -------- | ----------- |

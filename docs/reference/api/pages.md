@@ -22,7 +22,7 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 
 | Method | Path | Description |
 |---------|---------|---------|---------|
-|`GET` | [`/:_url?apos-refresh=1`](#get-url-apos-refresh-1) | Get a page's rendered content |
+|`GET` | [`/:_url?aposRefresh=1`](#get-url-aposrefresh-1) | Get a page's rendered content |
 |`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
 <!-- TODO: document -->
@@ -190,9 +190,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
     {
       "_id": "ckhdscx6000084z9k56lybljw",
       "visibility": "public",
-      "type": "@apostrophecms/trash",
-      "title": "Trash",
-      "slug": "/trash",
+      "type": "@apostrophecms/archive-page",
+      "title": "Archive",
+      "slug": "/archive",
       // ...
       "rank": 3,
       "path": "ckhdscx5900054z9k88uqs16w/ckhdscx6000084z9k56lybljw",
@@ -211,9 +211,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -235,7 +235,7 @@ The successful `GET` request returns the matching document. See the [page docume
 
 | Property | Type | Description |
 |----------|------|-------------|
-|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_trash` are optional conveniences for the home page and [trashed section](#moving-pages-to-the-trash), respectively. |
+|`_targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_archive` are optional conveniences for the home page and [archived section](#moving-pages-to-the-archive), respectively. |
 |`_position` | String, Number | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
 
 The `_position` property uses specific string values rather than index numbers to better support the draft review workflow.
@@ -291,9 +291,9 @@ The `_position` property uses specific string values rather than index numbers t
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the page document version for that locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
-<!-- TODO: link to docs about locales when available. -->
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -328,13 +328,13 @@ The successful `PUT` request returns the newly created document. See the [page d
 |----------|------|-------------|
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
 |`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the page document version for that locale. |
-<!-- TODO: link to docs about locales when available. -->
 
 If moving a page within the page tree, the `PATCH`request must include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page).
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -372,16 +372,16 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 
 The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
-### Moving pages to the trash
+### Moving pages to the archive
 
-The trash is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `trash` property to set `true`. Instead, set `_targetId` to `_trash` and `_position` to `lastChild` (or another position within the trash). You may similarly move pages out of the trash by moving them to a position relative to another page that is not in the trash.
+The archive is part of the overall page tree in order to maintain the nesting structure. As such, there is not only a simple `archived` property to set `true`. Instead, set `_targetId` to `_archive` and `_position` to `lastChild` (or another position within the archive). You may similarly move pages out of the archive by moving them to a position relative to another page that is not in the archive.
 
 ## `DELETE /api/v1/@apostrophecms/page/:_id`
 
 
 **Authentication required.**
 
-This API route **Permanently deletes the page database document**. Moving pieces to the trash in the Apostrophe user interface or [using a `PATCH` request](#moving-pages-to-the-trash) do not permanently delete database documents and should be considered.
+This API route **Permanently deletes the page database document**. Moving pieces to the archive in the Apostrophe user interface or [using a `PATCH` request](#moving-pages-to-the-archive) do not permanently delete database documents and should be considered.
 
 `DELETE` requests will be rejected if:
 - the `_id` matches the draft mode of a page that has an existing published mode document
@@ -395,7 +395,8 @@ This API route **Permanently deletes the page database document**. Moving pieces
 |`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
 |`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
 
-Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests).
+<!-- TODO: link to docs about locales and modes when available. -->
+<!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 
 ### Request example
 
@@ -418,9 +419,9 @@ The successful `DELETE` request simply responds with a `200` HTTP response statu
 }
 ```
 
-## `GET /:_url?apos-refresh=1`
+## `GET /:_url?aposRefresh=1`
 
-Including the `apos-refresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
+Including the `aposRefresh=1` query parameter value on an Apostrophe page URL returns the rendered HTML from the `refreshLayout.html` template, which excludes the wrapping markup from the `outerLayoutBase.html` template file outside of the `[data-apos-refreshable]` element. Apostrophe UI uses this parameter to refresh content during editing.
 
 Authentication is not required for this API route if `:_url` is a public URL.
 
@@ -443,7 +444,7 @@ The most critical element that is *excluded* is the `head` tag, with all of its 
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/some-page?apos-refresh=1', {
+const response = await fetch('http://example.net/some-page?aposRefresh=1', {
   method: 'GET'
 });
 const document = await response.text();
@@ -506,7 +507,7 @@ The successful `POST` request returns the newly published document. See the [pag
 |`slug`| String | A unique, but changeable, identifier for the page|
 |`rank` | Number | The order in which the page appears in the page tree under its parent. The first child page among its siblings will be `0`. |
 |`title` | String | The entered title, or name, of the *document*|
-|`trash` | Boolean | Whether the document is "trashed"|
+|`archived` | Boolean | Whether the document is archived|
 |`type` | String | The piece type name|
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
 |`visibility` | String | The visibility setting, controlling public availability|
@@ -529,7 +530,7 @@ The successful `POST` request returns the newly published document. See the [pag
     "level": 1,
     "metaType": "doc",
     "createdAt": "2020-11-23T16:34:05.894Z",
-    "trash": false,
+    "archived": false,
     "titleSortified": "about us",
     "updatedAt": "2020-12-21T20:34:02.636Z",
     "historicUrls": [
@@ -585,7 +586,7 @@ The successful `POST` request returns the newly published document. See the [pag
             "path": "ckhdscx5900054z9k88uqs16w",
             "metaType": "doc",
             "createdAt": "2020-11-11T19:17:53.998Z",
-            "trash": false,
+            "archived": false,
             "titleSortified": "home pager",
             "updatedAt": "2020-12-21T20:37:56.066Z",
             "historicUrls": [

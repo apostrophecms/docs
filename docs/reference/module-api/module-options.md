@@ -283,7 +283,7 @@ module.exports = {
 
 ### `slugPrefix`
 
-Set `slugPrefix` to a string to prepend all [slugs](glossary.md#slug) for docs of this type. This can prevent slugs, which must be unique to each doc, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
+Set `slugPrefix` to a string to prepend all [slugs](/reference/glossary.md#slug) for docs of this type. This can prevent slugs, which must be unique to each doc, from being reserved in some cases. For example, Apostrophe image docs have the `slugPrefix` value of `'image-'` so images, which do not typically have public pages, do not accidentally reserve a more reader-friendly slug.
 
 #### Example
 
@@ -423,9 +423,8 @@ Option settings in this section apply to the core page module (`@apostrophecms/p
 
 ### `builders`
 
-<!-- TODO: Update link to a more detailed explanation of builders when
-available. -->
-The `builders` option can be used to apply any existing [query builders](/guide/major-changes.md#queries) when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
+<!-- TODO: Update builders with link to a more detailed explanation of builders when available. -->
+The `builders` option can be used to apply any existing query builders when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
 
 The default value is:
 ```javascript
@@ -477,11 +476,10 @@ module.exports = {
 
 ### `minimumPark`
 
-The `minimumPark` option offers the ability to overwrite how the default required pages are configured. This includes the home page and the trash "page" (trash is part of the page tree). Most "parking" pages should be done with the [`park`](#park) option.
-<!-- TODO: Update when the trash is removed from home page children. -->
+The `minimumPark` option sets the initial defaults for the home page and archive "page" (the page archive). This should normally be left as it is. A possible use case for changing this might be when building an installable module meant to change the defaults for all websites that use it.
 
 ::: warning
-Removing either of those pages as required with this option would have negative effects, but this does offer the ability to change the title or page type of the home page, for example. Use with caution.
+Configuring this poorly, especially by leaving out one of the two required pages, will break page functionality. In almost every situation it is better to use the [`park`](#park) option instead, including for updating home page properties.
 :::
 
 The default is:
@@ -493,17 +491,15 @@ The default is:
     _defaults: {
       title: 'Home',
       type: '@apostrophecms/home-page'
-    },
-    _children: [
-        {
-        slug: '/trash',
-        parkedId: 'trash',
-        type: '@apostrophecms/trash',
-        trash: true,
-        orphan: true,
-        _defaults: { title: 'Trash' }
-      }
-    ]
+    }
+  },
+  {
+    slug: '/archive',
+    parkedId: 'archive',
+    type: '@apostrophecms/archive-page',
+    archived: true,
+    orphan: true,
+    title: 'Archive'
   }
 ]
 ```
@@ -521,17 +517,15 @@ module.exports = {
         _defaults: {
           title: 'Welcome',  // 👈
           type: 'welcome-page' // 👈
-        },
-        _children: [
-            {
-            slug: '/trash',
-            parkedId: 'trash',
-            type: '@apostrophecms/trash',
-            trash: true,
-            orphan: true,
-            _defaults: { title: 'Trash' }
-          }
-        ]
+        }
+      },
+      {
+        slug: '/archive',
+        parkedId: 'archive',
+        type: '@apostrophecms/archive-page',
+        archived: true,
+        orphan: true,
+        title: 'Archive'
       }
     ]
   },

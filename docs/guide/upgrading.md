@@ -16,7 +16,7 @@ The UI has been completely rebuilt with [Vue.js](https://vuejs.org/). It is much
 
 ### Clearer and easier module building
 
-There were several things about building advanced modules in A2 that often tripped up developers. A3 helps avoid the confusion around where to put things by doing away with `beforeConstruct`, `construct`, and `afterConstruct`. [They are replaced by a single `init` function and special sections](/docs/reference/module-api/module-overview.md) to do things like extend API routes, add template helper methods, and add columns to the piece manager UI.
+There were several things about building advanced modules in A2 that often tripped up developers. A3 helps avoid the confusion around where to put things by doing away with `beforeConstruct`, `construct`, and `afterConstruct`. [They are replaced by a single `init` function and special sections](/reference/module-api/module-overview.md) to do things like extend API routes, add template helper methods, and add columns to the piece manager UI.
 
 ### New Rich Text Editor
 

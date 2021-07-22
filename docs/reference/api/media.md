@@ -50,6 +50,7 @@ The successful `POST` request returns the newly created attachment. In case of a
 |`_id` | String | A unique and permanent ID for the attachment |
 |`_url` | String | The file URL (the original size, if an image) |
 |`_urls` | Object | An object with keys for the generated image size variants, if an image file |
+|`archivedDocIds` | Array | An array of string IDs that represent image or file documents using this attachment that are archived |
 |`createdAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's creation date and time|
 |`docIds` | Array | An array of string IDs that represent image or file documents using this attachment (empty at initial upload) |
 |`extension` | String | The file's file extension, e.g., `png`, `pdf` |
@@ -62,7 +63,6 @@ The successful `POST` request returns the newly created attachment. In case of a
 |`portrait` | Boolean | `true` if an image with portrait aspect ratio |
 |`title` | String | A "sortified" version of the file name (case-insensitive) |
 |`type` | String | 'attachment' |
-|`trashDocIds` | Array | An array of string IDs that represent image or file documents using this attachment in the trash |
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's last update date and time|
 |`width` | Number | Width of the image file, if an image |
 
@@ -77,7 +77,7 @@ The successful `POST` request returns the newly created attachment. In case of a
   "extension": "png",
   "type": "attachment",
   "docIds": [],
-  "trashDocIds": [],
+  "archivedDocIds": [],
   "length": 10497,
   "md5": "630eeaaecd0bdc07c4a82eeca4c07588",
   "width": 600,
