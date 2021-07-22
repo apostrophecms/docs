@@ -117,6 +117,6 @@ The "context" may be a page, piece, widget, or [array field](/reference/field-ty
 </div>
 ```
 
-## More information
-
-[Changes from 2.x](/guide/major-changes.md#areas-and-pages)
+::: note
+For more information on how areas changed from Apostrophe 2, see the [Coming from 2.x](/guide/upgrading.md#areas-and-pages) guide section on areas.
+:::

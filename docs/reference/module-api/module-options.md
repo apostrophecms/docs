@@ -745,7 +745,7 @@ module.exports = {
 
 <!-- TODO: Link to a guide on using piece filters when available. -->
 <!-- TODO: Link to a better query builder guide when available. -->
-`piecesFilters`, configured as an array of objects, supports filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/guide/major-changes.md#queries). These include:
+`piecesFilters`, configured as an array of objects, supports filtering pieces on an [index page](/reference/glossary.md#index-page). Each object must have a `name` property associated with a valid [query builder](/reference/module-api/module-overview.md#queries-self-query). These include:
 
 - Custom query builders configured in an app that include a `launder` method
 - Field names whose field types automatically get builders:
