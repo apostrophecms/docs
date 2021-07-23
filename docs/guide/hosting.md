@@ -48,3 +48,8 @@ We recommend using a utility such as [PM2](https://pm2.keymetrics.io/) to start 
 ### Minifying assets
 
 Apostrophe concatenates [project-level front end code](/guide/front-end-assets.md#placing-client-side-code) and, when a user is logged in, delivers it to browsers with the user interface code as well. There is no advanced minification applied. If needed, apply any advanced minification prior to running the production build task.
+
+## Hosting recipes
+
+The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/docs/cookbook/README.md#hosting).
+
