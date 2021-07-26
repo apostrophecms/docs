@@ -155,10 +155,10 @@ sudo systemctl reload nginx
 A newly-created site won't have much in the database yet, and **you need an admin user to start editing**.
 
 1. **Make sure you are on the `nodeapps` user** (the non-sudo user). Any direct work on the Apostrophe site (as opposed to the server) should be done by `nodeapps`.
-2.  Run the follow task to create a user with the name `administrator` to the "admin" group:
+2.  Run the follow task to create a user with the name `lucy` to the "admin" group:
 
 ```sh
-node app @apostrophecms/user:add administrator admin
+node app @apostrophecms/user:add lucy admin
 # The command structure is:
 # node app apostrophe-users:add userName groupName
 ```
