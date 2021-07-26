@@ -60,7 +60,7 @@ sudo su - nodeapps
 
 From here on out we never run a command as root, except as explicitly noted. This `nodeapps` account doesn't have sudo privileges, and that's a good thing for security.
 
-## Deploying a site for the first time
+### Deploying a site for the first time
 
 ::: note
 You can do this series of steps each time you want to add a new site to the VPS. You can run more than one site on a server, but for security and performance you might prefer to run them on separate servers in production.
@@ -96,7 +96,7 @@ pm2 save
 
 At this point Apostrophe is running on port `3000`. We need to configure nginx as a proxy server to handle HTTP and HTTPS connections on port `80` and `443` and forward them.
 
-## Adding your site to nginx
+### Adding your site to nginx
 
 1. SSH to the `ubuntu` user shell where you have sudo access. If you followed the instructions above and are on the `nodeapps` user, simply type `exit` and submit.
 2. Create the nginx configuration file, `/etc/nginx/conf.d/your-project-shortname-here.conf`.
@@ -107,7 +107,6 @@ sudo nano /etc/nginx/conf.d/your-project-shortname-here.conf
 ```
 
 3. In the editor, **paste the following, replacing `your.host.name` and `a3-boilerplate` as directed**:
-   - To save, press CTL+x, then follow the steps to confirm.
 
 ```nginx
 server {
@@ -128,6 +127,7 @@ server {
     expires 7d;
   }
 }
+# To save, press CTL+x, then follow the steps to confirm.
 ```
 
 ::: note
@@ -137,71 +137,80 @@ The `root` and `try_files` statements let nginx serve static files directly, for
 the best speed; if the URL isn't a static file, it is passed to Apostrophe. `expires 7d` allows the browser to cache the static files, for performance.
 :::
 
-4. You'll want to **add SSL for HTTPS connections**, too. For that, follow the LetsEncrypt [Certbot documentation](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx.html). Certbot will make the necessary nginx configuration changes for you.
+1. You'll want to **add SSL for HTTPS connections**, too. For that, follow the LetsEncrypt [Certbot documentation](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx.html). Certbot will make the necessary nginx configuration changes for you.
 
-5. Now instruct `nginx` to restart:
+2. Now instruct `nginx` to restart:
 
-```
+```sh
 sudo systemctl reload nginx
 ```
 
-Your site is up! Visit `http://your.host.name` to see it. If you didn't add it to your DNS yet, or it hasn't propagated, you won't be able to reach it yet. You can try `http://your.server.ip.address` until DNS is set up.
+**Your site should be up!** Visit `http://your.host.name` to see it. If you didn't add it to your DNS yet, or it hasn't propagated, you won't be able to reach it yet.
+<!-- You can try `http://your.server.ip.address` until DNS is set up. -->
 
-## Adding a user to a brand-new site
+## Working on the site after deployment
 
-A newly-created site won't have a database yet, and you need an admin user to start editing. Here's how to add an admin user with the name `admin`:
+### Adding a user to a brand-new site
 
+A newly-created site won't have much in the database yet, and **you need an admin user to start editing**.
+
+1. **Make sure you are on the `nodeapps` user** (the non-sudo user). Any direct work on the Apostrophe site (as opposed to the server) should be done by `nodeapps`.
+2.  Run the follow task to create a user with the name `administrator` to the "admin" group:
+
+```sh
+node app @apostrophecms/user:add administrator admin
+# The command structure is:
+# node app apostrophe-users:add userName groupName
 ```
-node app @apostrophecms/user:add admin admin
-```
 
-You will be prompted for a password.
+3. When prompted, **enter a secure password.** And be sure to record it securely as well!
 
-After that your account will be stored in the MongoDB database.
+After that your account will be stored in the MongoDB database. Access it on the `/login` page of your website.
 
-## Updating your site
+### Updating your site code
 
-To update your site later, follow these steps:
+To update your site later, follow these steps using the `nodeapps` (non-sudo) user:
 
-* If you didn't already, `ssh` to the `ubuntu` user on your server. Then run `sudo su - nodeapps` to switch users.
+1. `cd` to the project root if you are not there already. Since we first deployed our code by cloning a git repository, we'll pull from that repo to update the code.
 
-* Run these commands to update the code, install any new or updated npm packages, run any new database migrations and build new production assets:
-
-```
-cd a3-boilerplate
+```sh
+# Make sure we're in our project root directory.
+cd && cd a3-boilerplate
+# Pull our code.
 git pull
-npm run release
 ```
 
-> In projects based on `a3-boilerplate`, `release` takes care of `npm install`, Apostrophe migrations, and the production asset build in one step.
+2. Now that we have the code updated, we will install any new or updated npm packages, build new production assets, and run any new database migrations:
 
-* Instruct `pm2` to restart the site:
-
+```sh
+npm install && npm run build && node app @apostrophecms/migration:migrate
 ```
+
+::: tip
+In projects based on the `a3-boilerplate` code starter, the `npm run release` script takes care of all of this in one command. If your codebase does not include that script you will need to run each command directly.
+:::
+
+3. Instruct `pm2` to restart the site:
+
+```sh
 pm2 restart a3-boilerplate
 ```
 
-Your site will restart after a few seconds. You can check `pm2 logs a3-boilerplate` to see whether it has started up yet.
+Your site will restart after a few seconds. You can check the process logs with `pm2 logs a3-boilerplate` to see whether it has started up yet.
 
-## Viewing the Node.js console
+### Viewing the Node.js console
 
 Your site's console log messages are available from `pm2`:
 
-```
+```sh
 pm2 logs a3-boilerplate
 ```
 
-## Copying content from development to production
-
-TODO: instructions for a simple mongodump / mongorestore pipeline. This can be a one-liner with modern mongodb. Also a one-line rsync command for the media.
-
-## Copying content from production to development
-
-TODO: instructions for a simple mongodump / mongorestore pipeline. This can be a one-liner with modern mongodb. Also a one-line rsync command for the media.
-
 ## Recommended enhancements
 
-This is a simple, unopinionated production example. There are many things you can do to improve on this recipe.
+This recipe is a simple, unopinionated production example. There are many things you can do to improve on this recipe.
+
+### Run on multiple processes
 
 One important step is to run at least two Apostrophe processes, in order to guarantee a second process can respond if the first has crashed and is restarting.
 
@@ -209,14 +218,15 @@ One way to do that is to start two separate processes with `pm2`, using two `--n
 
 If you need more capacity, you can run as many processes as you have CPU cores on the server, possibly reserving one for MongoDB.
 
-## If you don't deploy with git
+### Specify the `APOS_RELEASE_ID` if not deploying with git
 
-Just a heads up: in this example, Apostrophe uses the current git commit ID to identify the current bundle of frontend assets. If your preferred recipe does not involve running `git clone` on the server, then you'll need to set the `APOS_RELEASE_ID` environment variable to a consistent value of your own both when running the asset build task and when starting up Apostrophe. Change that value for both purposes with each new deployment.
+Just a heads up: in this example, Apostrophe uses the current git commit ID to identify the current bundle of frontend assets.
 
-## If you don't want to use `npm run update`
+If your preferred deployment process does not involve running `git clone` on the server, **you'll need to set the `APOS_RELEASE_ID` environment variable to a consistent value of your own** when running the asset build task *and* when starting up Apostrophe. Change that release ID value for both purposes *with each new deployment*.
 
-For those who want to know, the complete commands for a release are:
-
-```bash
-npm install && npm run build && node app @apostrophecms/migration:migrate
+```sh
+APOS_RELEASE_ID=myLatestReleaseID npm run build &&
+APOS_RELEASE_ID=myLatestReleaseID pm2 restart a3-boilerplate
+# Remember, a3-boilerplate is the name of the pm2 process from this example.
+# Replace that with the name of your pm2 process.
 ```
