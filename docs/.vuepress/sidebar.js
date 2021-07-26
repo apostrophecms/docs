@@ -66,7 +66,7 @@ module.exports = {
       collapsable: false,
       sidebarDepth: 2,
       children: [
-        [ 'cookbook/ubuntu-setup.md', 'Ubuntu hosting setup 🆕' ]
+        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup 🆕' ]
       ]
     }
   ],
