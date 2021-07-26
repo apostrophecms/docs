@@ -4,4 +4,4 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 
 ## Hosting
 
-- [Ubuntu hosting setup](ubuntu-setup.md)
+- [Ubuntu hosting setup](ubuntu-hosting.md)
