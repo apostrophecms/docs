@@ -53,18 +53,22 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/conditional-fields.md',
-        [ 'guide/async-components.md', 'Async components 🆕' ]
-      ]
-    },
-    {
-      title: 'Hosting',
-      collapsable: false,
-      children: [
+        [ 'guide/async-components.md', 'Async components 🆕' ],
         [ 'guide/hosting.md', 'Hosting in production 🆕' ]
       ]
     },
     [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ],
     [ 'guide/contribution.md', 'Contribution guide 🆕' ]
+  ],
+  '/cookbook': [
+    {
+      title: 'Hosting',
+      collapsable: false,
+      sidebarDepth: 2,
+      children: [
+        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup 🆕' ]
+      ]
+    }
   ],
   '/reference': [
     'reference/glossary',
