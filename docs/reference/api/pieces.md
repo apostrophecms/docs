@@ -65,7 +65,7 @@ By default, `GET` requests return the published and default locale version of ea
 | Property | Type | Description |
 |----------|------|-------------|
 |`pages` | Number | The total number of pages of results |
-|`page` | Number | The current page of results |
+|`currentPage` | Number | The current page of results |
 |`results` | Array | An array of individual piece objects. See the [getOne](#get-api-v1-piece-name-id) response for the document structure.|
 
 

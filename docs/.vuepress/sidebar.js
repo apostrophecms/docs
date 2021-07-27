@@ -54,6 +54,7 @@ module.exports = {
       children: [
         'guide/conditional-fields.md',
         [ 'guide/async-components.md', 'Async components 🆕' ],
+        [ 'guide/headless-cms.md', 'Using as a headless CMS 🆕' ],
         [ 'guide/hosting.md', 'Hosting in production 🆕' ]
       ]
     },
