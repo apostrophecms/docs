@@ -68,6 +68,10 @@ module.exports = {
           {
             text: 'Reference',
             link: '/reference/'
+          },
+          {
+            text: 'Cookbook',
+            link: '/cookbook/'
           }
         ]
       },
