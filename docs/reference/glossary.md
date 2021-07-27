@@ -76,7 +76,7 @@ In Nunjucks templates, [a block is a section of a template that can be overridde
 
 A piece, page, or widget type's schema is the definition of its fields. Apostrophe's schemas are used both to create an editing interface and to sanitize and save data on the server side. Commonly used field types include strings, integers, floats, select elements and "relationship" fields, which allow editors to define connections to other docs.
 
-Schemas are built by using the `add`, `remove`, and `group` properites of the `fields` option when configuring any module that extends `@apostrophecms/piece-ype`, `@apostrophecms/page-type`, or `@apostrophecms/widget-type`.
+Schemas are built by using the `add`, `remove`, and `group` properites of the `fields` option when configuring any module that extends `@apostrophecms/piece-type`, `@apostrophecms/page-type`, or `@apostrophecms/widget-type`.
 
 Here is a simple example in which we add a required "author" string field to the schema for "story," a custom piece type:
 
