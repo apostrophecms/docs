@@ -31,7 +31,7 @@ There is [an official CLI](https://www.npmjs.com/package/@apostrophecms/cli) for
 Install the CLI tool:
 
 ```bash
-npm install @apostrophecms/cli
+npm install -g @apostrophecms/cli
 # Or `yarn install`, if you prefer. We'll stick to npm commands.
 ```
 
