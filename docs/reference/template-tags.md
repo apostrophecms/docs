@@ -76,7 +76,7 @@ The `component` tag inserts an asynchronous component into the template. See the
 
 #### `module:componentName`
 
-The primary argument is a combination of the name of a module name and the name of an async component from that module, separated by a colon. All async components belong to a specific module, though multiple modules may have components with the same name.
+The primary argument is a combination of the name of a module and the name of an async component from that module, separated by a colon. All async components belong to a specific module, though multiple modules may have components with the same name.
 
 #### `data` (optional)
 
