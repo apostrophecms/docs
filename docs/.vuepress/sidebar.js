@@ -121,6 +121,7 @@ module.exports = {
         'reference/field-types/time',
         'reference/field-types/url'
       ]
-    }
+    },
+    [ 'reference/template-tags', 'Template tags 🆕' ]
   ]
 };
