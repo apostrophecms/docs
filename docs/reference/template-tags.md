@@ -41,7 +41,7 @@ The `area` tag inserts an area field into the template. The area field [must alr
 
 #### `context`
 
-The area's document context, either a page (`data.page`), piece (`data.piece`), or widget (`data.widget`). The area field must be defined in the field schema for that context. See the [template data](/guide/template-data.md) section for more on each `data` property.
+The area's document context, either a page (`data.page`), piece (`data.piece`), widget (`data.widget`), or array field object. The area field must be defined in the field schema for that context. See the [template data](/guide/template-data.md) section for more on each `data` property.
 
 #### `areaName`
 
@@ -54,7 +54,7 @@ The context options object is added after area tag arguments following the `with
 Context options are optional for all core and official Apostrophe widget types.
 
 ::: note
-Context options are not the best place for most widget configuration. That should be done in the [area field configuration](/reference/field-types/area.md#widgets). Context options are used to override that with options that only apply to the specific template context.
+Context options are not the best place for most widget configuration. That should be done in the [area field configuration](/reference/field-types/area.md#widgets). Context options are used to supplement that with options that only apply to the specific template context. Context options cannot change which widgets are permitted in an area.
 :::
 
 ## `component`
@@ -121,7 +121,7 @@ This tag must be closed with an `endfragment` tag.
 
 #### `name(parameters)`
 
-The fragment name used to reference it in `render` and `rendercall` tags. It should be written as a function with parentheses. The parentheses may include argument names if needed, which would be referenced in variable brackets.
+The fragment name used to reference it in `render` and `rendercall` tags. It should be written like a function with parentheses. The parentheses may include parameter names if needed. Parameters should be separated by commas and may optionally include a default value assignment.
 
 ## `render`
 
