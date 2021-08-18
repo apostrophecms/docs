@@ -41,6 +41,21 @@ projectSlug: {
 |patternErrorMessage | String | | Error message to display if `pattern` does not match | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
+::: tip
+If you are overriding a piece type or page type's `slug` field and that doc type uses a [slug prefix](/reference/module-api/module-options.md#slugprefix), the `slug` field should include `'archived'` in the `following` option. It is used by the slug field type to manage prefixes, though its value is not included in the slug name.
+
+```
+slug: {
+  type: 'slug',
+  label: 'Slug',
+  following: [ 'title', 'archived' ],
+  required: true
+}
+```
+
+Overriding the `slug` field is typically only necessary if you want to change the `following` string fields.
+:::
+
 ## Use in templates
 
 If adding a new field with the `slug` type, it is most likely not going to be used in templates, but it is allowed as a string value.
