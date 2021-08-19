@@ -55,7 +55,16 @@ module.exports = {
         'guide/conditional-fields.md',
         [ 'guide/async-components.md', 'Async components 🆕' ],
         [ 'guide/headless-cms.md', 'Using as a headless CMS 🆕' ],
-        [ 'guide/hosting.md', 'Hosting in production 🆕' ]
+        [ 'guide/hosting.md', 'Hosting in production 🆕' ],
+        {
+          title: 'Internationalization',
+          path: '/guide/internationalization',
+          // collapsable: false,
+          children: [
+            [ 'guide/internationalization/dynamic.md', 'Dynamic i18n 🆕' ],
+            [ 'guide/internationalization/static.md', 'Static i18n 🆕' ]
+          ]
+        }
       ]
     },
     [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ],
@@ -122,6 +131,12 @@ module.exports = {
         'reference/field-types/url'
       ]
     },
-    [ 'reference/template-tags', 'Template tags 🆕' ]
+    [ 'reference/template-tags', 'Template tags 🆕' ],
+    {
+      title: 'Core Modules',
+      children: [
+        '/reference/modules/i18n.md'
+      ]
+    }
   ]
 };
