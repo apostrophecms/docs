@@ -57,12 +57,12 @@ module.exports = {
         [ 'guide/headless-cms.md', 'Using as a headless CMS 🆕' ],
         [ 'guide/hosting.md', 'Hosting in production 🆕' ],
         {
-          title: 'Internationalization',
-          path: '/guide/internationalization',
+          title: 'Localization 🆕',
+          path: '/guide/localization',
           // collapsable: false,
           children: [
-            [ 'guide/internationalization/dynamic.md', 'Dynamic i18n 🆕' ],
-            [ 'guide/internationalization/static.md', 'Static i18n 🆕' ]
+            [ 'guide/localization/dynamic.md', 'Dynamic l10n' ],
+            [ 'guide/localization/static.md', 'Static l10n' ]
           ]
         }
       ]
