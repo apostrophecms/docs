@@ -78,6 +78,7 @@ Option settings in this section apply to every module in Apostrophe.
 |---------|---------|---------|
 | [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
 | [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
+| [`i18n`](#i18n) | Boolean/Object | Indicate that the module will include localization strings for the i18n module (with optional configuration). |
 | [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
 ### `alias`
@@ -122,6 +123,34 @@ module.exports = {
     }
   },
   // ...
+}
+```
+
+### `i18n`
+
+If set to a truthy value, Apostrophe will look for an `i18n` directory *in that module* with one or more JSON files with localization string definitions (e.g., `modules/project-languages/es.json`). The JSON file names should match configured locale names. [See the static i18n guide](TODO) for more information.
+
+If set to an object, there may be `ns` and `browser` properties.
+
+| `i18n` setting | Value type | Description |
+|---------|---------|---------|
+| `ns` | String | A namespace for localization string keys in this module. If undefined, Apostrophe will use the `'default'` namespace. That namespace is intended for project-level localization. |
+| `browser` | Boolean | Set to `true` to make the JSON key/string pairs available on the browser window (e.g., `apos.i18n.i18n.en.default`) *when logged in*. Mostly useful if localizing Apostrophe user interface customizations. |
+
+[See the static i18n guide](TODO) for more information on both settings.
+
+#### Example
+
+```javascript
+// modules/project-languages/index.js
+module.exports = {
+  extend: '@apostrophecms/module',
+  options: {
+    i18n: {
+      namespace: 'projectName',
+      browser: true
+    }
+  }
 }
 ```
 
