@@ -59,10 +59,9 @@ module.exports = {
         {
           title: 'Localization 🆕',
           path: '/guide/localization',
-          // collapsable: false,
           children: [
-            [ 'guide/localization/dynamic.md', 'Dynamic l10n' ],
-            [ 'guide/localization/static.md', 'Static l10n' ]
+            [ 'guide/localization/static.md', 'Static l10n' ],
+            [ 'guide/localization/dynamic.md', 'Dynamic l10n' ]
           ]
         }
       ]

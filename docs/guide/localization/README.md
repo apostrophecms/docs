@@ -119,7 +119,7 @@ So how does Apostrophe choose the best locale to use? In many cases it is clear.
 4. The locale is higher in the configuration object.
 5. The locale is the default locale (when no other locale matches).
 
-### The default locale
+## The default locale
 
 The default locale is the locale used when no others matche the URL better. It is typically the locale used by your website's primary audience. **If no locales are configured, Apostrophe will use `'en'` as the default locale name.**
 
