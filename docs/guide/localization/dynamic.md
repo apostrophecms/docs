@@ -1,1 +1,1 @@
-# Dynamic content internationalization
+# Dynamic content localization
