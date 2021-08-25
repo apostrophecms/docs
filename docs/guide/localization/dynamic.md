@@ -19,7 +19,7 @@ Before going into specifics of user interface, it is worth establishing some of 
 
 Localizing means that **we make a clone of the content for a new locale, then make changes specific to the new locale.** As mentioned earlier, this will often involve translation, switching out photos, adding information, and other content changes. Once the page or piece has a new locale version, website visitors using the new locale will be able to see that thing.
 
-**Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Chinese, for example. If the page or piece should be available in more locales, then we localize it.
+**Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Chinese, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
 
 Let's take a look at this process using a new page in the Apostrophe demo as an example. In this example we will have three locales configured:
 
@@ -61,7 +61,7 @@ We haven't switched locales, so the "English" option is selected. There is also 
 
 ![The Apostrophe locale chooser with "English" selected"](/images/l10n/locale-chooser-ui.png)
 
-If we switched over to French or Spanish now, we would be redirected back to the home page since our new page doesn't exist in those locales.
+If we switched over to French or Spanish now, we would be prompted to either localize it immediately or redirect to the home page.
 
 In Edit mode the context bar menu includes a "Localize" option to start cloning this page into other locales.
 
@@ -97,7 +97,7 @@ The Apostrophe user interface has a locale chooser for editors, but visitors to 
 
 ### `data.localizations`
 
-This property provides much more information. It will be an array of objects that include information about the current page (or show page) context in all the active locales. It will include special properties that can help build a locale switcher for visitors:
+This property provides much more information. It will be an array of objects that include information about the current page context (or piece, when on a show page) in all the active locales. It will include special properties that can help build a locale switcher for visitors:
 
 | Locale property | Description |
 | ------- | ------- |
