@@ -2,7 +2,7 @@
 
 This section covers localization of strings throughout template files and Apostrophe user interface. These strings are hard-coded, not editable by logged-in users, and thus are not stored in the database. Instead, this localization is stored in JSON files associated with the various locales.
 
-## Registering strings to localize
+## Localizing strings
 
 There are often good reasons to hard-code text in templates even if we operate in multiple languages. For example, if our website has a blog with related articles featured at the bottom of each post using a relationship field. The heading "Related articles" belongs in the show page template. We don't want to make content editors translate that each time and we want to avoid creating any custom global fields for a text string that is not likely to change.
 
@@ -12,7 +12,7 @@ That section of our show page template might look like this:
   ```django
     {# More article template stuff above ⤴ #}
     <section>
-      <h2>Related articles</h2> {# 👈 We need to register this. #}
+      <h2>Related articles</h2> {# 👈 We need to localize this. #}
       <ul>
         {% for post in data.piece._related %}
           <li><a href="{{ post._url }}">{{ post.title }}</a></li>
@@ -25,13 +25,13 @@ That section of our show page template might look like this:
   </template>
 </AposCodeBlock>
 
-Registering that string is as easy as wrapping it in a template method: `__t()`. Make sure the string passed to the method is in quotes and any matching quotes in the string are escaped (e.g., `__t('Gritty\'s friends')`).
+Localizing that string is as easy as wrapping it in a template helper: `__t()`. Make sure the string passed to the helper is in quotes and any matching quotes in the string are escaped (e.g., `__t('Gritty\'s friends')`).
 
 <AposCodeBlock>
   ```django
     {# More article template stuff above ⤴ #}
     <section>
-      <h2>__t('Related articles')</h2> {# 🎉 It's registered! #}
+      <h2>{{ __t('Related articles') }}</h2> {# 🎉 It's localized! #}
       <ul>
         {% for post in data.piece._related %}
           <li><a href="{{ post._url }}">{{ post.title }}</a></li>
@@ -44,12 +44,12 @@ Registering that string is as easy as wrapping it in a template method: `__t()`.
   </template>
 </AposCodeBlock>
 
-In that example, we passed the actual text to the localization method. This has the benefit that it will be automatically used for the default locale and any other locales that don't translate it.
+In that example, we passed the actual text to the localization helper. This has the benefit that it will be automatically used for the default locale and any other locales that don't translate it.
 
 Our other option is to use a **localization key that is different from the original text**. Taking our example, that heading tag might instead look like:
 
 ```django
-<h2>__t('relatedArticles')</h2>
+<h2>{{ __t('relatedArticles') }}</h2>
 ```
 
 This method is better if your team prefers to maintain all hard-coded strings in the same way across locales (treating the default locale the same as others). Using the original text as the key, as in our previous example, might be better so that translators can see the original text alongside their translations in the JSON files. It mostly depends how you prefer to work. The important thing is to be consistent.
@@ -71,7 +71,7 @@ To register strings in **custom API routes**, use the `req.t()` method on the re
           async newest(req) {
             const product = await self.find(req).sort({ createdAt: -1 }).toObject();
             if (!product) {
-              // 👇 The 404 error is registered with req.t()
+              // 👇 Sends a localized version of the error with req.t()
               throw self.apos.error('notfound', req.t('No products were found.'));
             }
 
@@ -91,7 +91,7 @@ To register strings in **custom API routes**, use the `req.t()` method on the re
 There is currently no browser method available to register strings in project client-side JS. A good alternative is to create an API route that returns localized strings then use the response from that route in client-side JS.
 :::
 
-If you are customizing Apostrophe **user interface components**, the `$t()` method is available in the component (used as `this.$t()`) outside the template block.
+If you are customizing Apostrophe **user interface components**, the `$t()` method is available in the component (used as `this.$t()` outside the template block).
 
 <!-- TODO: Link to UI customization guide when available. -->
 
@@ -103,7 +103,7 @@ As a reminder, the Vue.js components of the user interface are not connected to 
 
 Now that there are strings to localize, we need to add JSON files for locales with the strings and their translations. For the purposes of our example we will assume we have two locales: `'en'` (English) and `'es'` (Spanish).
 
-Each locale should get its own JSON file using the locale name, in a `i18n` directory of a module that has internationalization active. Configure that module with the [`i18n` option](/reference/module-api/module-options.md#i18n), such as:
+Each locale should get its own JSON file using the locale name, in a `i18n` subdirectory of a module that has internationalization active. Configure that module with the [`i18n` option](/reference/module-api/module-options.md#i18n), such as:
 
 <AposCodeBlock>
   ```javascript
@@ -157,6 +157,10 @@ If the only localization key we registered in our project was `relatedArticles` 
 
 When rendering the show page template, Apostrophe will look in these files, find the registered key and replace it with the correct string based on the active locale.
 
+::: warning
+The primary module to avoid using to store l10n strings is `@apostrophecms/i18n`, the actual internationalization module. This is used by Apostrophe core for the user interface and it uses a namespace to keep its l10n keys separate from project-level localization.
+:::
+
 ## Using namespaces
 
 A l10n **namespace** is a prefix on localization keys that makes it harder to accidentally override. In project-level l10n namespacing is not really necessary since there are not additional layers of work that might override translation there.
@@ -194,6 +198,6 @@ Apostrophe will then treat keys with the namespace differently from the same key
 
 The Apostrophe user interface contains many registered strings, currently localized to English. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that.
 
-Add JSON files for the locales as normal in the project-level `modules/@apostrophecms/i18n` module directory. It's important to use this directory since it already has the `'apostrophe'` namespace configured. The UI keys all use this namespace. In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
+Add JSON files for the locales as normal in the project-level `modules/@apostrophecms/i18n` module directory. You can also use any other module configured to use the `'apostrophe'` namespace (keeping project strings separate). The UI keys all use this namespace. In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
 
 Of course, this would be a lot of work and would likely involve tracking down where strings are used. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
