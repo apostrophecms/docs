@@ -33,7 +33,7 @@ module.exports = {
           children: [
             'guide/templating.md',
             'guide/layout-template.md',
-            [ 'guide/template-data.md', 'Template data 🆕' ],
+            'guide/template-data.md',
             'guide/fragments.md'
           ]
         },
@@ -41,11 +41,11 @@ module.exports = {
         {
           title: 'Front end code',
           children: [
-            [ 'guide/front-end-assets.md', 'Front end CSS and JS 🆕' ],
-            [ 'guide/front-end-helpers.md', 'Front end helper methods 🆕' ]
+            [ 'guide/front-end-assets.md', 'Front end CSS and JS' ],
+            'guide/front-end-helpers.md'
           ]
         },
-        [ 'guide/media.md', 'Working with images and media 🆕' ]
+        [ 'guide/media.md', 'Working with images and media' ]
       ]
     },
     {
@@ -53,9 +53,9 @@ module.exports = {
       collapsable: false,
       children: [
         'guide/conditional-fields.md',
-        [ 'guide/async-components.md', 'Async components 🆕' ],
-        [ 'guide/headless-cms.md', 'Using as a headless CMS 🆕' ],
-        [ 'guide/hosting.md', 'Hosting in production 🆕' ],
+        'guide/async-components.md',
+        [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
+        [ 'guide/hosting.md', 'Hosting in production' ],
         {
           title: 'Localization 🆕',
           path: '/guide/localization',
@@ -66,8 +66,8 @@ module.exports = {
         }
       ]
     },
-    [ 'guide/upgrading.md', 'Coming from 2.x 🆕' ],
-    [ 'guide/contribution.md', 'Contribution guide 🆕' ]
+    [ 'guide/upgrading.md', 'Coming from 2.x' ],
+    'guide/contribution.md'
   ],
   '/cookbook': [
     {
@@ -130,7 +130,7 @@ module.exports = {
         'reference/field-types/url'
       ]
     },
-    [ 'reference/template-tags', 'Template tags 🆕' ],
+    'reference/template-tags',
     {
       title: 'Core Modules',
       children: [
