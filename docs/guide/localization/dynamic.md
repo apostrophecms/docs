@@ -19,7 +19,7 @@ Before going into specifics of user interface, it is worth establishing some of 
 
 Localizing means that **we make a clone of the content for a new locale, then make changes specific to the new locale.** As mentioned earlier, this will often involve translation, switching out photos, adding information, and other content changes. Once the page or piece has a new locale version, website visitors using the new locale will be able to see that thing.
 
-**Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Chinese, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
+**Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Mandarin, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
 
 Let's take a look at this process using a new page in the Apostrophe demo as an example. In this example we will have three locales configured:
 
