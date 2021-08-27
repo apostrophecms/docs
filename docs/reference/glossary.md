@@ -142,7 +142,7 @@ Apostrophe generally subscribes to [the W3C definitions](https://www.w3.org/Inte
 
 ### Locale
 
-A locale is one of the types of people for whom the application UI or website may be customized. Locales may be languages (e.g., English, Spanish), countries (e.g., Canada, France), combinations of the two (e.g., Canadian French, Canadian English), or really any significant group of website visitors.
+A locale is a content classification used to associate certain content and l10n settings with a group of people. Locales may be languages (e.g., English, Spanish), countries (e.g., Canada, France), combinations of the two (e.g., Canadian French, Canadian English), or really any significant group of website visitors.
 
 ### Internationalization
 

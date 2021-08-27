@@ -1,6 +1,10 @@
-# Static content localization
+# Static string localization
 
 This section covers localization of strings throughout template files and Apostrophe user interface. These strings are hard-coded, not editable by logged-in users, and thus are not stored in the database. Instead, this localization is stored in JSON files associated with the various locales.
+
+::: note
+Localizing static strings is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](README.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
+:::
 
 ## Localizing strings
 
