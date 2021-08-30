@@ -22,6 +22,7 @@ The table below lists the data properties available from Apostrophe core as well
 | `global` | The data object for the global doc. | <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
 | `home` | The data object for the home page. | <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
 | `locale` | The active locale.| <AposTag text="All pages"/> <AposTag text="Widgets" :tagStyle="1"/> |
+| `localizations` | An array of active locales including information about the active page in each.| <AposTag text="All pages"/> |
 | `manager` | In widget templates, the widget module manager object. | <AposTag text="Widgets" :tagStyle="1"/> |
 | `next` | If [`next: true` is set on the piece page type](/reference/module-api/module-options.md#next), the data object for the next piece in sort order. | <AposTag text="Show pages" :tagStyle="0"/> |
 | `options` | | <AposTag text="Widgets" :tagStyle="1"/> |
