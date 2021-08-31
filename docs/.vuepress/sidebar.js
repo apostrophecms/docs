@@ -71,11 +71,16 @@ module.exports = {
   ],
   '/cookbook': [
     {
+      title: 'Project features',
+      collapsable: false,
+      children: [
+        [ 'cookbook/building-navigation.md', 'Building site navigation 🆕' ]
+      ]
+    },
+    {
       title: 'Hosting',
       collapsable: false,
-      sidebarDepth: 2,
       children: [
-        [ 'cookbook/building-navigation.md', 'Building site navigation 🆕' ],
         [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup 🆕' ]
       ]
     }

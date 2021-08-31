@@ -5,6 +5,10 @@ Almost every website needs some kind of primary navigation. It's usually a row o
 1. **Use the page tree** to automatically generate navigation for pages
 2. **Manually build the site nav** using an array field
 
+::: note
+This code recipe discusses specifically how to build site-wide navigation. Keep in mind that the same concepts can be applied to build other kinds of navigation, including nav for certain sections of at website or contextual nav for a page's children.
+:::
+
 ## Generating site navigation from the page tree
 
 One of the defining features of pages in Apostrophe is that they exist in a hierarchy. Even if we added all pages on a website as siblings (the same hierarchy level) they would still all be children of the home page. This structure is expressed through the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).
@@ -19,23 +23,18 @@ As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tre
 
 <AposCodeBlock>
   ```django
-  {% block beforeMain %}
-  <div>
-    <header>
-      {# 👇 Adding our navigation wrapper. #}
-      <nav>
-        <ul>
-          {# 👇 Referencing `data.home._children` and looping over them. #}
-          {% for page in data.home._children %}
-            <li>
-              <a href="{{ page._url }}">{{ page.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </nav>
-    </header>
-    <main>
-  {% endblock %}
+  <header>
+    <nav>
+      <ul>
+        {# 👇 Referencing `data.home._children` and looping over them. #}
+        {% for page in data.home._children %}
+          <li>
+            <a href="{{ page._url }}">{{ page.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </header>
   ```
   <template v-slot:caption>
     views/layout.html
@@ -153,3 +152,141 @@ We would then display the image [using an `area` tag](/guide/media.html#the-imag
 As you can see, page templates come ready with page tree data that is ready to become site navigation. With additional configuration we can customize the data that templates give us. The examples above are only a few such ways to configure it.
 
 ## Add fields for manual nav building
+
+The other common approach to site navigation is to let editors build it manually. They would be able to choose the specific page links and the order in which the links should appear. Since the site nav is the same across every page (in most cases), we store the navigation data in [global settings](/guide/global.md).
+
+Before we look at a code example, let's think about how we would want to define fields for site navigation.
+
+- Website navigation is an order list of links, some of which might contain their own list of links (second-level navigation). This translates well to an array structure, so **we use an [`array` field type](/reference/field-types/array.md)**.
+- Navigation items might usually be pages on the website, but they also might be external links, links to files, or even might not be links at all in order to prioritize a second-level navigation. We won't get into all of those cases, but this means that we want to **let editors choose the navigation item type**.
+- Finally, each type of navigation item works differently. We will **use conditional logic to only show the correct fields** based on the chosen nav item type.
+
+With those ideas in mind, we can look at an example of project-level global module configuration that adds a navigation array field. To keep this relatively simple this will only include two navigation item types.
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    fields: {
+      add: {
+        // Adding our array field, `primaryNav`
+        primaryNav: {
+          label: 'Primary site navigation',
+          type: 'array',
+          titleField: 'label',
+          // The array schema for each item
+          fields: {
+            add: {
+              label: {
+                label: 'Nav item label',
+                type: 'string'
+              },
+              type: {
+                label: 'Link type',
+                type: 'select',
+                choices: [
+                  {
+                    label: 'Page',
+                    value: 'page'
+                  },
+                  {
+                    label: 'Custom URL',
+                    value: 'custom'
+                  }
+                ]
+              },
+              _page: {
+                label: 'Page to link',
+                type: 'relationship',
+                withType: '@apostrophecms/page',
+                max: 1,
+                required: true,
+                builders: {
+                  project: {
+                    title: 1,
+                    _url: 1
+                  }
+                },
+                // Only if it's a page link
+                if: {
+                  linkType: 'page'
+                }
+              },
+              customUrl: {
+                label: 'URL for custom link',
+                type: 'url',
+                required: true,
+                // Only if it's a custom link
+                if: {
+                  linkType: 'custom'
+                }
+              },
+              // A nice option to have the link open in a new tab
+              target: {
+                label: 'Will the link open a new browser tab?',
+                type: 'checkboxes',
+                choices: [
+                  {
+                    label: 'Open in new tab',
+                    value: '_blank'
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/global/index.js
+  </template>
+</AposCodeBlock>
+
+The field schema above adds an array field whose schema has five additional fields (remember: array fields have their own field schema for each array item):
+
+1. The nav item label, which is also the array field's `titleField` for the user interface
+2. The link type (linking to an internal page or external URL)
+3. A relationship field to an internal page, if the page link option is chosen
+4. A URL field, if the custom URL option is chosen
+5. An option to mark the link to open in a new tab (a nice option for editors to have)
+
+![The global settings editor with nav array field](/images/recipes/nav-array-field.png)
+
+![The nav items array editor showing custom URL fields](/images/recipes/nav-array-schema.png)
+
+The final step is to turn the array data from this into template markup. We will loop over the array of links and render the links based on what type they are. Page links are relationship data, so they are constructed differently from custom URL links, which are simply string values.
+
+
+<AposCodeBlock>
+  ```django
+  <header>
+    <nav>
+      <ul>
+        {# 👇 Referencing the global doc `primaryNav` property #}
+        {% for item in data.global.primaryNav %}
+          <li>
+            {% set path = '' %}
+            {% if item.type === 'page' and item._page and item._page[0] %}
+              {% path = item._page[0]._url %}
+            {% elif item.type === 'custom' %}
+              {% path = item.url %}
+            {% endif %}
+            <a href="{{ path }}"
+              {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
+            >{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </header>
+  ```
+  <template v-slot:caption>
+    views/layout.html
+  </template>
+</AposCodeBlock>
+
+In addition to adding more link types to the schema, the template example can be changed depending on the project needs.
+
+
+
