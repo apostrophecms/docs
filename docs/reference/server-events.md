@@ -183,32 +183,115 @@ Triggered after a document is rescued (the opposite of archiving) when saving it
 - `doc`: The document being rescued
 
 ### `beforePublish`
+
+Triggered just *before* a draft document is published.
+
+#### Parameters
+
+- `req`: The active request
+- `data`: An object containing the following properties:
+  - `draft`: The draft document data
+  - `published`: The document data as it will be published
+  - `options`: Any options passed from the `publish` method
+  - `firstTime`: A boolean value, `true` if the document has never been published before
+
+Example: `handlerName(req, { draft, published, options, firstTime })`
+
 ### `afterPublish`
+
+Triggered just *after* a draft document is published.
+
+#### Parameters
+
+- `req`: The active request
+- `data`: An object containing the following properties:
+  - `draft`: The draft document data
+  - `published`: The document data as it will be published
+  - `options`: Any options passed from the `publish` method
+  - `firstTime`: A boolean value, `true` if the document has never been published before
+
+Example: `handlerName(req, { draft, published, options, firstTime })`
+
 ### `afterRevertDraftToPublished`
+
+Triggered after a draft document is reverted to the most recent published state. This is separate from the undo and redo features in the user interface.
+
+#### Parameters
+
+- `req`: The active request
+- `result`: An object containing the following property:
+  - `draft`: The *new* draft document
+
+
 ### `afterRevertPublishedToPrevious`
 
+Triggered after a published document is reverted to the most recent "previous" state (the previous published version). This is separate from the undo and redo features in the user interface.
+
+#### Parameters
+
+- `req`: The active request
+- `result`: An object containing the following property:
+  - `published`: The *new* published document
+
 ## `@apostrophecms/express`
-- afterListen
-- compileRoutes
+
+### `afterListen`
+
+Triggered after the Express module begins listening for connections.
+
+There is no data included with the event for handlers.
+
+### `compileRoutes`
+
+**Not intended for project use.** Triggered prior to middleware and route registration. Used to get all modules to compile their respective routes for registration.
+
+There is no data included with the event for handlers.
 
 ## `@apostrophecms/login`
-- deserialize
-- after
+
+### `deserialize`
+
+Triggered after a user logs in and their data is retrieved.
+
+#### Parameters
+
+- `user`: The user's data from the database
+
+Example: `handlerName(user)`
+
+<!-- ### `after`
+
+Triggered after a user successfully logs into Apostrophe. -->
 
 ## `@apostrophecms/migration`
-- after
+
+### `after`
+
+Triggered after all data migrations have run. The database is now in a stable state.
+
+There is no data included with the event for handlers.
 
 ## `@apostrophecms/page`
-- beforeUnpublish
-- afterParkAll
-- afterConvert
-- beforeMove
-- afterMove
-- beforeUpdate
-- beforeSave
-- serve
-- serveQuery
-- notFound
+
+### `beforeUnpublish`
+
+### `afterParkAll`
+
+### `afterConvert`
+
+### `beforeMove`
+
+### `afterMove`
+
+### `beforeUpdate`
+
+### `beforeSave`
+
+### `serve`
+
+### `serveQuery`
+
+### `notFound`
 
 ## `@apostrophecms/piece-type`
 - beforeUnpublish
