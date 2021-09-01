@@ -65,7 +65,7 @@ The *default* query builder options for the page module look like this:
   </template>
 </AposCodeBlock>
 
-For example, **to include two levels of pages in the nav** we would add to the `builders` option that ancestors (such as the home page) should include two levels of child pages (`depth: 2`).
+For example, **to include two levels of pages in template ancestor data** we would add to the `builders` option that ancestors (such as the home page) should include two levels of child pages (`depth: 2`).
 
 <AposCodeBlock>
   ```javascript
@@ -88,7 +88,11 @@ For example, **to include two levels of pages in the nav** we would add to the `
   </template>
 </AposCodeBlock>
 
-By default the page data object includes all properties from the database document. We can **limit that returned data** (for a minor speed improvement and clearer logging) by adding a projection to the query builder. *Make sure to include the `path` in this projection to avoid crashing.*
+::: note
+If using the `depth: 2` builder option, the each page in the `data.home._children` array will include their own `_children` array with any child pages, if they have any.
+:::
+
+By default the page data object includes all properties from the database document. We can **limit that returned data** (for a minor speed improvement and clearer logging). One good approach to this is to set `areas: false` and `relationships: false` to remove area and relationship field data, which can get large.
 
 <AposCodeBlock>
   ```javascript
@@ -99,12 +103,8 @@ By default the page data object includes all properties from the database docume
         ancestors: {
           children: {
             depth: 2,
-            project: {
-              title: 1,
-              path: 1,
-              _url: 1,
-              _children: 1
-            }
+            areas: false,
+            relationships: false
           }
         }
       }
@@ -116,7 +116,7 @@ By default the page data object includes all properties from the database docume
   </template>
 </AposCodeBlock>
 
-If pages had **thumbnail images we wanted to show in the navigation**, we can include that as well. If we had added an area field called `thumbnail` to the page schema, we could get that data by also *configuring the query builder to include that area data*. (The relationship field data from the image widget isn't stored directly on the page.)
+If pages had **thumbnail images we wanted to show in the navigation**, we can include that as well. If we had added an area field called `thumbnail` to the page schema, we could adjust our `areas` option to only include that one area field by name. (The relationship field data from the image widget isn't stored directly on the page.)
 
 <AposCodeBlock>
   ```javascript
@@ -127,15 +127,9 @@ If pages had **thumbnail images we wanted to show in the navigation**, we can in
         ancestors: {
           children: {
             depth: 2,
-            project: {
-              title: 1,
-              path: 1,
-              thumbnail: 1, // 👈 Also included in the projection
-              _url: 1,
-              _children: 1
-            },
             // 👇 Now including the area data
-            areas: [ 'thumbnail' ]
+            areas: [ 'thumbnail' ],
+            relationships: false
           }
         }
       }
@@ -157,7 +151,7 @@ The other common approach to site navigation is to let editors build it manually
 
 Before we look at a code example, let's think about how we would want to define fields for site navigation.
 
-- Website navigation is an order list of links, some of which might contain their own list of links (second-level navigation). This translates well to an array structure, so **we use an [`array` field type](/reference/field-types/array.md)**.
+- Website navigation is an ordered list of links, some of which might contain their own list of links (second-level navigation). This translates well to an array structure, so **we use an [`array` field](/reference/field-types/array.md)**.
 - Navigation items might usually be pages on the website, but they also might be external links, links to files, or even might not be links at all in order to prioritize a second-level navigation. We won't get into all of those cases, but this means that we want to **let editors choose the navigation item type**.
 - Finally, each type of navigation item works differently. We will **use conditional logic to only show the correct fields** based on the chosen nav item type.
 
