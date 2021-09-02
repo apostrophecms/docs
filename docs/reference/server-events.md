@@ -4,7 +4,7 @@ sidebarDepth: 2
 
 # Server-side events
 
-Each section below includes each server-side event emitted by a particular module *and modules that extend it* (e.g., all piece types emit the events listed for `@apostrophecms/piece-type`). See the [server-side events guide](/guide/server-events.md) for more detail on using these.
+Each section below includes server-side events emitted by a particular module *and [modules that extend them](/guide/modules.md#module-inheritance)* (e.g., all piece types emit the events listed for `@apostrophecms/piece-type`). See the [server-side events guide](/guide/server-events.md) for more detail on using events.
 
 Code block examples represent the [`handlers`](/reference/module-api/module-overview.md#handlers-self) section of a module.
 
@@ -209,9 +209,9 @@ There is no data included with the event for handlers.
 
 ## `@apostrophecms/doc-type`
 
-These events are emitted by all page type and piece type modules since they extend `@apostrophecms/doc-type`. In most cases it will be best to watch for the event from a piece type or page type module rather than the doc type module.
+These events are emitted by **all page type and piece type modules** since they extend `@apostrophecms/doc-type`. In most cases it will be best to watch for the event from a piece type or page type module rather than the doc type module.
 
-If specifically watching `@apostrophecms/doc-type:` events (e.g., `@apostrophecms/doc-type:beforeInsert`), **it will normally be important to check the `type` of the document in question** before proceeding with the handler's work.
+If specifically watching events on `@apostrophecms/doc-type`, as opposed to modules that extend it, **it will normally be important to check the `type` of the document in question** before proceeding with the handler's work.
 
 ### `beforeInsert`
 
@@ -733,21 +733,155 @@ Triggered after page data is run through the schema module's `convert` method, v
 
 ### `beforeMove`
 
+Triggered just *before* a page is moved from one position in the page tree to another.
+
+#### Parameters
+
+- `req`: The active request
+- `page`: The page being moved
+- `target`: The page used as a target for positioning in the page tree
+- `position`: The position to place the page in relation to the target
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'beforeMove': {
+        async handlerName(req, page, target, position) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
 ### `afterMove`
 
-### `beforeUpdate`
+Triggered just *after* a page is moved from one position in the page tree to another.
 
-### `beforeSave`
+#### Parameters
 
-### `serve`
+- `req`: The active request
+- `page`: The page being moved
+- `data`: An object containing the following properties:
+  - `originalSlug`: The page's slug prior to moving
+  - `originalPath`: The page's path prior to moving
+  - `changed`: An array of all pages that were changed by the move, including children of the moved page
+  - `target`: The page used as a target for positioning in the page tree
+  - `position`: The position to place the page in relation to the target
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'afterMove': {
+        async handlerName(req, page, data) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
 
 ### `serveQuery`
 
+Triggered just before the database query executes to find the best matching page for a request. This can be used to make final adjustments to the query.
+
+#### Parameters
+
+- `req`: The active request
+- `query`: The database query that will execute
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'serveQuery': {
+        async handlerName(req, query) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
+### `serve`
+
+Triggered just before a requested page is served.
+
+#### Parameters
+
+- `req`: The active request
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'serve': {
+        async handlerName(req) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
 ### `notFound`
+
+Triggered when Apostrophe fails to find a matching page for a request, just before the 404 response. This is a final chance to do extra work to find a matching page.
+
+#### Parameters
+
+- `req`: The active request
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'notFound': {
+        async handlerName(req) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
 
 ## `@apostrophecms/piece-type`
 
 ### `beforeUnpublish`
+
+Triggered just before a piece document is unpublished (converted to a draft document).
+
+#### Parameters
+
+- `req`: The active request
+- `published`: The published document that is about to be unpublished
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'beforeUnpublish': {
+        async handlerName(req, published) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/piece-type/index.js
+  </template>
+</AposCodeBlock>
 
 ### `afterConvert`
 
@@ -775,8 +909,74 @@ Triggered after piece data is run through the schema module's `convert` method, 
 </AposCodeBlock>
 
 ## `@apostrophecms/search`
-- determineTypes
-- beforeIndex
+
+### `determineTypes`
+
+Triggered after the search module identifies the document types to include in search results. This is a chance to change the included types.
+
+#### Parameters
+
+- `types`: An array of document type names
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'determineTypes': {
+        async handlerName(types) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/search/index.js
+  </template>
+</AposCodeBlock>
+
+### `beforeIndex`
+
+Triggered just before the search index page is served, after the page's results are stored on `req.data.docs`.
+
+#### Parameters
+
+- `req`: The active request
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'determineTypes': {
+        async handlerName(req) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/search/index.js
+  </template>
+</AposCodeBlock>
 
 ## `@apostrophecms/template`
-- addBodyData
+
+### `addBodyData`
+
+**Not intended for project use.**  Triggered just before a body data object is added to a request prior to rendering a page.
+
+#### Parameters
+
+- `bodyData`: The body data object as it has been constructed
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'addBodyData': {
+        async handlerName(bodyData) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/template/index.js
+  </template>
+</AposCodeBlock>
