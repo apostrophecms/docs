@@ -1,6 +1,6 @@
 # Server-side events
 
-Each section below includes each server-side event emitted by a particular module and modules that extend it.
+Each section below includes each server-side event emitted by a particular module and modules that extend it. Code block examples represent the [`handlers`](/reference/module-api/module-overview.md#handlers-self) section of a module.
 
 ## Core app events
 
@@ -33,6 +33,17 @@ There is no data included with the event for handlers.
 - `isTask`: A boolean value indicating whether the process was started from an [Apostrophe task](/reference/module-api/module-overview.md#tasks-self).
 
 Example: `handlerName(isTask)`
+
+```javascript
+
+handlers(self, options) {
+  return {
+    'apostrophe:run': {
+      async handlerName(isTask) { ... }
+    }
+  };
+}
+```
 
 ## `@apostrophecms/db`
 
@@ -275,9 +286,31 @@ There is no data included with the event for handlers.
 
 ### `beforeUnpublish`
 
+Triggered just before a page document is unpublished (converted to a draft document).
+
+#### Parameters
+
+- `req`: The active request
+- `published`: The published document that is about to be unpublished
+
+Example: `handlerName(req, published)`
+
 ### `afterParkAll`
 
+Triggered after [parked pages](/reference/module-api/module-options.md#park) have been saved or updated in the database (as appropriate) during app startup.
+
+There is no data included with the event for handlers.
+
 ### `afterConvert`
+
+Triggered after page data is run through the schema module's `convert` method, validating its data to the page type's field schema.
+
+#### Parameters
+
+- `req`: The active request
+- `data`: The data being saved to the page, prior to schema conversion
+- `page`: The page as it will be saved, following schema conversion
+
 
 ### `beforeMove`
 
@@ -294,8 +327,18 @@ There is no data included with the event for handlers.
 ### `notFound`
 
 ## `@apostrophecms/piece-type`
-- beforeUnpublish
-- afterConvert
+
+### `beforeUnpublish`
+
+### `afterConvert`
+
+Triggered after piece data is run through the schema module's `convert` method, validating its data to the piece type's field schema.
+
+#### Parameters
+
+- `req`: The active request
+- `data`: The data being saved to the page, prior to schema conversion
+- `piece`: The page as it will be saved, following schema conversion
 
 ## `@apostrophecms/search`
 - determineTypes
