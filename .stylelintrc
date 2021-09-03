@@ -8,6 +8,7 @@
   ],
   "rules": {
     "at-rule-disallowed-list": ["each", "function"],
+    "scale-unlimited/declaration-strict-value": "never",
     "stylus/semicolon": "always",
     "stylus/pythonic": "never",
     "stylus/declaration-colon": "always",
