@@ -282,5 +282,37 @@ The final step is to turn the array data from this into template markup. We will
 
 In addition to adding more link types to the schema, the template example can be changed depending on the project needs.
 
+## Constructing breadcrumb navigation
 
+Breadcrumb navigation shows visitors the series of pages from the page they are on back to the home page. It could end with some other major landing page, but our example will lead back to the home page. To add bread crumbs to a page we use very similar techniques to those shown above for a website's primary navigation. Instead of using `data.home`, we use `data.page._ancestors`.
 
+**What is breadcrumb navigation, really?** If we think through the pieces of breadcrumb nav, we are looking at: *A series of links, usually starting with the home page, proceeding through the page tree, down to the page we are on.*
+
+`data.page._ancestors` perfectly matches this goal. It is an array of page objects, starting with the home page, continuing through the page tree and ending with the parent of the rendered page. Perfect! To turn that into a breadcrumb navigation, we simply need to **loop through `data.page._ancestors`, add a link for each ancestor**.
+
+The only tricky part comes at the end. If a visitor is on a piece's [show page](/guide/piece-pages.md#the-show-page-template), then `data.page` will actually be the index page. If `data.piece` exists (indicating we're rendering a show page), we will link to the index page (`data.page`) in the breadcrumbs, otherwise we'll simply print the current page's title.
+
+<AposCodeBlock>
+  ```django
+  {# Breadcrumb trail to the current page or piece. Not on the home page #}
+  {% if data.page and data.page._ancestors.length %}
+    <nav class="breadcrumb">
+      {# Loop over the ancestors. #}
+      {% for page in data.page._ancestors %}
+        <a href="{{ page._url }}">{{ page.title }}</a> ➡
+      {% endfor %}
+      {% if data.piece %}
+        {# We're rendering a show page. #}
+        <a href="{{ data.page._url }}">{{ data.page.title }}</a>  ➡
+        <span>{{ data.piece.title }}</span>
+      {% else %}
+        {# We're rendering a normal page. #}
+        <span>{{ data.page.title }}</span>
+      {% endif %}
+    </nav>
+  {% endif %}
+  ```
+  <template v-slot:caption>
+    views/layout.html
+  </template>
+</AposCodeBlock>
