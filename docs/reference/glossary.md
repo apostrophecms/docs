@@ -132,6 +132,11 @@ The editing interface for this join allows the user to pick offices to associate
 
 The database documents that exist as mode and locale versions of one another. For example, in a project with an English and a French locale, the home page would be managed in the database by six documents: 1) the draft English, 2) published English, 3) previous English, 4) draft French, 5) published French, and 6) previously published French. These six database documents make up the document set. -->
 
+
+### Shortname
+
+An Apostrophe website's shortname is used as the primary identifier for the application. It is used as the Express session name and by default is the database name and CSRF cookie name. It is a top-level property of the application object we [configure in a project's `app.js` file](/guide/setting-up.md#creating-a-project) as `shortName`.
+
 ## Localization terms
 
 Apostrophe generally subscribes to [the W3C definitions](https://www.w3.org/International/questions/qa-i18n.en) of the following terms. These definitions borrow from their descriptions with a focus on use with Apostrophe.
