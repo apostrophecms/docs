@@ -134,6 +134,7 @@ module.exports = {
     {
       title: 'Core Modules',
       children: [
+        '/reference/modules/db.md',
         '/reference/modules/i18n.md'
       ]
     }
