@@ -550,7 +550,7 @@ Using in a template:
 
 ```django
 {# modules/product-page/views/show.html #}
-{{ apos.product.discountPrice(data.piece) }}
+{{ apos.product.formatPrice(data.piece) }}
 ```
 
 #### `extendHelpers(self)`
