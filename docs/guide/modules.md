@@ -40,6 +40,13 @@ require('apostrophe')({
 
 The module API supports many different configuration options. See the [module API reference](/reference/module-api/module-overview.md) for more detail.
 
+::: note
+Modules names may not include periods (`.`).
+
+- Bad: `blog.post`
+- Good: `blog-post`
+:::
+
 ## Module inheritance
 
 Inheritance is the glue of the module system. Every module extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
