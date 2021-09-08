@@ -1,6 +1,6 @@
 # Building site navigation
 
-Almost every website needs some kind of primary navigation. It's usually a row of links at the top of each page that is hidden behind some kind of "hamburger menu" button on smaller devices. For Apostrophe sites there are two main approaches to adding and maintaining site navigation:
+Almost every website needs some kind of primary navigation. For Apostrophe sites there are two main approaches to adding and maintaining site navigation:
 
 1. **Use the page tree** to automatically generate navigation for pages
 2. **Manually build the site nav** using an array field
