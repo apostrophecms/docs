@@ -21,7 +21,7 @@ No matter [what module the JS file is in](/guide/front-end-assets.md#placing-cli
 // modules/assets/ui/src/index.js
 export default () = {
   if (document.querySelector('[data-party-toggle]')) {
-    apos.util.onReadyAndRefresh(() => {
+    apos.util.onReady(() => {
       const partyToggle = document.querySelector('[data-party-toggle]');
 
       partyToggle.addEventListener('click', engagePartyMode);
