@@ -45,6 +45,7 @@ _toppings: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`builders` | Object | n/a | Query builders to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
+|`fields` | Object | n/a | A field schema object, allowing editors to [add additional information to relationships](/guide/relationships#providing-context-with-fields). |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
@@ -63,8 +64,6 @@ If `withType` is not set the name of the field must match the name of the relate
 :::
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
-<!-- |`schema` | A schema object | n/a | In the presence of relationship, the content of a join is loaded differently. If the join is called `_departments` then `_departments[0]` will be an object with item and relationship properties, in which `item` is the department and `relationship` contains the relationship properties, rather than a flat array of departments. subproperties: `name`, `value`, `type`, `inline` | -->
-<!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## Filtering related document properties

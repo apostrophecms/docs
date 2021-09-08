@@ -218,3 +218,46 @@ With this field in place, you could display connected articles in a topics show 
   {% endfor %}
 </ul>
 ```
+
+
+## Providing context with `fields`
+
+In some cases it is useful to add additional information to individual relationships. This would be information that is only relevant to the relationship and not to each individual part.
+
+For example, we might be working on a website that displays teams within a company and the people on each team. We would use a relationship field on each `team` piece to connect to multiple `person` pieces. With that we should list all the team members on each `team` show page.
+
+If people have *unique job titles within different teams* we could store the job title directly on the relationship itself. Someone might be a "Support engineer" on the Support Team and a "QA engineer" within the Product Team. To do this, we add a standard field schema to the relationship field.
+
+```js
+// modules/team/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  fields: {
+    add: {
+      // ...
+      _people: {
+        type: 'relationship',
+        label: 'Team members',
+        withType: 'person',
+        // 👇 Our relationship fields
+        fields: {
+          add: {
+            teamTitle: {
+              type: 'string',
+              label: 'Team role'
+            }
+          }
+        }
+      }
+    },
+    // ...
+};
+```
+
+In the example above, we add a `fields` property to the relationship field, just like the `fields` property on the module itself. Just like the primary schema, we use an `add` subproperty with field configurations inside it. In this case there is no need for a `group` subproperty.
+
+Once this is added, editors can select an "Edit Relationship" option on the selected relationships.
+
+![The relationship field now with a menu button and "edit relationship" option](/images/relationship-fields.png)
+
+![The editor interface for the relationship's "team role" field](/images/relationship-editor.png)
