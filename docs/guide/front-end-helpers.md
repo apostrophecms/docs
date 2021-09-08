@@ -14,7 +14,7 @@ These are all available in the browser on `apos.util`, e.g., `apos.util.addClass
 | [`closest`](#closest-el-selector) | Returns the closest ancestor element that matches the selector. |
 | [`emit`](#emit-el-name-data) | Emit a custom browser event on a DOM element. |
 | [`getCookie`](#getcookie-name) | Get the value of a browser cookie. |
-| [`onReadyAndRefresh`](#onreadyandrefresh-fn) | Runs the function passed in when Apostrophe refreshes page content during editing.
+| [`onReady`](#onready-fn) | Runs the function passed in when Apostrophe refreshes page content during editing.
 | [`removeClass`](#removeclass-el-classname) | Remove a class from a DOM element, if present. |
 | [`sameSite`](#samesite-uri) | Returns `true` if a URI argument matches the same website as the current page. |
 
@@ -132,9 +132,13 @@ Get the value of a browser cookie.
 apos.util.getCookie('cookiename');
 ```
 
-### `onReadyAndRefresh(fn)`
+### `onReady(fn)`
 
 Runs the function passed in when the page loads as well as when Apostrophe refreshes page content during editing. When logged out it will run the function on initial page load. This is not necessary in [widget players](/guide/custom-widgets.md#client-side-javascript-for-widgets).
+
+::: note
+This method was previously named `onReadyAndRefresh`. The name was changed, though the previous name will still work through the 3.x major version.
+:::
 
 | Argument | What is it? |
 | -------- | ----------- |
@@ -145,7 +149,7 @@ const loadNewsletterForm = function () {
   // Code that loads a sign-up form...
 }
 
-apos.util.onReadyAndRefresh(loadNewsletterForm);
+apos.util.onReady(loadNewsletterForm);
 ```
 
 ### `removeClass(el, className)`
@@ -177,7 +181,7 @@ const siteMatches = apos.util.sameSite(targetUrl);
 ```
 
 ::: note
-There is also a `runPlayers` method on `apos.util`. That is run for us using `apos.util.onReadyAndRefresh` and runs all registered widget players. It is unlikely that it will need to be run in project-level code.
+There is also a `runPlayers` method on `apos.util`. That is run for us using `apos.util.onReady` and runs all registered widget players. It is unlikely that it will need to be run in project-level code.
 :::
 
 ## HTTP request methods

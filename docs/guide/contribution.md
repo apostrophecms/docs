@@ -63,7 +63,7 @@ Not good:
 
 Most code in Apostrophe projects belong in particular files. Even if an example is hypothetical (e.g., a `cat` content type) there is a standard file structure. Identifying a file path can help developers know where to put the example code.
 
-When adding code blocks that represent parts of a file, include the location of that file at the beginning of the code block. It should be added in a comment of that file type's style (e.g., `//` for Javascript, `{# #}` for Nunjucks) and and be relative to the project root.
+When adding code blocks that represent parts of a file, include the location of that file at the beginning of the code block. It should be added in a comment of that file type's style (e.g., `//` for JavaScript, `{# #}` for Nunjucks) and and be relative to the project root.
 
 Nunjucks template example:
 
