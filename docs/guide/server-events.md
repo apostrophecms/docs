@@ -49,6 +49,48 @@ The second event handler object is set to the key `'@apostrophecms/piece-type:be
 
 Event handlers can be spread *across multiple modules* in a project even if they respond to the same event. This allows us to keep each handler in the module that is most related to their purpose. When a product is updated by an editor, one module may send emails to notify the sales team and another module may update featured products on the home page.
 
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    // ...
+    handlers(self) {
+      return {
+        // Responds to `beforeSave` when emitted by the `product` module
+        'product:beforeSave': {
+          async updateProducts(req, piece) {
+            // Code to update featured products for the home page
+          }
+        }
+      }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    // ...
+    handlers(self) {
+      return {
+        // Responds to `beforeSave` when emitted by the `product` module
+        beforeSave: {
+          async emailSales(req, piece) {
+            // Code to construct and send an email to the sales team
+          }
+        }
+      }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+</AposCodeBlock>
+
 At the same time, *multiple event handlers for a single event can be included in a single module*. Each handler should be added as a separate property of the event object. This allows us to avoid having only one large handler that might get hard to maintain.
 
 <AposCodeBlock>
