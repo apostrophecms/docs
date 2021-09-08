@@ -41,7 +41,7 @@ require('apostrophe')({
 The module API supports many different configuration options. See the [module API reference](/reference/module-api/module-overview.md) for more detail.
 
 ::: note
-Modules names may not include periods (`.`).
+Module names may not include periods (`.`).
 
 - Bad: `blog.post`
 - Good: `blog-post`
