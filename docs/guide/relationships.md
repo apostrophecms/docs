@@ -259,3 +259,5 @@ In the example above, we add a `fields` property to the relationship field, just
 Once this is added, editors can select an "Edit Relationship" option on the selected relationships.
 
 ![The relationship field now with a menu button and "edit relationship" option](/images/relationship-fields.png)
+
+![The editor interface for the relationship's "team role" field](/images/relationship-editor.png)
