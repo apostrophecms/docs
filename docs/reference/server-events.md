@@ -49,7 +49,7 @@ When naming an event emitted *by a different module*, the event name must be pre
 
 ## Core app events
 
-These events are emitted by the primary Apostrophe app. Reference these events with the prefix `apostrophe:` (e.g., `apostrophe:afterInit`).
+These events are emitted by the primary Apostrophe app. Reference these events with the prefix `apostrophe:` (e.g., `apostrophe:ready`).
 
 ### `destroy`
 
@@ -72,17 +72,17 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-### `modulesReady`
+### `modulesRegistered`
 
 Triggered during startup after all modules are registered and their `init` functions run. This is the last opportunity to adjust module configuration (e.g., field schema) in response to other active modules.
 
-There is no data included with the event for handlers.
+There is no data included with the event for handlers. Previously named `modulesReady`, which still works as an alias.
 
 <AposCodeBlock>
   ```javascript
   handlers(self, options) {
     return {
-      'apostrophe:modulesReady': {
+      'apostrophe:modulesRegistered': {
         async handlerName() { ... }
       }
     };
@@ -93,17 +93,17 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-### `afterInit`
+### `ready`
 
-Invoked after all `apostrophe:modulesReady` handlers have completed. All modules are not completely ready for work.
+Invoked after all `apostrophe:modulesRegistered` handlers have completed. All modules are not completely ready for work.
 
-There is no data included with the event for handlers.
+There is no data included with the event for handlers. Previously named `afterInit`, which still works as an alias.
 
 <AposCodeBlock>
   ```javascript
   handlers(self, options) {
     return {
-      'apostrophe:afterInit': {
+      'apostrophe:ready': {
         async handlerName() { ... }
       }
     };
