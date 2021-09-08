@@ -135,7 +135,7 @@ The database documents that exist as mode and locale versions of one another. Fo
 
 ### Shortname
 
-An Apostrophe website's shortname is used as the primary identifier for the application. It is used as the Express session name and by default is the database name and CSRF cookie name. It is a top-level property of the application object we [configure in a project's `app.js` file](/guide/setting-up.md#creating-a-project) as `shortName`.
+An Apostrophe website's shortname is used as the primary identifier for the application. It is used as the Express session name and by default is the database name and part of the CSRF cookie name. It is a top-level property of the application object we [configure in a project's `app.js` file](/guide/setting-up.md#creating-a-project) as `shortName`.
 
 ## Localization terms
 
