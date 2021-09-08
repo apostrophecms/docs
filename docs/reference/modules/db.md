@@ -1,9 +1,9 @@
 # `@apostrophecms/db`
 
-This module establishes `apos.db`, the mongodb driver connection object.
+This module establishes `apos.db`, the MongoDB driver database object.
 
 ::: note
-`apos.db` is the mongodb database object, not an alias to this module. You shouldn't need to talk to this module after startup, but you can access it as `apos.modules['@apostrophecms/db']` if needed. You can also access `apos.dbClient` if you need the MongoClient object.
+`apos.db` is the MongoDB database object, not an alias to this module. You shouldn't need to talk to this module after startup, but you can access it as `apos.modules['@apostrophecms/db']` if needed. You can also access `apos.dbClient` if you need the MongoClient object.
 :::
 
 ## Options
@@ -17,7 +17,7 @@ This module establishes `apos.db`, the mongodb driver connection object.
 |`host` | String | A hostname to use in the database URI if the `uri` option is not used. This falls back to `localhost`. |
 |`port` | Integer | A port to use in the database URI if the `uri` option is not used. This falls back to `27017`. |
 |`name` | String | The project's database name. This falls back to the project [shortname](/reference/glossary.md#shortname). |
-|`client` | String |An existing MongoDB connection (MongoClient) object. If present, a new connection instance is created that reuses the same sockets, and `uri`, `host`, `connect`, etc. are ignored. |
+|`client` | String |An existing MongoDB connection (MongoClient) object. If present, it is used and `uri`, `host`, `connect`, etc. are ignored. |
 |`versionCheck` | Boolean | If `true`, Apostrophe checks the database and exits if it belongs to an older, incompatible major version of Apostrophe. Defaults to `true`. Set to `false` to avoid an extra query at startup. |
 
 ## Featured methods
@@ -27,7 +27,7 @@ The following locales belong to this module and may be useful in project-level c
 
 ### `connectToMongo()`
 
-Open the database connection. Always use `mongo.MongoClient` with its sensible defaults. Build a URI if we need to, so we can call it in a consistent way. One default we override: if the connection is lost, we keep attempting to reconnect forever. This is sensible behavior for a persistent process that requires MongoDB in order to operate.
+Open the database connection. Always uses `mongo.MongoClient` with its sensible defaults. Build a URI if necessary, so we can call it in a consistent way. One default we override: if the connection is lost, we keep attempting to reconnect forever. This is sensible behavior for a persistent process that requires MongoDB in order to operate.
 
 If you need to change the way MongoDB connections are made, override `connectToMongo` in your project. In many cases it is easier to just use the `client` option.
 
