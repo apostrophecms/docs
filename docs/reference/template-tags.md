@@ -84,7 +84,7 @@ The data argument, following the `with` keyword, is available in the async compo
 
 ## `fragment`
 
-The `fragment` tag *declares* a template fragment that will be inserted elsewhere with [`render`](#render) or [`rendercall`](#rendercall). See the [template fragments guide](/guide/fragments.md) for more on using this feature.
+Template fragments let us reuse template markup across a code base, whether standard synchronous or [async code](/guide/async-components.md). The `fragment` tag *declares* a template fragment that will be inserted elsewhere with [`render`](#render) or [`rendercall`](#rendercall). See the [template fragments guide](/guide/fragments.md) for more on using this feature.
 
 This tag must be closed with an `endfragment` tag.
 
