@@ -669,7 +669,7 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/page`
+## `@apostrophecms/page` events
 
 Events emitted by the `@apostrophecms/page` module.
 
@@ -856,7 +856,7 @@ Triggered after page data is run through the schema module's `convert` method, v
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/piece-type`
+## `@apostrophecms/piece-type` events
 
 These events are emitted by **all piece type modules** since they extend `@apostrophecms/piece-type`. In most cases it will be best to watch for the event from a piece type's module rather than the `@apostrophecms/piece-type` module.
 
@@ -911,7 +911,7 @@ Triggered after piece data is run through the schema module's `convert` method, 
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/search`
+## `@apostrophecms/search` events
 
 Events emitted by the `@apostrophecms/search` module.
 
