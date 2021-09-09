@@ -12,22 +12,30 @@ Regardless of the reason or the layers involved there are some common concepts t
 
 Before going further, keep in mind that there is an [API route reference section](/reference/api/) that will include much of the following information in a more direct format. One section there that will not be fully covered in this guide will be the [authentication APIs](/reference/api/authentication.md). There are a few options for authentication discussed there.
 
-For the sake of simplicity we can use the example of authentication using an API key. The key could be defined in the `@apostrophecms/express` module in a project like this:
+One of the more common use cases for a headless CMS is to simply get data from the CMS for a public website built with React, Vue.js or some other framework. Since the certain data is publically available in the front-end application, we can simply make that data publically available directly through the REST API using [a `publicApiProjection` option](/reference/api/authentication.md#allowing-public-access) on the doc type. This will only apply to `GET` requests.
 
+<AposCodeBlock>
 ```javascript
-// modules/@apostrophecms/express/index.js
 module.exports = {
+  // ...
   options: {
-    apiKeys: {
-      // Use your own strong, randomly generated key. Not like this one.
-      '000apikey123': {
-        // The user role associated with this key
-        role: 'admin'
-      }
+    publicApiProjection: {
+      title: 1,
+      slug: 1,
+      _url: 1,
+      _author: 1,
+      main: 1,
+      thumbnail: 1
     }
   }
 };
 ```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+We would add a `publicApiProjection` object for each piece type or page type that the front end app accesses. Since the REST APIs for Apostrophe content are immediately ready there is no other configuration needed inside Apostrophe for a basic one-way data flow.
 
 ## Getting piece data from the REST API
 
@@ -36,30 +44,29 @@ Requesting and using [piece](/guide/pieces.md) data should seem familiar to deve
 REST API routes are automatically constructed using the application's base URL, an API prefix (`/api/v1/`), the name of a content type module, and possibly a document ID. If using an API key for authentication, that would be added at the end in a query parameter as normal. For example, making a request for an *`article`* piece type from a website at `https://example.rocks` would use a URL like:
 
 ```
-https://example.rocks/api/v1/article?apikey=000apikey123
+https://example.rocks/api/v1/article
 ```
 
 When using Apostrophe as a headless CMS, we will most frequently be making `GET` requests from the Apostrophe app (see the [pieces API reference](/reference/api/pieces.md) for more on other request types). There are two main types of `GET` requests we should think about: a "get all" request and a "get one" request.
 
 ### Get all the pieces!
 
-To make a **"get all"** request, hit the URL as described above. Using the native Node.js `fetch` utility, that might look like:
+To make a **"get all"** request, hit the URL as described above. Using the Node.js `node-fetch` utility, such a request in a front end application might look like:
 
 ```javascript
+const fetch = require('node-fetch');
+
 async function getArticles() {
-  const response = await fetch('http://example.rocks/api/v1/article?apikey=000apikey123', {
+  const response = await fetch('http://example.rocks/api/v1/article', {
     method: 'GET'
   });
 
-  return response;
+  return response.results;
 }
 
 try {
-  getArticles()
-    .then(response => {
-      const articles = response.results;
-      // Do something with the articles!
-    });
+  const articles = await getArticles();
+  // Do something with the articles!
 } catch (error) {
   // Handle the error
 }
@@ -69,7 +76,6 @@ Assuming the request goes through well, it will return an object with three prop
 
 - `results`: an array of piece objects, limited to 10 pieces by default
 - `pages`: the total number of possible "pages" of results for this request
-
 - `currentPage`: the page number for that request (`1` for this first request)
 
 With that information we can make additional requests for more pages of results until we have as much data as we need.
@@ -79,7 +85,7 @@ With that information we can make additional requests for more pages of results 
 The **"get one"** type of request works similarly. Following the standard REST pattern, we add a document ID to the end of the previous request route URL to get only one result back. Each "get all" result object will include an `_id` property. Let's say that one `_id` was `j8e6n7n5y309:en:published`. We would make the request to:
 
 ```
-GET https://example.rocks/api/v1/article/j8e6n7n5y309:en:published?apikey=000apikey123
+GET https://example.rocks/api/v1/article/j8e6n7n5y309:en:published
 ```
 
 The response to that successful request will be [a single piece object](/reference/api/pieces.md#piece-document-response-example).
@@ -90,10 +96,10 @@ Page REST API requests look very similar to piece requests. They follow the same
 
 ```
 # All pages
-GET https://example.rocks/api/v1/@apostrophecms/page?apikey=000apikey123
+GET https://example.rocks/api/v1/@apostrophecms/page
 
 # A single page with document _id `903y5n76e8j:en:published`
-GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published?apikey=000apikey123
+GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published
 ```
 
 The module name used for these requests is always `@apostrophecms/page`, the module that manages pages in Apostrophe. The response for a "get one" request is also similar to a single piece `GET` request. It is a single page object with the page data properties immediate at the top level.
@@ -135,13 +141,13 @@ The home page object is returned with a `_children` array with the first-level p
 **We can request this data as a flat array** by adding the `?flat=1` query parameter.
 
 ```
-GET https://example.rocks/api/v1/@apostrophecms/page?flat=1&apikey=000apikey123
+GET https://example.rocks/api/v1/@apostrophecms/page?flat=1
 ```
 
 **And expand the results to include all pages, regardless of page tree depth** by using the `?all=1` query parameter. This also works with the nested object format.
 
 ```
-GET https://example.rocks/api/v1/@apostrophecms/page?flat=1&all=1apikey=000apikey123
+GET https://example.rocks/api/v1/@apostrophecms/page?flat=1&all=1
 ```
 
 ## Getting rendered HTML in responses
@@ -153,7 +159,7 @@ Apostrophe supports both approaches. The in-context editing features and [widget
 **In any Apostrophe REST API single-document `GET` ("get one") request, include the `?render-areas=1` query parameter.** This will return the page document as JSON. Each area field in the response will have a `_rendered` property with a string of HTML instead of the `items` array of widget objects. This could be useful if we mostly want to insert the rendered area HTML into an existing template system.
 
 ```
-GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published?apikey=000apikey123&render-areas=1
+GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published?render-areas=1
 ```
 
 If we wanted to get the full page as HTML rendered using the page templates, we could make a `GET` request to the page URL (basically what browsers do). This is only good if we are not trying to insert it into other templates.
