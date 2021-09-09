@@ -9,7 +9,7 @@ Each section below includes server-side events emitted by a particular module *a
 Code block examples represent the [`handlers`](/reference/module-api/module-overview.md#handlers-self) section of a module.
 
 ::: note
-As a reminder, when referencing an event in the `handlers` section *from within the module that emits it* we only need to use the event name.
+As a reminder, when referencing an event in the `handlers` section *from within the module that emits it* we only need to use the event name. This includes events emitted by functionality that a module inherits (e.g., all piece type modules emit events from `@apostrophecms/piece-type` functionality).
 
 <AposCodeBlock>
   ```javascript
@@ -53,7 +53,7 @@ These events are emitted by the primary Apostrophe app. Reference these events w
 
 ### `destroy`
 
-Triggered when the app's `destroy` method is called. Most commonly used in tests. , an apos object is being shut down. Your handlers should clean up any custom `setTimeouts`, `setIntervals` and/or open socket or database connections you have created. You should not "destroy" your actual website content. Just close any remaining open connections, timeouts, etc.
+Triggered when the app's `destroy` method is called. Most commonly used in tests. Your handlers should clean up any custom `setTimeout` or `setInterval` timers and/or open socket or database connections you have created. You should not "destroy" your actual website content. Just close any remaining open connections, timeouts, etc.
 
 There is no data included with the event for handlers.
 
@@ -95,7 +95,7 @@ There is no data included with the event for handlers. Previously named `modules
 
 ### `ready`
 
-Invoked after all `apostrophe:modulesRegistered` handlers have completed. All modules are not completely ready for work.
+Invoked after all `apostrophe:modulesRegistered` handlers and start up functions have completed. All modules are now completely ready for work.
 
 There is no data included with the event for handlers. Previously named `afterInit`, which still works as an alias.
 
@@ -116,11 +116,11 @@ There is no data included with the event for handlers. Previously named `afterIn
 
 ### `run`
 
-**Not intended for project use.** Triggered when the Apostrophe process is about to beginn running. Apostrophe uses this to run tasks and begin listening for connections.
+**Not intended for project use.** If Apostrophe was invoked as a command line task, Apostrophe's task module responds to this event by executing the task. Otherwise, Apostrophe's Express module responds to this event by listening for connections. If your goal is to do something just before that happens, you should listen for `apostrophe:ready` instead.
 
 #### Parameters
 
-- `isTask`: A boolean value indicating whether the process was started from an [Apostrophe task](/reference/module-api/module-overview.md#tasks-self).
+- `isTask`: A boolean value indicating whether the process was started as an [Apostrophe task](/reference/module-api/module-overview.md#tasks-self).
 
 <AposCodeBlock>
   ```javascript
@@ -137,7 +137,9 @@ There is no data included with the event for handlers. Previously named `afterIn
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/db`
+## `@apostrophecms/db` events
+
+Events emitted by the `@apostrophecms/db` module.
 
 ### `reset`
 
@@ -160,7 +162,9 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/doc`
+## `@apostrophecms/doc` events
+
+Events emitted by the `@apostrophecms/doc` module.
 
 ### `fixUniqueError`
 
@@ -188,7 +192,7 @@ Triggered when a unique key error is thrown by MongoDB. Apostrophe uses this to 
 
 ### `afterReplicate`
 
-Triggered after Apostrophe automatically replicates certain documents across all locales, including parked pages and piece types with the `replicate: true` option.
+Triggered after Apostrophe automatically replicates certain documents across all locales, including parked pages and piece types with the `replicate: true` option. This runs once during startup.
 
 There is no data included with the event for handlers.
 
@@ -207,7 +211,7 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/doc-type`
+## `@apostrophecms/doc-type` events
 
 These events are emitted by **all page type and piece type modules** since they extend `@apostrophecms/doc-type`. In most cases it will be best to watch for the event from a piece type or page type module rather than the doc type module.
 
@@ -290,7 +294,7 @@ Triggered just *before* Apostrophe either inserts *or* updates a document. Invok
 
 ### `afterInsert`
 
-Triggered just *after* Apostrophe inserts a document into the database for the first time.
+Triggered just *after* Apostrophe inserts a document into the database for the first time. The `doc._id` property is available at this point.
 
 #### Parameters
 
@@ -567,7 +571,9 @@ Triggered after a published document is reverted to the most recent "previous" s
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/express`
+## `@apostrophecms/express` events
+
+Events emitted by the `@apostrophecms/express` module.
 
 ### `afterListen`
 
@@ -592,7 +598,7 @@ There is no data included with the event for handlers.
 
 ### `compileRoutes`
 
-**Not intended for project use.** Triggered prior to middleware and route registration. Used to get all modules to compile their respective routes for registration.
+**Not intended for project use.** Triggered prior to middleware and route registration. Used to get all modules to compile their respective routes for registration. To add custom routes, configure the appropriate properties of your module, (e.g., `apiRoute`, `restApiRoute`).
 
 There is no data included with the event for handlers.
 
@@ -611,11 +617,13 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/login`
+## `@apostrophecms/login` events
+
+Events emitted by the `@apostrophecms/login` module.
 
 ### `deserialize`
 
-Triggered after a user logs in and their data is retrieved.
+Triggered on every request made when a user is logged in, populating `req.user`.
 
 #### Parameters
 
@@ -636,7 +644,9 @@ Triggered after a user logs in and their data is retrieved.
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/migration`
+## `@apostrophecms/migration` events
+
+Events emitted by the `@apostrophecms/migration` module.
 
 ### `after`
 
@@ -661,131 +671,7 @@ There is no data included with the event for handlers.
 
 ## `@apostrophecms/page`
 
-### `beforeUnpublish`
-
-Triggered just before a page document is unpublished (converted to a draft document).
-
-#### Parameters
-
-- `req`: The active request
-- `published`: The published document that is about to be unpublished
-
-<AposCodeBlock>
-  ```javascript
-  handlers(self, options) {
-    return {
-      'beforeUnpublish': {
-        async handlerName(req, published) { ... }
-      }
-    };
-  }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/page/index.js
-  </template>
-</AposCodeBlock>
-
-### `afterParkAll`
-
-Triggered after [parked pages](/reference/module-api/module-options.md#park) have been saved or updated in the database (as appropriate) during app startup.
-
-There is no data included with the event for handlers.
-
-<AposCodeBlock>
-  ```javascript
-  handlers(self, options) {
-    return {
-      'afterParkAll': {
-        async handlerName() { ... }
-      }
-    };
-  }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/page/index.js
-  </template>
-</AposCodeBlock>
-
-### `afterConvert`
-
-Triggered after page data is run through the schema module's `convert` method, validating its data to the page type's field schema.
-
-#### Parameters
-
-- `req`: The active request
-- `data`: The data being saved to the page, prior to schema conversion
-- `page`: The page as it will be saved, following schema conversion
-
-<AposCodeBlock>
-  ```javascript
-  handlers(self, options) {
-    return {
-      'afterConvert': {
-        async handlerName(req, data, page) { ... }
-      }
-    };
-  }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/page/index.js
-  </template>
-</AposCodeBlock>
-
-### `beforeMove`
-
-Triggered just *before* a page is moved from one position in the page tree to another.
-
-#### Parameters
-
-- `req`: The active request
-- `page`: The page being moved
-- `target`: The page used as a target for positioning in the page tree
-- `position`: The position to place the page in relation to the target
-
-<AposCodeBlock>
-  ```javascript
-  handlers(self, options) {
-    return {
-      'beforeMove': {
-        async handlerName(req, page, target, position) { ... }
-      }
-    };
-  }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/page/index.js
-  </template>
-</AposCodeBlock>
-
-### `afterMove`
-
-Triggered just *after* a page is moved from one position in the page tree to another.
-
-#### Parameters
-
-- `req`: The active request
-- `page`: The page being moved
-- `data`: An object containing the following properties:
-  - `originalSlug`: The page's slug prior to moving
-  - `originalPath`: The page's path prior to moving
-  - `changed`: An array of all pages that were changed by the move, including children of the moved page
-  - `target`: The page used as a target for positioning in the page tree
-  - `position`: The position to place the page in relation to the target
-
-<AposCodeBlock>
-  ```javascript
-  handlers(self, options) {
-    return {
-      'afterMove': {
-        async handlerName(req, page, data) { ... }
-      }
-    };
-  }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/page/index.js
-  </template>
-</AposCodeBlock>
+Events emitted by the `@apostrophecms/page` module.
 
 ### `serveQuery`
 
@@ -836,7 +722,7 @@ Triggered just before a requested page is served.
 
 ### `notFound`
 
-Triggered when Apostrophe fails to find a matching page for a request, just before the 404 response. This is a final chance to do extra work to find a matching page.
+Triggered when Apostrophe fails to find a matching page for a request, just before the 404 response. This is a final chance to do extra work to find a matching page and assign the URL to `req.redirect`.
 
 #### Parameters
 
@@ -857,11 +743,128 @@ Triggered when Apostrophe fails to find a matching page for a request, just befo
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/piece-type`
+
+## `@apostrophecms/page-type` events
+
+These events are emitted by **all page type modules** since they extend `@apostrophecms/page-type`. In most cases it will be best to watch for the event from a page type's module rather than the `@apostrophecms/page-type` module.
+
+If specifically watching events on `@apostrophecms/page-type`, as opposed to modules that extend it, **it will normally be important to check the `type` of the page in question** before proceeding with the handler's work.
 
 ### `beforeUnpublish`
 
-Triggered just before a piece document is unpublished (converted to a draft document).
+Triggered just before a page's published document is deleted, leaving only a draft document.
+
+#### Parameters
+
+- `req`: The active request
+- `published`: The published document that is about to be unpublished
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'beforeUnpublish': {
+        async handlerName(req, published) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
+### `beforeMove`
+
+Triggered just *before* a page is moved from one position in the page tree to another.
+
+#### Parameters
+
+- `req`: The active request
+- `page`: The page being moved
+- `target`: The page used as a target for positioning in the page tree
+- `position`: The position to place the page in relation to the target: `before` and `after` insert the new page as a sibling of the target; `firstChild` and `lastChild` insert the new page as a child of the target
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'beforeMove': {
+        async handlerName(req, page, target, position) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
+### `afterMove`
+
+Triggered just *after* a page is moved from one position in the page tree to another.
+
+#### Parameters
+
+- `req`: The active request
+- `page`: The page being moved
+- `data`: An object containing the following properties:
+  - `originalSlug`: The page's slug prior to moving
+  - `originalPath`: The page's path prior to moving
+  - `changed`: An array of all pages that were changed by the move, including children of the moved page
+  - `target`: The page used as a target for positioning in the page tree
+  - `position`: The position to place the page in relation to the target
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'afterMove': {
+        async handlerName(req, page, data) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
+
+### `afterConvert`
+
+Triggered after page data is run through the schema module's `convert` method, validating its data to the page type's field schema.
+
+#### Parameters
+
+- `req`: The active request
+- `data`: The data being saved to the page, prior to schema conversion
+- `page`: The page as it will be saved, following schema conversion
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'afterConvert': {
+        async handlerName(req, data, page) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
+## `@apostrophecms/piece-type`
+
+These events are emitted by **all piece type modules** since they extend `@apostrophecms/piece-type`. In most cases it will be best to watch for the event from a piece type's module rather than the `@apostrophecms/piece-type` module.
+
+If specifically watching events on `@apostrophecms/piece-type`, as opposed to modules that extend it, **it will normally be important to check the `type` of the piece in question** before proceeding with the handler's work.
+
+### `beforeUnpublish`
+
+Triggered just before a piece's published document is deleted, leaving only a draft document.
 
 #### Parameters
 
@@ -910,6 +913,8 @@ Triggered after piece data is run through the schema module's `convert` method, 
 
 ## `@apostrophecms/search`
 
+Events emitted by the `@apostrophecms/search` module.
+
 ### `determineTypes`
 
 Triggered after the search module identifies the document types to include in search results. This is a chance to change the included types.
@@ -956,11 +961,13 @@ Triggered just before the search index page is served, after the page's results 
   </template>
 </AposCodeBlock>
 
-## `@apostrophecms/template`
+## `@apostrophecms/template` events
+
+Events emitted by the `@apostrophecms/template` module.
 
 ### `addBodyData`
 
-**Not intended for project use.**  Triggered just before a body data object is added to a request prior to rendering a page.
+**Not intended for project use.**  Triggered just before a body data object is added to a request prior to rendering a page. A module's `getBrowserData` or `enableBrowserData` are better places to work on this data in project code.
 
 #### Parameters
 

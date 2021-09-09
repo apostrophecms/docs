@@ -1,12 +1,12 @@
 # Using server side events
 
-Apostrophe emits many sever-side events to allow project code and installed modules respond as needed. These range from start-up events to event triggered by normal editor actions. For example, if we had a website to track ghost sightings, we could watch for new sighting submissions and respond by sending the location address to a mapping API for validation and additional location information.
+Apostrophe emits many sever-side events to allow project code and installed modules to respond as needed. These range from start-up events to events triggered by normal editor actions. For example, if we had a website to track ghost sightings, we could watch for new sighting submissions and respond by sending the location address to a mapping API for validation and additional location information.
 
 For a list of server-side events, see the [events reference page](/reference/server-events.md).
 
 ## The `handlers` module property
 
-Apostrophe modules have a dedicated function property to register event handles. As a reminder, essentially all code in Apostrophe projects is a part of one module or another, whether custom or configuration of an installed module (including core modules).
+Apostrophe modules have a dedicated function property to register event handlers. As a reminder, essentially all code in Apostrophe projects is a part of one module or another, whether custom or configuration of an installed module (including core modules).
 
 Any module can include a [`handlers` customization function](/reference/module-api/module-overview.md#handlers-self), which takes the module itself as an argument. This function returns an object whose keys are names of server-side events. Those event keys are assigned an object containing event handlers.
 
@@ -26,7 +26,7 @@ The examples below show two examples of how a custom `product` module registers 
             piece.totalPrice = piece.price * (1.0 + (piece.tax / 100));
           }
         },
-        // Response to `beforeInsert` when emitted by *any* piece type
+        // Responds to `beforeInsert` when emitted by *any* piece type
         '@apostrophecms/piece-type:beforeInsert': {
           async beforeAnyPieceIsInserted(req, piece) {
             console.log('Something is being inserted. 📬', piece.title);
@@ -47,7 +47,7 @@ The second event handler object is set to the key `'@apostrophecms/piece-type:be
 
 ## Multiple handlers for an event
 
-Event handlers can be spread *across multiple modules* in a project even if they respond to the same event. This allows us to keep each handler in the module that is most related to their purpose. When a product is updated by an editor, one module may send emails to notify the sales team and another module may update featured products on the home page.
+Event handlers can be spread *across multiple modules* in a project even if they respond to the same event. This allows us to keep each handler in the module that is most related to their purpose. When a product is updated by an editor, one module may send emails to notify the sales team and another module may apply sales tax to the product's price.
 
 <AposCodeBlock>
   ```javascript
@@ -55,31 +55,10 @@ Event handlers can be spread *across multiple modules* in a project even if they
     // ...
     handlers(self) {
       return {
-        // Responds to `beforeSave` when emitted by the `product` module
-        'product:beforeSave': {
-          async updateProducts(req, piece) {
-            // Code to update featured products for the home page
-          }
-        }
-      }
-    }
-  };
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/home-page/index.js
-  </template>
-</AposCodeBlock>
-
-<AposCodeBlock>
-  ```javascript
-  module.exports = {
-    // ...
-    handlers(self) {
-      return {
-        // Responds to `beforeSave` when emitted by the `product` module
+        // Responds to `beforeSave` when emitted by this module
         beforeSave: {
-          async emailSales(req, piece) {
-            // Code to construct and send an email to the sales team
+          async applyTax(req, piece) {
+            // Apply sales tax
           }
         }
       }
@@ -91,6 +70,27 @@ Event handlers can be spread *across multiple modules* in a project even if they
   </template>
 </AposCodeBlock>
 
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    // ...
+    handlers(self) {
+      return {
+        // Responds to `beforeSave` when emitted by the `product` module
+        'product:beforeSave': {
+          async emailSales(req, piece) {
+            // Code to construct and send an email to the sales team
+          }
+        }
+      }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/external-notification/index.js
+  </template>
+</AposCodeBlock>
+
 At the same time, *multiple event handlers for a single event can be included in a single module*. Each handler should be added as a separate property of the event object. This allows us to avoid having only one large handler that might get hard to maintain.
 
 <AposCodeBlock>
@@ -99,8 +99,8 @@ At the same time, *multiple event handlers for a single event can be included in
     // ...
     handlers(self) {
       return {
-        // Responds to `beforeInsert` when emitted by the `product` module
-        beforeInsert: {
+        // Responds to `beforeSave` when emitted by the `product` module
+        beforeSave: {
           async applyTax(req, piece) {
             piece.totalPrice = piece.price * (1.0 + (piece.tax / 100));
           },
