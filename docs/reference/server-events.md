@@ -967,7 +967,7 @@ Events emitted by the `@apostrophecms/template` module.
 
 ### `addBodyData`
 
-**Not intended for project use.**  Triggered just before a body data object is added to a request prior to rendering a page. A module's `getBrowserData` or `enableBrowserData` are better places to work on this data in project code.
+**Not intended for project use.**  Triggered just before a body data object is added to a request prior to rendering a page. A module's `getBrowserData` and `enableBrowserData` are better places to work on this data in project code.
 
 #### Parameters
 
