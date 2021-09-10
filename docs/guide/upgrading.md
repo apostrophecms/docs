@@ -8,7 +8,7 @@ Apostrophe 3 introduces a number of new features for developers and content-edit
 
 ### 100% RESTful API coverage
 
-In the previous version, developers who wanted REST API access to their data needed to install the `apostrophe-headless` module. [This is now built into A3](/reference/api/) and are the foundation of the user interface.
+In the previous version, developers who wanted REST API access to their data needed to install the `apostrophe-headless` module. [This is now built into A3](/reference/api/) and is the foundation of the user interface.
 
 ### Totally rebuilt content editing interface
 
@@ -57,7 +57,7 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
   - Module field schemas now use an object structure on the `fields` property. It has `add`, `remove`, and `group` subproperties to replace A2's `addFields`, `removeFields`, and `arrangeFields`.
   - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, `remove`, and `order` subproperties. This replaces A2's `addColumns` property.
   - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, and `remove` subproperties. This replaces A2's `addFilters` property.
-  - Many module options that were top level properties in A2 (e.g., `label`, `alias`, `sort`) are now subproperties of `options`. These include all settings that are *not* covered in the [module properties overview reference](/reference/module-api/module-overview.md). See the [module options reference](/reference/module-api/module-options.md) for more on that.
+  - Many module settings that were top level properties in A2 (e.g., `label`, `alias`, `sort`) are now subproperties of `options`. These include all settings that are *not* covered in the [module properties overview reference](/reference/module-api/module-overview.md). See the [module options reference](/reference/module-api/module-options.md) for more on that.
   <!-- TODO: Update once options are all moved into individual module reference pages -->
   - The A2 `self.addHelper()` method used to add Nunjucks helper functions is replaced by the `helpers` section in module configuration.
   - The A2 `self.apiRoute()` method used to add a custom API route is replaced by the `apiRoutes` section in module configuration.
@@ -73,7 +73,7 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
 
 - Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
 - Areas must be declared as fields in the [content field schema](/guide/content-schema.md). They will no longer work if simply added to template files without being registered.
-- The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the object of widget configuration since that is now done in module configuration.
+- The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the configuration of widgets since that is now done in module configuration.
 - Area "singletons" are no longer a separate field type or template helper. They were always simply areas that only allowed one widget. With the other area changes, there is not much benefit to having that feature over adding the `max: 1` option to an area field.
 
 ### Other module configuration changes

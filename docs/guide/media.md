@@ -52,7 +52,7 @@ If presenting an image using the image widget and its template, the process is n
   </template>
 </AposCodeBlock>
 
-Done. The core image widget is design to render a responsive image with alt text (if it was entered for the image). When that is all that's needed this is a great option.
+Done. The core image widget is designed to render a responsive image with alt text (if it was entered for the image). When that is all that's needed this is a great option.
 
 ## The attachment field option
 
@@ -102,7 +102,7 @@ For non-image attachments, simply pass the attachment object into the method.
 </AposCodeBlock>
 
 
-For image attachments, doing the same thing will return the URL for the `full` image size by default. You can pass an options object as a second argument with its `size` property set to another image size to get a different URL back.
+For image attachments, doing the same thing will return the URL for the `full` image size by default (1140px × 1140px maximum size). You can pass an options object as a second argument with its `size` property set to another image size to get a different URL back.
 
 <AposCodeBlock>
 ```django

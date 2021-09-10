@@ -12,7 +12,7 @@ Regardless of the reason or the layers involved there are some common concepts t
 
 Before going further, keep in mind that there is an [API route reference section](/reference/api/) that will include much of the following information in a more direct format. One section there that will not be fully covered in this guide will be the [authentication APIs](/reference/api/authentication.md). There are a few options for authentication discussed there.
 
-One of the more common use cases for a headless CMS is to simply get data from the CMS for a public website built with React, Vue.js or some other framework. Since the certain data is publically available in the front-end application, we can simply make that data publically available directly through the REST API using [a `publicApiProjection` option](/reference/api/authentication.md#allowing-public-access) on the doc type. This will only apply to `GET` requests.
+One of the more common use cases for a headless CMS is to simply get data from the CMS for a public website built with React, Vue.js or some other framework. Since the certain data is publicly available in the front-end application, we can simply make that data publicly available directly through the REST API using [a `publicApiProjection` option](/reference/api/authentication.md#allowing-public-access) on the doc type. This will only apply to `GET` requests.
 
 <AposCodeBlock>
 ```javascript
@@ -54,8 +54,6 @@ When using Apostrophe as a headless CMS, we will most frequently be making `GET`
 To make a **"get all"** request, hit the URL as described above. Using the Node.js `node-fetch` utility, such a request in a front end application might look like:
 
 ```javascript
-const fetch = require('node-fetch');
-
 async function getArticles() {
   const response = await fetch('http://example.rocks/api/v1/article', {
     method: 'GET'
@@ -95,7 +93,7 @@ The response to that successful request will be [a single piece object](/referen
 Page REST API requests look very similar to piece requests. They follow the same REST API pattern:
 
 ```
-# All pages
+# The home page and first-level children
 GET https://example.rocks/api/v1/@apostrophecms/page
 
 # A single page with document _id `903y5n76e8j:en:published`
@@ -138,16 +136,16 @@ The response for page "get all" requests work differently by default. This is be
 
 The home page object is returned with a `_children` array with the first-level pages.
 
+**We can get all pages**, with limited data on child pages, by adding the `?all=1` query parameter.
+
+```
+GET https://example.rocks/api/v1/@apostrophecms/page?all=1
+```
+
 **We can request this data as a flat array** by adding the `?flat=1` query parameter.
 
 ```
-GET https://example.rocks/api/v1/@apostrophecms/page?flat=1
-```
-
-**And expand the results to include all pages, regardless of page tree depth** by using the `?all=1` query parameter. This also works with the nested object format.
-
-```
-GET https://example.rocks/api/v1/@apostrophecms/page?flat=1&all=1
+GET https://example.rocks/api/v1/@apostrophecms/page?all=1&flat=1
 ```
 
 ## Getting rendered HTML in responses
