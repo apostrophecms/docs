@@ -16,6 +16,8 @@
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "devDependencies": {
+    "@vuepress/plugin-google-analytics": "^1.5.4",
+    "chalk": "^2.4.2",
     "eslint": "^7.1.0",
     "eslint-config-apostrophe": "^3.2.0",
     "eslint-config-standard": "^14.1.0",
@@ -23,15 +25,14 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "esm": "^3.2.25",
+    "markdown-it-attrs": "^4.0.0",
     "stylelint": "^13.11.0",
     "stylelint-config-apostrophe": "^1.0.0",
     "stylelint-plugin-stylus": "^0.10.0",
     "vuepress": "^1.5.4",
-    "esm": "^3.2.25",
-    "markdown-it-attrs": "^4.0.0",
-    "@vuepress/plugin-google-analytics": "^1.5.4",
     "vuepress-plugin-sitemap": "^2.3.1",
-    "vuepress-theme-apostrophe": "git://github.com/apostrophecms/vuepress-theme-apostrophe.git"
+    "vuepress-theme-apostrophe": "^1.1.0"
   },
   "dependencies": {
     "markdown-it": "^12.0.6"
