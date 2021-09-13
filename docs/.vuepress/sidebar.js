@@ -55,8 +55,6 @@ module.exports = {
       children: [
         'guide/conditional-fields.md',
         'guide/async-components.md',
-        [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
-        [ 'guide/hosting.md', 'Hosting in production' ],
         {
           title: 'Localization 🆕',
           path: '/guide/localization',
@@ -64,7 +62,10 @@ module.exports = {
             [ 'guide/localization/static.md', 'Static l10n' ],
             [ 'guide/localization/dynamic.md', 'Dynamic l10n' ]
           ]
-        }
+        },
+        [ 'guide/server-events.md', 'Server-side events 🆕' ],
+        [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
+        [ 'guide/hosting.md', 'Hosting in production' ]
       ]
     },
     [ 'guide/upgrading.md', 'Coming from 2.x' ],
@@ -132,6 +133,7 @@ module.exports = {
       ]
     },
     'reference/template-tags',
+    'reference/server-events',
     {
       title: 'Core Modules',
       children: [
