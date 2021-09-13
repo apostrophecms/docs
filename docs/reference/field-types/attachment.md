@@ -2,7 +2,7 @@
 
 An `attachment` field allows the user to upload a file to the server, or replace a file which was previously uploaded. Attachments are most often used indirectly through the core image <!-- TODO: link --> and file <!-- TODO: link --> piece types. Each of those piece types contains an attachment field and some metadata fields, making them a convenient way to reuse files.
 
-You may also use attachment fields directly as well, however **doing so means that the uploaded file will not be available in the media library or file manager**. It will only be accessible as a property of the piece or page where it is uploaded. This can be appropriate for files that are only relevant for a single piece of content, such as resumés and job applications for a specific person.
+You may also use attachment fields directly as well, however **doing so means that the uploaded file will not be available in the media library or file manager**. It will only be accessible as a property of the piece or page where it is uploaded. This can be appropriate for files that are only relevant for a single piece of content, such as resumes and job applications for a specific person.
 
 ## Module field definition
 
@@ -11,7 +11,7 @@ All fields in a piece or page module use their object key as their database fiel
 ```javascript
 // Configuring the `resume` field in a module's `fields.add` subsection:
 resume: {
-  label: 'Resumé',
+  label: 'Resume',
   type: 'attachment',
   fileGroup: 'office'
 }

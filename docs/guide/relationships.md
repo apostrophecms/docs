@@ -166,7 +166,7 @@ A blog article show page template may include this code snippet:
 </ul>
 ```
 
-Since the data is fetched in an array, we use the `{% for %}` tag to loop it. If there is a maximum of one connected doc, you could reference it directly using the array index:
+Since the data is fetched in an array, we use the `{% for %}` tag to loop it. **If there is a maximum of one connected doc**, you could reference it directly using the array index:
 
 ```django
 {# module/article-pages/views/show.html #}
