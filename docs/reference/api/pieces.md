@@ -316,7 +316,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
 |Content properties | Variable | Additional properties specific to the piece type and its fields|
 
-**TODO:** Link to examples of each field's response format.
+<!-- **TODO:** Link to examples of each field's response format. -->
 
 ### Example
 
