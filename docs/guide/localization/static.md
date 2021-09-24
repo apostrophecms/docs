@@ -122,6 +122,23 @@ Each locale should get its own JSON file using the locale name, in a `i18n` subd
   </template>
 </AposCodeBlock>
 
+**If the l10n strings will be used in the user interface**, set the `i18n` option to an object with `browser: true`. *This includes any piece type and page type labels* that will appear in the UI. If that is not present then the UI build process will ignore the l10n JSON file. This is only appropriate for Apostrophe UI strings as they are only available when logged-in and, as noted above, there is no utility for localizing strings in other client-side JavaScript.
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    options: {
+      i18n: {
+        browser: true
+      }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    /modules/localization/index.js
+  </template>
+</AposCodeBlock>
+
 Like all modules, we would need to activate this in `app.js`. Our JSON files would be:
 
 - `modules/localization/i18n/en.json`

@@ -135,7 +135,7 @@ If set to an object, there may be `ns` and `browser` properties.
 | `i18n` setting | Value type | Description |
 |---------|---------|---------|
 | `ns` | String | A namespace for localization string keys in this module. If undefined, Apostrophe will use the `'default'` namespace. That namespace is intended for project-level localization. |
-| `browser` | Boolean | Set to `true` to make the JSON key/string pairs available on the browser window (e.g., `apos.i18n.i18n.en.default`) *when logged in*. Mostly useful if localizing Apostrophe user interface customizations. |
+| `browser` | Boolean | Set to `true` to make the JSON key/string pairs available on the browser window (e.g., `apos.i18n.i18n.en.default`) *when logged in*. Necessary when localizing strings in the UI, including doc type labels. |
 
 ::: note
 The namespace `'apostrophe'` is reserved for Apostrophe's UI. You may intentionally set `ns` to `'apostrophe'` if your goal is to localize the Apostrophe user interface.
