@@ -565,7 +565,7 @@ To maintain the same application, they should return the same type of response a
 
 Add a custom REST API for a module. The `restApiRoutes` function takes the module as an argument and returns an object of properties that map to the standard REST API request types.
 
-Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
+Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return some value (usually a data object). You should not use Express response methods here.
 
 ```javascript
 // modules/product/index.js
@@ -622,7 +622,7 @@ Each extended REST API route function should accept the original function as `_s
 
 Add custom API routes. The `apiRoutes` function takes takes the module as an argument and must return an object with properties for the relevant [HTTP request method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods), including `get`, `post`, `patch`, and `delete`. Each of those HTTP verb properties should be set to an object of routes.
 
-Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
+Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return some value (usually a data object). You should not use Express response methods here.
 
 ```javascript
 // modules/product/index.js
@@ -712,7 +712,7 @@ Add custom API routes to return rendered templates. The `renderRoutes` function 
 
 The name of the route dictates the template file that will be rendered. For example the `latest` route in the `product` module's `renderRoutes` section will return the template at `/modules/product/views/latest.html`.
 
-**Information returned by the route function will be used in the associated template as `data`.** Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
+**Information returned by the route function will be used in the associated template as `data`.** Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return a data object. You should not use Express response methods here.
 
 ```javascript
 // modules/product/index.js
