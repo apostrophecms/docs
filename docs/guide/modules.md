@@ -10,6 +10,8 @@ Each module defines a specific set of functionality, from configuring blog post 
 
 All modules use [the same API](/reference/module-api/). That shared foundation means that all have access to powerful features, such as custom command line tasks and API routes. It's the same API the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
 
+To find both official and community-supported Apostrophe modules to install, see [the Extensions and Integrations index](https://apostrophecms.com/extensions).
+
 ## Setting up a module
 
 Modules are organized in a folder at the root of a project named `modules`. Each module has a dedicated directory with an `index.js` file that contains its configurations. For example, you would define a blog post module in the file:

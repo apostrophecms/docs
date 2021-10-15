@@ -85,6 +85,11 @@ module.exports = {
             rel: false
           },
           {
+            text: 'Extensions',
+            link: 'https://apostrophecms.com/extensions',
+            rel: false
+          },
+          {
             text: 'GitHub',
             link: 'https://github.com/apostrophecms/apostrophe',
             re: false

@@ -68,6 +68,10 @@ module.exports = {
         [ 'guide/hosting.md', 'Hosting in production' ]
       ]
     },
+    {
+      title: 'Extensions and Integrations',
+      path: 'https://apostrophecms.com/extensions'
+    },
     [ 'guide/upgrading.md', 'Coming from 2.x' ],
     'guide/contribution.md'
   ],
