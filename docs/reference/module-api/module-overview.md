@@ -859,6 +859,7 @@ module.exports = {
         // This builder can be used to filter products in a query like this one:
         // await self.apos.product.find(req, {}).belowAverage(true).toArray();
         belowAverage: {
+          def: false,
           async finalize() {
             // Make sure this filter was actually invoked first
             if (query.get('belowAverage')) {
@@ -870,7 +871,8 @@ module.exports = {
             }
           },
           // The builder can also be invoked via the module's REST API as a
-          // query string parameter, e.g. `?belowAverage=1`.
+          // query string parameter, e.g. `?belowAverage=1`. Use the launder
+          // utility to ensure the proper data format for the database request.
           launder(value) {
             return self.apos.launder.boolean(value);
           },
