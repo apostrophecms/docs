@@ -47,7 +47,9 @@ The easiest way to get started with Apostrophe is to use the official starter pr
 apos create apos-app
 ```
 
-Or *without the CLI*, clone the boilerplate:
+The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
+
+To get started quickly without the CLI, clone the starter repository:
 
 ```bash
 git clone https://github.com/apostrophecms/a3-boilerplate apos-app
@@ -65,7 +67,22 @@ require('apostrophe')({
   // ...
 ```
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The starter has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+Excellent! Back in your terminal we'll install dependencies:
+
+```bash
+npm install
+```
+
+Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
+
+```bash
+node app @apostrophecms/user:add my-user admin
+# Replace `my-user` with the name you want for your first user.
+```
+
+### Finishing touches
+
+You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
 ```javascript
 // modules/@apostrophecms/express/index.js
@@ -79,18 +96,7 @@ module.exports = {
 };
 ```
 
-Excellent! Back in your terminal we'll install dependencies:
-
-```bash
-npm install
-```
-
-Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
-
-```bash
-node app @apostrophecms/user:add my-user admin
-# Replace `my-user` with the name you want for your first user.
-```
+### Starting up the website
 
 Start the site with `npm run dev`. The app will then watch for changes in client-side code, rebuilds it, then refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
 
