@@ -127,3 +127,44 @@ Here's how it works in a typical project with its own build process:
 - Whenever code changes are made, `nodemon` automatically restarts this cycle and refreshes the browser after a successful restart.
 
 But you don't have to use SCSS, webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
+
+### The `public` folder
+
+The `public` folder of each module solves a different problem from `ui/public`. While `ui/public` is for JavaScript and CSS files that should be appended as-is to Apostrophe's JavaScript and CSS bundles, usually to accommodate a custom webpack build, `public` is for files that should be **available separately.** A common example is a `.png` file to be used as a background image in CSS.
+
+While you can place asset files in the `public` folder of the project itself, and reference them with URLs like `/images/bg.png`, this has two problems when used in stylesheets:
+
+1. If a file is changed and the site is redeployed, users may still see the old file via their browser cache.
+2. If Apostrophe has been configured to deploy CSS and JS assets to Amazon S3, Azure Cloud Storage or another CDN, `/images/bg.png` in your CSS code will not be found at all because it refers to a different host.
+
+Files you place in the `public` subdirectory of any module are always deployed such that you can write URLs like this in your CSS or `.scss` files:
+
+`/modules/mymodulename/images/bg.png`
+
+Apostrophe will automatically fix these "asset paths" so they refer to the final URL of the asset, no matter what your production environment looks like.
+
+In addition, in production deployments, the URL will always contain a "release identifier" so that any static assets in the browser cache from a previous release are not reused.
+
+#### Asset paths in Nunjucks templates
+
+You can also convert asset paths to URLs in a Nunjucks template by calling the `apos.asset.url` helper function, like this:
+
+```django
+{{ apos.asset.url('/modules/mymodulename/images/bg.png') }}
+```
+
+#### Asset paths in frontend JavaScript
+
+You can obtain the URL corresponding to an asset path in frontend JavaScript using `apos.util.assetUrl`:
+
+```javascript
+apos.util.assetUrl('/modules/mymodulename/images/bg.png')
+```
+
+#### What about `extend` and `improve`?
+
+Sometimes modules extend or improve other modules, inheriting or contributing
+functionality. If both a base class module `a` and a module `b` that extends it contain
+`public` folders, containing files with different names, all of them will be available via paths starting with `/modules/b`. An exception: if files provided by `a` and `b` have the same name, the version in module `b` will win. However the base class version is still available in `/modules/a`. The same logic applies when `improve` is used.
+
+

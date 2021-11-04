@@ -41,7 +41,7 @@ module.exports = {
         {
           title: 'Front end code',
           children: [
-            [ 'guide/front-end-assets.md', 'Front end CSS and JS' ],
+            [ 'guide/front-end-assets.md', 'Front end CSS, JS and assets' ],
             [ 'guide/front-end-tips.md', 'Front end code tips 🆕' ],
             'guide/front-end-helpers.md'
           ]
