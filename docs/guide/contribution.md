@@ -34,6 +34,12 @@ This writing guide is meant to help maintain consistency in style and structure 
 Some grammar style notes here apply primarily to American English, but can be applied to other languages as well depending on the case.
 :::
 
+### "We" are learning together here
+
+Use the second person plural in guides. So instead of saying, "you need to activate the module," it would be "*we* need to activate the module." It might feel odd at first, but it is done so readers feel more like someone is guiding them as a peer rather than instructing them like a teacher.
+
+In reference sections we mostly write in the third person about the APIs, not instructing readers. There are some exceptions where it may be clearer to use the second person "you" than to force the passive voice simply to avoid it.
+
 ### Titles
 
 **Page titles and section headings should be written in sentence case.** Most words should be lowercase other than the first word, proper nouns, and other [specific cases](https://apastyle.apa.org/style-grammar-guidelines/capitalization/sentence-case).
