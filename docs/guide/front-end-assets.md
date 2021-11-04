@@ -1,4 +1,4 @@
-# Adding front end CSS and JavaScript
+# Adding front end CSS, JavaScript and other assets
 
 ApostropheCMS approaches CSS and client-side JavaScript by trying to taking care of as much of the hard parts as possible. To that end, the developers main job is to **put their SCSS and client-side JavaScript into `ui/src/index.scss` and `ui/src/index.js` files in the relevant module**. Apostrophe will then:
   - Compile [SCSS](https://sass-lang.com/guide) from `*.scss` files to CSS
