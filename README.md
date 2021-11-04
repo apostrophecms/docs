@@ -68,6 +68,6 @@ repository. Please include as much context for the change as is reasonable in
 the PR description.
 
 ## Notes about using the Apostrophe Vuepress theme
-This site uses [`vuepress-theme-apostrophe`](https://github.com/apostrophecms/vuepress-theme-apostrophe), which imports *stylesheets, components, and plugins (and their configurations)*. Other modifications, like ehancements to the markdown parser, must be present at project level across all vuepress sites that need them.
+This site uses [`vuepress-theme-apostrophe`](https://github.com/apostrophecms/vuepress-theme-apostrophe), which imports *stylesheets, components, and plugins (and their configurations)*. Other modifications, like enhancements to the markdown parser, must be present at project level across all vuepress sites that need them.
 
 Use this space to make other notes particular to the theme's shared resources
