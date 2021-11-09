@@ -16,6 +16,7 @@ Module configuration objects may use the following configuration properties. The
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
+| [`batchOperations`](#batchOperations) | Object | Yes | Configure manager batch operations | Piece |
 | [`icons`](#icons) | Object | No | Register a Material Design icon for the UI | All |
 
 ### "Cascading" settings
@@ -287,6 +288,64 @@ modules.export = {
 };
 ```
 
+### `batchOperations`
+
+Piece types can use batch operations in the `batchOperations` cascade object property, which are actions editors can take on many selected pieces at once. Apostrophe has archive and restore (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
+
+#### `add`
+
+The `add` property is an object containing batch operation configurations. Each batch operation configurations should include the following properties:
+
+| Property | Description |
+| ------- | ------- |
+| `label` | A text label used for the batch operation button's readable label. |
+| `route` | A relative route path with leading slash where the manager modal should send the selected document IDs for processing. The route should be defined in [`apiRoutes`](#apiroutes-self). |
+| `messages` | An object of notification message strings on `progress` and `completed` sub-properties. These may include `type` and `count` interpolation tags to be replaced by the piece type label and number of affected pieces, respectively. See example below. |
+| `icon` | The [name of an icon](#icons) to use for the operation button. |
+| `if` | Optionally include a conditional object, similar to [conditional fields](/guide/conditional-fields.md), to hide the operation button based on active [filter values](#filters). |
+| `modalOptions` | Options for the confirmation modal. [See below.](#modal-options)  |
+
+The following example uses a hypothetical batch operation that might reset piece fields to default values.
+
+```javascript
+// modules/article/index.js
+modules.export = {
+  batchOperations: {
+    add: {
+      reset: {
+        label: 'Reset',
+        // Uses a hypothetical route added in `apiRoutes`
+        route: '/reset',
+        messages: {
+          progress: 'Resetting {{ type }}...',
+          completed: 'Reset {{ count }} {{ type }}.'
+        },
+        // This assumes that the module added this in the `icons` configuration.
+        icon: 'recycle-icon',
+        // Only display this for non-archived pieces.
+        if: {
+          archived: false
+        },
+        modalOptions: {
+          title: 'Reset {{ type }}',
+          description: 'Are you sure you want to reset {{ count }} {{ type }}?',
+          confirmationButton: 'Yes, reset the selected content'
+        }
+      },
+    }
+  }
+};
+```
+
+##### Modal options
+
+Batch operation modal options include:
+
+| Option | Description |
+| ------- | ------- |
+| `title` | The modal heading. |
+| `description` | Descriptive text for the confirmation modal. |
+| `confirmationButton` | The affirmative confirmation button label (to continue the operation). |
 
 ### `icons`
 
