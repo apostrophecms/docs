@@ -294,12 +294,13 @@ Piece types can offer batch operations (actions editors can take on many selecte
 
 #### `add`
 
-The `add` property is an object containing batch operation configurations. Each batch operation configuration should include the following properties:
+The `add` property is an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
+
+Each batch operation configuration should include the following properties:
 
 | Property | Description |
 | ------- | ------- |
 | `label` | A text label used for the batch operation button's readable label. |
-| `route` | A relative route path with leading slash (e.g., `/route`) where the manager modal should send the selected document IDs for processing. The route should be defined in [`apiRoutes`](#apiroutes-self). |
 | `messages` | An object of notification message strings on `progress` and `completed` sub-properties. These may include `type` and `count` interpolation tags to be replaced by the piece type label and number of affected pieces, respectively. See example below. |
 | `icon` | The [name of an icon](#icons) to use for the operation button. |
 | `if` | Optionally include a conditional object, similar to [conditional fields](/guide/conditional-fields.md), to hide the operation button based on active [filter values](#filters). |
@@ -312,10 +313,9 @@ The following example uses a hypothetical batch operation that might reset piece
 modules.export = {
   batchOperations: {
     add: {
+      // This uses a hypothetical`reset` route added in `apiRoutes`
       reset: {
         label: 'Reset',
-        // Uses a hypothetical route added in `apiRoutes`
-        route: '/reset',
         messages: {
           progress: 'Resetting {{ type }}...',
           completed: 'Reset {{ count }} {{ type }}.'
