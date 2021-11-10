@@ -290,16 +290,16 @@ modules.export = {
 
 ### `batchOperations`
 
-Piece types can use batch operations in the `batchOperations` cascade object property, which are actions editors can take on many selected pieces at once. Apostrophe has archive and restore (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
+Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has archive and restore (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
 
 #### `add`
 
-The `add` property is an object containing batch operation configurations. Each batch operation configurations should include the following properties:
+The `add` property is an object containing batch operation configurations. Each batch operation configuration should include the following properties:
 
 | Property | Description |
 | ------- | ------- |
 | `label` | A text label used for the batch operation button's readable label. |
-| `route` | A relative route path with leading slash where the manager modal should send the selected document IDs for processing. The route should be defined in [`apiRoutes`](#apiroutes-self). |
+| `route` | A relative route path with leading slash (e.g., `/route`) where the manager modal should send the selected document IDs for processing. The route should be defined in [`apiRoutes`](#apiroutes-self). |
 | `messages` | An object of notification message strings on `progress` and `completed` sub-properties. These may include `type` and `count` interpolation tags to be replaced by the piece type label and number of affected pieces, respectively. See example below. |
 | `icon` | The [name of an icon](#icons) to use for the operation button. |
 | `if` | Optionally include a conditional object, similar to [conditional fields](/guide/conditional-fields.md), to hide the operation button based on active [filter values](#filters). |
