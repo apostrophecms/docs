@@ -93,7 +93,7 @@ With these configuration, we should immediately see a button for the "Reset" ope
 
 ![The article piece manager, now with a button using the recycle symbol](/images/batch-operation-recycle-button.png)
 
-### Adding the API route
+## Adding the API route
 
 Right now if we clicked that new button and confirmed to continue nothing would happen except for an error notification saying something like "Batch operation Reset failed." Since the batch operation is called `reset`, the manager is going to look for an API route at `/v1/api/article/reset` (the piece type's base API path, plus `/reset`). We need to add that route to the piece type.
 
@@ -209,10 +209,14 @@ async function resetter (req, id) {
     throw self.apos.error('notfound');
   }
 
-  // 🪄 Do the work of resetting piece field values.
+  // 🪄 Do the work of resetting piece field values here...
 
   await self.update(req, piece);
 }
 ```
 
 Finally, the iterator, `resetter` in this example, will receive the request object and a single document ID. This is where we as developers need to do the work of updating each selected piece. Our example here finds the piece, throws an error if not found, then eventually uses the `update` method to update the piece document. The magic `🪄` comment is where we would add the additional functionality to actually reset values.
+
+With that API route added, when we restart the website and run the batch operation again we should see our notifications indicating that it completed successfully.
+
+![The articles manager modal with two notifications indicating that the batch operation completed successfully](/images/batch-operation-complete.png)
