@@ -16,7 +16,7 @@ Module configuration objects may use the following configuration properties. The
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
-| [`batchOperations`](#batchOperations) | Object | Yes | Configure manager batch operations | Piece |
+| [`batchOperations`](#batchoperations) | Object | Yes | Configure manager batch operations | Piece |
 | [`icons`](#icons) | Object | No | Register a Material Design icon for the UI | All |
 
 ### "Cascading" settings
