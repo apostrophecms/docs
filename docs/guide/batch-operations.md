@@ -15,7 +15,7 @@ Batch operations are a ["cascading" configuration](/reference/module-api/module-
 
 <AposCodeBlock>
   ```javascript
-  modules.export = {
+  module.export = {
     batchOperations: {
       add: {
         reset: {
@@ -93,3 +93,126 @@ With these configuration, we should immediately see a button for the "Reset" ope
 
 ![The article piece manager, now with a button using the recycle symbol](/images/batch-operation-recycle-button.png)
 
+### Adding the API route
+
+Right now if we clicked that new button and confirmed to continue nothing would happen except for an error notification saying something like "Batch operation Reset failed." Since the batch operation is called `reset`, the manager is going to look for an API route at `/v1/api/article/reset` (the piece type's base API path, plus `/reset`). We need to add that route to the piece type.
+
+Batch operation route handlers will usually have a few steps in common, so we can look at those elements in the example below.
+
+<AposCodeBlock>
+  ```javascript
+  module.export = {
+    // `batchOperations` and other module settings...
+    apiRoutes(self) {
+      return {
+        post: {
+          reset(req) {
+            // Make sure there is an `_ids` array provided.
+            if (!Array.isArray(req.body._ids)) {
+              throw self.apos.error('invalid');
+            }
+
+            // Ensure that the req object and IDs are using the same locale
+            // and mode.
+            req.body._ids = req.body._ids.map(_id => {
+              return self.inferIdLocaleAndMode(req, _id);
+            });
+
+            // Run the batch operation as a "job," passing the iterator function
+            // as an argument to actually make the changes.
+            return self.apos.modules['@apostrophecms/job'].runBatch(
+              req,
+              req.body._ids,
+              resetter,
+              {
+                action: 'reset'
+              }
+            );
+
+            // The iterator function that updates each individual piece.
+            async function resetter (req, id) {
+              const piece = await self.findOneForEditing(req, { _id: id });
+
+              if (!piece) {
+                throw self.apos.error('notfound');
+              }
+
+              // 🪄 Do the work of resetting piece field values.
+
+              await self.update(req, piece);
+            }
+          }
+        }
+      };
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+Let's look at the pieces of this route, focusing on the parts that are likely to be common among most batch operations.
+
+```javascript
+apiRoutes(self) {
+  return {
+    post: {
+      reset(req) {
+        // ...
+      }
+    }
+  };
+}
+```
+
+We're adding our route to the [`apiRoutes` customization function](/reference/module-api/module-overview.md#apiroutes-self) as a `POST` route since the route will need to receive requests with a `body` object.
+
+```javascript
+if (!Array.isArray(req.body._ids)) {
+  throw self.apos.error('invalid');
+}
+```
+
+The Apostrophe user interface should take care of this for you, but it is always a good idea to include a check to make sure that the body of the reqest includes an `_ids` array. We could do additional work to make sure these are, in fact, IDs, but this is typically enough when you are not planning to use this route in other ways.
+
+```javascript
+req.body._ids = req.body._ids.map(_id => {
+  return self.inferIdLocaleAndMode(req, _id);
+});
+```
+
+This step may not be obvious, but since Apostrophe documents have versions in various locales, as well as both "live" and "draft" modes, it's important to use the `self.inferIdLocaleAndMode()` method on the IDs in most cases. In this context it is primarily used to update the `req` object to match the document IDs.
+
+```javascript
+  return self.apos.modules['@apostrophecms/job'].runBatch(
+    req,
+    req.body._ids,
+    resetter,
+    {
+      action: 'reset'
+    }
+  );
+  ```
+
+  This is more or less the last part (though we'll also need to take a look at that `resetter` iterator). The job module, `@apostrophecms/job`, has methods to process long-running jobs, including `runBatch` for batch operations. `runBatch` takes the following arguments:
+  - the `req` object
+  - an array of IDs, `req.body._ids`, used to find database documents to update
+  - an iterator function (more on that below)
+  - an options object, which we always use to include to define the `action` name for client-side event handlers
+
+```javascript
+async function resetter (req, id) {
+  const piece = await self.findOneForEditing(req, { _id: id });
+
+  if (!piece) {
+    throw self.apos.error('notfound');
+  }
+
+  // 🪄 Do the work of resetting piece field values.
+
+  await self.update(req, piece);
+}
+```
+
+Finally, the iterator, `resetter` in this example, will receive the request object and a single document ID. This is where we as developers need to do the work of updating each selected piece. Our example here finds the piece, throws an error if not found, then eventually uses the `update` method to update the piece document. The magic `🪄` comment is where we would add the additional functionality to actually reset values.
