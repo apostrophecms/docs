@@ -62,7 +62,7 @@ require('apostrophe')({
 
 ```javascript
 // modules/landing-page/index.js
-modules.export = {
+module.export = {
   extend: 'default-page'
 };
 ```
@@ -82,7 +82,7 @@ Within an application, you can alter installed or core module behavior by adding
 
 ```javascript
 // index.js
-modules.export = {
+module.export = {
   improve: '@apostrophecms/image'
   // Additional functionality ...
 };
@@ -110,7 +110,7 @@ An object of fields to add to the schema. See the [field type reference](/refere
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   fields: {
     add: {
       subtitle: {
@@ -128,7 +128,7 @@ An array of field names from the base class module to remove. Some default field
 
 ```javascript
 // modules/spotlight-article/index.js
-modules.export = {
+module.export = {
   extend: 'article',
   fields: {
     remove: [ 'subtitle' ]
@@ -148,7 +148,7 @@ The `@apostrophecms/doc-type` module arranges the default fields in two groups: 
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   fields: {
     add: {
       // ...
@@ -188,7 +188,7 @@ Filter properties include:
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   filters: {
     add: {
       _category: { // 👈 Referencing a relationship field named `_category`
@@ -214,7 +214,7 @@ An array of filter names from the base class module to remove.
 
 ```javascript
 // modules/spotlight-article/index.js
-modules.export = {
+module.export = {
   extend: 'article',
   filters: {
     remove: [ 'featured' ]
@@ -238,7 +238,7 @@ An object of columns to add to the piece type manager. Each column is an object 
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Adds a column showing when the article was published.
@@ -258,7 +258,7 @@ An array of column names from the base class module to remove.
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Hides the column showing when the article was last updated.
@@ -273,7 +273,7 @@ An array of column names to sort the columns in a particular order. This will of
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   extend: '@apostrophecms/piece-type',
   columns: {
     add: {
@@ -310,7 +310,7 @@ The following example uses a hypothetical batch operation that might reset piece
 
 ```javascript
 // modules/article/index.js
-modules.export = {
+module.export = {
   batchOperations: {
     add: {
       // This uses a hypothetical`reset` route added in `apiRoutes`
@@ -355,7 +355,7 @@ Each property key will be the name to reference the icon in an Apostrophe projec
 
 ```javascript
 // index.js
-modules.export = {
+module.export = {
   // ...
   icons: {
     airhorn: 'AirHorn',
