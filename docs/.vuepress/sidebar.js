@@ -53,7 +53,7 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
-        [ 'guide/static-assets.md', 'Using static module assets' ],
+        [ 'guide/static-module-assets.md', 'Using static module assets' ],
         'guide/conditional-fields.md',
         'guide/async-components.md',
         {

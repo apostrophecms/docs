@@ -8,7 +8,8 @@ Another issue is that those who configure Apostrophe to copy CSS and JS assets t
 
 Apostrophe offers a solution to this problem: each module folder can have its own `public` subdirectory, and *these static assets are copied to the same release location* where the CSS and JS bundles are deployed, regardless of whether that is on the server's hard drive, in S3 or some third location.
 
-::: note The `public` folder of each module solves a different problem from `ui/public`. While `ui/public` is for JavaScript and CSS files that should be appended as-is to Apostrophe's JavaScript and CSS bundles, usually to accommodate a custom webpack build, `public` is for files that should be **available separately.** A common example is a `.png` file to be used as a background image in CSS.
+::: note
+The `public` folder of each module solves a different problem from `ui/public`. While `ui/public` is for JavaScript and CSS files that should be appended as-is to Apostrophe's JavaScript and CSS bundles, usually to accommodate a custom webpack build, `public` is for files that should be **available separately.** A common example is a `.png` file to be used as a background image in CSS.
 :::
 
 #### Automatic asset path correction in stylesheets
