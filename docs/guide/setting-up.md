@@ -32,7 +32,7 @@ Install the CLI tool:
 
 ```bash
 npm install -g @apostrophecms/cli
-# Or `yarn install`, if you prefer. We'll stick to npm commands.
+# Or `yarn global add @apostrophecms/cli`, if you prefer. We'll stick to npm commands.
 ```
 
 Once installed you have access to the `apos` command. Simply use that command, or `apos --help`, to see a list of additional commands anytime.

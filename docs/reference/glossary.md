@@ -137,6 +137,16 @@ The database documents that exist as mode and locale versions of one another. Fo
 
 An Apostrophe website's shortname is used as the primary identifier for the application. It is used as the Express session name and by default is the database name and part of the CSRF cookie name. It is a top-level property of the application object we [configure in a project's `app.js` file](/guide/setting-up.md#creating-a-project) as `shortName`.
 
+## User interface terms
+
+### Manager
+
+The manager, or manager modal, is a UI modal that displays a table or list of pages or pieces of a particular doc type. Pages are displayed in one manager and every piece type is displayed in their own manager modals. This UI is usually opened by clicking or triggering the doc type's button in the admin bar. The manager is also used as a "chooser" when browsing pages or pieces for a relationship field.
+
+### Editor
+
+The editor modal is a traditional interface with [discrete fields](/reference/field-types/README.md) to add or update a document's content. This is distinct from the "in-context" editing experience where editors update content in the page as any visitor would see it.
+
 ## Localization terms
 
 Apostrophe generally subscribes to [the W3C definitions](https://www.w3.org/International/questions/qa-i18n.en) of the following terms. These definitions borrow from their descriptions with a focus on use with Apostrophe.

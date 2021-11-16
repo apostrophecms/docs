@@ -56,7 +56,7 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
 - Due to the module architecture changes, all modules in an A2 project would need to be refactored when migrating to A3. Most configurations and methods will be reusable, but they will need to be rearranged. See the [module reference](/reference/module-api/module-overview.md) for details. Here are some highlights:
   - Module field schemas now use an object structure on the `fields` property. It has `add`, `remove`, and `group` subproperties to replace A2's `addFields`, `removeFields`, and `arrangeFields`.
   - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, `remove`, and `order` subproperties. This replaces A2's `addColumns` property.
-  - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, and `remove` subproperties. This replaces A2's `addFilters` property.
+  - `filters` (for piece manager filters) is structured similarly to `fields` with `add`, and `remove` subproperties. This replaces A2's `addFilters` property.
   - Many module settings that were top level properties in A2 (e.g., `label`, `alias`, `sort`) are now subproperties of `options`. These include all settings that are *not* covered in the [module properties overview reference](/reference/module-api/module-overview.md). See the [module options reference](/reference/module-api/module-options.md) for more on that.
   <!-- TODO: Update once options are all moved into individual module reference pages -->
   - The A2 `self.addHelper()` method used to add Nunjucks helper functions is replaced by the `helpers` section in module configuration.
