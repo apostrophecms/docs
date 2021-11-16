@@ -122,7 +122,7 @@ Batch operation route handlers will usually have a few steps in common, so we ca
             // as an argument to actually make the changes.
             return self.apos.modules['@apostrophecms/job'].runBatch(
               req,
-              req.body._ids,
+              self.apos.launder.ids(req.body._ids),
               resetter,
               {
                 action: 'reset'
@@ -174,7 +174,7 @@ if (!Array.isArray(req.body._ids)) {
 }
 ```
 
-The Apostrophe user interface should take care of this for you, but it is always a good idea to include a check to make sure that the body of the reqest includes an `_ids` array. We could do additional work to make sure these are, in fact, IDs, but this is typically enough when you are not planning to use this route in other ways.
+The Apostrophe user interface should take care of this for you, but it is always a good idea to include a check to make sure that the body of the reqest includes an `_ids` array.
 
 ```javascript
 req.body._ids = req.body._ids.map(_id => {
@@ -187,7 +187,7 @@ This step may not be obvious, but since Apostrophe documents have versions in va
 ```javascript
   return self.apos.modules['@apostrophecms/job'].runBatch(
     req,
-    req.body._ids,
+    self.apos.launder.ids(req.body._ids),
     resetter,
     {
       action: 'reset'
@@ -197,7 +197,7 @@ This step may not be obvious, but since Apostrophe documents have versions in va
 
   This is more or less the last part (though we'll also need to take a look at that `resetter` iterator). The job module, `@apostrophecms/job`, has methods to process long-running jobs, including `runBatch` for batch operations. `runBatch` takes the following arguments:
   - the `req` object
-  - an array of IDs, `req.body._ids`, used to find database documents to update
+  - an array of IDs, `req.body._ids`, used to find database documents to update (we're running it through a method that ensures they are ID-like)
   - an iterator function (more on that below)
   - an options object, which we always use to include to define the `action` name for client-side event handlers
 
