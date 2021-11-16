@@ -42,7 +42,7 @@ module.exports = {
           title: 'Front end code',
           children: [
             [ 'guide/front-end-assets.md', 'Front end CSS and JS' ],
-            [ 'guide/front-end-tips.md', 'Front end code tips 🆕' ],
+            [ 'guide/front-end-tips.md', 'Front end code tips' ],
             'guide/front-end-helpers.md'
           ]
         },
@@ -56,16 +56,22 @@ module.exports = {
         'guide/conditional-fields.md',
         'guide/async-components.md',
         {
-          title: 'Localization 🆕',
+          title: 'Localization',
           path: '/guide/localization',
           children: [
             [ 'guide/localization/static.md', 'Static l10n' ],
             [ 'guide/localization/dynamic.md', 'Dynamic l10n' ]
           ]
         },
-        [ 'guide/server-events.md', 'Server-side events 🆕' ],
+        [ 'guide/server-events.md', 'Server-side events' ],
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
-        [ 'guide/hosting.md', 'Hosting in production' ]
+        [ 'guide/hosting.md', 'Hosting in production' ],
+        {
+          title: 'Other module config 🆕',
+          children: [
+            [ 'guide/batch-operations.md', 'Batch operations 🆕' ]
+          ]
+        }
       ]
     },
     {
@@ -80,14 +86,14 @@ module.exports = {
       title: 'Project features',
       collapsable: false,
       children: [
-        [ 'cookbook/building-navigation.md', 'Building site navigation 🆕' ]
+        [ 'cookbook/building-navigation.md', 'Building site navigation' ]
       ]
     },
     {
       title: 'Hosting',
       collapsable: false,
       children: [
-        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup 🆕' ]
+        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ]
       ]
     }
   ],
