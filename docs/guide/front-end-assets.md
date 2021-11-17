@@ -127,3 +127,7 @@ Here's how it works in a typical project with its own build process:
 - Whenever code changes are made, `nodemon` automatically restarts this cycle and refreshes the browser after a successful restart.
 
 But you don't have to use SCSS, webpack or any other specifics mentioned here, except for pushing the output into a `ui/public` folder so that Apostrophe can find it. You can follow whatever process works best for you or your organization.
+
+### What about other static assets for my module?
+
+If you have a need for static asset files like images and would like to ship them with individual modules, see the advanced topic [static module assets](static-module-assets.md).
