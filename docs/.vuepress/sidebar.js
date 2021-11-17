@@ -55,7 +55,7 @@ module.exports = {
       children: [
         'guide/conditional-fields.md',
         'guide/async-components.md',
-        'guide/static-module-assets.md',
+        [ 'guide/static-module-assets.md', 'Using static module assets 🆕' ],
         {
           title: 'Localization',
           path: '/guide/localization',
