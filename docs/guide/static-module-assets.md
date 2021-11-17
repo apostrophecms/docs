@@ -16,9 +16,7 @@ Files we place in the `public` subdirectory of any module are always deployed su
 
 `/modules/my-module/images/bg.png`
 
-Apostrophe will automatically fix these "asset paths" so they refer to the final URL of the asset, no matter what our production environment looks like.
-
-In addition, in production deployments, the final URL will always contain a "release identifier" so that any static assets in the browser cache from a previous release are not reused.
+Apostrophe will automatically fix these "asset paths" so they refer to the final URL of the asset, *no matter what our production environment looks like.* In addition, in production deployments, the final URL will always contain a "release identifier" so that any static assets in the browser cache from a previous release are not reused.
 
 ## Asset paths in Nunjucks templates
 
