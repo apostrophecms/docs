@@ -53,9 +53,9 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
-        [ 'guide/static-module-assets.md', 'Using static module assets' ],
         'guide/conditional-fields.md',
         'guide/async-components.md',
+        'guide/static-module-assets.md',
         {
           title: 'Localization',
           path: '/guide/localization',
