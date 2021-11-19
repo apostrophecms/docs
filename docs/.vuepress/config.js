@@ -72,6 +72,10 @@ module.exports = {
           {
             text: 'Cookbook',
             link: '/cookbook/'
+          },
+          {
+            text: 'Migration',
+            link: '/guide/upgrading/'
           }
         ]
       },
