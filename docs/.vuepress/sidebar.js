@@ -79,7 +79,13 @@ module.exports = {
       title: 'Extensions and Integrations',
       path: 'https://apostrophecms.com/extensions'
     },
-    [ 'guide/upgrading.md', 'Coming from 2.x' ],
+    {
+      title: 'Upgrading from 2.x',
+      children: [
+        [ 'guide/upgrading.md', 'Changes from A2' ],
+        'guide/upgrade-process.md'
+      ]
+    },
     'guide/contribution.md'
   ],
   '/cookbook': [

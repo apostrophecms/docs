@@ -1,0 +1,42 @@
+# Upgrading A2 projects
+
+- What's involved in upgrading from A2
+	- Updating the database structure
+		- broad strokes of what this means with a few examples of changes
+	- Upgrading the code base
+		- point to Coming from 2.x page to show examples of changes
+		- Module configuration API
+		- New widget player structure (without jQuery et al.)
+		- Templating API changes
+	- We have tools to help with both parts
+- Point to places in documentation to reference to upgrade manually (brief pointing to sections)
+	- Module overview and options reference
+	- Widget player docs
+	- Area templating docs
+	- Media-in-templates docs
+	- Macros to fragments if async (including area tags)
+- Introduce tools
+	- Content upgrader
+		- Pretty much essential to avoid essentially reproducing it
+		- Doesn't actually touch the old database (reads it)
+		- Limitations:
+			- doesn't migrate users due to permission complication
+				- recommendation for this
+			- No groups in A3, so groups not migrated
+			- Core image widget doesn't support multiple images, so only grabs first image
+		- Retains all original data in the new db just in case(?)
+		- What you'll need to do manually
+			- users, groups, image slideshows
+	- Code upgrader
+		- Pairs well with content upgrader to ensure a matching structure
+			- Recommended istead of 100% manual migration for this reason
+		- Also handles module upgrading
+		- Designed to take care of the majority of a standard Apostrophe 2 code base
+		- Limitations (What you'll need to do manually)
+			- Deprecated properties
+			- Original style widget players
+			- The scanner will highlight things for you.
+		-  Not meant to convert a codebase 100%, but 80%+ to let you focus on more custom pieces
+	- Please tell us where these don't work!
+
+## Updating an A2 module manually

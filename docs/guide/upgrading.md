@@ -1,4 +1,4 @@
-# Coming from Apostrophe 2.x
+# Changes from Apostrophe 2
 
 The 3.x major version of Apostrophe has many things to offer developers familiar with Apostrophe 2. It has a totally new UI, clearer module configuration, and many quality of life improvements, large and small. There are also some breaking changes, including in the general directory structure, so be sure to review the information below before upgrading codebases.
 
