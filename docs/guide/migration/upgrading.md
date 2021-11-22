@@ -1,12 +1,15 @@
+---
+sidebarDepth: 2
+---
+
 # Migration from Apostrophe 2
 
-While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 (A3), there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to A3 Importantly, we will introduce [tools for developers to automate most of the necessary migration work](#migration-tools).
+While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 (A3), there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to A3. Importantly, we will introduce [tools for developers to automate most of the necessary migration work](#migration-process).
 
 ## Breaking changes
 
-- What's involved in upgrading from A2
-	- Updating the database structure
-		- broad strokes of what this means with a few examples of changes
+### Code structure and APIs
+
 	- Upgrading the code base
 		- point to Coming from 2.x page to show examples of changes
 		- Module configuration API
@@ -20,7 +23,7 @@ While many foundational patterns from Apostrophe 2 (A2) were maintained in Apost
 	- Media-in-templates docs
 	- Macros to fragments if async (including area tags)
 
-### Codebase structure and module naming
+#### Codebase structure and module naming
 
 - The modules directory moved from `/lib/modules` to `/modules` since there was little need for the additional nesting.
 - All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this in projects in `/modules/@apostrophecms/page/index.js`.
@@ -32,7 +35,7 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
 - Official doc type modules are now singular as well.
 - Due to core module name changes, the `name` option is no longer necessary (or functional). The module names now exactly match the document `type` property (e.g., `@apostrophecms/user`, `@apostrophecms/image`).
 
-### Updated UI and module architecture
+#### Updated UI and module architecture
 
 - Most any user interface customizations based on the A2 jQuery code will no longer work.
 - [As noted above](#other-notable-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
@@ -52,18 +55,40 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
   - The A2 `self.expressMiddleware` system for adding Express middleware functions is replaced by the `middleware` section in module configuration.
   - The A2 `self.addTask()` method for adding CLI tasks is replaced by the `tasks` section in module configuration.
 
-### Areas and pages
+#### Areas and pages
 
 - Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
 - Areas must be declared as fields in the [content field schema](/guide/content-schema.md). They will no longer work if simply added to template files without being registered.
 - The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the configuration of widgets since that is now done in module configuration.
 - Area "singletons" are no longer a separate field type or template helper. They were always simply areas that only allowed one widget. With the other area changes, there is not much benefit to having that feature over adding the `max: 1` option to an area field.
 
-### Other module configuration changes
+#### Other module configuration changes
 
 - In A2, relationships between two piece or page types were referred to as "joins." In A3 they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundamentally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter). [See the guide](relationships.md#using-a-relationship-in-templates) regarding for changes in template use.
 - The `array` field type uses [a new syntax for adding its field schema](/reference/field-types/array.md#module-field-definition), matching the new module field schema syntax.
 - The `tags` field from A2 no longer exists. In most cases we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
+
+### Data Structure
+
+The following changes apply to database documents in A2 databases' primary content collection, `aposDocs`, unless otherwise specified. These are the majority of changes, but are not guaranteed to be completely comprehensive.
+
+- Apostrophe core *document* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-image`, `@apostrophecms/image`).
+- Apostrophe core *widget* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-video` to `@apostrophecms/video`).
+- There are always at least two database documents for each published document: one representing the published document and another representing the draft, potentially with unpublished changes. Once changes are saved after initial publication, another for the "previous" state is added. The "previous" document is not required for initial operation, however.
+- Unique ID and document state properties evolved to support the document version system.
+  - The `_id` property is now a combination of a unique string, a locale identifier (defaults to `en`), and the document mode (e.g., `ckokisysc00048d4l5zdo9l0c:en:published`).
+  - A new property, `aposLocale` stores the full locale, e.g., `en:published`.
+  - A new property `aposMode` stores the document mode, e.g., `published`.
+  - A new property `aposId` stores the unique document ID (shared between each variation), e.g., `ckokisysc00048d4l5zdo9l0c`.
+- `metaType` properties identify particular sections of document structure. These help Apostrophe property operate on similar content object structures.
+  - All `aposDocs` documents have a top level `metaType: 'doc'` property.
+  - Area field objects within documents have a `metaType: 'area'` property.
+  - Widget objects within areas have a `metaType: 'widget'` property.
+  - Individual array field items include a `metaType: 'arrayItem'` property.
+- A2 join field properties, now "relationships" in A3, have a new name structure.
+- `singleton` fields are no longer supported. They are `area` fields in A3.
+- The `trash` property is `archived` in A3.
+- Attachment documents in the `aposAttachments` DB collection change the `trashDocIds` property to `archivedDocIds`.
 
 ## Migration process
 
