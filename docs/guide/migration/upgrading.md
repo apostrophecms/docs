@@ -86,29 +86,49 @@ The following changes apply to database documents in A2 databases' primary conte
 - The `trash` property is `archived` in A3.
 - Attachment documents in the `aposAttachments` DB collection change the `trashDocIds` property to `archivedDocIds`.
 
-## Migration process
+## Migration tools and process
 
-Migrating an Apostrophe codebase
-- Introduce tools
-	- Content upgrader
-		- Pretty much essential to avoid essentially reproducing it
-		- Doesn't actually touch the old database (reads it)
-		- Limitations:
-			- doesn't migrate users due to permission complication
-				- recommendation for this
-			- No groups in A3, so groups not migrated
-			- Core image widget doesn't support multiple images, so only grabs first image
-		- Retains all original data in the new db just in case(?)
-		- What you'll need to do manually
-			- users, groups, image slideshows
-	- Code upgrader
-		- Pairs well with content upgrader to ensure a matching structure
-			- Recommended instead of 100% manual migration for this reason
-		- Also handles module upgrading
-		- Designed to take care of the majority of a standard Apostrophe 2 codebase
-		- Limitations (What you'll need to do manually)
-			- Deprecated properties
-			- Original style widget players
-			- The scanner will highlight things for you.
-		-  Not meant to convert a codebase 100%, but 80%+ to let you focus on more custom pieces
-	- Please tell us where these don't work!
+Migrating an Apostrophe 2 codebase and data should be done with care, but there are two official tools that can help speed the process along. Both tools are still somewhat early in development, so it is important to use them locally (not in production) and make sure to back up code and data before using them.
+
+**The Apostrophe team is very interested in feedback on these upgrader tools.** With each of their limitations in mind, please provide any comments, bug reports, code contributions, or feature requests as issues on the respective Github repositories.
+
+### Content Upgrader
+
+While completely manual code migration is possible, the *Content* Upgrader tool is basically essential for data conversion. Writing custom data migrations would not be able to do many thing differently from the official tool and there is very little to gain by doing so.
+
+The Content Upgrader tool does not change anything on the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in Apostrophe 3.
+
+Developers will install the Content Upgrader as a module within the A2 project. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
+
+#### Limitations
+
+There are a few limitations in the Content Upgrader to understand before using it.
+
+- Users and groups are not migrated. This is because the user roles of A3 differ in design from the permissions groups of A2. Copying users directly could create security issues. Create new accounts on the A3 project or arrive at your own migration strategy.
+- A2 has a built-in `apostrophe-images` widget type that acts as a slideshow when multiple images are selected. A3 only has a built-in single-image `@apostrophecms/image` widget type. By default `apostrophe-images` will be upgraded to `@apostrophecms/image`, with only the first image present in each. However you can use the `mapWidgetTypes` option (see the README) to override this mapping during the upgrade.
+- Since A3 does not have a built-in cropping feature yet, there is currently no accommodation for it in A3's `@apostrophecms/image` widget type. The tool attempts to carry over the cropping data in the format which is expected to work in A3 in the near future.
+
+### Code Upgrader
+
+The *Code* Upgrader tool support upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**. It has two major roles in converting an A2 codebase to use Apostrophe 3:
+
+1. It will lint an Apostrophe codebase for A2 syntax and structure that must change. This is its `lint` command.
+2. It will *make* many of those code changes for you. This is its `upgrade` command.
+
+Additionally, there is a `reset` command that can undo the automated changes. Always use a new git branch during this process as well to have an additional way to roll back changes.
+
+One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for A3 use. This is important because additional changes (such as complete module name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care in the final code changes to avoid effecting data compatibility.
+
+The Code Upgrader is installed globally in a Node environment (including developer environments) and run as a command line tool. **See the [Code Upgrader README](https://www.npmjs.com/package/@apostrophecms/code-upgrader) for full instructions.**
+
+#### Limitations
+
+Just as with the content tool, the Code Upgrader has some limitations to understand. While database structure is very predictable, code styles and patterns are not. Some A2 APIs and syntax are intentionally not touched to avoid making incorrect assumptions.
+
+- The tool is designed to operation on the majority of standard Apostrophe 2 codebases. Projects that generally follow patterns in official documentation and sample projects will have the best results. The tool will help on very custom projects (especially the linting mode), but more manual work will be needed to finish the work.
+- [Widget player code](/guide/custom-widgets.md#client-side-javascript-for-widgets) (client-side JavaScript) is not changed. The original widget player syntax relies on jQuery, which A3 does not include. A2 "lean" players may be supported in the future.
+- [Areas](/reference/glossary.md#area) (and A2's "singletons") that are only defined in A2 template files, "anonymous areas," are not changed. In A3 all areas must be registered in a module's field schema, however the complexity of area configuration (and limitations of template parsers) make them better converted manually.
+- [As mentioned above](#limitations) the image widget only supports a single image in A3. As in the content tool, these are converted to the equivalent A3 version, but full slideshow conversion will need to be done manually.
+- As the tool is still in development, some features will eventually be supported in the automatic upgrade, but are not yet. We appreciate your patience during development.
+
+In many of these limitation cases the **`lint`** command will still alert you to the outdated code so you can find it and make changes manually.
