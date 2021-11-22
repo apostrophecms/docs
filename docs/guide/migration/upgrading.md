@@ -8,20 +8,9 @@ While many foundational patterns from Apostrophe 2 (A2) were maintained in Apost
 
 ## Breaking changes
 
-### Code structure and APIs
+The updates described below are the majority of significant breaking changes, but are not completely comprehensive.
 
-	- Upgrading the code base
-		- point to Coming from 2.x page to show examples of changes
-		- Module configuration API
-		- New widget player structure (without jQuery et al.)
-		- Templating API changes
-	- We have tools to help with both parts
-- Point to places in documentation to reference to upgrade manually (brief pointing to sections)
-	- Module overview and options reference
-	- Widget player docs
-	- Area templating docs
-	- Media-in-templates docs
-	- Macros to fragments if async (including area tags)
+### Code syntax, APIs, and module configuration
 
 #### Codebase structure and module naming
 
@@ -29,16 +18,16 @@ While many foundational patterns from Apostrophe 2 (A2) were maintained in Apost
 - All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this in projects in `/modules/@apostrophecms/page/index.js`.
 
 ::: note
-Your project specific modules should not use the `@apostrophecms` namespace to avoid future collisions.
+Project-specific modules should not use the `@apostrophecms` namespace to avoid future collisions.
 :::
 
-- Official doc type modules are now singular as well.
-- Due to core module name changes, the `name` option is no longer necessary (or functional). The module names now exactly match the document `type` property (e.g., `@apostrophecms/user`, `@apostrophecms/image`).
+- Official doc type modules are now singular as well, e.g., `@apostrophecms/file`.
+- Due to core module name changes, the `name` option is no longer necessary (or functional) in page and piece type modules. Module names now exactly match the document `type` property (e.g., `@apostrophecms/user`, `@apostrophecms/image`).
 
 #### Updated UI and module architecture
 
 - Most any user interface customizations based on the A2 jQuery code will no longer work.
-- [As noted above](#other-notable-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
+- [As noted on the migration overview page](/guide/migration/overview.md#other-notable-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
 - Due to the module architecture changes, all modules in an A2 project would need to be refactored when migrating to A3. Most configurations and methods will be reusable, but they will need to be rearranged. See the [module reference](/reference/module-api/module-overview.md) for details. Here are some highlights:
   - Module field schemas now use an object structure on the `fields` property. It has `add`, `remove`, and `group` subproperties to replace A2's `addFields`, `removeFields`, and `arrangeFields`.
   - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, `remove`, and `order` subproperties. This replaces A2's `addColumns` property.
@@ -62,15 +51,22 @@ Your project specific modules should not use the `@apostrophecms` namespace to a
 - The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the configuration of widgets since that is now done in module configuration.
 - Area "singletons" are no longer a separate field type or template helper. They were always simply areas that only allowed one widget. With the other area changes, there is not much benefit to having that feature over adding the `max: 1` option to an area field.
 
-#### Other module configuration changes
+#### Client-side assets
+
+- A2 widget player formats are deprecated. The "lean" widget player structure can be more easily converted to the [A3 widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets) due to a similar structure.
+- The `pushAsset` method for delivering CSS and client-side JS is replaced by [placing files in the correct location](/guide/front-end-assets.md).
+- The `/public` directory *within modules* is [moved to `/ui/public`](/guide/static-module-assets.md).
+
+#### Other changes
 
 - In A2, relationships between two piece or page types were referred to as "joins." In A3 they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundamentally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter). [See the guide](relationships.md#using-a-relationship-in-templates) regarding for changes in template use.
 - The `array` field type uses [a new syntax for adding its field schema](/reference/field-types/array.md#module-field-definition), matching the new module field schema syntax.
 - The `tags` field from A2 no longer exists. In most cases we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
+- Template helper methods need to be adjusted to use the singular form of their module aliases, e.g., `apos.attachments.url` to `apos.attachment.url`.
 
 ### Data Structure
 
-The following changes apply to database documents in A2 databases' primary content collection, `aposDocs`, unless otherwise specified. These are the majority of changes, but are not guaranteed to be completely comprehensive.
+The following changes apply to database documents in A2 databases' primary content collection, `aposDocs`, unless otherwise specified.
 
 - Apostrophe core *document* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-image`, `@apostrophecms/image`).
 - Apostrophe core *widget* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-video` to `@apostrophecms/video`).
