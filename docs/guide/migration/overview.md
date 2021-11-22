@@ -4,6 +4,8 @@ Apostrophe 3 (A3) has many things to offer developers familiar with Apostrophe 2
 
 There are also some breaking changes, including in the general directory structure, so be sure to review the [upgrading guide](/guide/migration/upgrading.md) before upgrading codebases.
 
+## Features
+
 ### 100% RESTful API coverage
 
 In the previous version, developers who wanted REST API access to their data needed to install the `apostrophe-headless` module. [This is now built into A3](/reference/api/) and is the foundation of the user interface.
@@ -24,7 +26,7 @@ A3 uses the [tiptap](https://tiptap.dev/) rich text editor, a modern, open sourc
 
 [Async components](/guide/async-components.md) allow developers to write template code that uses data from custom database requests. In A2, the pattern to make those requests before rendering templates was unclear and fairly advanced. Async components should make this a clearer process and improve rendering performance.
 
-### Other notable improvements
+## Other improvements
 
 - Callback-driven code has been completely eliminated from the core of Apostrophe, and all of the JavaScript APIs return promises, so you can `await` them in async functions.
 - A3 completely removes the jQuery, lodash, and Moment.js libraries that were pushed to browsers by default. There is now only [a small set of helper methods](/guide/front-end-helpers.md).
