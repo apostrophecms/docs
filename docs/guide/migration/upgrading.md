@@ -88,6 +88,7 @@ The following changes apply to database documents in A2 databases' primary conte
 
 ## Migration process
 
+Migrating an Apostrophe codebase
 - Introduce tools
 	- Content upgrader
 		- Pretty much essential to avoid essentially reproducing it
@@ -102,9 +103,9 @@ The following changes apply to database documents in A2 databases' primary conte
 			- users, groups, image slideshows
 	- Code upgrader
 		- Pairs well with content upgrader to ensure a matching structure
-			- Recommended istead of 100% manual migration for this reason
+			- Recommended instead of 100% manual migration for this reason
 		- Also handles module upgrading
-		- Designed to take care of the majority of a standard Apostrophe 2 code base
+		- Designed to take care of the majority of a standard Apostrophe 2 codebase
 		- Limitations (What you'll need to do manually)
 			- Deprecated properties
 			- Original style widget players
