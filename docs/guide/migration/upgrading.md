@@ -15,7 +15,7 @@ The updates described below are the majority of significant breaking changes, bu
 #### Codebase structure and module naming
 
 - The modules directory moved from `/lib/modules` to `/modules` since there was little need for the additional nesting.
-- All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. You can configure this in projects in `/modules/@apostrophecms/page/index.js`.
+- All core modules have been namespaced with `@apostrophecms`. For example, the `apostrophe-pages` module is now `@apostrophecms/page`. At project level you can configure this module in `/modules/@apostrophecms/page/index.js`.
 
 ::: note
 Project-specific modules should not use the `@apostrophecms` namespace to avoid future collisions.
@@ -44,21 +44,22 @@ Project-specific modules should not use the `@apostrophecms` namespace to avoid 
   - The A2 `self.expressMiddleware` system for adding Express middleware functions is replaced by the `middleware` section in module configuration.
   - The A2 `self.addTask()` method for adding CLI tasks is replaced by the `tasks` section in module configuration.
 
-#### Areas and pages
+#### Areas, singletons, and template macros
 
-- Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
 - Areas must be declared as fields in the [content field schema](/guide/content-schema.md). They will no longer work if simply added to template files without being registered.
 - The area template tag format is now `{% area data.page, 'areaName' %}`. Note that this no longer includes the configuration of widgets since that is now done in module configuration.
+- The new area template tag renders asynchronously, which the standard [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) doesn't not support. Macros containing area tags must be converted to ["fragments"](/guide/fragments.md), the comparable feature in A3.
+  - As a rule we encourage developers to use fragments instead of macros in most every case. See the fragments guide for information on exceptions.
 - Area "singletons" are no longer a separate field type or template helper. They were always simply areas that only allowed one widget. With the other area changes, there is not much benefit to having that feature over adding the `max: 1` option to an area field.
 
 #### Client-side assets
 
 - A2 widget player formats are deprecated. The "lean" widget player structure can be more easily converted to the [A3 widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets) due to a similar structure.
 - The `pushAsset` method for delivering CSS and client-side JS is replaced by [placing files in the correct location](/guide/front-end-assets.md).
-- The `/public` directory *within modules* is [moved to `/ui/public`](/guide/static-module-assets.md).
 
 #### Other changes
 
+- Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
 - In A2, relationships between two piece or page types were referred to as "joins." In A3 they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundamentally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter). [See the guide](relationships.md#using-a-relationship-in-templates) regarding for changes in template use.
 - The `array` field type uses [a new syntax for adding its field schema](/reference/field-types/array.md#module-field-definition), matching the new module field schema syntax.
 - The `tags` field from A2 no longer exists. In most cases we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
@@ -68,14 +69,15 @@ Project-specific modules should not use the `@apostrophecms` namespace to avoid 
 
 The following changes apply to database documents in A2 databases' primary content collection, `aposDocs`, unless otherwise specified.
 
-- Apostrophe core *document* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-image`, `@apostrophecms/image`).
-- Apostrophe core *widget* type names (the `type` property) change to reflect the A3 version names (e.g., `apostrophe-video` to `@apostrophecms/video`).
+- Apostrophe core *doc type* names (the `type` property) change to reflect the comparable A3 module names (e.g., `apostrophe-image`, `@apostrophecms/image`).
+- Apostrophe core *widget type* names (the `type` property) change to reflect the comparable A3 module names (e.g., `apostrophe-video` to `@apostrophecms/video`). This is equal to the widget module name without its `-widget` suffix.
 - There are always at least two database documents for each published document: one representing the published document and another representing the draft, potentially with unpublished changes. Once changes are saved after initial publication, another for the "previous" state is added. The "previous" document is not required for initial operation, however.
+  - The exception to this is when a module has the [`localized: false` option](/reference/module-api/module-options.md#localized). The `@apostrophecms/user` module is the only such case in Apostrophe core.
 - Unique ID and document state properties evolved to support the document version system.
   - The `_id` property is now a combination of a unique string, a locale identifier (defaults to `en`), and the document mode (e.g., `ckokisysc00048d4l5zdo9l0c:en:published`).
   - A new property, `aposLocale` stores the full locale, e.g., `en:published`.
   - A new property `aposMode` stores the document mode, e.g., `published`.
-  - A new property `aposId` stores the unique document ID (shared between each variation), e.g., `ckokisysc00048d4l5zdo9l0c`.
+  - A new property `aposDocId` stores the unique document ID (shared between each variation), e.g., `ckokisysc00048d4l5zdo9l0c`.
 - `metaType` properties identify particular sections of document structure. These help Apostrophe property operate on similar content object structures.
   - All `aposDocs` documents have a top level `metaType: 'doc'` property.
   - Area field objects within documents have a `metaType: 'area'` property.
@@ -94,11 +96,11 @@ Migrating an Apostrophe 2 codebase and data should be done with care, but there 
 
 ### Content Upgrader
 
-While completely manual code migration is possible, the *Content* Upgrader tool is basically essential for data conversion. Writing custom data migrations would not be able to do many thing differently from the official tool and there is very little to gain by doing so.
+While completely manual code migration is possible, the *Content* Upgrader tool is basically essential for data conversion. Writing custom data migrations would not be able to do many things differently from the official tool and there is very little to gain by doing so.
 
-The Content Upgrader tool does not change anything on the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in Apostrophe 3.
+The Content Upgrader tool does not change anything in the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in Apostrophe 3.
 
-Developers will install the Content Upgrader as a module within the A2 project. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
+Developers will install the Content Upgrader as a module **within the A2 project**. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
 
 #### Limitations
 
@@ -110,14 +112,14 @@ There are a few limitations in the Content Upgrader to understand before using i
 
 ### Code Upgrader
 
-The *Code* Upgrader tool support upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**. It has two major roles in converting an A2 codebase to use Apostrophe 3:
+The *Code* Upgrader tool supports upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**. It has two major roles in converting an A2 codebase to use Apostrophe 3:
 
 1. It will lint an Apostrophe codebase for A2 syntax and structure that must change. This is its `lint` command.
 2. It will *make* many of those code changes for you. This is its `upgrade` command.
 
-Additionally, there is a `reset` command that can undo the automated changes. Always use a new git branch during this process as well to have an additional way to roll back changes.
+Additionally, there is a `reset` command that can undo all uncommitted changes. Always use a new git branch during this process as well to have an additional way to roll back changes.
 
-One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for A3 use. This is important because additional changes (such as complete module name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care in the final code changes to avoid effecting data compatibility.
+One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for A3 use. This is important because additional changes (such as field name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care in the final code changes to avoid affecting data compatibility.
 
 The Code Upgrader is installed globally in a Node environment (including developer environments) and run as a command line tool. **See the [Code Upgrader README](https://www.npmjs.com/package/@apostrophecms/code-upgrader) for full instructions.**
 
@@ -125,7 +127,7 @@ The Code Upgrader is installed globally in a Node environment (including develop
 
 Just as with the content tool, the Code Upgrader has some limitations to understand. While database structure is very predictable, code styles and patterns are not. Some A2 APIs and syntax are intentionally not touched to avoid making incorrect assumptions.
 
-- The tool is designed to operation on the majority of standard Apostrophe 2 codebases. Projects that generally follow patterns in official documentation and sample projects will have the best results. The tool will help on very custom projects (especially the linting mode), but more manual work will be needed to finish the work.
+- The tool is designed to operation on the majority of standard Apostrophe 2 codebases. Projects that generally follow patterns in official documentation and sample projects will have the best results. The tool will help on very custom projects (especially the linting mode), but more manual work will be always be needed to finish the work.
 - [Widget player code](/guide/custom-widgets.md#client-side-javascript-for-widgets) (client-side JavaScript) is not changed. The original widget player syntax relies on jQuery, which A3 does not include. A2 "lean" players may be supported in the future.
 - [Areas](/reference/glossary.md#area) (and A2's "singletons") that are only defined in A2 template files, "anonymous areas," are not changed. In A3 all areas must be registered in a module's field schema, however the complexity of area configuration (and limitations of template parsers) make them better converted manually.
 - [As mentioned above](#limitations) the image widget only supports a single image in A3. As in the content tool, these are converted to the equivalent A3 version, but full slideshow conversion will need to be done manually.
