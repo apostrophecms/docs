@@ -75,7 +75,7 @@ module.exports = {
           },
           {
             text: 'Migration',
-            link: '/guide/upgrading/'
+            link: '/guide/migration/overview.md'
           }
         ]
       },
