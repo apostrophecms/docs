@@ -66,6 +66,7 @@ module.exports = {
         },
         [ 'guide/server-events.md', 'Server-side events' ],
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
+        [ 'guide/custom-ui.md', 'Customizing the Apostrophe user interface' ],
         [ 'guide/hosting.md', 'Hosting in production' ],
         {
           title: 'Other module config 🆕',
