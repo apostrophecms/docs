@@ -102,6 +102,10 @@ The Content Upgrader tool does not change anything in the original Apostrophe 2 
 
 Developers will install the Content Upgrader as a module **within the A2 project**. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
 
+::: note
+The Content Upgrader tool is currently published as an **alpha** release. It is essentially feature complete, but will require additional testing before it is released as fully stable. We encourage developers to begin trying it on A2 projects and [provide feedback](https://github.com/apostrophecms/content-upgrader/issues/new) as we prepare for a stable release.
+:::
+
 #### Limitations
 
 There are a few limitations in the Content Upgrader to understand before using it.
@@ -122,6 +126,12 @@ Additionally, there is a `reset` command that can undo all uncommitted changes. 
 One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for A3 use. This is important because additional changes (such as field name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care in the final code changes to avoid affecting data compatibility.
 
 The Code Upgrader is installed globally in a Node environment (including developer environments) and run as a command line tool. **See the [Code Upgrader README](https://www.npmjs.com/package/@apostrophecms/code-upgrader) for full instructions.**
+
+::: note
+The Code Upgrader tool is currently published as an **alpha** release. It will lint most A2 feature that need updating, but there are several features that it cannot automatically upgrade yet. The tool will never do 100% of necessary code conversion, but we will continue adding feature support before it can be published as a full 1.0 release.
+
+We encourage developers to begin trying it on A2 projects and [provide feedback](https://github.com/apostrophecms/code-upgrader/issues/new) as we prepare for a stable release.
+:::
 
 #### Limitations
 
