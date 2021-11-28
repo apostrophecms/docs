@@ -1,4 +1,4 @@
-# Customizing the Apostrophe user interface
+# Customizing the user interface
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
 
@@ -11,7 +11,7 @@ Most of the time we don't need to override admin UI Vue components that ship wit
 Apostrophe will use only the last version of a component that is configured. For isntance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
 
 ::: note
-You will need to read the source code of the existing component we are overriding for more information about the patterns used, props provided and APIs we may need to access.
+For more information about the patterns used, props provided and APIs needed to implement a component, it's necessary to study the source code of the original.
 :::
 
 ## Overriding standard Vue components through configuration
@@ -20,8 +20,8 @@ There can be only one `AposDocsManager` Vue component definition in a project, b
 
 Here is an example of how to do that:
 
-```javascript
-// in our server-side modules/announcement/index.js file
+<AposCodeBlock>
+```js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -31,6 +31,11 @@ module.exports = {
   }
 }
 ```
+  <template v-slot:caption>
+    modules/announcement/index.js
+  </template>
+</AposCodeBlock>
+
 
 With this configuration, Apostrophe will look for a Vue component called `AnnouncementManager` when the user selects "Announcements" from the admin bar, bypassing `AposDocManager`.
 
@@ -40,21 +45,21 @@ Of course there are other components that can be overridden in this way, and the
 
 | Module                     | Option             | Default          |
 | -------------------------- | ------------------ | ---------------- |
-| @apostrophecms/piece-type  | components.managerModal | AposDocsManager  |
-| @apostrophecms/piece-type  | components.editorModal  | AposDocEditor    |
-| @apostrophecms/page        | components.managerModal | AposPagesManager |
-| @apostrophecms/page        | components.editorModal  | AposDocEditor    |
-| @apostrophecms/widget-type | components.widgetEditor | AposWidgetEditor |
-| @apostrophecms/widget-type | components.widget       | AposWidget       |
+| `@apostrophecms/piece-type`  | `components.managerModal` | `AposDocsManager`  |
+| `@apostrophecms/piece-type`  | `components.editorModal`  | `AposDocEditor`    |
+| `@apostrophecms/page`        | `components.managerModal` | `AposPagesManager` |
+| `@apostrophecms/page`        | `components.editorModal`  | `AposDocEditor`    |
+| `@apostrophecms/widget-type` | `components.widgetEditor` | `AposWidgetEditor` |
+| `@apostrophecms/widget-type` | `components.widget`       | `AposWidget`       |
 
 For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
 
 ::: note
-If the option ends in `Modal`, our component is expected to embed the `AposModal` component so that the admin UI can await it with `apos.modal.execute`. For an example, look at the source code of the default component you are providing a substitute for.
+If an option ends in `Modal`, our component is expected to embed the `AposModal` component so that the admin UI can await it with `apos.modal.execute`. For examples, look at the source code of the default components listed above.
 
-The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of your widget, so you won't need to configure a replacement unless you wish to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
+The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of any widget, so we won't need to configure a replacement unless we want to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
 
-The `AposWidget` component has **nothing to do with a typical site visitor experience,** it is used only when displaying your widget while the page is in edit mode. For instance, it works alongside `AposRichTextWidgetEditor` to provide a "click the text to edit" experience for rich text widgets. Most of the time you won't need to override this. To enhance your widgets with frontend JavaScript, you should write a [widget player](widget-player.md).
+The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, but the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
 :::
 
 ## Registering custom field types
@@ -67,8 +72,8 @@ A schema field has two parts: a server-side part and a browser-side part. The se
 
 Any module can register a schema field type on the server side, like this one, which provides a range field with two inputs, one for the low end of the range and one for the high end.
 
-```
-// modules/star-rating-field/index.js
+<AposCodeBlock>
+```js
 module.exports = {
   init(self) {
     self.addStarRatingFieldType();
@@ -95,6 +100,10 @@ module.exports = {
   }
 }
 ```
+  <template v-slot:caption>
+    modules/star-rating-field/index.js
+  </template>
+</AposCodeBlock>
 
 In `init`, which runs when the module is initialized, we call our `addStarRatingFieldType` method. `init` is the right place to invoke code that should run when the Apostrophe process starts up.
 
@@ -104,14 +113,14 @@ In `addStarRatingFieldType`, we invoke `self.apos.schema.addFieldType` to add ou
 * `convert`, a function to be used to sanitize the input and copy it to a destination. We pass our `convert` method for this purpose. Methods of our module are available as properties of `self`.
 * `component`, the name of a Vue component to be displayed when editing the field.
 
-In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But you can validate the input any way you like, as long as you never trust the input.
+In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But we can validate the input any way we like, as long as we never trust the input.
 
 ### Implementing the browser-side part
 
 On the browser side, we'll need a custom Vue component. Apostrophe provides a Vue mixin, `AposInputMixin`, that does much of the work for us.
 
-```
-<!-- modules/star-range-field/ui/apos/components/InputStarRating.vue -->
+<AposCodeBlock>
+```js
 <template>
   <AposInputWrapper
     :modifiers="modifiers" :field="field"
@@ -164,29 +173,35 @@ export default {
   }
 </style>
 ```
+  <template v-slot:caption>
+    modules/star-range-field/ui/apos/components/InputStarRating.vue
+  </template>
+</AposCodeBlock>
 
 In our template element, `AposInputWrapper` takes care of decorating our field with a label, error messages, etc. All we have to do is pass on some standard props that are provided to us. Beyond that, our responsibility is to display the current `value` to the user. We also add event handlers to handle user input, as explained below.
 
-In our script element, we have just two jobs: assigning a new value to `this.next` whenever the value changes, and validating the user's input. To update `this.next`, we implement methods that respond to click events, like the `setValue` and `clear` methods in this example. To validate the user's input, we implement a `validate` method, which accepts the current value and checks constraints like the `required` property of the field. If there is a problem, we return an error code such as `required`, `min` or `max`, otherwise we return `false`. The field configuration is available to us as `this.field`.
+In our script element, we have just two jobs: assigning a new value to `this.next` whenever the value changes, and validating the user's input. The `AposInputMixin` does the rest of the work for us.
 
-:::note
-"Where's the rest of the code?" The `AposInputMixin` does a lot of the work for us, so we can just focus on updating `this.next` and validating input when we're asked to do so.
-:::
+To update `this.next`, we implement methods that respond to click events, like the `setValue` and `clear` methods in this example. To validate the user's input, we implement a `validate` method, which accepts the current value and checks constraints like the `required` property of the field. If there is a problem, we return an error code such as `required`, `min` or `max`, otherwise we return `false`. The field configuration is available to us as `this.field`.
+
+The `style` element takes care of CSS for this component. Note that SCSS syntax is available. To avoid conflicts, using the `scoped` attribute is recommended.
 
 ### Putting the new schema field type to work
 
 Now we can use the new schema field type in any piece or widget much as we would use an `integer` field:
 
 ```javascript
-stars: {
-  label: 'Star Rating',
-  type: 'starRating',
-  required: true
-}
+fields: {
+  add: {
+  stars: {
+    type: 'starRating',
+    label: 'Star Rating',
+    required: true
+  }
 ```
 
 The resulting value is then available as the `stars` property of the piece or widget, with an integer value between `1` and `5`.
 
 ::: warning
-At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but if you supply custom admin UI components be aware that minor changes may be necessary.
+At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
 :::
