@@ -21,7 +21,7 @@ There can be only one `AposDocsManager` Vue component definition in a project, b
 Here is an example of how to do that:
 
 ```javascript
-// in our modules/announcement/index.js file
+// in our server-side modules/announcement/index.js file
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -111,8 +111,8 @@ In `convert`, we sanitize the input and copy it from `data[field.name]` to `obje
 On the browser side, we'll need a custom Vue component. Apostrophe provides a Vue mixin, `AposInputMixin`, that does much of the work for us.
 
 ```
+<!-- modules/star-range-field/ui/apos/components/InputStarRating.vue -->
 <template>
-  <!-- modules/star-range-field/ui/apos/components/InputStarRating.vue -->
   <AposInputWrapper
     :modifiers="modifiers" :field="field"
     :error="effectiveError" :uid="uid"
@@ -164,6 +164,14 @@ export default {
   }
 </style>
 ```
+
+In our template element, `AposInputWrapper` takes care of decorating our field with a label, error messages, etc. All we have to do is pass on some standard props that are provided to us. Beyond that, our responsibility is to display the current `value` to the user. We also add event handlers to handle user input, as explained below.
+
+In our script element, we have just two jobs: assigning a new value to `this.next` whenever the value changes, and validating the user's input. To update `this.next`, we implement methods that respond to click events, like the `setValue` and `clear` methods in this example. To validate the user's input, we implement a `validate` method, which accepts the current value and checks constraints like the `required` property of the field. If there is a problem, we return an error code such as `required`, `min` or `max`, otherwise we return `false`. The field configuration is available to us as `this.field`.
+
+:::note
+"Where's the rest of the code?" The `AposInputMixin` does a lot of the work for us, so we can just focus on updating `this.next` and validating input when we're asked to do so.
+:::
 
 ### Putting the new schema field type to work
 
