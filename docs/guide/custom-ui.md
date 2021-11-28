@@ -16,7 +16,7 @@ You will need to read the source code of the existing component we are overridin
 
 ## Overriding standard Vue components through configuration
 
-There can be only one `AposDocsManager` Vue component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by adding conditional logic to the component, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
+There can be only one `AposDocsManager` Vue component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
 
 Here is an example of how to do that:
 
@@ -38,17 +38,23 @@ As for the actual Vue code, we would place that in `modules/announcement/ui/apos
 
 Of course there are other components that can be overridden in this way, and the list is growing over time. Here are the components that can currently be overridden through configuration:
 
-| Module                    | Option             | Default          |
-| --------------------------| ------------------ | ---------------- |
-| @apostrophecms/piece-type | components.managerModal | AposDocsManager  |
-| @apostrophecms/piece-type | components.editorModal  | AposDocEditor    |
-| @apostrophecms/page       | components.managerModal | AposPagesManager |
-| @apostrophecms/page       | components.editorModal  | AposDocEditor    |
+| Module                     | Option             | Default          |
+| -------------------------- | ------------------ | ---------------- |
+| @apostrophecms/piece-type  | components.managerModal | AposDocsManager  |
+| @apostrophecms/piece-type  | components.editorModal  | AposDocEditor    |
+| @apostrophecms/page        | components.managerModal | AposPagesManager |
+| @apostrophecms/page        | components.editorModal  | AposDocEditor    |
+| @apostrophecms/widget-type | components.widgetEditor | AposWidgetEditor |
+| @apostrophecms/widget-type | components.widget       | AposWidget       |
 
-For readability's sake, a `.` is used in the table above to separate sub-properties of options. If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
+For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
 
 ::: note
-If the option ends in `Modal`, our component is expected to embed the `AposModal` component so that the admin UI can await it with `apos.modal.execute`. For an example, look at the source code of the module for which we are providing a substitute.
+If the option ends in `Modal`, our component is expected to embed the `AposModal` component so that the admin UI can await it with `apos.modal.execute`. For an example, look at the source code of the default component you are providing a substitute for.
+
+The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of your widget, so you won't need to configure a replacement unless you wish to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
+
+The `AposWidget` component has **nothing to do with a typical site visitor experience,** it is used only when displaying your widget while the page is in edit mode. For instance, it works alongside `AposRichTextWidgetEditor` to provide a "click the text to edit" experience for rich text widgets. Most of the time you won't need to override this. To enhance your widgets with frontend JavaScript, you should write a [widget player](widget-player.md).
 :::
 
 ## Registering custom field types
@@ -62,47 +68,43 @@ A schema field has two parts: a server-side part and a browser-side part. The se
 Any module can register a schema field type on the server side, like this one, which provides a range field with two inputs, one for the low end of the range and one for the high end.
 
 ```
-// modules/double-range-field/index.js
+// modules/star-rating-field/index.js
 module.exports = {
   init(self) {
-    self.addDoubleRangeFieldType();
+    self.addStarRatingFieldType();
   },
   methods(self) {
     return {
-      addDoubleRangeFieldType() {
+      addStarRatingFieldType() {
         self.apos.schema.addFieldType({
-          name: 'doubleRange',
+          name: 'starRating',
           convert: self.convert,
-          component: 'InputDoubleRange'
+          vueComponent: 'InputStarRating'
         });
       },
       async convert(req, field, data, object) {
-        let info = data[field.name];
-        if (typeof info !== 'object') {
-          info = {};
+        const input = data[field.name];
+        if ((data[field.name] == null) || (data[field.name] === '')) {
+          if (field.required) {
+            throw self.apos.error('notfound');
+          }
         }
-        if (((typeof info.low) !== 'number') || ((typeof info.high) !== 'number')) {
-          throw self.apos.error('notfound');
-        }
-        object[field.name] = {
-          low: info.low,
-          high: info.high
-        };
+        object[field.name] = self.apos.launder.integer(input, field.def, 1, 5);
       }
     }
   }
 }
 ```
 
-In `init`, which runs when the module is initialized, we call our `addDoubleRangeFieldType` method. `init` is the right place to invoke code that should run when the Apostrophe process starts up.
+In `init`, which runs when the module is initialized, we call our `addStarRatingFieldType` method. `init` is the right place to invoke code that should run when the Apostrophe process starts up.
 
-In `addDoubleRangeFieldType`, we invoke `self.apos.schema.addFieldType` to add our custom field type. We provide:
+In `addStarRatingFieldType`, we invoke `self.apos.schema.addFieldType` to add our custom field type on the server side. We provide:
 
 * `name`, which can be used as a `type` setting when adding the field to a schema.
 * `convert`, a function to be used to sanitize the input and copy it to a destination. We pass our `convert` method for this purpose. Methods of our module are available as properties of `self`.
 * `component`, the name of a Vue component to be displayed when editing the field.
 
-In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we check the type of every piece of input. If the input does not have both `low` and `high` properties with the `number` type, we throw a `notfound` error, which rejects the submission. `invalid` is another useful error name, if we wish to distinguish between missing data and data of the wrong type.
+In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But you can validate the input any way you like, as long as you never trust the input.
 
 ### Implementing the browser-side part
 
@@ -110,7 +112,7 @@ On the browser side, we'll need a custom Vue component. Apostrophe provides a Vu
 
 ```
 <template>
-  <!-- modules/double-range-field/ui/apos/components/InputDoubleRange.vue -->
+  <!-- modules/star-range-field/ui/apos/components/InputStarRating.vue -->
   <AposInputWrapper
     :modifiers="modifiers" :field="field"
     :error="effectiveError" :uid="uid"
@@ -118,29 +120,8 @@ On the browser side, we'll need a custom Vue component. Apostrophe provides a Vu
   >
     <template #body>
       <div class="apos-input-wrapper">
-        <div class="input-double-range" v-apos-tooltip="tooltip">
-          <label :for="`${uid}-low`">
-            Low:
-            <input
-              type="range"
-              class="apos-range__input"
-              @change="setLow"
-              :id="`${uid}-low`"
-              :disabled="field.readOnly"
-            >
-          </label>
-          <label :for="`${uid}-high`">
-            High:
-            <input
-              type="range"
-              class="apos-range__input"
-              @change="setHigh"
-              :id="`${uid}-high`"
-              :disabled="field.readOnly"
-            >
-          </label>
-          <button @click="clear" />Clear</button>
-        </div>
+        <button v-for="index in 5" :key="index" @click="setValue(index)" class="rating">{{ isActive(index) ? '☆' : '★' }}</button>
+        <button class="clear" @click="clear">Clear</button>
       </div>
     </template>
   </AposInputWrapper>
@@ -150,7 +131,7 @@ On the browser side, we'll need a custom Vue component. Apostrophe provides a Vu
 import AposInputMixin from 'Modules/@apostrophecms/schema/mixins/AposInputMixin';
 
 export default {
-  name: 'InputDoubleRange',
+  name: 'InputStarRating',
   mixins: [ AposInputMixin ],
   methods: {
     validate(value) {
@@ -161,22 +142,43 @@ export default {
       }
       return false;
     },
-    setLow(e) {
-      this.value = this.value || {};
-      this.value.low = e.target.value;
-    },
-    setHigh() {
-      this.value = this.value || {};
-      this.value.high = e.target.value;
+    setValue(index) {
+      this.next = index;
     },
     clear() {
-      this.value = null;
+      this.next = null;
+    },
+    isActive(index) {
+      return index <= this.next;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  /* Optional: styles here */
+  .rating {
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    font-size: inherit;
+  }
 </style>
 ```
+
+### Putting the new schema field type to work
+
+Now we can use the new schema field type in any piece or widget much as we would use an `integer` field:
+
+```javascript
+stars: {
+  label: 'Star Rating',
+  type: 'starRating',
+  required: true
+}
+```
+
+The resulting value is then available as the `stars` property of the piece or widget, with an integer value between `1` and `5`.
+
+::: warning
+At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but if you supply custom admin UI components be aware that minor changes may be necessary.
+:::
