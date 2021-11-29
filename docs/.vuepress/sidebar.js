@@ -1,4 +1,8 @@
 module.exports = {
+  '/guide/migration/': [
+    [ '/guide/migration/overview.md', 'Overview' ],
+    [ '/guide/migration/upgrading.md', 'Upgrading from A2' ]
+  ],
   '/guide': [
     {
       title: 'Getting started',
@@ -79,7 +83,6 @@ module.exports = {
       title: 'Extensions and Integrations',
       path: 'https://apostrophecms.com/extensions'
     },
-    [ 'guide/upgrading.md', 'Coming from 2.x' ],
     'guide/contribution.md'
   ],
   '/cookbook': [
