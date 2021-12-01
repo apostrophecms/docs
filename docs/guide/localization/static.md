@@ -222,3 +222,23 @@ The Apostrophe user interface contains many registered strings, currently locali
 Add JSON files for the locales as normal in the project-level `modules/@apostrophecms/i18n` module directory. You can also use any other module configured to use the `'apostrophe'` namespace (keeping project strings separate). The UI keys all use this namespace. In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
 
 Of course, this would be a lot of work and would likely involve tracking down where strings are used. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
+
+## Debugging localization
+
+There are two environment variables developers can use to debug during localization.
+
+### `APOS_DEBUG_I18N`
+
+Starting Apostrophe with the `APOS_DEBUG_I18N=1` environment variable will trigger the `i18next` debugging mode. This provides information about the i18n settings that may help resolve issues.
+
+### `APOS_SHOW_I18N`
+
+Using the `APOS_SHOW_I18N=1` environment variable adds emoji indicators to localized strings. For example, the localized string "Images" would be displayed as "🌍 Images." These help identify that text in a web page (or logged errors) have been passed through localization. Different emojis indicate additional information.
+
+| Emoji indicator | Meaning |
+|-----|----|
+| 🌍 | The string used a localization key and is registered with a value. |
+| 🕳️ | The displayed string is identical to the string passed into localization. It also *does not* seem to be using a l10n namespace.
+| ❌ | The displayed string is identical to the string passed into localization. It also *does* seem to be using a l10n namespace. Look for a module using the string's namespace (the part before `:`).
+
+For 🕳️ and ❌ indicators those are likely either localization keys that have not yet been registered with values (e.g., not translated) or they are not localization keys at all. Those do not necessarily indicate a problem, but simply are meant to give developers more information if a problem occurs.
