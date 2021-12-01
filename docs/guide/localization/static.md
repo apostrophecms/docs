@@ -184,7 +184,7 @@ The primary module to avoid using to store l10n strings is `@apostrophecms/i18n`
 
 ## Using namespaces
 
-A l10n **namespace** is a prefix on localization keys that makes it harder to accidentally override. In project-level l10n namespacing is not really necessary since there are not additional layers of work that might override translation there.
+A l10n **namespace** is a prefix on localization keys that makes it harder to accidentally override. In project-level l10n namespacing is *not really necessary* since there are not additional layers of work that might override translation there.
 
 Namespacing can be useful if you are building your own modules with hard-coded strings that you intend to publish. When that module is installed in a project later it would be less likely that the project will change them accidentally.
 
@@ -214,6 +214,12 @@ Then when you use the localization keys in template files (or elsewhere), start 
 ```
 
 Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`myTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
+
+::: warning
+Avoid using namespaces that begin with `apos`. The core team uses namespaces that begin with that for official modules, e.g., `aposForm` and `aposSeo`. Using that prefix is not technically forbidden, but it could result in conflicts with official modules.
+
+As a reminder, namespacing is primarily necessary for *installable modules* and not for project-level localization.
+:::
 
 ## Localizing the Apostrophe user interface
 
