@@ -216,7 +216,7 @@ Then when you use the localization keys in template files (or elsewhere), start 
 Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`myTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
 
 ::: warning
-Avoid using namespaces that begin with `apos`. The core team uses namespaces that begin with that for official modules, e.g., `aposForm` and `aposSeo`. Using that prefix is not technically forbidden, but it could result in conflicts with official modules.
+Avoid using namespaces that begin with `apos`. The core team uses namespaces that begin with that for official modules, e.g., `aposForm` and `aposSeo`. Using that prefix is not technically forbidden, but it could result in conflicts with official modules. Using the `apostrophe` namespace should definitely be avoided since it is used in Apostrophe core.
 
 As a reminder, namespacing is primarily necessary for *installable modules* and not for project-level localization.
 :::
