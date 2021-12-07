@@ -116,13 +116,15 @@ module.exports = {
       ]
     },
     {
-      title: 'Module API',
+      title: 'Server-side',
       path: '/reference/module-api',
       collapsable: false,
       sidebarDepth: 2,
       children: [
         'reference/module-api/module-overview',
-        'reference/module-api/module-options'
+        [ 'reference/module-api/module-options', 'Module options' ],
+        '/reference/server-events',
+        '/reference/query-builders'
       ]
     },
     {
@@ -153,7 +155,6 @@ module.exports = {
       ]
     },
     'reference/template-tags',
-    'reference/server-events',
     {
       title: 'Core Modules',
       children: [

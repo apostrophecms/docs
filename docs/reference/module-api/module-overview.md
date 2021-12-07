@@ -1,4 +1,4 @@
-# Module properties
+# Module configuration
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
 - [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
