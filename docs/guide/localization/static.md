@@ -65,6 +65,7 @@ Two other places you may want to register strings are in **API routes** and in V
 To register strings in **custom API routes**, use the `req.t()` method on the request object.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -102,6 +103,53 @@ If you are customizing Apostrophe **user interface components**, the `$t()` meth
 ::: note
 As a reminder, the Vue.js components of the user interface are not connected to any Vue app you may be running for your website visitors. The registration method will not be automatically available outside the UI components.
 :::
+
+### Localizing with string interpolation
+
+Consider the following string: "*Contact the London office*." Maybe we have offices in multiple countries and use this heading on each office's page. In this case we don't know the *exact* string to translate since the city will change. The variable part, the city, is also in the middle (for some languages, at least) so we could not even translate the rest very easily. In cases like this we use **string interpolation**.
+
+String interpolation is a process of generating a text string that is partly dynamic. In the previous paragraph's example, the city name is dynamic, or variable, since it is reused for each office.
+
+Regardless of whether we are localizing text in templates, server-side code, or UI Vue files, interpolation works essentially the same way. The string or localization key is still the first argument in the localization function. **Then an object is passed as a second argument to the l10n function, containing interpolation properties that match keys in curly braces.**
+
+Template example:
+
+<AposCodeBlock>
+  ```django
+    {{ __t('Contact the {{ city }} office', {
+      city: data.piece.city
+    }) }}
+  ```
+  <template v-slot:caption>
+    /modules/office-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+The arguments would look essentially identical in server-side or a UI file, using the respective l10n functions (`req.t()` and `this.$t()`, respectively). This also works if the first argument was a localization key that had that string assigned as its value.
+
+<AposCodeBlock>
+  ```json
+    {
+      "contactOffice": "Contact the {{ city }} office"
+    }
+  ```
+  <template v-slot:caption>
+    /modules/office-page/i18n/en.json
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+  ```django
+    {{ __t('contactOffice', {
+      city: data.piece.city
+    }) }}
+  ```
+  <template v-slot:caption>
+    /modules/office-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+See the [i18next documentation](https://www.i18next.com/translation-function/interpolation) for more available options.
 
 ## Adding and using localization files
 
