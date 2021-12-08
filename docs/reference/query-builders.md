@@ -8,7 +8,7 @@ Database query builders in Apostrophe help developer refine database document qu
 
 **See the [database querying guide](#TODO) for general information about using query builders.**
 
-## `All doc types`
+## Builders for all doc types
 
 The following query builders apply to all Apostrophe [doc types](/reference/glossary.md#doc).
 
@@ -83,94 +83,91 @@ query.attachments(true)
 
 Passing `true` to the `attachments` builder will annotate all attachment fields in the returned documents with URLs and other metadata (primarily for images). This uses the the `apos.attachment.all` method with the `annotate: true` option. The builder defaults to `false`.
 
-
-<!-- Start from here. -->
-
-
 ### `autocomplete()`
 
-`.autocomplete('sta')` limits results to docs which are a good match for
-a partial string beginning with `sta`, for instance `station`. Appropriate words
-must exist in the title or other text schema fields of
-the doc (autocomplete is not full text body search). Those words
-are then fed back into the `search` query builder to prioritize the results.
+```
+query.autocomplete('tree house')
+```
 
-### `children()`
-
-def: false
-
-If `.children(true)` is called, return all children of a given page
-as a `._children` array property of the page. If the argument is an
-object, it may have a `depth` property to fetch nested children. Any
-other properties are passed on to the query builder when making the query
-for the children, which you may use to filter them.
+The `autocomplete` builder operates as a sort of fuzzy search for documents. It accepts a string and uses document search text properties to find matches. The string can contain multiple words, but each word (or segment) needs to be a partial string to find non-exact results. So "tree" will find results with "treehouse," but "treehouses" will not find "treehouse" (it is not meant as an advanced search tool, but can help find similar results).
 
 ### `choices()`
 
-def: false
+```
+query.choices('color, species')
+
+query.choices(['color', 'species'])
+```
+
+The `choices` builder is use to populate a `choices` object on the query results based on the filters passed to it. Filters can be passed in as a single string of comma-separated values or an array of strings.
+
+That `choices` object will contain valid options for each filter based on the rest of the query. Those options can be used to populate a select field for filtering an index page, for example.
 
 ### `counts()`
 
-def: false
+```
+query.choices('color, species')
 
-Alternative to `choices` that also returns a count property for each choice,
-has a higher impact on the db
+query.choices(['color', 'species'])
+```
+
+The `counts` builder works very similarly to the [`choices` builder](#choices). When passed a string of comma-separated filter names (or an array of filter names), it will include a `counts` object including the individual choices. Each choice will include a `count` property set to the number of documents in the query results that match that choice.
 
 ### `criteria()`
 
-def: `{}`
+```
+query.criteria({ category: { $in: ['animals', 'vegetables'] } })
+```
 
-`.criteria({...})` Sets the MongoDB criteria, discarding
-criteria previously added using this
-method or the `and` method. For this reason,
-`and` is a more common choice. You can also
-pass a criteria object as the second argument
-to any `find` method.
+The `criteria` builder sets the base MongoDB query criteria, **discarding criteria previously added** using this method or the [`and` builder](#and). The `and` builder is usually better for most cases since it is not destructive. The default value of this builder is an empty object. As with the `and` builder, the criteria format would match that used in the [MongoDB `find` operation]((https://docs.mongodb.com/v4.4/reference/method/db.collection.find/)).
 
 ### `defaultSort()`
 
-`.defaultSort({ title: 1 })` changes the default value for the `sort` query builder.
-The argument is the same as for the `sort` query builder: an
-object like `{ title: 1 }`. `false` can be passed to clear
-a default.
+```
+query.defaultSort({ updatedAt: 1 })
+```
 
-This query builder is called by @apostrophecms/piece-type based on its
-`sort` configuration option.
+The `defaultSort` changes the default value for the [`sort` query builder](#sort).  The argument is the same as for the `sort` query builder: an object like `{ updatedAt: 1 }`, including a field name and `1` for ascending or `-1` for descending. See the [MongoDB `sort` method documentation](https://docs.mongodb.com/manual/reference/method/cursor.sort/) for other options. `false` can be passed as an option as well to clear the default sort.
 
-It is distinct from the `sort` feature so that we can
-distinguish between cases where a default sort should be ignored
-(for instance, the `search` query builder is present) and cases
-where a sort is explicitly demanded by the user.
+It is distinct from the `sort` builder to distinguish between cases where a default sort should be ignored (for instance, the `search` query builder is present) and cases where a sort is explicitly requested by the user.
 
+In most custom uses the `sort` builder will likely be a more common option.
+
+<!--
 ### `distinctCounts()`
+TODO
+```
+query.distinctCounts(true)
+```
 
-def: false
-`.distinctCounts(true)` makes it possible to obtain
-counts for each distinct value after a call to
-`toCount()` is resolved by calling `query.get('distinctCounts')`.
-These are returned as an object in which the keys are
-the distinct values of the field, and the values
-are the number of occurrences for each value.
+`.distinctCounts(true)` makes it possible to obtain counts for each distinct value after a call to `toCount()` is resolved by calling `query.get('distinctCounts')`. These are returned as an object in which the keys are the distinct values of the field, and the values are the number of occurrences for each value.
 
 This has a performance impact.
+-->
 
 ### `_ids()`
 
-`._ids([ id1, id2... ])` causes the query to return only those
-documents, and to return them in that order, assuming the documents
-with the specified ids exist. All documents are fetched in the
-same locale regardless of the locale suffix of the _ids. If
-no locale can be determined via query parameters, the locale is
-inferred from the first _id in the set.
-        //
-Can also be called with a string, which is treated as a single `_id`.
+```
+query._ids([
+  'ckwxzxdtr000t4v3rivysoari:en:published',
+  'ckwxzxdvc001b4v3rhxvxqgg1:en:published'
+])
+```
+
+The `_ids` builder causes the query to return only the document with matching `_id` properties and to return them in that order, assuming the documents with the specified IDs exist. All documents are fetched in the same locale regardless of the locale suffix of the values. If no locale can be determined via query parameters, the locale is inferred from the first _id in the set.
+
+The query builder can also be called with a string, which is treated as a single document ID.
 
 ### `limit()`
 
-`.limit(10)` limits the result to the first 10 matching
-documents, after skip is taken into account. Affects `toArray` only.
+```
+query.limit(10)
+```
+
+The `limit` query builder accepts an integer and limits the number of document results. It returns the first matching documents up to the set limit, though it does take the [`skip` builder](#skip) into account.
 
 ### `locale()`
+
 
 ### `log()`
 
@@ -291,6 +288,9 @@ more natural sort than MongoDB normally provides.
 For instance, `title` has `sortify: true` for all
 doc types, so you always get the more natural sort.
 
+<!-- Default sort bit -->
+The `defaultSort` changes the default value for the [`sort` query builder](#sort).  The argument is the same as for the `sort` query builder: an object like `{ updatedAt: 1 }`, including a field name and `1` for ascending or `-1` for descending. See the [MongoDB `sort` method documentation](https://docs.mongodb.com/manual/reference/method/cursor.sort/) for other options. `false` can be passed as an option as well to clear the default sort.
+
 ### `skip()`
 `.skip(10)` skips the first 10 matching documents. Affects
 `toArray` and `toObject`. Does not affect
@@ -320,11 +320,7 @@ give you a query of the right subclass.
 If set to true, attach a `_publishedDoc` property to each draft document,
 containing the related published document.
 
-## `any-page-type`
-
-### `isPage()`
-
-Added by `any-page-type`. `.isPage(true)` filters to only documents that are pages. Defaults to `true`
+## Page document query builders
 
 ### `ancestors()`
 
@@ -335,6 +331,23 @@ def: `false`
 If the argument is an object, do all of the above, and also call the query builders present in the object on the query that fetches the ancestors. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `._children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get really fancy.
 
 `ancestors` also has its own `depth` option, but it doesn't do what you think. If the `depth` option is present as a top-level property of the object passed to `ancestors`, then only that many ancestors are retrieved, counting backwards from the immediate parent of each page.
+
+### `children()`
+
+```
+query.children(true)
+```
+
+The If `.children(true)` is called, return all children of a given page
+as a `._children` array property of the page. If the argument is an
+object, it may have a `depth` property to fetch nested children. Any
+other properties are passed on to the query builder when making the query
+for the children, which you may use to filter them.
+
+
+### `isPage()`
+
+Added by `any-page-type`. `.isPage(true)` filters to only documents that are pages. Defaults to `true`
 
 ### `orphan()`
 
@@ -356,13 +369,12 @@ are suitable for display in the reorganize view.
 The only pages excluded are those with a `reorganize`
 property explicitly set to `false`.
 
-## `image`
+## Image document query builders
 
 ### `minSize()`
 
-## `submitted-draft`
+## Submitted draft builders
 
 ### `_type`
 
 def: null
-
