@@ -31,7 +31,7 @@ The `addLateCriteria` builder is an opportunity to add query criteria to merge d
 query.addUrls(false)
 ```
 
-The `addUrls` builder controls whether to invoke the `addUrls` method for doc types included in the query results. The builder defaults to `true`. If set to false, `addUrls` methods are not invoked.
+The `addUrls` builder controls whether to invoke the `addUrls` method for doc types included in the query results. The builder defaults to `true`. If set to `false`, `addUrls` methods are not invoked.
 
 This effectively controls whether the query results should include a `_url` property on individual documents, when available. `_url` is a dynamic property (not stored in the database) containing the document's unique URL. Not all documents have a unique URL.
 
@@ -168,42 +168,48 @@ The `limit` query builder accepts an integer and limits the number of document r
 
 ### `locale()`
 
+```
+query.locale('es:published')
+```
+
+A valid locale identifier passed to the `locale` builder will tell the query to return results only belonging to that locale. Documents that match the query and have *no locale* (because their doc type is not localized) are also included in the results. Specifically passing `false` (the default value) will use the locale and mode on the `req` request object.
 
 ### `log()`
 
-def: false
+```
+query.log(true)
+```
 
-If `.log(true)` is invoked, the query criteria are logged to the console.
+Setting the builder `.log(true)` on a query will log the the query criteria on the server (or the terminal when working on a local machine).
 
 ### `next()`
 
-`.next({ doc object goes here })`. If set to a doc object, this query builder will limit
-results to the docs that follow it in the current sort order.
-        //
-In addition to the current sort, the `_id` is used as a tiebreaker sort to avoid loops.
+```
+query.next({
+  _id: 'cgwxzcdvc501b4v3ghxvxqgg1:en:published',
+  ...
+})
+```
+
+Passing a document object to the `next` builder returns the document that follows it in the current sort order. The document object argument needs to at least include the properties used by the current sort as well as the `_id`. The `_id` is used as a tiebreaker to avoid loops.
 
 ### `page()`
 
-`.page(5)` sets the current page number to the 5th page
-overall (there is no page 0). You must also
-use `perPage`.
+```
+query.page(5)
+```
 
-Used by `@apostrophecms/piece-type` and `@apostrophecms/piece-page-type`.
+The `page` builder is used to request a particular "page," or set, of results when the [`perPage` builder](#perpage) is also used. Page numbers start with `1` (there is no page zero).
 
 ### `pageUrl()`
 
-def: true
-All docs that are part of the page tree (they have a slug
-beginning with a `/`) receive a `._url` property, which takes the
-sitewide prefix into account if necessary. Always use this property.
-Never use the slug as a URL.
-        //
-This feature is turned on by default, but you may chain
-`.pageUrl(false)` to disable it for a particular query.
-        //
-Note that many type-specific queries, such as those for `pieces`,
-also add a `._url` property appropriate to their type if a suitable
-pieces page is available.
+```
+query.pageUrl(false)
+```
+
+The `pageUrl` query builder is set to `true` by default and controls whether to add the `._url` property to page documents in the query results. The builder can be set to `false` to disable the `._url` property on a particular query.
+
+The `._url` property will include a site prefix if applicable and is always better to use than the document's `slug` for a URL.
 
 ### `permission()`
 
@@ -237,10 +243,14 @@ Used by `@apostrophecms/piece-type` and `@apostrophecms/piece-page-type`.
 
 ### `previous()`
 
-`.previous({ doc object goes here })`. If set to a doc object, this query builder will limit
-results to the docs that precede it in the current sort order.
-        //
-In addition to the current sort, the `_id` is used as a tiebreaker sort to avoid loops.
+```
+query.previous({
+  _id: 'cgwxzcdvc501b4v3ghxvxqgg1:en:published',
+  ...
+})
+```
+
+Passing a document object to the `previous` builder returns the document that precedes it in the current sort order. The document object argument needs to at least include the properties used by the current sort as well as the `_id`. The `_id` is used as a tiebreaker to avoid loops.
 
 ### `project()`
 
