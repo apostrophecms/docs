@@ -324,59 +324,59 @@ If the `withPublished` builder is set to `true`, then each document in the resul
 
 ## Page document query builders
 
+The following query builders only relate to page documents.
+
 ### `ancestors()`
 
-def: `false`
+```
+query.ancestors(true)
 
-`.ancestors(true)` retrieves the ancestors of each returned page and assigns them to the `._ancestors` property. The home page is `._ancestors[0]`. The page itself is not included in its own `._ancestors` array.
+query.ancestors({ children: true })
+```
 
-If the argument is an object, do all of the above, and also call the query builders present in the object on the query that fetches the ancestors. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `._children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get really fancy.
+Setting the `ancestors` builder to `true` retrieves the array of "ancestors" for each returned page and assigns them to the `_ancestors` property. Page ancestors are those that precede a given page in the page tree hierarchy. The home page is `_ancestors[0]`. A returned page is not included in its own `_ancestors` array.
 
-`ancestors` also has its own `depth` option, but it doesn't do what you think. If the `depth` option is present as a top-level property of the object passed to `ancestors`, then only that many ancestors are retrieved, counting backwards from the immediate parent of each page.
+If the builder argument is an object, do all of the above, and also call the query builders present in the object *on the query that fetches the ancestors*. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `_children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get two layers of child pages.
+
+`ancestors` also has its own `depth` option, but it might not do what you think. If the `depth` option is present as a top-level property of the `ancestors` builder argument, then only that number of ancestors are retrieved, counting backwards from the immediate parent of each page. So `{ depth: 2 }` retrieves only the two closest ancestors.
 
 ### `children()`
 
 ```
 query.children(true)
+
+query.children({ depth: 1 })
 ```
 
-The If `.children(true)` is called, return all children of a given page
-as a `._children` array property of the page. If the argument is an
-object, it may have a `depth` property to fetch nested children. Any
-other properties are passed on to the query builder when making the query
-for the children, which you may use to filter them.
-
+The `children` builder is used to include the "children" of returned pages in an array on a `_children` property. If `children(true)` is called, it will return all children of a given page. If the argument is an object, it may have a `depth` property to fetch a specific number of child layers. Any
+other properties are passed on *as builders for the query that fetches the children*.
 
 ### `isPage()`
 
-Added by `any-page-type`. `.isPage(true)` filters to only documents that are pages. Defaults to `true`
+```
+query.isPage(true)
+```
+
+Passing `true` to the `isPage` builder ensures that results will only include documents that are pages. It defaults to `true` when used.
 
 ### `orphan()`
 
-If `.orphan(null)` or `undefined` is called or this method
-is never called, return docs regardless of
-orphan status. if flag is `true`, return only
-orphan docs. If flag is `false`, return only
-docs that are not orphans. Orphans are pages that
-are not returned by the default behavior of the
-`children` query builder implemented by `@apostrophecms/any-page-type`
-and thus are left out of standard navigation.
+```
+query.orphan(true)
+```
 
-### `reorganize()`
+The `orphan` builder is used to return documents based on their "orphan" status. Orphans are pages that are not returned by the default behavior of the `children` query builder and thus are left out of standard navigation.
 
-def: null
-
-Use .reorganize(true) to return only pages that
-are suitable for display in the reorganize view.
-The only pages excluded are those with a `reorganize`
-property explicitly set to `false`.
+If flag is `true`, return only orphan docs. If flag is `false`, return only docs that are not orphans. If `.orphan(null)` or `undefined` is called, or this method is never called, return docs regardless of orphan status.
 
 ## Image document query builders
 
+The following query builders only relate to image documents.
+
 ### `minSize()`
 
-## Submitted draft builders
+```
+query.minSize([ 600, 800 ])
+```
 
-### `_type`
-
-def: null
+The `minSize` query builder can be used to set a minimum size for returned image documents. The argument should be an array with two values: the image width and the image height, in that order. The sizes are measured in pixels.
