@@ -213,33 +213,27 @@ The `._url` property will include a site prefix if applicable and is always bett
 
 ### `permission()`
 
-`.permission('admin')` would limit the returned docs to those for which the
-user associated with the query's `req` has the named permission.
-By default, `view` is checked for. You might want to specify
-`edit`.
+```
+query.permission('edit')
+```
 
-USE WITH CARE: If you pass `false`, permissions checks are disabled
-for this particular query.
+The `permission` builder is used restrict returned documents based on the action name passed as an argument. Only documents on which the `req` object can take the named action are returned. For example, using `.permission('edit')` on the query will only return documents that the requesting user (via `req`) can edit.
 
-If this method is never called, or you pass
-`undefined` or `null`, `view` is still checked for.
+Valid action arguments include:
+- `'view'`: The `req` has permission to view the documents. This is the default.
+- `'edit'`: The `req` has permission to edit the documents.
+- `'publish'`: The `req` has permission to publish the documents.
+- `false`: Bypass any permission checks. This returns everything regardless of permission level. *Use this with caution.*
 
-In all cases, all of the returned docs are marked
-with `_edit: true` properties
-if the user associated with the request is allowed to
-do that. This is useful if you are fetching
-docs for viewing but also want to know which ones
-can be edited.
+In all cases, all of the returned docs are marked with `_edit: true` properties if the user associated with the request is allowed to edit the document. This is useful if you are fetching docs for viewing but also want to know which ones can be edited.
 
 ### `perPage()`
 
-`.perPage(10)` allows you to paginate docs rather than using
-skip and limit directly.
+```
+query.perPage(20)
+```
 
-Sets the number of docs per page and enables the
-use of the `page` query builder to indicate the current page number.
-
-Used by `@apostrophecms/piece-type` and `@apostrophecms/piece-page-type`.
+Using the `perPage` builder returns documents in sets of the number passed as an argument. This helps return documents in managable numbers and paginate the results, using the [`page` query builder](#page) to get specific set of results. This is usually easier than using `skip` and `limit` directly.
 
 ### `previous()`
 
@@ -254,81 +248,79 @@ Passing a document object to the `previous` builder returns the document that pr
 
 ### `project()`
 
-        `.project({...})` sets the MongoDB projection. You can also
-        set the projection as the third argument to any
-        `find` method. The name was changed in 3.x to match
-        MongoDB's name for this chainable method of their
-        cursors.
+```
+query.project({
+  title: 1,
+  category: 1,
+  updatedAt: 1
+})
+```
+
+The `project` builders sets the [MongoDB projection](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/), specifying the document properties to included in the returned documents. The argument should be an object with properties of desired field names set to `1` to include those fields.
+
+<!-- TODO: point to the direct db find method for the alternate way to project results. -->
 
 ### `relationships()`
 
-def: true
+```
+query.relationships(false)
 
-`.relationships(true)`. Fetches relationships by default, for all types retrieved,
-based on the schema for each type. If `relationships(false)` is
-explicitly called no relationships are fetched. If
-`relationships([ ... ])` is invoked with an array of relationship names
-only those relationships and those intermediate to them
-are fetched (dot notation). See `@apostrophecms/schema`
-for more information.
+query.relationships(['_author'])
+```
+
+By default, [relationship](/guide/relationships.md) data are fetched for queried documents. The `relationships` builder can prevent or limit this.
+
+Pass `false` to the builder to not retrieve any relationship data. You may also pass an array of relationship names, which will fetch only those relationships and those intermediate to them (using dot notation).
 
 ### `sort()`
 
-`.sort({ title: 1 }` determines the sort order, similar to how
-MongoDB does it, with some extra features.
+```
+query.sort({ updatedAt: -1, title: 1 })
+```
 
-If `false` is explicitly passed, there is
-*no sort at all* (helpful with `$near`).
+The `sort` builder sets the sorting order for returned documents. If not set, the default is used, from the [`defaultSort` builder](#defaultsort) or module configuration. The sort argument is an object like `{ updatedAt: 1 }`, including a field name and `1` for ascending or `-1` for descending.  See the [MongoDB `sort` method documentation](https://docs.mongodb.com/manual/reference/method/cursor.sort/) for other options.
 
-If this method is never called or the argument is
-undefined, a case-insensitive sort on the title
-is the default, unless `search()` has been
-called, in which case a sort by search result
-quality is the default.
+`false` can be passed as an option to use *no sort definition at all*. This can be helpful when using MongoDB operators like `$near`, which already sort.
 
-If you sort on a field that is defined in the
-schema for the specific doc type you are finding,
-and that field has the `sortify: true` option in
-its schema field definition, then this query builder will
-automatically substitute a "sortified" version of
-the field that is case-insensitive, ignores
-extra whitespace and punctuation, etc. for a
-more natural sort than MongoDB normally provides.
+If this method is never called or the argument is `undefined`, a case-insensitive sort on the title is normally the default. If `search()` has been called, then a sort by search result quality is the default.
 
-For instance, `title` has `sortify: true` for all
-doc types, so you always get the more natural sort.
-
-<!-- Default sort bit -->
-The `defaultSort` changes the default value for the [`sort` query builder](#sort).  The argument is the same as for the `sort` query builder: an object like `{ updatedAt: 1 }`, including a field name and `1` for ascending or `-1` for descending. See the [MongoDB `sort` method documentation](https://docs.mongodb.com/manual/reference/method/cursor.sort/) for other options. `false` can be passed as an option as well to clear the default sort.
+If the query sorts on a field that is defined in a doc type's schema with the `sortify: true` option, then this query builder will automatically substitute a "sortified" version of the field: case-insensitive and ignoring extra whitespace and punctuation. This provides a more natural sort than MongoDB normally does.
 
 ### `skip()`
-`.skip(10)` skips the first 10 matching documents. Affects
-`toArray` and `toObject`. Does not affect
-`toDistinct` or `toMongo`.
+
+```
+query.skip(10)
+```
+
+The `skip` builder accepts a number as an argument, then skips that number of documents in a query's results. This affects `toArray` and `toObject`. It does not affect `toDistinct` or `toMongo`.
 
 ### `search()`
-`.search('tree')` limits results to those matching that text search.
-Search is implemented using MongoDB's `$text` operator and a full
-text index.
-        //
-If this query builder is set, the `sort` query builder will default to sorting
-by search quality. This is important because the worst of the
-full-text search matches will be of very poor quality.
+
+```
+query.search('tree')
+```
+
+The `search` builder limits results to those matching the string passed as an argument. Search is implemented using MongoDB's `$text` operator and a full text index.
+
+If this query builder is set, the `sort` query builder will default to sorting by search quality. This is important because the worst of the full-text search matches will be of very poor quality.
 
 ### `type()`
 
-`.type('product')` causes the query to only retrieve documents of the
-specified type. Filters out everything else.
-        //
-Generally you don't want to call this method directly.
-Call the `find()` method of the doc type manager
-for the type you are interested in. This will also
-give you a query of the right subclass.
+```
+query.type('product')
+```
+
+The `type` builder can be used to limit a query to only one particular doc type. Pass the doc type name (string) as an argument.
+
+Generally you don't want to call this method directly. It will be better to include the doc type name as the `type` criteria in the original `find()` method arguments.
 
 ### `withPublished()`
 
-If set to true, attach a `_publishedDoc` property to each draft document,
-containing the related published document.
+```
+query.withPublished(true)
+```
+
+If the `withPublished` builder is set to `true`, then each document in the results will include a `_publishedDoc` property. That property will be set to the published version of that document. This is really only useful when querying for draft documents.
 
 ## Page document query builders
 
