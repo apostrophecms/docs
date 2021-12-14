@@ -18,7 +18,9 @@ The following query builders apply to all Apostrophe [doc types](/reference/glos
 query.addUrls(false)
 ```
 
-The `addUrls` builder controls whether to invoke the `addUrls` method for doc types included in the query results. The builder defaults to `true`. If set to `false`, `addUrls` methods are not invoked.
+**Default value:** `true`
+
+The `addUrls` builder controls whether to invoke the `addUrls` method for doc types included in the query results. If set to `false`, `addUrls` methods are not invoked.
 
 This effectively controls whether the query results should include a `_url` property on individual documents, when available. `_url` is a dynamic property (not stored in the database) containing the document's unique URL. Not all documents have a unique URL.
 
@@ -56,6 +58,8 @@ query.areas(false)
 query.areas([ 'thumbnail' ])
 ```
 
+**Default value:** `true`
+
 The `areas` builder controls whether to call the `load` methods of widget type managers for widgets in areas. `load` methods are used to do things such as populating relationships in widgets and other asynchronous actions when areas are loaded.
 
 The default value is `true`. Pass `false` to prevent the extra processing for a particular query. This is helpful to make queries faster when detailed area data is not needed.
@@ -68,7 +72,9 @@ The value can also be an array containing strings representing area field names 
 query.attachments(true)
 ```
 
-Passing `true` to the `attachments` builder will annotate all attachment fields in the returned documents with URLs and other metadata (primarily for images). This uses the the `apos.attachment.all` method with the `annotate: true` option. The builder defaults to `false`.
+**Default value:** `false`
+
+Passing `true` to the `attachments` builder will annotate all attachment fields in the returned documents with URLs and other metadata (primarily for images). This uses the the `apos.attachment.all` method with the `annotate: true` option.
 
 ### `autocomplete()`
 
@@ -86,6 +92,8 @@ query.choices('color, species')
 query.choices(['color', 'species'])
 ```
 
+**Default value:** `false`
+
 The `choices` builder is use to populate a `choices` object on the query results based on the filters passed to it. Filters can be passed in as a single string of comma-separated values or an array of strings.
 
 That `choices` object will contain valid options for each filter based on the rest of the query. Those options can be used to populate a select field for filtering an index page, for example.
@@ -98,6 +106,8 @@ query.choices('color, species')
 query.choices(['color', 'species'])
 ```
 
+**Default value:** `false`
+
 The `counts` builder works very similarly to the [`choices` builder](#choices). When passed a string of comma-separated filter names (or an array of filter names), it will include a `counts` object including the individual choices. Each choice will include a `count` property set to the number of documents in the query results that match that choice.
 
 ### `criteria()`
@@ -105,6 +115,8 @@ The `counts` builder works very similarly to the [`choices` builder](#choices). 
 ```
 query.criteria({ category: { $in: ['animals', 'vegetables'] } })
 ```
+
+**Default value:** `{}`
 
 The `criteria` builder sets the base MongoDB query criteria, **discarding criteria previously added** using this method or the [`and` builder](#and). The `and` builder is usually better for most cases since it is not destructive. The default value of this builder is an empty object. As with the `and` builder, the criteria format would match that used in the [MongoDB `find` operation]((https://docs.mongodb.com/v4.4/reference/method/db.collection.find/)).
 
@@ -126,6 +138,8 @@ TODO
 ```
 query.distinctCounts(true)
 ```
+
+**Default value:** `false`
 
 `.distinctCounts(true)` makes it possible to obtain counts for each distinct value after a call to `toCount()` is resolved by calling `query.get('distinctCounts')`. These are returned as an object in which the keys are the distinct values of the field, and the values are the number of occurrences for each value.
 
@@ -159,6 +173,8 @@ The `limit` query builder accepts an integer and limits the number of document r
 query.locale('es:published')
 ```
 
+**Default value:** `false`
+
 A valid locale identifier passed to the `locale` builder will tell the query to return results only belonging to that locale. Documents that match the query and have *no locale* (because their doc type is not localized) are also included in the results. Specifically passing `false` (the default value) will use the locale and mode on the `req` request object.
 
 ### `log()`
@@ -166,6 +182,8 @@ A valid locale identifier passed to the `locale` builder will tell the query to 
 ```
 query.log(true)
 ```
+
+**Default value:** `false`
 
 Setting the builder `.log(true)` on a query will log the the query criteria on the server (or the terminal when working on a local machine).
 
@@ -178,6 +196,8 @@ query.next({
 })
 ```
 
+**Default value:** `false`
+
 Passing a document object to the `next` builder returns the document that follows it in the current sort order. The document object argument needs to at least include the properties used by the current sort as well as the `_id`. The `_id` is used as a tiebreaker to avoid loops.
 
 ### `page()`
@@ -186,6 +206,8 @@ Passing a document object to the `next` builder returns the document that follow
 query.page(5)
 ```
 
+**Default value:** `1`
+
 The `page` builder is used to request a particular "page," or set, of results when the [`perPage` builder](#perpage) is also used. Page numbers start with `1` (there is no page zero).
 
 ### `pageUrl()`
@@ -193,6 +215,8 @@ The `page` builder is used to request a particular "page," or set, of results wh
 ```
 query.pageUrl(false)
 ```
+
+**Default value:** `true`
 
 The `pageUrl` query builder is set to `true` by default and controls whether to add the `._url` property to page documents in the query results. The builder can be set to `false` to disable the `._url` property on a particular query.
 
@@ -220,6 +244,8 @@ In all cases, all of the returned docs are marked with `_edit: true` properties 
 query.perPage(20)
 ```
 
+**Default value:** `undefined`
+
 Using the `perPage` builder returns documents in sets of the number passed as an argument. This helps return documents in managable numbers and paginate the results, using the [`page` query builder](#page) to get specific set of results. This is usually easier than using `skip` and `limit` directly.
 
 ### `previous()`
@@ -230,6 +256,8 @@ query.previous({
   ...
 })
 ```
+
+**Default value:** `false`
 
 Passing a document object to the `previous` builder returns the document that precedes it in the current sort order. The document object argument needs to at least include the properties used by the current sort as well as the `_id`. The `_id` is used as a tiebreaker to avoid loops.
 
@@ -254,6 +282,8 @@ query.relationships(false)
 
 query.relationships(['_author'])
 ```
+
+**Default value:** `true`
 
 By default, [relationship](/guide/relationships.md) data are fetched for queried documents. The `relationships` builder can prevent or limit this.
 
@@ -321,6 +351,8 @@ query.ancestors(true)
 query.ancestors({ children: true })
 ```
 
+**Default value:** `false`
+
 Setting the `ancestors` builder to `true` retrieves the array of "ancestors" for each returned page and assigns them to the `_ancestors` property. Page ancestors are those that precede a given page in the page tree hierarchy. The home page is `_ancestors[0]`. A returned page is not included in its own `_ancestors` array.
 
 If the builder argument is an object, do all of the above, and also call the query builders present in the object *on the query that fetches the ancestors*. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `_children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get two layers of child pages.
@@ -335,6 +367,8 @@ query.children(true)
 query.children({ depth: 1 })
 ```
 
+**Default value:** `false`
+
 The `children` builder is used to include the "children" of returned pages in an array on a `_children` property. If `children(true)` is called, it will return all children of a given page. If the argument is an object, it may have a `depth` property to fetch a specific number of child layers. Any
 other properties are passed on *as builders for the query that fetches the children*.
 
@@ -343,6 +377,8 @@ other properties are passed on *as builders for the query that fetches the child
 ```
 query.isPage(true)
 ```
+
+**Default value:** `true`
 
 Passing `true` to the `isPage` builder ensures that results will only include documents that are pages. It defaults to `true` when used.
 
