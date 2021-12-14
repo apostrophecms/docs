@@ -79,10 +79,12 @@ Passing `true` to the `attachments` builder will annotate all attachment fields 
 ### `autocomplete()`
 
 ```
-query.autocomplete('tree house')
+query.autocomplete('tree')
 ```
 
-The `autocomplete` builder operates as a sort of fuzzy search for documents. It accepts a string and uses document search text properties to find matches. The string can contain multiple words, but each word (or segment) needs to be a partial string to find non-exact results. So "tree" will find results with "treehouse," but "treehouses" will not find "treehouse" (it is not meant as an advanced search tool, but can help find similar results).
+The `autocomplete` builder operates as a sort of fuzzy search for documents. It accepts a string and uses document search text properties to find matches. The string can contain multiple words, but only the final word may be a partial string to find non-exact results. So "tree" will find results with "treehouse," but "treehouses" will not find "treehouse" (it is not meant as an advanced search tool, but can help find similar results).
+
+This will only find partial matches in high-priority properties such as the `title`, or any string, select or checkbox field in the schema of the document.
 
 ### `choices()`
 
