@@ -117,7 +117,7 @@ query._ids([
 ])
 ```
 
-The `_ids` builder causes the query to return only the document with matching `_id` properties and to return them in that order, assuming the documents with the specified IDs exist. All documents are fetched in the same locale regardless of the locale suffix of the values. If no locale can be determined via query parameters, the locale is inferred from the first _id in the set.
+The `_ids` builder causes the query to return only the document with matching `_id` properties and to return them in that order, assuming the documents with the specified IDs exist. All documents are fetched in the locale and mode of the request regardless of the locale suffix of the values. If no locale can be determined via query parameters, the locale is inferred from the first _id in the set.
 
 The query builder can also be called with a string, which is treated as a single document ID.
 
@@ -127,7 +127,7 @@ The query builder can also be called with a string, which is treated as a single
 query.limit(10)
 ```
 
-The `limit` query builder accepts an integer and limits the number of document results. It returns the first matching documents up to the set limit, though it does take the [`skip` builder](#skip) into account.
+The `limit` query builder accepts an integer and limits the number of document results. It returns the first matching documents up to the set limit after taking the [`skip` builder](#skip) into account.
 
 ### `locale()`
 
@@ -137,7 +137,7 @@ query.locale('es:published')
 
 **Default value:** `false`
 
-A valid locale identifier passed to the `locale` builder will tell the query to return results only belonging to that locale. Documents that match the query and have *no locale* (because their doc type is not localized) are also included in the results. Specifically passing `false` (the default value) will use the locale and mode on the `req` request object.
+A valid locale identifier passed to the `locale` builder will tell the query to return results only belonging to that locale, including the mode (`draft` or `published`) after a `:` character. Documents that match the query and have *no locale* (because their doc type is not localized) are also included in the results. Specifically passing `false` (the default value) will use the locale and mode on the `req` request object.
 
 ### `log()`
 
@@ -190,7 +190,7 @@ The `._url` property will include a site prefix if applicable and is always bett
 query.permission('edit')
 ```
 
-The `permission` builder is used restrict returned documents based on the action name passed as an argument. Only documents on which the `req` object can take the named action are returned. For example, using `.permission('edit')` on the query will only return documents that the requesting user (via `req`) can edit.
+The `permission` builder is used to restrict returned documents based on the action name passed as an argument. Only documents on which the `req` object can take the named action are returned. For example, using `.permission('edit')` on the query will only return documents that the requesting user (via `req`) can edit.
 
 Valid action arguments include:
 - `'view'`: The `req` has permission to view the documents. This is the default.
@@ -198,7 +198,7 @@ Valid action arguments include:
 - `'publish'`: The `req` has permission to publish the documents.
 - `false`: Bypass any permission checks. This returns everything regardless of permission level. *Use this with caution.*
 
-In all cases, all of the returned docs are marked with `_edit: true` properties if the user associated with the request is allowed to edit the document. This is useful if you are fetching docs for viewing but also want to know which ones can be edited.
+In all cases, all of the returned docs are marked with `_edit: true` properties if the user associated with the request is allowed to edit the document and `_published: true` if the user is allowed to publish it. This is useful if you are fetching docs for viewing but also want to know which ones can be edited.
 
 ### `perPage()`
 
@@ -208,7 +208,9 @@ query.perPage(20)
 
 **Default value:** `undefined`
 
-Using the `perPage` builder returns documents in sets of the number passed as an argument. This helps return documents in managable numbers and paginate the results, using the [`page` query builder](#page) to get specific set of results. This is usually easier than using `skip` and `limit` directly.
+Using the `perPage` builder returns documents in sets of the number passed as an argument. This helps return documents in managable numbers and paginate the results, using the [`page` query builder](#page) to get a specific set of results. This is usually easier than using `skip` and `limit` directly.
+
+After the query completes, with `await query.toArray()` for instance, `query.get('totalPages')` will return the total number of pages.
 
 ### `previous()`
 
@@ -233,9 +235,11 @@ query.project({
 })
 ```
 
-The `project` builders sets the [MongoDB projection](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/), specifying the document properties to included in the returned documents. The argument should be an object with properties of desired field names set to `1` to include those fields.
+The `project` builders sets the [MongoDB projection](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/), specifying the document properties to included in the returned documents. The argument should be an object with properties of desired field names set to `1` to include those fields. Negative projections (`category: 0`) are currently not supported.
 
-<!-- TODO: point to the direct db find method for the alternate way to project results. -->
+In addition to database properties, Apostrophe provides two dynamic properties that can be included in hte `project` builder object:
+- `_url: 1` will include all properties required to generate an accurate `_url` property for each returned document.
+- `_relationshipName: 1` will add the properties required to permit a field of type `relationship` to be loaded, even though the related documents are not stored redundantly in the database. In this example, the name of the field is `_relationshipName`. `_articles: 1` could do the same for a relationship to `article` pieces.
 
 ### `relationships()`
 
@@ -279,7 +283,7 @@ The `skip` builder accepts a number as an argument, then skips that number of do
 query.search('tree')
 ```
 
-The `search` builder limits results to those matching the string passed as an argument. Search is implemented using MongoDB's `$text` operator and a full text index.
+The `search` builder limits results to those matching the string passed as an argument. Search is implemented using MongoDB's `$text` operator and a full text index. The `search` builder does not support partial matches. For that, see the [`autocomplete` builder](#autocomplete).
 
 If this query builder is set, the `sort` query builder will default to sorting by search quality. This is important because the worst of the full-text search matches will be of very poor quality.
 
@@ -291,7 +295,7 @@ query.type('product')
 
 The `type` builder can be used to limit a query to only one particular doc type. Pass the doc type name (string) as an argument.
 
-Generally you don't want to call this method directly. It will be better to include the doc type name as the `type` criteria in the original `find()` method arguments.
+Generally you don't want to call this method directly. It will be better to use a doc type module's `find` method, which limits to that type automatically. You can also include the doc type name as the `type` criteria in a generic `find()` method's arguments.
 
 ### `withPublished()`
 
@@ -303,7 +307,7 @@ If the `withPublished` builder is set to `true`, then each document in the resul
 
 ## Page document query builders
 
-The following query builders only relate to page documents.
+The following query builders are only available on query created with the page module's `apos.page.find` method and [page REST API routes](/reference/api/pages.md).
 
 ### `ancestors()`
 
@@ -317,7 +321,7 @@ query.ancestors({ children: true })
 
 Setting the `ancestors` builder to `true` retrieves the array of "ancestors" for each returned page and assigns them to the `_ancestors` property. Page ancestors are those that precede a given page in the page tree hierarchy. The home page is `_ancestors[0]`. A returned page is not included in its own `_ancestors` array.
 
-If the builder argument is an object, do all of the above, and also call the query builders present in the object *on the query that fetches the ancestors*. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `_children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get two layers of child pages.
+If the builder's argument is an object, the builder does all of the above, and also calls the query builders present in the object *on the query that fetches the ancestors*. For example, you can pass `{ children: true }` to fetch the children of each ancestor as the `_children` property of each ancestor, or pass `{ children: { depth: 2 } }` to get two layers of child pages.
 
 `ancestors` also has its own `depth` option, but it might not do what you think. If the `depth` option is present as a top-level property of the `ancestors` builder argument, then only that number of ancestors are retrieved, counting backwards from the immediate parent of each page. So `{ depth: 2 }` retrieves only the two closest ancestors.
 
@@ -342,7 +346,7 @@ query.isPage(true)
 
 **Default value:** `true`
 
-Passing `true` to the `isPage` builder ensures that results will only include documents that are pages. It defaults to `true` when used.
+Passing `true` to the `isPage` builder ensures that results will only include documents that are pages.
 
 ### `orphan()`
 
@@ -356,7 +360,8 @@ If flag is `true`, return only orphan docs. If flag is `false`, return only docs
 
 ## Image document query builders
 
-The following query builders only relate to image documents.
+The following query builders are only available on query created with the image module's `apos.image.find` method and [piece REST API routes](/reference/api/piece.md) when dealing with the `@apostrophecms/image` piece type.
+
 
 ### `minSize()`
 
