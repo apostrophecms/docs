@@ -4,26 +4,13 @@ sidebarDepth: 2
 
 # Query builders
 
-Database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. All official query builders are written to either work as intended or to have no effect, at worst. The sections below organize core query builders by the relevant document types.
+Server-side database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. All official query builders are written to either work as intended or to have no effect, at worst. The sections below organize core query builders by the relevant document types.
 
 **See the [database querying guide](#TODO) for general information about using query builders.**
 
 ## Builders for all doc types
 
 The following query builders apply to all Apostrophe [doc types](/reference/glossary.md#doc).
-
-### `addLateCriteria()`
-
-```
-query.addLateCriteria({
-  geo: {
-    $near: [ 43.019590, -87.909290 ],
-    $maxDistance: 10
-  }
- })
-```
-
-The `addLateCriteria` builder is an opportunity to add query criteria to merge directly into the final criteria object that will go to MongoDB. This is meant to be used only in cases where MongoDB forbids the use of an operator inside an `$and` array, such as the `$near` operator.
 
 ### `addUrls()`
 
