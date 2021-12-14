@@ -86,32 +86,6 @@ The `autocomplete` builder operates as a sort of fuzzy search for documents. It 
 
 This will only find partial matches in high-priority properties such as the `title`, or any string, select or checkbox field in the schema of the document.
 
-### `choices()`
-
-```
-query.choices('color, species')
-
-query.choices(['color', 'species'])
-```
-
-**Default value:** `false`
-
-The `choices` builder is use to populate a `choices` object on the query results based on the filters passed to it. Filters can be passed in as a single string of comma-separated values or an array of strings.
-
-That `choices` object will contain valid options for each filter based on the rest of the query. Those options can be used to populate a select field for filtering an index page, for example.
-
-### `counts()`
-
-```
-query.choices('color, species')
-
-query.choices(['color', 'species'])
-```
-
-**Default value:** `false`
-
-The `counts` builder works very similarly to the [`choices` builder](#choices). When passed a string of comma-separated filter names (or an array of filter names), it will include a `counts` object including the individual choices. Each choice will include a `count` property set to the number of documents in the query results that match that choice.
-
 ### `criteria()`
 
 ```
