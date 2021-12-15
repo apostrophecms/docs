@@ -368,8 +368,7 @@ module.export = {
 
 ### `async init(self)`
 
-This function runs once when the Apostrophe app first starts up. It takes the module, as `self`, as an argument. To run code on every request, or in other situations when the app is running, see the event handlers documentation.
-<!-- TODO: Link to event handlers guide documentation when available. -->
+This function runs once when the Apostrophe app first starts up. It takes the module, as `self`, as an argument. To run code on every request, or in other situations when the app is running, see the [event handlers documentation](/guide/server-events.md).
 
 While [customization functions](#customization-functions) add functionality for the module in specific ways, `init` provides a space for more open code execution. It is useful for setting properties on the module that could not be set in other sections.
 
@@ -846,13 +845,11 @@ A route in the `apiRoutes`, `restApiRoutes`, `renderRoutes`, and `routes` sectio
 
 ### `handlers(self)`
 
-The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing server-side events. The value of those event keys should be an object of functions to execute when those events fire. Event handlers may be asynchronous (async) functions.
-<!-- TODO: Link to the reference to or guide on server-side events when available. -->
+The `handlers` function takes the module as an argument and must return an object. The object keys should be names of existing [server-side events](/reference/server-events.md). The value of those event keys should be an object of functions to execute when those events fire. Event handlers may be asynchronous (async) functions.
 
 Events belonging to the same module where the handlers are defined, or from its base class, can be referenced by name, e.g., `beforeInsert` for any piece type. You may also add handlers in one module that respond to events in other modules. Those event names should be prefixed with the name of the module that emits the event followed by a colon, e.g., `@apostrophecms/page:beforeSend`.
 
-Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted.
-<!-- TODO: Link to event reference for arguments when available. -->
+Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted. See the [events reference](/reference/server-events.md) for details.
 
 ```javascript
 // modules/product/index.js
@@ -886,7 +883,6 @@ Each extended event handler should accept the original function as `_super` foll
 ### `queries(self, query)`
 
 The `queries` function registers custom query builders and methods. It takes two arguments: the module (`self`) and the query that is being constructed (`query`). It must return an object. That object can have two properties:
-<!-- TODO: Link to a real guide on using queries when available. This is simply reference. -->
 
 | `queries` properties | Description |
 | ---- | ---- |
@@ -895,8 +891,7 @@ The `queries` function registers custom query builders and methods. It takes two
 
 #### `builders`
 
-Query builders are defined as objects with a set of properties available to them. Builders often take an argument or use a default value.
-<!-- TODO: Link to a reference of core builders when available. -->
+Query builders are defined as objects with a set of properties available to them. Builders often take an argument or use a default value. Be sure to get to know the [existing query builders](/reference/query-builders.md) before creating new ones.
 
 | Builder properties | Description |
 | ---- | ---- |
@@ -952,8 +947,7 @@ module.exports = {
 
 #### `methods`
 
-An object of methods that execute queries after any builders have been applied. These functions should use existing query methods or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
-<!-- TODO: Link to a reference of core builders when available. -->
+An object of methods that execute queries after any builders have been applied. These functions should use existing [query methods](/guide/database-queries.md#finishing-with-query-methods) or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
 
 ```javascript
 // modules/product/index.js
