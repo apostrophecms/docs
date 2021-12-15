@@ -4,7 +4,7 @@ sidebarDepth: 2
 
 # Query builders
 
-Server-side database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. All official query builders are written to either work as intended or to have no effect, at worst. The sections below organize core query builders by the relevant document types.
+Server-side database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. The sections below organize core query builders by the relevant document types.
 
 **See the [database querying guide](#TODO) for general information about using query builders.**
 
@@ -237,7 +237,7 @@ query.project({
 
 The `project` builders sets the [MongoDB projection](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/), specifying the document properties to included in the returned documents. The argument should be an object with properties of desired field names set to `1` to include those fields. Negative projections (`category: 0`) are currently not supported.
 
-In addition to database properties, Apostrophe provides two dynamic properties that can be included in hte `project` builder object:
+In addition to database properties, Apostrophe provides two dynamic properties that can be included in the `project` builder object:
 - `_url: 1` will include all properties required to generate an accurate `_url` property for each returned document.
 - `_relationshipName: 1` will add the properties required to permit a field of type `relationship` to be loaded, even though the related documents are not stored redundantly in the database. In this example, the name of the field is `_relationshipName`. `_articles: 1` could do the same for a relationship to `article` pieces.
 
