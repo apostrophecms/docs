@@ -108,11 +108,11 @@ It is distinct from the `sort` builder to distinguish between cases where a defa
 
 In most custom uses the `sort` builder will likely be a more common option.
 
-<!--
 ### `distinctCounts()`
-TODO
+
 ```
-query.distinctCounts(true)
+const names = query.toDistinct('firstName')
+const counts = query.get('distinctCounts')
 ```
 
 **Default value:** `false`
@@ -120,7 +120,6 @@ query.distinctCounts(true)
 `.distinctCounts(true)` makes it possible to obtain counts for each distinct value after a call to `toCount()` is resolved by calling `query.get('distinctCounts')`. These are returned as an object in which the keys are the distinct values of the field, and the values are the number of occurrences for each value.
 
 This has a performance impact.
--->
 
 ### `_ids()`
 
