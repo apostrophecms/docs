@@ -206,11 +206,36 @@ const product = await self.find(req, { _id: productId })
   .toObject();
 ```
 
+#### `toCount`
+
+The `toCount` query method is the easy and quickest way to simply get the number of documents that match a query. The `toCount` query method will ignore any `page`, `skip` and `limit` query builders in order to get the total number.
+
+If the query is using a `perPage` query builder it will also populate `totalPages` on the query, which can be retrieved with `query.get('totalPages')`.
+
+```javascript
+const productsCount = await self.find(req, criteria)
+  .toCount();
+```
+
+#### `toDistinct`
+
+`toDistinct` allows us to retrieve the unique values for a particular document property from the documents that match query. For example, using `query.toDistinct('category')` will return an array with all the `category` property values across documents, with each category only appearing once in the array.
+
+```javascript
+const shoeColors = await self.find(req, { type: 'shoe' })
+  .toDistinct('color');
+```
+
 #### `toChoices`
-- query methods
-  - toChoices
-  - toDistinct
-  - toCount
+
+The `toChoices` query method builds on `toDistinct` by returning each choice as an object with `label` and `value` properties. This can be useful when populating a select or other input field with options for a doc type property. For example, this is used for the document manager modal filter UI in Apostrophe.
+
+`toChoices` accepts an options object as an optional second argument. Setting `counts: true` in that options object will include a `count` property on each returned choice indicating how many documents match that choice.
+
+```javascript
+const teamOffices = await self.find(req, { type: 'team' })
+  .toDistinct('office', { count: true });
+```
 
 ## Updating pieces
 - update() to update a piece
