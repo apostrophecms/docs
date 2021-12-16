@@ -163,13 +163,56 @@ We're not limited to the query builders that come in Apostrophe core. It may hel
 
 We can do this with the `queries()` customization function in the module configuration API. See the [module configuration API reference](/reference/module-api/module-overview.md#queries-self-query) for more information.
 
-### Getting the results with query methods
+### Finishing with query methods
+
+Initiating a query with `find()` and adding query builders are how we set up our data request. To get results we can use, the query ends with a **query method**. The query method takes the criteria and refinement we set up and adds logic that tells the database how we want our information back.
+
+The simplest and most commonly used query methods are **`toArray`** and **`toObject`**. They either return an array of document results or a single document result, respectively.
+
+#### `toArray`
+Our query example from above uses `toArray()`. Let's look at that again.
+
+```javascript
+const products = await self.find(req, criteria)
+  .sort({ createdAt: -1 })
+  .limit(5)
+  .toArray();
+```
+
+As we've covered already, this code sets up the initial query with criteria (`self.find`) and adds builders with additional instructions (`sort` and `limit`). The final thing it does is run `toArray()` on the query. This is telling the database, "Take all the instructions we provided and give us back an array of results based on those instructions. Please." So, at the end of this, `products` will be an array of up to five document objects.
+
+::: note
+See that in our example we use `await` before `self.find`, indicating that this is running an asynchronous operation. It is worth noting that `toArray()` is the only asynchronous part of the code since that's the part that actually talks to the database.
+
+It is totally fine to set up queries synchronously (without `await`) and then execute the query in a separate step later.
+
+```javascript
+const query = self.find(req, criteria)
+  .sort({ createdAt: -1 })
+  .limit(5);
+
+const products = await query.toArray();
+```
+:::
+
+#### `toObject`
+
+`toObject` is very similar to `toArray`, but it only returns one result as an object. In fact, `toObject` is basically the same as setting a `limit(1)` builder on the query then taking the single object out of the returned array. Using `toObject` simply makes it easier to write queries when we only want one result. For example, we may already know the unique `_id` of the document we want from the database.
+
+```javascript
+const productId = 'ckcqi1ye1005mof3rdgtlln0b:en:published';
+
+const product = await self.find(req, { _id: productId })
+  .toObject();
+```
+
+#### `toChoices`
 - query methods
-  - toArray
-  - toObject
   - toChoices
   - toDistinct
   - toCount
+
+## Updating pieces
 - update() to update a piece
 - insert() to insert a piece
   - difference for pages
