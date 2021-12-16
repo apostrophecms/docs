@@ -1,7 +1,3 @@
----
-sidebarDepth: 2
----
-
 # Querying the database
 
 When designing custom modules or customizing existing modules, it can quickly become necessary to fetch data that Apostrophe does not automatically make available. We might want to display a random image in a page banner or a few dynamically-chosen articles related to the page a visitor is on. Apostrophe has an API designed to help developers get as creative as they need to be.
@@ -14,7 +10,7 @@ As a final note, this guide will focus on working with content documents (e.g., 
 We use the terms "query" and "query builders" here. For developers with advanced Apostrophe 2 experience, these are generally the same as the A2 concepts of "cursors" and "cursor filters."
 :::
 
-## `find()`-ing data
+## Initiating the data query
 
 The page module (`@apostrophecms/page`) and all modules that *extend* the piece type module (`@apostrophecms/piece-type`), the two big "doc type" categories, have access to **a `find()` method** that initializes a data query. Any query using a doc type module's `find` method will be limited to that module type. This means that we can know that calling `self.find()` in a `product` piece module will only return "products".
 
@@ -96,7 +92,7 @@ It's important to understand that the `find` method is not the end of the proces
 
 These are **query builders**. Let's look at what query builders are before we identify what is happening in this example.
 
-### Using query builders
+## Using query builders
 
 Query builders are additional instructions added to the data query. These special methods may receive arguments, but many apply an effect without any arguments. They can be chained on a query, meaning that we can add multiple builders onto a query and each one will build on the rules established before it.
 
@@ -124,7 +120,7 @@ Many aspects of querying the database are the same for both page and piece queri
 There is [a section for these builders](/reference/query-builders.md#page-document-query-builders) in the reference page. There is a similar section with a builder that only works on *image* piece queries as well.
 :::
 
-#### Projections: Reducing returned document data
+### Projections: Reducing returned document data
 
 One very useful query builder is `.project()`. We often know what specific data properties we want from a query and it is rarely *every single property*. By applying a query projection we reduce density of the data returned, making the response lighter, faster, and easier work with during development.
 
@@ -145,7 +141,7 @@ The `_id` property is always included no matter what projection is used.
 In Apostrophe 2 this builder was named `projection`.
 :::
 
-#### Paginating query results
+### Paginating query results
 
 There are a few query builders that can work together to "paginate" query results. Sometimes that is better than receiving an unknown large number of results all at once.
 
@@ -157,19 +153,19 @@ query
 
 This example tells the query that its results should be returned in a group of no more than 20 (`.perPage(20)`) and that we want the second group of results based on the active sort order (`.page(2)`). These builders are used in the Apostrophe REST APIs and can be very helpful when dealing with large amounts of content. They use two other builders internally (`limit` and `skip`), but can be easier to use for common situations.
 
-#### Adding your own query builders
+### Adding your own query builders
 
 We're not limited to the query builders that come in Apostrophe core. It may help to create a builder that applies certain criteria and other builders that we might otherwise have to write repeatedly across a code base.
 
 We can do this with the `queries()` customization function in the module configuration API. See the [module configuration API reference](/reference/module-api/module-overview.md#queries-self-query) for more information.
 
-### Finishing with query methods
+## Finishing with query methods
 
 Initiating a query with `find()` and adding query builders are how we set up our data request. To get results we can use, the query ends with a **query method**. The query method takes the criteria and refinement we set up and adds logic that tells the database how we want our information back.
 
 The simplest and most commonly used query methods are **`toArray`** and **`toObject`**. They either return an array of document results or a single document result, respectively.
 
-#### `toArray`
+### `toArray`
 Our query example from above uses `toArray()`. Let's look at that again.
 
 ```javascript
@@ -195,7 +191,7 @@ const products = await query.toArray();
 ```
 :::
 
-#### `toObject`
+### `toObject`
 
 `toObject` is very similar to `toArray`, but it only returns one result as an object. In fact, `toObject` is basically the same as setting a `limit(1)` builder on the query then taking the single object out of the returned array. Using `toObject` simply makes it easier to write queries when we only want one result. For example, we may already know the unique `_id` of the document we want from the database.
 
@@ -206,7 +202,7 @@ const product = await self.find(req, { _id: productId })
   .toObject();
 ```
 
-#### `toCount`
+### `toCount`
 
 The `toCount` query method is the easy and quickest way to simply get the number of documents that match a query. The `toCount` query method will ignore any `page`, `skip` and `limit` query builders in order to get the total number.
 
@@ -217,7 +213,7 @@ const productsCount = await self.find(req, criteria)
   .toCount();
 ```
 
-#### `toDistinct`
+### `toDistinct`
 
 `toDistinct` allows us to retrieve the unique values for a particular document property from the documents that match query. For example, using `query.toDistinct('category')` will return an array with all the `category` property values across documents, with each category only appearing once in the array.
 
@@ -226,7 +222,7 @@ const shoeColors = await self.find(req, { type: 'shoe' })
   .toDistinct('color');
 ```
 
-#### `toChoices`
+### `toChoices`
 
 The `toChoices` query method builds on `toDistinct` by returning each choice as an object with `label` and `value` properties. This can be useful when populating a select or other input field with options for a doc type property. For example, this is used for the document manager modal filter UI in Apostrophe.
 
@@ -237,13 +233,41 @@ const teamOffices = await self.find(req, { type: 'team' })
   .toDistinct('office', { count: true });
 ```
 
-## Updating pieces
-- update() to update a piece
-- insert() to insert a piece
-  - difference for pages
-- The server events each triggers
-- fetching pieces from a different module
-- acting on mixed doc types with `self.apos.docs` methods
-- query utilities
-  - clone()
-  - toMongo()
+## Query across modules
+
+The `find()` method in doc type modules is easy to use within each module as `self.find`. However this assumes we're looking for only content that is governed by the module where the method is called. There are two main ways to write these database queries from one module and get content managed by a separate module.
+
+### Using another module's `find` method
+
+The `self` object available in any Apostrophe module's customization functions can access other module managers on the `self.apos.modules` object. For example, if I'm working in the `article` module and want to query `author` pieces, I can access the `author` module with this:
+
+```javascript
+self.apos.modules.author
+```
+
+`self.apos.modules.author` is essentially the same as `self` would be if we were operating within the `author` module. Therefore we can query author pieces directly by using that module's `find` method.
+
+```javascript
+const activeAuthors = self.apos.modules.author.find(req, { active: true })
+  .toArray();
+```
+
+If a doc type module has been [assigned an alias](/reference/module-api/module-options.md#alias), the doc type's manager will be directly on `self.apos`. For example, the `@apostrophecms/page` module is available as `self.apos.page` because `'page'` is its alias option value.
+
+### Querying multiple doc types
+
+As mentioned earlier, doc type modules' `find` methods will automatically restrict results to that document type. Sometimes we may want to fetch documents that match a query regardless of what doc type they are (e.g., all content tagged with a certain term). Or we may use a querying function across contexts and we don't know what doc type we will be looking for.
+
+There is a module that governs all content documents: `@apostrophecms/doc`, which is aliased as `'doc'`. Its `find` method works the same as any individual doc type's, but it is not restricted to any one document type. We can then use it to look for a particular type with the `type` property or pass it criteria and get documents of multiple types in the results.
+
+```javascript
+const featuredContent = self.apos.doc.find(req, { featured: true })
+  .toArray();
+
+
+const featuredByType = self.apos.doc.find(req, {
+  featured: true,
+  type: selectedType // A hypothetical option a user selected.
+})
+  .toArray();
+```
