@@ -2,9 +2,9 @@
 
 When designing custom modules or customizing existing modules, it can quickly become necessary to fetch data that Apostrophe does not automatically make available. We might want to display a random image in a page banner or a few dynamically-chosen articles related to the page a visitor is on. Apostrophe has an API designed to help developers get as creative as they need to be.
 
-One goal of the Apostrophe querying API is to facilitate common and advance requests to the MongoDB database *without* requiring developers to know advanced MongoDB syntax. Understanding that low-level syntax will be helpful at times, but advanced knowledge should not be necessary.
+One goal of the Apostrophe content query API is to facilitate common and advanced requests to the MongoDB database *without* requiring developers to know advanced MongoDB syntax. Understanding that low-level syntax will be helpful at times, but advanced knowledge should not be necessary.
 
-As a final note, this guide will focus on working with content documents (e.g., pages and pieces). Querying database collections for things like the cache or long-running jobs will be covered elsewhere.
+This API also provides a layer of security. Queries made through Apostrophe (that maintain the original `req` request), will only return content the active website user is allowed to see.
 
 ::: note
 We use the terms "query" and "query builders" here. For developers with advanced Apostrophe 2 experience, these are generally the same as the A2 concepts of "cursors" and "cursor filters."
@@ -12,7 +12,7 @@ We use the terms "query" and "query builders" here. For developers with advanced
 
 ## Initiating the data query
 
-The page module (`@apostrophecms/page`) and all modules that *extend* the piece type module (`@apostrophecms/piece-type`), the two big "doc type" categories, have access to **a `find()` method** that initializes a data query. Any query using a doc type module's `find` method will be limited to that module type. This means that we can know that calling `self.find()` in a `product` piece module will only return "products".
+The page module (`@apostrophecms/page`) and all modules that *extend* the piece type module (`@apostrophecms/piece-type`), the two big "doc type" categories, have access to **a `find()` method** that initiates a data query. Any query using a doc type module's `find` method will be limited to that module type. This means that we can know that calling `self.find()` in a `product` piece module will only return products.
 
 The `find` method takes up to three arguments:
 
@@ -20,9 +20,9 @@ The `find` method takes up to three arguments:
 | -------- | -------- | ----------- |
 | `req` | TRUE | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | FALSE | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | FALSE | The options object is converted to matching [query builders](#using-query-builders). It is often easier to add query builders in the method-syntax described below. |
+| `options` | FALSE | The options object is converted to matching [query builders](#using-query-builders). It is often easier to add query builders in the fluent interface described below. |
 
-In the following example, we are writing the function that powers an [async template component](/guide/async-components.md). This hypothentical component would be passed the product `_id` property where it is shown as `productId`.
+In the following example, we are writing the function that powers an [async template component](/guide/async-components.md). This hypothetical component would be passed the product `_id` property where it is shown as `productId`.
 
 <AposCodeBlock>
   ```javascript
@@ -54,6 +54,20 @@ In the following example, we are writing the function that powers an [async temp
     modules/product/index.js
   </template>
 </AposCodeBlock>
+
+::: note
+For context, this is what it would look like to invoke this async component in a product show page template:
+
+<AposCodeBlock>
+  ```django
+  {% component 'product:latest' with { productId: data.piece._id } %}
+  ```
+  <template v-slot:caption>
+    modules/product-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+:::
 
 **What is happening here?**
 
@@ -99,8 +113,9 @@ Query builders are additional instructions added to the data query. These specia
 Examples of query builders include:
 - `.limit(10)`: This limits the number of results that the query will return to the number we pass it.
 - `.sort({ name: 1 })`: This builder sorts query results based on a document property value. This one sorts by the `name` property in ascending order.
-- `.search('search term')`: This accepts a string and looks for documents that have that string in their registered searchable words.
+- `.search('search term')`: This accepts a string and looks for documents that have that string in Apostrophe's full-text index.
 - `.relationships(false)`: This builder accepts `false` or an array of relationship field names to avoid or limit relationship data loading onto the request response (saving some processing when it's not needed).
+- `.areas(false)`: Similarly, this builder accepts `false` to prevent fetching relationships and doing similar work for any widgets nested in the documents, which can also help with performance where that information is unnecessary. You can also specify an array of specific area names whose widgets should be fully loaded.
 
 As we can see here, query builders apply a wide variety of effects. See the [query builder reference page](/reference/query-builders.md) for a full list of query builders and how to use them.
 
@@ -128,12 +143,13 @@ One very useful query builder is `.project()`. We often know what specific data 
 query
   .project({
     title: 1,
+    _url: 1,
     _author: 1,
     publishedAt: 1
   })
 ```
 
-The `project` builder is one that uses a MongoDB syntax. The object passed as an argument should include schema field names for the document type we're querying with each set to `1`. This tells the database that we only want these fields in each document we get back.
+The `project` builder is one that uses a MongoDB syntax. The object passed as an argument should include schema field names for the document type we're querying with each set to `1`. This tells the database that we only want these fields in each document we get back. In addition to simple fields, Apostrophe enhances `project` to handle relationship fields and the special property `_url`.
 
 The `_id` property is always included no matter what projection is used.
 
@@ -152,6 +168,65 @@ query
 ```
 
 This example tells the query that its results should be returned in a group of no more than 20 (`.perPage(20)`) and that we want the second group of results based on the active sort order (`.page(2)`). These builders are used in the Apostrophe REST APIs and can be very helpful when dealing with large amounts of content. They use two other builders internally (`limit` and `skip`), but can be easier to use for common situations.
+
+### Schema field builders
+
+Apostrophe automatically creates query builders for most [schema fields](/guide/content-schema.md) configured on piece and page types. Passing a value into a schema field builder refines the query to fetch documents that have the provided value in the matching field.
+
+For example, we might have a select field on a `product` piece type to identify a particular category:
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    fields: {
+      add: {
+        //...
+        category: {
+          type: 'select',
+          label: 'Product Line',
+          choices: [
+            { value: 'professional', label: 'Professional' },
+            { value: 'hobbyist', label: 'Hobby' },
+            { value: 'athletic', label: 'Athletic' }
+          ]
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/product-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+We can query products matching a particular category:
+
+```javascript
+query.category('athletic')
+```
+
+The following field types get this query builder treatment:
+
+- `string`
+- `slug`
+- `boolean`
+- `checkboxes`
+- `select`
+- `radio`
+- `integer`
+- `float`
+- `url`
+- `date`
+- `relationship`
+
+`relationship` fields get special treatment with four query builders for each field. If the field name is `_products`, then:
+
+- `._products(product._id)` matches only documents related to the product with the provided `_id`. You can also pass an array of product IDs, in which case documents related to *at least one* of those products will match.
+- `.products(product.slug)` (no leading `_`) is similar, but supports matching by the `slug` property. You can also pass an array of product slugs, in which case only documents related to *at least one* of those products will match.
+- `._productsAnd([ _id1, _id2, _id3...])` matches only documents related to *all* of the specified product IDs (one relation is not enough).
+- `.productsAnd([ slug1, slug2, slug3...])` (no leading  `_`) matches only documents related to *all* of the specified product slugs (one relation is not enough).
+
+`_id` properties are useful since they will never change, but slugs can be more readable (for humans) and parsed from URLs.
 
 ### Adding your own query builders
 
@@ -175,7 +250,7 @@ const products = await self.find(req, criteria)
   .toArray();
 ```
 
-As we've covered already, this code sets up the initial query with criteria (`self.find`) and adds builders with additional instructions (`sort` and `limit`). The final thing it does is run `toArray()` on the query. This is telling the database, "Take all the instructions we provided and give us back an array of results based on those instructions. Please." So, at the end of this, `products` will be an array of up to five document objects.
+As we've covered already, this code sets up the initial query with criteria (`self.find`) and adds builders with additional instructions (`sort` and `limit`). The final thing it does is run `toArray()` on the query. This is telling the database, "take all the instructions we provided and give us back an array of results based on those instructions. Please." So, at the end of this, `products` will be an array of up to five document objects.
 
 ::: note
 See that in our example we use `await` before `self.find`, indicating that this is running an asynchronous operation. It is worth noting that `toArray()` is the only asynchronous part of the code since that's the part that actually talks to the database.
@@ -204,7 +279,7 @@ const product = await self.find(req, { _id: productId })
 
 ### `toCount`
 
-The `toCount` query method is the easy and quickest way to simply get the number of documents that match a query. The `toCount` query method will ignore any `page`, `skip` and `limit` query builders in order to get the total number.
+The `toCount` query method is the easiest and quickest way to simply get the number of documents that match a query. The `toCount` query method will ignore any `page`, `skip` and `limit` query builders in order to get the total number.
 
 If the query is using a `perPage` query builder it will also populate `totalPages` on the query, which can be retrieved with `query.get('totalPages')`.
 
@@ -230,7 +305,7 @@ The `toChoices` query method builds on `toDistinct` by returning each choice as 
 
 ```javascript
 const teamOffices = await self.find(req, { type: 'team' })
-  .toDistinct('office', { count: true });
+  .toChoices('office', { count: true });
 ```
 
 ## Query across modules
@@ -239,20 +314,20 @@ The `find()` method in doc type modules is easy to use within each module as `se
 
 ### Using another module's `find` method
 
-The `self` object available in any Apostrophe module's customization functions can access other module managers on the `self.apos.modules` object. For example, if I'm working in the `article` module and want to query `author` pieces, I can access the `author` module with this:
+The `self` object available in any Apostrophe module's customization functions can access other doc types on the `self.apos.modules` object. For example, if I'm working in the `article` module and want to query `author` pieces, I can access the `author` module with this:
 
 ```javascript
 self.apos.modules.author
 ```
 
-`self.apos.modules.author` is essentially the same as `self` would be if we were operating within the `author` module. Therefore we can query author pieces directly by using that module's `find` method.
+`self.apos.modules.author` is the same as `self` would be if we were operating within the `author` module. Therefore we can query author pieces directly by using that module's `find` method.
 
 ```javascript
 const activeAuthors = self.apos.modules.author.find(req, { active: true })
   .toArray();
 ```
 
-If a doc type module has been [assigned an alias](/reference/module-api/module-options.md#alias), the doc type's manager will be directly on `self.apos`. For example, the `@apostrophecms/page` module is available as `self.apos.page` because `'page'` is its alias option value.
+If a doc type module has been [assigned an alias](/reference/module-api/module-options.md#alias), then the doc type module will be directly on `self.apos`. For example, the `@apostrophecms/page` module is available as `self.apos.page` because `'page'` is its alias option value.
 
 ### Querying multiple doc types
 
@@ -271,3 +346,5 @@ const featuredByType = self.apos.doc.find(req, {
 })
   .toArray();
 ```
+
+Using `self.apos.doc.find` has limitations, however. Significantly, pieces will not return with `_url` properties. We would have to run additional queries to the individual piece type module `find` methods once we knew what types we had. That is one reason why using `self.find()` from doc type modules is better when possible.
