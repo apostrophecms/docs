@@ -149,7 +149,7 @@ query
   })
 ```
 
-The `project` builder is one that uses a MongoDB syntax. The object passed as an argument should include schema field names for the document type we're querying with each set to `1`. This tells the database that we only want these fields in each document we get back. In addition to simple fields, Apostrophe enhances `project` to handle relationship fields and the special property `_url`.
+The `project` builder is one that uses a MongoDB syntax. The object passed as an argument should include schema field names for the document type we're querying with each set to `1` or `true`. This tells the database that we only want these fields in each document we get back. In addition to simple fields, Apostrophe enhances `project` to handle relationship fields and the special property `_url`.
 
 The `_id` property is always included no matter what projection is used.
 
@@ -226,7 +226,7 @@ The following field types get this query builder treatment:
 - `._productsAnd([ _id1, _id2, _id3...])` matches only documents related to *all* of the specified product IDs (one relation is not enough).
 - `.productsAnd([ slug1, slug2, slug3...])` (no leading  `_`) matches only documents related to *all* of the specified product slugs (one relation is not enough).
 
-`_id` properties are useful since they will never change, but slugs can be more readable (for humans) and parsed from URLs.
+`_id` properties are useful since they will never change, but slugs can be more readable (for humans) and are more typically used in URLs.
 
 ### Adding your own query builders
 
