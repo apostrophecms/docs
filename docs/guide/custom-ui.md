@@ -2,21 +2,32 @@
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
 
-## Overriding standard Vue components by name
+::: warning
+* Altering the UI should be done rarely and carefully.
+* Overriding or replacing a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
+* Make sure there is not a better way to achieve the desired goal. This includes [asking for help in discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
+* At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue.js 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
+:::
 
-Apostrophe's admin UI is implemented in Vue. We'll find various Vue components implemented in `.vue` files in different Apostrophe modules, including a number of modules that are packaged inside the core `apostrophe` npm module.
+## Overriding standard Vue.js components by name
 
-Most of the time we don't need to override admin UI Vue components that ship with Apostrophe. But if we have a need, we can do by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of our own module.**
+Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules, primarily in Apostrophe core.
 
-Apostrophe will use only the last version of a component that is configured. For isntance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
+Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
+
+Apostrophe will use only the last version of a component that it finds during startup. The general startup order is:
+
+1. Core Apostrophe modules
+2. Installed and project-level modules, in the order they are configured in `app.js`
+that is configured. For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
 
 ::: note
 For more information about the patterns used, props provided and APIs needed to implement a component, it's necessary to study the source code of the original.
 :::
 
-## Overriding standard Vue components through configuration
+## Overriding standard Vue.js components through configuration
 
-There can be only one `AposDocsManager` Vue component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
+There can be only one `AposDocsManager` Vue.js component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
 
 Here is an example of how to do that:
 
@@ -37,9 +48,9 @@ module.exports = {
 </AposCodeBlock>
 
 
-With this configuration, Apostrophe will look for a Vue component called `AnnouncementManager` when the user selects "Announcements" from the admin bar, bypassing `AposDocManager`.
+With this configuration, Apostrophe will look for a Vue.js component called `AnnouncementManager` when the user selects "Announcements" from the admin bar, bypassing `AposDocManager`.
 
-As for the actual Vue code, we would place that in `modules/announcement/ui/apos/components/AnnouncementManager.vue`.
+As for the actual Vue.js code, we would place that in `modules/announcement/ui/apos/components/AnnouncementManager.vue`.
 
 Of course there are other components that can be overridden in this way, and the list is growing over time. Here are the components that can currently be overridden through configuration:
 
@@ -111,13 +122,13 @@ In `addStarRatingFieldType`, we invoke `self.apos.schema.addFieldType` to add ou
 
 * `name`, which can be used as a `type` setting when adding the field to a schema.
 * `convert`, a function to be used to sanitize the input and copy it to a destination. We pass our `convert` method for this purpose. Methods of our module are available as properties of `self`.
-* `component`, the name of a Vue component to be displayed when editing the field.
+* `component`, the name of a Vue.js component to be displayed when editing the field.
 
 In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But we can validate the input any way we like, as long as we never trust the input.
 
 ### Implementing the browser-side part
 
-On the browser side, we'll need a custom Vue component. Apostrophe provides a Vue mixin, `AposInputMixin`, that does much of the work for us.
+On the browser side, we'll need a custom Vue.js component. Apostrophe provides a Vue.js mixin, `AposInputMixin`, that does much of the work for us.
 
 <AposCodeBlock>
 ```js
@@ -203,5 +214,4 @@ fields: {
 The resulting value is then available as the `stars` property of the piece or widget, with an integer value between `1` and `5`.
 
 ::: warning
-At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
 :::
