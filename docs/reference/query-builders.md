@@ -6,7 +6,7 @@ sidebarDepth: 2
 
 Server-side database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. The sections below organize core query builders by the relevant document types.
 
-**See the [database querying guide](#TODO) for general information about using query builders.**
+**See the [database querying guide](/guide/database-queries.md) for general information about using query builders.**
 
 ## Builders for all doc types
 

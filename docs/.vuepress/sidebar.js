@@ -69,12 +69,13 @@ module.exports = {
           ]
         },
         [ 'guide/server-events.md', 'Server-side events' ],
+        [ 'guide/database-queries.md', 'Querying the database 🆕' ],
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
         [ 'guide/hosting.md', 'Hosting in production' ],
         {
-          title: 'Other module config 🆕',
+          title: 'Other module config',
           children: [
-            [ 'guide/batch-operations.md', 'Batch operations 🆕' ]
+            [ 'guide/batch-operations.md', 'Batch operations' ]
           ]
         }
       ]
