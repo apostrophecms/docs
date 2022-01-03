@@ -94,7 +94,7 @@ query.criteria({ category: { $in: ['animals', 'vegetables'] } })
 
 **Default value:** `{}`
 
-The `criteria` builder sets the base MongoDB query criteria, **discarding criteria previously added** using this method or the [`and` builder](#and). The `and` builder is usually better for most cases since it is not destructive. The default value of this builder is an empty object. As with the `and` builder, the criteria format would match that used in the [MongoDB `find` operation]((https://docs.mongodb.com/v4.4/reference/method/db.collection.find/)).
+The `criteria` builder sets the base MongoDB query criteria, **discarding criteria previously added** using this method or the [`and` builder](#and). The `and` builder is usually better for most cases since it is not destructive. The default value of this builder is an empty object. As with the `and` builder, the criteria format would match that used in the [MongoDB `find` operation](https://docs.mongodb.com/v4.4/reference/method/db.collection.find/).
 
 ### `defaultSort()`
 
@@ -360,7 +360,7 @@ If flag is `true`, return only orphan docs. If flag is `false`, return only docs
 
 ## Image document query builders
 
-The following query builders are only available on query created with the image module's `apos.image.find` method and [piece REST API routes](/reference/api/piece.md) when dealing with the `@apostrophecms/image` piece type.
+The following query builders are only available on query created with the image module's `apos.image.find` method and [piece REST API routes](/reference/api/pieces.md) when dealing with the `@apostrophecms/image` piece type.
 
 
 ### `minSize()`
