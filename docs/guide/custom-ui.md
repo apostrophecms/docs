@@ -3,79 +3,33 @@
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
 
 ::: warning
-* Altering the UI should be done rarely and carefully.
-* Overriding or replacing a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
+* Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
+* Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
 * Make sure there is not a better way to achieve the desired goal. This includes [asking for help in discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
 * At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue.js 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
 :::
 
-## Overriding standard Vue.js components by name
+## Apostrophe admin UI file structure
 
-Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules, primarily in Apostrophe core.
+Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules. These are typically found in Apostrophe core, but they can be anywhere in the project. This means that we can introduce our own Vue components to the admin UI just by adding `.vue` files to the `ui/apos/components` subdirectory of any Apostrophe module. As explained below, it is also possible to override existing components by supplying a component with the same name.
 
-Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
+## Rebuilding the UI when we make changes
 
-Apostrophe will use only the last version of a component that it finds during startup. The general startup order is:
+For performance reasons, Apostrophe projects are not configured to automatically rebuild the admin UI every time your code changes. This makes sense because in most projects there is no custom admin UI code, and it takes time to build.
 
-1. Core Apostrophe modules
-2. Installed and project-level modules, in the order they are configured in `app.js`
-that is configured. For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
+However we can "opt in" to rebuilding the UI on every code change, like this:
 
-::: note
-For more information about the patterns used, props provided and APIs needed to implement a component, it's necessary to study the source code of the original.
-:::
-
-## Overriding standard Vue.js components through configuration
-
-There can be only one `AposDocsManager` Vue.js component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
-
-Here is an example of how to do that:
-
-<AposCodeBlock>
-```js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    components: {
-      managerModal: 'AnnouncementManager'
-    }
-  }
-}
+```bash
+APOS_DEV=1 npm run dev
 ```
-  <template v-slot:caption>
-    modules/announcement/index.js
-  </template>
-</AposCodeBlock>
 
+For convenience, you may wish to set this environment variable for the lifetime of your terminal session:
 
-With this configuration, Apostrophe will look for a Vue.js component called `AnnouncementManager` when the user selects "Announcements" from the admin bar, bypassing `AposDocManager`.
+```bash
+export APOS_DEV=1
+```
 
-As for the actual Vue.js code, we would place that in `modules/announcement/ui/apos/components/AnnouncementManager.vue`.
-
-Of course there are other components that can be overridden in this way, and the list is growing over time. Here are the components that can currently be overridden through configuration:
-
-| Module                     | Option             | Default          |
-| -------------------------- | ------------------ | ---------------- |
-| `@apostrophecms/piece-type`  | `components.managerModal` | `AposDocsManager`  |
-| `@apostrophecms/piece-type`  | `components.editorModal`  | `AposDocEditor`    |
-| `@apostrophecms/page`        | `components.managerModal` | `AposPagesManager` |
-| `@apostrophecms/page`        | `components.editorModal`  | `AposDocEditor`    |
-| `@apostrophecms/widget-type` | `components.widgetEditor` | `AposWidgetEditor` |
-| `@apostrophecms/widget-type` | `components.widget`       | `AposWidget`       |
-
-For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
-
-::: note
-Since the type of an existing page can be changed, there is only one manager modal and only one editor modal for all pages, and those component names are configured on the `@apostrophecms/page` module. Piece and widget types can have their own type-specifc overrides.
-
-If an option ends in `Modal`, the component is required to embed the `AposModal` component. For examples, look at the source code of the default components listed above.
-
-The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of any widget, so we won't need to configure a replacement unless we want to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
-
-The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
-
-Before you override an editor modal, consider just adding a custom schema field type.
-:::
+Of course the admin UI is always rebuilt when deploying. No special changes or environment settings are needed for production use.
 
 ## Registering custom field types
 
@@ -201,6 +155,10 @@ To update `this.next`, we implement methods that respond to click events, like t
 
 The `style` element takes care of CSS for this component. Note that SCSS syntax is available. To avoid conflicts, using the `scoped` attribute is recommended.
 
+::: warning
+If it doesn't seem to work at first, make sure you launched `npm run dev` with the `APOS_DEV=1` environment variable setting as explained earlier. This ensures the Apostrophe admin UI is rebuilt on each code change. You can stop using it when you are finished changing admin UI code.
+:::
+
 ### Putting the new schema field type to work
 
 Now we can use the new schema field type in any piece or widget much as we would use an `integer` field:
@@ -208,14 +166,167 @@ Now we can use the new schema field type in any piece or widget much as we would
 ```javascript
 fields: {
   add: {
-  stars: {
-    type: 'starRating',
-    label: 'Star Rating',
-    required: true
+    rating: {
+      type: 'starRating',
+      label: 'Star Rating',
+      required: true
+    }
   }
+}
 ```
 
 The resulting value is then available as the `stars` property of the piece or widget, with an integer value between `1` and `5`.
 
-::: warning
+## Adding custom columns to the piece type manager
+
+Another common extension is a custom column for the piece type manager. By default the manager modal displays the title, certain flags, and the last time the piece was updated. We can extend this to display our custom star ratings.
+
+### Implementing the server-side part
+
+Let's look at a simple piece type module called `review` that takes advantage of the `starRating` field type we defined earlier. We'll add a `rating` field to the schema for the piece type, and also add a column to display it in the manager modal:
+
+<AposCodeBlock>
+```js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  fields: {
+    add: {
+      rating: {
+        type: 'starRating',
+        label: 'Star Rating',
+        required: true
+      }
+    }
+  },
+  columns: {
+    add: {
+      rating: {
+        label: 'Rating',
+        component: 'ColumnStarRating'
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    modules/review/index.js
+  </template>
+</AposCodeBlock>
+
+### Implementing the browser-side part
+
+This code makes reference to a Vue component, `ColumnStarRating`, that doesn't exist yet. Next we'll introduce that component:
+
+<AposCodeBlock>
+```js
+<template>
+  <p
+    class="apos-table__cell-field"
+    :class="`apos-table__cell-field--${header.name}`"
+  >
+    <span v-if="hasValue">
+      <span v-for="index in 5" :key="index" class="rating">{{ isActive(index) ? '☆' : '★' }}</span>
+    </span>
+    <span v-else>
+      None
+    </span>
+  </p>
+</template>
+
+<script>
+import AposCellMixin from 'Modules/@apostrophecms/ui/mixins/AposCellMixin';
+
+export default {
+  name: 'AposCellBasic',
+  mixins: [ AposCellMixin ],
+  computed: {
+    hasValue() {
+      return this.get(this.header.name) != null;
+    }
+  },
+  methods: {
+    isActive(index) {
+      return index <= (this.get(this.header.name) || 0);
+    }
+  }
+};
+</script>
+
+```
+  <template v-slot:caption>
+    modules/star-range-field/ui/apos/components/ColumnStarRating.vue
+  </template>
+</AposCodeBlock>
+
+While the Vue component could be placed in any module, it makes the most sense to group it in the `star-range-field` module because it might be used as a column in any piece type, not just a `review`.
+
+This component uses `AposCellMixin` to do two important things:
+
+* The component gains access to the configuration of the column by accessing the `header` prop, which is automatically declared by the mixin.
+* The component can fetch properties from the piece by invoking `this.get` with any property name. Following Apostrophe's convention this method automatically fetches from the published version of the piece if it exists, otherwise from the draft.
+
+## Overriding standard Vue.js components by name
+
+Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
+
+Apostrophe will use only the last version of a component that it finds during startup. The general startup order is:
+
+1. Core Apostrophe modules
+2. Installed and project-level modules, in the order they are configured in `app.js`
+that is configured. For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
+
+::: note
+For more information about the patterns used, props provided and APIs needed to implement a component, it's necessary to study the source code of the original.
+:::
+
+## Overriding standard Vue.js components through configuration
+
+There can be only one `AposDocsManager` Vue.js component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better if we could **specify a different, custom component name to be used** to manage a particular piece type.
+
+Here is an example of how to do that:
+
+<AposCodeBlock>
+```js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    components: {
+      managerModal: 'AnnouncementManager'
+    }
+  }
+}
+```
+  <template v-slot:caption>
+    modules/announcement/index.js
+  </template>
+</AposCodeBlock>
+
+
+With this configuration, Apostrophe will look for a Vue.js component called `AnnouncementManager` when the user selects "Announcements" from the admin bar, bypassing `AposDocManager`.
+
+As for the actual Vue.js code, we would place that in `modules/announcement/ui/apos/components/AnnouncementManager.vue`.
+
+Of course there are other components that can be overridden in this way, and the list is growing over time. Here are the components that can currently be overridden through configuration:
+
+| Module                     | Option             | Default          |
+| -------------------------- | ------------------ | ---------------- |
+| `@apostrophecms/piece-type`  | `components.managerModal` | `AposDocsManager`  |
+| `@apostrophecms/piece-type`  | `components.editorModal`  | `AposDocEditor`    |
+| `@apostrophecms/page`        | `components.managerModal` | `AposPagesManager` |
+| `@apostrophecms/page`        | `components.editorModal`  | `AposDocEditor`    |
+| `@apostrophecms/widget-type` | `components.widgetEditor` | `AposWidgetEditor` |
+| `@apostrophecms/widget-type` | `components.widget`       | `AposWidget`       |
+
+For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
+
+::: note
+Since the type of an existing page can be changed, there is only one manager modal and only one editor modal for all pages, and those component names are configured on the `@apostrophecms/page` module. Piece and widget types can have their own type-specifc overrides.
+
+If an option ends in `Modal`, the component is required to embed the `AposModal` component. For examples, look at the source code of the default components listed above.
+
+The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of any widget, so we won't need to configure a replacement unless we want to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
+
+The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
+
+Before you override an editor modal, consider just adding a custom schema field type.
 :::
