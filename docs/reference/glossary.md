@@ -4,6 +4,10 @@ While these terms have more common definitions, these descriptions focus on each
 
 ## General terms
 
+### Core
+
+The term "Apostrophe core," or simply "core," is used frequently throughout this documentation. "Core" refers to the foundational software for all Apostrophe projects. It is the package that a developer would get when installing with `npm i apostrophe` or `yarn add apostrophe`. This documentation focuses on the features in Apostrophe core since those are the features that all Apostrophe projects have in common.
+
 ### Module
 
 Apostrophe sites are powered by Apostrophe modules. Each module is responsible for providing one feature, such as a type of widget, a type of customized page, or a service like pushing assets to the browser. Apostrophe has many standard modules which provide its core features.
