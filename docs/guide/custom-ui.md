@@ -66,11 +66,15 @@ Of course there are other components that can be overridden in this way, and the
 For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
 
 ::: note
-If an option ends in `Modal`, our component is expected to embed the `AposModal` component so that the admin UI can await it with `apos.modal.execute`. For examples, look at the source code of the default components listed above.
+Since the type of an existing page can be changed, there is only one manager modal and only one editor modal for all pages, and those component names are configured on the `@apostrophecms/page` module. Piece and widget types can have their own type-specifc overrides.
+
+If an option ends in `Modal`, the component is required to embed the `AposModal` component. For examples, look at the source code of the default components listed above.
 
 The `AposWidgetEditor` component already provides a modal dialog box in which to edit the schema of any widget, so we won't need to configure a replacement unless we want to support editing directly on the page. `AposRichTextWidgetEditor` is an example of how to do this.
 
-The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, but the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
+The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
+
+Before you override an editor modal, consider just adding a custom schema field type.
 :::
 
 ## Registering custom field types
@@ -81,7 +85,7 @@ A schema field has two parts: a server-side part and a browser-side part. The se
 
 ### Implementing the server-side part
 
-Any module can register a schema field type on the server side, like this one, which provides a range field with two inputs, one for the low end of the range and one for the high end.
+Any module can register a schema field type on the server side, like this one, which allows editors to set a "star rating" of 1 to 5 stars, as is often seen in movie and restaurant reviews.
 
 <AposCodeBlock>
 ```js
@@ -94,11 +98,11 @@ module.exports = {
       addStarRatingFieldType() {
         self.apos.schema.addFieldType({
           name: 'starRating',
-          convert: self.convert,
+          convert: self.convertInput,
           vueComponent: 'InputStarRating'
         });
       },
-      async convert(req, field, data, object) {
+      async convertInput(req, field, data, object) {
         const input = data[field.name];
         if ((data[field.name] == null) || (data[field.name] === '')) {
           if (field.required) {
@@ -121,10 +125,10 @@ In `init`, which runs when the module is initialized, we call our `addStarRating
 In `addStarRatingFieldType`, we invoke `self.apos.schema.addFieldType` to add our custom field type on the server side. We provide:
 
 * `name`, which can be used as a `type` setting when adding the field to a schema.
-* `convert`, a function to be used to sanitize the input and copy it to a destination. We pass our `convert` method for this purpose. Methods of our module are available as properties of `self`.
+* `convert`, a function to be used to sanitize the input and copy it to a destination. We pass our `convertInput` method for this purpose. Methods of our module are available as properties of `self`.
 * `component`, the name of a Vue.js component to be displayed when editing the field.
 
-In `convert`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But we can validate the input any way we like, as long as we never trust the input.
+In `convertInput`, we sanitize the input and copy it from `data[field.name]` to `object[field.name]`. Since we must not trust the browser, we take care to sanitize it with [the `launder` module](https://npmjs.com/package/launder), which is always available as `apos.launder`. But we can validate the input any way we like, as long as we never trust the input.
 
 ### Implementing the browser-side part
 
