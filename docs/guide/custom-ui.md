@@ -5,7 +5,7 @@ This guide focuses on how to customize Apostrophe's administrative user interfac
 ::: warning
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
-* Make sure there is not a better way to achieve the desired goal. This includes [asking for help in discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
+* Make sure there is not a better way to achieve the desired goal. This includes [asking for help in Discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
 * At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue.js 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
 :::
 
@@ -138,7 +138,9 @@ Most of the time we don't need to override admin UI components that ship with Ap
 Apostrophe will use only the last version of a component that it finds during startup. The general startup order is:
 
 1. Core Apostrophe modules
-2. Installed and project-level modules, in the order they are configured in `app.js`. For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
+2. Installed and project-level modules, in the order they are configured in `app.js`
+
+For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
 
 ::: note
 For more information about the patterns used, props provided and APIs needed to override an existing core component, it's necessary to study the source code of the original.
@@ -146,7 +148,7 @@ For more information about the patterns used, props provided and APIs needed to 
 
 ## Overriding standard Vue.js components through configuration
 
-There can be only one `AposDocsManager` component definition in a project, but sometimes we need different behavior for a specific piece type only. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better to **specify a different, custom component name to be used** to manage a particular piece type.
+There can be only one `AposDocsManager` component definition in a project, but sometimes we need different behavior for a specific piece type. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better to **specify a different, custom component name to be used** to manage a particular piece type.
 
 Here is an example of how to do that:
 
