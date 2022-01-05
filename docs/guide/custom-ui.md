@@ -195,5 +195,5 @@ The `AposWidgetEditor` component already provides a modal dialog box in which to
 
 The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
 
-Before you override an editor modal, consider [adding a custom schema field type](../cookbook/custom-schema-field-types.md) instead.
+Before you override an editor modal, consider [adding a custom schema field type](/guide/custom-schema-field-types.md) instead.
 :::
