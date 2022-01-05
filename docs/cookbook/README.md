@@ -5,6 +5,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Common features
 
 - [Building site navigation](building-navigation.md)
+- [Custom schema field types](custom-schema-field-types.md)
 
 ## Hosting
 
