@@ -59,7 +59,7 @@ module.exports = {
       children: [
         'guide/conditional-fields.md',
         'guide/async-components.md',
-        [ 'guide/static-module-assets.md', 'Using static module assets 🆕' ],
+        'guide/static-module-assets.md',
         {
           title: 'Localization',
           path: '/guide/localization',
@@ -71,11 +71,18 @@ module.exports = {
         [ 'guide/server-events.md', 'Server-side events' ],
         [ 'guide/database-queries.md', 'Querying the database 🆕' ],
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
+        'guide/custom-ui.md',
         [ 'guide/hosting.md', 'Hosting in production' ],
         {
           title: 'Other module config',
           children: [
             [ 'guide/batch-operations.md', 'Batch operations' ]
+          ]
+        },
+        {
+          title: 'Other customizations 🆕',
+          children: [
+            [ 'guide/custom-schema-field-types.md', 'Custom field types' ]
           ]
         }
       ]
