@@ -45,7 +45,7 @@ _toppings: {
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`builders` | Object | n/a | Query builders to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
-|`fields` | Object | n/a | A field schema object, allowing editors to [add additional information to relationships](/guide/relationships#providing-context-with-fields). |
+|`fields` | Object | n/a | A field schema object, allowing editors to [add additional information to relationships](/guide/relationships.md#providing-context-with-fields). |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |

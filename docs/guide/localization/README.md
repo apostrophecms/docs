@@ -16,7 +16,7 @@ The term "internationalization," often abbreviated **i18n** comes up when discus
 The first step in localizing content, whether static or dynamic, is to define locales. These are most often different languages, countries, or combinations of the two. In some cases it may also be appropriate to establish locales for people based on topical interests, professional categories, or cultural identities.
 
 
-We configure locales through the `@apostrophecms/i18n` module. In a project code base, we can add a `modules/@apostrophecms/i18n/index.js` file. The locales will go in its `locales` option object.
+We configure locales through the `@apostrophecms/i18n` module. In a project codebase, we can add a `modules/@apostrophecms/i18n/index.js` file. The locales will go in its `locales` option object.
 
 <AposCodeBlock>
   ```javascript

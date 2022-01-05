@@ -65,6 +65,7 @@ Two other places you may want to register strings are in **API routes** and in V
 To register strings in **custom API routes**, use the `req.t()` method on the request object.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -102,6 +103,53 @@ If you are customizing Apostrophe **user interface components**, the `$t()` meth
 ::: note
 As a reminder, the Vue.js components of the user interface are not connected to any Vue app you may be running for your website visitors. The registration method will not be automatically available outside the UI components.
 :::
+
+### Localizing with string interpolation
+
+Consider the following string: "*Contact the London office*." Maybe we have offices in multiple countries and use this heading on each office's page. In this case we don't know the *exact* string to translate since the city will change. The variable part, the city, is also in the middle (for some languages, at least) so we could not even translate the rest very easily. In cases like this we use **string interpolation**.
+
+String interpolation is a process of generating a text string that is partly dynamic. In the previous paragraph's example, the city name is dynamic, or variable, since it is reused for each office.
+
+Regardless of whether we are localizing text in templates, server-side code, or UI Vue files, interpolation works essentially the same way. The string or localization key is still the first argument in the localization function. **Then an object is passed as a second argument to the l10n function, containing interpolation properties that match keys in curly braces.**
+
+Template example:
+
+<AposCodeBlock>
+  ```django
+    {{ __t('Contact the {{ city }} office', {
+      city: data.piece.city
+    }) }}
+  ```
+  <template v-slot:caption>
+    /modules/office-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+The arguments would look essentially identical in server-side or a UI file, using the respective l10n functions (`req.t()` and `this.$t()`, respectively). This also works if the first argument was a localization key that had that string assigned as its value.
+
+<AposCodeBlock>
+  ```json
+    {
+      "contactOffice": "Contact the {{ city }} office"
+    }
+  ```
+  <template v-slot:caption>
+    /modules/office-page/i18n/en.json
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+  ```django
+    {{ __t('contactOffice', {
+      city: data.piece.city
+    }) }}
+  ```
+  <template v-slot:caption>
+    /modules/office-page/views/show.html
+  </template>
+</AposCodeBlock>
+
+See the [i18next documentation](https://www.i18next.com/translation-function/interpolation) for more available options.
 
 ## Adding and using localization files
 
@@ -184,7 +232,7 @@ The primary module to avoid using to store l10n strings is `@apostrophecms/i18n`
 
 ## Using namespaces
 
-A l10n **namespace** is a prefix on localization keys that makes it harder to accidentally override. In project-level l10n namespacing is not really necessary since there are not additional layers of work that might override translation there.
+A l10n **namespace** is a prefix on localization keys that makes it harder to accidentally override. In project-level l10n namespacing is *not really necessary* since there are not additional layers of work that might override translation there.
 
 Namespacing can be useful if you are building your own modules with hard-coded strings that you intend to publish. When that module is installed in a project later it would be less likely that the project will change them accidentally.
 
@@ -215,6 +263,12 @@ Then when you use the localization keys in template files (or elsewhere), start 
 
 Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`myTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
 
+::: warning
+Avoid using namespaces that begin with `apos`. The core team uses namespaces that begin with that for official modules, e.g., `aposForm` and `aposSeo`. Using that prefix is not technically forbidden, but it could result in conflicts with official modules. Using the `apostrophe` namespace should definitely be avoided since it is used in Apostrophe core.
+
+As a reminder, namespacing is primarily necessary for *installable modules* and not for project-level localization.
+:::
+
 ## Localizing the Apostrophe user interface
 
 The Apostrophe user interface contains many registered strings, currently localized to English. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that.
@@ -222,3 +276,23 @@ The Apostrophe user interface contains many registered strings, currently locali
 Add JSON files for the locales as normal in the project-level `modules/@apostrophecms/i18n` module directory. You can also use any other module configured to use the `'apostrophe'` namespace (keeping project strings separate). The UI keys all use this namespace. In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
 
 Of course, this would be a lot of work and would likely involve tracking down where strings are used. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
+
+## Debugging localization
+
+There are two environment variables developers can use to debug during localization.
+
+### `APOS_DEBUG_I18N`
+
+Starting Apostrophe with the `APOS_DEBUG_I18N=1` environment variable will trigger the `i18next` debugging mode. This provides information about the i18n settings that may help resolve issues.
+
+### `APOS_SHOW_I18N`
+
+Using the `APOS_SHOW_I18N=1` environment variable adds emoji indicators to localized strings. For example, the localized string "Images" would be displayed as "🌍 Images." These help identify that text in a web page (or logged errors) have been passed through localization. Different emojis indicate additional information.
+
+| Emoji indicator | Meaning |
+|-----|----|
+| 🌍 | The string used a localization key and is registered with a value. |
+| 🕳️ | The displayed string is identical to the string passed into localization. It also *does not* seem to be using a l10n namespace.
+| ❌ | The displayed string is identical to the string passed into localization. It also *does* seem to be using a l10n namespace. Look for a module using the string's namespace (the part before `:`).
+
+For 🕳️ and ❌ indicators those are likely either localization keys that have not yet been registered with values (e.g., not translated) or they are not localization keys at all. Those do not necessarily indicate a problem, but simply are meant to give developers more information if a problem occurs.

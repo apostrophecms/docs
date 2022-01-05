@@ -51,5 +51,5 @@ Apostrophe concatenates [project-level front end code](/guide/front-end-assets.m
 
 ## Hosting recipes
 
-The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/docs/cookbook/README.md#hosting).
+The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/cookbook/README.md#hosting).
 
