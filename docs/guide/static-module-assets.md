@@ -19,11 +19,13 @@ Files we place in the `public` subdirectory of any module are always deployed su
 Apostrophe will automatically fix these "asset paths" so they refer to the final URL of the asset, *no matter what our production environment looks like.* In addition, in production deployments, the final URL will always contain a "release identifier" so that any static assets in the browser cache from a previous release are not reused.
 
 ::: warning
-If you are configuring an Apostrophe core module or other module installed via npm, and you choose to add a `public` subdirectory for that module at project level, you will need to prefix the module name with `my-` when creating CSS URLs to those assets. Note that the `my-` prefix goes in the module name part, not the organization name part.
+If you are configuring an Apostrophe core module or other module installed via npm, and you choose to add a `public` subdirectory for that module at project level, you will need to prefix the module name with `my-` when creating asset URLs to those assets. Note that the `my-` prefix goes in the module name part, not the organization name part.
 
 For example, if you have a `modules/@apostrophecms/asset/public/example.svg` file, you can access that from CSS as `/modules/@apostrophecms/my-asset/example.svg`.
 
 This distinguishes your `public` folder from any assets that might be provided by the original npm module.
+
+It's usually simpler to just put your public assets in a module specific to your project, rather than a project-level configuration of a core one.
 :::
 
 ## Asset paths in Nunjucks templates
