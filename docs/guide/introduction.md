@@ -16,7 +16,7 @@ In short, it recognizes pain points on both sides of the CMS experience and reli
 
 ## Give it a test run
 
-Please [try the Apostrophe demo](https://demo.apos3.dev/) for yourself if you haven't yet. That hands-on experience will provide valuable context as you learn about building with Apostrophe. Take notice of key features, including:
+Please [try the Apostrophe demo](http://demo.apostrophecms.com/) for yourself if you haven't yet. That hands-on experience will provide valuable context as you learn about building with Apostrophe. Take notice of key features, including:
 
 - in-context editing
 - switching between "Published" and "Draft" modes
