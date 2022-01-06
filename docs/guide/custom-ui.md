@@ -35,7 +35,7 @@ Of course the admin UI is always rebuilt when deploying. No special changes or e
 
 Apostrophe's [schema field types](content-schema.md) cover many situations, but we might wish to add a new one.
 
-Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](../cookbook/custom-schema-field-types.md). However note that you will find it easier to follow the remainder of this article if you read that article first.
+Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However note that you will find it easier to follow the remainder of this article if you read that article first.
 
 ## Adding custom columns to the piece type manager
 
@@ -43,7 +43,7 @@ Another common extension is a custom column for the piece type manager. By defau
 
 ### Implementing the server-side part
 
-Let's look at a simple piece type module called `review` that takes advantage of the [`starRating` field type we define in a separate article](../cookbook/custom-schema-field-types.md). We'll add a `rating` field to the schema for the piece type, and also add a column to display it in the manager modal:
+Let's look at a simple piece type module called `review` that takes advantage of the [`starRating` field type we define in a separate article](/guide/custom-schema-field-types.md). We'll add a `rating` field to the schema for the piece type, and also add a column to display it in the manager modal:
 
 <AposCodeBlock>
 ```js
