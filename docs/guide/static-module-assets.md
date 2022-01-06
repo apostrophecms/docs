@@ -21,7 +21,7 @@ Apostrophe will automatically fix these "asset paths" so they refer to the final
 ::: warning
 If you are configuring an Apostrophe core module or other module installed via npm, and you choose to add a `public` subdirectory for that module at project level, you will need to prefix the module name with `my-` when creating asset URLs to those assets. Note that the `my-` prefix goes in the module name part, not the organization name part.
 
-For example, if you have a `modules/@apostrophecms/asset/public/example.svg` file, you can access that from CSS as `/modules/@apostrophecms/my-asset/example.svg`.
+For example, if you have a `modules/@apostrophecms/asset/public/example.svg` file, you can access that via CSS or via the methods given below as `/modules/@apostrophecms/my-asset/example.svg`.
 
 This distinguishes your `public` folder from any assets that might be provided by the original npm module.
 
