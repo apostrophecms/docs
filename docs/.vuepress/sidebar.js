@@ -69,7 +69,13 @@ module.exports = {
           ]
         },
         [ 'guide/server-events.md', 'Server-side events' ],
-        [ 'guide/database-queries.md', 'Querying the database 🆕' ],
+        {
+          title: 'Working with the database 🆕',
+          children: [
+            'guide/database-queries.md',
+            [ 'guide/database-insert-update.md', 'Inserting and updating docs' ]
+          ]
+        },
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
         'guide/custom-ui.md',
         [ 'guide/hosting.md', 'Hosting in production' ],
