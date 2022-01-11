@@ -25,6 +25,8 @@ Apostrophe is fully initialized before a task is run, except that it does not li
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/task/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
+Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.task.invoke(...)`.
+
 ::: danger
 `getReq` and the related methods below should be used very carefully. It is easy to accidentally grant admin-level (or other higher role) access when lower level permissions are better applied. Those methods are primarily meant for writing unit tests and CLI tasks.
 
