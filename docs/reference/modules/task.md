@@ -35,13 +35,13 @@ It is almost always the case that an existing request object should be used inst
 
 ### `invoke(name, args, options)`
 
-For use when you wish to execute an Apostrophe command line task from server-side code and continue with other work. This avoids using the command line directly or using the Node.js `child_process` module. The method runs asynchronously (returns a Promise).
+For use when you wish to execute an Apostrophe command line task from server-side code and continue with other work. This avoids using the command line directly or using the Node.js `child_process` module. The method returns a Promise (it can be run with the `async/await` syntax).
 
 **The `name` argument** is the only one that is required. It must be the name of a task, including the name of the module where it was registered, e.g., `'@apostrophecms/user:add'`.
 
 If present, **the `args` argument should be an array of positional arguments** that would be provided to the task in a CLI, *not including* the task name.
 
-If present, **the `options` argument contains the optional parameters** that would normally be hyphenated, i.e. at the command line you might write `--total=20`. This can be passed as the second argument if `args` is omitted.
+If present, **the `options` argument is an object that contains optional parameters** that would normally be hyphenated, i.e. at the command line you might write `--total=20`. This can be passed as the second argument if `args` is omitted.
 
 ```
 # CLI equivalent: node app @apostrophecms/user:add 'alf' 'admin'
@@ -54,7 +54,7 @@ await self.apos.task.invoke('product:generate', { total: 20 })
 The `args` and `options` arguments may be completely omitted, though individual tasks should indicate whether arguments are required when they are run.
 
 ::: note
-It is better to call module's method *directly* rather than invoking a task when possible. This method is for cases where that option is not readily available.
+It is better to call a module's method *directly* rather than invoking a task when possible. This method is for cases where that option is not readily available.
 
 During the execution of the task, `self.apos.argv` will have a new, temporary value to accommodate tasks that inspect this property directly rather than examining their `argv` argument. `self.apos.argv` will be restored at the end of task execution.
 
@@ -95,5 +95,5 @@ A convenience wrapper for `getReq`. This returns a request object simulating a u
 
 ### `getAdminReq(options)`
 
-A convenience wrapper for `getReq`. This returns a request object simulating a user with the `admin` role. See [`getReq`](#getreq-options) for information about the `options` argument.
+A convenience wrapper for `getReq`. This returns a request object simulating a user with the `admin` role. This is the default behavior of `getReq()`. See [`getReq`](#getreq-options) for information about the `options` argument.
 
