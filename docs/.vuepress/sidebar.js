@@ -1,3 +1,5 @@
+const { readdirSync } = require('fs');
+
 module.exports = {
   '/guide/migration/': [
     [ '/guide/migration/overview.md', 'Overview' ],
@@ -165,10 +167,17 @@ module.exports = {
     'reference/template-tags',
     {
       title: 'Core Modules',
-      children: [
-        '/reference/modules/db.md',
-        '/reference/modules/i18n.md'
-      ]
+      children: getModuleRefs()
     }
   ]
+};
+
+function getModuleRefs () {
+  const moduleFiles = readdirSync(`${process.cwd()}/docs/reference/modules`);
+
+  return moduleFiles
+    .filter(filename => !filename.startsWith('_template'))
+    .map(filename => {
+      return `/reference/modules/${filename}`;
+    });
 };
