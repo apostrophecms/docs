@@ -83,19 +83,39 @@ See the [Underscore.String.js `prune` function](https://gabceb.github.io/undersc
 
 #### `escapeHtml(string, options)`
 
-Escape a plaintext `string` correctly for use in HTML.
+Escape a plaintext `string` correctly for use in HTML. `options` is an object of options, but may be omitted.
 
 If `{ pretty: true }` is in the `options` object, new lines become `br` tags, and URLs become links to those URLs. Otherwise this does basic escaping. For backwards compatibility, if the second argument is truthy and not an object, `{ pretty: true }` is assumed.
 
 If `{ single: true }` is in the `options` object, single-quotes are escaped, otherwise double-quotes are escaped.
 
 #### `htmlToPlaintext(htmlString)`
-#### `capitalizeFirst()`
-#### `cssName()`
-#### `camelName()`
-#### `addSlashIfNeeded()`
-#### `slugify()`
-#### `sortify()`
+
+A method to convert a string of HTML to simple plain text (no rich text indicators). This is meant for basic HTML conversion, such as converting the contents of a piece's rich text widget teaser into unformatted text to be displayed on the index page. It returns a string of plain text.
+
+#### `capitalizeFirst(string)`
+
+`capitalizeFirst` accepts a string argument and returns the string with the first letter capitalized.
+
+#### `cssName(camelString)`
+
+This method is used to convert "camel case" strings (`spiderMan`) into CSS-friendly "kebab case" (`spider-man`). It returns the converted string.
+
+#### `camelName(string)`
+
+This method converts a string to camel case and returns the converted string. Any characters that are not alphanumeric will be removed and the following character (if alphanumeric) will be capitalized.
+
+#### `addSlashIfNeeded(path)`
+
+`addSlashIfNeeded()` accepts a string and returns it with a slash at the end only if there is not one already. It is useful for ensuring uniform URL paths in code.
+
+#### `slugify(string, options)`
+
+This is a wrapper for the [sluggo](https://www.npmjs.com/package/sluggo) utility. It accepts a string and options object. It returns the string lower cased and with spaces and non-alphanumeric characters replaced with a dash (by default). See the sluggo documentation for other options.
+
+#### `sortify(string)`
+
+`sortify` does the same thing as `slugify`, but whitespace and non-alphanumeric characters are replaced with a single space instead of a dash. This is used to make strings uniform for sorting, including for populating document properties such as `titleSortified` that store the uniform version.
 
 ### Other utility methods
 
@@ -103,16 +123,48 @@ If `{ single: true }` is in the `options` object, single-quotes are escaped, oth
 
 Returns a unique identifier (ID) for a new page or other object. IDs are generated with the `cuid` module which prevents collisions and ensures a certain level of complexity. This should not be used for passwords, however.
 
-#### `md5()`
-#### `md5File()`
-#### `fileLength()`
-#### `searchify()`
-#### `clonePermanent()`
-#### `orderById()`
-#### `isAjaxRequest()`
-#### `insensitiveSort()`
-#### `insensitiveSortByProperty()`
-#### `insensitiveSortCompare()`
+#### `md5(string)`
+
+Perform an md5 checksum on a string. Returns a hex string.
+
+#### `async md5File(filepath)`
+
+Perform an md5 checksum on a file at a given path. Async. Returns a Promise that resolves to a hex string.
+
+#### `async fileLength(filepath)`
+
+Accepts a file path and returns a Promise that resolves to the file size in bytes.
+
+#### `clonePermanent(object, keepScalars)`
+
+Clone the given object recursively, discarding all properties whose names begin with underscores (`_`) except for `_id`. Returns the cloned object.
+
+This removes the output of relationships and other dynamic loaders, so that dynamically available content is not stored redundantly in MongoDB. Object values that are `Date` objects are cloned as such. All other non-JSON objects are cloned as plain JSON objects.
+
+If `keepScalars` is true, properties beginning with underscores are kept as long as they are not objects. This is useful when using `clonePermanent` to limit JSON inserted into browser attributes, rather than filtering for the database. Preserving simple string properties like `_url` is usually a good thing in the former case.
+
+If the `object` argument is an array, the clone is also an array. Arrays are cloned as such only if they are true arrays (`Array.isArray()` returns `true`).
+
+#### `orderById(ids, items, idProperty)`
+
+`ids` should be an array of MongoDB identifiers (`_id` properties). The elements of the `items` array, which should be the result of a mongodb query, are returned in the order specified by `ids` array.
+
+This is useful after performing an `$in` query with MongoDB (`$in` does _not_ sort its results in the order given). Any IDs that do not actually exist for an item in the `items` array are not returned, and vice versa. You should not assume the result will have the same length as either array.
+
+Optionally you may specify a property name other than `_id` as the third argument (`idProperty`). You may use dot notation in this argument.
+
+#### `isAjaxRequest(req)`
+
+Returns `true` if the `req` request object is an AJAX request (`req.xhr` is set, or `req.query.xhr` is set to emulate it) _and_ Apostrophe's main content area refresh mechanism is not in play (`req.query.aposRefresh` is not `'1'`).
+
+#### `insensitiveSort(strings)`
+
+Sort an array of strings (`strings`) in place (does not return), comparing strings in a case-insensitive way.
+
+#### `insensitiveSortByProperty(objects, property)`
+
+Sort an array of objects (`objects`) in place (does not return), based on the value of the given `property` of each object, in a case-insensitive way.
+
 #### `findNestedObjectById()`
 #### `findNestedObjectAndDotPathById()`
 #### `profile()`
