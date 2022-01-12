@@ -16,7 +16,7 @@ When we have an existing piece document that to update, we use the `update()` me
 | `piece` | TRUE | The document object that will *replace* the existing database document. |
 | `options` | FALSE | An options object, currently only used for internal draft state management. |
 
-For example, if we had a dog adoption website we may want to update `dog` pieces to indicate whether someone requested information about them. This could be after a contact form receives a submission about the dog.
+For example, if we had a dog adoption website that used an external API, we may want to update `dog` pieces periodically with adoption status. This may be using a command line task that is run regularly by a cron job.
 
 <AposCodeBlock>
   ```javascript
@@ -24,13 +24,19 @@ For example, if we had a dog adoption website we may want to update `dog` pieces
     extend: '@apostrophecms/piece-type',
     // ...
     methods (self) {
-      // The hypothetical contact form can only pass along the `_id` for the dog.
-      async registerInterest(dogId) {
-        const req = apos.task.getReq({ role: 'editor' });
-        const dogDocument = await self.find(req, { _id: dogId }).toObject();
+      // The hypothetical method is run once for each dog we're following from
+      // the API. A separate method would add any new dogs.
+      async updateDogStatus(req, dogId, status) {
+        const dogDocument = await self.find(req, {
+          dogId
+        }).toObject();
 
-        // We update the `receivedInterest` integer property.
-        dogDocument.receivedInterest++;
+        if (!dogDocument) {
+          return null;
+        };
+
+        // We update the `status` property.
+        dogDocument.status = status;
 
         const updateResult = await self.update(req, dogDocument);
 
@@ -47,26 +53,34 @@ For example, if we had a dog adoption website we may want to update `dog` pieces
 **What is happening here?**
 
 ```javascript
-async registerInterest(dogId) {
-  const req = apos.task.getReq({ role: 'editor' });
-  const dogDocument = await self.find(req, { _id: dogId }).toObject();
+async updateDogStatus(req, dogId, status) {
+  const dogDocument = await self.find(req, {
+    dogId
+  }).toObject();
   ...
 }
 ```
 
-Our method received the `_id` of the document associated with this dog. We then generate a `req` object using `apos.task.getReq()`. While it is best to use a "natural" request object, if the contact form submission was from someone not logged in then the `req` will not have permission to update documents. We would want to make sure to guard against spam submissions elsewhere.
-
-We then request the *full* database document. See the [database querying guide](/guide/database-queries.md) for more on this.
+Our method received the active request object, the API's identifier for a dog, and the dog's availability status (probably a string value). We then request the *full* database document. See the [database querying guide](/guide/database-queries.md) for more on this.
 
 ```javascript
-dogDocument.receivedInterest++;
+if (!dogDocument) {
+  return null;
+};
+```
+
+If the identified dog isn't in our database yet, we would return a `null` value and the update task's function could insert the dog instead.
+
+```javascript
+// We update the `status` property.
+dogDocument.status = status;
 
 const updateResult = await self.update(req, dogDocument);
 
 return updateResult;
 ```
 
-We then update the document property that tracks how many times someone expressed interested in the dog. Then we use `self.update` to replace the previous document state with our update (with `await` as it is asynchronous). We finally return the result, which will be an object with update information from MongoDb.
+We update the document property that tracks the dog's adoption status on the data object and use `self.update` to replace the previous document state with our update (with `await` as it is asynchronous). We finally return the result, which will be an object with update information from MongoDb.
 
 ::: note
 **What if we are updating a document from a different doc type module?**
@@ -78,7 +92,7 @@ In the example above, `self` refers to the `dog` piece type module since that is
 
 Updating pages works the same way as pieces with the same arguments to the `update` method. There are a few things to keep in mind when working on pages, however.
 
-**We often call the page `update` method from `self.apos.page`.** `self.update` does work from individual page type modules and sometimes that is the right way to call it. But since pages can change their `type` property (unlike pieces) they share a single `update` method from the `@apostrophecms/page` module. `self.update` on individual page type modules is simply a wrapper that method.
+**We often call the page `update` method from `self.apos.page`.** `self.update` does work from individual page type modules and sometimes that is the right way to call it. But since pages can change their `type` property (unlike pieces) they share a single `update` method from the `@apostrophecms/page` module. `self.update` on individual page type modules is simply a wrapper around that method.
 
 **There is a better way to move pages within the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).** The `@apostrophecms/page` module has a dedicated `move()` method for that purpose. Documentation of that method is upcoming. In the meantime, refer to the [REST API information about page tree placement](/reference/api/pages.md#post-api-v1-apostrophecms-page).
 
@@ -94,9 +108,7 @@ Instead, use the `self.newInstance()` method to get a fresh document object of t
     extend: '@apostrophecms/piece-type',
     // ...
     methods (self) {
-      async addNewDog(initialInfo) {
-        // Generate a req object using the contributor role
-        const req = apos.task.getReq({ role: 'contributor' });
+      async addNewDog(req, initialInfo) {
         // Generate a blank dog data object.
         let newDog = self.newInstance();
         // Add our initial information to the object.
@@ -151,9 +163,5 @@ As with pieces, this process will normally begin by generating an empty page doc
 </AposCodeBlock>
 
 ::: note
-Whenever updating or inserting a content document, do not attempt to directly set any property beginning with an underscore (`_`). Any property with a leading underscore, except for `_id`, **will not be saved to the database**.
-
-Apostrophe only allows starting property names with an underscore on dynamically loaded information. This includes [populated relationship information](/guide/relationships.md) and the `_url` property. These properties can change at any time and make use of other information stored elsewhere in the database.
-
 With very few exceptions, the `_id` property is an automatically generated, randomized, and (always) unique property. It is also special in that it can never change for a given document.
 :::
