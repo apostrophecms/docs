@@ -26,29 +26,29 @@ Because this module has an alias, you can call these from another module from th
 
 The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior.
 
-#### `log(string)`
+#### `log(msg)`
 
-Logs a message passed as a string. The default implementation wraps `console.log` and passes on all arguments, so substitution strings may be used.
+Logs a message or input, `msg`. The default implementation wraps `console.log` and passes on all arguments, so substitution strings may be used.
 
 If a `logger` option function does not include a `log` function, the `info` method will be used. This allows an instance of [bole](https://www.npmjs.com/package/bole) or similar loggers to be passed to the `logger` option.
 
-#### `info(string)`
+#### `info(msg)`
 
-Logs a informational message passed as a string. The default implementation wraps `console.info` and passes on all arguments, so substitution strings may be used.
+Logs a informational message. The default implementation wraps `console.info` and passes on all arguments, so substitution strings may be used.
 
-#### `debug(string)`
+#### `debug(msg)`
 
-Logs a debugging message passed as a string. The default implementation wraps `console.debug` (or `console.log` if that's unavailable) and passes on all arguments, so substitution strings may be used.
+Logs a debugging message. The default implementation wraps `console.debug` (or `console.log` if that's unavailable) and passes on all arguments, so substitution strings may be used.
 
-#### `warn(string)`
+#### `warn(msg)`
 
-Logs a warning message passed as a string. The default implementation wraps `console.warn` and passes on all arguments, so substitution strings may be used.
+Logs a warning message. The default implementation wraps `console.warn` and passes on all arguments, so substitution strings may be used.
 
-#### `warnDev(string)`
+#### `warnDev(msg)`
 
 Identical behavior to [`apos.util.warn`](#warn-string) except that the warning is not displayed if `process.env.NODE_ENV` is `production`. It will log the message every time it is called. See `warnDevOnce()` for a quieter version when messages may become repetitive.
 
-#### `warnDevOnce(name, string)`
+#### `warnDevOnce(name, msg)`
 
 Identical to `apos.util.warnDev`, except that the warning is only displayed once for each registered `name`. `name` should be a string not already used in an unrelated `warnDevOnce` call.
 
@@ -61,9 +61,9 @@ The warnings will be allowed in production mode if the command line option `--al
 
 All warnings for a particular name will be *muted* if the option `--ignore-[name]` is used: `node app --ignore-github-connection-error`.
 
-#### `error(string)`
+#### `error(msg)`
 
-Logs an error message passed as a string. The default implementation wraps `console.error` and passes on all arguments, so substitution strings may be used.
+Logs an error message. The default implementation wraps `console.error` and passes on all arguments, so substitution strings may be used.
 
 ### String manipulation methods
 
@@ -204,10 +204,131 @@ The `@` syntax works only for locating nested objects. You may not pass `@abc` w
 
 Returns a *new* `req` object with the properties of the original plus any in the optional `properties` parameter. Used when a request object with one change is desired, such as `mode: 'published'`. Avoids the need to push and pop properties of the original `req`. Also available as `req.clone(properties)`.
 
-## Module tasks
+## Template helpers
 
-### `reset`
+Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
 
-Full command: `node app @apostrophecms/db:reset`
+Some of these utility helpers replicate JavaScript APIs that are not available in Nunjucks templates natively.
 
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
+#### `slugify(string, options)`
+
+A wrapper of the [`slugify()` method](#slugify-string-options) described above.
+
+### `log(msg)`
+
+A wrapper of the [`log()` method](#log-msg) described above.
+
+### `generateId()`
+
+A wrapper of the [`generateId()` method](#generateid) described above.
+
+### `isCurrentYear(d)`
+
+Returns `true` if the `Date` object (`d`) refers to a date in the current year.
+
+### `isUndefined(val)`
+
+Returns `true` if the value `val` is strictly equal to `undefined`.
+
+### `isFalse(val)`
+
+Returns `true` if the value `val` is strictly equal to `false`.
+
+### `isFunction(val)`
+
+Returns `true` if the value `val` is a function (`typeof val === 'function'`).
+
+### `startCase(str)`
+
+Returns a string `str` to start case (first letter of each word is capitalized).Used to make default labels out of camel case property names.
+
+### `eqStrict(a, b)`
+
+Returns `true` if values `a` and `b` are strictly equal. The Nunjucks template syntax does not recognize `===` to test this.
+
+### `contains(list, val)`
+
+Returns `true` if the list `list` contains the specified value, `val`. `list` may be an array, object, or string (to look for a substring). This uses the [lodash `includes` method](https://lodash.com/docs/4.17.15#includes).
+
+If `val` is an array, this returns `true` if the list contains *any of* the specified values.
+
+### `containsProperty(list, prop)`
+
+Returns `true` if the list contains *at least* one object with the named property, `prop`. `list` may be an array, object, or string (to look for a substring). This uses the [lodash `has` method](https://lodash.com/docs/4.17.15#has).
+
+If `list` is a single object, this function returns `true` if that object has a property `prop`.
+
+## Object and array helpers
+
+### `inspect(obj)`
+
+Logs the properties of an object, `obj`, in detail. Invokes the Node.js [`util.inspect()`](https://nodejs.org/docs/latest-v8.x/api/util.html#util_util_inspect_object_options) method on the object, to a depth of 10.
+
+### `reverse(arr)`
+
+Returns the array, `arr`, in reverse order.
+
+### `beginsWith(list, val)`
+
+If the `list` argument is a string, returns `true` if it starts with the value `val`. If the `list` argument is an array, returns true if *at least one* of its items begins with `val`.
+
+### `find(arr, prop, val)`
+
+Finds and returns the *first* array (`arr`) item, if any, that has the specified value (`val`) for the specified property (`prop`).
+
+### `filter(arr, prop, val)`
+
+Finds and returns *all* array (`arr`) items, if any, that have the specified value (`val`) for the specified property (`prop`).
+
+### `reject(arr, prop, val)`
+
+Returns the array (`arr`), *filtering out* any items, if any, that have the specified value (`val`) for the specified property (`prop`).
+
+### `filterNonempty(arr, prop)`
+
+Finds and returns *all* array (`arr`) items, if any, that have *truthy values* for the specified property (`prop`).
+
+### `filterEmpty()`
+
+Finds and returns *all* array (`arr`) items, if any, that have *falsy values* for the specified property (`prop`).
+
+### `isEmpty(obj)`
+
+Returns `true` if the specified array or object (`obj`) is considered empty Objects are empty if they have no own enumerable properties. Arrays are considered empty if they have a length of 0.
+
+### `pluck(arr, prop)`
+
+Given an *array of objects* (`arr`) with the given property (`prop`), return an array with the value of that property for each object.
+
+### `omit(obj, paths)`
+
+Given an object (`obj`), returns an object without the named path or property paths (`paths`). `paths` may be a string or array of strings.
+
+### `difference(arr1, arr2, prop)`
+
+Given the arrays `arr1` and `arr2`, this returns a subset of elements in `arr1` that *do not* appear in `arr2`. If `arr2` is not an array it is treated as an empty array.
+
+If `prop` is present, then that property of each object in `arr1` is compared to `arr2` items. This is useful when `arr1` contains field choice objects (e.g., in [select fields](/reference/field-types/select.md#choices-configuration)) with a `value` property, while `arr2 `just contains actual values.
+
+A deep comparison is performed with the [lodash `isEqual` method](https://lodash.com/docs/4.17.15#isEqual).
+
+### `concat(arr1, arr2, /* arr3, arr4... */)`
+
+Concatenate all of the array and/or value arguments into a single array. If an argument is an array, all of its elements are individually added to the
+resulting array. If an argument is a non-array value, it is added directly to the array.
+
+### `groupBy(items, key)`
+
+Returns an object that groups items in a collection (`items`) by the property named by `key` on each of the values.
+
+If the first item in `items` has an array on the property named by `key`, this returns an object that groups each item by their shared array values.
+
+### `object(/* key1, value1, key2, value2... */)`
+
+Given a series of alternating keys and values, this function returns an object with the keys set to the following values. For instance, `apos.util.object('name', 'bob')` returns `{ name: 'bob' }`. This is useful since Nunjucks does not allow you to create an object with a property whose name is unknown at the time the template is written.
+
+### `merge(/* obj1, obj2, obj3... */)`
+
+This helper accepts any number of object arguments. It then merges them into a new object and the returns resulting object. If several objects have a property, the last object passed in wins.
+
+If any argument is `null`, it is skipped gracefully. This allows you to pass in an unexamined variable without checking if it is `null`.
