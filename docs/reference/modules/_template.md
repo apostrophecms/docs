@@ -22,8 +22,10 @@
 
 ## Featured methods
 
-The following locales belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/i18n/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/i18n/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
+
+Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].inferIdLocaleAndMode()`.
 
 ### `inferIdLocaleAndMode(req, _id)`
 

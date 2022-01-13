@@ -32,6 +32,7 @@ _pizzas: {
 |`reverseOf` | String | n/a | Set to the name of the related `relationship` field. |
 |`ifOnlyOne` | Boolean | `false` | If `true`, it will only reveal the relationship data if the doc query returned only one document. [See below](#ifonlyone) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 ::: tip
 For relationships with pages, use `withType: '@apostrophecms/any-page-type'`.

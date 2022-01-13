@@ -35,13 +35,13 @@ resume: {
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |`aspectRatio` | Array | n/a | Only applies to image files. If set to an array like `[ 2, 1 ]`, the image must have that aspect ratio and will be autocropped if the user does not manually crop. Only suitable if fileGroup is images. | -->
 <!-- |`contextual` | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |`crop` | Boolean | `false` | Only applies to image files. If `true`, the user may crop the attachment. Only suitable if fileGroup is images. | -->
 <!-- |`minSize` | Array | n/a | Only applies to image files. if set to an array like `[ 640, 480 ]`, the image must have at least the specified minimum width and height. Only suitable if fileGroup is images. | -->
-<!-- |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value | -->
 
 ::: warning NOTE
 The uploaded files are stored in a web-accessible folder, however their file names are prepended with a randomized ID to avoid naming collisions.

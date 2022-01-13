@@ -32,10 +32,10 @@ birthday: {
 |`max` | String | n/a | The maximum allowed date value for the field. Must be a date format (e.g., `YYYY-MM-DD`) |
 |`min` | String | n/a | The minimum allowed date value for the field. Must be a date format (e.g., `YYYY-MM-DD`) |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## Use in templates
 

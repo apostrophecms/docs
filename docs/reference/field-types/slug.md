@@ -34,12 +34,12 @@ projectSlug: {
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 |`page` | Boolean | `false` | If `true`, then slashes are allowed since the slug field is describing a page doc |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 <!-- TODO: 2.x options not yet available -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |pattern | String | | Regular expression to validate entries |
 |patternErrorMessage | String | | Error message to display if `pattern` does not match | -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ::: tip
 If you are overriding a piece type or page type's `slug` field and that doc type uses a [slug prefix](/reference/module-api/module-options.md#slugprefix), the `slug` field should include `'archived'` in the `following` option. It is used by the slug field type to manage prefixes, though its value is not included in the slug name.
