@@ -54,6 +54,7 @@ _toppings: {
 |`min` | Integer |  n/a | The minimum number of related docs required |
 |`max` | Integer |  n/a | The maximum number of related docs allowed |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 |`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationship) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 
@@ -62,9 +63,6 @@ To create relationships with pages, use `withType: '@apostrophecms/any-page-type
 
 If `withType` is not set the name of the field must match the name of the related type, with a leading `_` (underscore), and *optional* trailing `s` added (e.g., `_article` or `_articles` to connect to the `article` piece type).
 :::
-
-<!-- TODO: The following settings are likely to return, but are not yet implemented. -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## Filtering related document properties
 

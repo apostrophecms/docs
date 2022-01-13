@@ -34,12 +34,12 @@ fontSize: {
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 |`max` | Number | n/a | The maximum allowed value for the field |
 |`min` | Number | n/a | The minimum allowed value for the field |
-|`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`step` | Number | 1 | The interval between numbers (it may be a floating point number) |
+|`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## Use in templates
 

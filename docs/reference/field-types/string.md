@@ -41,6 +41,7 @@ biography: {
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 |`sortify` |	Boolean |	`false` |	If true, creates "sortified" fields. See below. |
 |`textarea` | Boolean | `false` | If `true`, use a textarea interface with multiple lines, which allows line breaks |
 
@@ -49,7 +50,6 @@ biography: {
 <!-- |pattern | String | | Regular expression to validate entries |
 |patternErrorMessage | String | | Error message to display if `pattern` does not match | -->
 <!-- |searchable | Boolean | true | If false, content from the area will not appear in search results. | -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## `sortify`
 

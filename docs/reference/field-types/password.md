@@ -32,10 +32,10 @@ secret: {
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | false | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
-<!-- |readOnly | Boolean | false | If `true`, prevents the user from editing the field value | -->
 
 ## Use in templates
 
