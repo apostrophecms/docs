@@ -75,14 +75,22 @@ If the identified dog isn't in our database yet, we would return a `null` value 
 // We update the `status` property.
 dogDocument.status = status;
 
-const updateResult = await self.update(req, dogDocument);
+const updatedDraft = await self.update(req, dogDocument);
 
-return updateResult;
+return updatedDraft;
 ```
 
-We update the document property that tracks the dog's adoption status on the data object and use `self.update` to replace the previous document state with our update (with `await` as it is asynchronous). We finally return the result, which will be an object with update information from MongoDb.
+We update the document property that tracks the dog's adoption status on the data object and use `self.update` to replace the previous document state with our update (with `await` as it is asynchronous). We finally return the result, which will be the updated document object.
+
+Note that using the provided `req` object like this works only if the `req` object is from a user with *at least* "contributor" permissions for the `dog` piece type. We could pass `{ permissions: false }` as a third options argument to `self.update()` to bypass that permission check, though that obviously raises security issues we would need to consider carefully.
 
 ::: note
+All content documents have multiple versions, including "draft" and "published" versions. The `update()` methods only updates the "draft" copy, allowing editors to still review before publishing. If we *did* want to publish here as well, we would want to run the publishing method:
+
+```javascript
+await self.publish(req, updatedDraft);
+```
+
 **What if we are updating a document from a different doc type module?**
 
 In the example above, `self` refers to the `dog` piece type module since that is where the method is registered. If we wanted to run the `update` method from a separate module we would replace `self` with a specific reference to the `dog` module: **`self.apos.modules.dog`**.
@@ -92,9 +100,9 @@ In the example above, `self` refers to the `dog` piece type module since that is
 
 Updating pages works the same way as pieces with the same arguments to the `update` method. There are a few things to keep in mind when working on pages, however.
 
-**We often call the page `update` method from `self.apos.page`.** `self.update` does work from individual page type modules and sometimes that is the right way to call it. But since pages can change their `type` property (unlike pieces) they share a single `update` method from the `@apostrophecms/page` module. `self.update` on individual page type modules is simply a wrapper around that method.
+**We typically call the page `update` method from the main page module: `self.apos.page.update()`.** Since pages can change their `type` property (unlike pieces) they share a single `update` method from the `@apostrophecms/page` module. `self.update()` on individual page type modules is simply a wrapper around that method.
 
-**There is a better way to move pages within the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).** The `@apostrophecms/page` module has a dedicated `move()` method for that purpose. Documentation of that method is upcoming. In the meantime, refer to the [REST API information about page tree placement](/reference/api/pages.md#post-api-v1-apostrophecms-page).
+**`update()` is not the way to move pages within the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).** The `@apostrophecms/page` module has a dedicated `move()` method for that purpose. Documentation of that method is upcoming. In the meantime, refer to the [REST API information about page tree placement](/reference/api/pages.md#post-api-v1-apostrophecms-page).
 
 ## Inserting a new piece
 
