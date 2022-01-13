@@ -197,3 +197,9 @@ The `AposWidget` component has **nothing to do with a typical site visitor exper
 
 Before you override an editor modal, consider [adding a custom schema field type](/guide/custom-schema-field-types.md) instead.
 :::
+
+## Adding custom login requirements
+
+In some cases we might wish to enhance Apostrophe's login form with additional, custom steps.
+
+This too is a larger topic that touches on more than just UI, so we've created a [separate article on how to add a custom login requirement](/guide/custom-login-requirements.md).
