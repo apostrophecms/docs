@@ -50,6 +50,7 @@ contactInfo: {
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
 |`titleField` | String |  n/a | The name of one of the array schema fields. If provided, the user interface will use the value of that field as a label for the array tabs. |
 
 ::: tip NOTE
@@ -60,7 +61,6 @@ contactInfo: {
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
-<!-- |readOnly | Boolean | `false` | If `true`, prevents the user from editing the field value | -->
 
 ## Configuring the array field schema
 
