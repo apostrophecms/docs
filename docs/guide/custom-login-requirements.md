@@ -32,7 +32,7 @@ While [most password complexity rules are often counterproductive](https://arste
 
 ## The three phases of login
 
-Apostrophe allows you to add extra login requirements during three different phases of the login process:
+Apart from password complexity, most enhancements to the login form involve at least some new UI code. Apostrophe allows you to add extra login requirements during three different phases of the login process:
 
 * `beforeSubmit`: right at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
 * `afterSubmit`: immediately after the form is completed and the Login button is clicked, but before the API request to actually log in. Best used for requirements that **do** have a visible interface and which do not require any special knowledge about the user, such as a visible CAPTCHA image, or a simple math problem. These will be **presented one at a time**, in the space formerly occupied by the login form, after the login button is clicked.
