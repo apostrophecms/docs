@@ -165,16 +165,44 @@ Sort an array of strings (`strings`) in place (does not return), comparing strin
 
 Sort an array of objects (`objects`) in place (does not return), based on the value of the given `property` of each object, in a case-insensitive way.
 
-#### `findNestedObjectById()`
-#### `findNestedObjectAndDotPathById()`
-#### `profile()`
-#### `now()`
-#### `getManagerOf()`
-#### `get()`
-#### `resolveAtReference()`
-#### `set()`
-#### `recursionGuard()`
-#### `cloneReq()`
+#### `findNestedObjectById(object, _id, options)`
+
+Within an `object` (typically a full content document or widget object), find and return a nested object with the given `_id` property. This works regardless of the target object's nesting depth. Useful to locate a specific widget within a document.
+
+Pass `{ ignoreDynamicProperties: true }` as the `options` argument to skip objects set on dynamic properties (those starting with `_`) during this check.
+
+#### `findNestedObjectAndDotPathById(object, _id, options)`
+
+Similar to `findNestedObjectById`. Within an `object` (typically a full content document or widget object), find a nested object with the given `_id` property. This works regardless of the target object's nesting depth. Useful to locate a specific widget within a document.
+
+Unlike `findNestedObjectById`, **this returns an object with two properties:**
+- `object`: The target object as returned by the other method.
+- `dotPath`: The dot notation path to the target object.
+
+Pass `{ ignoreDynamicProperties: true }` as the `options` argument to skip objects set on dynamic properties (those starting with `_`) during this check.
+
+#### `getManagerOf(object)`
+
+Given a widget or document object, this returns the appropriate manager module.
+
+#### `get(obj, path)`
+
+Returns the value at the given `path` from the object or array `obj`.
+
+`path` supports dot notation like MongoDB. If the first dot notation segment of `path` begins with `@xyz` (or `@` followed by any alphanumeric value) the nested object within `obj` with an `_id` property equal to `xyz` is found and returned, no matter how deeply nested it is.
+
+#### `set(obj, path, val)`
+
+Set a value (`val`) at the provided `path` within the object or
+array `obj`, mutating `obj`.
+
+`path` supports dot notation like MongoDB. If the first dot notation segment of `path` begins with `@xyz` (or `@` followed by any alphanumeric value) the nested object within `obj` with an `_id` property equal to `xyz` is located, no matter how deeply nested it is. If `@xyz` is the full `path` argument, the nested object is replaced with `val`. If there are further components via dot notation, they are used to locate the final location for `val`.
+
+The `@` syntax works only for locating nested objects. You may not pass `@abc` where `abc` is the `_id` of `obj` itself.
+
+#### `cloneReq(req, properties)`
+
+Returns a *new* `req` object with the properties of the original plus any in the optional `properties` parameter. Used when a request object with one change is desired, such as `mode: 'published'`. Avoids the need to push and pop properties of the original `req`. Also available as `req.clone(properties)`.
 
 ## Module tasks
 
