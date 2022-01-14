@@ -82,7 +82,7 @@ return updatedDraft;
 
 We update the document property that tracks the dog's adoption status on the data object and use `self.update` to replace the previous document state with our update (with `await` as it is asynchronous). We finally return the result, which will be the updated document object.
 
-Note that using the provided `req` object like this works only if the `req` object is from a user with *at least* "contributor" permissions for the `dog` piece type. We could pass `{ permissions: false }` as a third options argument to `self.update()` to bypass that permission check, though that obviously raises security issues we would need to consider carefully.
+Note that using the provided `req` object like this works only if the `req` object is from a user with *at least* "contributor" permissions for the `dog` piece type. **If we wanted to bypass that permission check**, or if we ever wanted to allow anonymous site visitors to insert or update content, we would pass `{ permissions: false }` as a third options argument to `self.update()`. That obviously raises security issues we would need to consider carefully.
 
 ::: note
 All content documents have multiple versions, including "draft" and "published" versions. The `update()` methods only updates the "draft" copy, allowing editors to still review before publishing. If we *did* want to publish here as well, we would want to run the publishing method:
