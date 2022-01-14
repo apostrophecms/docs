@@ -103,7 +103,7 @@ This code makes reference to a Vue component, `ColumnStarRating`, that doesn't e
 import AposCellMixin from 'Modules/@apostrophecms/ui/mixins/AposCellMixin';
 
 export default {
-  name: 'AposCellBasic',
+  name: 'ColumnStarRating',
   mixins: [ AposCellMixin ],
   computed: {
     hasValue() {
