@@ -96,14 +96,6 @@ To register strings in **custom API routes**, use the `req.t()` method on the re
 There is currently no browser method available to register strings in project client-side JS. A good alternative is to create an API route that returns localized strings then use the response from that route in client-side JS.
 :::
 
-If you are customizing Apostrophe **user interface components**, the `$t()` method is available in the component (used as `this.$t()` outside the template block).
-
-<!-- TODO: Link to UI customization guide when available. -->
-
-::: note
-As a reminder, the Vue.js components of the user interface are not connected to any Vue app you may be running for your website visitors. The registration method will not be automatically available outside the UI components.
-:::
-
 ### Localizing with string interpolation
 
 Consider the following string: "*Contact the London office*." Maybe we have offices in multiple countries and use this heading on each office's page. In this case we don't know the *exact* string to translate since the city will change. The variable part, the city, is also in the middle (for some languages, at least) so we could not even translate the rest very easily. In cases like this we use **string interpolation**.
@@ -153,41 +145,9 @@ See the [i18next documentation](https://www.i18next.com/translation-function/int
 
 ## Adding and using localization files
 
-Now that there are strings to localize, we need to add JSON files for locales with the strings and their translations. For the purposes of our example we will assume we have two locales: `'en'` (English) and `'es'` (Spanish).
+Now that there are strings to localize, we need to add JSON files for locales with the strings and their translations. For the purposes of our example we will assume we have two locales: `'en'` (English) and `'es'` (Spanish). Each locale should get its own JSON file using the locale name, in a `i18n` subdirectory of a module that has internationalization active.
 
-Each locale should get its own JSON file using the locale name, in a `i18n` subdirectory of a module that has internationalization active. Configure that module with the [`i18n` option](/reference/module-api/module-options.md#i18n), such as:
-
-<AposCodeBlock>
-  ```javascript
-  module.exports = {
-    options: {
-      i18n: true
-    }
-  };
-  ```
-  <template v-slot:caption>
-    /modules/localization/index.js
-  </template>
-</AposCodeBlock>
-
-**If the l10n strings will be used in the user interface**, set the `i18n` option to an object with `browser: true`. *This includes any piece type and page type labels* that will appear in the UI. If that is not present then the UI build process will ignore the l10n JSON file. This is only appropriate for Apostrophe UI strings as they are only available when logged-in and, as noted above, there is no utility for localizing strings in other client-side JavaScript.
-
-<AposCodeBlock>
-  ```javascript
-  module.exports = {
-    options: {
-      i18n: {
-        browser: true
-      }
-    }
-  };
-  ```
-  <template v-slot:caption>
-    /modules/localization/index.js
-  </template>
-</AposCodeBlock>
-
-Like all modules, we would need to activate this in `app.js`. Our JSON files would be:
+Like all modules, we would need to activate this module in `app.js`, even if we don't need an `index.js` file. Our JSON files would be:
 
 - `modules/localization/i18n/en.json`
 - `modules/localization/i18n/es.json`
@@ -227,7 +187,7 @@ If the only localization key we registered in our project was `relatedArticles` 
 When rendering the show page template, Apostrophe will look in these files, find the registered key and replace it with the correct string based on the active locale.
 
 ::: warning
-The primary module to avoid using to store l10n strings is `@apostrophecms/i18n`, the actual internationalization module. This is used by Apostrophe core for the user interface and it uses a namespace to keep its l10n keys separate from project-level localization.
+The primary module to avoid using to store l10n strings for project-level text is `@apostrophecms/i18n`, the actual internationalization module. This is used by Apostrophe core for the user interface and it uses a namespace to keep its l10n keys separate from project-level localization.
 :::
 
 ## Using namespaces
@@ -236,32 +196,32 @@ A l10n **namespace** is a prefix on localization keys that makes it harder to ac
 
 Namespacing can be useful if you are building your own modules with hard-coded strings that you intend to publish. When that module is installed in a project later it would be less likely that the project will change them accidentally.
 
-To use a l10n namespace, include it in the `i18n` option object in the module where your JSON files are with the `ns` setting.
+To use a l10n namespace, first choose a namespace name. Let's say it's `ourTeam`. Create an `i18n/ourTeam` subdirectory inside your module, and populate it with `.json` files.
+
+::: warning
+Although you can set the `i18n.ns` option of the module instead to define the namespace for `.json` files placed directly in `i18n/`, we do not recommend this legacy approach because it can break localization of text inherited from another module. Use namespace subdirectories instead.
+:::
 
 <AposCodeBlock>
-  ```javascript
-  module.exports = {
-    options: {
-      i18n: {
-        ns: 'myTeam'
-      }
-    }
-  };
+  ```json
+  {
+    "relatedArticles": "Related articles"
+  }
   ```
   <template v-slot:caption>
-    /modules/localization/index.js
+    /modules/localization/i18n/ourTeam/en.json
   </template>
 </AposCodeBlock>
 
-**You do not need to include this namespace in the l10n JSON files.** If the JSON files are in the module directory where this setting appears, Apostrophe will know that the keys in those files should be namespaced.
+**You do not need to include the namespace name in the contents of the l10n JSON files themselves.** Apostrophe will know the namespace already based on the directory name.
 
 Then when you use the localization keys in template files (or elsewhere), start each key with the namespace:
 
 ```django
-<h2>__t('myTeam:relatedArticles')</h2>
+<h2>__t('ourTeam:relatedArticles')</h2>
 ```
 
-Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`myTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
+Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`ourTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
 
 ::: warning
 Avoid using namespaces that begin with `apos`. The core team uses namespaces that begin with that for official modules, e.g., `aposForm` and `aposSeo`. Using that prefix is not technically forbidden, but it could result in conflicts with official modules. Using the `apostrophe` namespace should definitely be avoided since it is used in Apostrophe core.
@@ -271,11 +231,50 @@ As a reminder, namespacing is primarily necessary for *installable modules* and 
 
 ## Localizing the Apostrophe user interface
 
-The Apostrophe user interface contains many registered strings, currently localized to English. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that.
+The Apostrophe user interface contains many registered strings, currently localized to English and a few other languages. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that. Localizing text in your own **custom** admin UI modules is a separate topic which we'll address later.
 
-Add JSON files for the locales as normal in the project-level `modules/@apostrophecms/i18n` module directory. You can also use any other module configured to use the `'apostrophe'` namespace (keeping project strings separate). The UI keys all use this namespace. In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
+To localize Apostrophe's existing user interface strings, we need to create JSON files for the `apostrophe` namespace, which contains all of the phrases for the core UI of Apotrophe. To do that, add JSON files for the locales to a project-level `modules/@apostrophecms/i18n/apostrophe` directory. The name of the subdirectory determines the namespace. You can also do this in any other module as long as you use an `i18n/apostrophe` subdirectory within that module, keeping these localizations separate from your project-level strings.
 
-Of course, this would be a lot of work and would likely involve tracking down where strings are used. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
+Note that separately installed npm modules may use other namespaces, which you can see in their source code. You can create subdirectories for these as well, again keeping these localizations separate from your project-level strings.
+
+In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
+
+Of course, this can be a lot of work and would likely involve tracking down where strings are used for testing purposes. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
+
+### Localizing your own custom Apostrophe user interface modules
+
+If you are [writing your own extensions to the Apostrophe user interface](../custom-ui.md), you will want to localize strings there just as you would in any module, with the following additions:
+
+* You should use a custom namespace for your strings, to avoid any confusion with our official `apostrophe` namespace.
+* You'll need to set `browser: true` for your namespace, as shown below. Doing this in any module will ensure strings for this namespace make it to the browser for the admin UI.
+* You'll need to register the text strings in your custom Vue admin UI components.
+
+Here is an example module `index.js` file that sets the `browser: true` flag for a namespace:
+
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    // Note this is at top level, not under options
+    i18n: {
+      ourTeamUI: {
+        browser: true
+      }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    /modules/team-ui/index.js
+  </template>
+</AposCodeBlock>
+
+Once that file is in place we can populate the `/modules/team-ui/i18n/ourTeamUI` folder with JSON files as described earlier.
+
+To access our phrases in our custom admin UI Vue components, we invoke `this.$t()` when writing Vue methods, or just `$t()` when in the template block. In all other respects invoking `$t()` works the same way as `__t()`, discussed earlier.
+
+::: note
+As a reminder, the Vue.js components of the user interface are not connected to any Vue app you may be running for your website visitors. The registration method will not be automatically available outside the UI components.
+:::
 
 ## Debugging localization
 
