@@ -6,7 +6,7 @@ sidebarDepth: 2
 
 **Alias:** `apos.util`
 
-The `@apostrophecms/util` module contains utility methods and tools that do not primarily operate with any particular other module.
+The `@apostrophecms/util` module contains utility methods and tools that do not clearly belong in any other module.
 
 ## Options
 
@@ -69,9 +69,11 @@ Logs an error message. The default implementation wraps `console.error` and pass
 
 #### `globalReplace(source, target, replacement)`
 
-Globally replaces a target string within a source string. This allows global string replacement without using regular expressions. Arguments are:
+Globally replaces a target string within a source string. This allows global string replacement without using regular expressions. It replaces the original `source` string and does not return anything.
 
-- **`source`**: A string that will be mutated by replacing substrings.
+Arguments are:
+
+- **`source`**: A string that will be replaced after updating `target` string segments.
 - **`target`**: A string that should be replaced every time it appears in `source`.
 - **`replacement`**: A string used to replace `target` wherever it appears in `source`.
 
@@ -147,7 +149,7 @@ If the `object` argument is an array, the clone is also an array. Arrays are clo
 
 #### `orderById(ids, items, idProperty)`
 
-`ids` should be an array of MongoDB identifiers (`_id` properties). The elements of the `items` array, which should be the result of a mongodb query, are returned in the order specified by `ids` array.
+`ids` should be an array of identifiers (`_id` properties, by default). The elements of the `items` array, which should be the result of a mongodb query, are returned in the order specified by the `ids` array.
 
 This is useful after performing an `$in` query with MongoDB (`$in` does _not_ sort its results in the order given). Any IDs that do not actually exist for an item in the `items` array are not returned, and vice versa. You should not assume the result will have the same length as either array.
 
@@ -169,7 +171,7 @@ Sort an array of objects (`objects`) in place (does not return), based on the va
 
 Within an `object` (typically a full content document or widget object), find and return a nested object with the given `_id` property. This works regardless of the target object's nesting depth. Useful to locate a specific widget within a document.
 
-Pass `{ ignoreDynamicProperties: true }` as the `options` argument to skip objects set on dynamic properties (those starting with `_`) during this check.
+Pass `{ ignoreDynamicProperties: true }` as the `options` argument to skip objects set on dynamic properties (those starting with `_`) during this check. This is useful to ignore documents loaded via relationships.
 
 #### `findNestedObjectAndDotPathById(object, _id, options)`
 
