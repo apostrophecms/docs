@@ -1,10 +1,13 @@
 # Nested module folders
 
-Apostrophe has optional support for nested subdirectories of modules, tucked
-inside `modules`.
+When projects have dozens of modules, the `modules/` folder can begin to appear cluttered. It can be difficult to locate a particular module in such a long list. Similarly, since every module must at least be activated in `app.js`, that file can begin to feel cluttered as well. In this situation, developers often wish for a way to group their modules into subdirectories, as well as a way to break up `app.js` into multiple files for readability. Apostrophe offers the `nestedModuleSubdirs` option as a solution to both problems.
 
-You must set the `nestedModuleSubdirs` option to `true` in `app.js`, like this:
+When the top-level `nestedModuleSubdirs` option is set to `true`, Apostrophe will:
 
+* Recognize modules when nested in subdirectories within `modules/`. This reduces clutter in the `modules/` folder.
+* Load any `modules.js` files discovered in parent directories within `modules/`, and merge them with the `modules` section of `app.js`. This reduces clutter in `app.js`.
+
+We can set the `nestedModuleSubdirs` option to `true` in `app.js`, like this:
 
 <AposCodeBlock>
 ```javascript
@@ -27,8 +30,8 @@ Now you can nest modules in subdirectories, like the example `modules/products` 
 
 <AposCodeBlock>
 ```javascript
-// modules/products/modules.js
 module.exports = {
+  // This code merges with the `modules` section of `app.js`
   'product': {},
   'product-page': {},
   'product-widget': {}
@@ -39,11 +42,14 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
-And then you can implement those modules in their own sub-subdirectories:
+::: note
+You do not have to use `modules.js` files if you don't want to. You can still activate your modules in `app.js` if you prefer. It usually makes sense to reduce clutter in both places: the `modules/` folder and `app.js`. But, it's up to you. This feature is entirely for your convenience.
+:::
+
+Now we'll implement those modules in their own sub-subdirectories:
 
 <AposCodeBlock>
 ```javascript
-// modules/products/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -58,7 +64,6 @@ module.exports = {
 
 <AposCodeBlock>
 ```javascript
-// modules/products/product-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -73,7 +78,6 @@ module.exports = {
 
 <AposCodeBlock>
 ```javascript
-// modules/products/product-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -100,14 +104,16 @@ The resulting directory tree looks like this:
 ```
 /app.js
 /modules
-/modules/products (modules.js lives here, activates three modules)
+/modules/products
+/modules/products/module.js (activates the three modules below)
 /modules/products/product (index.js for the product piece type lives here)
 /modules/products/product-page-type (index.js, views/show.html, etc.)
 /modules/products/product-widget (index.js, views/widget.html, etc.)
 ```
 
-Just remember: **the names of the parent folders do not matter, and the names of the actual
-module folders at the bottom MUST still match the name of each module.**
+::: warn
+It is important to understand that **the names of the subdirectories do not matter.** The The subdirectories are purely there for your convenience in organizing your code and they are **not part of the name of the modules within them.** The names of the actual
+module folders within them must still match the full name of each module.
+:::
 
-By following through with this approach you can make `app.js` much shorter and better organize your project.
-
+By following through with this approach you can make `app.js` much shorter and better organize your project's files for easier maintenance.
