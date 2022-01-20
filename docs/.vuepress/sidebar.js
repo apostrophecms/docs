@@ -62,6 +62,7 @@ module.exports = {
         'guide/conditional-fields.md',
         'guide/async-components.md',
         'guide/static-module-assets.md',
+        'guide/nested-module-subdirs.md',
         {
           title: 'Localization',
           path: '/guide/localization',
