@@ -69,7 +69,7 @@ Logs an error message. The default implementation wraps `console.error` and pass
 
 #### `globalReplace(source, target, replacement)`
 
-Globally replaces a target string within a source string. This allows global string replacement without using regular expressions. It replaces the original `source` string and does not return anything.
+Globally replaces a target string within a source string. This allows global string replacement without using regular expressions. It replaces the original `source` string and does not return a value.
 
 Arguments are:
 
@@ -161,11 +161,11 @@ Returns `true` if the `req` request object is an AJAX request (`req.xhr` is set,
 
 #### `insensitiveSort(strings)`
 
-Sort an array of strings (`strings`) in place (does not return), comparing strings in a case-insensitive way.
+Sort an array of strings (`strings`) in place, comparing strings in a case-insensitive way. It does not return a value.
 
 #### `insensitiveSortByProperty(objects, property)`
 
-Sort an array of objects (`objects`) in place (does not return), based on the value of the given `property` of each object, in a case-insensitive way.
+Sort an array of objects (`objects`) in place, based on the value of the given `property` of each object, in a case-insensitive way. It does not return a value.
 
 #### `findNestedObjectById(object, _id, options)`
 
