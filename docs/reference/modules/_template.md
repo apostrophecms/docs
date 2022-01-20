@@ -35,6 +35,14 @@ Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare ve
 
 Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
 
+## Template helpers
+
+Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
+
+#### `slugify(string, options)`
+
+Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## Module tasks
 
 ### `reset`
