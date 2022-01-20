@@ -32,15 +32,112 @@ While [most password complexity rules are often counterproductive](https://arste
 
 ## The three phases of login
 
-Apart from password complexity, most enhancements to the login form involve at least some new UI code. Apostrophe allows you to add extra login requirements during three different phases of the login process:
+Apart from password complexity, most enhancements to the login form involve at least some new UI code. UI components added this way are integrated into the existing login interface. This involves both backend Node.js development and frontend Vue 2 [component](https://vuejs.org/v2/guide/components.html) development.
 
-* `beforeSubmit`: right at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
+Apostrophe allows you to add extra login requirements during three different phases of the login process:
+
+* `beforeSubmit`: requirements in this phase are displayed before the user clicks the Login button. If the requirement has a visible UI, it appears at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
 * `afterSubmit`: immediately after the form is completed and the Login button is clicked, but before the API request to actually log in. Best used for requirements that **do** have a visible interface and which do not require any special knowledge about the user, such as a visible CAPTCHA image, or a simple math problem. These will be **presented one at a time**, in the space formerly occupied by the login form, after the login button is clicked.
 * `afterPasswordVerified`: similar to `afterSubmit`, but requirements in this phase are displayed **after the password has been verified.** Best used for requirements that require special knowledge of the user, such as 2FA (Two-Factor Authentication).
 
+## The server side
+
+Each distinct requirement has its own server-side code, which must be added to the `requirements(self)` module configuration function of the `@apostrophecms/login` module at project level, or to an npm module that enhances it via `improve`.
+
+The object returned by `requirements` is similar to that returned by `fields`, in that it has an `add` property, and each individual login requirement is a sub-property of `add`.
+
+Each requirement must have a unique name. The name of each requirement should be CapitalizedInCamelCase, as it doubles as a Vue component name, as explained below.
+
+Each requirement has:
+
+* A `phase` property, which must be `beforeSubmit`, `afterSubmit` or `afterPasswordVerified`.
+* A `props(req)` function, which may be `async` and returns an object. The properties of that object become Vue `props` of the Vue component, as explained below. The `req` object allows access to the [current Express request](https://expressjs.com/en/api.html#req), including `req.session` which can be useful for temporary storage not revealed to the browser.
+* A `verify(req)` function, which may be `async`. This function is responsible for throwing an exception if the requirement has not been met. Any data provided by the Vue component will be accessible here as `req.body.requirements.RequirementName`, where `RequirementName` should be replaced with the name of the requirement.
+
+To illustrate, the general structure on the server side is:
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    requirements(self) {
+      return {
+        add: {
+          RequirementName: {
+            phase: 'afterSubmit',
+            async props(req) {
+              return {
+                propName: propValue
+              };
+            },
+            async verify(req) {
+              if (!verifyThisCodeIsCorrect(req.body.requirement.RequirementName)) {
+                throw self.apos.error('invalid', 'appropriate message');
+              }
+            }
+          }
+        }
+      };
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/login/index.js
+  </template>
+</AposCodeBlock>
+
+## The browser side
+
+Each distinct requirement also has browser-side code, which is implemented as a Vue component. As explained in the [custom UI guide](../custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project. For this purpose they are typically placed in the `modules/@apostrophecms/login/ui/apos/components` module at project level, or in an npm module that enhances `@apostrophecms/login` via `improve`.
+
+The developer is responsible for the appearance of the component. For `beforeSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterSubmit` requirements, it will appear on its own, "fading up" after the Login button is clicked, although password verification has not happened yet. For `afterPasswordVerified` requirements, the appearance is the same as for `afterSubmit`, although password verification has been completed at this point. If there are multiple `afterSubmit` and `afterPasswordVerified` requirements, the user will see them presented one at a time, with the `afterSubmit` requirements completed first.
+
+Each component is responsible for:
+
+* Presenting its own UI, if any. Apostrophe will handle "fading up" `afterSubmit` and `afterPasswordVerified` components and displaying any suitable outer framing.
+* Accepting the properties of the object returned by the server-side `props(req)` function as props.
+* Emitting a `done` event with a payload providing proof that the requirement has been met. This proof is accessible to the `verify(req)` function on the server side as `req.body.requirements.RequirementName`. In the case of `afterSubmit` and `afterPasswordVerified` requirements, the `done` event should not be emitted until the user has indicated their response is complete in some way.
+
+While there is no fixed structure for the Vue components, a typical outline looks like:
+
+<AposCodeBlock>
+  ```javascript
+  <template>
+    <fieldset>
+      <label>What code did you receive?</label>
+      <p>Hint: {{ hint }}</p>
+      <input type="text" v-model="value" />
+      <button type="button" @click="go">OK</button>
+    </fieldset>
+  </template>
+  <script>
+  export default {
+    emits: [ 'done' ],
+    props: {
+      // Comes from the hint property of the
+      // object returned by props(req) on the server side
+      hint: String
+    },
+    data() {
+      return {
+        value: ''
+      };
+    },
+    methods: {
+      go() {
+        this.$emit('done', this.value);
+      }
+    }
+  };
+  </script>
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/login/ui/apos/components/RequirementName.vue
+  </template>
+</AposCodeBlock>
+
 ## Implementing `beforeSubmit` and `afterSubmit` requirements
 
-Here is server-side code for a simple requirement to solve a math problem when logging in. This example uses `phase: 'afterSubmit'`, because the requirement has a user interface and our recommendation is to let it appear on its own. One could also use `phase: 'beforeSubmit'` if displaying the math problem at the bottom of the login form is preferred, with no other code changes:
+Here is complete server-side code for a simple requirement to solve a math problem when logging in. This example uses `phase: 'afterSubmit'`, because the requirement has a user interface and our recommendation is to let it appear on its own. One could also use `phase: 'beforeSubmit'` if displaying the math problem at the bottom of the login form is preferred, with no other code changes:
 
 <AposCodeBlock>
   ```javascript
@@ -80,8 +177,7 @@ Here is server-side code for a simple requirement to solve a math problem when l
 
 **What is happening here?**
 
-* At project level, custom login requirements must either be delivered as project-level configuration of the `@apostrophecms/login` module (in `modules/@apostrophecms/login` at project level). They may not be spread across several modules at project level, however you **may implement more than one** in the `requirements()` module initialization function of `@apostrophecms/login`. If you wish to ship a single custom login requirement as a public or private npm module for reuse, use the `improve: '@apostrophecms/login'` property so that your module is treated as an extra layer of configuration for `@apostrophecms/login`. Note that `improve` is not available at project level.
-* The `props()` function of the requirement is invoked before the form appears and returns an object whose properties become props for the custom Vue component shown below. Because it has access to `req`, this function can store information about the "challenge" presented by the requirement in `req.session`, so it remains available for verifying the result, **without disclosing the right answer** to the browser.
+* The `props()` function of the requirement is invoked before the form appears and returns an object whose properties become props for the custom Vue component shown below. Because it has access to `req`, the [Express request object represnting the current browser request](https://expressjs.com/en/api.html#req), this function can store information about the "challenge" presented by the requirement in `req.session` so that it remains available for verifying the result **without disclosing the right answer** to the browser.
 * The `verify()` function of the requirement is invoked when the login form is completed and the user clicks Login. Note that Apostrophe won't allow that to happen until the custom Vue component emits a `done` event, as shown below. `verify()` also has access to `req`, so it can consult `req.session` to see if the response is correct.
 * If `verify()` throws an error, the error is displayed and the login form can be submitted again. If no requirements throw an error, login proceeds, first to the `afterSubmit` requirements, and then the `afterPasswordVerified` requirements.
 
@@ -102,7 +198,7 @@ To complete the requirement we also need a Vue component on the browser side. As
   </template>
   <script>
   export default {
-    emits: [ 'done', 'block' ],
+    emits: [ 'done' ],
     props: {
       mathProblem: String
     },
@@ -130,12 +226,18 @@ To complete the requirement we also need a Vue component on the browser side. As
 </AposCodeBlock>
 
 ::: note
-Don't forget to add `APOS_DEV=1` at the start of your `npm run dev` command if you are actively developing Apostrophe admin UI components. Otherwise Apostrophe will not rebuild the admin UI every time.
+Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI every time.
+
+If your project is derived from `a3-boilerplate` you can type:
+
+```bash
+APOS_DEV=1 npm run dev
+```
 :::
 
 **What is happening here?**
 
-This simple Vue component has only one job: take the props returned by the server-side `props` function, display an appropriate interface, and emit a `done` Vue event with the user's response to the challenge. Everything else is handled for us by Apostrophe.
+This Vue component has only one job: take the props returned by the server-side `props` function, display an appropriate interface, and emit a `done` Vue event with the user's response to the challenge. Everything else is handled for us by Apostrophe.
 
 ::: note
 Apostrophe looks for a Vue component with the same name as the requirement.
@@ -218,7 +320,7 @@ Here is the front-end Vue component code for this requirement:
   </template>
   <script>
   export default {
-    emits: [ 'done', 'block' ],
+    emits: [ 'done' ],
     props: {
       code: String
     },
