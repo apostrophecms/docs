@@ -202,7 +202,7 @@ With those ideas in mind, we can look at an example of project-level global modu
                 },
                 // Only if it's a page link
                 if: {
-                  linkType: 'page'
+                  type: 'page'
                 }
               },
               customUrl: {
@@ -211,7 +211,7 @@ With those ideas in mind, we can look at an example of project-level global modu
                 required: true,
                 // Only if it's a custom link
                 if: {
-                  linkType: 'custom'
+                  type: 'custom'
                 }
               },
               // A nice option to have the link open in a new tab
@@ -261,14 +261,16 @@ The final step is to turn the array data from this into template markup. We will
         {% for item in data.global.primaryNav %}
           <li>
             {% set path = '' %}
+            {% set pageTitle = '' %}
             {% if item.type === 'page' and item._page and item._page[0] %}
-              {% path = item._page[0]._url %}
+              {% set path = item._page[0]._url %}
+              {% set pageTitle = item._page[0].title %}
             {% elif item.type === 'custom' %}
-              {% path = item.url %}
+              {% set path = item.url %}
             {% endif %}
             <a href="{{ path }}"
               {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
-            >{{ item.label }}</a>
+            >{{ item.label or pageTitle }}</a>
           </li>
         {% endfor %}
       </ul>
