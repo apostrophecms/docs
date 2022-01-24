@@ -36,9 +36,9 @@ Apart from password complexity, most enhancements to the login form involve at l
 
 Apostrophe allows you to add extra login requirements during three different phases of the login process:
 
-* `beforeSubmit`: requirements in this phase are displayed before the user clicks the Login button. If the requirement has a visible UI, it appears at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
-* `afterSubmit`: immediately after the form is completed and the Login button is clicked, but before the API request to actually log in. Best used for requirements that **do** have a visible interface and which do not require any special knowledge about the user, such as a visible CAPTCHA image, or a simple math problem. These will be **presented one at a time**, in the space formerly occupied by the login form, after the login button is clicked.
-* `afterPasswordVerified`: similar to `afterSubmit`, but requirements in this phase are displayed **after the password has been verified.** Best used for requirements that require special knowledge of the user, such as 2FA (Two-Factor Authentication).
+* `beforeSubmit`: Requirements in this phase are displayed before the user clicks the Login button. If the requirement has a visible UI, it appears at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
+* `afterSubmit`: Requirements in this phase are displayed after the form is completed and the Login button is clicked, but before the API request to actually log in. Best used for requirements that **do** have a visible interface and which do not require any special knowledge about the user, such as a visible CAPTCHA image, or a simple math problem. These will be **presented one at a time**, in the space formerly occupied by the login form, after the login button is clicked.
+* `afterPasswordVerified`: This phase is similar to `afterSubmit`, but requirements in this phase are displayed **after the password has been verified.** Best used for requirements that require special knowledge of the user, such as 2FA (Two-Factor Authentication).
 
 ## The server side
 
@@ -89,11 +89,11 @@ To illustrate, the general structure on the server side is:
 
 Each distinct requirement also has browser-side code, which is implemented as a Vue component. As explained in the [custom UI guide](../custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project. For this purpose they are typically placed in the `modules/@apostrophecms/login/ui/apos/components` module at project level, or in an npm module that enhances `@apostrophecms/login` via `improve`.
 
-The developer is responsible for the appearance of the component. For `beforeSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterSubmit` requirements, it will appear on its own, "fading up" after the Login button is clicked, although password verification has not happened yet. For `afterPasswordVerified` requirements, the appearance is the same as for `afterSubmit`, although password verification has been completed at this point. If there are multiple `afterSubmit` and `afterPasswordVerified` requirements, the user will see them presented one at a time, with the `afterSubmit` requirements completed first.
+The developer is responsible for the appearance of the component. For `beforeSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterSubmit` requirements, it will appear on its own, after the Login button is clicked, although password verification has not happened yet. For `afterPasswordVerified` requirements, the appearance is the same as for `afterSubmit`, although password verification has been completed at this point. If there are multiple `afterSubmit` and `afterPasswordVerified` requirements, the user will see them presented one at a time, with the `afterSubmit` requirements completed first.
 
 Each component is responsible for:
 
-* Presenting its own UI, if any. Apostrophe will handle "fading up" `afterSubmit` and `afterPasswordVerified` components and displaying any suitable outer framing.
+* Presenting its own UI, if any. Note that `afterSubmit` and `afterPasswordVerified` requirements will appear in isolation, one at a time, while any UI for `beforeSubmit` components will appear simultaneously with the login form.
 * Accepting the properties of the object returned by the server-side `props(req)` function as props.
 * Emitting a `done` event with a payload providing proof that the requirement has been met. This proof is accessible to the `verify(req)` function on the server side as `req.body.requirements.RequirementName`. In the case of `afterSubmit` and `afterPasswordVerified` requirements, the `done` event should not be emitted until the user has indicated their response is complete in some way.
 
@@ -226,14 +226,19 @@ To complete the requirement we also need a Vue component on the browser side. As
 </AposCodeBlock>
 
 ::: note
-Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI every time.
+Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI automatically when you make changes to admin UI code, such as login requirement components.
 
 If your project is derived from `a3-boilerplate` you can type:
 
 ```bash
 APOS_DEV=1 npm run dev
 ```
+
+If this is unfamiliar to you we recommend reading [Customizing the user interface](custom-ui.md) first.
 :::
+
+
+
 
 **What is happening here?**
 
