@@ -1,3 +1,7 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/task`
 
 **Alias:** `apos.task`
@@ -15,6 +19,8 @@ node app article:generate --total=20
 ```
 
 Apostrophe is fully initialized before a task is run, except that it does not listen for connections. We may access all general Apostrophe features in a task.
+
+**Extends:** `{{ $frontmatter.extends }}`
 
 ## Related documentation
 

@@ -1,3 +1,7 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/db`
 
 This module establishes `apos.db`, the MongoDB driver database object.
@@ -5,6 +9,8 @@ This module establishes `apos.db`, the MongoDB driver database object.
 ::: note
 `apos.db` is the MongoDB database object, not an alias to this module. You shouldn't need to talk to this module after startup, but you can access it as `apos.modules['@apostrophecms/db']` if needed. You can also access `apos.dbClient` if you need the MongoClient object.
 :::
+
+**Extends:** `{{ $frontmatter.extends }}`
 
 ## Options
 
