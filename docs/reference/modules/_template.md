@@ -33,7 +33,7 @@ The following methods belong to this module and may be useful in project-level c
 
 Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].inferIdLocaleAndMode()`.
 
-### `async inferIdLocaleAndMode(req, _id)`
+### `async eventualResponse(req, _id)`
 
 Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
 

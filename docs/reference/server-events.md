@@ -675,7 +675,7 @@ Events emitted by the `@apostrophecms/page` module.
 
 ### `beforeSend`
 
-Triggered just before a page template is rendered and sent as a response to a request. This can be a good place to adjust the data available to the template  by amending `req.data`.
+Triggered just before a page template is rendered and sent as a response to a request. This can be a good place to adjust the data available to the template  by amending `req.data`. Also see the [async components guide](/guide/async-components.md), as that can be a cleaner way to package code that fetches data during rendering.
 
 #### Parameters
 

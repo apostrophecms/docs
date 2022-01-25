@@ -3,7 +3,7 @@
 This module is the foundation of all other Apostrophe modules. It is not *directly* used for any functionality, but [every other module inherits its behavior and functionality](/guide/modules.md#module-inheritance). Every other module has access to use the features documented here. Critically, this module includes initialization behavior that all modules need to start up correctly and register features.
 
 :::warning
-**This module should almost never be configured directly in project code.** In other words, there should almost never be a `modules/@apostrophecms/module/index.js` file in a project codebase or `@apostrophecms/module: {}` line in an `app.js` file. The only reason to do so would be to add a feature that every other module will need.
+**This module should almost never be configured directly in project code.** In other words, there should almost never be a `modules/@apostrophecms/module/index.js` file in a project codebase. The only reason to do so would be to add a feature that every other module will need. There should *never* be a `@apostrophecms/module: {}` line in an `app.js` file.
 
 **Instead, configure the options below on other modules as needed** (e.g., configure the `alias` option on a module to create an easy reference to *that* module). Similarly, run the methods below as needed from the most appropriate module (e.g., use `self.email` from a contact page-type module).
 :::
@@ -17,12 +17,14 @@ This module is the foundation of all other Apostrophe modules. It is not *direct
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. As noted above, *they should be used via another, more appropriate module,* rather than directly called from this module. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/module/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. As noted above, *they should be used via another module.* They cannot be directly called from this module as it is not instantiated.
+
+See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/module/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 ### `async render(req, template, data)`
 
-Returns rendered HTML for a template with the data provided. You must pass `req`, a request object, as the first argument. The `template` argument should be the name of a template file in the module's `views` directory.
+Returns rendered HTML for a template with the data provided. You must pass `req`, a request object, as the first argument. The `template` argument should be the name of a template file in the module's `views` directory. If the `template` argument has no file extension Apostrophe will look for an `.html` or `.njk` file.
 
 All properties of `data` can be used in Nunjucks templates as properties of the `data` object. This argument may be omitted to include no additional data.
 
@@ -38,7 +40,7 @@ The `send()` method renders a template with data as with the [`render()`](#async
 
 ### `async sendPage(req, template, data)`
 
-Similarly to the [`send()`](#async-send-req-template-data) method renders a template and sends the rendered HTML as a response to the request (`req`). Where `send()` is used to render general template files, `sendPage()` is specifically used to render and send *full pages* for Apostrophe projects.
+Similar to the [`send()`](#async-send-req-template-data) method, this renders a template and sends the rendered HTML as a response to the request (`req`). Where `send()` is used to render general template files, `sendPage()` is specifically used to render and send *full pages* for Apostrophe projects. Page templates should extend the outer layout template &ndash; either directly (`{% extends data.outerLayout %}`) or by extending a template that does so.
 
 Templates rendered and sent with this method have full access to all template [data properties](/guide/template-data.md) appropriate for the related module. The template is also wrapped with the proper layout file (`'@apostrophecms/template:outerLayout.html'` by default), including the full `head` tag.
 
