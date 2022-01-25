@@ -186,7 +186,7 @@ There is also a `runPlayers` method on `apos.util`. That is run for us using `ap
 
 ## HTTP request methods
 
-These are all available in the browser on `apos.http`, e.g., `apos.http.get('/api/v1/article')`. TThey include utility methods to make requests with each HTTP method (`GET`, `POST`, `PATCH`, `PUT`, and `DELETE`) as well as other helpers for making HTTP requests.
+These are all available in the browser on `apos.http`, e.g., `apos.http.get('/api/v1/article')`. They include utility methods to make requests with each HTTP method (`GET`, `POST`, `PATCH`, `PUT`, and `DELETE`) as well as other helpers for making HTTP requests.
 
 | Method | What is it? |
 | -------- | ----------- |
