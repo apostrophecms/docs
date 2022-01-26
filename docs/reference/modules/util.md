@@ -1,4 +1,5 @@
 ---
+extends: '@apostrophecms/module'
 sidebarDepth: 2
 ---
 
@@ -7,6 +8,8 @@ sidebarDepth: 2
 **Alias:** `apos.util`
 
 The `@apostrophecms/util` module contains utility methods and tools that do not clearly belong in any other module.
+
+**Extends:** `{{ $frontmatter.extends }}`
 
 ## Options
 

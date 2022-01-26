@@ -673,6 +673,29 @@ There is no data included with the event for handlers.
 
 Events emitted by the `@apostrophecms/page` module.
 
+### `beforeSend`
+
+Triggered just before a page template is rendered and sent as a response to a request. This can be a good place to adjust the data available to the template  by amending `req.data`. Also see the [async components guide](/guide/async-components.md), as that can be a cleaner way to package code that fetches data during rendering.
+
+#### Parameters
+
+- `req`: The active request
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self, options) {
+    return {
+      'beforeSend': {
+        async handlerName(req) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+</AposCodeBlock>
+
 ### `serveQuery`
 
 Triggered just before the database query executes to find the best matching page for a request. This can be used to make final adjustments to the query.
@@ -699,7 +722,7 @@ Triggered just before the database query executes to find the best matching page
 
 ### `serve`
 
-Triggered just before a requested page is served.
+Triggered just before Apostrophe attempts to serve a requested page.
 
 #### Parameters
 
