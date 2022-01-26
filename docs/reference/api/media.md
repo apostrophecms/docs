@@ -19,12 +19,12 @@ For attachments meant to be included in the media or file libraries, metadata an
 
 **Authentication required.**
 
-The `body` of the request should use the `multipart/form-data` encoding, with the file itself uploaded under the name `file`. In a client-side request, the `body` of the request should be a `FormData` object.
+The `body` of the request should use the `multipart/form-data` encoding, with the file itself uploaded under the name `file`. In a client-side request, the `body` of the request should be a [`FormData` object](https://www.npmjs.com/package/form-data).
 
 ### Request example
 
 ```javascript
-// Create a `FormData` object
+// Create a [`FormData` object](https://www.npmjs.com/package/form-data)
 const formData = new window.FormData();
 
 // Append a file as per the FormData API:

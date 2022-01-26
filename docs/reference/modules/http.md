@@ -109,7 +109,7 @@ Accepts the following properties on the optional `options` object:
 | `qs` | Object | An object of query parameters and values. It may contain nested objects, arrays, and properties with null values. |
 | `jar` | Object | Pass in a cookie jar obtained from `apos.http.jar()`. |
 | `send` | String | Can be 'json' to always send `options.body` JSON-encoded, or `form` to send it URL-encoded. |
-| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a `FormData` object, it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
+| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a [`FormData` object](https://www.npmjs.com/package/form-data), it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
 | `parse` | String | Set to `json` to always parse the response body as JSON, otherwise the response body is parsed as JSON only if the `content-type` is `application/json`. |
 | `headers` | Object | An object containing header names and values. |
 | `csrf` | Boolean/String | If set to `true`, which is the default, and the `jar` contains the CSRF cookie for this Apostrophe site due to a previous `GET` request, send it as the X-XSRF-TOKEN header. If a string, send the current value of the cookie of that name in the `jar` as the X-XSRF-TOKEN header. If `false`, disable this feature. |
@@ -129,7 +129,7 @@ Accepts the following properties on the optional `options` object:
 | `qs` | Object | An object of query parameters and values. It may contain nested objects, arrays, and properties with null values. |
 | `jar` | Object | Pass in a cookie jar obtained from `apos.http.jar()`. |
 | `send` | String | Can be 'json' to always send `options.body` JSON-encoded, or `form` to send it URL-encoded. |
-| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a `FormData` object, it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
+| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a [`FormData` object](https://www.npmjs.com/package/form-data), it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
 | `parse` | String | Set to `json` to always parse the response body as JSON, otherwise the response body is parsed as JSON only if the `content-type` is `application/json`. |
 | `headers` | Object | An object containing header names and values. |
 | `csrf` | Boolean/String | If set to `true`, which is the default, and the `jar` contains the CSRF cookie for this Apostrophe site due to a previous `GET` request, send it as the X-XSRF-TOKEN header. If a string, send the current value of the cookie of that name in the `jar` as the X-XSRF-TOKEN header. If `false`, disable this feature. |
@@ -149,7 +149,7 @@ Accepts the following properties on the optional `options` object:
 | `qs` | Object | An object of query parameters and values. It may contain nested objects, arrays, and properties with null values. |
 | `jar` | Object | Pass in a cookie jar obtained from `apos.http.jar()`. |
 | `send` | String | Can be 'json' to always send `options.body` JSON-encoded, or `form` to send it URL-encoded. |
-| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a `FormData` object, it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
+| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a [`FormData` object](https://www.npmjs.com/package/form-data), it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
 | `parse` | String | Set to `json` to always parse the response body as JSON, otherwise the response body is parsed as JSON only if the `content-type` is `application/json`. |
 | `headers` | Object | An object containing header names and values. |
 | `csrf` | Boolean/String | If set to `true`, which is the default, and the `jar` contains the CSRF cookie for this Apostrophe site due to a previous `GET` request, send it as the X-XSRF-TOKEN header. If a string, send the current value of the cookie of that name in the `jar` as the X-XSRF-TOKEN header. If `false`, disable this feature. |
@@ -169,7 +169,7 @@ Accepts the following properties on the optional `options` object:
 | `qs` | Object | An object of query parameters and values. It may contain nested objects, arrays, and properties with null values. |
 | `jar` | Object | Pass in a cookie jar obtained from `apos.http.jar()`. |
 | `send` | String | Can be 'json' to always send `options.body` JSON-encoded, or `form` to send it URL-encoded. |
-| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a `FormData` object, it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
+| `body` | Variable | The request body. If an object or array, it is sent as JSON. If a [`FormData` object](https://www.npmjs.com/package/form-data), it is sent as a `multipart/form-data` upload. Otherwise it is sent as-is, unless the `send` option is set. |
 | `parse` | String | Set to `json` to always parse the response body as JSON, otherwise the response body is parsed as JSON only if the `content-type` is `application/json`. |
 | `headers` | Object | An object containing header names and values. |
 | `csrf` | Boolean/String | If set to `true`, which is the default, and the `jar` contains the CSRF cookie for this Apostrophe site due to a previous `GET` request, send it as the X-XSRF-TOKEN header. If a string, send the current value of the cookie of that name in the `jar` as the X-XSRF-TOKEN header. If `false`, disable this feature. |

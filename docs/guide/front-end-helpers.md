@@ -267,7 +267,7 @@ Send an HTTP request with a specific method to the given URL, returning the resp
 | ------- | ----------- |
 | `qs` | An object of query string parameters set to values. |
 | `body` | The request body. If an object or array it is sent as JSON. Otherwise sent as-is, unless the `send` option is set to `'json'`. |
-| `send` | Set to `'json'` to *always* send the request body as JSON, even if a `FormData` object or non-object. This is not necessary when the body is a normal object. |
+| `send` | Set to `'json'` to *always* send the request body as JSON, even if a [`FormData` object](https://www.npmjs.com/package/form-data) or non-object. This is not necessary when the body is a normal object. |
 | `parse` | Set to `'json'` to *always* parse the response as JSON. Otherwise the response body is parsed as JSON only if the `Content-Type` is `application/json`. |
 | `headers` | An object containing HTTP header names and values. |
 | `draft` | If `true`, always add `aposMode=draft` to the query string, creating one if needed. |
