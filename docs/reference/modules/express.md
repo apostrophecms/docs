@@ -1,56 +1,84 @@
 # `@apostrophecms/express`
 
-*General description paragraph.* Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+This module initializes the Express framework, which Apostrophe uses and extends to implement both API routes and page-serving routes. The Express `app` object is made available as `apos.app`, and the `express` object itself as `apos.express`. This module also adds a number of standard middleware functions and implements the server side of CSRF protection for Apostrophe.
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
-|`apiKeys` | String | Nulla vitae elit libero, a pharetra augue. |
-|`expressBearerToken` | String | Nulla vitae elit libero, a pharetra augue. |
-|`csrf` | String | Nulla vitae elit libero, a pharetra augue. |
-|`bodyParser` | String | Nulla vitae elit libero, a pharetra augue. |
-|`trustProxy` | String | Nulla vitae elit libero, a pharetra augue. |
-|`session` | String | Nulla vitae elit libero, a pharetra augue. |
-|`port` | String | Nulla vitae elit libero, a pharetra augue. |
-|`address` | String | Nulla vitae elit libero, a pharetra augue. |
+|`address` | String | Apostrophe listens for connections on all interfaces (`0.0.0.0`) unless this option is set to another address. If the `ADDRESS` environment variable is set, it is used instead. |
+|`apiKeys` | Object | Configure API keys for request authentication. See [the authentication guide](/reference/api/authentication.md#api-keys) for more. |
+|`bodyParser` | Object | The `json` and `urlencoded` properties of this object are merged with Apostrophe's default options to be passed to the [`body-parser` npm module's](https://www.npmjs.com/package/body-parser) `json` and `urlencoded` methods. |
+|`csrf` | Boolean/Object | Set to `false` to disable CSRF protection or to an object with `name` property to customize the CSRF cookie name. See below. |
+|`expressBearerToken` | Object | An options object passed to [`express-bearer-token`](https://www.npmjs.com/package/express-bearer-token) for the bearer token middleware. |
+|`port` | Integer | Apostrophe listens for connections on port `3000` unless this option is set to another port. If the `PORT` environment variable is set, it is used instead. |
+|`session` | Object | Properties of the `session` option are used to create the session middleware. See below. |
+|`trustProxy` | Boolean | Enables the [trust proxy option for Express](https://expressjs.com/en/api.html#trust.proxy.options.table). Set to `true` to tell the Express app to  respect `X-Forwarded-* ` headers. This is helpful when Apostrophe is generating `http:` URLs even though a proxy like nginx is being used to serve it over `https:`. |
 
-### `locales`
+### `session`
 
-*Description of a more complex option.* Id ligula porta felis euismod semper. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+The `session` options object is passed to the
+[express-session](https://npmjs.org/package/express-session) function. If each is not otherwise specified, Apostrophe enables the following defaults:
+
+```javascript
+{
+  // Does not save sessions until something is stored in them. This greatly
+  // reduces `aposSessions` collection size.
+  saveUninitialized: false,
+  // We are using the 3.x mongo store which is compatible with the
+  // `resave: false` option, preventing the vast majority of session-related
+  // race conditions.
+  resave: false,
+  // Always update the cookie, so that each successive access revives your
+  // login session timeout.
+  rolling: true,
+  // This option should be customized in every project.
+  secret: 'you should have a secret',
+  name: self.apos.shortName + '.sid',
+  cookie: {}
+}
+```
+
+If you want to use another session store, you can pass an instance, but it's easier to let Apostrophe do the work of setting it up:
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    options: {
+      session: {
+        store: {
+          name: 'connect-redis',
+          options: {
+            // redis-specific options here
+          }
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/express/index.js
+  </template>
+</AposCodeBlock>
+
+Be sure to install `connect-redis`, or the store of your choice, as an npm dependency of your project.
+
+### `csrf`
+
+By default, Apostrophe implements [CSRF protection](https://en.wikipedia.org/wiki/Cross-site_request_forgery) via an `XSRF-TOKEN` cookie. All non-safe HTTP requests (not `GET`, `HEAD`, `OPTIONS` or `TRACE`) automatically receive protection via CSRF middleware, which rejects requests in which the CSRF token does not match the header. If the request was made with a valid API key or bearer token it bypasses this check.
+
+If the `csrf` option is set to `false`, CSRF protection is disabled. **This is not recommended.** Set this option to an object with a `name` property to set that property's value as the CSRF cookie name.
+
+You can configure exceptions to CSRF protection by setting the [`csrfExceptions` option](/reference/module-api/module-options.md#csrfexceptions) of any module to an array of route names specific to that module, or URLs (starting with `/`). Exceptions may use [Minimatch](https://github.com/isaacs/minimatch) wildcards (`*` and `**`).
+
+You may need to use this feature when implementing `POST` form submissions that do not send the header.
 
 ## Related documentation
 
-- [Static localization guide](/guide/localization/static.md)
-- [Dynamic content localization guide](/guide/localization/dynamic.md)
+- [Custom express routes](/reference/module-api/module-overview.md#routes-self)
+- [Authentication with API keys](/reference/api/authentication.md#api-keys)
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/i18n/index.js) for all methods that belong to this module.
+This module's methods are used to generate the Express app. Customization should be done using the options described above. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/express/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
-
-Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].inferIdLocaleAndMode()`.
-
-### `inferIdLocaleAndMode(req, _id)`
-
-Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
-
-### `isValidLocale(locale)`
-
-Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
-
-## Template helpers
-
-Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
-
-#### `slugify(string, options)`
-
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-## Module tasks
-
-### `reset`
-
-Full command: `node app @apostrophecms/db:reset`
-
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
