@@ -598,7 +598,7 @@ There is no data included with the event for handlers.
 
 ### `compileRoutes`
 
-**Not intended for project use.** Triggered prior to middleware and route registration. Used to get all modules to compile their respective routes for registration. To add custom routes, configure the appropriate properties of your module, (e.g., `apiRoute`, `restApiRoute`).
+**Not intended for project use.** Triggered prior to middleware and route registration. Used to get all modules to compile their respective routes for registration. To add custom routes, configure the appropriate properties of your module, (e.g., `apiRoutes`, `restApiRoutes`).
 
 There is no data included with the event for handlers.
 
