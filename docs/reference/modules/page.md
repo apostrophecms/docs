@@ -10,19 +10,18 @@ For creating page types, see the `@apostrophecms/page-type` module instead.
 
 | Property | Value type | Description |
 |---------|---------|---------|
-| [`builders`](#builders) | Object | Set [query builder](/reference/query-builders.md) values to be used when pages are served. |
+| [`builders`](#builders) | Object | Set query builder values to be used when pages are served. |
 | [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
 | [`minimumPark`](#minimumpark) | Array | Override default parked pages, including the home page. |
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
-| [`publicApiProjection`](#publicapiprojection-for-pages) | Object | Set query builder values to be used when pages are served. |
-| [`quickCreate`](#quickcreate-for-pages) | Boolean | Set to `false` to remove pages from the quick create menu. |
+| [`publicApiProjection`](#publicapiprojection) | Object | Set query builder values to be used when pages are served. |
+| [`quickCreate`](#quickcreate) | Boolean | Set to `false` to remove pages from the quick create menu. |
 | [`types`](#types) | Array | Set the page types available for new pages. |
 
 
 ### `builders`
 
-<!-- TODO: Update builders with link to a more detailed explanation of builders when available. -->
-The `builders` option can be used to apply any existing query builders when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates).
+The `builders` option can be used to apply any existing query builders when a page is served by its URL. This affects the data available on the page object, `req.data.page` (`data.page` in templates). All of the [documented query builders](/reference/query-builders.md) are valid, but in a key/value syntax rather than as method receiving arguments.
 
 The default value is:
 ```javascript
@@ -175,7 +174,7 @@ module.exports = {
 }
 ```
 
-### `publicApiProjection` (for pages)
+### `publicApiProjection`
 
 By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
 
@@ -198,7 +197,7 @@ module.exports = {
 
 Unauthenticated [`GET /api/v1/@apostrophecms/page`](/reference/api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
 
-### `quickCreate` (for pages)
+### `quickCreate`
 
 Pages are included in the admin bar "quick create" menu by default. Setting `quickCreate: false` on the page module will disable this.
 
