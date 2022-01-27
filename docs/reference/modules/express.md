@@ -9,7 +9,7 @@ This module initializes the Express framework, which Apostrophe uses and extends
 |`address` | String | Apostrophe listens for connections on all interfaces (`0.0.0.0`) unless this option is set to another address. If the `ADDRESS` environment variable is set, it is used instead. |
 |`apiKeys` | Object | Configure API keys for request authentication. See [the authentication guide](/reference/api/authentication.md#api-keys) for more. |
 |`bodyParser` | Object | The `json` and `urlencoded` properties of this object are merged with Apostrophe's default options to be passed to the [`body-parser` npm module's](https://www.npmjs.com/package/body-parser) `json` and `urlencoded` methods. |
-|`csrf` | Boolean/Object | Set to `false` to disable CSRF protection or to an object with `name` property to customize the CSRF cookie name. See below. |
+|`csrf` | Boolean/Object | Set to `false` to disable CSRF protection or to an object with a `name` property to customize the CSRF cookie name. See below. |
 |`expressBearerToken` | Object | An options object passed to [`express-bearer-token`](https://www.npmjs.com/package/express-bearer-token) for the bearer token middleware. |
 |`port` | Integer | Apostrophe listens for connections on port `3000` unless this option is set to another port. If the `PORT` environment variable is set, it is used instead. |
 |`session` | Object | Properties of the `session` option are used to create the session middleware. See below. |
@@ -39,7 +39,7 @@ The `session` options object is passed to the
 }
 ```
 
-If you want to use another session store, you can pass an instance, but it's easier to let Apostrophe do the work of setting it up:
+By default Apostrophe stores sessions in MongoDB so it is not necessary to install another solution. If you want to use another session store, you can pass an instance as the store sub-option, but it's easier to let Apostrophe do the work of setting it up:
 
 <AposCodeBlock>
   ```javascript
@@ -65,7 +65,7 @@ Be sure to install `connect-redis`, or the store of your choice, as an npm depen
 
 ### `csrf`
 
-By default, Apostrophe implements [CSRF protection](https://en.wikipedia.org/wiki/Cross-site_request_forgery) via an `XSRF-TOKEN` cookie. All non-safe HTTP requests (not `GET`, `HEAD`, `OPTIONS` or `TRACE`) automatically receive protection via CSRF middleware, which rejects requests in which the CSRF token does not match the header. If the request was made with a valid API key or bearer token it bypasses this check.
+By default, Apostrophe implements [CSRF protection](https://en.wikipedia.org/wiki/Cross-site_request_forgery) via an `XSRF-TOKEN` cookie. All non-safe HTTP requests (not `GET`, `HEAD`, `OPTIONS` or `TRACE`) automatically receive protection via CSRF middleware, which rejects requests in which the CSRF token does not match the header. *If the request was made with a valid API key or bearer token it bypasses this check.*
 
 If the `csrf` option is set to `false`, CSRF protection is disabled. **This is not recommended.** Set this option to an object with a `name` property to set that property's value as the CSRF cookie name.
 
