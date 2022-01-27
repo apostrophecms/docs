@@ -55,4 +55,4 @@ If needed, you may assign the *fully* created transport directly to `self.transp
 
 ## Related documentation
 
-- [The `self.email()` method](/docs/reference/modules/module.md#email-req-templatename-data-options)
+- [The `self.email()` method in every module](/docs/reference/modules/module.md#email-req-templatename-data-options)
