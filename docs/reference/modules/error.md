@@ -19,7 +19,15 @@ be applied to the Error object. Certain values of `name` match to certain HTTP s
 
 `message` may be skipped completely, or included as a string for a longer description. `data` is optional and may contain data about the error, safe to share with an untrusted client.
 
-If the error is caught by Apostrophe's `apiRoute` or `restApiRoute` mechanism, and `name` matches to a status code, an appropriate HTTP error is sent, and `data` is sent as a JSON object, with `message` as an additional property if present. If the `name` argument does not match a code, a general 500 error is sent to avoid disclosing inappropriate information and the error is only logged by Apostrophe server-side.
+If the error is caught by Apostrophe's [`apiRoutes`](/reference/module-api/module-overview.md#apiroutes-self), [`restApiRoutes`](/reference/module-api/module-overview.md#restapiroutes-self), and [`renderRoutes`](/reference/module-api/module-overview.md#renderroutes-self) mechanisms, and `name` matches to a status code, an appropriate HTTP error is sent. The HTTP response to the client will consist of a JSON object with `name`, `data`, and `message` properties (the latter two only if present). If the `name` argument does not match a code, a general 500 error is sent to avoid disclosing inappropriate information and the error is only logged by Apostrophe server-side.
+
+```json
+{
+  "name": "invalid",
+  "data": {},
+  "message": "Your credentials are incorrect, or there is no such user"
+}
+```
 
 For brevity, this method is aliased as `apos.error`.
 
