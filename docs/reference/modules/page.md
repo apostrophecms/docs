@@ -368,12 +368,12 @@ Template helpers are methods available for use in template files. Because this m
 
 #### `isAncestorOf(possibleAncestorPage, page)`
 
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Returns a boolean value indicating whether the first argument page object (`possibleAncestorPage`) is an ancestor of the second argument page (`page`) in the page tree.
 
 ## Module tasks
 
 ### `unpark`
 
-Full command: `node app @apostrophecms/page:unpark`
+Full command: `node app @apostrophecms/page:unpark /page/slug`
 
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
+Running this task will unlock a page that was ["parked"](#park) by including its slug as an argument. This allows editors to then change any properties that were not editable previously.
