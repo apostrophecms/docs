@@ -1,8 +1,8 @@
 ---
-extends: '@apostrophecms/doc-type'
+extends: '@apostrophecms/module'
 ---
 
-# `@apostrophecms/piece-type`
+# `@apostrophecms/doc-type`
 
 This module is the foundation for all [piece types](/guide/pieces.md) in Apostrophe. It is not typically configured or referenced in project code directly since each piece type should be managed independently in most cases. For example, the options documented below would be configured on a custom piece type, e.g., `article`, rather this piece type base module.
 
@@ -15,19 +15,21 @@ The only reason to configure this module directly would be to apply the changes 
 |  Property | Type | Description |
 |---|---|---|
 | [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`editRole`](#editrole) | String | Identify the minimum user role that can edit this piece type. Defaults to `'contributor'`. |
+| `insertViaUpload` | Boolean | *️⃣... |
 | [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
 | [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
-| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
 | [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
 | [`publicApiProjection`](#publicapiprojection) | Object | Piece fields to make available via a public REST API route. |
 | [`quickCreate`](#quickcreate) | Boolean | Set to `true` to add the piece type to the quick create menu. |
 | [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
-| `showCreate` | Boolean | Set to `false` to disable UI related to creating new pieces of that type. |
-| `showArchive` | Boolean | Set to `false` to disable UI related to archiving pieces of that type. |
-| `showDiscardDraft` | Boolean | Set to `false` to disable UI related to discarding draft pieces of that type. |
-| `showDismissSubmission` | Boolean | Set to `false` to disable UI related to dismissing draft submissions for pieces of that type. |
-| `singleton` | Boolean | Set to `true` to ensure that no one can create a new piece of that type. The global doc as only one should ever exist. |
-| [`sort`](#sort) | Object | The value for a piece type's default sort order query builder. |
+| `showCreate` | Boolean | *️⃣... |
+| `showArchive` | Boolean | *️⃣... |
+| `showDiscardDraft` | Boolean | *️⃣... |
+| `showDismissSubmission` | Boolean | *️⃣... |
+| `singleton` | Boolean | *️⃣... |
+| `sort` | Boolean | *️⃣... |
 
 ### `autopublish`
 
@@ -48,9 +50,13 @@ module.exports = {
 }
 ```
 
+### `editRole`
+
+Part of the permissions system for editing content in Apostrophe. Pieces default to `contributor` as the default role
+
 ### `label`
 
-`label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals.
+`label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals and the page type select field.
 
 If not set, Apostrophe will convert the module `name` meta property to a readable label by splitting the `name` on dashes and underscores, then capitalizing the first letter of each word.
 
@@ -84,26 +90,43 @@ module.exports = {
 }
 ```
 
-### `perPage`
+### `sort`
 
-In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+The `sort` option for a doc type defines a sorting order for requests to the database for that type. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
+
+The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns documents based on the `updatedAt` property (the date and time of the last update) in descending order. The `sort` object can have multiple keys for more specific sorting.
 
 #### Example
+
+This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
 
 ```javascript
 // modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
-    perPage: 20 // REST `GET` requests will return 20 pieces per page.
+    sort: {
+      priority: 1,
+      updatedAt: -1
+    }
   },
+  fields: {
+    add: {
+      priority: {
+        type: 'integer',
+        min: 1,
+        max: 5
+      },
+      // ...
+    }
+  }
   // ...
 }
 ```
 
 ### `pluralLabel`
 
-Similar to `label` for all doc types, the `pluralLabel` option sets the string the user interface will use to describe a piece type in plural contexts.
+Similar to `label` for all doc types, the `pluralLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces should have unique labels (e.g., "Articles," or "Teams").
 
 If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
 
@@ -116,6 +139,23 @@ module.exports = {
   options: {
     label: 'Goose',
     pluralLabel: 'Geese'
+  },
+  // ...
+}
+```
+
+### `perPage`
+
+In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+
+#### Example
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    perPage: 20 // REST `GET` requests will return 20 pieces per page.
   },
   // ...
 }
@@ -181,39 +221,6 @@ module.exports = {
 }
 ```
 
-### `sort`
-
-The `sort` option for a doc type defines a sorting order for requests to the database for that type. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
-
-The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns documents based on the `updatedAt` property (the date and time of the last update) in descending order. The `sort` object can have multiple keys for more specific sorting.
-
-#### Example
-
-This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    sort: {
-      priority: 1,
-      updatedAt: -1
-    }
-  },
-  fields: {
-    add: {
-      priority: {
-        type: 'integer',
-        min: 1,
-        max: 5
-      },
-      // ...
-    }
-  }
-  // ...
-}
-```
 
 ## Related documentation
 
@@ -225,39 +232,10 @@ module.exports = {
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-type/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
-### `async find(req, criteria, options)`
-
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/docs/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
-
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | Object | The options object is converted to matching [query builders](/reference/query-builders.md). |
-
-### `async update(req, piece, options)`
-
-The `insert()` method is used to add a new piece in server-side code. See the [guide for inserting documents in code](/guide/database-insert-update.md#inserting-a-new-piece) for more on this.
-
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `piece` | Object | The piece document object. |
-| `options` | Object | An options object, primarily used for internal draft state management. |
-
-### `async update(req, piece, options)`
-
-The `update()` is used to update data for an existing piece. Note that the second argument must be a *complete piece object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-content-documents) for more on this.
-
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `piece` | Object | The document object that will *replace* the existing database document. |
-| `options` | Object | An options object, currently only used for internal draft state management. |
-
-### `getBrowserData(req)`
-
-Piece type modules' implementation of [`getBrowserData`](module.md#getbrowserdata-req). This establishes the data that is used in the browser (including by the user interface). If adjusting this **remember to [*extend* this method](/reference/module-api/module-overview.md#extendmethods-self) rather than overwriting it** to avoid breaking the UI.
+async find(req, criteria, options)
+async insert(req, piece, options)
+async delete(req, piece, options)
+getBrowserData(req)
 
 ## Module tasks
 
