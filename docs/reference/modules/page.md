@@ -256,50 +256,105 @@ The following methods belong to this module and may be useful in project-level c
 
 Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.page.find()`.
 
-- async find(req, criteria, options)
-- async insert(req, targetId, position, page, options)
-- getBrowserData
-- lock
-- unlock
-- newChild
-- allowedChildTypes
-- move
-- getTarget
-- getTargetIdAndPosition
-- async archive(req, ...)
-- async update(req, ...)
-- async publish(req, ...)
-- async localize(req, ...)
-- async revertDraftToPublished(req, draft)
-- async revertPublishedToPrevious(req, published)
-- async serve(req, res)
-- normalizeSlug(req)
-- serveNotFound(req)
-- async serveDeliver(req, err)
-- isPage(doc),
--
+### `async find(req, criteria, options)`
 
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/docs/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
-### `inferIdLocaleAndMode(req, _id)`
+| Property | Type | Description |
+| -------- | -------- | ----------- |
+| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
+| `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
+| `options` | Object | The options object is converted to matching [query builders](/docs/guide/database-queries.md#using-query-builders). |
 
-Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
+### `async insert(req, targetId, position, page, options)`
 
-### `isValidLocale(locale)`
+The `insert()` method is used to add a new page. It requires specific arguments to place the new page in a specific location in the page tree hierarchy. See the [guide for inserting documents in code](/guide/database-insert-update.md#inserting-pages) for more on this.
 
-Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
+| Property | Type | Description |
+| -------- | -------- | ----------- |
+| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
+|`targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_archive` are optional conveniences for the home page and [archived section](/reference/api/pages.md#moving-pages-to-the-archive), respectively. |
+|`position` | Integer/String | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
+| `page` | Object | The page document object. |
+| `options` | Object | An options object, primarily used for internal draft state management. |
+
+### `async update(req, page, options)`
+
+The `update()` is used to update data for an existing page. Note that the second argument must be a *complete page object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-page-documents) for more on this.
+
+| Property | Type | Description |
+| -------- | -------- | ----------- |
+| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
+| `page` | Object | The document object that will *replace* the existing database document. |
+| `options` | Object | An options object, currently only used for internal draft state management. |
+
+### `getBrowserData(req)`
+
+The page module's implementation of [`getBrowserData`](module.md#getbrowserdata-req). This establishes the data that is used in the browser (including by the user interface). If adjusting this **remember to [*extend* this method](/reference/module-api/module-overview.md#extendmethods-self) rather than overwriting it** to avoid breaking the UI.
+
+### `newChild(page)`
+
+This method creates and returns a new object suitable to be inserted *as a child of the specified parent page* (`page`) via `insert()`. It *does not* insert the page to the database. That should be done as a subsequent step. If the parent page is locked down such that no child page types are permitted, this method returns `null`. Visibility settings are inherited from the parent page.
+
+### `allowedChildTypes(page)`
+
+This module returns an array of page types allowed to be used for child pages of page (`page`) passed in as an argument. By default, this method simply returns an array of all page types, but it can be extended or overwritten to be more restrictive.
+
+### `async move(req, pageId, targetId, position)`
+
+This is the proper method to use to move a page within the page tree hierarchy. Since pages have positional relationship with each other we need to provide the `_id` properties of the page we're moving, the page it should be moved *in relation to*, and the position in relation to the target page.
+
+| Property | Type | Description |
+| -------- | -------- | ----------- |
+| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
+|`pageId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_archive` are optional conveniences for the home page and [archived section](/reference/api/pages.md#moving-pages-to-the-archive), respectively. |
+|`targetId` | String | The `_id` of an existing page to use as a target when inserting the new page. `_home` and `_archive` are optional conveniences for the home page and [archived section](/reference/api/pages.md#moving-pages-to-the-archive), respectively. |
+|`position` | Integer/String | A numeric value will represent the zero-based child index under the `_targetId` page. `before`, `after`, `firstChild`, or `lastChild` values set the position within the page tree for the new page in relation to the target page (see `_targetId`). `before` and `after` insert the new page as a sibling of the target. `firstChild` and `lastChild` insert the new page as a child of the target. |
+
+### `async archive(req, _id)`
+
+The `archive()` method moves a page, identified by its unique `_id`, into the page tree's archive section. It returns and object with two properties: `parentSlug`, the slug of the page's former parent; and `changed`, an array of objects with `_id` and `slug` properties, identifying all child pages of the moved page that were also archived.
+
+### `async publish(req, draft, options)`
+
+When passed a `req` object and *draft* document object (`draft`), this method will publish the draft. This replaces an existing published version of the page, if there is one. The options object (`options`) is currently only used for internal draft state management.
+
+### `async localize(req, draft, locale, option)`
+
+Localize the draft page (`draft`), copying it to another locale (`locale`). This creates that locale's draft for the first time if necessary. By default existing documents are not updated, but setting `update: true` in the `options` object will update existing ones.
+
+### `async revertDraftToPublished(req, draft)`
+
+Reverts the given draft page (`draft`) to the most recent publication, clearing any changes. It returns the draft's new value, or `false` if the draft was not modified from the published version or no published version exists yet.
+
+Emits the [`afterRevertDraftToPublished` event](/docs/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes the draft document in its payload, allowing you to alter the returned draft object.
+
+### `async revertPublishedToPrevious(req, published)`
+
+Reverts a published page document (`published`) to the previous published state and returns the updated published state. If this was already done (only one previous state is saved) or there is no previous publication, it throws an `invalid` exception.
+
+Emits the [`afterRevertPublishedToPrevious` event](/docs/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes the published document in its payload, allowing you to alter the returned published doc object.
+
+### `normalizeSlug(req)`
+
+Normalizes and replaces `req.slug` to account for unneeded trailing whitespace, trailing slashes other than the root, and double slash based open redirect attempts.
+
+### `isPage(doc),`
+
+Returns `true` if the document object, `doc` is identifiable as a page.
 
 ## Template helpers
 
-Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
+Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.page.isAncestorOf(doc1, doc2)`.
 
-#### `slugify(string, options)`
+#### `isAncestorOf(possibleAncestorPage, page)`
 
 Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Module tasks
 
-### `reset`
+### `unpark`
 
-Full command: `node app @apostrophecms/db:reset`
+Full command: `node app @apostrophecms/page:unpark`
 
 Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
