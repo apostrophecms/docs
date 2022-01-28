@@ -264,7 +264,17 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | Object | The options object is converted to matching [query builders](/docs/guide/database-queries.md#using-query-builders). |
+| `options` | Object | The options object is converted to matching [query buildersbbuilder. |
+
+### `findForEditing(req, criteria, builders)`
+
+Returns a query that finds pages the current user (based on the `req` request object) can edit. Unlike `find()`, this query defaults to including docs in the archive.
+
+`criteria` is a MongoDB criteria object as in `find()`. The `builders` argument should be an object of query builders, in the same style as the [module option of the same name](#builders).
+
+### `findOneForEditing(req, criteria, builders)`
+
+`findOneForEditing()` is wrapper for `findForEditing()` that returns a single document matching the arguments, not simply a query.
 
 ### `async insert(req, targetId, position, page, options)`
 
@@ -342,6 +352,15 @@ Normalizes and replaces `req.slug` to account for unneeded trailing whitespace, 
 ### `isPage(doc),`
 
 Returns `true` if the document object, `doc` is identifiable as a page.
+
+
+### `getBaseUrl(req)`
+
+Returns the effective base URL for the given request (`req`). If Apostrophe's top-level `baseUrl` option is set, or a hostname is defined for the active locale, then that is consulted, otherwise the base URL is the empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
+
+### `inferIdLocaleAndMode(req, _id)`
+
+This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id)
 
 ## Template helpers
 
