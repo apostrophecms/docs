@@ -263,6 +263,8 @@ Piece type modules' implementation of [`getBrowserData`](module.md#getbrowserdat
 
 ### `generate`
 
-Full command: `node app [piece module name]:generate --total [integer]`
+Full command: `node app [piece-type name]:generate --total [integer]`
 
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
+This task is used to generate sample documents for a given piece type. This can be helpful during project development to quickly create test content. The task will generate 10 items if the `--total` argument is *not* included. If `--total` is included with a number argument, it will generate that number of items.
+
+For example, `node app article:generate --total 2000` will generate 2,000 documents for an `article` piece type.
