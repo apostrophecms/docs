@@ -132,7 +132,7 @@ module.exports = {
 
 ### `park`
 
-Use the `park` option to add an array of pages that should be created when the app starts up if they do not already exist. Each page is added as an object with initial properties, including the required `parkedId`.
+Use the `park` option to add an array of pages that should be created when the app starts up if they do not already exist. Each page is added as an object with initial properties, including the required `parkedId`. If a page in this array has the same `parkedId` as one in [`minimumPark`](#minimumpark), the version in the `park` option will be used.
 
 Required and recommended parked page properties include:
 
@@ -152,6 +152,13 @@ If added on the top level of the page object, these properties will not be edita
 module.exports = {
   options: {
     park: [
+      // Customizing home page properties, including title and page type.
+      {
+        slug: '/',
+        parkedId: 'home',
+        title: 'Our Business',
+        type: 'custom-home-page'
+      },
       // The blog page has a permanent slug, title, and type.
       {
         parkedId: 'blogParkedId',
@@ -254,7 +261,7 @@ module.exports = {
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/page/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
-Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.page.find()`.
+Because this module has an alias, you can call these from another module using the alias. For example, `self.apos.page.find()`.
 
 ### `async find(req, criteria, options)`
 
@@ -290,7 +297,7 @@ The `insert()` method is used to add a new page. It requires specific arguments 
 
 ### `async update(req, page, options)`
 
-The `update()` is used to update data for an existing page. Note that the second argument must be a *complete page object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-page-documents) for more on this.
+The `update()` method is used to update data for an existing page. Note that the second argument must be a *complete page object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-page-documents) for more on this.
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
@@ -323,7 +330,7 @@ This is the proper method to use to move a page within the page tree hierarchy. 
 
 ### `async archive(req, _id)`
 
-The `archive()` method moves a page, identified by its unique `_id`, into the page tree's archive section. It returns and object with two properties: `parentSlug`, the slug of the page's former parent; and `changed`, an array of objects with `_id` and `slug` properties, identifying all child pages of the moved page that were also archived.
+The `archive()` method moves a page, identified by its unique `_id`, into the page tree's archive section. It returns an object with two properties: `parentSlug`, the slug of the page's former parent; and `changed`, an array of objects with `_id` and `slug` properties, identifying all child pages of the moved page that were also archived.
 
 ### `async publish(req, draft, options)`
 
@@ -337,26 +344,26 @@ Localize the draft page (`draft`), copying it to another locale (`locale`). This
 
 Reverts the given draft page (`draft`) to the most recent publication, clearing any changes. It returns the draft's new value, or `false` if the draft was not modified from the published version or no published version exists yet.
 
-Emits the [`afterRevertDraftToPublished` event](/docs/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes the draft document in its payload, allowing you to alter the returned draft object.
+Emits the [`afterRevertDraftToPublished` event](/docs/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes a payload object containing the draft document.
 
 ### `async revertPublishedToPrevious(req, published)`
 
 Reverts a published page document (`published`) to the previous published state and returns the updated published state. If this was already done (only one previous state is saved) or there is no previous publication, it throws an `invalid` exception.
 
-Emits the [`afterRevertPublishedToPrevious` event](/docs/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes the published document in its payload, allowing you to alter the returned published doc object.
+Emits the [`afterRevertPublishedToPrevious` event](/docs/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes a payload object containing the published document.
 
 ### `normalizeSlug(req)`
 
 Normalizes and replaces `req.slug` to account for unneeded trailing whitespace, trailing slashes other than the root, and double slash based open redirect attempts.
 
-### `isPage(doc),`
+### `isPage(doc)`
 
 Returns `true` if the document object, `doc` is identifiable as a page.
 
 
 ### `getBaseUrl(req)`
 
-Returns the effective base URL for the given request (`req`). If Apostrophe's top-level `baseUrl` option is set, or a hostname is defined for the active locale, then that is consulted, otherwise the base URL is the empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
+Returns the effective base URL for the given request (`req`). If a hostname is configured for the active local (`req.locale`), then the base URL will include it, inferring the protocol from `req.protocol`. Otherwise, if Apostrophe's top-level `baseUrl` option is set it will be used. If there is neither an active locale hostname nor a configured `baseUrl` option, the base URL will be an empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
 
 ### `inferIdLocaleAndMode(req, _id)`
 
@@ -376,4 +383,4 @@ Returns a boolean value indicating whether the first argument page object (`poss
 
 Full command: `node app @apostrophecms/page:unpark /page/slug`
 
-Running this task will unlock a page that was ["parked"](#park) by including its slug as an argument. This allows editors to then change any properties that were not editable previously.
+Running this task will unlock a page that was ["parked"](#park) by including its slug as an argument. The page must first be removed from the [`park` option array](#park). This allows editors to then change any properties that were not editable previously.
