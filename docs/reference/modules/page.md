@@ -260,7 +260,7 @@ module.exports = {
 ## Related documentation
 
 - [Pages guide](/guide/pages.md)
-- [Pages REST API](/docs/reference/api/pages.md)
+- [Pages REST API](/reference/api/pages.md)
 
 ## Featured methods
 
@@ -271,7 +271,7 @@ Because this module has an alias, you can call these from another module using t
 
 ### `async find(req, criteria, options)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/docs/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
@@ -350,13 +350,13 @@ Localize the draft page (`draft`), copying it to another locale (`locale`). This
 
 Reverts the given draft page (`draft`) to the most recent publication, clearing any changes. It returns the draft's new value, or `false` if the draft was not modified from the published version or no published version exists yet.
 
-Emits the [`afterRevertDraftToPublished` event](/docs/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes a payload object containing the draft document.
+Emits the [`afterRevertDraftToPublished` event](/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes a payload object containing the draft document.
 
 ### `async revertPublishedToPrevious(req, published)`
 
 Reverts a published page document (`published`) to the previous published state and returns the updated published state. If this was already done (only one previous state is saved) or there is no previous publication, it throws an `invalid` exception.
 
-Emits the [`afterRevertPublishedToPrevious` event](/docs/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes a payload object containing the published document.
+Emits the [`afterRevertPublishedToPrevious` event](/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes a payload object containing the published document.
 
 ### `normalizeSlug(req)`
 

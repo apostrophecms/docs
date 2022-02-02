@@ -218,7 +218,7 @@ module.exports = {
 ## Related documentation
 
 - [Pieces guide](/guide/pieces.md)
-- [Pieces REST API](/docs/reference/api/pieces.md)
+- [Pieces REST API](/reference/api/pieces.md)
 
 ## Featured methods
 
@@ -227,7 +227,7 @@ The following methods belong to this module and may be useful in project-level c
 
 ### `async find(req, criteria, options)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/docs/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
