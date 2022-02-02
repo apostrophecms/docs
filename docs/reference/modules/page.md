@@ -285,7 +285,7 @@ Returns a query that finds pages the current user (based on the `req` request ob
 
 `criteria` is a MongoDB criteria object as in `find()`. The `builders` argument should be an object of query builders, in the same style as the [module option of the same name](#builders).
 
-### `findOneForEditing(req, criteria, builders)`
+### `async findOneForEditing(req, criteria, builders)`
 
 `findOneForEditing()` is wrapper for `findForEditing()` that returns a single document matching the arguments, not simply a query.
 
@@ -373,7 +373,7 @@ Returns the effective base URL for the given request (`req`). If a hostname is c
 
 ### `inferIdLocaleAndMode(req, _id)`
 
-This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id)
+This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id).
 
 ## Template helpers
 
