@@ -78,6 +78,7 @@ Option settings in this section apply to every module in Apostrophe.
 |---------|---------|---------|
 | [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
 | [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
+| [`csrfExceptions`](#csrfexceptions) | Array | An array of route names in the module, or URLs starting with `/`, that should bypass CSRF protection. |
 | [`i18n`](#i18n) | Boolean/Object | Indicate that the module will include localization strings for the i18n module (with optional configuration). |
 | [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
@@ -121,6 +122,22 @@ module.exports = {
     components: {
       managerModal: 'MyCustomPiecesManager'
     }
+  },
+  // ...
+}
+```
+
+### `csrfExceptions`
+
+See the [Express module](/reference/modules/express.md#csrf) for more on CSRF protection in Apostrophe. This option can contain an array of route names or relative URLs that should bypass CSRF protection.
+
+#### Example
+
+```javascript
+// modules/access/index.js
+module.exports = {
+  options: {
+    csrfExceptions: [ 'login', '/safe-url' ]
   },
   // ...
 }
