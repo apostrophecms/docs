@@ -102,7 +102,7 @@ Updating pages works the same way as pieces with the same arguments to the `upda
 
 **We typically call the page `update` method from the main page module: `self.apos.page.update()`.** Since pages can change their `type` property (unlike pieces) they share a single `update` method from the `@apostrophecms/page` module. `self.update()` on individual page type modules is simply a wrapper around that method.
 
-**`update()` is not the way to move pages within the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).** The `@apostrophecms/page` module has a dedicated `move()` method for that purpose. Documentation of that method is upcoming. In the meantime, refer to the [REST API information about page tree placement](/reference/api/pages.md#post-api-v1-apostrophecms-page).
+**`update()` is not the way to move pages within the [page tree](/guide/pages.md#connecting-pages-with-page-tree-navigation).** The `@apostrophecms/page` module has [a dedicated `move()` method](/reference/modules/page.md#async-move-req-pageid-targetid-position) for that purpose. The [REST API information about page tree placement](/reference/api/pages.md#post-api-v1-apostrophecms-page) has additional information.
 
 ## Inserting a new piece
 
