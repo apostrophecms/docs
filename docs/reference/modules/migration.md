@@ -6,15 +6,15 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.migration`
 
+**Extends:** `{{ $frontmatter.extends }}` [ℹ️](/guide/modules.md#module-inheritance)
+
 This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between versions of Apostrophe.
 
-The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module. The task function runs on every site start up, though typically only new migrations will run (see the warning below).
+The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments the task function also runs on every site start up.
 
 ::: warning
 **Migrations must be written so they are safe to run multiple times.** Apostrophe tracks when migrations have been run before in a the `aposMigrations` database collection, but there is no guarantee that they will not run again if that cache is cleared. If this is difficult to guarantee, you may wish to [write a task](/reference/module-api/module-overview.md#tasks-self) that executes the changes instead.
 :::
-
-**Extends:** `{{ $frontmatter.extends }}` [ℹ️](/guide/modules.md#module-inheritance)
 
 ## Featured methods
 
@@ -68,21 +68,45 @@ If running multiple instances of the website on a server, note that previous ins
 If you absolutely must prevent requests from being executed during the migration, wrap them with the `await apos.global.busy(fn)` API. Note that this API involves a significant startup delay to allow existing requests to terminate.
 :::
 
-### `async eventualResponse(req, _id)`
+### `async eachDoc(criteria, limit, iterator)`
 
-Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
+Invokes the `iterator` function once for each doc in the `aposDocs` collection. The iterator function receives the document as an argument and is run as an `async` function. This method will never visit the same doc twice in a single call, even if modifications are made.
 
-### `isValidLocale(locale)`
+The `criteria` object is used to find documents to process, formatted the same way as an argument to the [query builder of the same name](/reference/query-builders.md#criteria). `limit` should be an integer and the number of documents to process in parallel, though it may be omitted. If only two arguments are passed in, `limit` is assumed to be 1 (only one doc may be processed at a time).
 
-Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
+**Note:** This API is meant for migrations and task use only. It has no built-in security checks.
 
-## Template helpers
+### `async each(collection, criteria, limit, iterator)`
 
-Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
+This method is similar to [`eachDoc`](#async-eachdoc-criteria-limit-iterator), but it also accepts a database collection as its first argument. When working on normal website content, `eachDoc` will be better to use, though this method can be useful if operating on other database collections, such as the attachments collection (`self.apos.attachment.db`).
 
-#### `slugify(string, options)`
+**Note:** This API is meant for migrations and task use only. It has no built-in security checks.
 
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+### `async eachArea(criteria, limit, iterator)`
+
+Invokes the `iterator` function once for *every area* in *every doc* in the `aposDocs` collection. This method will never visit the same doc twice in a single call, even if modifications are made.
+
+ The `iterator` function receives the following arguments:
+ - `doc`: The full document object
+ - `area`: The area object within the document
+ - `dotPath`: The dot notation series leading to the area within the doc. If the area is a top-level field on the doc type's schema this will simply be the field name.
+
+`criteria` may be used to limit the docs for which this is done, similar to its use in [`eachDoc`](#async-eachdoc-criteria-limit-iterator). `limit` should be an integer and the number of documents to process in parallel, though it may be omitted. If only two arguments are passed in, `limit` is assumed to be 1 (only one doc may be processed at a time).
+
+**Note:** This API is meant for migrations and task use only. It has no built-in security checks.
+
+### `async eachWidget(criteria, limit, iterator)`
+
+Continuing from `eachArea()`, this method goes one level deeper. Invokes the `iterator` function once for *every widget* in *every area* in *every doc* in the `aposDocs` collection. This method will never visit the same doc twice in a single call, even if modifications are made.
+
+ The `iterator` function receives the following arguments:
+ - `doc`: The full document object
+ - `widget`: The widget object within the document
+ - `dotPath`: The dot notation series leading to the widget within the doc. If the area is a top-level field on the doc type's schema this will simply be the field name.
+
+`criteria` may be used to limit the docs for which this is done, similar to its use in [`eachDoc`](#async-eachdoc-criteria-limit-iterator). `limit` should be an integer and the number of documents to process in parallel, though it may be omitted. If only two arguments are passed in, `limit` is assumed to be 1 (only one doc may be processed at a time).
+
+**Note:** This API is meant for migrations and task use only. It has no built-in security checks.
 
 ## Module tasks
 
@@ -90,4 +114,4 @@ Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consec
 
 Full command: `node app @apostrophecms/migration:migrate`
 
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
+Run this command-line task to run all migrations. Migrations do not run automatically in production environments, so in that context this must be run manually or as part of a deployment process.
