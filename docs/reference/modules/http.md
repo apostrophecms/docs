@@ -6,10 +6,10 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.http`
 
+<AposRefExtends :module="$frontmatter.extends" />
+
 This module adds methods for easy HTTP requests in Apostrophe project and module server-side code. These methods are compatible with the respective [client-side HTTP methods](/guide/front-end-helpers.md#http-request-methods). It also defines error codes for use with the main `apos.error()` method.
 <!-- TODO: Link to the error module reference. -->
-
-**Extends:** `{{ $frontmatter.extends }}`
 
 ## Options
 

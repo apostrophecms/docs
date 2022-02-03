@@ -7,9 +7,9 @@ sidebarDepth: 2
 
 **Alias:** `apos.util`
 
-The `@apostrophecms/util` module contains utility methods and tools that do not clearly belong in any other module.
+<AposRefExtends :module="$frontmatter.extends" />
 
-**Extends:** `{{ $frontmatter.extends }}`
+The `@apostrophecms/util` module contains utility methods and tools that do not clearly belong in any other module.
 
 ## Options
 

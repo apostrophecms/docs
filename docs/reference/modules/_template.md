@@ -6,9 +6,9 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.i18n`
 
-*General description paragraph.* Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+<AposRefExtends :module="$frontmatter.extends" />
 
-**Extends:** `{{ $frontmatter.extends }}`
+*General description paragraph.* Cras mattis consectetur purus sit amet fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Options
 

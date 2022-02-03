@@ -6,7 +6,7 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.migration`
 
-**Extends:** `{{ $frontmatter.extends }}` [ℹ️](/guide/modules.md#module-inheritance)
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between versions of Apostrophe.
 

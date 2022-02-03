@@ -1,4 +1,10 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/express`
+
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module initializes the Express framework, which Apostrophe uses and extends to implement both API routes and page-serving routes. The Express `app` object is made available as `apos.app`, and the `express` object itself as `apos.express`. This module also adds a number of standard middleware functions and implements the server side of CSRF protection for Apostrophe.
 

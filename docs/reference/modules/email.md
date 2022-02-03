@@ -1,4 +1,10 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/email`
+
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module manages general email functionality that Apostrophe modules use. The most significant feature is the `nodemailer` option, which is used to configure the [Nodemailer](https://nodemailer.com/) third-party module.
 

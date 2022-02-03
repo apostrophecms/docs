@@ -1,0 +1,36 @@
+<template>
+  <p>
+    <strong>Extends:</strong> <code>{{ module }}</code> <a href="/guide/modules.html#module-inheritance">ℹ️</a>
+  </p>
+</template>
+
+<script>
+export default {
+  props: {
+    module: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {}
+  },
+  computed: {}
+};
+</script>
+
+<style lang="stylus"  scoped>
+  p
+    position: relative;
+  a
+    position: absolute;
+    left: 0;
+    transform: translateX(-130%);
+    opacity: .8;
+    transition: opacity 0.25s;
+  .theme-default-content a:hover,
+  .theme-default-content a:focus
+    text-decoration: none;
+    opacity: 1;
+
+</style>
