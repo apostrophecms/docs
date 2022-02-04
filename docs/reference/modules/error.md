@@ -1,4 +1,10 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/error`
+
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module establishes an error method used throughout Apostrophe code to help format code errors consistently.
 

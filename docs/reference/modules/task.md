@@ -6,6 +6,8 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.task`
 
+<AposRefExtends :module="$frontmatter.extends" />
+
 This module allows support modules in creating command line tasks. It also provides utilities for generating request objects when one is not available and is needed.
 
 Command line tasks are invoked with the general structure:
@@ -19,8 +21,6 @@ node app article:generate --total=20
 ```
 
 Apostrophe is fully initialized before a task is run, except that it does not listen for connections. We may access all general Apostrophe features in a task.
-
-**Extends:** `{{ $frontmatter.extends }}`
 
 ## Related documentation
 

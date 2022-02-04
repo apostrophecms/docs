@@ -6,6 +6,8 @@ extends: '@apostrophecms/module'
 
 **Alias:** `apos.page`
 
+<AposRefExtends :module="$frontmatter.extends" />
+
 This module provides the majority of functionality for serving and generally working with [pages](/reference/glossary.md#page) in Apostrophe.
 
 For creating page types, see the `@apostrophecms/page-type` module instead.

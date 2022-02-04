@@ -372,8 +372,8 @@ This function runs once when the Apostrophe app first starts up. It takes the mo
 
 While [customization functions](#customization-functions) add functionality for the module in specific ways, `init` provides a space for more open code execution. It is useful for setting properties on the module that could not be set in other sections.
 
+<AposCodeBlock>
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   options: {
@@ -402,6 +402,10 @@ module.exports = {
   }
 };
 ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+</AposCodeBlock>
 
 ## Customization functions
 
