@@ -61,7 +61,7 @@ This module is meant as a base class for more specific content modules. As such,
 
 ### `allowedSchema(req)`
 
-Returns a new version of the doc type's schema containing only fields that the current user (`req.user`) has permission to edit. This is dictated by the `permission` property of the schema field, or if is no `permission` property for the field. The `req` should be an existing request object.
+Returns a new version of the doc type's schema containing only fields that the current user (`req.user`) has permission to edit.
 
 ### `async convert(req, input, doc, options)`
 

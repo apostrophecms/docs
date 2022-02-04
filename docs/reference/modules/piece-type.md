@@ -71,7 +71,7 @@ module.exports = {
 
 Defaults to `true`. If set to `false`, this doc type will _not_ be included in the locale system. This means there will be only one version of each doc, regardless of whether multiple locales (e.g., for languages or regions) are active. There is no distinction between draft and published, including in the database.
 
-The "users" piece disables localization in this way. It can also be useful for piece types that are synchronized from another system that has no notion of locales and no distinction between "draft" and "published" content.
+The "users" piece type disables localization in this way. It can also be useful for piece types that are synchronized from another system that has no notion of locales and no distinction between "draft" and "published" content.
 
 #### Example
 
