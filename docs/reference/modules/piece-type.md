@@ -4,11 +4,11 @@ extends: '@apostrophecms/doc-type'
 
 # `@apostrophecms/piece-type`
 
+**Extends:** `{{ $frontmatter.extends }}`
+
 This module is the foundation for all [piece types](/guide/pieces.md) in Apostrophe. It is not typically configured or referenced in project code directly since each piece type should be managed independently in most cases. For example, the options documented below would be configured on a custom piece type, e.g., `article`, rather this piece type base module.
 
-The only reason to configure this module directly would be to apply the changes to *every* piece type, including those Apostrophe core (e.g., `@apostrophecms/user`).
-
-**Extends:** `{{ $frontmatter.extends }}`
+The only reason to configure this module directly would be to apply the changes to *every* piece type, including those in Apostrophe core (e.g., `@apostrophecms/user`).
 
 ## Options
 
@@ -17,7 +17,7 @@ The only reason to configure this module directly would be to apply the changes 
 | [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
 | [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
 | [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
-| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
 | [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
 | [`publicApiProjection`](#publicapiprojection) | Object | Piece fields to make available via a public REST API route. |
 | [`quickCreate`](#quickcreate) | Boolean | Set to `true` to add the piece type to the quick create menu. |
@@ -26,12 +26,12 @@ The only reason to configure this module directly would be to apply the changes 
 | `showArchive` | Boolean | Set to `false` to disable UI related to archiving pieces of that type. |
 | `showDiscardDraft` | Boolean | Set to `false` to disable UI related to discarding draft pieces of that type. |
 | `showDismissSubmission` | Boolean | Set to `false` to disable UI related to dismissing draft submissions for pieces of that type. |
-| `singleton` | Boolean | Set to `true` to ensure that no one can create a new piece of that type. The global doc as only one should ever exist. |
+| `singleton` | Boolean | Set to `true` to ensure that no one can create a new piece of that type. The global doc module uses this, as only one should ever exist. |
 | [`sort`](#sort) | Object | The value for a piece type's default sort order query builder. |
 
 ### `autopublish`
 
-Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type.
+Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type, but there will be draft document versions in the database.
 
 The core image and file modules use this option, for example. It eliminates the need for users to think about the distinction between draft and published content while preserving the possibility of translation for different locales.
 
@@ -52,7 +52,7 @@ module.exports = {
 
 `label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals.
 
-If not set, Apostrophe will convert the module `name` meta property to a readable label by splitting the `name` on dashes and underscores, then capitalizing the first letter of each word.
+If not set, Apostrophe will convert the module name to a readable label by splitting the `name` property on dashes and underscores, then capitalizing the first letter of each word.
 
 #### Example
 
@@ -69,7 +69,9 @@ module.exports = {
 
 ### `localized`
 
-Defaults to `true`. If set to `false`, this doc type will _not_ be included in the locale system. This means there will be only one version of each doc, regardless of whether multiple locales (e.g., for languages or regions) are active. The "users" piece disables localization in this way.
+Defaults to `true`. If set to `false`, this doc type will _not_ be included in the locale system. This means there will be only one version of each doc, regardless of whether multiple locales (e.g., for languages or regions) are active. There is no distinction between draft and published, including in the database.
+
+The "users" piece disables localization in this way. It can also be useful for piece types that are synchronized from another system that has no notion of locales and no distinction between "draft" and "published" content.
 
 #### Example
 
@@ -86,7 +88,7 @@ module.exports = {
 
 ### `perPage`
 
-In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. This value defaults to 10.
+In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. It also controls how many are displayed in the manager modal user interface. This value defaults to 10.
 
 #### Example
 
@@ -237,7 +239,7 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
 | `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
 
-### `async update(req, piece, options)`
+### `async insert(req, piece, options)`
 
 The `insert()` method is used to add a new piece in server-side code. See the [guide for inserting documents in code](/guide/database-insert-update.md#inserting-a-new-piece) for more on this.
 
@@ -245,7 +247,7 @@ The `insert()` method is used to add a new piece in server-side code. See the [g
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `piece` | Object | The piece document object. |
-| `options` | Object | An options object, primarily used for internal draft state management. |
+| `options` | Object | An options object. Setting `permissions: false` will bypass all permission checks. |
 
 ### `async update(req, piece, options)`
 
@@ -255,7 +257,7 @@ The `update()` is used to update data for an existing piece. Note that the secon
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `piece` | Object | The document object that will *replace* the existing database document. |
-| `options` | Object | An options object, currently only used for internal draft state management. |
+| `options` | Object | An options object. Setting `permissions: false` will bypass all permission checks. |
 
 ### `getBrowserData(req)`
 
@@ -265,8 +267,8 @@ Piece type modules' implementation of [`getBrowserData`](module.md#getbrowserdat
 
 ### `generate`
 
-Full command: `node app [piece-type name]:generate --total [integer]`
+Full command: `node app [piece-type name]:generate --total=[integer]`
 
 This task is used to generate sample documents for a given piece type. This can be helpful during project development to quickly create test content. The task will generate 10 items if the `--total` argument is *not* included. If `--total` is included with a number argument, it will generate that number of items.
 
-For example, `node app article:generate --total 2000` will generate 2,000 documents for an `article` piece type.
+For example, `node app article:generate --total=2000` will generate 2,000 documents for an `article` piece type.

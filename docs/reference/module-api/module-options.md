@@ -355,7 +355,7 @@ Option settings in this section apply to all piece modules (those that extend `@
 | Option | Value type | Description |
 |---------|---------|---------|
 | [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
-| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
 | [`publicApiProjection`](#publicapiprojection-for-pieces) | Object | Piece fields to make available via a public REST API route. |
 | [`quickCreate`](#quickcreate-for-pieces) | Boolean | Set to `true` to add the piece type to the quick create menu. |
 | [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
@@ -728,7 +728,7 @@ Option settings in this section apply to all piece page types (modules that exte
 
 | Option | Value type | Description |
 |---------|---------|---------|
-| [`perPage`](#perpage) | Integer | Set the number of pieces to be |
+| [`perPage`](#perpage) | Integer | Set the number of pieces to display in each set of paginated index page results. |
 | [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
 | [`piecesFilters`](#piecesfilters) | Array | Configure pieces filters for index pages. |
 | [`pieceModuleName`](#piecemodulename) | String | Specify the associated piece type if it doesn't match the module name. |

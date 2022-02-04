@@ -4,11 +4,11 @@ extends: '@apostrophecms/module'
 
 # `@apostrophecms/doc-type`
 
+**Extends:** `{{ $frontmatter.extends }}`
+
 This module establishes the basic structure and functionality for all content documents, including pages and pieces. More specifically, it is the foundation for piece *types* and page *types*. The features below are available on all piece and page types except where they are overridden in the `@apostrophecms/piece-type` and `@apostrophecms/page-type` modules.
 
 This module is almost never configured or extended directly in Apostrophe projects. The only reason to configure this module directly would be to apply the changes to *every* page type and piece type, including those Apostrophe core (e.g., `@apostrophecms/user`, `@apostrophecms/home-page`). Project-level doc types should extend either `@apostrophecms/piece-type` or `@apostrophecms/page-type` instead.
-
-**Extends:** `{{ $frontmatter.extends }}`
 
 ## Options
 
