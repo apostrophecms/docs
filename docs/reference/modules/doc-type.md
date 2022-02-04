@@ -6,7 +6,7 @@ extends: '@apostrophecms/module'
 
 This module establishes the basic structure and functionality for all content documents, including pages and pieces. More specifically, it is the foundation for piece *types* and page *types*. The features below are available on all piece and page types except where they are overridden in the `@apostrophecms/piece-type` and `@apostrophecms/page-type` modules.
 
-This module is almost never configured directly in Apostrophe projects. The only reason to configure this module directly would be to apply the changes to *every* page type and piece type, including those Apostrophe core (e.g., `@apostrophecms/user`, `@apostrophecms/home-page`).
+This module is almost never configured or extended directly in Apostrophe projects. The only reason to configure this module directly would be to apply the changes to *every* page type and piece type, including those Apostrophe core (e.g., `@apostrophecms/user`, `@apostrophecms/home-page`). Project-level doc types should extend either `@apostrophecms/piece-type` or `@apostrophecms/page-type` instead.
 
 **Extends:** `{{ $frontmatter.extends }}`
 
@@ -14,25 +14,20 @@ This module is almost never configured directly in Apostrophe projects. The only
 
 |  Property | Type | Description |
 |---|---|---|
-| [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
 | [`relatedDocument`](#relateddocument) | Boolean | Assign `true` on a doc-type module (almost always pieces) for those docs to be considered "related documents" in localization. |
-| `slugPrefix` | String | A string Apostrophe should prepend to all slugs for a doc type. |
-
-### `autopublish`
-
-Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type.
-
-The core image and file modules use this option, for example. It eliminates the need for users to think about the distinction between draft and published content while preserving the possibility of translation for different locales.
+| `slugPrefix` | String | A string Apostrophe should prepend to all slugs for a doc type. Only applicable to piece-type modules. |
 
 ### `relatedDocument`
 
-When editors localize content, syncing it from one locale to other locales, there is an option to also localize "related documents" (docs connected through [relationship fields](/guide/relationships.md)). Setting this property `true` on a piece-type module will tell Apostrophe to automatically localize those pieces when connected to a document when it is localized using that editor option.
+When editors localize content, syncing it from one locale to other locales, there is an option to also localize "related documents" (docs connected through [relationship fields](/guide/relationships.md)). If this option is `true`, the type is selected by default for localization when related to a piece or page being localized. This is the default setting for `@apostrophecms/image` and `@apostrophecms/file`.
 
-Apostrophe's `@apostrophecms/image` and `@apostrophecms/file` modules have this active. Page types should essentially never be considered "related documents" in this way.
+If this option is `null`, the type is offered for localization when related to a piece or page being localized, but not selected by default. This is the default setting for all other piece types.
+
+If this option is `false`, the type is *never* offered for localization when related to a piece or page being localized. This is the default setting for `@apostrophecms/page-type`.
 
 ### `slugPrefix`
 
-Document slugs, the `slug` property of content documents, must be unique within a database. Apostrophe will enforce this by adding numbers to the end of a duplicate slug when needed (e.g., `some-slug-0`). Registering a prefix for a doc-type's slugs with `slugPrefix` is another way to prevent duplicate slugs across different doc-types (usually piece types) and also avoid the appended numbers.
+Document slugs, the `slug` property of content documents, must be unique within a database. Apostrophe will enforce this by adding numbers to the end of a duplicate slug when needed (e.g., `some-slug-0`). Registering a prefix for a piece type's slugs with `slugPrefix` is another way to prevent duplicate slugs across different piece types and also avoid the appended numbers. This should not be used for page types.
 
 For example, the `@apostrophecms/image` module uses the `image-` slug prefix. Image document slugs are not as important as event slugs, so adding the prefix prevents an image from reserving a slug both might have used. An image with filename `2021-company-retreat.jpg` would otherwise have tried to have the same auto-generated slug as an event titled "2021 Company Retreat."
 
@@ -66,7 +61,7 @@ This module is meant as a base class for more specific content modules. As such,
 
 ### `allowedSchema(req)`
 
-Returns a new version of the doc type's schema containing only fields for which the current user (`req.user`) has permission to edit. That is specified by the `permission` property of the schema field, or there is no `permission` property for the field. The `req` should be an existing request object.
+Returns a new version of the doc type's schema containing only fields that the current user (`req.user`) has permission to edit. This is dictated by the `permission` property of the schema field, or if is no `permission` property for the field. The `req` should be an existing request object.
 
 ### `async convert(req, input, doc, options)`
 
@@ -78,9 +73,9 @@ If `options.copyingId` is present and assigned to a document `_id`, the doc with
 
 ### `fieldsPresent(input)`
 
-Returns an array with the names of all doc type schema fields present in the `input` object, taking into account relationship fields keeping their data in a separate `Ids` property and other considerations.
+Returns an array with the names of all doc type schema fields present in the `input` object.
 
-### `async find(req, criteria, options)`
+### `async find(req, criteria, builders)`
 
 The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
@@ -88,7 +83,7 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | Object | The options object is converted to matching [query builders](/reference/query-builders.md). |
+| `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
 
 ### `findForEditing(req, criteria, builders)`
 

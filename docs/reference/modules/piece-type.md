@@ -227,7 +227,7 @@ The following methods belong to this module and may be useful in project-level c
 
 This module is meant as a base class for more specific content modules. As such, the methods should be used from those content modules, not directly from this one.
 
-### `async find(req, criteria, options)`
+### `async find(req, criteria, builders)`
 
 The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
@@ -235,7 +235,7 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | Object | The options object is converted to matching [query builders](/reference/query-builders.md). |
+| `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
 
 ### `async update(req, piece, options)`
 
