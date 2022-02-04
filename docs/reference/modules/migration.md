@@ -8,12 +8,12 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between versions of Apostrophe.
+This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between major versions of Apostrophe.
 
-The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments the task function also runs on every site start up.
+The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments all new migrations also run on every every site startup.
 
 ::: warning
-**Migrations must be written so they are safe to run multiple times.** Apostrophe tracks when migrations have been run before in a the `aposMigrations` database collection, but there is no guarantee that they will not run again if that cache is cleared. If this is difficult to guarantee, you may wish to [write a task](/reference/module-api/module-overview.md#tasks-self) that executes the changes instead.
+**Migrations must be written so they are safe to run multiple times.** Apostrophe tracks when migrations have been run before in the `aposMigrations` database collection, but there is no guarantee that they will not run again if data is cleared the collection. If this is difficult to guarantee, you may wish to [write a task](/reference/module-api/module-overview.md#tasks-self) that executes the changes instead.
 :::
 
 ## Featured methods
@@ -40,16 +40,16 @@ module.exports = {
   methods(self) {
     return {
       // 👇 Registering a method to run in the migration.
-      async painRosesRed () {
-        const req = self.apos.task.getReq('editor');
-
+      async paintRosesRed () {
         await self.apos.migration.eachDoc({
-          type: 'rose'
+          type: 'rose',
+          color: 'white'
         }, async (doc) => {
-          if (doc.color === 'white') {
-            doc.color = 'red';
-            await self.update(req, doc);
-          }
+          await self.apos.doc.db.updateOne({
+            _id: doc._id
+          }, {
+            $set: { color: 'red' }
+          });
         });
       }
     }
@@ -63,16 +63,13 @@ module.exports = {
 
 ::: warning
 If running multiple instances of the website on a server, note that previous instances of the site are not stopped automatically while migrations are run. Migrations must minimize their impact on currently running instances of older versions of the site. It is safer to copy data to new properties and to not *remove* existing data until a subsequent migration.
-
-<!-- TODO: Link to the global module reference page here. -->
-If you absolutely must prevent requests from being executed during the migration, wrap them with the `await apos.global.busy(fn)` API. Note that this API involves a significant startup delay to allow existing requests to terminate.
 :::
 
 ### `async eachDoc(criteria, limit, iterator)`
 
 Invokes the `iterator` function once for each doc in the `aposDocs` collection. The iterator function receives the document as an argument and is run as an `async` function. This method will never visit the same doc twice in a single call, even if modifications are made.
 
-The `criteria` object is used to find documents to process, formatted the same way as an argument to the [query builder of the same name](/reference/query-builders.md#criteria). `limit` should be an integer and the number of documents to process in parallel, though it may be omitted. If only two arguments are passed in, `limit` is assumed to be 1 (only one doc may be processed at a time).
+The `criteria` object is used to find documents to process, using the same format as in a [MongoDB `find` operation query](https://docs.mongodb.com/v4.4/reference/method/db.collection.find/). `limit` should be an integer and the number of documents to process in parallel, though it may be omitted. If only two arguments are passed in, `limit` is assumed to be 1 (only one doc may be processed at a time).
 
 **Note:** This API is meant for migrations and task use only. It has no built-in security checks.
 
