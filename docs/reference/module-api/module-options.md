@@ -355,14 +355,14 @@ Option settings in this section apply to all piece modules (those that extend `@
 | Option | Value type | Description |
 |---------|---------|---------|
 | [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
-| [`perPage`](#perpage) | Integer | The number of pieces to include on `req.data.pieces` in each page. |
+| [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
 | [`publicApiProjection`](#publicapiprojection-for-pieces) | Object | Piece fields to make available via a public REST API route. |
 | [`quickCreate`](#quickcreate-for-pieces) | Boolean | Set to `true` to add the piece type to the quick create menu. |
 | [`searchable`](#searchable) | Boolean | Set to `false` to remove the piece type from search results. |
 
 ### `pluralLabel`
 
-Similar to `label` for all doc types, the `pluraLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces should have unique labels (e.g., "Articles," or "Teams").
+Similar to `label` for all doc types, the `pluralLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces should have unique labels (e.g., "Articles," or "Teams").
 
 If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
 
@@ -728,7 +728,7 @@ Option settings in this section apply to all piece page types (modules that exte
 
 | Option | Value type | Description |
 |---------|---------|---------|
-| [`perPage`](#perpage) | Integer | Set the number of pieces to be |
+| [`perPage`](#perpage) | Integer | Set the number of pieces to display in each set of paginated index page results. |
 | [`next`](#next) | Boolean/Object | Enable and optionally configure the `req.data.next` object. |
 | [`piecesFilters`](#piecesfilters) | Array | Configure pieces filters for index pages. |
 | [`pieceModuleName`](#piecemodulename) | String | Specify the associated piece type if it doesn't match the module name. |

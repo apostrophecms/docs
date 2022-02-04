@@ -1,3 +1,7 @@
+---
+extends: '@apostrophecms/module'
+---
+
 # `@apostrophecms/page`
 
 **Alias:** `apos.page`
@@ -5,6 +9,8 @@
 This module provides the majority of functionality for serving and generally working with [pages](/reference/glossary.md#page) in Apostrophe.
 
 For creating page types, see the `@apostrophecms/page-type` module instead.
+
+**Extends:** `{{ $frontmatter.extends }}`
 
 ## Options
 
@@ -254,7 +260,7 @@ module.exports = {
 ## Related documentation
 
 - [Pages guide](/guide/pages.md)
-- [Pages REST API](/docs/reference/api/pages.md)
+- [Pages REST API](/reference/api/pages.md)
 
 ## Featured methods
 
@@ -263,15 +269,15 @@ The following methods belong to this module and may be useful in project-level c
 
 Because this module has an alias, you can call these from another module using the alias. For example, `self.apos.page.find()`.
 
-### `async find(req, criteria, options)`
+### `async find(req, criteria, builders)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/docs/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `options` | Object | The options object is converted to matching [query builders](/reference/query-builders.md). |
+| `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
 
 ### `findForEditing(req, criteria, builders)`
 
@@ -279,7 +285,7 @@ Returns a query that finds pages the current user (based on the `req` request ob
 
 `criteria` is a MongoDB criteria object as in `find()`. The `builders` argument should be an object of query builders, in the same style as the [module option of the same name](#builders).
 
-### `findOneForEditing(req, criteria, builders)`
+### `async findOneForEditing(req, criteria, builders)`
 
 `findOneForEditing()` is wrapper for `findForEditing()` that returns a single document matching the arguments, not simply a query.
 
@@ -344,13 +350,13 @@ Localize the draft page (`draft`), copying it to another locale (`locale`). This
 
 Reverts the given draft page (`draft`) to the most recent publication, clearing any changes. It returns the draft's new value, or `false` if the draft was not modified from the published version or no published version exists yet.
 
-Emits the [`afterRevertDraftToPublished` event](/docs/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes a payload object containing the draft document.
+Emits the [`afterRevertDraftToPublished` event](/reference/server-events.md#afterrevertdrafttopublished) before returning, which includes a payload object containing the draft document.
 
 ### `async revertPublishedToPrevious(req, published)`
 
 Reverts a published page document (`published`) to the previous published state and returns the updated published state. If this was already done (only one previous state is saved) or there is no previous publication, it throws an `invalid` exception.
 
-Emits the [`afterRevertPublishedToPrevious` event](/docs/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes a payload object containing the published document.
+Emits the [`afterRevertPublishedToPrevious` event](/reference/server-events.md#afterrevertpublishedtoprevious) before returning, which includes a payload object containing the published document.
 
 ### `normalizeSlug(req)`
 
@@ -367,7 +373,7 @@ Returns the effective base URL for the given request (`req`). If a hostname is c
 
 ### `inferIdLocaleAndMode(req, _id)`
 
-This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id)
+This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id).
 
 ## Template helpers
 
