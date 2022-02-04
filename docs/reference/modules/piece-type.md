@@ -4,7 +4,7 @@ extends: '@apostrophecms/doc-type'
 
 # `@apostrophecms/piece-type`
 
-**Extends:** `{{ $frontmatter.extends }}`
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module is the foundation for all [piece types](/guide/pieces.md) in Apostrophe. It is not typically configured or referenced in project code directly since each piece type should be managed independently in most cases. For example, the options documented below would be configured on a custom piece type, e.g., `article`, rather this piece type base module.
 
