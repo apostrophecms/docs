@@ -91,7 +91,8 @@ module.exports = {
         {
           title: 'Other customizations 🆕',
           children: [
-            [ 'guide/custom-schema-field-types.md', 'Custom field types' ]
+            [ 'guide/custom-schema-field-types.md', 'Custom field types' ],
+            'guide/custom-login-requirements.md'
           ]
         }
       ]
