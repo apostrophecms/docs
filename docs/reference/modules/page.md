@@ -12,8 +12,6 @@ This module provides the majority of functionality for serving and generally wor
 
 For creating page types, see the `@apostrophecms/page-type` module instead.
 
-**Extends:** `{{ $frontmatter.extends }}`
-
 ## Options
 
 | Property | Value type | Description |

@@ -4,7 +4,7 @@ extends: '@apostrophecms/module'
 
 # `@apostrophecms/doc-type`
 
-**Extends:** `{{ $frontmatter.extends }}`
+<AposRefExtends :module="$frontmatter.extends" />
 
 This module establishes the basic structure and functionality for all content documents, including pages and pieces. More specifically, it is the foundation for piece *types* and page *types*. The features below are available on all piece and page types except where they are overridden in the `@apostrophecms/piece-type` and `@apostrophecms/page-type` modules.
 
