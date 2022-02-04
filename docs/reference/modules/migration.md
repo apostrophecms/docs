@@ -10,11 +10,7 @@ extends: '@apostrophecms/module'
 
 This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between major versions of Apostrophe.
 
-The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments all new migrations also run on every every site startup.
-
-::: warning
-**Migrations must be written so they are safe to run multiple times.** Apostrophe tracks when migrations have been run before in the `aposMigrations` database collection, but there is no guarantee that they will not run again if data is cleared the collection. If this is difficult to guarantee, you may wish to [write a task](/reference/module-api/module-overview.md#tasks-self) that executes the changes instead.
-:::
+The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments all new migrations also run on every site startup.
 
 ## Featured methods
 
