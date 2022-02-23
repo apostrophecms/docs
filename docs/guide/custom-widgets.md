@@ -160,7 +160,7 @@ module.exports = {
   </h2>
   <div hidden data-collapser-detail>
     {# `nlbr` and `safe` are core Nunjucks tag filters #}
-    {{ data.widget.description | nlbr | safe }}
+    {{ data.widget.detail | nlbr | safe }}
   </div>
 </section>
 ```
