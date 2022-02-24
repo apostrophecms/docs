@@ -94,7 +94,7 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 Here are some two-column styles for people following along.
 
 ```css
-/* modules/two-column-widget/ui/src/styles.scss */
+/* modules/two-column-widget/ui/src/index.scss */
 .two-col {
   display: flex;
   flex-flow: row wrap;
@@ -160,7 +160,7 @@ module.exports = {
   </h2>
   <div hidden data-collapser-detail>
     {# `nlbr` and `safe` are core Nunjucks tag filters #}
-    {{ data.widget.description | nlbr | safe }}
+    {{ data.widget.detail | nlbr | safe }}
   </div>
 </section>
 ```
