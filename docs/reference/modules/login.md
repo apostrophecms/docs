@@ -9,19 +9,11 @@ extends: '@apostrophecms/module'
 This module manages Apostrophe's standard login form and related capabilities.
 
 ## Options
-
-   localLogin: true,
-    bearerTokens: true,
-    throttle: {
-      allowedAttempts: 3,
-      perMinutes: 1,
-      lockoutMinutes: 1
-    }
  
 |  Property | Type | Description |
 |---|---|---|
-|`localLogin` | Boolean | Defaults to `true`. If false, the login form is disabled.|
-|`bearerTokens` | Boolean | Defaults to `true`. If set to an object, the `lifetime` subproperty determines the lifetime of a bearer token for the REST API.| 
+|`localLogin` | Boolean | If false, the login form is disabled.|
+|`bearerTokens` | Object | If set to an object, the `lifetime` subproperty determines the lifetime of a bearer token for the REST API.| 
 |`throttle` | Object | Used to prevent brute-force password guessing.|
 
 ### `localLogin`
