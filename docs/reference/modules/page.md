@@ -17,6 +17,7 @@ For creating page types, see the `@apostrophecms/page-type` module instead.
 | Property | Value type | Description |
 |---------|---------|---------|
 | [`builders`](#builders) | Object | Set query builder values to be used when pages are served. |
+| [`cache`](#cache) | Object | Provides control over cache headers for both ordinary page requests and the REST API. |
 | [`home`](#home) | Boolean/Object | Change how the home page is added to `req.data` when pages are served. |
 | [`minimumPark`](#minimumpark) | Array | Override default parked pages, including the home page. |
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
@@ -55,6 +56,34 @@ module.exports = {
 ```
 
 In this example, we are not including ancestor pages and are requesting two levels of child pages (direct children and their direct children).
+
+### `cache`
+
+`cache` can be set to an object with optional `page` and `api` subproperties, and a `maxAge` subproperty within each, determining the cache lifetime in seconds. If enabled, Apostrophe will send a `Cache-Control` header with the specified maximum age. The actual caching is provided by the browser, or by an intermediate CDN or reverse proxy.
+
+The `page` subproperty controls cache headers for ordinary page requests, while the `api` subproperty controls cache headers for REST API requests using the `GET` method.
+
+Note that Apostrophe already provides "cache on demand" by default, to improve performance when simultaneous `GET` requests arrive for the same piece. Unlike "cache on demand," setting the `cache` option introduces the possibility that some visitors will see older content, up to the specified lifetime.
+
+If a user is logged in, or `req.session` has content, Apostrophe always disables caching. However such a user could encounter a previously cached document from before logging in. Apostrophe contains logic to mitigate this in the editing experience.
+
+#### Example
+
+```javascript
+// modules/@apostrophecms/page/index.js
+options: {
+  cache: {
+    page: {
+      // Specified in seconds
+      maxAge: 6000
+    },
+    api: {
+      // Specified in seconds
+      maxAge: 3000
+    }
+  }
+}
+```
 
 ### `home`
 
