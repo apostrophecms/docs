@@ -130,7 +130,8 @@ module.exports = {
         'reference/api/pieces',
         'reference/api/pages',
         'reference/api/media',
-        'reference/api/field-formats'
+        'reference/api/field-formats',
+        'reference/api/caching'
       ]
     },
     {

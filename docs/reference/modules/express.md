@@ -20,6 +20,7 @@ This module initializes the Express framework, which Apostrophe uses and extends
 |`port` | Integer | Apostrophe listens for connections on port `3000` unless this option is set to another port. If the `PORT` environment variable is set, it is used instead. |
 |`session` | Object | Properties of the `session` option are used to create the session middleware. See below. |
 |`trustProxy` | Boolean | Enables the [trust proxy option for Express](https://expressjs.com/en/api.html#trust.proxy.options.table). Set to `true` to tell the Express app to  respect `X-Forwarded-* ` headers. This is helpful when Apostrophe is generating `http:` URLs even though a proxy like nginx is being used to serve it over `https:`. |
+|`enableCacheOnDemand` | Boolean | Set to `false` to disable cache on demand. [See documentation](/reference/api/caching.html#express-cache-on-demand). |
 
 ### `session`
 

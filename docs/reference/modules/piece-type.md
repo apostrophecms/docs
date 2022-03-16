@@ -15,6 +15,7 @@ The only reason to configure this module directly would be to apply the changes 
 |  Property | Type | Description |
 |---|---|---|
 | [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`cache`](#cache) | Object | Provides control over cache headers for the REST API. |
 | [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
 | [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
 | [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
@@ -46,6 +47,25 @@ module.exports = {
   },
   // ...
 }
+```
+
+### `cache`
+
+`cache` can be set to an object with an `api` subproperty, and a `maxAge` subproperty within that, determining the cache lifetime in seconds. If enabled, Apostrophe will send a `Cache-Control` header with the specified maximum age. The actual caching is provided by the browser, or by an intermediate CDN or reverse proxy.
+
+Note that Apostrophe already provides "cache on demand" by default, to improve performance when simultaneous `GET` requests arrive for the same piece. Unlike "cache on demand," setting the `cache` option introduces the possibility that some visitors will see older content, up to the specified lifetime.
+
+If a user is logged in, or `req.session` has content, Apostrophe always disables caching. However such a user could encounter a previously cached document from before logging in. Apostrophe contains logic to mitigate this in the editing experience.
+
+#### Example
+
+```javascript
+  cache: {
+    api: {
+      // Specified in seconds
+      maxAge: 3000
+    }
+  }
 ```
 
 ### `label`
