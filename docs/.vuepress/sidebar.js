@@ -59,6 +59,7 @@ module.exports = {
       title: 'Advanced topics',
       collapsable: false,
       children: [
+        'guide/caching.md',
         'guide/conditional-fields.md',
         'guide/async-components.md',
         'guide/static-module-assets.md',
@@ -130,8 +131,7 @@ module.exports = {
         'reference/api/pieces',
         'reference/api/pages',
         'reference/api/media',
-        'reference/api/field-formats',
-        'reference/api/caching'
+        'reference/api/field-formats'
       ]
     },
     {
