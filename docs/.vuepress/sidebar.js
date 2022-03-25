@@ -160,6 +160,7 @@ module.exports = {
         'reference/field-types/email',
         'reference/field-types/float',
         'reference/field-types/integer',
+        'reference/field-types/object',
         'reference/field-types/oembed',
         'reference/field-types/password',
         'reference/field-types/radio',

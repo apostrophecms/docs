@@ -41,7 +41,7 @@ The `area` tag inserts an area field into the template. The area field [must alr
 
 #### `context`
 
-The area's document context, either a page (`data.page`), piece (`data.piece`), widget (`data.widget`), or array field object. The area field must be defined in the field schema for that context. See the [template data](/guide/template-data.md) section for more on each `data` property.
+The area's document context, either a page (`data.page`), piece (`data.piece`), widget (`data.widget`), `array` field or `object` field. The area field must be defined in the field schema for that context. See the [template data](/guide/template-data.md) section for more on each `data` property.
 
 #### `areaName`
 

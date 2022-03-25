@@ -14,6 +14,7 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[email](/reference/field-types/email.md) | Email address  |
 |[float](/reference/field-types/float.md) | A floating point number |
 |[integer](/reference/field-types/integer.md) | A whole number, whether positive or negative |
+|[object](/reference/field-types/object.md) | A sub-object of structured content using its own [field schema](/reference/glossary.md#schema) |
 |[oembed](/reference/field-types/oembed.md) | Media URL to be embedded via [the oEmbed format](https://oembed.com/) |
 |[password](/reference/field-types/password.md) | Text entry that obscures input |
 |[radio](/reference/field-types/radio.md) | Single value selection with a radio input interface |
