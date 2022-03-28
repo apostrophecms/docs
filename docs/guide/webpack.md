@@ -9,8 +9,7 @@ It's possible to override the webpack config from any module. You can just add a
 
 ```javascript
 module.exports = {
-  // My module configuration
-
+  // ...
   webpack: {
     extensions: {
       foo: {
@@ -36,8 +35,7 @@ Example:
 ```javascript
 {
   modules: {
-    // My others modules
-
+    // ...
     test: {},
     'test-widget': {}
   }
@@ -96,8 +94,7 @@ In my `test-widget` module:
 
 ```javascript
 module.exports = {
-  // My module configuration
-
+  // ...
   webpack: {
     bundles: {
       'test-bundle': {}
