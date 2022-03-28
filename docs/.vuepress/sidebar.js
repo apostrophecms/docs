@@ -95,7 +95,8 @@ module.exports = {
             [ 'guide/custom-schema-field-types.md', 'Custom field types' ],
             'guide/custom-login-requirements.md'
           ]
-        }
+        },
+        'guide/webpack.md'
       ]
     },
     {
