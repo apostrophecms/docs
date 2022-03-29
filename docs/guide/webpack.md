@@ -108,19 +108,23 @@ They will be merged in the main webpack config using [webpack-merge](https://git
 You can also generate extra bundles that you don't want to be loaded on all pages.
 For example, if a widget needs a lot of front-end javascript but is used only on one page.
 
-It will be done in the same webpack object than for extensions.
-In my `test-widget` module:
+It will be done in the same webpack object than for extensions:
 
+<AposCodeBlock>
 ```javascript
-module.exports = {
-  // ...
-  webpack: {
-    bundles: {
-      'test': {}
+  module.exports = {
+    // ...
+    webpack: {
+      bundles: {
+        'test': {}
+      }
     }
-  }
-};
-```
+  };
+  ```
+  <template v-slot:caption>
+    modules/test-widget/index.js
+  </template>
+</AposCodeBlock>
 
 At start time, Apostrophe will look in `modules/test-widget/ui/src/test-bundle.js` and `modules/test-widget/ui/src/test-bundle.scss`. For each one, it will generate a specific bundle and load it only on pages that use this test widget.
 If a file does not exist it just bundles nothing here, but will load these bundles if existing where this widget is used.
@@ -128,17 +132,21 @@ If a file does not exist it just bundles nothing here, but will load these bundl
 You can also use this bundle in another module if you want. Let's say we have another module `test-page`,
 and we want to load this bundle only on `index` pages:
 
-
-```javascript
-module.export = {
-  extend: '@apostrophecms/piece-page-type',
-  bundles: {
-    'test': {
-      templates: ['index']
+<AposCodeBlock>
+  ```javascript
+    module.export = {
+      extend: '@apostrophecms/piece-page-type',
+      bundles: {
+        'test': {
+          templates: ['index']
+        }
+      }
     }
-  }
-}
-```
+  ```
+  <template v-slot:caption>
+    modules/test-page/index.js
+  </template>
+</AposCodeBlock>
 
 Here, the `test` bundle will be loaded on test pages, but only on the `index` pages and not the `show` ones.
 If you don't add the `templates` property, the bundle will be loaded on `index` and `show` pages.
