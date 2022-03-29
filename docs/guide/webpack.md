@@ -7,22 +7,28 @@ For example if you want to add a new loader for a specific file type, or simply 
 
 It's possible to override the webpack config from any module. You can just add a `webpack` property at module root, like so:
 
-```javascript
-module.exports = {
-  // ...
-  webpack: {
-    extensions: {
-      foo: {
-        resolve: {
-          alias: {
-            'Utils': path.join(process.cwd(), 'lib/utils/')
+
+<AposCodeBlock>
+  ```javascript
+    module.exports = {
+      // ...
+      webpack: {
+        extensions: {
+          foo: {
+            resolve: {
+              alias: {
+                'Utils': path.join(process.cwd(), 'lib/utils/')
+              }
+            }
           }
         }
       }
-    }
-  }
-};
-```
+    };
+  ```
+  <template v-slot:caption>
+    modules/my-module/index.js
+  </template>
+</AposCodeBlock>
 
 `extensions` is an object that can take multiple extensions, why ? First, this way you can simply know what is the purpose of this extension by looking at its name. It also makes possible to override easily a previously set extension.
 
@@ -32,51 +38,62 @@ Note that, if you want to override an extension from another module, the last de
 
 Example:
 
-```javascript
-{
-  modules: {
-    // ...
-    test: {},
-    'test-widget': {}
+<AposCodeBlock>
+  ```javascript
+  {
+    modules: {
+      // ...
+      test: {},
+      'test-widget': {}
+    }
   }
-}
-```
+  ```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
 
-In my  `test` module:
-
-```javascript
-module.exports = {
-  webpack: {
-    extensions: {
-      addAlias: {
-        resolve: {
-          alias: {
-            Foo: path.join(process.cwd(), 'lib/foo/')
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    webpack: {
+      extensions: {
+        addAlias: {
+          resolve: {
+            alias: {
+              Foo: path.join(process.cwd(), 'lib/foo/')
+            }
           }
         }
       }
     }
   }
-}
-```
+  ```
+  <template v-slot:caption>
+    modules/test/index.js
+  </template>
+</AposCodeBlock>
 
-In my  `test-widget` module:
-
-```javascript
-module.exports = {
-  webpack: {
-    extensions: {
-      addAlias: {
-        resolve: {
-          alias: {
-            Foobar: path.join(process.cwd(), 'lib/foobar/')
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    webpack: {
+      extensions: {
+        addAlias: {
+          resolve: {
+            alias: {
+              Foobar: path.join(process.cwd(), 'lib/foobar/')
+            }
           }
         }
       }
     }
   }
-}
-```
+  ```
+  <template v-slot:caption>
+    modules/test-widget/index.js
+  </template>
+</AposCodeBlock>
 
 In this case only the alias Foobar will be available.
 Of course you can add multiple extensions using different names from different modules.
@@ -85,6 +102,8 @@ They will be merged in the main webpack config using [webpack-merge](https://git
 :warning: It will override the main config for the whole project, not only for a specific module.
 
 ## Generating and loading extra bundles
+
+### Configuration
 
 You can also generate extra bundles that you don't want to be loaded on all pages.
 For example, if a widget needs a lot of front-end javascript but is used only on one page.
@@ -97,7 +116,7 @@ module.exports = {
   // ...
   webpack: {
     bundles: {
-      'test-bundle': {}
+      'test': {}
     }
   }
 };
@@ -114,14 +133,22 @@ and we want to load this bundle only on `index` pages:
 module.export = {
   extend: '@apostrophecms/piece-page-type',
   bundles: {
-    'test-bundle': {
+    'test': {
       templates: ['index']
     }
   }
 }
 ```
 
-Here, the `test-bundle` will be loaded on test pages, but only on the `index` pages and not the `show` ones.
+Here, the `test` bundle will be loaded on test pages, but only on the `index` pages and not the `show` ones.
 If you don't add the `templates` property, the bundle will be loaded on `index` and `show` pages.
 
-About shared dependencies, if a bundle use the same packages than the `main` one (which is loaded everywhere), webpack won't duplicate them and they will be imported only in the `main` bundle.
+### Shared dependencies
+
+If a bundle import the same packages than the `main` one (which is loaded everywhere), webpack won't duplicate them and they will be imported only in the `main` bundle.
+
+### Output files
+
+All your bundles will have the suffix `-module-bundle`. If you set the option `es5` to true in the asset module, you'll also have for each bundle a `nomodule` version with the suffix `-nomodule-bundle`.
+
+When building the assets in production mode, they will be copied inside the `release` folder like the main bundle.
