@@ -41,6 +41,8 @@ Once installed you have access to the `apos` command. Simply use that command, o
 
 ## Creating a project
 
+Before creating a project, run [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) locally following their instructions.
+
 The easiest way to get started with Apostrophe is to use the official starter project. If you have the CLI installed, go into your normal projects directory and use the command:
 
 ``` bash
