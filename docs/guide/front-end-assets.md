@@ -110,7 +110,9 @@ Apostrophe uses babel's `@babel/preset-env` module to provide as much support as
 
 ## Using your own build process
 
-Apostrophe's built-in `ui/src` feature is very handy, and sufficient for most sites. But if you wish to create your own build process, such as a custom webpack build that supports `jsx` files for React or `.vue` files for Vue, then you'll want to take a different path.
+Apostrophe's built-in `ui/src` feature is very handy, and sufficient for most sites. And if it isn't quite powerful enough, you can [extend it to meet your needs](webpack.md). In most cases that is the best way forward.
+
+However, if after reading that guide you still wish to create your own build process,then you'll want to take a different path. This is where `ui/public` comes in.
 
 The basic idea is that your build process should produce just one output `.js` file, and possibly a `.css` file too. Then you can feed those into Apostrophe by creating a generic module, like `asset`, and configuring your own build process to write its output to `modules/asset/ui/public/index.js` and `modules/asset/ui/public/index.css`.
 
