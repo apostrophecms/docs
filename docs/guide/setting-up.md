@@ -41,7 +41,7 @@ Once installed you have access to the `apos` command. Simply use that command, o
 
 ## Creating a project
 
-Before creating a project, run [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) locally following their instructions.
+Before creating a project, make sure you start [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) locally following their instructions. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a place for ApostropheCMS to store its information.
 
 The easiest way to get started with Apostrophe is to use the official starter project. If you have the CLI installed, go into your normal projects directory and use the command:
 
