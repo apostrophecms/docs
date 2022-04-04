@@ -17,16 +17,16 @@ These are options to *the module itself*, so they apply to *every* instance of t
 
 |  Property | Type | Description |
 |---|---|---|
-| [`className`](#class-name) | String | Core widgets apply it to themselves if set. |
+| [`className`](#classname) | String | Core widgets apply it to themselves if set. |
 | [`components`](#components) | Object | Vue components to be used when editing. |
 | [`contextual`](#contextual) | Boolean | The widget is edited directly on the page, not in a modal. |
-| [`defaultData`](#default-data) | Any | Default value of a contextual widget. |
+| [`defaultData`](#defaultdata) | Any | Default value of a contextual widget. |
 | [`deferred`](#deferred) | Boolean | This widget type should load last. |
 | [`icon`](#icon) | String | Icon name. |
 | [`label`](#label) | String | Identifies this widget in a list of widget types. |
-| [`neverLoad`](#never-load) | Array | Widget types never loaded recursively by this widget. |
-| [`NeverLoadSelf`](#never-load-self) | Boolean | The widget should never recursively load itself. |
-| [`scene`](#scene) | String | Can specify that this widget type requires logged-in assets. |
+| [`neverLoad`](#neverload) | Array | Widget types never loaded recursively by this widget. |
+| [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
+| [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The Nunjucks template name to render. |
 
 ### `className`
@@ -48,8 +48,132 @@ Custom widgets have no default template, but may choose to support the same patt
 </div>
 ```
 
+### `components`
+
+If present, the `components` option must be an object and is consulted to determine the name of the Vue component to be used for editing, via its `widgetEditor` subproperty. If the `contextual` option is set to `true`, then the component must implement the [contextual editing pattern](../../guide/editing-custom-widgets-in-context.md). Otherwise it must implement a modal dialog box implementing the same pattern as the standard widget editor dialog box (the `AposWidgetEditor` Vue component), which is usually not necessary as it is simpler to add existing and custom schema fields to be displayed by the existing dialog box.
+
 ### `contextual`
 
 When the `contextual` option is set to `true`, an edit button is not displayed for the widget, and the widget is not edited in a dialog box according to a schema of fields. Instead, the widget is edited directly on the page.
 
 To support this, the widget must implement the [contextual editing pattern](../../guide/editing-custom-widgets-in-context.md).
+
+Defaults to `false`.
+
+### `defaultData`
+
+The `defaultData` option may contain an object providing defaults for contextually edited widgets. This is required for contextually edited widgets because they do not always use the `fields` section. Normal widgets that use the usual dialog box to edit schema fields may rely on the `def` property of each field instead. There is no default value.
+
+### `deferred`
+
+Widget types may contain `relationship` and `relationshipReverse` fields that load other documents. By default this is done in the order the widgets are encountered when loading the page, with requests relating to the same type of widget grouped together for performance. This is a recursive process. Widget types that specify `deferred: true` will resolve their "loaders" at the very end of the process, after all other widget types and their relationships have been recursively loaded. This is beneficial for widget type modules like `@apostrophecms/image-widget` because they can be efficiently grouped together in a single database call. Defaults to `false`.
+
+### `icon`
+
+The name of the icon to be displayed for this widget type in a menu of widget types. This icon name must correspond to an icon loaded via [the `icons` module section](/reference/module-api/module-overview.md#icons). If not configured the widget type is listed without an icon.
+
+### `label`
+
+The label to be displayed for the icon in a menu of widget types and in certain other contexts in the UI. This should be brief but informative and should be capitalized, like `Slideshow`. By default it is derived from the module name, but we recommend configuring an explicit label.
+
+### `neverLoad`
+
+This option specifies an array of widget types that should never be loaded recursively by this widget type. While documents that contain those widget types might be loaded by relationships, additional relationships within those widget types will not be loaded. This can be a helpful guard against runaway recursion and the associated performance hit. There is no default, however see [`neverLoadSelf`](#never-load-self).
+
+### `neverLoadSelf`
+
+If this option is set to `true`, and the widget has relationships with documents that contain more widgets of the **same** type, those widgets will **not** load their own relationships. This option defaults to `true`, which is an effective guard against runaway recursion and performance problems. Disabling this option should be done with care to ensure infinite loops do not become possible when loading the page.
+
+### `scene`
+
+**Deprecated.** If this option is set to `user`, Apostrophe will load all of the JavaScript associated with the logged-in editing experience when this widget type is present. Since the admin UI is primarily designed for editors and not for the fast page load time, we do not recommend this approach and may remove this option in a future release of ApostropheCMS. By default this option is not set.
+
+### `template`
+
+The name of the template in the `views` folder of the module that should be rendered to display the widget. This option defaults to `widget`, and it is generally not necessary to change it.
+
+## Related documentation
+
+- [Core widgets](/guide/core-widgets.md)
+- [Custom widgets](/guide/custom-widgets.md)
+
+## Featured methods
+
+### `getBrowserData(req)`
+
+This method returns an object of properties to be exposed on the browser side. If the module name is `hero-widget`, then this data is exposed as `window.apos.modules['hero-widget']`.
+
+Since the default implementation exposes essential information, always use `extendMethods` to extend it, like this:
+
+```js
+extendMethods(self) {
+  return {
+    getBrowserData(_super, req) {
+      return {
+        ..._super(req),
+        newProperty: value
+      };
+    }
+  };
+}
+```
+
+### `async output(req, widget, options, _with)`
+
+Apostrophe invokes this method to render the widget. In most cases it is best to provide a `widget.html` template and rely on the default implementation of this method. However it is possible to override this method to render a widget in an entirely different way. The method must return a string of markup already marked as safe. If a custom implementation does not use Nunjucks then it may be returned as safe with the following code:
+
+```js
+return self.apos.template.safe(string);
+```
+
+The `widget` argument contains the widget object with its schema fields, the `options` argument contains any options configured for this widget in the relevant `area` field, and the `_with` argument contains any template-level options passed via the `with` keyword.
+
+### `addSearchTexts(widget, texts)`
+
+This method is called to make the text of the widget available to Apostrophe's built-in search features. If the widget relies on schema fields for its content then it should not be necessary to override this method. However widget type modules like `@apostrophecms/rich-text-widget` that do not use fields will need to provide their own implementation, like this:
+
+```js
+methods(self) {
+  return {
+    addSearchTexts(item, texts) {
+      texts.push({
+        weight: 10,
+        text: self.apos.util.htmlToPlaintext(item.content),
+        silent: false
+      });
+    }
+  };
+}
+```
+
+Currently texts with weights greater than `10` are available as part of `autocomplete` search, which affects the "Manage Pieces" dialog box. Texts marked `silent` impact search results but are not included in the `searchSummary` property of the overall document.
+
+### `sanitize(req, input, options)`
+
+When the user edits a widget and the browser attempts to save that change, Apostrophe invokes this method to sanitize the user input. If the widget relies on schema fields, it is usually not necessary to override this method. It is most often overridden in modules like `@apostrophecms/rich-text-widget` that have special needs like sanitizing HTML markup. This method receives the Express request (`req`), an object representing a new value for the widget which contains untrusted data from the user (`input`), and the options configured for this widget type in the relevant `area` field (`options`). The return value must be an object and is stored as the new value of the widget, along with certain automatically-supplied properties like `type` and `_id` that this method does not need to concern itself with.
+
+### `load(req, widgets)`
+
+Apostrophe invokes this method to load any relationships defined in the schema fields of the widget. To create an opportunity for optimizations, the method is passed an array which may contain any number of widgets of this module's type.
+
+Those choosing to override the method to perform additional loading of another kind should consider using `extendMethods` to invoke the original as well, unless `relationship` and `relationshipReverse` schema fields are guaranteed not to be present.
+
+Custom reimplementations that do not have any special optimizations for more than one widget in the array must still take care to loop over `widgets` and load appropriate data for all of them.
+
+There is no return value. The related documents are attached to the widget objects via temporary properties (properties whose names start with `_`, which tells Apostrophe that they should not be stored back to the database at save time).
+
+As an alternative, consider invoking [async components](async-components.md) from `widget.html`. Async components are easier to understand and will run only if the template elects to call them in a particular case, which can sometimes be more efficient.
+
+## Module tasks
+
+### `list`
+
+Full command: `node app [widget-type-module-name]:list`
+
+This task generates a list of documents that contain the widget type in question, along with a "dot path" to the widget within the document. It is intended as a debugging tool. For instance:
+
+```bash
+node app @apostrophecms/rich-text-widget:list
+```
+
+Will list all of the rich text widgets on the site.

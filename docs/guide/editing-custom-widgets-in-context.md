@@ -96,11 +96,10 @@ Don't forget to also enable the module in `app.js`, like any other module.
 :::
 
 <AposCodeBlock>
-```js
-
-<AposCodeBlock>
 ```django
-<h1 class="contextual-heading" style="width: {{ data.widget.width }}%">{{ data.widget.heading }}</h1>
+<h1 class="contextual-heading" style="width: {{ data.widget.width }}%">
+  {{ data.widget.heading }}
+</h1>
 ```
   <template v-slot:caption>
     modules/hero-widget/views/widget.html

@@ -203,3 +203,9 @@ Before you override an editor modal, consider [adding a custom schema field type
 In some cases we might wish to enhance Apostrophe's login form with additional, custom steps.
 
 This too is a larger topic that touches on more than just UI, so we've created a [separate article on how to add a custom login requirement](/guide/custom-login-requirements.md).
+
+## Editing custom widgets in context
+
+While most widgets are edited most conveniently via the standard dialog box that appears when the edit button is clicked, some can be edited effectively "in context" right on the page. The standard rich text widget is a good example.
+
+To learn how to implement this pattern for a custom widget, check out this [separate article on how to edit custom widgets in context](/guide/editing-custom-widgets-in-context.md).
