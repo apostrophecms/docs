@@ -20,7 +20,7 @@ To implement on-page editing for a custom widget type, we must implement the fol
 
 The `contextual` option of the widget module must be set to `true`. This is the trigger for contextual editing. Otherwise the normal editing dialog box is displayed for the widget.
 
-The `components` option of the widget module must be set to an object a `widgetEditor` (widget editor) subproperty specifying the name of a Vue component.
+The `components` option of the widget module determines the Vue components to be used for the editing experience. Currently there is just one subproperty, `widgetEditor`, which is required for contextual editing.
 
 The `defaultData` option of the widget module may be set to a default value for newly created widgets of this type.
 
@@ -249,7 +249,6 @@ export default {
   }
 </style>
 ```
-
   <template v-slot:caption>
     modules/hero-widget/ui/apos/components/HeroWidgetEditor.vue
   </template>
@@ -277,7 +276,6 @@ When emitting an update, be sure to include any properties of `value` that your 
   box-sizing: border-box;
 }
 ```
-
   <template v-slot:caption>
     modules/hero-widget/ui/src/index.scss
   </template>

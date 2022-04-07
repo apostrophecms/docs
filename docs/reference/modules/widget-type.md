@@ -78,7 +78,7 @@ The label to be displayed for the icon in a menu of widget types and in certain 
 
 ### `neverLoad`
 
-This option specifies an array of widget types that should never be loaded recursively by this widget type. While documents that contain those widget types might be loaded by relationships, additional relationships within those widget types will not be loaded. This can be a helpful guard against runaway recursion and the associated performance hit. There is no default, however see [`neverLoadSelf`](#never-load-self).
+This option specifies an array of widget types that should never be loaded recursively by this widget type. While documents that contain those widget types might be loaded by relationships, additional relationships within those widget types will not be loaded. This can be a helpful guard against runaway recursion and the associated performance hit. There is no default because the default setting of [`neverLoadSelf`](#never-load-self) solves the runaway recursion problem for most widgets. However this option can further improve performance if certain widget types have relationships of their own, might be present via relationships specified for this widget, and are not necessary to present this widget.
 
 ### `neverLoadSelf`
 
