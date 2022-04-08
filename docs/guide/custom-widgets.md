@@ -257,11 +257,11 @@ export default () => {
 The player *does* have access to the widget's wrapping element, so we use `el.dataset.color` to access the color data we stored on `data-color`.
 
 ::: tip
-We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a string first. Use the `jsonAttribute` template filter to do this.
+We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a properly escaped string first. Use the `jsonAttribute` template filter to do this.
 
 ```django
 <div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
 ```
 
-The value will be converted to a string and escaped. The original value can retrieved in the player with `JSON.parse`.
+The value will be converted to a JSON string and escaped. The original value can retrieved in the player with `JSON.parse`.
 :::
