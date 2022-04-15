@@ -87,7 +87,7 @@ To illustrate, the general structure on the server side is:
 
 ## The browser side
 
-Each distinct requirement also has browser-side code, which is implemented as a Vue component. As explained in the [custom UI guide](../custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project. For this purpose they are typically placed in the `modules/@apostrophecms/login/ui/apos/components` module at project level, or in an npm module that enhances `@apostrophecms/login` via `improve`.
+Each distinct requirement also has browser-side code, which is implemented as a Vue component. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project. For this purpose they are typically placed in the `modules/@apostrophecms/login/ui/apos/components` module at project level, or in an npm module that enhances `@apostrophecms/login` via `improve`.
 
 The developer is responsible for the appearance of the component. For `beforeSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterPasswordVerified` requirements, it will appear on its own, after the Login button is clicked and the password is verified. If there are multiple `afterPasswordVerified` requirements, the user will see them presented one at a time. Transitions are provided by Apostrophe and do not need to be included in login requirement components.
 
@@ -190,7 +190,7 @@ Here is complete server-side code for a simple requirement to solve a math probl
 This simple example uses `req.session`, however be aware that if your site uses bearer tokens for headless REST API logins you will need to store temporary information between requests in another way, such as by using the `@apostrophecms/cache` module. Sessions are not available to headless API clients.
 :::
 
-To complete the requirement we also need a Vue component on the browser side. As explained in the [custom UI guide](../custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project, like this:
+To complete the requirement we also need a Vue component on the browser side. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project, like this:
 
 <AposCodeBlock>
   ```javascript
