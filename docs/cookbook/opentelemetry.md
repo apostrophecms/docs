@@ -113,7 +113,7 @@ Now we'll need to refactor `app.js` a little bit to connect OpenTelemetry with A
 // ./app.js
 // The Apostrophe bootstrap
 const apostrophe = require('apostrophe');
-const { telemetry, shutdown } = require('./telemetry');
+const { sdk, shutdown } = require('./telemetry');
 
 // Move Apostrophe configuration to a variable, rather than directly
 // invoking the apostrophe function
@@ -131,7 +131,7 @@ const config = {
 if (process.env.APOS_OPENTELEMETRY) {
   // This allows the SDK to be fully initialized,
   // and is the cleanest way to start the app
-  telemetry
+  sdk
     .start()
     .then(() => console.log('OpenTelemetry started'))
     .then(() => apostrophe(config));
