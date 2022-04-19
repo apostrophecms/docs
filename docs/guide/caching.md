@@ -115,7 +115,7 @@ options: {
 }
 ```
 
-_Note that for now, only single pages benefit from this advanced caching system (pages' `getOne` REST API route and regular served pages)._
+_Note that for now, only single pages benefit from this advanced caching system (`getOne` REST API and ordinary page responses)._
 
 To enable it for GET REST API responses for a particular piece type, you can set the `etags` option for that module:
 
@@ -132,7 +132,7 @@ options: {
 }
 ```
 
-_Note that for now, only single pieces benefit from this advanced caching system (pieces' `getOne` REST API route)._
+_Note that for now, only single pieces benefit from this advanced caching system (`getOne` REST API piece responses)._
 
 You can also enable it for all piece types by enabling it for `@apostrophecms/piece-type`:
 
