@@ -80,7 +80,8 @@ The advanced cache invalidation system allows caching of pages and pieces using 
 
 It invalidates the cache for pages' and pieces' `getOne` REST API route, and regular served pages when they are modified, or when their related (and reverse related) documents are.
 
-The cache of an index page corresponding to the type of a piece that was just saved will automatically be invalidated. However, please consider that it won't be effective when a related piece is saved, therefore the cache will automatically be invalidated _after_ the cache lifetime set in `maxAge` cache option.
+The cache of an index page corresponding to the type of a piece that was just saved will automatically be invalidated.  
+However, please consider that it won't be effective when a related piece is saved, therefore the cache will automatically be invalidated _after_ the cache lifetime set in `maxAge` cache option.
 
 To enable the feature for ordinary page responses, set the `etags` option of the `@apostrophecms/page` module:
 
