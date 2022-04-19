@@ -120,6 +120,13 @@ module.exports = {
       children: [
         [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ]
       ]
+    },
+    {
+      title: 'Profiling',
+      collapsable: false,
+      children: [
+        [ 'cookbook/opentelemetry.md', 'Profiling ApostropheCMS with OpenTelemetry' ]
+      ]
     }
   ],
   '/reference': [
