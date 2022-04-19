@@ -73,3 +73,76 @@ options: {
 ```
 
 Since custom piece types extend this module, configuring it at project level configures all of them with a new default. It is still possible to override the `cache` option in the individual modules.
+
+## Advanced Cache Invalidation
+
+The advanced cache invalidation system allows caching of pages and pieces using `ETag` header.
+
+It invalidates the cache for pages' and pieces' `getOne` REST API route, and regular served pages when they are modified, or when their related (and reverse related) documents are.
+
+The cache of an index page corresponding to the type of a piece that was just saved will automatically be invalidated. However, please consider that it won't be effective when a related piece is saved, therefore the cache will automatically be invalidated _after_ the cache lifetime set in `maxAge` cache option.
+
+To enable the feature for ordinary page responses, set the `etags` option of the `@apostrophecms/page` module:
+
+```javascript
+// modules/@apostrophecms/page/index.js
+options: {
+  cache: {
+    page: {
+      maxAge: 6000,
+      etags: true
+    }
+  }
+}
+```
+
+To also enable it for GET REST API responses for pages, set it in the `api` subproperty as well:
+
+```javascript
+// modules/@apostrophecms/page/index.js
+options: {
+  cache: {
+    page: {
+      maxAge: 6000,
+      etags: true
+    },
+    api: {
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
+
+_Note that for now, only single pages benefit from this advanced caching system (pages' `getOne` REST API route and regular served pages)._
+
+To enable it for GET REST API responses for a particular piece type, you can set the `etags` option for that module:
+
+```javascript
+// modules/article/index.js
+extend: '@apostrophecms/piece-type',
+options: {
+  cache: {
+    api: {
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
+
+_Note that for now, only single pieces benefit from this advanced caching system (pieces' `getOne` REST API route)._
+
+You can also enable it for all piece types by enabling it for `@apostrophecms/piece-type`:
+
+```javascript
+// modules/@apostrophecms/piece-type/index.js
+options: {
+  cache: {
+    api: {
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
