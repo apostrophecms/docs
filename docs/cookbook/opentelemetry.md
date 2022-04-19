@@ -23,7 +23,7 @@ npm install @opentelemetry/sdk-node@0.27.0 \
 
 ## 2. Install Jaeger
 
-The easiest way to install and run Jaeger in our development environment is via Docker image. Here are the most basic steps to do that, but you prefer you may follow the [Jaeger Getting Started Guide](https://www.jaegertracing.io/docs/1.32/getting-started/).
+The easiest way to install and run Jaeger in our development environment is via Docker image. Here are the most basic steps to do that, but if you prefer you may follow the [Jaeger Getting Started Guide](https://www.jaegertracing.io/docs/1.32/getting-started/).
 
 ::: warning
 First ensure you have [Docker installed](https://docs.docker.com/get-docker/).
