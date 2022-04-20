@@ -121,7 +121,7 @@ const { sdk, shutdown } = require('./telemetry');
 const config = {
   shortName: 'myApp',
   // Provide our shutdown handler
-  beforeExit: shutdown,
+  beforeExit: process.env.APOS_OPENTELEMETRY ? shutdown : null,
   modules: {
     // ... Our regular module configuration comes here
   }
