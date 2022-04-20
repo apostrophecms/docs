@@ -148,6 +148,5 @@ options: {
 }
 ```
 
-Please note that even with the advanced cache invalidation system there will always be situations where caching allows a website visitor to see old content. Page content might differ based on an async component that fetches modified documents, or API calls to a third party service, or even the time of day. For this reason `maxAge` should always be set to a reasonable value to ensure the served content is never too old.
-
-For this reason content is never cached for logged-in users.
+Please note that even with the advanced cache invalidation system there will always be situations where caching allows a website visitor to see old content. Page content might differ based on an async component that fetches modified documents, or API calls to a third party service, or even the time of day.  
+For this reason `maxAge` should always be set to a reasonable value to ensure the served content is never too old. Content is never cached for logged-in users.
