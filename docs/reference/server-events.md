@@ -211,6 +211,31 @@ There is no data included with the event for handlers.
   </template>
 </AposCodeBlock>
 
+### `afterAllModesDeleted`
+
+Triggered after Apostrophe automatically deletes all modes of a certain document. If the doc type module has the `localized: false` setting this event will not be emitted.
+
+#### Parameters
+
+- `req`: The active request
+- `doc`: The draft mode data of the document being deleted
+- `options`: Any options passed to the `delete` method of the corresponding document type
+
+<AposCodeBlock>
+  ```javascript
+  handlers(self) {
+    return {
+      'afterAllModesDeleted': {
+        async handlerName(req, doc, options) { ... }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/doc/index.js
+  </template>
+</AposCodeBlock>
+
 ## `@apostrophecms/doc-type` events
 
 These events are emitted by **all page type and piece type modules** since they extend `@apostrophecms/doc-type`. In most cases it will be best to watch for the event from a piece type or page type module rather than the doc type module.
