@@ -73,3 +73,80 @@ options: {
 ```
 
 Since custom piece types extend this module, configuring it at project level configures all of them with a new default. It is still possible to override the `cache` option in the individual modules.
+
+## Advanced Cache Invalidation
+
+The purpose of this feature is to generate `ETag` headers that allow the browser to check whether a page or piece has changed, reducing the amount of work done on the server. The actual caching is not performed in ApostropheCMS itself. To gain the full benefit of this strategy, you must implement a cache at the CDN level via a service such as CloudFlare, or do so in your reverse proxy server, e.g. `nginx`. Otherwise caching will only take place in individual web browsers.
+
+- The cache of ordinary page responses is automatically invalidated when corresponding pages are modified
+- The cache of `getOne` REST API page and piece responses, as well as `show` and `index` piece pages responses is automatically invalidated when corresponding documents are modified
+- Editing a related document or a reverse related one will also trigger a cache invalidation
+
+To enable the feature for ordinary page responses, set the `etags` option of the `@apostrophecms/page` module:
+
+```javascript
+// modules/@apostrophecms/page/index.js
+options: {
+  cache: {
+    page: {
+      // Specified in seconds
+      maxAge: 6000,
+      etags: true
+    }
+  }
+}
+```
+
+To also enable it for GET REST API responses for pages, set it in the `api` subproperty as well:
+
+```javascript
+// modules/@apostrophecms/page/index.js
+options: {
+  cache: {
+    page: {
+      // Specified in seconds
+      maxAge: 6000,
+      etags: true
+    },
+    api: {
+      // Specified in seconds
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
+
+To enable it for GET REST API responses for a particular piece type, you can set the `etags` option for that module:
+
+```javascript
+// modules/article/index.js
+extend: '@apostrophecms/piece-type',
+options: {
+  cache: {
+    api: {
+      // Specified in seconds
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
+
+You can also enable it for all piece types by enabling it for `@apostrophecms/piece-type`:
+
+```javascript
+// modules/@apostrophecms/piece-type/index.js
+options: {
+  cache: {
+    api: {
+      // Specified in seconds
+      maxAge: 3000,
+      etags: true
+    }
+  }
+}
+```
+
+Please note that even with the advanced cache invalidation system there will always be situations where caching allows a website visitor to see old content. Page content might differ based on an async component that fetches modified documents, or API calls to a third party service, or even the time of day.  
+For this reason `maxAge` should always be set to a reasonable value to ensure the served content is never too old. Content is never cached for logged-in users.
