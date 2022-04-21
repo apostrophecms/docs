@@ -213,7 +213,7 @@ There is no data included with the event for handlers.
 
 ### `afterAllModesDeleted`
 
-Triggered after Apostrophe automatically deletes all modes of a certain document.
+Triggered after Apostrophe automatically deletes all modes of a certain document. If the doc type module has the `localized: false` setting this event will not be emitted.
 
 #### Parameters
 
