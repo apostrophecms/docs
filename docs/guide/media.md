@@ -194,6 +194,35 @@ When the relationship field has the `max: 1` limit, or when we only want the fir
 
 As mentioned above, once we have the attachment object, all of the helper methods from [the attachment field option](#the-attachment-field-option) examples can help finish the job. Additionally, since an image from a relationship field may have alt text, that can be found on the image attachment object `_alt` property as shown above.
 
+When working with images, additional helpers are available. As an example, see the markup below, taken from the built-in `@apostrophecms/image-widget` module. You can use this markup in your own widgets and templates:
+
+<AposCodeBlock>
+```django
+{% set attachment = apos.image.first(data.widget._image) %}
+
+{% if attachment %}
+  <img
+    {# Modern browsers, best when used with a "sizes" attribute #}
+    srcset="{{ apos.image.srcset(attachment) }}"
+    {# Legacy browsers #}
+    src="{{ apos.attachment.url(attachment, { size: data.options.size or 'full' }) }}"
+    {# image.first attaches this property of the image piece for you #}
+    alt="{{ attachment._alt or '' }}"
+    {# Effective width and height (takes cropping into account) #}
+    width="{{ apos.attachment.getWidth(attachment) }}"
+    height="{{ apos.attachment.getHeight(attachment) }}"
+    {# Responsive design: make sure an editor-chosen focal point remains visible #}
+    {% if apos.attachment.hasFocalPoint(attachment) %}
+      style="object-position: {{ apos.attachment.focalPointToObjectPosition(attachment) }}"
+    {%- endif -%}
+  />
+{% endif %}
+```
+  <template v-slot:caption>
+    modules/article-page/views/show.html
+  </template>
+</AposCodeBlock>
+
 ::: tip TLDR;
 It would be reasonable to be saying, "simply tell me which option to use!" It does depend on the case and how each developer and their clients prefer to work. That said, there are some clear cases where one option is best:
 
@@ -201,6 +230,7 @@ It would be reasonable to be saying, "simply tell me which option to use!" It do
 - **The file should be added to the file library or media library**: use a relationship field *or* an area with the image widget.
 - **An image will be displayed using the image widget template from Apostrophe core**: use an area field with the image widget.
 - **The editors definitely want a full-size view of the image in the content editor UI**: use an area field with the image widget.
+- **The cropping and focal point features are needed:** use a relationship field (see above example markup) *or* an area with the image widget (more automatic).
 
 If none of those cases apply, personal preference will come into play. For what it's worth, **the core Apostrophe team generally prefers using relationship fields to select images or files** when possible. Put simply, once familiar with the helper methods, using the individual file properties in templates provides ultimate control over presentation to match the context.
 :::

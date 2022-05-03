@@ -154,6 +154,44 @@ widgets: {
 }
 ```
 
+### Specifying a minimum size
+
+You can specify a minimum size for any image widget:
+
+```js
+// modules/@apostrophecms/home-page/index.js
+// In area field configuration options
+widgets: {
+  '@apostrophecms/image': {
+    minSize: [ 1000, 600 ]
+  }
+}
+```
+
+This widget won't allow the editor to select any image under 1000 pixels wide, or under 600 pixels tall. In addition, editors won't be able to crop the image smaller than that after selecting it for that particular widget.
+
+### Specifying an aspect ratio
+
+You can specify a minimum size for any image widget:
+
+```js
+// modules/@apostrophecms/home-page/index.js
+// In area field configuration options
+widgets: {
+  '@apostrophecms/image': {
+    aspectRatio: [ 3, 2 ]
+  }
+}
+```
+
+In some designs, especially slideshow experiences involving multiple images, allowing images with different aspect ratios just doesn't look good. For these cases, you can set an appropriate aspect ratio.
+
+When you set an aspect ratio, editors can still select differently shaped images. However, if they save that selection without manually cropping it, the image is automatically cropped to match the ratio you set. If the editor does choose to manually crop it, the cropping interface ensures the aspect ratio you chose remains in effect.
+
+### Taking advantage of the "focal point" feature
+
+A fixed ratio for all devices doesn't work for all designs. If your responsive design features custom CSS with different ratios at different breakpoints, consider encouraging editors to use the focal point feature as an alternative to setting `minSize`. The image widget emits CSS that biases the browser toward ensuring that the editor's chosen focal point remains visible, regardless of device.
+
 ### Customizing responsive image sizes
 
 <!-- TODO: link to attachment module srcset method when reference is available. -->
