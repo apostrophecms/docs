@@ -26,4 +26,4 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[string](/reference/field-types/string.md) | Simple text string |
 |[time](/reference/field-types/time.md) | Time entry, stored in HH:MM:SS format |
 |[url](/reference/field-types/url.md) | Text input requiring URL structure |
-
+|[dateAndTime](/reference/field-types/dateAndTime.md) | A toggle button and two inputs for date and time, stored in ISO 8601 format `YYYY-MM-DDTHH:MM:SSZ` |
