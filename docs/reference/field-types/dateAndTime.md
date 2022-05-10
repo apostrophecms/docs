@@ -1,12 +1,14 @@
 # `dateAndTime`
 
-`dateAndTime` fields are text field with UI support, and limitation, for saving date and time values. Date and times are stored in ISO 8601 format. `YYYY-MM-DDTHH:MM:SSZ` format.
+`dateAndTime` fields are text field with UI support, and limitation, for saving date and time values. Dates and times are stored in ISO 8601 format, for example: `2022-01-01T03:00:00Z`.
+
+Note that while dates and times are edited in the individual editor's time zone, they are always saved in UTC (Universal Coordinated Time).
 
 ## Module field definition
 
 ```javascript
-// Configuring the `eventTime` field in a module's `fields.add` subsection:
-eventTime: {
+// Configuring the `eventDateAndTime` field in a module's `fields.add` subsection:
+eventDateAndTime: {
   label: 'What is the date and time of the event?',
   type: 'dateAndTime'
 }
@@ -35,6 +37,8 @@ eventTime: {
 
 Times are stored, and will print, in the ISO 8601 format `YYYY-MM-DDTHH:MM:SSZ`.
 
+To print them in the format of your choice pass a [momentjs/datejs compliant format string](https://momentjs.com/docs/#/displaying/) to the date Nunjucks filter, like this:
+
 ```django
-{{ data.piece.eventTime }}
+{{ data.piece.eventDateAndTime | date("dddd, MMMM Do YYYY, h:mm:ss a") }}
 ```
