@@ -33,6 +33,8 @@ In this case, the `assets` module may not have any additional code and even may 
 
 Client side code will be recompiled **when the app starts up** or if **the build task runs**. Tools like [nodemon](https://www.npmjs.com/package/nodemon) are helpful to watch for code changes and restart the app for automatic recompiling. The CLI command to run the build task manually is `node app @apostrophecms/asset:build`.
 
+However, Apostrophe can recompile frontend assets much faster with its own built-in change detection. It is best if `nodemon` is configured to ignore `ui/src`, `ui/public` and `ui/apos` folders in any module. Our [a3-boilerplate](https://github.com/apostrophecms/a3-boilerplate) starter project includes a `nodemon` configuration which does this correctly (see `package.json` for the `nodemon` configuration settings used).
+
 ## Executing your JavaScript code in the right order
 
 If you spread the client-side code across modules, it will be imported in the order they are instantiated in `app.js`. For example, let's say you have JavaScript files in `modules/sing-widget/ui/src/index.js` and `modules/dance-widget/ui/src/index.js`.
