@@ -242,7 +242,7 @@ Apostrophe will take care of deploying the output files of custom bundles alongs
 
 Apostrophe uses webpack's built-in support for caching of modules in the filesystem. In normal use you should never have to worry about this, you simply benefit from a speed improvement. However, in certain scenarios you may wish to configure the location of the cache or clear it.
 
-### Clearing the Webpack Cache
+### Clearing the Webpack cache
 
 In cases such as a change to your webpack configuration that Apostrophe cannot automatically detect but which leads to a desired change in the compiled output, you may need to clear the webpack cache. You can do that with this command line task:
 
@@ -250,7 +250,7 @@ In cases such as a change to your webpack configuration that Apostrophe cannot a
 node app @apostrophecms/asset:clear-cache
 ```
 
-### Configuring the location of the Webpack Cache
+### Configuring the location of the Webpack cache
 
 By default, the cache is written to `data/temp`, relative to the project root. This works well in development and can work well in production as well, as long as `data` is a persistent folder.
 
