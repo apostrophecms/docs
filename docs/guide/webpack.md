@@ -244,11 +244,13 @@ Apostrophe uses webpack's built-in support for caching of modules in the filesys
 
 ### Clearing the Webpack cache
 
-In cases such as a change to your webpack configuration that Apostrophe cannot automatically detect but which leads to a desired change in the compiled output, you may need to clear the webpack cache. You can do that with this command line task:
+In cases such as a change to your webpack configuration that Apostrophe cannot automatically detect and therefore fails to cause a desired change in the compiled output, you may need to clear the webpack cache. You can do that with this command line task:
 
 ```bash
 node app @apostrophecms/asset:clear-cache
 ```
+
+This task will be used rarely, as most changes to the webpack configuration are automatically detected. You will never need it if all you are doing is updating your frontend code.
 
 ### Configuring the location of the Webpack cache
 
