@@ -1,6 +1,6 @@
 # `dateAndTime`
 
-`dateAndTime` fields are text field with UI support, and limitation, for saving date and time values. Dates and times are stored in ISO 8601 format, for example: `2022-01-01T03:00:00Z`.
+`dateAndTime` fields provide subfields for entering date and time values in a user-friendly way. Dates and times are stored in ISO 8601 format, for example: `2022-01-01T03:00:00Z`.
 
 Note that while dates and times are edited in the individual editor's time zone, they are always saved in UTC (Universal Coordinated Time).
 
