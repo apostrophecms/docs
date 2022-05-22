@@ -6,7 +6,7 @@ We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many servi
 
 1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 20.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
    - There is a step on this first page to select or add an SSH key to connect securely from your computer. Follow Lightsail's directions to do this.
-2. Completely any additional configurations you want, then **create the instance**. Once the instance is created, click on it to continue configuration.
+2. Complete any additional configurations you want, then **create the instance**. Once the instance is created, click on it to continue configuration.
 3. On the "Networking" tab, you should see that the SSH and HTTP ports are already open. In addition, **open the HTTPS port** by clicking "Add rule" and selecting "HTTPS." You need this for `https://` connections.
    - Wait a couple minutes even after it says it's ready, to be sure it will accept your SSH connection.
 4. SSH to your server's `ubuntu` account, according to the Lightsail instructions. This account has `sudo` privileges so you can take care of tasks that require root access.
