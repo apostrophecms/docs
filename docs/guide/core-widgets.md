@@ -172,7 +172,7 @@ This widget won't allow the editor to select any image under 1000 pixels wide, o
 
 ### Specifying an aspect ratio
 
-You can specify a minimum size for any image widget:
+You can specify an aspect ratio for any image widget:
 
 ```js
 // modules/@apostrophecms/home-page/index.js
