@@ -113,7 +113,7 @@ Using the session cookie, send a `POST` request to `/api/v1/@apostrophecms/login
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/logout', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
