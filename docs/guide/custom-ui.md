@@ -200,9 +200,9 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Starting from Apostrophe v3.18.0 we can add custom context menus (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
+We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
 
-Here is an example of how to add custom context menu labeled "My Menu".
+Here is an example of how to add custom context menu item labeled "My Menu".
 
 ![A custom context menu 'My Menu' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
 
@@ -234,7 +234,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 :::
 
 ::: note
-* The current API supports only `context: "update"`.
+* The current API supports only `context: "update"` (the custom menu items are available for previously saved documents).
 * The `action` property should be globally unique.
 * Overriding the same `action` is possible (the last wins).
 * You may mark the action as "dangerous" via an optional property `modifiers: [ "danger" ]`.
