@@ -200,11 +200,11 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
 
-Here is an example of how to add custom context menu item labeled "My Menu".
+Here is an example of how to add custom context menu item labeled "My Menu Item".
 
-![A custom context menu 'My Menu' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
+![A custom context menu 'My Menu Item' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
 
 <AposCodeBlock>
 ```js
@@ -218,7 +218,7 @@ module.exports = {
     self.apos.doc.addContextOperation(self.name, {
       context: 'update',
       action: 'myUniqueAction',
-      label: 'My Menu',
+      label: 'My Menu Item',
       modal: 'MyModalComponent'
     });
   }
@@ -238,7 +238,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 * The `action` property should be globally unique.
 * Overriding the same `action` is possible (the last wins).
 * You may mark the action as "dangerous" via an optional property `modifiers: [ "danger" ]`.
-* An additional optional boolean property `manuallyPublished` is supported. When set to `true`, the custom menu will be shown only for document types with options `autopublish: false` and `localized: true`.
+* An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
 :::
 
 ## Adding custom login requirements
