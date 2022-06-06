@@ -40,7 +40,7 @@ module.exports = {
 
 ### Leave `-widget` out of area configuration
 
-If you dig into the Apostrophe code, or read the guide to custom widget types, you may already know that widget module names end with `-widget`, such as `@apostrophecms/rich-text-widget`. This suffix is left off when configuring areas. The area knows these are widgets already and it does not seem necessary to require developers don't need to write it over and over.
+If you dig into the Apostrophe code, or read the guide to custom widget types, you may already know that widget module names end with `-widget`, such as `@apostrophecms/rich-text-widget`. This suffix is left off when configuring areas. The area knows these are widgets already and it does not seem necessary to require developers to write it over and over.
 
 ### Limiting the number of widgets in an area
 
