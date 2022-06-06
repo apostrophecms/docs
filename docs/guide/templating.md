@@ -10,7 +10,7 @@ The root `views` directory will usually contain [a layout template](/guide/layou
 
 ## How templates work together
 
-To paraphrase John Donne, no template is an island. Templates will always be used as a system. We do this with the **`extends`**, **`include`**, and **[`import`](/guide/fragments.md)** tags.
+To paraphrase [John Donne](https://en.wikipedia.org/wiki/John_Donne), no template is an island. Templates will always be used as a system. We do this with the **`extends`**, **`include`**, and **[`import`](/guide/fragments.md)** tags.
 
 ### Extending templates
 
