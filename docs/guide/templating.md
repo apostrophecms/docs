@@ -88,7 +88,7 @@ The `{% include %}` template tag pulls one template *into* another template. Thi
 
 {% block afterMain %}
   </main> {# Closing tag for the main block #}
-  {% include footer.html %}
+  {% include "footer.html" %}
 {% endblock %}
 ```
 
@@ -98,7 +98,7 @@ See more about including templates [in the Nunjucks documentation](https://mozil
 
 ### Referencing templates across modules
 
-The `include` and `extends` tags in the examples above name "global templates," which are in the root `views` directory. As such, we can simply reference by file name: e.g., `{% extends layout.html %}` or `{% include footer.html %}`. You could do the same thing if both templates were in the *same* module directory (both in our `modules/default-page/views` directory).
+The `include` and `extends` tags in the examples above name "global templates," which are in the root `views` directory. As such, we can simply reference by file name: e.g., `{% extends "layout.html" %}` or `{% include "footer.html" %}`. You could do the same thing if both templates were in the *same* module directory (both in our `modules/default-page/views` directory).
 
 In some cases, **we will need to extend or include a template file that belongs to a separate module**. In that case, we need to provide additional information so Apostrophe can find that template.
 
