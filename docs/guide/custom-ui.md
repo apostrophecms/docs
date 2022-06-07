@@ -204,7 +204,7 @@ Apostrophe offers a context menu that can be used to carry out certain operation
 
 Here is an example of how to add custom context menu item labeled "My Menu Item".
 
-![A custom context menu 'My Menu Item' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
+![A custom context menu item 'My Menu Item' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
 
 <AposCodeBlock>
 ```js
