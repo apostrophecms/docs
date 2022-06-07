@@ -120,6 +120,101 @@ Because the two extensions have the same name (`addAlias`) and the `test-2` modu
 
 By contrast, if you use different extension names, two separate modules can contribute their own aliases. This works because they are automatically merged together with the main webpack configuration using [webpack-merge](https://github.com/survivejs/webpack-merge).
 
+### Passing extensions options from any modules
+
+Webpack extensions can also be function that take an `options` parameter.
+From any module, you can declare a `extensionOptions` property in your webpack object. For each webpack extension found in the project, it will look for all `extensionOptions` of the same name and reduce them in a single options object passed to the extension itself.
+
+Example:
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    webpack: {
+      extensions: {
+        // Extension can be a function and return the final config
+        addAlias (options) {
+          return {
+            mode: options.mode,
+            resolve: {
+              alias: options.alias || {}
+            }
+          }
+        }
+      },
+      extensionOptions: {
+        // Options can be a function to merge and return new options
+        addAlias (options) {
+          return {
+            alias: {
+              Special: path.join(process.cwd(), 'lib/different/'),
+              ...options.alias || {}
+            }
+          }
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/test-1/index.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    webpack: {
+      extensionOptions: {
+        addAlias (options) {
+          return {
+            alias: {
+              ...options.alias || {},
+              New: path.join(process.cwd(), 'lib/new/'),
+            }
+          }
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/test-2/index.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+  ```javascript
+  module.exports = {
+    webpack: {
+      extensionOptions: {
+        // It also can be a simple object if nothing has to be merged
+        // We take care of merging first level properties
+        addAlias: {
+          mode: 'production'
+        }
+      }
+    }
+  }
+  ```
+  <template v-slot:caption>
+    modules/test-3/index.js
+  </template>
+</AposCodeBlock>
+
+Following this example, the options object passed to the `addAlias` extension will look like this:
+```javascript
+{
+  alias: {
+    Special: path.join(process.cwd(), 'lib/different/'),
+    New: path.join(process.cwd(), 'lib/new/')
+  },
+  mode: 'production'
+}
+```
+
+This way you'll be able to contribute to any webpack extension from any module.
+
 ## Extra bundles
 
 If you have large amounts of frontend JavaScript that are specific to just one page or widget, you can generate "extra bundles" to be loaded only when those pages or widgets are present. For example, a widget that doesn't appear on most pages might require a large and complicated [player function](custom-widgets.md#client-side-javascript-for-widgets) with many imports of its own.
