@@ -175,8 +175,8 @@ As for the actual Vue.js code, we would place that in `modules/announcement/ui/a
 
 Of course there are other components that can be overridden in this way, and the list is growing over time. Here are the components that can currently be overridden through configuration:
 
-| Module                     | Option             | Default          |
-| -------------------------- | ------------------ | ---------------- |
+| Module                       | Option                    | Default            |
+| ---------------------------- | ------------------------- | ------------------ |
 | `@apostrophecms/piece-type`  | `components.managerModal` | `AposDocsManager`  |
 | `@apostrophecms/piece-type`  | `components.editorModal`  | `AposDocEditor`    |
 | `@apostrophecms/page`        | `components.managerModal` | `AposPagesManager` |
@@ -196,6 +196,49 @@ The `AposWidgetEditor` component already provides a modal dialog box in which to
 The `AposWidget` component has **nothing to do with a typical site visitor experience.** It is used only when displaying our widget while the page is in edit mode. While overriding this component is rare, the `@apostrophecms/rich-text-widget` module does so to provide a "click the text to edit" experience for rich text widgets. If you're just trying to enhance your widget with frontend JavaScript, you should write a [widget player](custom-widgets.md#client-side-javascript-for-widgets) instead.
 
 Before you override an editor modal, consider [adding a custom schema field type](/guide/custom-schema-field-types.md) instead.
+:::
+
+## Adding custom context menu items
+
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
+
+Here is an example of how to add custom context menu item labeled "My Menu Item".
+
+![A custom context menu item 'My Menu Item' in the Piece Editor Modal](/images/ui-custom-context-menu.png)
+
+<AposCodeBlock>
+```js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Article',
+    pluralLabel: 'Articles'
+  },
+  init(self) {
+    self.apos.doc.addContextOperation(self.name, {
+      context: 'update',
+      action: 'myUniqueAction',
+      label: 'My Menu Item',
+      modal: 'MyModalComponent'
+    });
+  }
+}
+```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+::: warning
+Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/components/AposDocContextMenu.vue) (computed property `menu`).
+:::
+
+::: note
+* The current API supports only `context: "update"` (the custom menu items are available for previously saved documents).
+* The `action` property should be globally unique.
+* Overriding the same `action` is possible (the last wins).
+* You may mark the action as "dangerous" via an optional property `modifiers: [ "danger" ]`.
+* An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
 :::
 
 ## Adding custom login requirements
