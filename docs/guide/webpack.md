@@ -124,7 +124,7 @@ By contrast, if you use different extension names, two separate modules can cont
 
 Webpack extensions can also be functions that take an `options` parameter.
 From any module, you can declare an `extensionOptions` property in your webpack object. 
-For each webpack extension found in the project, it will look for all `extensionOptions` of the same name and reduce them in a single options object passed to the extension itself.
+For each webpack extension found in the project, it will look for all `extensionOptions` of the same name and merge them in a single options object passed to the extension itself.
 
 Example:
 
@@ -214,8 +214,7 @@ Following this example, the options object passed to the `addAlias` extension wi
 }
 ```
 
-This way you'll be able to contribute to any webpack extension from any module in a flexible.
-This feature should only be useful in certain specific cases.
+This way you'll be able to contribute to any webpack extension from any module in a flexible way.
 
 ## Extra bundles
 
