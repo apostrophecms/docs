@@ -120,7 +120,7 @@ Because the two extensions have the same name (`addAlias`) and the `test-2` modu
 
 By contrast, if you use different extension names, two separate modules can contribute their own aliases. This works because they are automatically merged together with the main webpack configuration using [webpack-merge](https://github.com/survivejs/webpack-merge).
 
-### Passing extensions options from any modules
+### Passing extensions options from any module
 
 Webpack extensions can also be functions that take an `options` parameter.
 From any module, you can declare an `extensionOptions` property in your webpack object. 
