@@ -122,7 +122,7 @@ For image attachments, doing the same thing will return the URL for the `full` i
 
 <AposCodeBlock>
 ```django
-{% set srcset = apos.attachment.srcset(data.piece.photoUpload) %}
+{% set srcset = apos.image.srcset(data.piece.photoUpload) %}
 
 <img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
 ```
@@ -147,7 +147,7 @@ module.exports = {
         label: 'Image',
         type: 'relationship',
         // Use `@apostrophecms/file` for non-image files
-        withType: '@apostrophecms/image'
+        withType: '@apostrophecms/image',
         max: 1
       }
     }
