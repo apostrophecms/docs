@@ -39,6 +39,18 @@ module.exports = {
 };
 ```
 
+```django
+{# modules/article-page/views/show.html #}
+{% extends "layout.html" %}
+
+{% block main %}
+  <h1>{{ data.piece.title }}</h1>
+  <section>
+    {% area data.piece, 'body' %}
+  </section>
+{% endblock %}
+```
+
 ::: note
 Refer to the [pieces guide](/guide/pieces.md) for more information on adding piece types.
 :::
