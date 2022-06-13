@@ -331,7 +331,7 @@ If a doc type module has been [assigned an alias](/reference/module-api/module-o
 
 ### Querying multiple doc types
 
-As mentioned earlier, doc type modules' `find` methods will automatically restrict results to that document type. Sometimes we may want to fetch documents that match a query regardless of what doc type they are (e.g., all content tagged with a certain term). Or we may use a querying function across contexts and we don't know what doc type we will be looking for.
+As mentioned earlier, doc type modules `find` methods will automatically restrict results to that document type. Sometimes we may want to fetch documents that match a query regardless of what doc type they are (e.g., all content tagged with a certain term). Or we may use a querying function across contexts and we don't know what doc type we will be looking for.
 
 There is a module that governs all content documents: `@apostrophecms/doc`, which is aliased as `'doc'`. Its `find` method works the same as any individual doc type's, but it is not restricted to any one document type. We can then use it to look for a particular type with the `type` property or pass it criteria and get documents of multiple types in the results.
 

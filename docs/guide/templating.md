@@ -6,7 +6,7 @@ Template files go in `views` directories, either as module subdirectories or at 
 
 ![Screenshot of a file directory highlighting a default-page module views directory and the global views directory](/images/templating-views-dirs.jpg)
 
-The root `views` directory will usually contain [a layout template](/guide/layout-template.md) and often [fragment templates](/guide/fragments.md). Templates in modules' `views` directories will usually be used only for their respective modules. [Widget](/guide/custom-widgets.md#widget-templates), [page](/guide/pages.md#page-template-essentials), and [piece page](/guide/piece-pages.md#the-index-page-template) templates are the main examples of that.
+The root `views` directory will usually contain [a layout template](/guide/layout-template.md) and often [fragment templates](/guide/fragments.md). Templates in modules `views` directories will usually be used only for their respective modules. [Widget](/guide/custom-widgets.md#widget-templates), [page](/guide/pages.md#page-template-essentials), and [piece page](/guide/piece-pages.md#the-index-page-template) templates are the main examples of that.
 
 ## How templates work together
 

@@ -281,7 +281,7 @@ The `update()` is used to update data for an existing piece. Note that the secon
 
 ### `getBrowserData(req)`
 
-Piece type modules' implementation of [`getBrowserData`](module.md#getbrowserdata-req). This establishes the data that is used in the browser (including by the user interface). If adjusting this **remember to [*extend* this method](/reference/module-api/module-overview.md#extendmethods-self) rather than overwriting it** to avoid breaking the UI.
+Piece type modules implementation of [`getBrowserData`](module.md#getbrowserdata-req). This establishes the data that is used in the browser (including by the user interface). If adjusting this **remember to [*extend* this method](/reference/module-api/module-overview.md#extendmethods-self) rather than overwriting it** to avoid breaking the UI.
 
 ## Module tasks
 
