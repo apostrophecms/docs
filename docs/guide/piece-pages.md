@@ -171,7 +171,39 @@ Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager
 
 Show pages are the web pages for individual pieces, rendered from `show.html` templates. Instead of `data.page`, the template uses `data.piece` to access the piece data.
 
-Assuming our `article` piece type example has a single `main` area, it could look like this:
+Assuming our `article` piece type example has a single `body` area, it could look like this:
+
+```javascript
+// modules/article/index.js
+
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Article'
+    // Additionally add a `pluralLabel` option if needed.
+  },
+  fields: {
+    add: {
+      body: {
+        label: 'Article text',
+        type: 'area',
+        options: {
+          max: 1,
+          widgets: {
+            '@apostrophecms/rich-text': {}
+          }
+        }
+      }
+    },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: [ 'title', 'body' ]
+      }
+    }
+  }
+}
+```
 
 ```django
 {# modules/article-page/views/show.html #}
@@ -180,7 +212,7 @@ Assuming our `article` piece type example has a single `main` area, it could loo
 {% block main %}
   <h1>{{ data.piece.title }}</h1>
   <section>
-    {% area data.piece, 'main' %}
+    {% area data.piece, 'body' %}
   </section>
 {% endblock %}
 ```
