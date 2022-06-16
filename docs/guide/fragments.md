@@ -134,9 +134,9 @@ Importing the fragment into any page or widget template would look exactly as if
 
 ```django
 {# In any page or widget template file #}
-{% import 'fragments/utilities.html' as utils %}
+{% import 'fragments/utilities.html' as utilities %}
 
-{% render utils.heading('Organization history') %}
+{% render utilities.heading('Organization history') %}
 {# Renders: `<h2 class="fancy">Organization history</h2>` #}
 ```
 

@@ -122,7 +122,7 @@ Including a class with a style will not automatically apply any styles. You stil
 
 You can configure only one of the two sections (`toolbar` or `styles`), and use the default configuration for the other.
 
-**You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring configure these options on the `@apostrophecms/rich-text-widget` module.
+**You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring these options on the `@apostrophecms/rich-text-widget` module.
 
 ```javascript
 // modules/@apostrophecms/rich-text-widget/index.js

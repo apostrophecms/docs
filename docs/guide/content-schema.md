@@ -28,7 +28,10 @@ module.exports = {
       }
     },
     group: {
-      blogFields: [ 'authorName', 'body' ]
+      blogFields: {
+        label: 'Blog fields',
+        fields: [ 'authorName', 'body' ]
+      }
     }
   }
 };
