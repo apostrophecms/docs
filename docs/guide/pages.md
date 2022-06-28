@@ -215,7 +215,7 @@ Apostrophe templates have data available to add navigation based on the page tre
 | ------ | ------ |
 | `data.home` | Home page data. It is similar to the data on `data.page`, but always references the home page. |
 | `data.home._children` | Page data for pages one level below the home page in the page tree. |
-| `data.page._ancestors` | Page data for pages one level *above* the active page. |
+| `data.page._ancestors` | Page data for the ancestors of the active page, starting with the home page. |
 | `data.page._children` | Page data for pages one level *below* the active page. |
 
 By default, one level of children are available on each ancestor, as well as on the home page and `data.page`.
