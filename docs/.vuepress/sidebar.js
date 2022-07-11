@@ -40,6 +40,7 @@ module.exports = {
             'guide/templating.md',
             'guide/layout-template.md',
             'guide/template-data.md',
+            'guide/template-filters.md',
             'guide/fragments.md'
           ]
         },
