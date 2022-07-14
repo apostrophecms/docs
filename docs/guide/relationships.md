@@ -234,7 +234,7 @@ With this field in place, you could display connected articles in a topics show 
 
 ## Providing context with `fields`
 
-In some cases it is useful to add additional information to individual relationships. This would be information that is only relevant to the relationship and not to each individual part.
+In some cases, it is useful to add additional information to individual relationships. This would be information that is only relevant to the relationship and not to each individual part.
 
 For example, we might be working on a website that displays teams within a company and the people on each team. We would use a relationship field on each `team` piece to connect to multiple `person` pieces. With that we should list all the team members on each `team` show page.
 
@@ -256,19 +256,35 @@ module.exports = {
           add: {
             teamTitle: {
               type: 'string',
+              label: 'Team title'
+            },
+            teamRole: {
+              type: 'string',
               label: 'Team role'
+            }
+          },
+          group: {
+            positions: {
+              label: 'Position',
+              fields: [ 'teamTitle', 'teamRole' ]
             }
           }
         }
       }
     },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: [ 'title', '_people' ]
+      }
+    }
     // ...
 };
 ```
 
-In the example above, we add a `fields` property to the relationship field, just like the `fields` property on the module itself. Just like the primary schema, we use an `add` subproperty with field configurations inside it. In this case there is no need for a `group` subproperty.
+In the example above, we add a `fields` property to the relationship field, just like the `fields` property on the module itself. Just like the primary schema, we use an `add` subproperty with field configurations inside it. We are also adding a `group` to give a label to the tab within the "Edit Relationship" modal.
 
-Once this is added, editors can select an "Edit Relationship" option on the selected relationships.
+Once this is added, editors can select an "Edit Relationship" option from the context menu of each relationship.
 
 ![The relationship field now with a menu button and "edit relationship" option](/images/relationship-fields.png)
 
