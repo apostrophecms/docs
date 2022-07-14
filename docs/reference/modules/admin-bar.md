@@ -10,51 +10,86 @@ extends: '@apostrophecms/module'
 
 This module implements Apostrophe's admin bar at the top of the page. Any module can register a button (or more than one) for the bar by calling the `add` method of this module. Buttons can also be grouped into dropdown menus and restricted to those with particular permissions. The [apostrophe-pieces](/reference/modules/piece-type.md) takes advantage of this module automatically.
 
-On the browser side there are also convieniences to implement handlers for these menu items.
-
 ## Options
+
+Options are passed into the admin-bar module by "extending" it through an `index.js` file typically located in the project modules folder, nested inside a `admin-bar` subfolder, inside a `@apostrophecms` folder.
+For example
+```
+deployment
+lib
+modules
+┗@apostrophecms
+              ┗ admin-bar
+                        ┗ i18n
+                             ┗ en.json
+                               fr.json
+                          index.js
+@node_modules
+app.js
+```
 
 |  Property | Type | Description |
 |---|---|---|
-|`defaultLocale` | String | Nulla vitae elit libero, a pharetra augue. |
-|`locales` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
+|`groups` | Array | Adds one or more menu item group objects to be displayed in dropdown menus |
 
-### `locales`
+### `groups`
 
-*Description of a more complex option.* Id ligula porta felis euismod semper. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Sed posuere consectetur est at lobortis. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+The `groups` option takes an array of one or more objects that group several menu items together in the admin bar as a dropdown menu. Each of the `groups` objects requires a `label` and an array of menu `items`. The `label` will be used as the label displayed in the menu. The `items` array contains the names of the individual menu items you want to appear in the dropdown, entered in the order you want them to appear. Note: Menu names for `piece-type` items are the name of the piece-type, not the lable. For core items, like 'Images', the name is prefixed - '@apostrophecms/image'.
 
-## Related documentation
-
-- [Static localization guide](/guide/localization/static.md)
-- [Dynamic content localization guide](/guide/localization/dynamic.md)
+**Example**
+```javascript
+// modules/@apostrophecms/admin-bar/index.js
+module.exports = {
+  options: {
+    groups: [
+      {
+        name: 'media',
+        label: 'Media',
+        items: [
+          '@apostrophecms/image',
+          '@apostrophecms/file',
+          '@apostrophecms/image-tag',
+          '@apostrophecms/file-tag'
+        ]
+      }
+    ]
+  }
+};
+```
+Will result in grouping those four core modules into a single dropdown menu displayed as 'Media' on the menu bar.
+![ApostropheCMS admin bar with open dropdown menu titled 'Media'](/images/group-menu.png)
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/i18n/index.js) for all methods that belong to this module.
+The following method belongs to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/admin-bar/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
-Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].inferIdLocaleAndMode()`.
+Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].add()`.
 
-### `async eventualResponse(req, _id)`
+### `add(name, label, permission, options)`
 
-Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.
+Add an item to the menu bar.
 
-### `isValidLocale(locale)`
+The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item is controlling a specific modal, this will be caught by `TheAposModals` to display the correct modal. So, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`.
 
-Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
+**Example**
+```javascript
+apos.bus.$on('admin-menu-click', async (item) => {
+  // Make sure it is the button we care about, leave others to their own handlers
+  if (item !== '@apostrophecms/global:editor')
+})
 
-## Template helpers
+The label will be displayed on the menu bar.
 
-Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
+`permission` takes an object with `action` and `type` properties. The `action` property dictates what type of action the button will perform, for The `type` property should be a permission name such as `admin` or `edit`
 
-#### `slugify(string, options)`
+`options` can take several properties that control positioning and display of the new menu item.
 
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-## Module tasks
-
-### `reset`
-
-Full command: `node app @apostrophecms/db:reset`
-
-Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.
+|  Property | Type | Description |
+|---|---|---|
+|`groups` | Array | Adds one or more objects that group menu items into dropdown menus |
+|`after` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
+|`last` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
+|`contextUtility` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
+|`toggle` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
+|`tooltip` | Object | Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. |
