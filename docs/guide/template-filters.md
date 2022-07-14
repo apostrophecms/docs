@@ -9,11 +9,11 @@ In this example, a hypothetical page headline will be retrieved from the page da
 
 >Note: The order of filters can be important, as they are applied sequentially to the input data.
 
-## Apostrophe supplied Filters
+## Apostrophe supplied filters
 There are several custom filters and filter sets (multiple, sequential filters) used in Apostrophe templating. Rather than have to remember each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. These are documented with the modules that provide them. Several of the more common of these are within the documentation for the [util module](/reference/modules/util.html#template-helpers).
 
 ## Custom template filters
-If you have special template needs you can also construct custom filters for use in Nunjucks templates.
+If you have special template needs you can also construct custom filters for use in Nunjucks templates. By way of example, we'll create a link where the URL is included as part of the label
 
 ```javascript
 // lib/modules/link-widgets/index.js
