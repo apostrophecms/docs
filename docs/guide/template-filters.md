@@ -13,7 +13,9 @@ In this example, a hypothetical page headline will be retrieved from the page da
 There are several custom filters and filter sets (multiple, sequential filters) used in Apostrophe templating. Rather than have to remember each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. These are documented with the modules that provide them. Several of the more common of these are within the documentation for the [util module](/reference/modules/util.html#template-helpers).
 
 ## Custom template filters
-If you have special template needs you can also construct custom filters for use in Nunjucks templates. By way of example, we'll create a link where the URL is included as part of the label
+If you have special template needs you can also construct custom filters for use in Nunjucks templates. They can be added by passing the filter name and function to the template module `addFilter(name, function)` method. Multiple filters can be added by passing an object to this same method where each key is the name of the filter and the value is the function.
+
+By way of example, we'll create a link where the URL is included as part of the label, but without the protocol.
 
 ```javascript
 // lib/modules/link-widgets/index.js
@@ -56,22 +58,32 @@ module.exports = {
   }
 };
 ```
-To use this filter you would simply pipe your data to the filter.
+Within the `methods` we create a function `stripHttp()` that takes a string from the template. It then returns that same string after performing a RegExp replace to strip the protocol.
+
+In `init()`, we pass our function to the template module using `self.apos.template.addFilter({})`. This method takes the name of the filter that will be used in the template as a property - in this case `stripHttp` - and our new function as a value.
+
+To use this new filter you would simply pipe your data to the filter from within the template.
 
 ```markup
 // lib/modules/link-widgets/views/widget.html
 <section data-link-widget>
-  <h2>{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</h2>
+  <a href="{{ data.widget.url }}">{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</a>
 </section>
 ```
 
 ## Alphabetical Apostrophe filter reference
 
-### `| build(obj...)`
+### `build(url, path, data)`
 
-Given a URL and one or more objects, this filter adds query string parameters for each of the properties in the objects. If objects affect the same parameter, the last object wins. If a parameter is set to `null` or the empty string it is removed from the URL altogether. This is very useful for adding filters to the current URL, respecting other filters already present, without complicated logic.
+Given a URL , this filter can add both path and query string parameters. This is very useful for adding filters to the current URL, respecting other filters already present, without complicated logic.
 
-The `build` filter has additional features which you can read about in the comments of the `index.js` file of the url module.
+The method in the `url` module requires that the URL be passed in as the first argument. However when using this as a filter in Nunjucks, the data before the pipe will be sent as the first argument. This parameter accepts a URL that can include query parameters and anchor tags.
+
+The `path` parameter accepts an array, but is optional. If present, it allows addition of additional path elements to the URL. The array strings are not added directly to the URL, but are substituted with values from the data object. So, with a `path` array of `['one', 'two']` and a `data` object of `{ one: 'first', two: 'second'}` the URL `https://example.com` would be modified to `https://example.com/first/second`. The path elements will be added in the order they appear in the `path` array.
+
+The `data` parameter accepts an object. As outlined for `path`, these can be key:value pairs that add new path elements. If the key does not match any element in the `path` array, it will be added to the URL as a query parameter. Continuing with the example URL from above, passing a `data` object of `{ id : 1010 }` would result in a filtered URL of `https://example.com?id=1010`. If the query parameter already exists in the URL, the value will be changed to the value in the `data` object. Passing values of `null`,`undefined` or an empty string will remove the query parameter.
+
+If the `data` object contains a key that matches a string in the `path` array and has an invalid path value, e.g. `null`, or is not slug safe all path processing will stop and any additional `data` key:value pairs will be added as query parameters even if they match with a `path` array value.
 
 ### `| clonePermanent`
 
