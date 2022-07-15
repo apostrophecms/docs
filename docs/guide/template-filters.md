@@ -73,29 +73,39 @@ To use this new filter you would simply pipe your data to the filter from within
 
 ## Alphabetical Apostrophe filter reference
 
-### `build(url, path, data)`
+### `| build(url, path, data)`
 
-Given a URL , this filter can add both path and query string parameters. This is very useful for adding filters to the current URL, respecting other filters already present, without complicated logic.
+Given a URL, this filter can add both path and query string parameters. This is very useful for adding filters to the current URL, respecting other filters already present, without complicated logic.
 
-The method in the `url` module requires that the URL be passed in as the first argument. However when using this as a filter in Nunjucks, the data before the pipe will be sent as the first argument. This parameter accepts a URL that can include query parameters and anchor tags.
+The method in the `url` module requires that the URL be passed in as the first argument. However, when using this as a filter in Nunjucks, the data before the pipe will be sent as the first argument. This parameter accepts a URL that can include query parameters and anchor tags.
 
-The `path` parameter accepts an array, but is optional. If present, it allows addition of additional path elements to the URL. The array strings are not added directly to the URL, but are substituted with values from the data object. So, with a `path` array of `['one', 'two']` and a `data` object of `{ one: 'first', two: 'second'}` the URL `https://example.com` would be modified to `https://example.com/first/second`. The path elements will be added in the order they appear in the `path` array.
+The `path` parameter accepts an array but is optional. If present, it allows the addition of additional path elements to the URL. The array strings are not added directly to the URL but are substituted with values from the data object. So, with a `path` array of `['one', 'two']` and a `data` object of `{ one: 'first', two: 'second'}` the URL `https://example.com` would be modified to `https://example.com/first/second`. The path elements will be added in the order they appear in the `path` array.
 
-The `data` parameter accepts an object. As outlined for `path`, these can be key:value pairs that add new path elements. If the key does not match any element in the `path` array, it will be added to the URL as a query parameter. Continuing with the example URL from above, passing a `data` object of `{ id : 1010 }` would result in a filtered URL of `https://example.com?id=1010`. If the query parameter already exists in the URL, the value will be changed to the value in the `data` object. Passing values of `null`,`undefined` or an empty string will remove the query parameter.
+The `data` parameter accepts an object. As outlined for `path`, these can be key:value pairs that add new path elements. If the key does not match any element in the `path` array, it will be added to the URL as a query parameter. Continuing with the example URL from above, passing a `data` object of `{ id: 1010 }` would result in a filtered URL of `https://example.com?id=1010`. If the query parameter already exists in the URL, the value will be changed to the value in the `data` object. Passing values of `null`, `undefined`, or an empty string will remove the query parameter.
 
-If the `data` object contains a key that matches a string in the `path` array and has an invalid path value, e.g. `null`, or is not slug safe all path processing will stop and any additional `data` key:value pairs will be added as query parameters even if they match with a `path` array value.
+If the `data` object contains a key that matches a string in the `path` array and has an invalid path value, e.g. `null`, or is not slug safe, all path processing will stop, and any additional `data` key:value pairs will be added as query parameters even if they match with a `path` array value.
+
+Since passing a parameter of the same name as an existing query parameter will replace the value, building an array property for a query requires MongoDB-style operators. If an array doesn’t already exist, the `$addToSet` operator will create it and add a value. Otherwise, it will simply add the value.
+
+`{ colors: { $addToSet: ‘blue’ } }`
+
+To remove values from an existing array use the `$pull` operator:
+
+`{ colors: { $pull: ‘blue’ } }`
+
+For additional detail, you can examine the code comments in the `url` module [`index.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/url/index.js).
 
 ### `| clonePermanent`
 
-Given JavaScript data, this filter recursively strips out any properties whose names beginning with a `_`, except `_id`. This is used to avoid pushing large joined documents into the DOM.
+Given JavaScript data, this filter recursively strips out any properties whose names beginning with a `_`, except `_id`. This is used to avoid pushing large documents into the DOM, keeping markup size down. This filter is usually followed by either `json` or `jsonAttribute`.
 
 ### `| css`
 
-Converts a string to a hyphenated CSS identifier. For instance, `fooBar` becomes `foo-bar`.
+Converts a string from other formats, such as underscore or camelCase to a kebab-case CSS identifier. For instance, `fooBar` becomes `foo-bar`.
 
 ### `| date(format)`
 
-Turns a JavaScript Date object into a string, as specified by `format`. For formatting options, see [the documentation of the `momentjs` npm module](https://momentjs.com/docs/#/displaying/format/).
+Turns a JavaScript Date object into a string, as specified by `format`. For formatting options, see [the documentation of the `dayjs` npm module](https://day.js.org/docs/en/display/format).
 
 ### `| json`
 
@@ -103,7 +113,7 @@ Turns JavaScript data into a JSON string, **correctly escaped for safe use insid
 
 ### `| jsonAttribute(options)`
 
-Given JavaScript data, this filter escapes it correctly to be the value of a `data-` attribute of an element in the page. It does not add the `"` quote characters, but it does escape any `"` characters in the JSON string.
+Given JavaScript data, this filter escapes it correctly to be the value of a `data-` attribute of an element in the page. It does not add the `"` quote characters around the attribute itself, but it does escape any `"` characters in the JSON string.
 
 `options` may be omitted. If `options.single` is truthy, single-quotes are escaped instead, and you must use `'` \(single quotes\) to quote the attribute. This saves space and is more readable in "view page source."
 
@@ -111,19 +121,23 @@ Given JavaScript data, this filter escapes it correctly to be the value of a `da
 
 ### `| merge(object2, object3...)`
 
-When applied to an object, this filter "merges in" the properties of any additional objects given to it as arguments, using the lodash `assign` method. Note that this is not a recursive merge. If two objects contain the same property, the last object wins.
+When applied to an object, this filter "merges in" the properties of any additional objects given to it as arguments. Note that this is not a recursive merge. If two objects contain the same property, the last object wins.
 
 ### `| nlbr`
 
-Converts newlines found in a string into `<br />` tags.
+Converts newlines found in a string into `<br />` tags. The incoming string is escaped from any HTML markup. Following conversion of the newlines into breaks, the string is passed through the `|safe` filter before returning it.
 
 ### `| nlp`
 
-Breaks a string into `<p>...</p>` elements, based on newlines.
+Breaks a string into `<p>...</p>` elements, based on newlines. Like the `| nlbr` filter, the incoming string is escaped and passed back as safe.
 
 ### `| query`
 
 Turns an object into a query string. See also `build`.
+
+## `| safe`
+
+The `| safe` filter marks any passed value as safe for direct output on the page. This filter is built into Nunjucks, but merits special mention. Data passed into templates is automatically escaped, thus there is no need for the `| escape` (aliased as `| e`) filter. However, is you want to bypass this behavior you need to pass any data through the `| safe` filter. This should be used with some caution as this could allow the Editor to pass HTML breaking code onto the page.
 
 ### `| striptags`
 
