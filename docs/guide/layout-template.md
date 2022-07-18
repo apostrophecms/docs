@@ -1,4 +1,4 @@
-# Layout Templates
+# Layout templates
 
 A layout template is common in most Apostrophe apps. As the name suggests, it **contains the markup that surrounds page content and is mostly consistent across the website**. Website navigation and footers are both usually in the layout template, whether directly as markup or included from template partials.
 
