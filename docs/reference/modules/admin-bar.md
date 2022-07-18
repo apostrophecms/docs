@@ -18,15 +18,16 @@ For example
 deployment
 lib
 modules
-┗@apostrophecms
-              ┗ admin-bar
-                        ┗ i18n
-                             ┗ en.json
-                               fr.json
-                          index.js
+┗ @apostrophecms
+┆              ┗ admin-bar
+┆                        ┗ i18n
+┆                        ┆    ┗ en.json
+┆                        ┆      fr.json
+┆                          index.js
 @node_modules
 app.js
 ```
+The options passed in through this manner will configure the existing `node_modules->apostrophe/lib/modules/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules->@apostrophecms->pages->index.js` file in the project to add configuration to the main `page` module. 
 
 |  Property | Type | Description |
 |---|---|---|
@@ -64,7 +65,7 @@ Will result in grouping those four core modules into a single dropdown menu disp
 The following method belongs to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/admin-bar/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
-Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.[the alias].add()`.
+Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.adminBar.add()`.
 
 ### `add(name, label, permission, options)`
 
@@ -76,12 +77,15 @@ The `name` for the item must be unique within the menu bar to avoid conflicts. W
 ```javascript
 apos.bus.$on('admin-menu-click', async (item) => {
   // Make sure it is the button we care about, leave others to their own handlers
-  if (item !== '@apostrophecms/global:editor')
-})
+  if (item !== 'myCustomWidget:editor') {
+    return;
+  }
+  // Custom code for button action
+});
+```
+The `label` will be displayed on the menu bar.
 
-The label will be displayed on the menu bar.
-
-`permission` takes an object with `action` and `type` properties. The `action` property dictates what type of action the button will perform, for The `type` property should be a permission name such as `admin` or `edit`
+`permission` is optional and takes an object with `action` and `type` properties. If no permissions are present then anyone can perform the action represented by the button. The `action` property dictates what type of action the button will perform. These include `view`, `view-draft`, `edit`, `publish`, `upload-attachment`, and `delete`. The `type` property matches the name of the module the button is managing. This type must have a registered manager.
 
 `options` can take several properties that control positioning and display of the new menu item.
 
