@@ -75,7 +75,7 @@ To use this new filter you would simply pipe your data to the filter from within
 ```
 
 ## Alphabetical Apostrophe filter reference
-### `| build(url, path, data)`
+### `| build(url, path, data...)`
 
 This filter can add path and query string parameters to the passed URL. This is very useful for adding filters to the current URL, respecting other filters already present, without complicated logic.
 The method in the `url` module requires that the URL be passed in as the first argument. However, when using this as a filter in Nunjucks, the data before the pipe will be sent as the first argument. This parameter accepts a URL that can include query parameters and anchor tags.
