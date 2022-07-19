@@ -8,27 +8,13 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module implements Apostrophe's admin bar at the top of the page. Any module can register a button (or more than one) for the bar by calling this module's `add` method. Buttons can also be grouped into dropdown menus and restricted to those with particular permissions. The [apostrophe-pieces](/reference/modules/piece-type.md) takes advantage of this module automatically.
+This module implements Apostrophe's admin bar at the top of the page. Any module can register a button (or more than one) for the bar by calling this module's `add` method. Buttons can also be grouped into dropdown menus and restricted to those with particular permissions. The [@apostrophecms/piece-type module](/reference/modules/piece-type.md) takes advantage of this module automatically.
 
 ## Configuration options
 
-Options are passed into the admin-bar module by "extending" it through an `index.js` file typically located in the project modules folder, nested inside an `admin-bar` subfolder, inside a `@apostrophecms` folder.
-For example
-```
-deployment
-lib
-modules
-┗ @apostrophecms
-┆              ┗ admin-bar
-┆                        ┗ i18n
-┆                        ┆    ┗ en.json
-┆                        ┆      fr.json
-┆                          index.js 👈
-@node_modules
-app.js
-```
+Options are passed into the admin-bar module by "extending" it through an `index.js` file typically located at `modules/@apostrophecms/admin-bar/index.js in the project folder.
 
-The options passed in this manner will configure the existing `node_modules->apostrophe/lib/modules/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules->@apostrophecms->pages->index.js` file in the project to add configuration to the main `page` module.
+The options passed in this manner will configure the existing @apostrophe/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules->@apostrophecms->pages->index.js` file in the project to add configuration to the main `page` module.
 
 |  Property | Type | Description |
 |---|---|---|
@@ -36,7 +22,7 @@ The options passed in this manner will configure the existing `node_modules->apo
 
 ### `groups`
 
-The `groups` option takes an array of one or more objects that group several menu items together in the admin bar as a dropdown menu. Each of the `groups` objects requires a `label` and an array of menu `items`. The `label` will be used as the label displayed in the menu. The `items` array contains the names of the individual menu items you want to appear in the dropdown, entered in the order you want them to appear. Note: Menu names for `piece-type` items are the name of the piece-type, not the label. For core items, like 'Images', the name is prefixed - `@apostrophecms/image`.
+The `groups` option takes an array of one or more objects that group several menu items together in the admin bar as a dropdown menu. Each of the `groups` objects requires a `label` and an array of menu `items`. The `label` will be used as the label displayed in the menu. The `items` array contains the names of the individual menu items you want to appear in the dropdown, entered in the order you want them to appear. Note: Menu names for `piece-type` items are the name of the piece-type, not the label. For core items, like 'Images', the name is prefixed - '@apostrophecms/image'.
 
 **Example**
 ```javascript
@@ -72,32 +58,32 @@ Because this module has an alias, you can call these from another module from th
 
 Add an item to the menu bar.
 
-The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. So, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`.
+The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`.
 
 **Example**
 ```javascript
 apos.bus.$on('admin-menu-click', async (item) => {
  // Make sure it is the button we care about, leave others to their own handlers
- if (item !== 'myCustomWidget:editor') {
+ if (item !== 'myCustomModule') {
    return;
  }
  // Custom code for button action
 });
 ```
-The `label` will be the button name displayed on the menu bar.
+The `label` will be the name displayed for the button on the menu bar.
 
-`permission` is optional and takes an object with `action` and `type` properties. If no permissions are present, anyone can perform the action represented by the button. The `action` property dictates what type of action the button will perform. These include `view`, `view-draft`, `edit`, `publish`, `upload-attachment`, and `delete`. The `type` property matches the name of the module the button is managing. This type must have a registered manager.
+`permission` is optional and takes an object with `action` and `type` properties. If no permissions are present, anyone can see the button. The `action` property dictates what type of action the button will perform. These include `view`, `view-draft`, `edit`, `publish`, `upload-attachment`, and `delete`. The `type` property matches the name of the module the button is managing. This type must have a registered manager.
 
 `options` can take several properties that control the positioning and display of the new menu item.
 
 |  Property | Type | Description |
 |---|---|---|
 | `after` | String | Takes the name of the button - without `:manager` or `:editor` if present - to output the current button after.  |
-| `last` | Boolean |  If truthy, it will cause the button to be displayed at the end of the list |
+| `last` | Boolean |  If truthy, it will cause the button to be displayed at the end of the list. |
 | `contextUtility` | Boolean | If truthy, it will cause the button to be displayed in the tray of icons to the left of the page settings gear. |
 | `icon` | String | If `contextUtility` is `true` an icon name is required for display. |
 | `toggle` | Boolean | If truthy, the button will remain active until it is clicked a second time. |
-| `tooltip` | Object \| String | Depending on the `toggle` value, a tooltip string or an object with ‘activated and ‘deactivated’ strings |
+| `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with ‘activated and ‘deactivated’ strings. |
 
 ### `after`
 
