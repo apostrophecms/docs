@@ -81,9 +81,11 @@ This filter can add path and query string parameters to the passed URL. This is 
 The method in the `url` module requires that the URL be passed in as the first argument. However, when using this as a filter in Nunjucks, the data before the pipe will be sent as the first argument. This parameter accepts a URL that can include query parameters and anchor tags.
 
 The `path` parameter accepts an array but is optional. If present, it allows the addition of additional path elements to the URL. The array strings are not added directly to the URL but are substituted with values from the `data` object. So, with a `path` array of `['one', 'two']` and a `data` object of `{ one: 'first', two: 'second'}` the URL `https://example.com` would be modified to `https://example.com/first/second`. The path elements will be added in the order they appear in the `path` array.
-The `data` parameter accepts an object. As outlined for `path`, these can be key:value pairs that add new path elements. If the key does not match any element in the `path` array, it will be added to the URL as a query parameter. Continuing with the example URL from above, passing a `data` object of `{ id: 1010 }` would result in a filtered URL of `https://example.com?id=1010`. If the query parameter already exists in the URL, the value will be changed to the value in the `data` object. Passing values of `null`, `undefined`, or an empty string will remove the query parameter.
+
+The `data` parameter can accept multiple, comma-separated objects. The objects will be considered sequentially, so if duplicate keys are passed, the value will be assigned from the last passed object. As outlined for `path`, these objects can be key:value pairs that add new path elements. If the key does not match any element in the `path` array, it will be added to the URL as a query parameter. Continuing with the example URL from above, passing a `data` object of `{ id: 1010 }` would result in a filtered URL of `https://example.com?id=1010`. If the query parameter already exists in the URL, the value will be changed to the value in the `data` object. Passing values of `null`, `undefined`, or an empty string will remove the query parameter.
 
 If the `data` object contains a key that matches a string in the `path` array and has an invalid path value, e.g. `null`, or is not slug safe, all path processing will stop. Any additional `data` key:value pairs will be added as query parameters even if they match a `path` array value.
+
 Since passing a parameter of the same name as an existing query parameter will replace the value, building an array property for a query requires MongoDB-style operators. If an array doesn’t already exist, the `$addToSet` operator will create it and add a value. Otherwise, it will simply add the value.
 
 `{ colors: { $addToSet: ‘blue’ } }`
@@ -92,11 +94,9 @@ To remove values from an existing array use the `$pull` operator:
 
 `{ colors: { $pull: ‘blue’ } }`
 
-For additional detail, you can examine the code comments in the `url` module [`index.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/url/index.js).
-
 ### `| clonePermanent`
 
-Given JavaScript data, this filter recursively strips out any properties whose names begin with a `_`, except `_id`. This is used to avoid pushing large documents into the DOM, keeping markup size down. This filter is usually followed by either the `json` or `jsonAttribute` filters.
+Given JavaScript data, this filter recursively strips out any properties whose names begin with a `_`, except `_id`. This is used to avoid pushing large related documents into the DOM, keeping markup size down. This filter is usually followed by either the `json` or `jsonAttribute` filters.
 ### `| css`
 Converts a string from other formats, such as underscore or camelCase to a kebab-case CSS identifier. For instance, `fooBar` becomes `foo-bar`.
 ### `| date(format)`
