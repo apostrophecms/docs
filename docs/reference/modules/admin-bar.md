@@ -28,7 +28,7 @@ The `groups` option takes an array of one or more objects that group several men
 
 <AposCodeBlock>
 ```javascript
-// modules/@apostrophecms/admin-bar/index.js
+
 module.exports = {
  options: {
    groups: [
@@ -46,6 +46,9 @@ module.exports = {
  }
 };
 ```
+<template v-slot:caption>
+    modules/@apostrophecms/admin-bar/index.js
+  </template>
 </AposCodeBlock>
 
 This will result in grouping those four core modules into a single dropdown menu displayed as 'Media' on the menu bar.
@@ -115,5 +118,3 @@ The `toggle` property is used in conjunction with `contextUtility`. If it set to
 
 ### `tooltip`
 The `tooltip` property can take either a string or an object. If `toggle` is falsy, then the value of `tooltip` is a string to display on hover. If `toggle` is truthy, then `tooltip` takes an object with two arguments, `activate` and `deactivate`. Both properties accept string values with the former being displayed for the activated state and the later the deactivated state.
-
-
