@@ -3,13 +3,20 @@
 ## Nunjucks supplied filters
 The Nunjucks templating language comes with several [built-in filters](https://mozilla.github.io/nunjucks/templating.html#filters). These filters apply functions to template data before outputting content to the page. They are called with a pipe operator `|` and can take arguments.
 
-```markup
+<AposCodeBlock>
+```django
 <h1>{{ data.page.headline | replace("foo", "bar" ) | upper }}</h1>
 ```
+</AposCodeBlock>
+
 
 In this example, a hypothetical page headline will be retrieved from the page data and then piped to the 'replace' filter, along with two arguments. This filter will scan the incoming data and replace any instances of ‘foo’ with 'bar'. The output of this filter will then pass the result to the upper function, which will return the input as an uppercase string before being output to the page.
 
->Note: The order of filters can be significant, as they are applied sequentially to the input data.
+::: note
+
+The order of filters can be significant, as they are applied sequentially to the input data.
+
+:::
 
 ## Apostrophe supplied filters
 
@@ -20,6 +27,8 @@ Several custom filters and filter sets (multiple, sequential filters) are used i
 If you have special template needs you can also construct custom filters for use in Nunjucks templates. They can be added by passing the filter name and function to the template module `addFilter(name, function)` method. Multiple filters can be added by passing an object to this same method, where each key is the name of the filter and the value is the function.
 
 By way of example, we'll create a link where the URL is included as part of the label, but without the protocol.
+
+<AposCodeBlock>
 ```javascript
 // lib/modules/link-widgets/index.js
 module.exports = {
@@ -61,18 +70,22 @@ module.exports = {
   }
 };
 ```
+</AposCodeBlock>
 
 Within the `methods`, we create a function `stripHttp()` that takes a string from the template. It performs a RegExp replace to strip the protocol before returning the string.
 
 In `init()`, we pass our function to the template module using `self.apos.template.addFilter({})`. This method takes the name of the filter that will be used in the template as property - in this case `stripHttp` - and our new function as a value.
 
 To use this new filter you would simply pipe your data to the filter from within the template.
-```markup
-// lib/modules/link-widgets/views/widget.html
+
+<AposCodeBlock>
+```django
+{# lib/modules/link-widgets/views/widget.html #}
 <section data-link-widget>
   <a href="{{ data.widget.url }}">{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</a>
 </section>
 ```
+</AposCodeBlock>
 
 ## Alphabetical Apostrophe filter reference
 ### `| build(url, path, data...)`
@@ -98,6 +111,7 @@ To remove values from an existing array use the `$pull` operator:
 
 Given JavaScript data, this filter recursively strips out any properties whose names begin with a `_`, except `_id`. This is used to avoid pushing large related documents into the DOM, keeping markup size down. This filter is usually followed by either the `json` or `jsonAttribute` filters.
 ### `| css`
+
 Converts a string from other formats, such as underscore or camelCase to a kebab-case CSS identifier. For instance, `fooBar` becomes `foo-bar`.
 ### `| date(format)`
 
@@ -106,6 +120,7 @@ Turns a JavaScript Date object into a string, as specified by `format`. For form
 
 Turns JavaScript data into a JSON string, **correctly escaped for safe use inside a** `script` **tag in the middle of an HTML document.** Note that it is **not** safe to use the Nunjucks `dump` filter in this way. This filter is not for attributes; see `jsonAttribute`.
 ### `| jsonAttribute(options)`
+
 Given JavaScript data, this filter escapes it correctly to be the value of a `data-` attribute of an element in the page. It does not add the `"` quote characters around the attribute itself, but it does escape any `"` characters in the JSON string.
 
 `options` may be omitted. If `options.single` is truthy, single-quotes are escaped instead, and you must use `'` (single quotes) to quote the attribute. This saves space and is more readable in "view page source."
@@ -113,11 +128,13 @@ Given JavaScript data, this filter escapes it correctly to be the value of a `da
 **If this filter is applied to anything other than an object or array**, the value is converted to a string and output literally, without quotes. This is done for compatibility with jQuery's `data` method, which only parses JSON when it sees `{}` or `[]` syntax, and otherwise returns the value directly as a string. If you don't like this, only pass objects to this filter.
 
 ### `| merge(object2, object3...)`
+
 When applied to an object, this filter "merges in" the properties of any additional objects given to it as arguments. Note that this is not a recursive merge. If two objects contain the same property, the last object wins.
 ### `| nlbr`
 
 Converts newlines found in a string into `<br />` tags. The incoming string is escaped from any HTML markup. After converting the newlines into breaks, the string is passed through the `|safe` filter before returning it.
 ### `| nlp`
+
 Breaks a string into `<p>...</p>` elements, based on newlines. Like the `| nlbr` filter, the incoming string is escaped and passed back as safe.
 ### `| query`
 
@@ -128,4 +145,5 @@ Turns an object into a query string. This filter uses the stringify method of th
 The `| safe` filter marks any passed value as safe for direct output on the page. This filter is built into Nunjucks but merits special mention. Data passed from Apostrophe into templates is automatically escaped. Thus, there is no need for the `| escape` (aliased as `| e`) filter. However, if you want to bypass this behavior, you must pass any data through the `| safe` filter. This should be used with caution as this could allow the Editor to pass HTML breaking code onto the page.
 
 ### `| striptags`
+
 Strips HTML tags from a string, leaving only the content inside the tags.
