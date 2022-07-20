@@ -25,6 +25,8 @@ The options passed in this manner will configure the existing @apostrophe/admin-
 The `groups` option takes an array of one or more objects that group several menu items together in the admin bar as a dropdown menu. Each of the `groups` objects requires a `label` and an array of menu `items`. The `label` will be used as the label displayed in the menu. The `items` array contains the names of the individual menu items you want to appear in the dropdown, entered in the order you want them to appear. Note: Menu names for `piece-type` items are the name of the piece-type, not the label. For core items, like 'Images', the name is prefixed - '@apostrophecms/image'.
 
 **Example**
+
+<AposCodeBlock>
 ```javascript
 // modules/@apostrophecms/admin-bar/index.js
 module.exports = {
@@ -44,6 +46,8 @@ module.exports = {
  }
 };
 ```
+</AposCodeBlock>
+
 This will result in grouping those four core modules into a single dropdown menu displayed as 'Media' on the menu bar.
 ![ApostropheCMS admin bar with open dropdown menu titled 'Media'](/images/group-menu.png)
 
@@ -61,6 +65,8 @@ Add an item to the menu bar.
 The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`.
 
 **Example**
+
+<AposCodeBlock>
 ```javascript
 apos.bus.$on('admin-menu-click', async (item) => {
  // Make sure it is the button we care about, leave others to their own handlers
@@ -70,6 +76,8 @@ apos.bus.$on('admin-menu-click', async (item) => {
  // Custom code for button action
 });
 ```
+</AposCodeBlock>
+
 The `label` will be the name displayed for the button on the menu bar.
 
 `permission` is optional and takes an object with `action` and `type` properties. If no permissions are present, anyone can see the button. The `action` property dictates what type of action the button will perform. These include `view`, `view-draft`, `edit`, `publish`, `upload-attachment`, and `delete`. The `type` property matches the name of the module the button is managing. This type must have a registered manager.
