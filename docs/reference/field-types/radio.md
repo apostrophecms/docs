@@ -48,7 +48,7 @@ animalType: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | Varies | n/a | The default value for the field. Must be from the defined choices' values. |
+|`def` | Varies | n/a | The default value for the field, or a method name that returns them. Must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
@@ -63,6 +63,16 @@ animalType: {
 
 <!-- Importing choices description -->
 <Content :page-key="$site.pages.find(p => p.relativePath === 'reference/field-types/_choices-setting.md').key"/>
+
+## Populating `choices` dynamically
+
+What if the choices aren't known in advance? Then you can fetch them dynamically.
+
+First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass a string, the name of the method you'll implement on the server side — **do not** pass a function.
+
+Second, implement that method in your module to take a single `(req)` argument and return an array of choices in the usual format. You may use an async function, or return a promise that will resolve to the array. That means you can reach out to APIs using modules like `axios` or `node-fetch`, or make Apostrophe database queries.
+
+It is usually a good idea to perform at least short-term caching in your choices method, in order to limit the impact on performance when editing.
 
 ## Use in templates
 
