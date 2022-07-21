@@ -32,7 +32,7 @@ genres: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`choices` | `array` |  n/a | An array of options that the editor can select from. See below. |
+|`choices` | `array` |  n/a | An array of options that the editor can select from, or a method name that returns them. See below. |
 |`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`checkboxes` for this type) |
 
@@ -54,6 +54,16 @@ genres: {
 
 <!-- Importing choices description -->
 <Content :page-key="$site.pages.find(p => p.relativePath === 'reference/field-types/_choices-setting.md').key"/>
+
+## Populating `choices` dynamically
+
+What if the choices aren't known in advance? Then you can fetch them dynamically.
+
+First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass a string, the name of the method you'll implement on the server side — **do not** pass a function.
+
+Second, implement that method in your module to take a single `(req)` argument and return an array of choices in the usual format. You may use an async function, or return a promise that will resolve to the array. That means you can reach out to APIs using modules like `axios` or `node-fetch`, or make Apostrophe database queries.
+
+It is usually a good idea to perform at least short-term caching in your choices method, in order to limit the impact on performance when editing.
 
 ## Use in templates
 
