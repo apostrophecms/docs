@@ -48,7 +48,7 @@ animalType: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`def` | Varies | n/a | The default value for the field. Must be from the defined choices' values. |
+|`def` | Varies | n/a | The default value for the field, or a method name that returns them. Must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
