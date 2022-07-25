@@ -14,7 +14,7 @@ This module implements Apostrophe's admin bar at the top of the page. Any module
 
 Options are passed into the admin-bar module by "extending" it through an `index.js` file typically located at `modules/@apostrophecms/admin-bar/index.js in the project folder.
 
-The options passed in this manner will configure the existing @apostrophe/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules->@apostrophecms->pages->index.js` file in the project to add configuration to the main `page` module.
+The options passed in this manner will configure the existing @apostrophe/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules/@apostrophecms/pages/index.js` file in the project to add configuration to the main `page` module.
 
 |  Property | Type | Description |
 |---|---|---|
@@ -89,16 +89,11 @@ The `label` will be the name displayed for the button on the menu bar.
 
 |  Property | Type | Description |
 |---|---|---|
-| `after` | String | Takes the name of the button - without `:manager` or `:editor` if present - to output the current button after.  |
-| `last` | Boolean |  If truthy, it will cause the button to be displayed at the end of the list. |
+| `last` | Boolean | If truthy, it will cause the button to be displayed at the end of the list. |
 | `contextUtility` | Boolean | If truthy, it will cause the button to be displayed in the tray of icons to the left of the page settings gear. |
 | `icon` | String | If `contextUtility` is `true` an icon name is required for display. |
 | `toggle` | Boolean | If truthy, the button will remain active until it is clicked a second time. |
 | `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with ‘activated and ‘deactivated’ strings. |
-
-### `after`
-
-The `after` option is used to position the button after another specific module button in the menu bar.
 
 ### `last`
 
