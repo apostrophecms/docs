@@ -6,278 +6,235 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module operates in cooperation with the 'piece-type' module to show both individual pieces, as well as all instances of a particular piece. In addition to all of the features from the ['@apostrophecms/page'](/reference/modules/page.md) module, it also exposes two specialized views and additional data to the templates.
-
-TODO: Expand a bit?
+This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the  ['@apostrophecms/page'](/reference/modules/page.md) module.
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
-| [`label`](#label) | String | The human-readable label for the doc type. |
-| [`next`](#next) | Boolean | If set to `true`, `data.next` is the next piece based on the sort. |
+| [`next`](#next) | Boolean \|\| Object | If set to `true`, `data.next` is the next piece based on the sort. |
 | [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
-| [`piecesFilters`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
+| [`piecesFilters`](#piecesFilter) | Array | Takes an array of objects where each contains a `name` key and a value of a field in the piece to filter on. |
+| [`pieceModuleName`](#pieceModuleName) | String | Optionally sets the `piece-type` to a specific name other than the default set by the module name. |
+| [`previous`](#previous) | Boolean \|\| Object | If set to `true`, `data.previous` is the previous piece based on the sort. |
 
-### `autopublish`
+### `next`
+If this option is set to true, it exposes the next piece in the current [sort order](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#sort) as `req.data.next` (`data.next` in the template) when serving a [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the next item in a series (e.g., the next oldest blog post).
 
-Set `autopublish` to `true` to automatically publish any changes saved to docs of this type. There is then effectively no draft mode for this doc type, but there will be draft document versions in the database.
+This option can also be set to an object containing an object with a key of `project` and values which will be used as a query builder for retrieving the next piece document.
 
-The core image and file modules use this option, for example. It eliminates the need for users to think about the distinction between draft and published content while preserving the possibility of translation for different locales.
-
-#### Example
+<AposCodeBlock>
 
 ```javascript
-// modules/article-category/index.js
 module.exports = {
-  extend: '@apostrophecms/piece-type',
+  extend: ‘@apostrophecms/piece-page-type’,
   options: {
-    autopublish: true
+    next: true
   },
-  // ...
+  // …
 }
-```
 
-### `cache`
+// OR
 
-`cache` can be set to an object with an `api` subproperty, and a `maxAge` subproperty within that, determining the cache lifetime in seconds. If enabled, Apostrophe will send a `Cache-Control` header with the specified maximum age. The actual caching is provided by the browser, or by an intermediate CDN or reverse proxy.
-
-Note that Apostrophe already provides "cache on demand" by default, to improve performance when simultaneous `GET` requests arrive for the same piece. Unlike "cache on demand," setting the `cache` option introduces the possibility that some visitors will see older content, up to the specified lifetime.
-
-If a user is logged in, or `req.session` has content, Apostrophe always disables caching. However such a user could encounter a previously cached document from before logging in. Apostrophe contains logic to mitigate this in the editing experience.
-
-#### Example
-
-```javascript
-  cache: {
-    api: {
-      // Specified in seconds
-      maxAge: 3000
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The next article piece would be returned with only the `title, `_url`
+    // and `lastPublishedAt` properties.
+    next: {
+      project: {
+        title: 1,
+        _url: 1,
+        lastPublishedAt: 1
+      }
     }
-  }
-```
-
-### `label`
-
-`label` should be set to a text string to be used in user interface elements related to this doc type. This includes buttons to open piece manager modals.
-
-If not set, Apostrophe will convert the module name to a readable label by splitting the `name` property on dashes and underscores, then capitalizing the first letter of each word.
-
-#### Example
-
-```javascript
-// modules/feature/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    label: 'Featured Article'
   },
-  // ...
+  // …
 }
 ```
-
-### `localized`
-
-Defaults to `true`. If set to `false`, this doc type will _not_ be included in the locale system. This means there will be only one version of each doc, regardless of whether multiple locales (e.g., for languages or regions) are active. There is no distinction between draft and published, including in the database.
-
-The "users" piece type disables localization in this way. It can also be useful for piece types that are synchronized from another system that has no notion of locales and no distinction between "draft" and "published" content.
-
-#### Example
-
-```javascript
-// modules/administrative-category/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    localized: false
-  },
-  // ...
-}
-```
+<template v-slot:caption>
+  modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 ### `perPage`
+The `perPage` option receives an integer as value and sets the number of pieces that will be displayed per page for the `index.html` page. It is set to 10 items per page by default.
 
-In piece types, the `perPage` option, expressed as an integer, sets the number of pieces that will be returned in each "page" [during `GET` requests](/reference/api/pieces.md#get-api-v1-piece-name) that don't specify an `_id`. It also controls how many are displayed in the manager modal user interface. This value defaults to 10.
-
-#### Example
+<AposCodeBlock>
 
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
-    perPage: 20 // REST `GET` requests will return 20 pieces per page.
+    perPage: 20 // REST `GET` requests will return 20 pieces per page
   },
-  // ...
+// …
 }
 ```
+  <template v-slot:caption>
+    modules/article-page/index.js
+  </template>
+</AposCodeBlock>
 
-### `pluralLabel`
+### `piecesFilter`
+The `piecesFilter` takes an array of objects to assist in filtering on the index page. Each object must have a `name` property associated with a valid [query builder](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#queries-self-query). 
 
-Similar to `label` for all doc types, the `pluralLabel` option sets the string the user interface will use to describe a piece type in plural contexts.
+These include:
+* Custom query builders configured in an app that include a `launder` method
+* Field names whose field types automatically get builders:
+    - boolean
+    - checkboxes
+    - date
+    - float
+    - integer
+    - relationship
+    - select
+    - slug
+    - string
+    - url
 
-If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
+When the index page is served, configured filters will be represented on a `req.data.piecesFilter` object (`data.piecesFilter` in the template). If you include `counts: true` in a filter object the number of pieces matching that filter are included in the `req.data.piecesFilter` properties.
 
-#### Example
+<AposCodeBlock>
 
 ```javascript
-// modules/goose/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
-    label: 'Goose',
-    pluralLabel: 'Geese'
-  },
-  // ...
-}
-```
-
-### `publicApiProjection`
-
-By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
-
-This should be set to an object containing individual field name keys set to `1` for their values. Those fields names included in the `publicApiProjection` object will be returned when the `GET` API requests are made without authentication.
-
-#### Example
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    publicApiProjection: {
-      title: 1,
-      authorName: 1,
-      _url: 1 // 👈 Dynamic properties are allowed
-    }
-  },
-  // ...
-}
-```
-
-Unauthenticated [`GET /api/v1/article`](/reference/api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
-
-### `quickCreate`
-
-Setting `quickCreate: true` on a piece adds that piece type to the admin bar "quick create" menu. The Apostrophe admin bar user interface includes the quick create menu button to add new pieces without first opening their respective manager modals.
-
-#### Example
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    quickCreate: true
-  },
-  // ...
-}
-```
-
-### `searchable`
-
-<!-- TODO: link to documentation of Apostrophe search when available. -->
-Setting `searchable: false` on a piece type will exclude that piece type from the results in Apostrophe's built-in search.
-
-#### Example
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    searchable: false
-  },
-  // ...
-}
-```
-
-### `sort`
-
-The `sort` option for a doc type defines a sorting order for requests to the database for that type. The option is set to an object containing field name keys with `1` as a property value for ascending order and `-1` for descending order.
-
-The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns documents based on the `updatedAt` property (the date and time of the last update) in descending order. The `sort` object can have multiple keys for more specific sorting.
-
-#### Example
-
-This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
-
-```javascript
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    sort: {
-      priority: 1,
-      updatedAt: -1
-    }
+    label: 'Book',
+    pluralLabel: 'Books'
   },
   fields: {
     add: {
-      priority: {
-        type: 'integer',
-        min: 1,
-        max: 5
+      _author: {
+        label: 'Author',
+        type: 'relationship'
       },
-      // ...
+      category: {
+        label: 'Category',
+        type: 'select',
+        choices: [
+          // category choices here
+        ]
+      }
     }
+    // …
   }
-  // ...
+};
+```
+  <template v-slot:caption>
+    modules/book/index.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    piecesFilters: [
+      { name: '_author' },
+      {
+        name: 'category',
+        counts: true
+      }
+    ]
+  }
+};
+
+```
+  <template v-slot:caption>
+    modules/book-page/index.js
+  </template>
+</AposCodeBlock>
+
+### `pieceModuleName`
+Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+
+<AposCodeBlock>
+
+```javascript
+// 👆 This module name would look for a piece type
+// named `fiction` if not for `pieceModuleName`
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    pieceModuleName: 'book'
+  }
+  // Code to select and group only fiction books
+  // …
+};
+```
+<template v-slot:caption>
+modules/fiction-page/index.js
+</template>
+</AposCodeBlock>
+
+### `previous`
+If this option is set to true, it exposes the previous piece in the current [sort order](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#localized) as `req.data.previous` (`data.previous` in the template) when serving a [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the previous item in a series (e.g., the next newest blog post).
+
+This option can also be set to an object containing an object with a key of `project` and values which will be used as a query builder for retrieving the previous piece document.
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    previous: true
+  },
+  // …
+}
+
+// OR
+
+module.exports = {
+  extend: '@apostrophecms/piece-page-type',
+  options: {
+    // The previous article piece would be returned with only the `title`, `_url`
+    // and `lastPublishedAt` properties.
+    next: {
+      project: {
+        title: 1,
+        _url: 1,
+        lastPublishedAt: 1
+      }
+    }
+  },
+  // …
 }
 ```
+<template v-slot:caption>
+  modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
-## Related documentation
+## Related Documentation
 
-- [Pieces guide](/guide/pieces.md)
-- [Pieces REST API](/reference/api/pieces.md)
+* [Piece index and show pages](https://v3.docs.apostrophecms.org/guide/piece-pages.html)
+* [Piece page type options](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-piece-page-types)
 
 ## Featured methods
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-page-type/index.js) for all the modules that belong to this module.
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-type/index.js) for all methods that belong to this module.
-<!-- Some are used within the module and would just create noise here. -->
+### `indexQuery(req)`
+This method should be overridden for a piece-type to call additional [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders) by default.
 
-This module is meant as a base class for more specific content modules. As such, the methods should be used from those content modules, not directly from this one.
+### `beforeIndex(req)`
+This method is called before `indexPage`. It is a convenient method to extend for manipulating the `req` being supplied to that page.
 
-### `async find(req, criteria, builders)`
+### `beforeShow(req)`
+This method is called before `showPage`. It is a convenient method to extend for manipulating the `req` being supplied to that page.
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+### `dispatchAll()`
+This method can be extended to override the default behavior of invoking `showPage` if the URL has an additional path after the base, e.g. `/blog/good-article`. As example, you could override to use `/:year/:month/:day/:slug` to invoke `self.showPage`. This should be used in conjunction with the [`buildUrl()`](#buildurl-req-page-piece)) method of this module. See [@apostrophecms/page-type](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/page-type/index.js) for more about what you can do with dispatch routes.
 
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
-| `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
+### `buildUrl(req, page, piece)`
+This method should be extended to build custom URL for use in the [`dispatchAll`](#dispatchall) method.
 
-### `async insert(req, piece, options)`
+### `filterByIndexPage(query, page)`
+This method invokes query builders on the supplied query argument to ensure it only fetches results appropriate to the given page. This is typically done when there is more than one pieces-page per page type. This should be used in conjunction with the [`chooseParentPage`](#chooseparentpage-pages-piece) method of this module.
 
-The `insert()` method is used to add a new piece in server-side code. See the [guide for inserting documents in code](/guide/database-insert-update.md#inserting-a-new-piece) for more on this.
-
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `piece` | Object | The piece document object. |
-| `options` | Object | An options object. Setting `permissions: false` will bypass all permission checks. |
-
-### `async update(req, piece, options)`
-
-The `update()` is used to update data for an existing piece. Note that the second argument must be a *complete piece object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-content-documents) for more on this.
-
-| Property | Type | Description |
-| -------- | -------- | ----------- |
-| `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
-| `piece` | Object | The document object that will *replace* the existing database document. |
-| `options` | Object | An options object. Setting `permissions: false` will bypass all permission checks. |
-
-### `getBrowserData(req)`
-
-Piece type modules' implementation of [`getBrowserData`](module.md#getbrowserdata-req). This establishes the data that is used in the browser (including by the user interface). If adjusting this **remember to [*extend* this method](/reference/module-api/module-overview.md#extendmethods-self) rather than overwriting it** to avoid breaking the UI.
-
-## Module tasks
-
-### `generate`
-
-Full command: `node app [piece-type name]:generate --total=[integer]`
-
-This task is used to generate sample documents for a given piece type. This can be helpful during project development to quickly create test content. The task will generate 10 items if the `--total` argument is *not* included. If `--total` is included with a number argument, it will generate that number of items.
-
-For example, `node app article:generate --total=2000` will generate 2,000 documents for an `article` piece type.
+### `chooseParentPage(pages, piece)`
+This `pages` parameter of this method takes an array of all of the index pages for a particular piece-type, and the `piece` parameter is an individual piece-type name. By default, it will return the first item in the `pages` array, but the developer should map pieces to pages in a way that makes sense for their design. This method will give a warning if the [`filterByIndexPage`](#filterbyindexpage-query-page) method has not been overridden.
