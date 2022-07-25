@@ -17,11 +17,11 @@ There can only be *one* global doc.
 ## Options
 |  Property | Type | Description |
 |---|---|---|
-|`deferWidgetLoading` | Boolean | If set to `true`, any widget with the option `defer: true` will not be loaded until the end of loading the global doc. |
+|`deferWidgetLoading` | Boolean | If set to `true`, any widget with the option [`deferred: true`](https://v3.docs.apostrophecms.org/reference/modules/widget-type.html#deferred) will not be loaded until the end of loading the global doc. |
 
 ### `deferWidgetLoading`
 
-If set to `true`, the `deferWidgetLoading` option reduces the number of queries required when loading the global doc. Any widget with the option `defer: true` used on the page will not be loaded until the entire global doc is loaded.
+If set to `true`, the `deferWidgetLoading` option reduces the number of queries required when loading the global doc. Any widget with the option `deferred: true` used on the page will not be loaded until the entire global doc is loaded.
 
 #### Example
 
