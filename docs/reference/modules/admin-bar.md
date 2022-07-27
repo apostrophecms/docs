@@ -12,9 +12,7 @@ This module implements Apostrophe's admin bar at the top of the page. Any module
 
 ## Configuration options
 
-Options are passed into the admin-bar module by "extending" it through an `index.js` file typically located at `modules/@apostrophecms/admin-bar/index.js in the project folder.
-
-The options passed in this manner will configure the existing @apostrophe/admin-bar` module options through implicit subclassing. This same type of configuration takes place when you create a `modules/@apostrophecms/pages/index.js` file in the project to add configuration to the main `page` module.
+Options are passed into the admin-bar module by creating a `modules/@apostrophecms/admin-bar/index.js` file in our project. Our project-specific configuration will merge gracefully with the defaults that come with the module. New fields are added and grouped identically to any widget or pieces module.
 
 |  Property | Type | Description |
 |---|---|---|
