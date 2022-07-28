@@ -8,7 +8,7 @@ extends: '@apostrophecms/doc-type'
 
 This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the  ['@apostrophecms/page'](/reference/modules/page.md) module.
 
-Once an editor adds a page of this type to the site via user interface, it becomes possible to view a listing of pieces by visiting that page's URL, and to view individual pieces of the relevant type by adding the slug of any piece to the page's URL, like this: `/slug/of/page/slug-of-piece`
+Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL, and to view individual pieces of the relevant type by adding the slug of any piece to the page's URL, like this: `/slug/of/page/slug-of-piece`
 
 This default behavior can be customized as described below.
 
@@ -64,7 +64,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `perPage`
-The `perPage` option should be set to an integer as a value and specifies the number of pieces displayed per page for the `index.html` page. It is set to 10 items per page by default.
+The `perPage` option should be set to an integer and specifies the number of pieces displayed per page for the `index.html` page before pagination is offered. It is set to 10 items per page by default.
 
 <AposCodeBlock>
 
@@ -99,7 +99,7 @@ These include:
     - string
     - url
 
-When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
+When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
 <AposCodeBlock>
 
@@ -159,9 +159,27 @@ module.exports = {
 ```
 {
   _author: [
-    { value: 'Gibson', label: 'Gibson' },
-    { value: 'Herbert', label: 'Herbert' },
-    { value: 'Le Guin', label: 'Le Guin' }
+    {
+      slug: 'gibson',
+      _edit: true,
+      _publish: true,
+      label: 'Gibson',
+      value: 'cl64zrra8000fgels5v1k8ums:en:draft'
+    },
+    {
+      slug: 'herbert',
+      _edit: true,
+      _publish: true,
+      label: 'Herbert',
+      value: 'cl64zsgi1000vgels1xoi2b9o:en:draft'
+    },
+    {
+      slug: 'le-guin',
+      _edit: true,
+      _publish: true,
+      label: 'Le Guin',
+      value: 'cl64zs5h0000ngelsbhzvgdpc:en:draft'
+    }
   ],
   category: [
     { value: 'cyberpunk', label: 'cyberpunk', count: 4 },
