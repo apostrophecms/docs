@@ -24,12 +24,12 @@ If `refreshOnRestart` is truthy and `process.env.NODE_ENV` is not set to `produc
 
 ### `watch`
 
-If `watch` is falsy, then changes to any of the assets in the `modules` and `node_modules` will not trigger a restart. Note that this option is disabled and has no impact if `process.env.NODE_ENV` is set to `production`. 
+If `watch` is falsy, then changes to any of the assets in the `modules` and `node_modules` will not trigger a restart. Note that this option is disabled and has no impact if `process.env.NODE_ENV` is set to `production`.
 
 ## Command Line Tasks
 
 ### `build`
-The build command triggers the compilation, processing, and output of the project assets. The main code from each module, code placed in the `<module-name>/ui/src` folders, and scripts included in [bundles](#bundles) are combined separately. Any SCSS files are combined and translated to CSS. If `NODE_ENV=production`, all of the final deployment files are written out to the `public/releases` folder within a sub-folder named by the release id. The `build` script will try to automatically set the release id when building from a simple git checkout from the hash, building for Heroku or platform.sh from the environment variables, or Stagecoach from the root directory name. Otherwise, the release id can set from a `APOS_RELEASE_ID` environment variable or with a root directory file named 'release-id' with the value of the id inside. The value should be a short, unique string identifier.
+The build command triggers the compilation, processing, and output of the project assets. The main code from each module, code placed in the `<module-name>/ui/src` folders, and scripts included in [bundles](#bundles) are combined separately. Any SCSS files are combined and translated to CSS. If `NODE_ENV=production`, all of the final deployment files will be written out to a sub-folder located within either the `public/apos-frontend\releases` folder, or the `public/uploads/apos-frontend/releases/` folder if the `APOS_UPLOADFS_ASSETS` variable is also present. The name of the subfolder is derived from the release id. The `build` script will try to automatically set the release id using the hash if the project is a simple git checkout, environment variables for Heroku or platform.sh, orthe root directory name for Stagecoach. When building for other environments, the release id can be set from an `APOS_RELEASE_ID` environment variable or with a root directory file named 'release-id' with the value of the id inside. The value should be a short, unique string identifier.
 
 #### Example
 
@@ -64,7 +64,7 @@ The webpack configuration can be extended from any module. The `asset` module ex
 | [`bundles`](#bundles) | Object | |
 
 ### `extensions`
-The `extensions` option allows the addition of custom methods for processing the Javascript and SCSS in the `ui/src` folder. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). This property can take either a simple object with a name property or a function that returns an object. 
+The `extensions` option allows the addition of custom methods for processing the Javascript and SCSS in the `ui/src` folder. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). This property can take either a simple object with a name property or a function that returns an object.
 
 #### `extensions` simple object
 
@@ -78,20 +78,20 @@ Modification of the `resolve` property of the webpack configuration using a simp
 const path = require("path");
 
 module.exports = {
- // ...
- webpack: {
-   extensions: {
-     modifyResolve: {
-       resolve: {
-         extensions: [ '.jsx' ],
-         alias: {
-           'Utilities': path.join(process.cwd(), 'lib/utils')
-         }
-       }
-     }
-   }
- },
- // ...
+// ...
+webpack: {
+  extensions: {
+    modifyResolve: {
+      resolve: {
+        extensions: [ '.jsx' ],
+        alias: {
+          'Utilities': path.join(process.cwd(), 'lib/utils')
+        }
+      }
+    }
+  }
+},
+// ...
 };
 
 ```
@@ -132,23 +132,23 @@ Functions in the `extensions` property take an `option` parameter to allow multi
 const path = require("path");
 
 module.exports = {
- // ...
-  webpack: {
-   extensions: {
-     addAlias(options) {
-       return {
-         resolve: {
-           extensions: [ ...(options.extensions || []), '.jsx' ],
-           alias: {
-             ...(options.alias || {}),
-             Utilities: path.resolve(process.cwd(), './lib/utils')
-           }
-         }
-       };
-     }
-   }
- },
- // ...
+// ...
+ webpack: {
+  extensions: {
+    addAlias(options) {
+      return {
+        resolve: {
+          extensions: [ ...(options.extensions || []), '.jsx' ],
+          alias: {
+            ...(options.alias || {}),
+            Utilities: path.resolve(process.cwd(), './lib/utils')
+          }
+        }
+      };
+    }
+  }
+},
+// ...
 };
 
 ```
@@ -168,19 +168,19 @@ Extending the previous example with an additional extension and alias:
 
 ```javascript
 module.exports = {
- // ...
-  webpack: {
-   extensionOptions: {
-     addAlias(options) {
-       return {
-         extensions: [ '.jsm' ],
-         alias: {
-           Data: path.resolve(process.cwd(), './lib/data')
-         }
-       };
-     }
-   }
- },
+// ...
+ webpack: {
+  extensionOptions: {
+    addAlias(options) {
+      return {
+        extensions: [ '.jsm' ],
+        alias: {
+          Data: path.resolve(process.cwd(), './lib/data')
+        }
+      };
+    }
+  }
+},
 // …
 };
 ```
@@ -192,14 +192,12 @@ module/my-new-widget/index.js
 ### `bundles`
 The `bundles` option allows delivery of frontend assets to a specific page or if a widget is on a page page. This option takes an object containing either the JavaScript or stylesheet file names without extension as properties. These files should be located in the module's `ui/src` folder. Each property takes either an empty object or a sub-property of `templates`. The `templates` sub-property accepts an array of page template names where the content should be loaded. So, for example, a bundle added to a `piece-page-type` could specify `templates: [ 'index' ]` to load the bundle on the `index` page, but not the `show` page.
 
-Multiple modules can contribute to a single bundle by using the same bundle name, and webpack will merge these files in the final build. In addition, any shared dependencies between the extra bundles and the "main" bundle built from the code found in the `ui/src/index.js` files will be resolved so that only one instance is loaded. 
+Multiple modules can contribute to a single bundle by using the same bundle name, and webpack will merge these files in the final build. In addition, any shared dependencies between the extra bundles and the "main" bundle built from the code found in the `ui/src/index.js` files will be resolved so that only one instance is loaded.
 
 ::: warning
-Bundles should be used cautiously as they can contribute to slower page load times. 
+Bundles should be used cautiously as they can contribute to slower page load times.
 :::
-
 
 ## Related documentation
 
 - [Extending webpack configuration](/guide/webpack.md)
-
