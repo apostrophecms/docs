@@ -9,3 +9,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Hosting
 
 - [Ubuntu hosting setup](ubuntu-hosting.md)
+
+## Microsoft Windows
+
+- [Windows development environment](windows-development.md)

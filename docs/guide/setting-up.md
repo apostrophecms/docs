@@ -1,5 +1,7 @@
 # Setting up
 
+This article covers the first steps to get started. MacOS and Linux users can dive right in. If you have Windows, please follow our [Windows development](../cookbook/windows-development.md) cookbook article first.
+
 ## System requirements
 
 | Software | Minimum Version |
@@ -26,7 +28,7 @@ ImageMagick is optional, but recommended. It provides the `convert` and `identif
 
 ## The Apostrophe CLI tool
 
-There is [an official CLI](https://www.npmjs.com/package/@apostrophecms/cli) for quickly setting up starter code for your Apostrophe project. Once in a project it can also help add new module code with a single command so you can focus on the unique parts rather than copying or remembering boilerplate. Keep an eye out for updates once it is installed since it will continue to evolve to help with additional tasks.
+There is [an official CLI](https://www.npmjs.com/package/@apostrophecms/cli) (Command Line Interface) for quickly setting up starter code for your Apostrophe project. Once in a project it can also help add new module code with a single command so you can focus on the unique parts rather than copying or remembering boilerplate. Keep an eye out for updates once it is installed since it will continue to evolve to help with additional tasks.
 
 Install the CLI tool:
 
