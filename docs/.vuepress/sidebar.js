@@ -128,6 +128,13 @@ module.exports = {
       children: [
         [ 'cookbook/opentelemetry.md', 'Profiling ApostropheCMS with OpenTelemetry' ]
       ]
+    },
+    {
+      title: 'Microsoft Windows',
+      collapsable: false,
+      children: [
+        [ 'cookbook/windows-development.md', 'Windows development environment' ]
+      ]
     }
   ],
   '/reference': [
