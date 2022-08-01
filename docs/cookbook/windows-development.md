@@ -139,7 +139,7 @@ start-mongo
 
 ## Installing ApostropheCMS
 
-Now we're ready to install the Apostrophe CLI (Command Line Interface)! To get started, **open a second Ubuntu 22.04 window**, and in that Window type:
+Now we're ready to install the Apostrophe CLI (Command Line Interface)! To get started, **open a second Ubuntu 20.04 window**, and in that Window type:
 
 ```bash
 nvm use 16
