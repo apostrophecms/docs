@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-The `asset` module serves to organize, process, and output all project script and styling assets during the build process. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are passed through the creation of a `modules/@apostrophecms/asset/index.js` file.
+The `asset` module serves to organize, process, and output all project JavaScript and CSS assets during the build process. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are passed through the creation of a `modules/@apostrophecms/asset/index.js` file.
 
 ## Options
 
@@ -20,7 +20,7 @@ The `asset` module serves to organize, process, and output all project script an
 
 ### `refreshOnRestart`
 
-If `refreshOnRestart` is truthy and `process.env.NODE_ENV` is not set to `production`, then restart of the Apostrophe app will trigger a browser refresh.
+By default, `refreshOnRestart` is set to `false`. If this option is truthy and `process.env.NODE_ENV` is not set to `production`, then restart of the Apostrophe app will trigger a browser refresh. This is very useful in combination with `nodemon`.
 
 ### `watch`
 
