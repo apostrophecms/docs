@@ -12,7 +12,7 @@ If you have never installed WSL before, WSL2 will be the default. The rest of th
 
 First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular we strongly recommend that you [install Ubuntu 20.04 LTS, which can also be done from the Windows app store](https://apps.microsoft.com/store/detail/ubuntu-2004/9N6SVWS3RX71?hl=en-us&gl=US). This method was tested for this article. Newer versions of Ubuntu might not support everything covered here, and 20.04 is supported until 2030.
 
-Second, launch Ubuntu 20.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you may need to access the prompt a different way, for instance by launching Powershell and typing `wsl`.
+Second, launch Ubuntu 20.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl`.
 
 ::: note
 From here on out, all commands are intended to be typed at the Ubuntu 20.04 shell prompt, not the regular Windows command or Powershell prompt.
@@ -116,7 +116,7 @@ sudo rm /tmp/mongodb-27017.sock
 mongod --dbpath=/home/apostrophe/mongodb-data/5.0
 ```
 
-You should only have to do this once to clean up the mess. In future, **just remember: don't use `sudo`, you don't need it and it only makes a mess.** If there's an exception we'll explicitly show that in our tutorials.
+You should only have to do this once to clean up the mess. In the future, **just remember: don't use `sudo`, you don't need it and it only makes a mess.** If there's an exception we'll explicitly show that in our tutorials.
 
 Another possibility is that you tried to write `--dbpath=~/mongodb-data/5.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
 
