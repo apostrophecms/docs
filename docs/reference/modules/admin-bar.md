@@ -12,7 +12,7 @@ This module implements Apostrophe's admin bar at the top of the page. Any module
 
 ## Configuration options
 
-Options are passed into the admin-bar module by creating a `modules/@apostrophecms/admin-bar/index.js` file in our project. Our project-specific configuration will merge gracefully with the defaults that come with the module. New fields are added and grouped identically to any widget or pieces module.
+Options are passed into the admin-bar module by creating a `modules/@apostrophecms/admin-bar/index.js` file in our project. Our project-specific configuration will merge gracefully with the defaults that come with the module.
 
 |  Property | Type | Description |
 |---|---|---|
@@ -63,21 +63,33 @@ Because this module has an alias, you can call these from another module from th
 
 Add an item to the menu bar.
 
-The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`.
+The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`. A more complex example is contained within the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js).
 
 **Example**
 
+Code added to handle click events on the new button in the admin UI frontend:
+
 <AposCodeBlock>
+
 ```javascript
-apos.bus.$on('admin-menu-click', async (item) => {
- // Make sure it is the button we care about, leave others to their own handlers
- if (item !== 'myCustomModule') {
-   return;
- }
- // Custom code for button action
-});
+export default () => {
+  apos.bus.$on('admin-menu-click', async (item) => {
+    // Make sure it is the button we care about, leave others to their own handlers
+    if (item !== 'myCustomModule') {
+      return;
+    }
+    // Custom code for button action
+  };
+}
 ```
+<template v-slot:caption>
+/modules/myCustomModule/ui/apos/index.js
+</template>
 </AposCodeBlock>
+
+::: note
+Make sure to add this to the `ui/apos/apps/` folder, or import it into a file located there. If you try to load this code by adding it to `ui/src` you will get an error in the console because the admin functions won't be available, yet.
+:::
 
 The `label` will be the name displayed for the button on the menu bar.
 
