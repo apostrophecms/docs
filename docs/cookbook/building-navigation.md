@@ -266,7 +266,7 @@ The final step is to turn the array data from this into template markup. We will
               {% set path = item._page[0]._url %}
               {% set pageTitle = item._page[0].title %}
             {% elif item.type === 'custom' %}
-              {% set path = item.url %}
+              {% set path = item.customUrl %}
             {% endif %}
             <a href="{{ path }}"
               {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
