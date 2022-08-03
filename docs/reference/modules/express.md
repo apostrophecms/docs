@@ -89,3 +89,11 @@ You may need to use this feature when implementing `POST` form submissions that 
 
 This module's methods are used to generate the Express app. Customization should be done using the options described above. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/express/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
+
+## Module tasks
+
+### `list-routes`
+
+Full command: `node app @apostrophecms/express:list-routes`
+
+As a debugging convenience, this task command lists all routes that ApostropheCMS added to Express via the `routes`, `apiRoutes`, `restApiRoutes` and `renderRoutes` module sections. This command currently does not list routes added to Express directly via `apos.app`, such as the `*` wildcard route for pages, although these may be included in the future.
