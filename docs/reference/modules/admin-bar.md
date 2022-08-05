@@ -103,7 +103,7 @@ The `label` will be the name displayed for the button on the menu bar.
 | `contextUtility` | Boolean | If truthy, it will cause the button to be displayed in the tray of icons to the left of the page settings gear. |
 | `icon` | String | If `contextUtility` is `true` an icon name is required for display. |
 | `toggle` | Boolean | If truthy, the button will remain active until it is clicked a second time. |
-| `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with ‘activated and ‘deactivated’ strings. |
+| `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with `activated` and `deactivated` strings. |
 
 ### `last`
 
