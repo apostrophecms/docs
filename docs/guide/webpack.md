@@ -286,8 +286,10 @@ Let's say we have another bundle, `about-page`, and we want to load an extra bun
   ```javascript
     module.exports = {
       extend: '@apostrophecms/page-type',
-      bundles: {
-        'about': {}
+      webpack: {
+        bundles: {
+          'about': {}
+        }
       }
     }
   ```
@@ -308,9 +310,11 @@ We can accomplish that with the `templates` sub-property:
   ```javascript
     module.exports = {
       extend: '@apostrophecms/piece-page-type',
-      bundles: {
-        'product': {
-          templates: [ 'index' ]
+      webpack: {
+        bundles: {
+          'product': {
+            templates: [ 'index' ]
+          }
         }
       }
     }
