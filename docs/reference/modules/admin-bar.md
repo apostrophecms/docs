@@ -25,6 +25,7 @@ The `groups` option takes an array of one or more objects that group several men
 **Example**
 
 <AposCodeBlock>
+
 ```javascript
 
 module.exports = {
