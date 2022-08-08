@@ -2,7 +2,7 @@
 
 ## API keys
 
-API keys are great for server-to-server communication, because they don't expire. They are unsuitable for client-side requests or use in headless applications because it is possible for end users to determine the API key and use it for their own purposes. For these roles see the section on [bearer tokens](#bearer-tokens) below.
+API keys are great for server-to-server communication because they don't expire. However, they are unsuitable for client-side requests or use in headless applications because it is possible for end users to determine the API key and use it for their own purposes. For these roles, see the section on [bearer tokens](#bearer-tokens) below.
 
 Configure API keys as an option in the `@apostrophecms/express` module in `app.js`. Alternately, all `@apostrophecms/express` configuration may be added in a separate `modules/@apostrophecms/express/index.js` file.
 
@@ -33,7 +33,7 @@ Add an `authorization` [HTTP header](https://javascript.info/fetch#request-heade
 ApiKey myapikey1029384756
 ```
 
-Alternatively you may pass the api key as the `apikey` or `apiKey` query parameter:
+Alternatively, you may pass the api key as the `apikey` or `apiKey` query parameter:
 
 ```
 http://example.net/api/v1/article?apikey=myapikey1029384756
@@ -48,13 +48,14 @@ Bearer tokens are more appropriate for browser use and headless applications bec
 const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify({
     username: 'your-username-here',
     password: 'your-secure-password'
   })
 });
+const data = await response.json();
 ```
 
 ### Response
@@ -93,8 +94,9 @@ As an alternative to a bearer token, you may request a session cookie. This is t
 const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
   method: 'POST',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
+  credentials:'include',
   body: JSON.stringify({
     username: 'your-username-here',
     password: 'your-secure-password',
@@ -105,7 +107,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error an appropriate HTTP status code is returned.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](https://v3.docs.apostrophecms.org/guide/custom-login-requirements.html) in our guide.
 
 ### End session
 
@@ -129,7 +131,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ## Allowing public access
 
-All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to authenticated users for security reasons. However you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
+All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to authenticated users for security reasons. However, you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
 
 ```javascript
 // modules/product/index.js
