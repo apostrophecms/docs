@@ -17,6 +17,7 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
 | [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
+| `uploadfs` | String \|\| Object | Determines what processor to use for assets during the build process.
 
 ### `refreshOnRestart`
 
@@ -25,6 +26,10 @@ By default, `refreshOnRestart` is set to `false`. If this option has a falsy val
 ### `watch`
 
 By default, `watch` is set to `true`. A truthy value will cause the application to monitor for changes in any of the asset bundles in the `modules` and `node_modules` folders and trigger a webpack rebuild and browser refresh. A value of `false` will disable this behavior. Note that this option is disabled and has no impact if `process.env.NODE_ENV` is set to `production`.
+
+### `uploadfs`
+
+By default, uploadfs will use [sharp](https://www.npmjs.com/package/sharp) for processing uploads during the build process. Setting the `image` subproperty to `imagemagick` will use this processor if it is installed. Finally, a fully custom processor can be used by passing an object. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
 
 ## Command Line Tasks
 
@@ -71,10 +76,10 @@ The webpack configuration for building the front-facing page assets can be exten
 |---|---|---|
 | [`extensions`](#extensions) | Object | Adds extra processing functionality to webpack. |
 | [`extensionOptions`](#extensionoptions) | Object | Adds functionality to any extensions added through the `extensions` option. |
-| [`bundles`](#bundles) | Object | |
+| [`bundles`](#bundles) | Object | Allows delivery of additional assets when specific pages or pieces are displayed. |
 
 ### `extensions`
-The `extensions` option allows the addition of custom webpack configuration methods for processing the Javascript and SCSS in the `ui/src` and `ui/apos` folders. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). As value, this property can take either a simple object or a function that accepts an object of options and returns an object.
+The `extensions` option allows the addition of custom webpack configuration methods for processing the Javascript and SCSS in the `ui/src` and `ui/apos` folders. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). Subproperties of extensions can be simple objects whose properties merge with the webpack configuration, or functions that accept an object of options and return such an object.
 
 #### `extensions` simple object
 
