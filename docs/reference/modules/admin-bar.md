@@ -45,7 +45,7 @@ module.exports = {
  }
 };
 ```
-<template v-slot:caption>
+  <template v-slot:caption>
     modules/@apostrophecms/admin-bar/index.js
   </template>
 </AposCodeBlock>
@@ -83,9 +83,9 @@ export default () => {
   };
 }
 ```
-<template v-slot:caption>
-/modules/myCustomModule/ui/apos/index.js
-</template>
+  <template v-slot:caption>
+    /modules/myCustomModule/ui/apos/index.js
+  </template>
 </AposCodeBlock>
 
 ::: note
