@@ -29,7 +29,7 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 ## Command Line Tasks
 
 ### `build`
-The build command triggers the compilation, processing, and output of files within the `ui/apos`  and `ui/src` folders of each module. Logged-in users will receive assets from both folders, while logged-out users will only receive the later.
+The build command triggers the compilation, processing, and output of files within the `ui/apos`  and `ui/src` folders of each module. Logged-in users will receive assets from both folders, while logged-out users will only receive the later. You don't need this task in a development environment, it runs automatically when you start your app. It is necessary in a production environment.
 
 Assets within the `ui/apos` folder modify the admin UI. Code to be passed to the build process should be organized into two subfolders, a `components` folder that contains any new Vue components, and a `apps` folder that takes any additional admin-facing JavaScript. During the build process code located in the `ui/apos` subdirectory of any module is automatically detected and incorporated. Assets in the `components` folder are registered automatically by name and do not need to be imported. Unlike assets in the `ui/src` folder where only the `index.js` file is an entry point, all files in the `ui/apos/apps` folder are entry points. If this behavior is undesirable any files that should not be entry points can be placed into a sub-directory and imported into the main entry point file. See the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/login) for an example, including import of the Vue library within the [`AposLogin.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js). Customizing the admin UI is covered in-depth in the [guide documentation](https://v3.docs.apostrophecms.org/guide/custom-ui.html#customizing-the-user-interface).
 
@@ -39,14 +39,14 @@ In addition, files in `ui/public` are automatically concatenated into the `ui/sr
 
 In addition to the `ui/src/index.js` and `ui/src/index.scss` entry points, additional entry points can be defined by declaring [bundles via the `webpack` section](#bundles) of any module's main `index.js` file. These create separately compiled frontend bundles loaded only if a widget type or page type module declares a need for them.
 
-If `NODE_ENV=production`, all of the final deployment files will be written out to a sub-folder located within either the `public/apos-frontend\releases` folder, or the `public/uploads/apos-frontend/releases/` folder if the `APOS_UPLOADFS_ASSETS` variable is also present. The name of the subfolder is derived from the release id. The `build` script will try to automatically set the release id using the hash if the project is a simple git checkout, environment variables for Heroku or platform.sh, or via the timestamp part of the project's deployment folder name for Stagecoach. When building for other environments, the release id must be set via the `APOS_RELEASE_ID` environment variable or with a root directory file named 'release-id' with the value of the id inside. The value should be a short, unique string identifier.
+If `NODE_ENV=production`, all of the final deployment files will be written out to a sub-folder located within either the `public/apos-frontend/releases` folder, or the `public/uploads/apos-frontend/releases/` folder if the `APOS_UPLOADFS_ASSETS` variable is also present. The name of the subfolder is derived from the release id. The `build` script will try to automatically set the release id using the hash if the project is a simple git checkout, environment variables for Heroku or platform.sh, or via the timestamp part of the project's deployment folder name for Stagecoach. When building for other environments, the release id must be set via the `APOS_RELEASE_ID` environment variable or with a root directory file named 'release-id' with the value of the id inside. The value should be a short, unique string identifier.
 
 #### Example
 
 <AposCodeBlock>
 
 ```sh
-APOS_RELEASE_ID='2022-01-01' node app @apostrophecms/asset:build
+NODE_ENV=production APOS_RELEASE_ID='2022-01-01' node app @apostrophecms/asset:build
 ```
 </AposCodeBlock>
 
@@ -74,7 +74,7 @@ The webpack configuration for building the front-facing page assets can be exten
 | [`bundles`](#bundles) | Object | |
 
 ### `extensions`
-The `extensions` option allows the addition of custom methods for processing the Javascript and SCSS in the `ui/src` and `ui/apos` folders. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). This property can take either a simple object with a name property or a function that accepts an object of options and returns an object.
+The `extensions` option allows the addition of custom webpack configuration methods for processing the Javascript and SCSS in the `ui/src` and `ui/apos` folders. The schema used within the option conforms to that used for configuring webpack, which you can learn more about [here](https://webpack.js.org/configuration/). As value, this property can take either a simple object or a function that accepts an object of options and returns an object.
 
 #### `extensions` simple object
 
@@ -194,7 +194,7 @@ module/my-new-widget/index.js
 </AposCodeBlock>
 
 ### `bundles`
-The `bundles` option allows delivery of frontend assets to a specific page or if a widget is on a page page. The` bundles` subproperty can be present in any type of module, not just widget type and page type modules. However, configuring a bundle in a widget type or page type module is the only way to cause it to actually be loaded. If a bundle is present in another type of module, that module can contribute code to it, but it will only get loaded when also configured for at least one widget type or page type. This option takes an object containing either the JavaScript or stylesheet file names without extension as properties. These files should be located in the module's `ui/src` folder. Each property takes either an empty object or a sub-property of `templates`. The `templates` sub-property accepts an array of page template names where the content should be loaded. The `templates` feature is most often relevant for piece-page-type modules; if it is not used, it is assumed both `index` and `show` templates should load the bundle.
+The `bundles` option allows delivery of frontend assets to a specific page or if a widget is on a page page. The `bundles` subproperty can be present in any type of module, not just widget type and page type modules. However, configuring a bundle in a widget type or page type module is the only way to cause it to actually be loaded. If a bundle is present in another type of module, that module can contribute code to it, but it will only get loaded when also configured for at least one widget type or page type. This option takes an object containing either the JavaScript or stylesheet file names without extension as properties. These files should be located in the module's `ui/src` folder. Each property takes either an empty object or a sub-property of `templates`. The `templates` sub-property accepts an array of page template names where the content should be loaded. The `templates` feature is most often relevant for piece-page-type modules; if it is not used, it is assumed both `index` and `show` templates should load the bundle.
 
 Multiple modules can contribute to a single bundle by using the same bundle name, and webpack will merge these files in the final build. In addition, any shared dependencies between the extra bundles and the "main" bundle built from the code found in the `ui/src/index.js` files will be resolved so that only one instance is loaded.
 
@@ -209,6 +209,6 @@ Extra bundles should **only be used if the user probably won't need them on most
 
 ## Related documentation
 
-- [Extending webpack configuration](/guide/webpack.md)
+- [Extending webpack configuration](../../guide/webpack.md)
 
 
