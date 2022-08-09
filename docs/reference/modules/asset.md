@@ -17,7 +17,7 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
 | [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
-| `uploadfs` | String \|\| Object | Determines what processor to use for assets during the build process.
+| [`uploadfs`](#uploadfs) | String \|\| Object | Determines what processor to use for assets during the build process.
 
 ### `refreshOnRestart`
 
@@ -29,7 +29,7 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 
 ### `uploadfs`
 
-By default, uploadfs will use [sharp](https://www.npmjs.com/package/sharp) for processing uploads during the build process. Setting the `image` subproperty to `imagemagick` will use this processor if it is installed. Finally, a fully custom processor can be used by passing an object. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
+By default, uploadfs will use [sharp](https://www.npmjs.com/package/sharp) for static asset storage and delivery during the build process and during upload by the `attachment` module. Setting the `image` subproperty to `imagemagick` will force use of this processor if it is installed for the build process. Finally, a fully custom processor can be used by passing an object.  The processor choice for asset upload can be set seperately in the `attachment` module options. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
 
 ## Command Line Tasks
 
