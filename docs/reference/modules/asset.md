@@ -29,7 +29,7 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 
 ### `uploadfs`
 
-When the `APOs_UPLOADFS_ASSETS` env variable is present,this optional property can be used to configure an `uploadfs` instance that differs from the one configured by the `attachment` module, allowing changes in where assets from the webpack build process are stored and how they are served. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
+When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional property can be used to configure an `uploadfs` instance that differs from the one configured by the `attachment` module, allowing changes in where assets from the webpack build process are stored and how they are served. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
 
 ## Command Line Tasks
 
