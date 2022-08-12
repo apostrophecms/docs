@@ -42,8 +42,8 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 |`all` | `?all=1` | Set to `1` to include the *entire* page tree, regardless of depth |
 |`flat` | `?flat=1` | Set to `1` to [return page results in an flat array](#flat-array-response) instead of the page tree structure |
 |`children` | `?children=false` | Set to `false` to exclude the `_children` array` |
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request page document versions for that locale. Defaults to the default locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` to request the draft version of page documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request page document versions for that locale. Defaults to the default locale. |
 <!-- TODO: link to docs about locales when available. -->
 
 ### Request example
@@ -209,9 +209,9 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the page document version for that locale. |
-|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to request a specific mode version of the page. Authentication is required to get drafts. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request the page document version for that locale. |
+|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -220,7 +220,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=en&renderAreas=true', {
   method: 'GET'
 });
 const document = await response.json();
@@ -245,8 +245,8 @@ The `_position` property uses specific string values rather than index numbers t
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a page as a draft instead of immediately published. Set to `published` or leave it off to insert a published page. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request page document versions for that locale. Defaults to the default locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` to insert a page as a draft instead of immediately published. Set to `published` or leave it off to insert a published page. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request page document versions for that locale. Defaults to the default locale. |
 <!-- TODO: link to docs about locales when available. -->
 
 ### Request example
@@ -289,9 +289,9 @@ The `_position` property uses specific string values rather than index numbers t
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the page document version for that locale. |
-|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to replace a specific mode version of the page. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to replace the page document version for that locale. |
+|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -307,7 +307,7 @@ const data = {
   _position: 'lastChild'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=fr', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -327,8 +327,8 @@ The successful `PUT` request returns the newly created document. See the [page d
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the page document version for that locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to update a specific mode version of the page. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to update the page document version for that locale. |
 
 If moving a page within the page tree, the `PATCH`request must include *both* `_targetId` and `_position` as described in the [POST request description](#post-api-v1-apostrophecms-page).
 
@@ -346,7 +346,7 @@ const data = {
   title: 'Organization history'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=fr', {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json'
@@ -393,8 +393,8 @@ This API route **Permanently deletes the page database document**. Moving pieces
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
+|`aposLocale` | `?aposLocale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -403,7 +403,7 @@ This API route **Permanently deletes the page database document**. Moving pieces
 
 ```javascript
 // Request inside an async function.
-await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=en', {
   method: 'DELETE'
 });
 ```
@@ -470,14 +470,14 @@ The `body` of the request is ignored.
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-locale` | `?apos-locale=fr` | Identify a valid locale to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+|`aposLocale` | `?aposLocale=fr` | Identify a valid locale to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
 <!-- TODO: link to docs about locales when available. -->
 
 ### Request example
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckhdscx5900054z9k88uqs16w:en:draft/publish?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckhdscx5900054z9k88uqs16w/publish?apikey=myapikey&aposLocale=fr', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
