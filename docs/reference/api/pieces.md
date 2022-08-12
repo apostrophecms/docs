@@ -52,7 +52,7 @@ You may configure custom filters for a piece type as well. See [the guide on cus
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article?apikey=myapikey&aposMode=draft', {
   method: 'GET'
 });
 const document = await response.json();
