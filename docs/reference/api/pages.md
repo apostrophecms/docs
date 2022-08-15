@@ -215,12 +215,14 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
-
+::: note
+Query parameters will override the locale and mode present in the `_id`. So, if the `aposLocale=es` parameter is supplied, a `GET` request to the `_id` `###:en:published` will return the Spanish, not English, locale.
+:::
 ### Request example
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=en&renderAreas=true', {
+const response = await fetch('http://example.net/api/v1/@apostrophecms/page/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'GET'
 });
 const document = await response.json();
