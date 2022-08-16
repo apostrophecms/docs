@@ -107,6 +107,7 @@ In case of an error an appropriate HTTP status code is returned.
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
 ::: note
 Query parameters will override the locale and mode present in the `_id`. So, if the `aposLocale=es` parameter is supplied, a `GET` request to the `_id` `###:en:published` will return the Spanish, not English, locale.
+You can also elect to use the `aposDocId` instead of the `_id` and use the query parameters to pass in the locale and mode parameters found in the `_id`.
 :::
 
 ### Request example
@@ -171,7 +172,7 @@ The successful `POST` request returns the newly created document. See the [piece
 // Object with, at a minimum, properties for each required piece field.
 const data = { ... };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=fr', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:fr:published?apikey=myapikey', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -257,7 +258,7 @@ This API route **permanently deletes the piece database document**. Moving piece
 
 ```javascript
 // Request inside an async function.
-await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=en', {
+await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
   method: 'DELETE'
 });
 ```
