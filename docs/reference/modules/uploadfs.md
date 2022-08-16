@@ -1,7 +1,4 @@
-
-# `@apostrophecms/module-name`
-
-<AposRefExtends :module="$frontmatter.extends" />
+# `@apostrophecms/uploadfs`
 
 The `uploadfs` module copies files to a web-accessible location and provides a consistent way to get the URLs that correspond to those files.  `uploadfs` can also resize, crop and autorotate uploaded images. It includes S3-based, Azure-based, GCS-based, and local filesystem-based backends and you may supply others.
 
@@ -138,7 +135,7 @@ This property takes either a string designating one of the built-in storage opti
 ### `tempPath`
 During processing of files, the `uploadfs` module first copies them to a temporary location until the pipeline is finished. By default this is the `data/temp/uploadfs` folder of the project root directory. The `tempPath` property takes a local directory path for creating the `/temp` folder that houses these files. It is deleted after the build process.
 
-## Backend-type Specific Options
+<span id="backend-typespecificoptions">## Backend-type Specific Options</span>
 
 ### `contentTypes`
 This `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
