@@ -38,9 +38,9 @@ Apostrophe provides built-in REST end points for all [piece types](/reference/gl
 |----------|------|-------------|
 |`page` | `?page=2` | The page of results to return |
 |`search` | `?search=shoes` | A search query to filter the response |
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
-|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
+|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
 #### Custom filters
@@ -52,7 +52,7 @@ You may configure custom filters for a piece type as well. See [the guide on cus
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article?apikey=myapikey&aposMode=draft', {
   method: 'GET'
 });
 const document = await response.json();
@@ -99,18 +99,22 @@ In case of an error an appropriate HTTP status code is returned.
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request the piece document version for that locale. |
-|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request the piece document version for that locale. |
+|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
+::: note
+Query parameters will override the locale and mode present in the `_id`. So, if the `aposLocale=es` parameter is supplied, a `GET` request to the `_id` `###:en:published` will return the Spanish, not English, locale.
+You can also elect to use the `aposDocId` instead of the `_id` and use the query parameters to pass in the locale and mode parameters found in the `_id`.
+:::
 
 ### Request example
 
 ```javascript
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=draft&aposLocale=en', {
   method: 'GET'
 });
 const document = await response.json();
@@ -126,8 +130,8 @@ The successful `GET` request returns the matching document. See the [piece docum
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` to insert a piece as a draft instead of immediately published. Set to `published` or leave it off to insert a published piece. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
 <!-- TODO: link to docs about locales when available. -->
 
 ### Request example
@@ -156,8 +160,8 @@ The successful `POST` request returns the newly created document. See the [piece
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to replace the piece document version for that locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to replace a specific mode version of the piece. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to replace the piece document version for that locale. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -168,7 +172,7 @@ The successful `POST` request returns the newly created document. See the [piece
 // Object with, at a minimum, properties for each required piece field.
 const data = { ... };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:fr:published?apikey=myapikey', {
   method: 'PUT',
   headers: {
     'Content-Type': 'application/json'
@@ -188,8 +192,8 @@ The successful `PUT` request returns the newly created document. See the [piece 
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to update the piece document version for that locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to update a specific mode version of the piece. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to update the piece document version for that locale. |
 
 If a `PATCH` operation is attempted in the published mode, the changes in the patch are applied to both the draft and the current document, but properties of the draft not mentioned in the patch are not published. This is to prevent unexpected outcomes.
 
@@ -205,7 +209,7 @@ const data = {
   category: 'Nerd Post'
 };
 // Request inside an async function.
-const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:published?apikey=myapikey', {
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr?apikey=myapikey&aposMode=published&aposLocale=en', {
   method: 'PATCH',
   headers: {
     'Content-Type': 'application/json'
@@ -244,8 +248,8 @@ This API route **permanently deletes the piece database document**. Moving piece
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-mode` | `?apos-mode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
-|`apos-locale` | `?apos-locale=fr` | Set to a valid locale to delete the piece document version for that locale. |
+|`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to delete the piece document version for that locale. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -280,7 +284,7 @@ The `body` of the request is ignored.
 
 | Parameter | Example | Description |
 |----------|------|-------------|
-|`apos-locale` | `?apos-locale=fr` | Identify a valid locale to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
+|`aposLocale` | `?aposLocale=fr` | Identify a valid locale to publish the draft for that locale. Defaults to the locale of the `_id` in the request or the default locale. |
 <!-- TODO: link to docs about locales when available. -->
 
 ### Request example
