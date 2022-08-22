@@ -41,7 +41,7 @@ The options documentation for this module are split into those that are general 
 |---|---|---|
 | [`disabledFileKey`](#disabledfilekey) | String | Used along with the `enable` and `disable` methods to rename and obfuscate files to block access. |
 | [`uploadsPath`](#uploadspath) | String | Changes the storage location of uploadfs on the local filesystem from the default `public/uploads` subdirectory of the project root. |
-| [`uploadsUrl`](#uploadsurl) | String | Sets the endpoint for asset access. Defaults to `/uploads`|
+| [`uploadsUrl`](#uploadsurl) | String | Sets the endpoint for asset access. Defaults to `/uploads`. |
 
 ### Minimal Local Example
 <AposCodeBlock>
@@ -54,8 +54,8 @@ module.exports = {
       // The next three can be set if 
       // a different path from default is desired
       uploadsPath: __dirname + '/public/uploads',
-      uploadsUrl: 'http://localhost:3000' + uploadsLocalUrl,
-      tempPath: __dirname + '/temp',
+      uploadsUrl: '/uploads',
+      tempPath: __dirname + '/temp'
     }
   }
 };
@@ -73,15 +73,16 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 | `bucket` | String | Sets the bucket name. |
 | [`contentTypes`](#contenttypes) | Object | Adds additional project asset file extensions as properties with corresponding mimetype as value. |
 | `cachingTime` | Integer | Changes the default caching time to a new amount of time, in seconds, for an asset. |
-| `endpoint` | String | Sets the endpoint URI to send requests. |
+| [`endpoint`](#endpoint) | String | Sets the endpoint URI to send requests. |
 | `https` | Boolean | Setting this to true forces `https:` transfer to the endpoint. |
 | [`noGzipContentTypes`](#nogzipcontenttypes) | Array | Designates file types that should not be gzipped and replaces the default list. |
 | [`addNoGzipContentTypes`](#addnogzipcontenttypes) | Array | Adds to the default list of files that should not be gzipped. |
+| [`region`](#region) | String | Used to build a standard AWS `endpoint`. |
 | `style` | String  | If set to `path` it forces path style URLs for S3 objects - the same as passing `s3ForcePathStyle: true`. |
 | `port` | Integer | Sets the port. |
-| [`secret`](#secret) | String | Provides the account `secretAccessKey` for older knox style credentials. |
-| `key` | String | Provides the account `accessKeyId` for older knox style credentials. |
-| `token` | String  | Provides an optional `sessionToken` for older knox style credentials. |
+| [`secret`](#secret) | String | Provides the account `secretAccessKey`. |
+| [`key`](#key) | String | Provides the account `accessKeyId`. |
+| [`token`](#token) | String  | Provides an optional `sessionToken`. |
 
 ### Minimal S3 Example
 <AposCodeBlock>
@@ -91,16 +92,13 @@ module.exports = {
   options: {
     uploadfs: {
       storage: 's3',
-      // Add an arbitrary S3 compatible endpoint
-      endpoint: 's3-compatible-endpoint.com',
       // Get your credentials at aws.amazon.com
       secret: 'xxx',
       key: 'xxx',
       // Bucket name created on aws.amazon.com
       bucket: 'bucketname',
-      // For read-after-write consistency in the US East region.
-      // You could also use any other region name except us-standard
-      region: 'external-1',
+      // Region name for endpoint
+      region: 'us-east-1',
       // Any additional S3 object options specified in the linked documentation
       useDualstackEndpoint: true
     }
@@ -116,18 +114,18 @@ module.exports = {
 See the Azure documentation [here](https://docs.microsoft.com/en-us/rest/api/storageservices/) for additional details.
 |  Property | Type | Description |
 |---|---|---|
-| `account` | String | Sets the storage account name. |
+| `account` | String | Required. Sets the storage account name. |
 | `allowedMethods` | Array | Configures CORS allowed methods. |
 | `allowedHeaders` | Array | Configures CORS allowed headers. |
 | `allowedOrigins` | Array | Configures CORS allowed origins. |
 | `container` | String | Sets the storage container name. |
-| [`disabledFileKey`](#azuredisabledfilekey) | String | Required along with the `enable` and `disable` methods to rename and obfuscate files to block access. |
+| [`disabledFileKey`](#azuredisabledfilekey) | String | Required. Works along with the `enable` and `disable` methods to rename and obfuscate files to block access. |
 | `exposedHeaders` | Array | Configures the exposure or the CORS response headers. |
 | [`gzipEncoding`](#gzipencoding) | Object | Designates file types to gzip or prevent from gzipping using  property:value pairs of file extensions and `true` or `false` for values. |
-| `key` | String | Sets the access key. |
+| `key` | String | Required. Sets the access key. |
 | `maxAgeInSeconds` | Integer | Sets the maximum amount of time the browser should cache the preflight OPTIONS request. |
-| [`replicateClusters`](#replicateClusters) | Array |Array of objects to replicate content across clusters. |
-| [`tempPath`](#temppath) | String | The directory location for creating the `/temp` folder and temporary files during processing. |
+| [`replicateClusters`](#replicateClusters) | Array |Array of objects to replicate content across a cluster. |
+| [`tempPath`](#temppath) | String | Defaults to `data/temp/uploadfs` relative to the project root. Directory location for creating the temporary folder and files during processing. |
 
 ### Minimal Azure Example
 <AposCodeBlock>
@@ -140,14 +138,8 @@ module.exports = {
       account: 'storageAccountName',
       container: 'storageContainerName',
       key: 'accessKey',
-      // If a non-default path is desired
-      tempPath: __dirname + '/temp',
       // Always required for Azure
-      disabledFileKey: 'a random string of your choosing',
-      gzipEncoding: {
-        docx: true,
-        pdf: false
-      }
+      disabledFileKey: 'a random string of your choosing'
     }
   }
 };
@@ -181,8 +173,7 @@ module.exports = {
       // Create bucket in the Google Cloud Console
       bucket: 'bucketname',
       // Select your region
-      region: 'us-west-2',
-      validation: 'md5'
+      region: 'us-west-2'
     }
   }
 };
@@ -196,7 +187,7 @@ module.exports = {
 <h2>General Storage Options</h2>
 
 ### `cdn`
-If you choose to host assets on a CDN, set the `cdn` property value to the URL of the CDN. This property can also take an object with two properties - `url` and `enabled`. The `url` property value is the URL of the CDN and `enabled` takes a boolean which determines if the CDN will be used.
+If you choose to host assets on a CDN, set the `cdn` property value to the URL of the CDN. This property can also take an object with two properties - `url` and `enabled`. The `url` property value is the URL of the CDN and `enabled` takes a boolean which determines if the CDN will be used. This results in Apostrophe outputing URLs that point to the CDN rather than directly to the storage backend.
 
 #### Example
 
@@ -207,7 +198,7 @@ module.exports = {
   options: {
     uploadfs: {
       cdn: {
-        url:'https://wpc.cdnurl.com/cap/800001/',
+        url:'https://wpc.cdnurl.com/',
         enabled: true
       }
     }
@@ -223,11 +214,12 @@ module.exports = {
 ### `storage` 
 This property takes either a string designating one of the built-in storage options to be used, or an object for custom storage needs. Built-in values are `azure` (Microsoft Azure), `gcs` (Google Cloud Storage), `local` (local file storage only), and `s3` (Amazon Simple Storage Service). See the [`s3.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/s3.js) file for an example of creating a custom storage solution.
 
+---
 
 <h2>Local Storage Options</h2>
 
 ### `disabledFileKey`
-This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access.
+This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions which will lead to problems syncing content with `rsync` or similiar commands. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access. It is recommended that this option be used from the start of the project, but the module exposes [a method](#migratetodisabledfilekey) to switch later if desired.
 
 ### `uploadsPath`
 By default, this is set to the `/public/uploads` directory at the root of your project by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
@@ -235,7 +227,12 @@ By default, this is set to the `/public/uploads` directory at the root of your p
 ### `uploadsUrl`
 By default, this is set to your local apostrophe instance base URL, plus any localization prefix, plus `/uploads` by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
 
+---
+
 <h2>S3 Storage Options</h2>
+
+### `storage` {#s3storage}
+The `storage` option should be set to `s3` to use the Amazon Web Services S3 or any other S3-compatible service, like DigitalOcean or Linode.
 
 ### `agent`
 The `agent` property takes either `http.Agent` or `https.Agent`. This value will be used to set the `params.httpOptions.agent` value for S3 service object. See the [documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html) for more details.
@@ -243,6 +240,8 @@ The `agent` property takes either `http.Agent` or `https.Agent`. This value will
 ### `contentTypes`
 The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
 
+### `endpoint`
+The `endpoint` option allows setting of an endpoint to which to send requests. For the AWS S3 service it is constructed from the `region` option. However, this option allows for custom URLs for other non-AWS S3-compatible storage services, like DigitalOcean or Linode.
 
 ### `noGzipContentTypes`
 By default, an array of MIME types that should not be gzip compressed is loaded from the `/lib/storage/noGzipContentTypes.js` file in the `node_modules/uploadfs` package. If you pass an array through the `noGzipContentTypes` option it will replace this default list. 
@@ -250,14 +249,29 @@ By default, an array of MIME types that should not be gzip compressed is loaded 
 ### `addNoGzipContentTypes`
 Adding an array of MIME types to the `addNoGzipContentTypes` will result in merging of those MIME types with the existing default array of types that should not be compressed.
 
+### `region`
+The `region` option is used to pass a specific AWS S3 region to build the endpoint. The allowed values are listed in the [official documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html).
+
+
 ### `secret`
-The `secret`, `key`, and `token` properties are all used to generate an `AWS.Credentials()` credentials object. This is for legacy AWS support. 
+The `secret` option is used to pass the value of the `secretAccessKey` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
+
+### `key`
+The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
+
+### `token`
+The `token` option is used to pass the value of the optional `sessionToken` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
+
+---
 
 <h2>Azure Storage Options</h2>
 
 ::: warning
 If using Azure as your storage choice, you should always use `disabledFileKey` with the `disable` and `enable` method. With Azure, the permissions for a single blob (file) can't be changed, so it must be duplicated and renamed to disable web access.
 :::
+
+### `storage` {#azurestorage}
+The `storage` option should be set to `azure` to use the Microsoft Azure service.
 
 ### `disabledFileKey` {#azuredisabledfilekey}
 This required property takes a string (longer is better) and provides a way to make uploaded assets disabled for access. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access.
@@ -283,7 +297,7 @@ By default, the Azure storage option will gzip all files except those who have a
 </AposCodeBlock>
 
 ### `replicateClusters`
-This property takes an array of objects describing individual clusters to replicate data across. Each object takes `account`, `container`, and `key` properties.
+This property takes an array of objects describing individual containers to replicate data across. Each object takes `account`, `container`, and `key` properties.
 
 #### Example
 <AposCodeBlock>
@@ -313,10 +327,41 @@ uploadfs: {
 ### `tempPath`
 During processing of files, the `uploadfs` module first copies them to a temporary location until the pipeline is finished. By default this is set to `data/temp/uploadfs` by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. The `tempPath` property takes a local directory path for creating the `/temp` folder that houses these files. It is deleted after the build process.
 
+---
+
 <h2>GCS Storage Options</h2>
+
+### `storage` {#gcsstorage}
+The `storage` option should be set to `gcs` to use the Google Cloud Storage service.
 
 ### `contentTypes` {#gsccontenttypes}
 The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
+
+## Environment variables
+
+Apostrophe exposes a number of environmental variables for easily setting a number of options for the AWS S3 and GCS services.
+
+For the AWS S3 service and similar S3-type services, these variables cover the most common options needed to use the service
+### `APOS_S3_BUCKET`
+ The 'APOS_S3_BUCKET' takes the bucket name and is required. If this variable is present it enables setting the other S3 options using environment variables. This value will override the value passed in through the corresponding option.
+
+### `APOS_S3_SECRET`
+The `APOS_S3_SECRET` variable is required and takes the `secretAccessKey` option for the account. This value will override the value passed in through the corresponding option.
+### `APOS_S3_KEY`
+The `APOS_S3_KEY` variable is required and takes the `accessKeyId` for the account. This value will override the value passed in through the corresponding option.
+### `APOS_S3_REGION`
+The `APOS_S3_REGION` variable will be used to set the endpoint and is required when using the AWS S3 service. If using a S3-type service, like DigitalOcean or Linode` it is optional and `APOS_S3_ENDPOINT` is required. This value will override the value passed in through the corresponding option.
+
+### `APOS_S3_ENDPOINT`
+The `APOS_S3_ENDPOINT` variable is used with S3-type services offered by vendors other than AWS and is required when using these types of services. This value will override the value passed in through the corresponding option.
+
+### GOOGLE_APPLICATION_CREDENTIALS
+The GCS service `storage` option requires that the `GOOGLE_APPLICATION_CREDENTIALS` environment variable be set to the location of a service account file obtained from the Google Cloud Console.
+
+#### Example
+```sh
+export GOOGLE_APPLICATION_CREDENTIALS=./projectname-f7f5e919aa79.json
+```
 
 ## Featured methods
 
@@ -353,33 +398,21 @@ async modifyImage( file, uploadfsPath) {
 };
 ```
 
-### `migrateFromDisabledFileKey(callback)`
+### `migrateFromDisabledFileKey(callback)` {migratefromdisabledfilekey}
 The `migrateFromDisabledFileKey` function provides a way to switch any file previously disabled using the `disabledFileKey` option to use the `disable` method instead. Note: the `disabledFileKey` option should be removed before invoking this method.
 
 #### Example
 
 ```javascript
-self.uploadfs.migrateFromDisabledFileKey(function(e) { … });
+self.apos.uploadfs.migrateFromDisabledFileKey(function(e) { … });
 ```
 
-### `migrateToDisabledFileKey(callback)`
-The `migrateToDisabledFileKey` function provides a way to switch any file previously disabled using the`disable` method to use the `disabledFileKey` option.
+### `migrateToDisabledFileKey(callback)` {migratetodisabledfilekey}
+The `migrateToDisabledFileKey` function provides a way to switch any file previously disabled using the`disable` method to use the `disabledFileKey` option. Note: `disabledFileKey` must be set before invoking this method.
 
 #### Example
 
 ```javascript
-self.uploadfs.migrateToDisabledFileKey(function(e) { … });
+self.apos.uploadfs.migrateToDisabledFileKey(function(e) { … });
 ```
 
-## ENVIRONMENT variables
-
-### `APOS_S3_BUCKET`
-Apostrophe exposes a number of environmental variables for easily setting a number of options for the AWS S3 service allows. The 'APOS_S3_BUCKET' must be set to the bucket name to set the account options in this way. The other possible environment variables are `APOS_S3_ENDPOINT`, `APOS_S3_SECRET`, `APOS_S3_KEY`, and `APOS_S3_REGION`. The values of these variables will override any values passed in through the corresponding option. No other cconfiguration is required.
-
-### GOOGLE_APPLICATION_CREDENTIALS
-The GCS service `storage` option requires that the `GOOGLE_APPLICATION_CREDENTIALS` environment variable be set to the location of a service account file obtained from the Google Cloud Console.
-
-#### Example
-```sh
-export GOOGLE_APPLICATION_CREDENTIALS=./projectname-f7f5e919aa79.json
-```
