@@ -2,42 +2,46 @@
 # `@apostrophecms/uploadfs`
 
 
-The `uploadfs` module copies files to a web-accessible location and provides a consistent way to get the URLs that correspond to those files.  `uploadfs` can also resize, crop and autorotate uploaded images. It includes S3-based, Azure-based, GCS-based, and local filesystem-based backends and you may supply others.
+The `@apostrophecms/uploadfs` module copies files to a web-accessible location and provides a consistent way to get the URLs that correspond to those files. It provides access to instances of the `uploadfs` npm module. `@apostrophecms/uploadfs` can also resize, crop and autorotate uploaded images. It includes S3-based, Azure-based, GCS-based, and local filesystem-based backends and you may supply others.
 
 ## Selected Options
 ::: note
-These are only selected options. For additional options, see the main [documentation](https://www.npmjs.com/package/uploadfs) for this module. While the `uploadfs` module handles image manipulation, options are configured mostly by the `attachment` module and image specific options will be covered by the reference page for that module.
+These are only selected options. For additional options, see the [documentation](https://www.npmjs.com/package/uploadfs) for the `uploadfs` npm package. While the `@apostrophecms/uploadfs` module handles image manipulation, these image-related options are configured mostly by the `attachment` module and will be covered by the reference page for that module.
 :::
 
-The `uploadfs` module storage options can be configured in several ways. For the Amazon S3 service you can set the most common options through [environment variables](#environmentvariables). Options that are common to both attachments and assets can be configured through the `uploadfs` property from `modules/@apostrophecms/uploadfs/index.js`. For less common asset storage use cases, like alternative CDN usage, additional configuration can be passed through `modules/@apostrophe/asset/index.js`.
+The `uploadfs` module storage options can be configured in several ways. For the Amazon S3 service you can set the most common options through [environment variables](#environmentvariables). Options that are common to both attachments and assets can be configured through the `uploadfs` property within the module `options` in `modules/@apostrophecms/uploadfs/index.js`. For less common asset storage use cases, like alternative CDN usage, additional configuration can be passed in the same manner through the `modules/@apostrophe/asset/index.js` file.
 
-The options documentation for this module are split into those that are passed for all backend storage services, options that are supplied to multiple services, and those that are service-specific. A number of the options are described in greater detail in the official documentation for the specific service and links are provided.
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+👉🏻  uploadfs: {
+      storage: 'local'
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/uploadfs/index.js
+  </template>
+</AposCodeBlock>
+
+The options documentation for this module are split into those that are general storage options and those that are service-specific for local, AWS S3, Microsoft Azure, and Google Cloud Storage. A number of the options are described in greater detail in the official documentation for the specific service and links are provided. If you are using an S3 compatible service, the options provided through the `storage: 's3'` option are a good starting point and maybe sufficient.
 
 ## General Storage Options
 |  Property | Type | Description |
 |---|---|---|
 | [`cdn`](#cdn) | String \|\| Object | Takes either a string representing the URL of the CDN, or an object with `url` and `enabled` properties. |
 | `prefix` | String | Allows prefixing of static assets that share a single, multisite backend bucket |
-| [`storage`](#storage) | String \|\| Object  | Storage location specified as string for built-in solutions or an object for custom storage. |
-| `strictPaths` | Boolean | By default, `uploadfs` will modify slashes in the asset path. Setting `strictPaths` to `true` will eliminate this behavior. |
-
-## Backend-type Specific Options
-|  Property | Type | Description |
-|---|---|---|
-| `bucket` | String | Sets the bucket name for either S3 or GCS services. |
-| [`contentTypes`](#contenttypes) | Object | Adds additional project asset file extensions as properties with corresponding mimetype as value for the S3 and GCS services.  |
-| [`disabledFileKey`](#disabledfilekey) | String | Used along with the `enable` and `disable` methods to rename and obfuscate files to block access for both local and Azure storage options. |
-| `endpoint` | String | Sets the endpoint URI for S3 or GCS services to send requests. |
-| `https` | Boolean | Setting this to true forces `https:` transfer to the endpoint for S3 or GCS services. |
-| `key` | String | Sets the access key for S3 (for backwards compatibility, see below) or Azure services. |
-| `port` | Integer | Sets the port for S3 or GCS services. |
-| `cachingTime` | Integer | Changes the default caching time for an asset for the S3 and GCS services. |
+| [`storage`](#storage) | String \|\| Object  | Storage backend specified as string for built-in solutions or an object for custom storage. |
 
 ## Local Storage Options
 |  Property | Type | Description |
 |---|---|---|
-| [`uploadsPath`](#uploadspath) | String | Sets the directory location for creating the local `/public/uploads` folder and writing post-processed files. |
-| [`uploadsUrl`](#uploadsurl) | String | Sets the endpoint for asset access. |
+| [`disabledFileKey`](#disabledfilekey) | String | Used along with the `enable` and `disable` methods to rename and obfuscate files to block access. |
+| [`uploadsPath`](#uploadspath) | String | Changes the storage location of uploadfs on the local filesystem from the default `public/uploads` subdirectory of the project root. |
+| [`uploadsUrl`](#uploadsurl) | String | Sets the endpoint for asset access. Defaults to `/uploads`|
 
 ### Minimal Local Example
 <AposCodeBlock>
@@ -66,9 +70,15 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 |  Property | Type | Description |
 |---|---|---|
 | [`agent`](#agent) | Object | The Agent object used to perform HTTP requests - passed into the `params.httpOptions`. |
+| `bucket` | String | Sets the bucket name. |
+| [`contentTypes`](#contenttypes) | Object | Adds additional project asset file extensions as properties with corresponding mimetype as value. |
+| `cachingTime` | Integer | Changes the default caching time to a new amount of time, in seconds, for an asset. |
+| `endpoint` | String | Sets the endpoint URI to send requests. |
+| `https` | Boolean | Setting this to true forces `https:` transfer to the endpoint. |
 | [`noGzipContentTypes`](#nogzipcontenttypes) | Array | Designates file types that should not be gzipped and replaces the default list. |
 | [`addNoGzipContentTypes`](#addnogzipcontenttypes) | Array | Adds to the default list of files that should not be gzipped. |
 | `style` | String  | If set to `path` it forces path style URLs for S3 objects - the same as passing `s3ForcePathStyle: true`. |
+| `port` | Integer | Sets the port. |
 | [`secret`](#secret) | String | Provides the account `secretAccessKey` for older knox style credentials. |
 | `key` | String | Provides the account `accessKeyId` for older knox style credentials. |
 | `token` | String  | Provides an optional `sessionToken` for older knox style credentials. |
@@ -111,8 +121,10 @@ See the Azure documentation [here](https://docs.microsoft.com/en-us/rest/api/sto
 | `allowedHeaders` | Array | Configures CORS allowed headers. |
 | `allowedOrigins` | Array | Configures CORS allowed origins. |
 | `container` | String | Sets the storage container name. |
+| [`disabledFileKey`](#azuredisabledfilekey) | String | Required along with the `enable` and `disable` methods to rename and obfuscate files to block access. |
 | `exposedHeaders` | Array | Configures the exposure or the CORS response headers. |
 | [`gzipEncoding`](#gzipencoding) | Object | Designates file types to gzip or prevent from gzipping using  property:value pairs of file extensions and `true` or `false` for values. |
+| `key` | String | Sets the access key. |
 | `maxAgeInSeconds` | Integer | Sets the maximum amount of time the browser should cache the preflight OPTIONS request. |
 | [`replicateClusters`](#replicateClusters) | Array |Array of objects to replicate content across clusters. |
 | [`tempPath`](#temppath) | String | The directory location for creating the `/temp` folder and temporary files during processing. |
@@ -150,6 +162,12 @@ See the GCS documentation [here](https://googleapis.dev/nodejs/storage/latest/Bu
 ) for additional details.
 |  Property | Type | Description |
 |---|---|---|
+| `bucket` | String | Sets the bucket name. |
+| [`contentTypes`](#gsccontenttypes) | Object | Adds additional project asset file extensions as properties with corresponding mimetype as value. |
+| `cachingTime` | Integer | Changes the default 1 hour caching time to a new amount of time, in seconds, for an asset. |
+| `endpoint` | String | Sets the endpoint URI to send requests. |
+| `https` | Boolean | Setting this to true forces `https:` transfer to the endpoint. |
+| `port` | Integer | Sets the port. |
 | `validation`| String \|\| Boolean | Method for checking data integrity - 'md5', 'crc32c', or false. |
 
 ### Minimal GCS Example
@@ -205,19 +223,11 @@ module.exports = {
 ### `storage` 
 This property takes either a string designating one of the built-in storage options to be used, or an object for custom storage needs. Built-in values are `azure` (Microsoft Azure), `gcs` (Google Cloud Storage), `local` (local file storage only), and `s3` (Amazon Simple Storage Service). See the [`s3.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/s3.js) file for an example of creating a custom storage solution.
 
-<h2>Backend-type Specific Options</h2>
-
-### `contentTypes`
-The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
-
-### `disabledFileKey`
-This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local and Azure storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access.
-
-::: warning
-If using Azure as your storage choice, you should always use `disabledFileKey` with the `disable` method. With Azure, the permissions for a single blob (file) can't be changed, so it must be duplicated and renamed to disable web access.
-:::
 
 <h2>Local Storage Options</h2>
+
+### `disabledFileKey`
+This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access.
 
 ### `uploadsPath`
 By default, this is set to the `/public/uploads` directory at the root of your project by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
@@ -230,6 +240,10 @@ By default, this is set to your local apostrophe instance base URL, plus any loc
 ### `agent`
 The `agent` property takes either `http.Agent` or `https.Agent`. This value will be used to set the `params.httpOptions.agent` value for S3 service object. See the [documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html) for more details.
 
+### `contentTypes`
+The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
+
+
 ### `noGzipContentTypes`
 By default, an array of MIME types that should not be gzip compressed is loaded from the `/lib/storage/noGzipContentTypes.js` file in the `node_modules/uploadfs` package. If you pass an array through the `noGzipContentTypes` option it will replace this default list. 
 
@@ -240,6 +254,13 @@ Adding an array of MIME types to the `addNoGzipContentTypes` will result in merg
 The `secret`, `key`, and `token` properties are all used to generate an `AWS.Credentials()` credentials object. This is for legacy AWS support. 
 
 <h2>Azure Storage Options</h2>
+
+::: warning
+If using Azure as your storage choice, you should always use `disabledFileKey` with the `disable` and `enable` method. With Azure, the permissions for a single blob (file) can't be changed, so it must be duplicated and renamed to disable web access.
+:::
+
+### `disabledFileKey` {#azuredisabledfilekey}
+This required property takes a string (longer is better) and provides a way to make uploaded assets disabled for access. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access.
 
 ### `gzipEncoding`
 By default, the Azure storage option will gzip all files except those who have an extension in the array passed by the `defaultGzipBlacklist.js` file at the root of the 'uploadfs' package. The `gzipEncoding` option takes an object with file extensions as properties and values of `true` or `false`. These choices will be merged with the default selection to either remove the file type from the existing list and enable gzip compression if `true`, or add it to the list and disable gzip compression if `false`.
@@ -291,6 +312,11 @@ uploadfs: {
 
 ### `tempPath`
 During processing of files, the `uploadfs` module first copies them to a temporary location until the pipeline is finished. By default this is set to `data/temp/uploadfs` by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. The `tempPath` property takes a local directory path for creating the `/temp` folder that houses these files. It is deleted after the build process.
+
+<h2>GCS Storage Options</h2>
+
+### `contentTypes` {#gsccontenttypes}
+The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
 
 ## Featured methods
 
