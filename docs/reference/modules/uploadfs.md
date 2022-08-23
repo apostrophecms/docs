@@ -4,6 +4,8 @@
 
 The `@apostrophecms/uploadfs` module copies files to a web-accessible location and provides a consistent way to get the URLs that correspond to those files. It provides access to instances of the `uploadfs` npm module. `@apostrophecms/uploadfs` can also resize, crop and autorotate uploaded images. It includes S3-based, Azure-based, GCS-based, and local filesystem-based backends and you may supply others.
 
+An instance of the `uploadfs` module is available through `self.apos.uploadfs`. This can be used for custom uploads as long as the existing `/attachments` and `/apos-frontend` prefixes are avoided. For access to the `@apostrophecms/uploadfs` module instead, use `self.apos.modules['@apostrophecms/uploadfs']`.
+
 ## Selected Options
 ::: note
 These are only selected options. For additional options, see the [documentation](https://www.npmjs.com/package/uploadfs) for the `uploadfs` npm package. While the `@apostrophecms/uploadfs` module handles image manipulation, these image-related options are configured mostly by the `attachment` module and will be covered by the reference page for that module.
@@ -66,7 +68,7 @@ module.exports = {
 </AposCodeBlock>
 
 ## S3 Storage Options
-The options listed below are ApostropheCMS specific. Any AWS S3-specific options can be passed as options using the properties listed in the AWS SDK [documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property).
+The options listed below are ApostropheCMS specific. Any AWS S3-specific options can be passed as options using the properties listed in the AWS SDK [documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor-property). This option might also be viable for other storage vendors that use S3-compatible methods, like DigitalOcean or Linode.
 |  Property | Type | Description |
 |---|---|---|
 | [`agent`](#agent) | Object | The Agent object used to perform HTTP requests - passed into the `params.httpOptions`. |
@@ -98,9 +100,7 @@ module.exports = {
       // Bucket name created on aws.amazon.com
       bucket: 'bucketname',
       // Region name for endpoint
-      region: 'us-east-1',
-      // Any additional S3 object options specified in the linked documentation
-      useDualstackEndpoint: true
+      region: 'us-east-1'
     }
   }
 };
@@ -219,7 +219,7 @@ This property takes either a string designating one of the built-in storage opti
 <h2>Local Storage Options</h2>
 
 ### `disabledFileKey`
-This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions which will lead to problems syncing content with `rsync` or similiar commands. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access. It is recommended that this option be used from the start of the project, but the module exposes [a method](#migratetodisabledfilekey) to switch later if desired.
+This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions which will lead to problems syncing content with `rsync` or similiar commands. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access. It is recommended that this option be used from the start of the project, but the module exposes a method, [migrateToDisabledFileKey](#migratetodisabledfilekey), to switch later if desired.
 
 ### `uploadsPath`
 By default, this is set to the `/public/uploads` directory at the root of your project by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
@@ -337,13 +337,15 @@ The `storage` option should be set to `gcs` to use the Google Cloud Storage serv
 ### `contentTypes` {#gsccontenttypes}
 The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
 
+---
+
 ## Environment variables
 
 Apostrophe exposes a number of environmental variables for easily setting a number of options for the AWS S3 and GCS services.
 
 For the AWS S3 service and similar S3-type services, these variables cover the most common options needed to use the service
 ### `APOS_S3_BUCKET`
- The 'APOS_S3_BUCKET' takes the bucket name and is required. If this variable is present it enables setting the other S3 options using environment variables. This value will override the value passed in through the corresponding option.
+ The 'APOS_S3_BUCKET' takes the bucket name and is required. Adding a value to this variable will also automatically set the `storage` option to `s3` and enables setting the other S3 options using environment variables. This value will override the value passed in through the corresponding option.
 
 ### `APOS_S3_SECRET`
 The `APOS_S3_SECRET` variable is required and takes the `secretAccessKey` option for the account. This value will override the value passed in through the corresponding option.
@@ -355,7 +357,7 @@ The `APOS_S3_REGION` variable will be used to set the endpoint and is required w
 ### `APOS_S3_ENDPOINT`
 The `APOS_S3_ENDPOINT` variable is used with S3-type services offered by vendors other than AWS and is required when using these types of services. This value will override the value passed in through the corresponding option.
 
-### GOOGLE_APPLICATION_CREDENTIALS
+### `GOOGLE_APPLICATION_CREDENTIALS`
 The GCS service `storage` option requires that the `GOOGLE_APPLICATION_CREDENTIALS` environment variable be set to the location of a service account file obtained from the Google Cloud Console.
 
 #### Example
