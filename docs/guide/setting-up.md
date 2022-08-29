@@ -18,12 +18,10 @@ node -v && npm -v
 # if installed.
 mongod --version
 # This will display your MongoDB version, if installed.
-which convert && which identify
-# This will display the location of the ImageMagick utilities, if installed.
 ```
 
 ::: tip NOTE
-ImageMagick is optional, but recommended. It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If you do not install it Apostrophe can still handle image uploads, though more slowly.
+On most systems, the [`sharp.js`](https://www.npmjs.com/package/sharp) package is automatically installed and used to process images. In some rare cases, sharp will not install, and we recommend installation of ImageMagick (https://imagemagick.org/script/download.php) and configuring the `@apostrophecms/attachment` module to use this processor by adding `image: 'imagemagick` to the options in `/modules/@apostrophecms/attachment/index.js`. Any other processor will require a custom solution.
 :::
 
 ## The Apostrophe CLI tool
