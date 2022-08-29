@@ -40,7 +40,7 @@ The options documentation for this module are split into those that are general 
 | [`tempPath`](#temppath) | String | Defaults to `data/temp/uploadfs` relative to the project root. Directory location for creating the temporary folder and files during processing. |
 
 ### `cdn`
-If you choose to host assets on a CDN, set the `cdn` property value to the URL of the CDN. This property can also take an object with two properties - `url` and `enabled`. The `url` property value is the URL of the CDN and `enabled` takes a boolean which determines if the CDN will be used. This results in Apostrophe outputing URLs that point to the CDN rather than directly to the storage backend. Configuring your CDN of choice to automatically obtain files from your storage backend is your responsibility.
+If you choose to host assets on a CDN, set the `cdn` property value to the URL of the CDN. This property can also take an object with two properties - `url` and `enabled`. The `url` property value is the URL of the CDN and `enabled` takes a boolean which determines if the CDN will be used. This results in Apostrophe outputting URLs that point to the CDN rather than directly to the storage backend. Configuring your CDN of choice to automatically obtain files from your storage backend is your responsibility.
 
 #### Example
 
@@ -51,7 +51,7 @@ module.exports = {
   options: {
     uploadfs: {
       cdn: {
-        url:'https://wpc.cdnurl.com',
+        url: 'https://wpc.cdnurl.com',
         enabled: true
       }
     }
@@ -68,7 +68,7 @@ module.exports = {
 This property takes either a string designating one of the built-in storage options to be used, or an object for custom storage needs. Built-in values are `azure` (Microsoft Azure), `gcs` (Google Cloud Storage), `local` (local file storage only), and `s3` (Amazon Simple Storage Service). See the [`s3.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/s3.js) file for an example of creating a custom storage solution.
 
 ### `tempPath`
-During processing of files, the `uploadfs` module first copies them to a temporary location until the pipeline is finished. By default this is set to `data/temp/uploadfs` by the `@apostrophecms/uploadfs` module. The `tempPath` property takes a local directory path for creating the `/temp` folder that houses these files. It is deleted after the build process.
+During processing of files, the `uploadfs` module first copies them to a temporary location until the pipeline is finished. By default this is set to `data/temp/uploadfs` by the `@apostrophecms/uploadfs` module. The `tempPath` property takes a local directory path for creating the `/temp` folder that houses these files.
 
 ---
 
@@ -86,7 +86,7 @@ During processing of files, the `uploadfs` module first copies them to a tempora
 module.exports = {
   options: {
     uploadfs: {
-      storage: 'local' //this is also the default
+      storage: 'local' // this is also the default
     }
   }
 };
@@ -103,7 +103,7 @@ This property takes a string (longer is better) and provides an alternative way 
 By default, this is set to the `/public/uploads` directory at the root of your project by the `@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
 
 ### `uploadsUrl`
-By default, this is set to your local apostrophe instance base URL, plus any localization prefix, plus `/uploads` by the `node_modules/apostrophe/modules/@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
+By default, this is set to your local apostrophe instance base URL, plus any localization prefix, plus `/uploads` by the `@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
 
 ---
 
