@@ -114,7 +114,6 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 | [`agent`](#agent) | Object | The Agent object used to perform HTTP requests - passed into the `params.httpOptions`. |
 | `bucket` | String | Sets the bucket name. |
 | [`contentTypes`](#contenttypes) | Object | Adds additional project asset file extensions, without leading '.', as properties with corresponding mimetype as value. |
-| `cachingTime` | Integer | Changes the default caching time to a new amount of time, in seconds, for an asset. |
 | [`endpoint`](#endpoint) | String | Sets the endpoint URI to send requests. |
 | `https` | Boolean | Setting this to true forces `https:` transfer to the endpoint. |
 | [`noGzipContentTypes`](#nogzipcontenttypes) | Array | Designates file types that should not be gzipped and replaces the default list. |
