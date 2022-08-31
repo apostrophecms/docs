@@ -153,7 +153,8 @@ APOS_MONGODB_URI=mongodb://%mongodb-address% npm test
 
 ### Mocha doesn't seems to work with apostrophe
 
-Starting from Apostrophe 3.26.0, we now support Mocha 9+ ([CHANGELOG](https://github.com/apostrophecms/apostrophe/blob/main/CHANGELOG.md#fixes-2))
+Starting from Apostrophe 3.26.0, we now support Mocha 9+
+([CHANGELOG](https://github.com/apostrophecms/apostrophe/blob/main/CHANGELOG.md#3260-2022-08-03))
 
 If you are using an older version of Apostrophe, please use Mocha 8.
 
