@@ -2,7 +2,7 @@
 
 ## Requirements
 
-a running MongoDB server
+- A running MongoDB server
 
 ## Setup
 
@@ -34,7 +34,7 @@ When you call `npm test`, it will lint your files according to [eslint-config-ap
 
 You will need a `test/package.json` file referencing the repository URL of your module. Please replace `%module-name%` & `%module-repository-url%` with your module informations.
 
-e.g. for the module `[@apostrophecms/sitemap](https://github.com/apostrophecms/sitemap)` we use 
+e.g. for the module [@apostrophecms/sitemap](https://github.com/apostrophecms/sitemap) we use 
 
 > `"@apostrophecms/sitemap": "git://github.com/apostrophecms/sitemap.git"`
 > 
@@ -45,7 +45,7 @@ e.g. for the module `[@apostrophecms/sitemap](https://github.com/apostrophecms/s
   " * ": "Apostrophe requires that all npm modules to be loaded by moog",
   " */": "exist in package.json at project level, which for a test is here",
   "dependencies": {
-    "apostrophe": "^3.8.1",
+    "apostrophe": "^3.26.0",
     "%module-name%": "%module-repository-url%"
   }
 }
@@ -137,7 +137,7 @@ It exposes:
 - `t.getUserJar` to get a cookie jar for the admin user
 - `t.timeout` can be set using an environment variable `TEST_TIMEOUT`, e.g.`TEST_TIMEOUT=5000 npm test`
 
-`[testModule](https://github.com/apostrophecms/apostrophe/blob/main/index.js#L468)` will tweak the Apostrophe environment suitably for unit tests
+[testModule](https://github.com/apostrophecms/apostrophe/blob/main/index.js#L468) will tweak the Apostrophe environment suitably for unit tests
 
 ## FAQ
 
@@ -154,7 +154,7 @@ APOS_MONGODB_URI=mongodb://%mongodb-address% npm test
 ### Mocha doesn't seems to work with apostrophe
 
 Starting from Apostrophe 3.26.0, we now support Mocha 9+
-([CHANGELOG](https://github.com/apostrophecms/apostrophe/blob/main/CHANGELOG.md#3260-2022-08-03))
+([Apostrophe 3.26.0 Changelog](https://github.com/apostrophecms/apostrophe/blob/main/CHANGELOG.md#3260-2022-08-03))
 
 If you are using an older version of Apostrophe, please use Mocha 8.
 
