@@ -10,28 +10,49 @@ extends: '@apostrophecms/module'
 
 The `attachment` module coordinates the addition and manipulation of any files added to the database and works alongside the `@apostrophecms/uploadfs` module. This includes rescaling and cropping of images, as well as the uploading of non-image files like '.pdf' or '.csv'. It exposes multiple template helpers and command line tasks for attachment retrieval and manipulation.
 
-Options for this module are passed in through either `modules/@apostrophecms/uploadfs/index.js` or `modules/@apostrophecms/assets/index.js`.
+Options for this module are passed in through both `modules/@apostrophecms/attachment/index.js` and `modules/@apostrophecms/uploadfs/index.js`.
 
 ## Options
 
+The `@apostrophecms/attachment` module is unusual compared to other modules in that some settings are passed directly to `@apostrophecms/uploadfs`. Those options are marked with a '*' in the options table. These options should be added to the `modules/@apostrophecms/uploadfs/index.js` file inside the `uploadfs` object. Additionally, the `imageSizes` property is passed as a top-level property of the `/modules/@apostrophecms/attachment/index.js` file, not in the `options` object.
+
 |  Property | Type | Description |
 |---|---|---|
-| [`copyOriginal`](#copyoriginal)| Boolean | Undefined by default. If set to `false` the original image will not be copied to the database, only scaled images. |
+| [`copyOriginal` *](#copyoriginal) | Boolean | Undefined by default. If set to `false` the original image will not be copied to the database, only scaled images. |
 | [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to determine post-upload manipulation. |
-| [`image`](#image) | String \|\| Object | Sets the image processor to 'sharp' (by default), 'imagemagick, or a custom processor passed in an object. |
-| [`imageSizes`](#imagesizes) | Object | Takes an object with an `add` property assigned an object composed of size objects. |
-| `orientOriginals` | Boolean | Unless set to `false`, the uploaded image will be reoriented according to header data. |
-| [`postprocessors`](#postprocessors) | Array | Takes an array of objects detailing optional postprocessors for images. |
-| `scaledJpegQuality` | Integer | Sets the JPEG quality setting for scaled images - defaults to 80. |
-| `sizeAvailableInArchive` | String | Takes the name of a size to make available even if file access is disabled. Defaults to 'one-sixth'. |  
+| [`image` *](#image) | String \|\| Object | Sets the image processor to 'sharp' (by default), 'imagemagick, or a custom processor passed in an object. |
+| [`imageSizes`](#imagesizes) | Object | Takes an object with `add` and `remove` properties to change the image sizes created upon image import. |
+| `orientOriginals` * | Boolean | Unless set to `false`, the uploaded image will be reoriented according to header data. |
+| [`postprocessors` *](#postprocessors) | Array | Takes an array of objects detailing optional postprocessors for images. |
+| `scaledJpegQuality` * | Integer | Sets the JPEG quality setting for scaled images - defaults to 80. |
+| `sizeAvailableInArchive` * | String | Takes the name of a size to make available even if file access is disabled. Defaults to 'one-sixth'. |  
 
 ### `copyOriginal`
 
-By default, the `copyOriginal` value is undefined, resulting in storage of the original image in the database. Explicitly setting this to `false` will block this behavior.
+This option should be passed to the `@apostrophecms/uploadfs` module. By default, the `copyOriginal` value is undefined, resulting in storage of the original image in the database. Explicitly setting this to `false` will block this behavior.
+
+#### Example
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    uploadfs: {
+      copyOriginal: false'
+    }
+  }
+};
+```
+<template v-slot:caption>
+  module/@apostrophecms/uploadfs/index.js
+</template>
+
+</AposCodeBlock>
 
 ### `fileGroups`
 
-By default, this option is set to an array with two objects and any array passed through this option will replace the default values. 
+This option should be passed to the `@apostrophecms/attachment` module. By default, this option is set to an array with two objects and any array passed through this option will replace the default values. 
 
 The first default object has a key:value of `name: 'images'` and an `extensions` key with an array of strings containing the non-prefixed extensions of file types that can be uploaded. In order to allow different spelling, e.g. 'jpg' or 'jpeg', the `extensionMaps` option takes an object with the alternative spelling as key and the extension it should map to as value. Finally, this object also has a key:value pair of `image: true` to indicated that these types of files should be processed by `@apostrophecms/uploadfs`.
 
@@ -42,10 +63,46 @@ Passing a new image extension type through replacement of the `@apostrophecms/at
 The second default object is very similar, but for the `name` key it takes a value of `office`, and `image: false`, indicating that these file types should not be processed. Again, the `extensions` key takes an array of non-prefixed strings indicating the allowed file types. The `extensionMaps` maps alternative spellings to the specified extension.
 
 ### `image`
-The 'image' option defaults to 'sharp' and using the built-in [sharp.js](https://www.npmjs.com/package/sharp) image processor. This property also accepts `imagemagik` if it has been installed or an object specifying a custom processor. See the [`sharp.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/image/sharp.js) file for example.
+This option should be passed to the `@apostrophecms/uploadfs` module. The 'image' option defaults to 'sharp' and using the built-in [sharp.js](https://www.npmjs.com/package/sharp) image processor. This property also accepts `imagemagik` if it has been installed or an object specifying a custom processor. See the `uploadfs` npm module [`sharp.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/image/sharp.js) file for example.
+
+### `imageSizes`
+This option should be passed to the `@apostrophecms/attachment` module. It gets passed as a top-level property, not within the `options` property. By default it is assigned an array containing six image size objects. Each of these objects has a `name`, `width`, and `height` property. The `width` and `height` values are unitless. The default sizes are:
+
+```javascript
+  { name: 'max', width: 1600, height: 1600 },
+  { name: 'full', width: 1140, height: 1140 },
+  { name: 'two-thirds', width: 760, height: 760 },
+  { name: 'one-half', width: 570, height: 700 },
+  { name: 'one-third', width: 380, height: 700 },
+  { name: 'one-sixth', width: 190, height: 350 }
+  ```
+  
+Additional sizes can be added through an object composed of size objects containing `name`, `width`, and `height` properties. This object is passed as value to the `add` key of `imageSizes`. Default sizes can be removed by passing an array containing their names to the `remove` key of `imageSizes`.
+
+#### Example
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  imageSizes: {
+    add: {
+      mini: {
+        width: 200,
+        height: 200
+      }
+    },
+    remove: ['one-half']
+  },
+};
+```
+<template v-slot:caption>
+  modules/@apostrophecms/attachment/index.js
+</template>
+</AposCodeBlock>
 
 ### `postprocessors`
-It is possible to configure `uploadfs` to run a postprocessor on every custom-sized image that it generates. This is intended for file size optimization tools like `imagemin`.
+This option should be passed to the `@apostrophecms/uploadfs` module. It is possible to configure `uploadfs` to run a postprocessor on every custom-sized image that it generates. This is intended for file size optimization tools like `imagemin`.
 
 Here is an example based on the `imagemin` documentation:
 
@@ -73,6 +130,7 @@ uploadfs({
   ]
 });
 ```
+
   <template v-slot:caption>
     modules/@apostrophecms/uploadfs/index.js
   </template>
@@ -114,6 +172,7 @@ The `options` parameter is optional and takes an object with several potential p
 
 `options.annotate` takes a boolean value. If set to true, it will add a `_urls` property to any image attachment objects in the returned array. The image `_urls` property contains sub-properties named for each image name size with the URL as a string value. The `_urls` will also contain an `uncropped` property with sub-properties named for each image name size and the URL as value. For non-image files, `annotate: true` will add a `_url` property to the object in the returned array with the URL of the attachment as value.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set images = apos.attachment.all(data.page._people, { group: 'images' }) %}
@@ -123,8 +182,9 @@ The `options` parameter is optional and takes an object with several potential p
 {% endif %}
 ```
 
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 ### `first`(within, options)
@@ -142,20 +202,23 @@ The `options` parameter is optional and takes an object with several potential p
 
 `options.annotate` takes a boolean value. If set to true, it will add a `_urls` property to any image attachment objects in the returned array. The image `_urls` property contains sub-properties named for each image name size with the URL as a string value. The `_urls` will also contain an `uncropped` property with sub-properties named for each image name size and the URL as value. For non-image files, `annotate: true` will add a `_url` property to the object in the returned array with the URL of the attachment as value.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
    <img src="{{ image._urls['one-third'] }}">
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 
 ### `focalPointToObjectPosition(attachment)`
 If the attachment has a focal point defined, this helper will return the focal point position converted to CSS syntax for `object-position` as a string with coordinates as percentages. This string does not have an `;` appended, so it must be added. If no focal point is set for the attachment it returns `center center`.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
@@ -164,13 +227,15 @@ If the attachment has a focal point defined, this helper will return the focal p
   <img src="{{ image._urls['one-third'] }}" style="object-position: {{ focalPoint }};">
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 ### `getFocalPoint(attachment)`
 If the attachment has a focal point defined, this helper will return an object containing an `x` property with the x-postition, and `y` property with the y-position, as percentages. The numbers are supplied unitless. If there is no focal point defined it returns null.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
@@ -179,26 +244,30 @@ If the attachment has a focal point defined, this helper will return an object c
   <img src="{{ image._urls['one-third'] }}" style="object-position: left {{ focalPoint.x }}% top {{ focalPoint.y }}%;">
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 ### `getHeight(attachment)`
 Returns either the original size attachment height, or the cropped height if the image has been cropped in the document.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set imageHeight = apos.attachment.getHeight(image) %}  <img src="{{ image._urls['one-third'] }}" height="{{ imageHeight }}" >
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 ### `getWidth(attachment)`
 Returns either the original size attachment width or the cropped width if the image has been cropped in the document.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
@@ -206,14 +275,15 @@ Returns either the original size attachment width or the cropped width if the im
   <img src="{{ image._urls['one-third'] }}" width="{{ imageWidth }}" >
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
-
 
 ### `hasFocalPoint(attachment)`
 Returns `true` if the image attachment associated with the document has a focal point set.
 
+<AposCodeBlock>
 ```django
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
@@ -223,8 +293,9 @@ Returns `true` if the image attachment associated with the document has a focal 
   {% endif %}
 {% endif %}
 ```
-<AposCodeBlock v-slot:caption>
+<template v-slot:caption>
   modules/default-page/views/page.html
+  </template>
 </AposCodeBlock>
 
 ### `isCroppable(attachment)`
@@ -232,7 +303,6 @@ Checks the attachment extension against the `fileGroups` option to determine if 
 
 ### `url(attachment, options)`
 Returns the URL of the passed attachment. If `options.size` is set to the name of an existing size, it will return the URL for that size. `options.full` will return the URL for the "full width" (1140px, by default), not the original. For the original, pass `original` as the `size` value. By default the full size is returned. if `options.uploadfsPath` is `true`, the uploadfs path will be returned.
-
 
 ## Module tasks
 
@@ -244,13 +314,9 @@ Usage
 node app @apostrophecms/attachment:rescale
 ```
 
-
 ## Related documentation
 
 - [Attachment schema field](https://v3.docs.apostrophecms.org/reference/field-types/attachment.html#attachment)
 - [API attachment response](https://v3.docs.apostrophecms.org/reference/api/field-formats.html#attachment)
 - [API crop endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-crop)
 - [API upload endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-upload)
-
-
-
