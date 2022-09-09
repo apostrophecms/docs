@@ -13,6 +13,7 @@ Module configuration objects may use the following configuration properties. The
 | [`improve`](#improve) | String | No | Identify a module to enhance | All |
 | [`options`](#options) | Object | No | Configure module options | All |
 | [`instantiate`](#instantiate) | Boolean | No | Prevent a module from being fully instantiated | All |
+| [`bundle`](#bundle) | Object | No | Identify multiple modules to load | All |
 | [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
@@ -97,6 +98,10 @@ An object used to add additional, often optional, settings to a module. There ar
 ### `instantiate`
 
 Set to `false` to prevent the module from being fully instantiated in the application. The primary purpose of this option is to create a base class module that others will [extend](#extend) but that will not be used directly.
+
+### `bundle`
+
+Used to add multiple modules from a single base module. Takes an object with two properties. The `directory` property takes a relative path to the directory of the modules to be loaded. The `modules` property takes an array of module names. Modules loaded in this way still need to be added to the `app.js` file, unless they use [`improve`](#improve). Any modules that to be used as a base class for other modules should be added to `app.js`, but have their [`instantiate`](#instantiate) option set to `false`.
 
 ### `fields`
 
@@ -1101,4 +1106,3 @@ module.exports = {
   }
 };
 ```
-
