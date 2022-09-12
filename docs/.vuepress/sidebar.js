@@ -137,7 +137,7 @@ module.exports = {
       ]
     },
     {
-      title: 'Docker containers'
+      title: 'Docker containers',
       collapsable: false,
       children: [
         [ 'cookbook/using-docker.md', 'Setting up an Apostrophe project with Docker' ]
