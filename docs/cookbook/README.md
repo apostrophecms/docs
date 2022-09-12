@@ -17,3 +17,6 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Microsoft Windows
 
 - [Windows development environment](windows-development.md)
+
+## Docker Containers
+- [Setting up an apostrophe project with Docker](using-docker.md)

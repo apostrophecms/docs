@@ -39,6 +39,8 @@ CMD ["node", "app.js"]
   Dockerfile
 </template>
 
+</AposCodeBlock>
+
 Let's walk briefly through each of the lines. The first line specifies that this image will extend an existing image with the long-term support version of node.js running on an alpine linux v3.15 operating system. If you need another version of node or a newer version of alpine linux, you should alter this line to build from an [official](https://hub.docker.com/_/node/) or another image. You will likely want to match both the node.js version and linux distro to what is currently supported by your server.
 
 The `WORKDIR` command is used to define the working directory of the Docker container where all of the subsequent commands will be run. It implicitly runs both `mkdir` and `cd` commands. 
@@ -61,6 +63,7 @@ Finally, the last line of this file provides the command to trigger our project 
 The alpine linux distro is slim and doesn't include bash, but we can access a shell at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
 
 <AposCodeBlock>
+
 ```bash
 #!/bin/sh
 
@@ -82,6 +85,7 @@ We won't go through this file in detail. As covered in the previous section, it 
 The [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#dockerignore-file) file acts to prevent specific files from being copied into your final image. This is important to prevent sensitive or unnecessary files from being incorporated into your image. This example `.dockerignore` file is set up to ignore **all** files by having an `*` wildcard as the first line. It then adds files and folders we do want to be copied back in by prefixing them with a `!`. This pattern prevents us from accidentally allowing the copy of a newly added file.
 
 <AposCodeBlock>
+
 ```bash
 *
 !LICENSE
@@ -100,12 +104,14 @@ The [`.dockerignore`](https://docs.docker.com/engine/reference/builder/#dockerig
 <template v-slot:caption>
   .dockerignore
 </template>
+
 </AposCodeBlock>
 
 ## Creating a `docker-compose.yaml` file
 In this guide, we are starting by creating multiple containers and a persistent volume. This is so that we can provide both a MongoDB instance and a place to store uploaded assets. We are going to do this using [Docker Compose](https://docs.docker.com/compose/) and a `docker-compose.yml` file. In the next sections of the tutorial, we will look at removing the extra container and volume by taking advantage of cloud storage and database services. Create this file at the root of your project.
 
 <AposCodeBlock>
+
 ```bash
 services:
   db:
@@ -133,6 +139,8 @@ services:
   docker-compose.yaml
 </template>
 
+</AposCodeBlock>
+
 The spacing in this file is very important. White-space, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
 Next, we are specifying that the database should communicate over port `27017`. This is the port typically used by Apostrophe, but might need to be altered to match your environment.
@@ -153,6 +161,7 @@ Finally, much like with the database, we are persisting a volume for any uploads
 The last file we need to create before bringing our project up is a `.env` file at the root of our project containing the environmental variables. In this example file, we are assuming that you are hosting on a single server. Therefore we are setting the `APOS_CLUSTER_PROCESSES` environment variable to `2` to ensure that there is availability in case of a restart due to a crash. This number could be increased depending on your server.
 
 <AposCodeBlock>
+
 ```bash
 NODE_ENV=production
 APOS_MONGODB_URI=mongodb://db:27017/apostrophe
@@ -199,7 +208,53 @@ docker compose down
 If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://v3.docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
 
 ### Changing the `docker-compose.yaml` file
-In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: 'APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For Amazon, your `environment:` section should now look like this:
+In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For Amazon, your `environment:` section should now look like this:
+
+<AposCodeBlock>
+
+```bash
+…
+    environment:
+      - NODE_ENV
+      - APOS_MONGODB_URI
+      - APOS_CLUSTER_PROCESSES
+      - APOS_S3_REGION
+      - APOS_S3_BUCKET
+      - APOS_S3_KEY
+      - APOS_S3_SECRET
+…
+```
+
+<template v-slot:caption>
+  docker-compose.yaml
+</template>
+
+</AposCodeBlock>
+
+### Changing the `.env` file
+Next, the `.env` file should be modified to contain values for each of the new environment variables. Each will get populated with values specific to your S3 buckets. Again, add the `APOS_S3_ENDPOINT` with value if using a service not hosted by AWS.
+
+<AposCodeBlock>
+
+```sh
+NODE_ENV=production
+APOS_MONGODB_URI=mongodb://db:27017/apostrophe
+APOS_S3_REGION=<your region>
+APOS_S3_BUCKET=<your bucket name>
+APOS_S3_KEY=<account key>
+APOS_S3_SECRET=<account secret>
+```
+
+<template v-slot:caption>
+  .env
+</template>
+
+</AposCodeBlock>
+## Using AWS S3 services
+If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://v3.docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
+
+### Changing the `docker-compose.yaml` file
+In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For Amazon, your `environment:` section should now look like this:
 
 <AposCodeBlock>
 
@@ -243,6 +298,7 @@ APOS_S3_SECRET=<account secret>
 </AposCodeBlock>
 
 In addition to these changes, you will also likely have to change your `@apostrophecms/uploadfs` options for accessing the bucket. For example:
+
 <AposCodeBlock>
 
 ```javascript
@@ -285,15 +341,17 @@ Any special characters in your user name or password within the connection strin
 ### Finishing up
 Since this will create a new database, once you bring your site up you should add an admin user as was [detailed](#spinningourprojectup) when we used the containerized version.
 
-To bring the site up use :
+Then, to bring the site up use :
 ```cli
 docker composer up
 ```
 
-To bring it down:
-```cli
-docker composer down
-```
-
 ## Deploy
-**TO BE FINISHED**
+
+Great, so we have a working Apostrophe Docker image. How do we get it on the web? There are a many options. Here are a few.
+
+* [Automated builds from GitHub](https://docs.docker.com/docker-hub/github/)
+* Install [Dokku](http://dokku.viewdocs.io/dokku/) on the server then use [Dockerfile deployment](http://dokku.viewdocs.io/dokku/deployment/methods/dockerfiles/)
+* Use `docker save` and `docker load` to [deploy without a private registry](https://realguess.net/2015/02/04/docker-save-load-and-deploy/)
+* Build the image directly on the server
+* Many more (use a web search!)
