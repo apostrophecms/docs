@@ -1,6 +1,6 @@
 # Building Docker images for Apostrophe projects
 
-[Docker](https://www.docker.com/) is a containerization platform that lets developers build an image for their projects and then run it anywhere. This document will guide you through setting up Docker and using it to create an image for hosting your Apostrophe project.
+[Docker](https://www.docker.com/) is a containerization platform that lets developers build an image for their projects and then run it anywhere. This guide is for production, not development. If you want to use Docker as a development environment, you can explore using a persistent Docker volume for your project, but bear in mind that commands like npm install can be very slow in such a configuration.
 
 The initial steps of this guide will assume that you will be hosting your database, project, and uploaded assets on the same server. The second part will outline steps for configuring to use the AWS S3 service for hosting assets. Finally, the third portion will provide guidance for using the MongoDB Atlas multi-cloud database.
 
@@ -44,7 +44,7 @@ CMD ["node", "app.js"]
 
 </AposCodeBlock>
 
-Let's walk briefly through each of the lines. The first line specifies that this image will extend an existing image with the long-term support version of node.js running on an alpine linux v3.15 operating system. If you need another version of node or a newer version of alpine linux, you should alter this line to build from an official node.js [image](https://hub.docker.com/_/node/) or a 3<sup>rd</sup> party image.
+Let's walk briefly through each of the lines. The first line specifies that this image will extend an existing image with the long-term support version of node.js running on an alpine linux v3.15 operating system. If you need another version of node, another version of Alpine Linux, or prefer not to use Alpine Linux as your container OS, you should alter this line to build from an official node.js [image](https://hub.docker.com/_/node/) or a 3<sup>rd</sup> party image.
 
 The `WORKDIR` command is used to define the working directory of the Docker container where all of the subsequent commands will be run. It implicitly runs both `mkdir` and `cd` commands.
 
@@ -64,7 +64,7 @@ Everything until this point helped build the container image. Those commands onl
 
 ### Creating the install script
 
-The alpine linux distribution is slim and doesn't include bash, but we can access a shell at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
+The alpine linux distribution is slim and doesn't include bash, but we can access a the "busybox" shell, which is compatible with the basics, at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
 
 <AposCodeBlock>
 
@@ -99,7 +99,6 @@ apos-build/
 badges/
 data/
 node-modules/
-public/apos-frontend/
 public/uploads/
 .dockerignore
 .env
@@ -134,6 +133,7 @@ services:
   web:
     build:
       context: .
+    container_name: "apostrophe-container"
     ports:
       - "3000:3000"
     environment:
@@ -152,13 +152,15 @@ services:
 
 </AposCodeBlock>
 
-The spacing in this file is very important. White-space, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
+The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
-Next, we are specifying that the database should communicate over port `27017`. This is the port typically used by Apostrophe but might need to be altered to match your environment.
+Next, we are specifying that the database should communicate over port `27017`. This is the port typically used by Apostrophe, so you will need to alter this if you want to connect to the container MongoDB using the mongo CLI tools or the Compass App.
 
 Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this.
 
 Looking at the `web:` container, we aren't passing an image but instead passing `build`. Within this, we are adding `context: .` which specifies we should build the image for this container from the `Dockerfile` in the same directory.
+
+To make accessing the container running our apostrophe easier, we are giving it a name using the `container_name` key. You can use any name you would like, but remember it for later.
 
 The next two lines, starting with `ports:`, list the ports that the container should listen through, in this case, the typical port 3000.
 
@@ -193,14 +195,9 @@ Bringing our project up in Docker is a two-step process. First, from the CLI run
 When this finishes, you can run the command `docker compose up`. This will bring your project up and if you are using the defaults, allow you to access the site at `http://localhost:3000`. At this point, you won't be able to log in because it is a fresh database. To do this, you need to open a session with your container running Apostrophe. With both containers still running, give the following command from your terminal.
 
 ```bash
-docker container ls
+docker exec -it <container_name> /bin/sh
 ```
-
-This will list all of your containers. Pick the one running your project image, not the database container and get the container id. Use it to run this command:
-
-```bash
-docker exec -it <container ID> /bin/sh
-```
+The `<container_name>` should be substituted with the name you gave your container in the `docker-compose.yaml` file.
 
 When the connection to your container is established, you issue the normal command for adding an Apostrophe admin to the database.
 
@@ -219,16 +216,16 @@ docker compose down
 ### Updating your project
 Whenever your code or dependencies change, for example, when there is an update to Apostrophe, your container will have to be rebuilt. This can be done using the same steps as the initial build.
 
-First, make sure your `package-lock.json` file is up to date by running `npm update` on your project repo. Then, with the container down, run:
+First, make sure your `package-lock.json` file is up to date by running `npm update` on your project repo. Then run:
 
 ```bash
 docker compose build
 ```
 
-And then run:
+After your container is re-built run:
 
 ```bash
-docker compose up
+docker compose restart
 ```
 
 ### Summary
@@ -283,7 +280,7 @@ APOS_S3_SECRET=<account secret>
 
 </AposCodeBlock>
 
-In addition to these changes, you will also likely have to change your `@apostrophecms/uploadfs` options for accessing the bucket. For example:
+While setting S3 permissions is beyond the scope of this guide, you might have to change your `@apostrophecms/uploadfs` options for accessing the bucket. This is done by extending the `@apostrophecms/upploadfs` options as you would for other Apostrophe modules. For example:
 
 <AposCodeBlock>
 
