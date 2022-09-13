@@ -154,7 +154,7 @@ services:
 
 The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
-Next, we are specifying that the database should communicate over port `27017`. This is the port typically used by Apostrophe, so you will need to alter this if you want to connect to the container MongoDB using the mongo CLI tools or the Compass App.
+Next, we are specifying that the database should communicate over port `27017`. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
 
 Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this.
 
