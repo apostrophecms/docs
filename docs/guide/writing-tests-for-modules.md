@@ -1,5 +1,18 @@
 # Writing tests for modules
 
+Tests are useful to guarantee that the requirements of your application are met over time.
+
+You don't have to test over and over again the same scenarios, it's a time saving tool.
+
+There are many kind of tests
+
+- [unit testing](https://en.wikipedia.org/wiki/Unit_testing) where we test a single part of the application, a single
+    module, file commonly referred as a unit
+- [integration testing](https://en.wikipedia.org/wiki/Integration_testing) where we test multiple parts of an
+    application working together as a group
+- [system testing](https://en.wikipedia.org/wiki/System_testing), sometimes referred as [end-to-end testing](https://www.indeed.com/career-advice/career-development/end-to-end-testing) where we test the entire application
+- and many more
+
 ## Requirements
 
 - A running MongoDB server
@@ -34,9 +47,9 @@ When you call `npm test`, it will lint your files according to [eslint-config-ap
 
 You will need a `test/package.json` file referencing the repository URL of your module. Please replace `%module-name%` & `%module-repository-url%` with your module informations.
 
-e.g. for the module [@apostrophecms/sitemap](https://github.com/apostrophecms/sitemap) we use 
+e.g. for the module [@apostrophecms/login-hcaptcha](https://github.com/apostrophecms/login-hcaptcha) we use 
 
-> `"@apostrophecms/sitemap": "git://github.com/apostrophecms/sitemap.git"`
+> `"@apostrophecms/login-hcaptcha": "git://github.com/apostrophecms/login-hcaptcha.git"`
 > 
 
 ```json
@@ -104,9 +117,10 @@ Mocha does not play well with arrow-functions, more info at [https://mochajs.org
       await t.destroy(apos);
     });
 
-    it('should have module options', async function () {
+    it('should have module options', function () {
       const actual = apos.modules['%module-name%'].options;
       const expected = {
+        apos,
         custom: true
       };
 
@@ -142,26 +156,40 @@ By running the test using `npm test` command, you should see the output below
 ```
 $ npm test
 
-> @apostrophecms/sitemap@1.0.1 test
+> @apostrophecms/login-hcaptcha@1.0.0 test
 > npm run lint && mocha
 
 
-> @apostrophecms/sitemap@1.0.1 lint
+> @apostrophecms/login-hcaptcha@1.0.0 lint
 > npm run eslint
 
 
-> @apostrophecms/sitemap@1.0.1 eslint
+> @apostrophecms/login-hcaptcha@1.0.1 eslint
 > eslint .
 
 
 
-  Apostrophe Sitemap
+  Apostrophe Login hCAPTCHA
 Listening at http://127.0.0.1:7780
     ✓ should have module options
 
 
   1 passing (909ms)
 ```
+
+### What's next?
+
+You can now test the additional methods you've provided with your module on [self](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#methods-self).
+
+You can use any existing apostrophe modules with a `test` folder as a reference.
+
+You'll find below a non exhaustive list of modules:
+
+- [@apostrophecms/form](https://github.com/apostrophecms/form/blob/main/test/test.js)
+- [@apostrophecms/login-hcaptcha](https://github.com/apostrophecms/login-hcaptcha/blob/main/test/test.js)
+- [@apostrophecms/svg-sprite](https://github.com/apostrophecms/svg-sprite/blob/main/test/test.js)
+- [@apostrophecms/scheduled-publishing](https://github.com/apostrophecms/scheduled-publishing/blob/main/test/test.js)
+- [@apostrophecms/sitemap](https://github.com/apostrophecms/sitemap/blob/main/test/test.js)
 
 ## FAQ
 
