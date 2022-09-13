@@ -1,6 +1,6 @@
 # Areas and widgets
 
-**Areas** are core to Apostrophe's in-context editing experience. They are special fields where editors can add one or more content widgets. A **widget** is a section of structured content, such as a block of rich text, an image slideshow, or a grid of featured products. Together, these two features let editors add custom and advanced content to a website, move it around, and edit it &ndash; all within a model that maintains the content design.
+**Areas** are core to Apostrophe's in-context editing experience. They are special fields where editors can add one or more content widgets. A **widget** is a section of structured content, such as a block of rich text, an image slideshow, or a grid of featured products. Together, these two features let editors add custom and advanced content to a website, move it around, and edit it &ndash; all within a model that maintains the content design. Areas can be configured for editors to add content through a basic menu or through an expanded preview menu.
 
 ## Basic area configuration
 
@@ -74,6 +74,69 @@ introduction: {
 }
 ```
 
+## Expanded widget menu configuration
+ To enhance the editor experience, an expanded widget menu can be added instead of the basic configuration. This menu expands out from the left side and provides a visual indication of what each widget type is like, as well as support for organization of widgets into groups. This type of area is added to a page in a manner similar to the basic menu as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`.
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Landing Page'
+  },
+  fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          expanded: true,
+          groups: {
+            basic: {
+              label: 'Basic',
+              widgets: {
+                '@apostrophecms/rich-text': {},
+                '@apostrophecms/image': {}
+              },
+              columns: 2
+            },
+            layout: {
+              label: 'Layout',
+              widgets: {
+                'two-column': {},
+                'three-column': {},
+                'four-column': {}
+              },
+              columns: 3
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+```
+
+<template>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+ For the expanded widget preview menu, widgets are added in `groups`, rather than being added and then arranged as in the basic configuration. Fields with an `area` type take two new options. The first new option is `expanded` and takes a boolean to activate the expanded preview. The `groups` option takes multiple groupings of widgets assigned through named objects. In the example code, there are two such `groups`. The first is named `basic` and the second is named `layout`. Each has a `label` key that provides the display name. Each also has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix. Finally, each group has a `columns` key that take an integer from 1-4. This determines how many columns this group will use and how many widgets will be displayed per line. The default value is 3.
+
+ ### Widget preview options
+ If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed. The widgets `label` will be displayed, but an additional `description` option can be used to provide descriptive text that will be displayed below the widget in the menu.
+ 
+ By default, the widget will be displayed as a placeholder rectangle. However, there are three options for adding a preview image.
+ 
+ The `previewComponent` option takes the name of a custom Vue component
+ MORE DESCRIPTION NEEDS TO BE ADDED HERE
+
+The `previewImage` option takes the extension, without `.`, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.EXTENSION`, where `EXTENSION` matches the string passed to the option.
+
+The third option is `previewIcon`. This option takes any icon that has been registered
 ## Adding areas to templates
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
