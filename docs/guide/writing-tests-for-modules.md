@@ -13,6 +13,12 @@ There are many kind of tests
 - [system testing](https://en.wikipedia.org/wiki/System_testing), sometimes referred as [end-to-end testing](https://www.indeed.com/career-advice/career-development/end-to-end-testing) where we test the entire application
 - and many more
 
+This documentation focuses on how to test Apostrophe modules, not Apostrophe itself using integration testing.
+
+Modules should be stand-alone npm packages.
+
+We will use a fictitious module named `article` to illustrate how to write tests for modules.
+
 ## Requirements
 
 - A running MongoDB server
@@ -33,11 +39,26 @@ You will need to add some new scripts to your `package.json`.
 
 ```json
 {
+  "name": "article",
+  "version": "1.0.0",
+  "description": "A fictitious Apostrophe module",
+  "main": "index.js",
   "scripts": {
     "lint": "npm run eslint",
     "eslint": "eslint .",
     "test": "npm run lint && mocha"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+```
+
+Add the following to `.eslintrc.json` to tell eslint to use ApostropheCMS ESLint confiuration.
+
+```json
+{
+  "extends": [ "apostrophe" ]
 }
 ```
 
@@ -45,7 +66,7 @@ When you call `npm test`, it will lint your files according to [eslint-config-ap
 
 ### Test folder
 
-You will need a `test/package.json` file referencing the repository URL of your module. Please replace `%module-name%` & `%module-repository-url%` with your module informations.
+You will need a `test/package.json` file referencing the repository URL of your module. Please replace `article` & `%article-repository-url%` with your module informations.
 
 e.g. for the module [@apostrophecms/login-hcaptcha](https://github.com/apostrophecms/login-hcaptcha) we use 
 
@@ -59,7 +80,7 @@ e.g. for the module [@apostrophecms/login-hcaptcha](https://github.com/apostroph
   " */": "exist in package.json at project level, which for a test is here",
   "dependencies": {
     "apostrophe": "^3.26.0",
-    "%module-name%": "%module-repository-url%"
+    "article": "%article-repository-url%"
   }
 }
 ```
@@ -89,7 +110,7 @@ Mocha does not play well with arrow-functions, more info at [https://mochajs.org
   // getAppConfig is used to set options for Apostrophe and the module you want to test
   const getAppConfig = function (options = {}) {
     return {
-      '%module-name%': {
+      article: {
         options: {
           // Pass the required options here, if your module doesn't have any options
           // please skip the `options` attribute
@@ -100,14 +121,14 @@ Mocha does not play well with arrow-functions, more info at [https://mochajs.org
     };
   };
 
-  describe('%module-name%', function () {
+  describe('article', function () {
     let apos;
 
     this.timeout(t.timeout);
 
     before(async function () {
       apos = await t.create({
-        shortName: '%module-name%',
+        shortName: 'article',
         testModule: true,
         modules: getAppConfig()
       });
@@ -118,7 +139,7 @@ Mocha does not play well with arrow-functions, more info at [https://mochajs.org
     });
 
     it('should have module options', function () {
-      const actual = apos.modules['%module-name%'].options;
+      const actual = apos.modules.article.options;
       const expected = {
         apos,
         custom: true
@@ -183,7 +204,7 @@ You can now test the additional methods you've provided with your module on [sel
 
 You can use any existing apostrophe modules with a `test` folder as a reference.
 
-You'll find below a non exhaustive list of modules:
+You'll find below a non exhaustive list of such modules:
 
 - [@apostrophecms/form](https://github.com/apostrophecms/form/blob/main/test/test.js)
 - [@apostrophecms/login-hcaptcha](https://github.com/apostrophecms/login-hcaptcha/blob/main/test/test.js)
