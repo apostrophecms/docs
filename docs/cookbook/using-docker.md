@@ -240,7 +240,7 @@ Right now, our Dockerized container is limited to a single server. For simple, l
 If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://v3.docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
 
 ### Changing the `docker-compose.yaml` file
-In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For Amazon, your `environment:` section should now look like this:
+In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For AWS, your `environment:` section should now look like this:
 
 <AposCodeBlock>
 
@@ -315,7 +315,7 @@ Any assets uploaded through the site will now be stored in your S3 bucket rather
 [MongoDB Atlas](https://www.mongodb.com/atlas/database) is a robust, multi-cloud database service. There are a number of advantages, but one is that using a cloud database means that our project can run on multiple servers but still all access the same database. If we run our project in a docker container without an accompanying database container, we don't have to use Docker Compose. However, since we have already built these assets, we can continue with these files. Two files must be altered - `docker-compose.yaml` and `.env`.
 
 ### Changing the `docker-compose.yaml` file
-Since we no longer have to use the database container, we can simply delete that whole section from the `services:`.
+Since we no longer have to use the database container, we can simply delete that whole section from the `services:`. Likewise, we can also remove the `depends_on:` section since we no longer have that container.
 
 ### Changing the `.env` file
 First, start by getting an account and setting up a project and cluster according to the [instructions](https://www.mongodb.com/docs/atlas/?_ga=2.115258319.959071482.1662986164-305956368.1655805952&_gac=1.50376795.1662898658.Cj0KCQjwjvaYBhDlARIsAO8PkE2KG3UP3yszcTYrzDpB8BRxDZ7vM2vLMafvX59emZZKkDExo_ZPZRIaAneGEALw_wcB) at the Atlas site. Once you do this, you can get the connect string for your database. The `APOS_MONGODB_URI` was already being set within the `.env` file. You simply need to substitute your connect string for the value.
@@ -325,7 +325,7 @@ Any special characters in your user name or password within the connection strin
 :::
 
 ### Finishing up
-Since this will create a new database, once you bring your site up you should add an admin user as was [detailed](#spinningourprojectup) when we used the containerized version.
+Since this will create a new database, once you bring your site up you should add an admin user as was [detailed](#spinning-our-project-up) when we used the containerized version.
 
 Then, to bring the site up use :
 ```cli
