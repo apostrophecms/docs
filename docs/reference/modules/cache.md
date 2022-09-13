@@ -8,25 +8,26 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-The `@apostrophecms/cache` module is a general-purpose cache implementation for improved performance in all areas where results can be retained and reused temporarily. Any number of namespaces can be used to separatly maintain data. It is powered by a MongoDB collection.
+The `@apostrophecms/cache` module is a general-purpose cache implementation for improved performance in all areas where results can be retained and reused temporarily. Any number of namespaces can be used to separately maintain data. It is powered by a MongoDB collection.
 
 ## Methods
 
 ### `async set(namespace, key, value, lifetime)`
-The `set()` method is asynchronous and should be called with an await to insure that any data is cached prior to trying to retrieve it. The method takes four parameters. The first, `namespace`, takes a string and is used to prevent collisions between keys when caching unrelated data. The `key` parameter takes a string and is the identifier that can be used to retrieve the item to be stored. The `value` parameter takes any JSON-friendly value and does not need to be stringified. The optional `lifetime` parameter takes the number of seconds for the value to exist as an integer. If set to zero or unspecified then there won't be an expiration time. However, the cache should not be used for primary storage as it could be cleared at some point.
+The `set()` method is asynchronous and should be called with an await to insure that any data is cached prior to trying to retrieve it. The method takes four parameters. The first, `namespace`, takes a string and is used to prevent collisions between keys when caching unrelated data. The `key` parameter takes a string and is the identifier that can be used to retrieve the item to be stored. The `value` parameter takes any JSON-friendly value and does not need to be stringified. The optional `lifetime` parameter takes the number of seconds for the value to exist as an integer. If set to zero or unspecified then there won't be an expiration time. However, the cache should not be used for primary storage as it could be cleared at any time, partially cleared to free space, et cetera.
 
 #### Example
 
 ```javascript
 …
+const url = `http://api.weatherapi.com/v1/forcast.json?q=${zipCode}`;
 // Check the cache for the data we want
-let specificData = await self.apos.cache.get('apiData', 'specificData');
-if(!specificData) {
+let weatherData = await self.apos.cache.get('weatherApi', zipCode);
+if (!weatherData) {
   // The data wasn't cached, so let's get it the hard way
-  const response = await fetch('https://api.endpoint.com', {options});
-  const specificData = await response.json();
+  const response = await fetch(url, {options});
+  weatherData = await response.json();
   // let's cache for an hour = 60 seconds * 60 minutes = 3600
-  const cache = await self.apos.cache.set('apiData', 'specificData', specificData, 3600);
+  await self.apos.cache.set('weatherApi', zipCode, weatherData, 3600);
 }
 // Now we can use the data
 …
@@ -40,13 +41,15 @@ The `get()` method is asynchronous and should be called with await. It allows yo
 ```javascript
 …
 // Check the cache for the data we want
-let specificData = await self.apos.cache.get('apiData', 'specificData');
-if(!specificData) {
+const url = `http://api.weatherapi.com/v1/forcast.json?q=${zipCode}`;
+// Check the cache for the data we want
+let weatherData = await self.apos.cache.get('weatherApi', zipCode);
+if (!weatherData) {
   // The data wasn't cached, so let's get it the hard way
-  const response = await fetch('https://api.endpoint.com', {options});
-  const specificData = await response.json();
+  const response = await fetch(url, {options});
+  weatherData = await response.json();
   // let's cache for an hour = 60 seconds * 60 minutes = 3600
-  const cache = await self.apos.cache.set('apiData', 'specificData', specificData, 3600);
+  await self.apos.cache.set('weatherApi', zipCode, weatherData, 3600);
 }
 // Now we can use the data
 …
