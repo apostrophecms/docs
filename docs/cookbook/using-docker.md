@@ -152,7 +152,7 @@ services:
 
 </AposCodeBlock>
 
-The spacing in this file is very important. White-space, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
+The spacing in this file is very important. White-space, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
 Next, we are specifying that the database should communicate over port `27017`. This is the port typically used by Apostrophe but might need to be altered to match your environment.
 
@@ -190,24 +190,24 @@ The only other line that might need alteration is the `APOS_MONGODB_URI` if your
 ### Spinning our project up
 Bringing our project up in Docker is a two-step process. First, from the CLI run `docker compose build`. This will create our project image. You should see commands from your `Dockerfile`, messages from the npm install, and then the familiar messages from Apostrophe as it builds the assets.
 
-When this finishes, you can run the command `docker compose up`. This will bring your project up and if you are using the defaults, allow you to access the site at `http://localhost:3000`. At this point, you won't be able to log in because it is a fresh database. To do this, you need to open a session with your container running Apostrophe. The name for this container should be <YourProjectName_web> if you used the default settings. With both containers still running, give the following command from your terminal.
-
-```bash
-docker run –network="host" -it <YourProjectName_web> /bin/sh
-```
-Just replace the `<YourProjectName_web>`. If you get an error you can check your container name by running:
+When this finishes, you can run the command `docker compose up`. This will bring your project up and if you are using the defaults, allow you to access the site at `http://localhost:3000`. At this point, you won't be able to log in because it is a fresh database. To do this, you need to open a session with your container running Apostrophe. With both containers still running, give the following command from your terminal.
 
 ```bash
 docker container ls
 ```
 
-This will list all of your containers. Pick the one running your project image, not the database container.
+This will list all of your containers. Pick the one running your project image, not the database container and get the container id. Use it to run this command:
+
+```bash
+docker exec -it <container ID> /bin/sh
+```
 
 When the connection to your container is established, you issue the normal command for adding an Apostrophe admin to the database.
 
 ```bash
 node app @apostrophecms/user:add admin admin
 ```
+
 Now you should be able to log in as admin.
 
 If you want to bring the site down use:
