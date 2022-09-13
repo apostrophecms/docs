@@ -68,62 +68,56 @@ As your tests grows, you can break it down into multiple files based on your lik
 
 Mocha does not play well with arrow-functions, more info at [https://mochajs.org/#arrow-functions](https://mochajs.org/#arrow-functions)
 
+<AposCodeBlock>
+  ```javascript
+  const assert = require('assert').strict;
+  const t = require('apostrophe/test-lib/util.js');
 
-```javascript
-// test/index.js
-const assert = require('assert');
-const t = require('apostrophe/test-lib/util.js');
-
-const getAppConfig = function (options = {}) {
-  return {
-    '@apostrophecms/express': {
-      options: {
-        session: { secret: 'supersecret' }
-      }
-    },
-    '%module-name%': {
-      options: {
-        // pass the required options here
-        ...options
-      }
-    }
-  };
-};
-
-describe('%module-name%', function () {
-  let apos;
-
-  this.timeout(t.timeout);
-
-  after(function () {
-    return t.destroy(apos);
-  });
-
-  it('should be a property of the apos object', async function () {
-    const appConfig = getAppConfig();
-
-    await t.create({
-      root: module,
-      testModule: true,
-      modules: {
-        ...appConfig,
-        testRunner: {
-          handlers(self) {
-            return {
-              'apostrophe:afterInit': {
-                checkModule () {
-                  apos = self.apos;
-                  assert(self.apos.modules['%module-name%']);
-                }
-              }
-            };
-          }
+  // getAppConfig is used to set options for Apostrophe and the module you want to test
+  const getAppConfig = function (options = {}) {
+    return {
+      '%module-name%': {
+        options: {
+          // Pass the required options here, if your module doesn't have any options
+          // please skip the `options` attribute
+          ...options,
+          custom: true
         }
       }
+    };
+  };
+
+  describe('%module-name%', function () {
+    let apos;
+
+    this.timeout(t.timeout);
+
+    before(async function () {
+      apos = await t.create({
+        shortName: '%module-name%',
+        testModule: true,
+        modules: getAppConfig()
+      });
+    });
+
+    after(async function () {
+      await t.destroy(apos);
+    });
+
+    it('should have module options', async function () {
+      const actual = apos.modules['%module-name%'].options;
+      const expected = {
+        custom: true
+      };
+
+      assert.deepEqual(actual, expected);
     });
   });
-});
-```
+  ```
+  <template v-slot:caption>
+    test/index.js
+  </template>
+</AposCodeBlock>
 
 ### Dependencies
 
@@ -137,7 +131,37 @@ It exposes:
 - `t.getUserJar` to get a cookie jar for the admin user
 - `t.timeout` can be set using an environment variable `TEST_TIMEOUT`, e.g.`TEST_TIMEOUT=5000 npm test`
 
-[testModule](https://github.com/apostrophecms/apostrophe/blob/main/index.js#L468) will tweak the Apostrophe environment suitably for unit tests
+[testModule](https://github.com/apostrophecms/apostrophe/blob/main/index.js#L468) will tweak the Apostrophe environment suitably for unit tests (i.e. set default modules options, check test files location, build module paths)
+
+- `describe` & `it` functions are provided by mocha, more info at [BDD](https://mochajs.org/#bdd)
+
+### Output
+
+By running the test using `npm test` command, you should see the output below
+
+```
+$ npm test
+
+> @apostrophecms/sitemap@1.0.1 test
+> npm run lint && mocha
+
+
+> @apostrophecms/sitemap@1.0.1 lint
+> npm run eslint
+
+
+> @apostrophecms/sitemap@1.0.1 eslint
+> eslint .
+
+
+
+  Apostrophe Sitemap
+Listening at http://127.0.0.1:7780
+    ✓ should have module options
+
+
+  1 passing (909ms)
+```
 
 ## FAQ
 
