@@ -19,7 +19,7 @@ The `set()` method is asynchronous and should be called with an await to insure 
 
 ```javascript
 …
-const url = `http://api.weatherapi.com/v1/forcast.json?q=${zipCode}`;
+const url = `http://api.weatherapi.com/v1/forecast.json?q=${zipCode}`;
 // Check the cache for the data we want
 let weatherData = await self.apos.cache.get('weatherApi', zipCode);
 if (!weatherData) {
@@ -41,7 +41,7 @@ The `get()` method is asynchronous and should be called with await. It allows yo
 ```javascript
 …
 // Check the cache for the data we want
-const url = `http://api.weatherapi.com/v1/forcast.json?q=${zipCode}`;
+const url = `http://api.weatherapi.com/v1/forecast.json?q=${zipCode}`;
 // Check the cache for the data we want
 let weatherData = await self.apos.cache.get('weatherApi', zipCode);
 if (!weatherData) {
