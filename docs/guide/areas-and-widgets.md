@@ -136,7 +136,7 @@ module.exports = {
 
 The `previewImage` option takes the extension, without `.`, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.EXTENSION`, where `EXTENSION` matches the string passed to the option.
 
-The third option is `previewIcon`. This option takes any icon that has been registered
+The third option is `previewIcon`. This option takes any icon that has been [registered](reference/module-api/module-overview.html#icons). The `icon` option, if it is present, will be used if no `previewIcon` option is set.
 ## Adding areas to templates
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
