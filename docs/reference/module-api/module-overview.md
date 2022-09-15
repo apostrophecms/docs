@@ -101,7 +101,7 @@ Set to `false` to prevent the module from being fully instantiated in the applic
 
 ### `bundle`
 
-Used to add multiple modules from a single npm module. Takes an object with two properties. The `directory` property takes a relative path to the directory of the modules to be loaded. The `modules` property takes an array of module names. THe original module and bundled modules loaded in this way still need to be added to the `app.js` file, unless they use [`improve`](#improve). Any modules that to be used only as a base class for other modules should be added to `app.js`, but have their [`instantiate`](#instantiate) property set to `false`.
+Used to add multiple modules from a single npm module. Takes an object with two properties. The `directory` property takes a relative path to the directory of the modules to be loaded. The `modules` property takes an array of module names. THe original module and bundled modules loaded in this way still need to be added to the `app.js` file, unless they use [`improve`](#improve). Any modules that are to be used only as a base class for other modules should be added to `app.js`, but have their [`instantiate`](#instantiate) property set to `false`.
 
 ### `fields`
 
