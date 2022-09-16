@@ -75,7 +75,7 @@ introduction: {
 ```
 
 ## Expanded widget menu configuration
- To enhance the editor experience, an expanded widget menu can be added instead of the basic configuration. This menu expands out from the left side and provides a visual indication of what each widget type is like, as well as support for organization of widgets into groups. This type of area is added to a page in a manner similar to the basic menu as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`.
+ To enhance the editor experience, an expanded widget menu can be added instead of the basic configuration. This menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an area using the expanded menu is through a [field schema](/guide/content-schema.md) that is slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
 
 <AposCodeBlock>
 
@@ -124,19 +124,21 @@ module.exports = {
 
 </AposCodeBlock>
 
- For the expanded widget preview menu, widgets are added in `groups`, rather than being added and then arranged as in the basic configuration. Fields with an `area` type take two new options. The first new option is `expanded` and takes a boolean to activate the expanded preview. The `groups` option takes multiple groupings of widgets assigned through named objects. In the example code, there are two such `groups`. The first is named `basic` and the second is named `layout`. Each has a `label` key that provides the display name. Each also has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix. Finally, each group has a `columns` key that take an integer from 1-4. This determines how many columns this group will use and how many widgets will be displayed per line. The default value is 3.
+ For the expanded widget preview menu, widgets are added in `groups`, rather than being added and then arranged as in the basic configuration. Fields with an `area` type take two new options. The first new option is `expanded` and takes a boolean to activate the expanded preview. This option is required to activate the menu. The `groups` option takes multiple groupings of widgets assigned through named objects. In the example code, there are two such `groups`. The first is named `basic` and the second is named `layout`. Each has a `label` key that provides the display name. Each also has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix. Finally, each group has a `columns` key that takes an integer from 1-4. This determines how many columns this group will use and how many widgets will be displayed per line. The default value is 3.
 
  ### Widget preview options
- If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed. The widgets `label` will be displayed, but an additional `description` option can be used to provide descriptive text that will be displayed below the widget in the menu.
+ If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed in the menu. The menu will show the widget `label`, but the `description` option can be used to provide additional descriptive text for display below the widget.
  
- By default, the widget will be displayed as a placeholder rectangle. However, there are three options for adding a preview image.
- 
- The `previewComponent` option takes the name of a custom Vue component
- MORE DESCRIPTION NEEDS TO BE ADDED HERE
+ By default, the widget will be displayed as a placeholder rectangle. However, there are two options for adding a different preview.
 
-The `previewImage` option takes the extension, without `.`, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.EXTENSION`, where `EXTENSION` matches the string passed to the option.
+The `previewImage` option takes the extension, without `.`, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.extension`, where `extension` matches the string passed to the option.
 
-The third option is `previewIcon`. This option takes any icon that has been [registered](reference/module-api/module-overview.html#icons). The `icon` option, if it is present, will be used if no `previewIcon` option is set.
+::: note
+The extension should always be lower case.
+:::
+
+The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons can be registered using the [icons](/reference/module-api/module-overview.html#icons) property within the module before use in the menu. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+
 ## Adding areas to templates
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
