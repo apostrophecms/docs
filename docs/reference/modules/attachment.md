@@ -10,74 +10,119 @@ extends: '@apostrophecms/module'
 
 The `attachment` module coordinates the addition and manipulation of any files added to the database and works alongside the `@apostrophecms/uploadfs` module. This includes rescaling and cropping of images, as well as the uploading of non-image files like '.pdf' or '.csv'. It exposes multiple template helpers and command line tasks for attachment retrieval and manipulation.
 
-Options for this module are passed in through both `modules/@apostrophecms/attachment/index.js` and `modules/@apostrophecms/uploadfs/index.js`.
+Options and configuration settings for this module are passed in through both `modules/@apostrophecms/attachment/index.js` and `modules/@apostrophecms/uploadfs/index.js`.
 
 ## Options
 
-The `@apostrophecms/attachment` module is unusual compared to other modules in that some settings are passed directly to `@apostrophecms/uploadfs`. Those options are marked with a '*' in the options table. These options should be added to the `modules/@apostrophecms/uploadfs/index.js` file inside the `uploadfs` object. Additionally, the `imageSizes` property is passed as a top-level property of the `/modules/@apostrophecms/attachment/index.js` file, not in the `options` object.
-
+The `@apostrophecms/attachment` module is unusual compared to other modules in that some settings are passed directly to `@apostrophecms/uploadfs`. For these, see the [selected settings](#selecteduploadfssettings) of the `@apostrophecms/uploadfs` module section. 
 |  Property | Type | Description |
 |---|---|---|
-| [`copyOriginal` *](#copyoriginal) | Boolean | Undefined by default. If set to `false` the original image will not be copied to the database, only scaled images. |
-| [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to determine post-upload manipulation. |
-| [`image` *](#image) | String \|\| Object | Sets the image processor to 'sharp' (by default), 'imagemagick, or a custom processor passed in an object. |
-| [`imageSizes`](#imagesizes) | Object | Takes an object with `add` and `remove` properties to change the image sizes created upon image import. |
-| `orientOriginals` * | Boolean | Unless set to `false`, the uploaded image will be reoriented according to header data. |
-| [`postprocessors` *](#postprocessors) | Array | Takes an array of objects detailing optional postprocessors for images. |
-| `scaledJpegQuality` * | Integer | Sets the JPEG quality setting for scaled images - defaults to 80. |
-| `sizeAvailableInArchive` * | String | Takes the name of a size to make available even if file access is disabled. Defaults to 'one-sixth'. |  
+| [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to allow for upload and manipulation. |
 
-### `copyOriginal`
+### `fileGroups`
 
-This option should be passed to the `@apostrophecms/uploadfs` module. By default, the `copyOriginal` value is undefined, resulting in storage of the original image in the database. Explicitly setting this to `false` will block this behavior.
-
-#### Example
+This option should be passed to the `@apostrophecms/attachment` module. By default, this option is set to an array with two objects and any array passed through this option will replace the default values.
 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
-  options: {
-    uploadfs: {
-      copyOriginal: false'
-    }
-  }
-};
+...
+    self.fileGroups = self.options.fileGroups || [
+      {
+        name: 'images',
+        label: 'apostrophe:images',
+        extensions: [
+          'gif',
+          'jpg',
+          'png',
+          'svg',
+          'webp'
+        ],
+        extensionMaps: { jpeg: 'jpg' }
+      },
+      {
+        name: 'office',
+        label: 'apostrophe:office',
+        extensions: [
+          'txt',
+          'rtf',
+          'pdf',
+          'xls',
+          'ppt',
+          'doc',
+          'pptx',
+          'sldx',
+          'ppsx',
+          'potx',
+          'xlsx',
+          'xltx',
+          'csv',
+          'docx',
+          'dotx'
+        ],
+        extensionMaps: {}
+      }
+    ];
+...
 ```
 <template v-slot:caption>
-  module/@apostrophecms/uploadfs/index.js
+  /@apostrophecms/attachment/index.js
 </template>
 
 </AposCodeBlock>
 
-### `fileGroups`
-
-This option should be passed to the `@apostrophecms/attachment` module. By default, this option is set to an array with two objects and any array passed through this option will replace the default values. 
-
-The first default object has a key:value of `name: 'images'` and an `extensions` key with an array of strings containing the non-prefixed extensions of file types that can be uploaded. In order to allow different spelling, e.g. 'jpg' or 'jpeg', the `extensionMaps` option takes an object with the alternative spelling as key and the extension it should map to as value. Finally, this object also has a key:value pair of `image: true` to indicated that these types of files should be processed by `@apostrophecms/uploadfs`.
+The first default object's `name` property is set to `images` and an `extensions` key with an array of strings containing the non-prefixed extensions of file types that can be uploaded and attached to `@apostrophecms/image` pieces. In order to allow different spelling, e.g. 'jpg' or 'jpeg', the `extensionMaps` option takes an object with the alternative spelling as key and the extension it should map to as value.
 
 ::: note
 Passing a new image extension type through replacement of the `@apostrophecms/attachment` default `fileGroups` option will not automatically cause the new image type to be re-sized or cropped, only added to the database and written to the designated uploadfs folder.
 :::
 
-The second default object is very similar, but for the `name` key it takes a value of `office`, and `image: false`, indicating that these file types should not be processed. Again, the `extensions` key takes an array of non-prefixed strings indicating the allowed file types. The `extensionMaps` maps alternative spellings to the specified extension.
+The second default object is very similar, but for the `name` key it takes a value of `office`, and `image: false`, indicating that these file types can be attached to `@apostrophecms/file` pieces and should not be processed. Again, the `extensions` key takes an array of non-prefixed strings indicating the allowed file types. The `extensionMaps` maps alternative spellings to the specified extension.
 
-### `image`
-This option should be passed to the `@apostrophecms/uploadfs` module. The 'image' option defaults to 'sharp' and using the built-in [sharp.js](https://www.npmjs.com/package/sharp) image processor. This property also accepts `imagemagik` if it has been installed or an object specifying a custom processor. See the `uploadfs` npm module [`sharp.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/image/sharp.js) file for example.
+## Configuration
+
+|  Property | Type | Description |
+|---|---|---|
+| [`imageSizes`](#imagesizes) | Object | Takes an object with `add` and `remove` properties to change the image sizes created upon image import. |
 
 ### `imageSizes`
-This option should be passed to the `@apostrophecms/attachment` module. It gets passed as a top-level property, not within the `options` property. By default it is assigned an array containing six image size objects. Each of these objects has a `name`, `width`, and `height` property. The `width` and `height` values are unitless. The default sizes are:
+This configuration setting should be passed to the `@apostrophecms/attachment` module. It gets passed as a top-level property, not within the `options` property. By default it is assigned an array containing six image size objects. Each of these objects has a `name`, `width`, and `height` property. The `width` and `height` values are unitless. The default sizes are:
 
 ```javascript
-  { name: 'max', width: 1600, height: 1600 },
-  { name: 'full', width: 1140, height: 1140 },
-  { name: 'two-thirds', width: 760, height: 760 },
-  { name: 'one-half', width: 570, height: 700 },
-  { name: 'one-third', width: 380, height: 700 },
-  { name: 'one-sixth', width: 190, height: 350 }
+  imageSizes: {
+    add: {
+      max: {
+        width: 1600,
+        height: 1600
+      },
+      full: {
+        width: 1140,
+        height: 1140
+      },
+      'two-thirds': {
+        width: 760,
+        height: 760
+      },
+      'one-half': {
+        width: 570,
+        height: 700
+      },
+      'one-third': {
+        width: 380,
+        height: 700
+      },
+      'one-sixth': {
+        width: 190,
+        height: 350
+      }
+    }
   ```
   
 Additional sizes can be added through an object composed of size objects containing `name`, `width`, and `height` properties. This object is passed as value to the `add` key of `imageSizes`. Default sizes can be removed by passing an array containing their names to the `remove` key of `imageSizes`.
+
+::: note
+The Apostrophe admin UI may display various sizes to help you manage your images, so remove sizes with care.
+:::
 
 #### Example
 
@@ -101,41 +146,6 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-### `postprocessors`
-This option should be passed to the `@apostrophecms/uploadfs` module. It is possible to configure `uploadfs` to run a postprocessor on every custom-sized image that it generates. This is intended for file size optimization tools like `imagemin`.
-
-Here is an example based on the `imagemin` documentation:
-
-<AposCodeBlock>
-
-```javascript
-const imagemin = require('imagemin');
-const imageminJpegtran = require('imagemin-jpegtran');
-const imageminPngquant = require('imagemin-pngquant');
-
-uploadfs({
-  storage: 'local',
-  image: 'sharp',
-  postprocessors: [
-    {
-      postprocessor: imagemin,
-      extensions: [ 'gif', 'jpg', 'png' ],
-      options: {
-        plugins: [
-          imageminJpegtran(),
-          imageminPngquant({quality: '0.3-0.8'})
-        ]
-      }
-    }
-  ]
-});
-```
-
-  <template v-slot:caption>
-    modules/@apostrophecms/uploadfs/index.js
-  </template>
-</AposCodeBlock>
-
 ## Featured methods
 
 ### `checkExtension(field, attachment)`
@@ -144,14 +154,14 @@ This method checks whether the supplied attachment file extension is allowed by 
 The `field` parameter takes an object and informs the method what file extensions are allowed. To greenlist extensions by [fileGroup](#filegroups), `field.fileGroups` or `field.fileGroup` take a string, array, or object. The `attachment.group` key value will be checked against the passed value.To greenlist by `attachment.extension`, `field.extensions` or `field.extension` take a string, array, or object. The `attachment.extension` key value will be checked against the passed value.
 
 ### `insert(req, file, options)`
-This method inserts the supplied file as an Apostrophe attachment. It returns `attachment` where `attachment` is an attachment object that can be passed to the `url` module API, or used for the value of a `type: 'attachment'` schema field.
+This method inserts the supplied file as an Apostrophe attachment. It returns `attachment` where `attachment` is an attachment object that can be passed to the [`url()` method](#urlmethod), or used for the value of a `type: 'attachment'` schema field.
 
-The `file` parameter accepts an object with `name` and `path` properties. The `name` should be set to the name of the file, while the `path` should be the actual full path to the file on disk. If you are using Express in your project then the `req.files['yourfieldname']` will be such an object so long as fileupload is configured to submit one file per request.
+The `file` parameter accepts an object with `name` and `path` properties. The `name` should be set to the name of the file, while the `path` should be the actual full path to the file on disk. This is designed to work well with the [`connect-multiparty`](https://www.npmjs.com/package/connect-multiparty) npm module, which is used as middleware by the upload route of this module. But you can also use it to copy files into uploadfs as part of a command line task or other server-side logic.
 
 The `options` parameter is optional. If `options.permissions` is explicitly set to `false` then permissions are not checked.
 
 ### `crop(req, _id, crop)`
-This method takes the original image out of the uploadfs path, copies it to the uploadfs specified temporary location, applies the crop, and then puts it back into uploadfs storage. The `crop` parameter takes an object with `top`, `left`, `width`, and `height` properties. The passed values should be unitless.
+This method takes the image specified by the `_id` of an existing attachment, copies it to the uploadfs specified temporary location, applies the crop, and then saves it back into uploadfs storage. The `crop` parameter takes an object with `top`, `left`, `width`, and `height` properties. The passed values should be unitless, but must be JavaScript numbers, not strings.
 
 ## Template helpers
 
@@ -301,7 +311,7 @@ Returns `true` if the image attachment associated with the document has a focal 
 ### `isCroppable(attachment)`
 Checks the attachment extension against the `fileGroups` option to determine if the attachment can be cropped.
 
-### `url(attachment, options)`
+### `url(attachment, options)`<a name="urlmethod"></a>
 Returns the URL of the passed attachment. If `options.size` is set to the name of an existing size, it will return the URL for that size. `options.full` will return the URL for the "full width" (1140px, by default), not the original. For the original, pass `original` as the `size` value. By default the full size is returned. if `options.uploadfsPath` is `true`, the uploadfs path will be returned.
 
 ## Module tasks
@@ -313,6 +323,80 @@ Usage
 ```bash
 node app @apostrophecms/attachment:rescale
 ```
+
+## Selected `@apostrophecms/uploadfs` module settings<a name="selecteduploadfssettings"></a>
+
+These options should be added to the `modules/@apostrophecms/uploadfs/index.js` file inside the `uploadfs` object. See the [`@apostrophecms/uploadfs` reference page](/reference/modules/uploadfs.html) for the remainder of the module options and settings.
+
+|  Property | Type | Description |
+|---|---|---|
+| [`copyOriginal`](#copyoriginal) | Boolean | Undefined by default. If set to `false` the original image will not be copied to the database, only scaled images. |
+| [`image`](#image) | String \|\| Object | Sets the image processor to 'sharp' (by default), 'imagemagick, or a custom processor passed in an object. |
+| `orientOriginals` | Boolean | Unless set to `false`, the uploaded image will be reoriented according to header data. |
+| [`postprocessors`](#postprocessors) | Array | Takes an array of objects detailing optional postprocessors for images. |
+| `scaledJpegQuality` | Integer | Sets the JPEG quality setting for scaled images - defaults to 80. |
+| `sizeAvailableInArchive` | String | Takes the name of a size to make available even if the document is archived. Defaults to 'one-sixth'. |
+
+### `copyOriginal`
+
+This setting should be passed to the `@apostrophecms/uploadfs` module. By default, the `copyOriginal` value is undefined, resulting in storage of the original image in the database. Explicitly setting this to `false` will block this behavior. This option is ignored for non-image files.
+
+### `image`
+This setting should be passed to the `@apostrophecms/uploadfs` module. The 'image' setting defaults to 'sharp' and using the built-in [sharp.js](https://www.npmjs.com/package/sharp) image processor. This property also accepts `imagemagick` if it has been installed or an object specifying a custom processor. See the `uploadfs` npm module [`sharp.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/image/sharp.js) file for example.
+
+#### Example
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    uploadfs: {
+      copyOriginal: false
+    }
+  }
+};
+```
+<template v-slot:caption>
+  module/@apostrophecms/uploadfs/index.js
+</template>
+
+</AposCodeBlock>
+
+### `postprocessors`
+This setting should be passed to the `@apostrophecms/uploadfs` module. It is possible to configure `uploadfs` to run a postprocessor on every custom-sized image that it generates. This is intended for file size optimization tools like `imagemin`.
+
+Here is an example based on the `imagemin` documentation:
+
+<AposCodeBlock>
+
+```javascript
+const imagemin = require('imagemin');
+const imageminJpegtran = require('imagemin-jpegtran');
+const imageminPngquant = require('imagemin-pngquant');
+
+uploadfs({
+  storage: 'local',
+  image: 'sharp',
+  postprocessors: [
+    {
+      postprocessor: imagemin,
+      extensions: [ 'gif', 'jpg', 'png' ],
+      options: {
+        plugins: [
+          imageminJpegtran(),
+          imageminPngquant({quality: '0.3-0.8'})
+        ]
+      }
+    }
+  ]
+});
+```
+
+  <template v-slot:caption>
+    modules/@apostrophecms/uploadfs/index.js
+  </template>
+</AposCodeBlock>
 
 ## Related documentation
 
