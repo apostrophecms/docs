@@ -1,4 +1,4 @@
-# Building Docker images for Apostrophe projects
+# Hosting an Apostrophe project with Docker
 
 [Docker](https://www.docker.com/) is a containerization platform that lets developers build an image for their projects and then run it anywhere. This guide is for production, not development. If you want to use Docker as a development environment, you can explore using a persistent Docker volume for your project, but bear in mind that commands like npm install can be very slow in such a configuration.
 
@@ -127,7 +127,7 @@ services:
   db:
     image: mongo:4.4.14
     ports:
-      - "27017:27017"
+      - "27018:27018"
     volumes:
       - /data/db
   web:
@@ -154,7 +154,7 @@ services:
 
 The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
-Next, we are specifying that the database should communicate over port `27017`. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
+Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDb. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
 
 Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this.
 
@@ -177,7 +177,7 @@ The last file we need to create before bringing our project up is a `.env` file 
 
 ```bash
 NODE_ENV=production
-APOS_MONGODB_URI=mongodb://db:27017/apostrophe
+APOS_MONGODB_URI=mongodb://db:27018/apostrophe
 APOS_CLUSTER_PROCESSES=2
 ```
 
@@ -267,7 +267,7 @@ Next, the `.env` file should be modified to contain values for each of the new e
 
 ```sh
 NODE_ENV=production
-APOS_MONGODB_URI=mongodb://db:27017/apostrophe
+APOS_MONGODB_URI=mongodb://db:27018/apostrophe
 APOS_S3_REGION=<your region>
 APOS_S3_BUCKET=<your bucket name>
 APOS_S3_KEY=<account key>
@@ -280,26 +280,7 @@ APOS_S3_SECRET=<account secret>
 
 </AposCodeBlock>
 
-While setting S3 permissions is beyond the scope of this guide, you might have to change your `@apostrophecms/uploadfs` options for accessing the bucket. This is done by extending the `@apostrophecms/upploadfs` options as you would for other Apostrophe modules. For example:
-
-<AposCodeBlock>
-
-```javascript
-module.exports = {
-  options: {
-    uploadfs: {
-      bucketObjectsACL: 'bucket-owner-full-control'
-    }
-  }
-};
-```
-
-<template v-slot:caption>
-  modules/@apostrophecms/uploadfs/index.js
-</template>
-
-</AposCodeBlock>
-
+While setting S3 permissions is beyond the scope of this guide, you might have to either change your `@apostrophecms/uploadfs` options for accessing the bucket or make changes to the ACL policies through your AWS dashboard.
 ### Finishing up
 Just like with the Docker container previously, you can now bring the site up with:
 
