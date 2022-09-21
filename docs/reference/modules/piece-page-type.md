@@ -83,7 +83,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `piecesFilters`
-The `piecesFilters` takes an array of objects to assist in filtering on the index page. Each object must have a `name` property associated with a valid [query builder](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#queries-self-query). 
+The `piecesFilters` takes an array of objects to assist in filtering on the index page. Each object must have a `name` property associated with a valid [query builder](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#queries-self-query).
 
 These include:
 * Custom query builders configured in an app that include a `launder` method
@@ -185,7 +185,7 @@ module.exports = {
     { value: 'cyberpunk', label: 'cyberpunk', count: 4 },
     { value: 'dystopian', label: 'dystopian', count: 9 },
     { value: 'fantasy', label: 'fantasy', count: 7 }
-  ] 
+  ]
 }
 ```
 <template v-slot:caption>
@@ -264,6 +264,9 @@ The following methods belong to this module and may be useful in project-level c
 
 ### `indexQuery(req)`
 This method should be overridden for a piece-type to call additional [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the index page.
+
+### `showQuery(req)`
+This method should be overridden for a piece-type to call additional [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the show page.
 
 ### `async beforeIndex(req)`
 This method is called before `indexPage`. Within the core module it does nothing, so it can be easily overridden by supplying a new method in the `methods` section of the custom module. It is a convenient method for manipulating the `req` being supplied to that page.
