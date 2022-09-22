@@ -154,9 +154,9 @@ services:
 
 The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container.  Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
-Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDb. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
+Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDB. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
 
-Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this.
+Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this. Without the persistent volume at this stage, w the database would appear to work, but all content would be lost on every restart.
 
 Looking at the `web:` container, we aren't passing an image but instead passing `build`. Within this, we are adding `context: .` which specifies we should build the image for this container from the `Dockerfile` in the same directory.
 
@@ -280,8 +280,21 @@ APOS_S3_SECRET=<account secret>
 
 </AposCodeBlock>
 
-While setting S3 permissions is beyond the scope of this guide, you might have to either change your `@apostrophecms/uploadfs` options for accessing the bucket or make changes to the ACL policies through your AWS dashboard.
 ### Finishing up
+While our Docker container is now configured for storing items on AWS S3, it won't fully work if we were to spin it up now. First, we have to configure our S3 bucket to allow our site to access it. This is easily done through the AWS control panel.
+
+1) First, select the bucket from the The S3 management console and then click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
+![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
+
+2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
+![S3 console showing all public access blocks for S3 bucket turned off](../.vuepress/public/images/s3-public-permissions.png)
+
+3) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
+![The S3 console Object Ownership section](../.vuepress/public/images/s3-object-ownership.png)
+
+4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
+![S3 console object ownership edit screen](../.vuepress/public/images/s3-object-permission.png)
+
 Just like with the Docker container previously, you can now bring the site up with:
 
 ```cli
@@ -312,7 +325,7 @@ docker composer up
 
 ## Deploying
 
-Great, so we have a working Apostrophe Docker image. How do we get it on the web? There are a many options. Here are a few.
+Great, so we have a working Apostrophe Docker image. How do we get it on the web? There are many options. Here are a few.
 
 * [Automated builds from GitHub](https://docs.docker.com/docker-hub/github/)
 * Install [Dokku](http://dokku.viewdocs.io/dokku/) on the server then use [Dockerfile deployment](http://dokku.viewdocs.io/dokku/deployment/methods/dockerfiles/)
