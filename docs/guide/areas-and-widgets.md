@@ -29,7 +29,7 @@ module.exports = {
     },
     group: {
       mainArea: {
-        label: 'Main page content'
+        label: 'Main page content',
         fields: ['main']
       }
     }
@@ -82,10 +82,11 @@ introduction: {
 }
 ```
 
-## Expanded widget menu configuration
- To enhance the editor experience, an expanded widget menu can be added instead of the basic configuration. This menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an area using the expanded menu is through a [field schema](/guide/content-schema.md) that is slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
+## Expanded widget preview menu configuration
+ To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an `area` using the expanded menu is through a [field schema](/guide/content-schema.md) that is slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/page-type',
@@ -96,16 +97,16 @@ module.exports = {
     add: {
       main: {
         type: 'area',
+    👉🏻  expanded: true,
         options: {
-          expanded: true,
-          groups: {
+      👉🏻  groups: {
             basic: {
               label: 'Basic',
               widgets: {
                 '@apostrophecms/rich-text': {},
                 '@apostrophecms/image': {}
               },
-              columns: 2
+          👉🏻  columns: 2
             },
             layout: {
               label: 'Layout',
@@ -119,33 +120,43 @@ module.exports = {
           }
         }
       }
+    },
+    group: {
+      mainArea: {
+        label: 'Main page content',
+        fields: ['main']
+      }
     }
   }
 };
 ```
+
 <template v-slot:caption>
   modules/landing-page/index.js
 </template>
+
 </AposCodeBlock>
 
- For the expanded widget preview menu, widgets are added in `groups`, rather than being added and then arranged as in the basic configuration. Fields with an `area` type take two new options.
+ For the expanded widget preview menu, there are three settings to configure. The first setting is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
- The first new option is `expanded` and takes a boolean to activate the expanded preview. This option is required to activate the menu.
+ Second, widgets are added in `groups` that organize the added widgets into specific regions of the menu. Each grouping of widgets is organized in a named object. In the example code, there are two such `groups` added within the `area` options. The first is named `basic`, and the second is named `layout`. Each has a `label` key that provides the name displayed for the widget group. Each individual group has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix.
  
- The `groups` option takes multiple groupings of widgets assigned through named objects. In the example code, there are two such `groups`. The first is named `basic`, and the second is named `layout`. Each has a `label` key that provides the display name. Each individual group has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix. Finally, each group has a `columns` key that takes an integer from 1-4. This determines how many widgets will be displayed per line. The default value is 3.
+ Finally, each group has a `columns` key that takes an integer from 1-4. This determines how many widgets will be displayed per line. The default value is 3.
+
+An `area` configured in this way can still take a `max` option to limit the number of widgets to be added.
 
  ### Widget preview options
- If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed in the menu. The menu will show the widget `label`, but the `description` option can be used to provide additional descriptive text for display below the widget.
+ If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed in the menu. These options are added directly into the options of the individual widget modules. The menu will show the widget `label`, but the optional `description` option can be used to provide additional descriptive text for display below the widget.
  
  By default, the widget will be displayed as a placeholder rectangle. However, there are two options for adding a different preview.
 
-The `previewImage` option takes the extension, without `.`, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.extension`, where `extension` matches the string passed to the option.
+The `previewImage` option takes the extension, without prefixing, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.<extension>`, where `extension` matches the string passed to the option.
 
 ::: note
 The extension should always be lower case.
 :::
 
-The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons can be registered using the [icons](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module before use in the menu. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons can be registered using the [`icons`](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
 ## Adding areas to templates
 
@@ -193,6 +204,8 @@ In other situations, you may need to **pass the widget *template* options that o
 
 These can be added in an object after the area tag arguments using the `with` keyword.
 
+<AposCodeBlock>
+
 ```django
 {% area data.page, 'main' with {
   '@apostrophecms/image': {
@@ -200,6 +213,12 @@ These can be added in an object after the area tag arguments using the `with` ke
   }
 } %}
 ```
+
+<template v-slot:caption>
+  modules/landing-page/views/page.html
+</template>
+
+</AposCodeBlock>
 
 The object following `with` should include keys matching widget type names, without the `-widget` suffix (e.g., the `@apostrophecms/image`). The context template will pass those options into the proper widget template as `data.contextOptions`. In the example above, the core image widget template, *and only that template*, would be able to use the data as:
 
