@@ -83,7 +83,7 @@ introduction: {
 ```
 
 ## Expanded widget preview menu configuration
- To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an `area` using the expanded menu is through a [field schema](/guide/content-schema.md) that is slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
+ To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This context menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an `area` using the expanded menu requires a [field schema](/guide/content-schema.md) slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
 
 <AposCodeBlock>
 
@@ -97,8 +97,8 @@ module.exports = {
     add: {
       main: {
         type: 'area',
-    👉🏻  expanded: true,
         options: {
+      👉🏻  expanded: true,
       👉🏻  groups: {
             basic: {
               label: 'Basic',
@@ -137,9 +137,9 @@ module.exports = {
 
 </AposCodeBlock>
 
- For the expanded widget preview menu, there are three settings to configure. The first setting is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
+ For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
- Second, widgets are added in `groups` that organize the added widgets into specific regions of the menu. Each grouping of widgets is organized in a named object. In the example code, there are two such `groups` added within the `area` options. The first is named `basic`, and the second is named `layout`. Each has a `label` key that provides the name displayed for the widget group. Each individual group has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix.
+ Second, widgets are added in a `groups` option that organizes the added widgets into specific regions of the menu. Each grouping of widgets is organized in a named object. In the example code, there are two such `groups` added within the area. The first is named `basic`, and the second is named `layout`. Each has a `label` key that provides the name displayed for the widget group. Each individual group has a `widgets` key that contains the names and options for all of the widgets to be included in that group. Like with the basic configuration, the widget names do not need the '-widget' suffix.
  
  Finally, each group has a `columns` key that takes an integer from 1-4. This determines how many widgets will be displayed per line. The default value is 3.
 
