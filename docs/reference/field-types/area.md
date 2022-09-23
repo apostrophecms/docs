@@ -121,7 +121,7 @@ add: {
 
 ### `widgets`
 
-Widgets names are added as keys to the `widgets` object, with their individual configurations (if needed) as the key value objects. This `widgets` object is added directly to the `options` for the pop-up list menu or within the named group objects in the `groups` option for the expanded preview menu.
+Widgets names are added as keys to the `widgets` object, with their individual configurations (if needed) as the key value objects. This `widgets` object is added directly to the `options` for the pop-up list menu or within the named group objects in the [`groups` option](#groups) for the expanded preview menu.
 **Note:** widget keys in area configuration are their associated module names minus the `-widget` suffix (e.g., `'callout-widget'` is configured as simply `'callout'`). Since all widget module names end with that suffix, it is not required for less repetition.
 
 Configuring a widget type in an area field applies that configuration to the widget type _only in this area's context_. So a rich text widget with configured toolbar and styles in the area field would not automatically apply to a rich text widget in a different area field. (Though some widgets, including the core rich text widget, may support default configurations.)
