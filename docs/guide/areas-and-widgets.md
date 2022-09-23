@@ -83,7 +83,9 @@ introduction: {
 ```
 
 ## Expanded widget preview menu configuration
- To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This context menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons. Adding an `area` using the expanded menu requires a [field schema](/guide/content-schema.md) slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
+ To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This context menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons.
+
+ Adding an `area` using the expanded menu requires a [field schema](/guide/content-schema.md) slightly different from a basic area. The following example shows a landing page type with one area field named `main`.
 
 <AposCodeBlock>
 
@@ -104,16 +106,18 @@ module.exports = {
               label: 'Basic',
               widgets: {
                 '@apostrophecms/rich-text': {},
-                '@apostrophecms/image': {}
+                '@apostrophecms/image': {},
+                'topic': {},
+                '@apostrophecms/video': {}
               },
           👉🏻  columns: 2
             },
             layout: {
-              label: 'Layout',
+              label: 'Specialty',
               widgets: {
                 'two-column': {},
-                'three-column': {},
-                'four-column': {}
+                'hero': {},
+                '@apostrophecms/html': {}
               },
               columns: 3
             }
@@ -136,6 +140,8 @@ module.exports = {
 </template>
 
 </AposCodeBlock>
+
+![Editing an area with the expanded widget preview open.](../.vuepress/public/images/widget-preview-menu.png)
 
  For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
