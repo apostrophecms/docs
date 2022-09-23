@@ -1,6 +1,6 @@
 # `area`
 
-An `area` field allows editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). There are two ways to configure an `area`. The first adds widgets to a pop-up list menu for the editor to select from. For this configuration, widgets are added through a `widgets` property in the `options`. Alternatively, the expanded preview menu provides a fly-in menu that allows grouping and a visual preview of widgets. This is configured through a `groups` property in the `options`. 
+An `area` field allows editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). There are two ways to configure an `area`. The first adds widgets to a pop-up list menu for the editor selection. For this configuration, widgets are added through a `widgets` property in the `options`. Alternatively, the expanded preview menu provides a fly-in menu that allows grouping and a visual preview of widgets. This is configured through a `groups` option that takes the `widgets` property. 
 
 ## Module field definition
 
@@ -53,7 +53,6 @@ main: {
 
 |  Property | Type | Default | Description |
 |---|---|---|---|
-|`expanded`| Boolean | `false` | Activates the expanded widget preview menu. |
 |`required` | Boolean | `false` | If true, the field is mandatory. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
@@ -71,6 +70,7 @@ Area inputs have additional settings configured in an `options` object.
 |---|---|---|---|
 |`max`| Integer | No | Sets the maximum number of widgets allowed in the area. |
 |`widgets`| Object | No | Takes widget names as keys and associated widget options as values. |
+|`expanded`| Boolean | Yes | Activates the expanded widget preview menu. |
 |`groups`| Object | Yes | Accepts an object composed of named group objects. |
 
 ### `max`
@@ -121,7 +121,7 @@ add: {
 
 ### `widgets`
 
-Widgets names are added as keys to the `widgets` object, with their individual configurations (if needed) as the key value objects. This `widgets` object is added directly to the `options` for the pop-up list menu or within the named group objects in the `groups` setting for the expanded preview menu.
+Widgets names are added as keys to the `widgets` object, with their individual configurations (if needed) as the key value objects. This `widgets` object is added directly to the `options` for the pop-up list menu or within the named group objects in the `groups` option for the expanded preview menu.
 **Note:** widget keys in area configuration are their associated module names minus the `-widget` suffix (e.g., `'callout-widget'` is configured as simply `'callout'`). Since all widget module names end with that suffix, it is not required for less repetition.
 
 Configuring a widget type in an area field applies that configuration to the widget type _only in this area's context_. So a rich text widget with configured toolbar and styles in the area field would not automatically apply to a rich text widget in a different area field. (Though some widgets, including the core rich text widget, may support default configurations.)
