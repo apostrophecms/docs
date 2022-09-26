@@ -1,6 +1,6 @@
 # `area`
 
-An `area` field allows editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). There are two ways to configure an `area`. The first adds widgets to a pop-up list menu for the editor selection. For this configuration, widgets are added through a `widgets` property in the `options`. Alternatively, the expanded preview menu provides a fly-in menu that allows grouping and a visual preview of widgets. This is configured through a `groups` option that takes the `widgets` property. 
+An `area` field allows editors to add, edit, and arrange a series of [widgets](/reference/glossary.md#widget). There are two ways to configure an `area`. The first adds widgets to a pop-up list menu for the editor selection. For this configuration, widgets are added through a `widgets` property in the `options`. Alternatively, the expanded preview menu provides a fly-in menu that allows grouping and a visual preview of widgets. This is configured through a `groups` option in which each individual group takes a `widgets` property. 
 
 ## Module field definition
 
