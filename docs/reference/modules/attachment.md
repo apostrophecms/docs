@@ -14,7 +14,7 @@ Options and configuration settings for this module are passed in through both `m
 
 ## Options
 
-The `@apostrophecms/attachment` module is unusual compared to other modules in that some settings are passed directly to `@apostrophecms/uploadfs`. For these, see the [selected settings](#selecteduploadfssettings) of the `@apostrophecms/uploadfs` module section. 
+This reference is unusual compared to other reference pages in that it documents some settings that are passed directly to `@apostrophecms/uploadfs`. For these, see the [selected settings](#selecteduploadfssettings) of the `@apostrophecms/uploadfs` module section of this reference. 
 |  Property | Type | Description |
 |---|---|---|
 | [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to allow for upload and manipulation. |
@@ -66,7 +66,7 @@ This option should be passed to the `@apostrophecms/attachment` module. By defau
 ...
 ```
 <template v-slot:caption>
-  /@apostrophecms/attachment/index.js
+  module/@apostrophecms/attachment/index.js
 </template>
 
 </AposCodeBlock>
@@ -326,7 +326,7 @@ node app @apostrophecms/attachment:rescale
 
 ## Selected `@apostrophecms/uploadfs` module settings<a name="selecteduploadfssettings"></a>
 
-These options should be added to the `modules/@apostrophecms/uploadfs/index.js` file inside the `uploadfs` object. See the [`@apostrophecms/uploadfs` reference page](/reference/modules/uploadfs.html) for the remainder of the module options and settings.
+These options should be added to the `modules/@apostrophecms/uploadfs/index.js` file inside the `uploadfs` option. See the [`@apostrophecms/uploadfs` reference page](/reference/modules/uploadfs.html) for the remainder of the module options and settings.
 
 |  Property | Type | Description |
 |---|---|---|
