@@ -156,7 +156,7 @@ The spacing in this file is very important. Whitespace, not tab, indentation ind
 
 Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDB. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
 
-Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this. Without the persistent volume at this stage, w the database would appear to work, but all content would be lost on every restart.
+Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this. Without the persistent volume at this stage, the database would appear to work, but all content would be lost on every restart.
 
 Looking at the `web:` container, we aren't passing an image but instead passing `build`. Within this, we are adding `context: .` which specifies we should build the image for this container from the `Dockerfile` in the same directory.
 
@@ -281,9 +281,9 @@ APOS_S3_SECRET=<account secret>
 </AposCodeBlock>
 
 ### Finishing up
-While our Docker container is now configured for storing items on AWS S3, it won't fully work if we were to spin it up now. First, we have to configure our S3 bucket to allow our site to access it. This is easily done through the AWS control panel.
+While our Docker container is now configured for storing items on AWS S3, it won't fully work if we were to spin it up now. First, we have to configure our S3 bucket to allow the public to access it. This is easily done through the AWS control panel.
 
-1) First, select the bucket from the The S3 management console and then click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
+1) First, select the bucket from the S3 management console and then click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
 ![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
 
 2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
