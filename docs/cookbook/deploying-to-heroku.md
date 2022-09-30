@@ -113,12 +113,12 @@ Press Control-C after you successfully test the site. Startup may take an extra 
 Now Your database exists in the cloud, but it doesn't contain any users, so you won't be able to log in. Let's use the command line to connect again to fix that:
 
 ```bash
-APOS_MONGODB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
+$ APOS_MONGODB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
 ```
 
 *This is the same user-creation command you saw in our getting-started tutorial.* We're just talking to a different database.
 
-> You can also copy a local database from an existing site to Atlas using the `mongodump` and `mongorestore` commands.
+> You can also copy a local database from an existing site to Atlas using the [`mongodump`](https://www.mongodb.com/docs/database-tools/mongodump/) and [`mongorestore`](https://www.mongodb.com/docs/database-tools/mongorestore/) commands. For additional examples of their use, see the `scripts/sync-down` and `scripts/sync-up` files in a CLI created project.
 
 ## Storing files with Amazon S3
 
@@ -134,10 +134,19 @@ Choose a bucket name (the same as your app is nice but not mandatory) and a regi
 
 You can set your permissions right away.
 
+1) Click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
+![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
 
+2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
+![S3 console showing all public access blocks for S3 bucket turned off](../.vuepress/public/images/s3-public-permissions.png)
 
+3) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
+![The S3 console Object Ownership section](../.vuepress/public/images/s3-object-ownership.png)
 
-Now test it *without* Heroku, on your local machine, by setting the environment variables just for one run of your site (the trailing `\` characters are there to allow us to break one command line over multiple lines for readability in the `bash` shell):
+4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
+![S3 console object ownership edit screen](../.vuepress/public/images/s3-object-permission.png)
+
+You can test it *without* Heroku, on your local machine, by setting the environment variables just for one run of your site (the trailing `\` characters are there to allow us to break one command line over multiple lines for readability in the `bash` shell):
 
 ```
 $ APOS_S3_BUCKET=YOUR-bucket-name \
