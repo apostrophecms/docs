@@ -136,6 +136,13 @@ module.exports = {
       children: [
         [ 'cookbook/windows-development.md', 'Windows development environment' ]
       ]
+    },
+    {
+      title: 'Docker containers',
+      collapsable: false,
+      children: [
+        [ 'cookbook/using-docker.md', 'Hosting an Apostrophe project with Docker' ]
+      ]
     }
   ],
   '/reference': [
