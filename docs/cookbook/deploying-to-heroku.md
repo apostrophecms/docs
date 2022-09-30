@@ -7,7 +7,7 @@ There are many cloud hosting services, but they all present the same challenges.
 
 [Heroku](http://heroku.com) is a great starting point for cloud hosting because it is simple to set up, but all of the cloud's challenges come into play. What we learn by deploying to Heroku can be applied equally to Amazon EC2, Microsoft Azure, and other cloud hosting services.
 
-To reduce costs for this how-to, we'll be using free services from Amazon Web Services and MongoDB Atlas, a MongoDB cloud hosting service from the creators of MongoDB. But remember that you can choose paid plans with much higher capacity and performance. Everything in this tutorial is designed to scale smoothly to those paid offerings. Heroku's offerings
+To reduce costs for this how-to, we'll be using free services from Amazon Web Services and MongoDB Atlas, a MongoDB cloud hosting service from the creators of MongoDB. But remember that you can choose paid plans with much higher capacity and performance. Everything in this tutorial is designed to scale smoothly to those paid offerings. Heroku's offerings are in flux. They are eliminating their free tier, but they are offering low-price 'Eco' and 'Basic' plans that have the same provisioning as their free tier that was used to write this tutorial.
 
 ## Before you begin
 
@@ -63,7 +63,7 @@ heroku  https://githeroku.com/apos-heroku-tut.git (push)
 ```
 
 ## Add a MongoDB Atlas cluster
-Now we're almost ready to deploy. But first, we need a database.
+With our project set-up to deploy to Heroku, we need a database.
 
 Heroku runs our node app, but it doesn't run MongoDB for us. So let's go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign up.
 
@@ -148,7 +148,7 @@ You can set your permissions right away.
 
 You can test it *without* Heroku, on your local machine, by setting the environment variables just for one run of your site (the trailing `\` characters are there to allow us to break one command line over multiple lines for readability in the `bash` shell):
 
-```
+```bash
 $ APOS_S3_BUCKET=YOUR-bucket-name \
   APOS_S3_SECRET=YOUR-s3-secret \
   APOS_S3_KEY=YOUR-s3-key \
