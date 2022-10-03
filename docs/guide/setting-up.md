@@ -20,7 +20,7 @@ mongod --version
 ```
 
 ::: tip NOTE
-[ImageMagick](https://imagemagick.org/script/download.php) can be used if your system doesn't support the default npm [`sharp` package](https://www.npmjs.com/package/sharp). It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If your project does not contain `sharp` and ImageMagick is installed, apostrophe will fall-back automatically.
+[ImageMagick](https://imagemagick.org/script/download.php) can be used if your system doesn't support the default npm [`sharp` package](https://www.npmjs.com/package/sharp). It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. Apostrophe will automatically install `sharp` when you `npm install` your project, you do not have to add it yourself. If for any reason Apostrophe is unable to install its `sharp` dependency and `ImageMagick` has been installed on your system, Apostrophe will fall back to `ImageMagick` automatically.
 :::
 
 ## The Apostrophe CLI tool
