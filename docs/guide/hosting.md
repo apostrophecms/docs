@@ -10,7 +10,6 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 | [NGINX](https://www.nginx.com/) (or another proxy server) | Latest |
 | [Node.js](https://nodejs.org/en/) | 14.x+ |
 | [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.2+ |
-| [ImageMagick](https://imagemagick.org/script/download.php#linux) (optional) | Any |
 
 
 | Hardware specification | Minimum recommendation |
