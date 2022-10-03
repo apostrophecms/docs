@@ -76,7 +76,7 @@ module.exports = {
         },
         [ 'guide/server-events.md', 'Server-side events' ],
         {
-          title: 'Working with the database 🆕',
+          title: 'Working with the database',
           children: [
             'guide/database-queries.md',
             [ 'guide/database-insert-update.md', 'Inserting and updating docs' ]
@@ -92,7 +92,7 @@ module.exports = {
           ]
         },
         {
-          title: 'Other customizations 🆕',
+          title: 'Other customizations',
           children: [
             [ 'guide/custom-schema-field-types.md', 'Custom field types' ],
             'guide/custom-login-requirements.md',
@@ -135,6 +135,13 @@ module.exports = {
       collapsable: false,
       children: [
         [ 'cookbook/windows-development.md', 'Windows development environment' ]
+      ]
+    },
+    {
+      title: 'Docker containers',
+      collapsable: false,
+      children: [
+        [ 'cookbook/using-docker.md', 'Hosting an Apostrophe project with Docker' ]
       ]
     }
   ],

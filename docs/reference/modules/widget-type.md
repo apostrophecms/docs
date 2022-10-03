@@ -14,6 +14,7 @@ The only reason to configure this module directly would be to apply the changes 
 
 ::: note
 These are options to *the module itself*, so they apply to *every* instance of the widget. They are separate from the options that can be passed when adding the widget to an area field, and from the template options that be passed via the `with` keyword when inserting an area in a template.
+:::
 
 |  Property | Type | Description |
 |---|---|---|
