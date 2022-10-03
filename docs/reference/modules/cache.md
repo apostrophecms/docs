@@ -55,7 +55,7 @@ if (!weatherData) {
 …
 ```
 
-### `clear(namespace)`
+### `async clear(namespace)`
 The `clear()` method is an asynchronous method and should be called with await. The method clears all keys that were set with the same `namespace` argument.
 
 ::: note
