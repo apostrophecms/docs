@@ -41,7 +41,7 @@ If needed, you may assign the *fully* created transport directly to `self.transp
 
 <AposCodeBlock>
   ```javascript
-  const nodemailer = require('nodemailer);
+  const nodemailer = require('nodemailer');
   const mailjetTransport = require('nodemailer-mailjet-transport');
 
   module.exports = {
