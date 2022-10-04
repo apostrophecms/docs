@@ -80,6 +80,14 @@ You can configure exceptions to CSRF protection by setting the [`csrfExceptions`
 
 You may need to use this feature when implementing `POST` form submissions that do not send the header.
 
+## Environment variables
+
+### `APOS_LOG_ALL_ROUTES`
+
+If `APOS_LOG_ALL_ROUTES` is a nonempty string, Apostrophe will log the journey of each request through various middleware functions, often ending in a route. These messages appear on the server console. This is helpful when a URL does not seem to be reaching the intended [API route](../guide/../module-api/module-overview.md#restapiroutes-self).
+
+Note that not every request ends in a route, as it is possible for middleware to redirect a request or send a response on its own.
+
 ## Related documentation
 
 - [Custom express routes](/reference/module-api/module-overview.md#routes-self)
