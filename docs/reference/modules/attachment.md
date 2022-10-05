@@ -83,7 +83,7 @@ The second default object is very similar, but for the `name` key it takes a val
 
 ### `addFileGroups`
 
-This option should be passed to the `@apostrophecms/attachment` moduleand it takes an array of objects. Unlike the `fileGroups` option, this option is used to add to, not replace, the existing default extension groups. 
+This option should be passed to the `@apostrophecms/attachment` module and it takes an array of objects. This option allows you to specify new `fileGroups` containing allowed extensions for use in the `attachment` schema field. Passing this option an object with the same `name` property as an existing file group will merge the `extensions` and `extensionMaps` with the existing group.
 
 A new extension can be added to the existing groups, either `office` or `image` by setting the object `name` property to the same value as the group you want to add the extension into.
 
@@ -125,7 +125,7 @@ The `addFileGroups` option can also be used to add a new grouping without elimin
 <AposCodeBlock>
 
 ```javascript
-module.exports= {
+module.exports = {
   options: {
     addFileGroups: [
       {
@@ -237,6 +237,12 @@ The `options` parameter is optional. If `options.permissions` is explicitly set 
 
 ### `crop(req, _id, crop)`
 This method takes the image specified by the `_id` of an existing attachment, copies it to the uploadfs specified temporary location, applies the crop, and then saves it back into uploadfs storage. The `crop` parameter takes an object with `top`, `left`, `width`, and `height` properties. The passed values should be unitless, but must be JavaScript numbers, not strings.
+
+### `addFieldGroup(group)`
+This method takes an object specifying either a new file group or that extends an existing group. For new file groups the object should have `name`, `extensions`, and `extensionMaps` properties that are set-up like the objects passed through array to the `fieldGroups` option of this module.
+
+To extend an existing file group the object should have a `name` property matching the `name` value of an existing file group (`office` or `images`, by default). The object should also have an `extensions` property, `extensionMaps` property, or both. These properties are structured like the properties of the same name in the `fieldGroups` objects.
+
 
 ## Template helpers
 
