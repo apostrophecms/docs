@@ -18,16 +18,18 @@ This reference is unusual compared to other reference pages in that it documents
 |  Property | Type | Description |
 |---|---|---|
 | [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to allow for upload and manipulation. |
+| [`addFileGroups`](#addFileGroups) | Array | Allows addition of extension(s) to existing groups or creation of new groups. |
 
 ### `fileGroups`
 
-This option should be passed to the `@apostrophecms/attachment` module. By default, this option is set to an array with two objects and any array passed through this option will replace the default values.
+This option should be passed to the `@apostrophecms/attachment` module. By default, this option is set to an array with two objects and any array passed through this option will *replace* the default values.
 
 <AposCodeBlock>
 
 ```javascript
-...
-    self.fileGroups = self.options.fileGroups || [
+module.exports = {
+  options: {
+    fileGroups: [
       {
         name: 'images',
         label: 'apostrophe:images',
@@ -77,7 +79,80 @@ The first default object's `name` property is set to `images` and an `extensions
 Passing a new image extension type through replacement of the `@apostrophecms/attachment` default `fileGroups` option will not automatically cause the new image type to be re-sized or cropped, only added to the database and written to the designated uploadfs folder.
 :::
 
-The second default object is very similar, but for the `name` key it takes a value of `office`, and `image: false`, indicating that these file types can be attached to `@apostrophecms/file` pieces and should not be processed. Again, the `extensions` key takes an array of non-prefixed strings indicating the allowed file types. The `extensionMaps` maps alternative spellings to the specified extension.
+The second default object is very similar, but for the `name` key it takes a value of `office`, indicating that these file types can be attached to `@apostrophecms/file` pieces and should not be processed. Again, the `extensions` key takes an array of non-prefixed strings indicating the allowed file types. The `extensionMaps` maps alternative spellings to the specified extension.
+
+### `addFileGroups`
+
+This option should be passed to the `@apostrophecms/attachment` moduleand it takes an array of objects. Unlike the `fileGroups` option, this option is used to add to, not replace, the existing default extension groups. 
+
+A new extension can be added to the existing groups, either `office` or `image` by setting the object `name` property to the same value as the group you want to add the extension into.
+
+### Example
+
+<AposCodeBlock>
+
+```javascript
+module.exports= {
+  options: {
+    addFileGroups: [
+      // adds tif extension to the 'images' group
+      {
+        name: 'images',
+        extensions: [
+          'tif'
+        ],
+        extensionMaps: {
+          tiff: 'tif'
+        }
+      }
+    ]
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/attachment/index.js
+</template>
+
+</AposCodeBlock>
+
+In addition to `name`, the object can have both `extensions` and `extensionMaps` properties that take values just like the properties in the `fileGroups` options. Both are optional, you only are required to supply one, but can supply both.
+
+The `addFileGroups` option can also be used to add a new grouping without eliminating the existing groups. This is accomplished through the addition of a new object containing `name`, `label`, `extensions` and `extensionMaps` properties. All are required.
+
+### Example
+
+<AposCodeBlock>
+
+```javascript
+module.exports= {
+  options: {
+    addFileGroups: [
+      {
+        name: 'logfiles',
+        extensions: [
+          'etl',
+          'evt',
+          'evtx'
+        ],
+        extensionMaps: {}
+      }
+    ]
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/attachment/index.js
+</template>
+
+</AposCodeBlock>
+
+This example will make a new group, `logfiles`, but leave the `images` and `office` groups unaltered. This new group will be available to use in the `attachment` field `fileGroup` setting.
+
+::: note
+A single `addFileGroups` option can be used to both alter existing groups and add new groups by passing multiple objects in the array.
+:::
 
 ## Configuration
 

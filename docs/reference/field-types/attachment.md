@@ -49,7 +49,7 @@ The uploaded files are stored in a web-accessible folder, however their file nam
 
 ## Custom file groups
 
-Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` or `addFileGroups` options of the [`@apostrophecms/attachment` module](./../modules/asset.md). Those custom groups names can then be used for an attachment field's `fileGroup` setting.
+Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` or `addFileGroups` options of the [`@apostrophecms/attachment` module](./../modules/attachment.md). Those custom groups names can then be used for an attachment field's `fileGroup` setting.
 
 <!-- TODO: Link to the attachment module page for this instead once available. -->
 
