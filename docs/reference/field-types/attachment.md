@@ -30,7 +30,7 @@ resume: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`fileGroup` | String | n/a | Can be set to `images` or `office` to limit the file types that can be uploaded. See more below. |
+|`fileGroup` | String | n/a | Can be set to the default `images` or `office` groups, or a custom group, to limit the file types that can be uploaded. See more below. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
@@ -49,7 +49,7 @@ The uploaded files are stored in a web-accessible folder, however their file nam
 
 ## Custom file groups
 
-Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` option of the `@apostrophecms/attachment` module. Those custom groups names can then be used for an attachment field's `fileGroup` setting.
+Developers can configure file type groups in addition to `office` and `image` using the `fileGroups` or `addFileGroups` options of the [`@apostrophecms/attachment` module](./../modules/asset.md). Those custom groups names can then be used for an attachment field's `fileGroup` setting.
 
 <!-- TODO: Link to the attachment module page for this instead once available. -->
 
