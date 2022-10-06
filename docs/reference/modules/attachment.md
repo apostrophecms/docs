@@ -238,10 +238,10 @@ The `options` parameter is optional. If `options.permissions` is explicitly set 
 ### `crop(req, _id, crop)`
 This method takes the image specified by the `_id` of an existing attachment, copies it to the uploadfs specified temporary location, applies the crop, and then saves it back into uploadfs storage. The `crop` parameter takes an object with `top`, `left`, `width`, and `height` properties. The passed values should be unitless, but must be JavaScript numbers, not strings.
 
-### `addFieldGroup(group)`
-This method takes an object specifying either a new file group or that extends an existing group. For new file groups the object should have `name`, `extensions`, and `extensionMaps` properties that are set-up like the objects passed through array to the `fieldGroups` option of this module.
+### `addFileGroup(group)`
+This method takes an object specifying either a new file group or that extends an existing group. For new file groups the object should have `name`, `extensions`, and `extensionMaps` properties that are set-up like the objects passed through array to the `fileGroups` option of this module.
 
-To extend an existing file group the object should have a `name` property matching the `name` value of an existing file group (`office` or `images`, by default). The object should also have an `extensions` property, `extensionMaps` property, or both. These properties are structured like the properties of the same name in the `fieldGroups` objects.
+To extend an existing file group the object should have a `name` property matching the `name` value of an existing file group (`office` or `images`, by default). The object should also have an `extensions` property, `extensionMaps` property, or both. These properties are structured like the properties of the same name in the `fileGroups` objects.
 
 
 ## Template helpers
