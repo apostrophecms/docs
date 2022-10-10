@@ -1,6 +1,6 @@
 # Using S3 services with Apostrophe
 
-Deploying Apostrophe to production requires that you specify hosting for the code base, the MongoDB instance, and storage for any uploaded content. Many hosting services can provide all three, but it is also possible and sometimes desirable to split these between different services. This tutorial looks at storage solutions using the S3 API.
+Deploying Apostrophe to production requires that you specify hosting for the code base, the MongoDB instance, and storage for any uploaded content. Many hosting services can provide all three, but it is also possible and sometimes desirable to split these between different services. This tutorial looks at file storage solutions using the S3 API.
 
 ## What is the S3 API?
 The S3 API  is a REST API developed by Amazon as a means of communicating with their Simple Storage Service (S3). Versions of this API have since been adopted by many other providers. These alternative providers can sometimes provide lower cost points or desirable features, like IPFS. The `@apostrophecms/uploadfs` module provides an easy way to connect to most S3 API-powered services through environmental variables.
@@ -70,11 +70,11 @@ The Vultr storage service uses a truncated version of the S3 API. However, we ca
 10) Add a bucket name following the noted limitations. This name will be used to set the `APOS_S3_BUCKET` variable.
 
 ### Vultr Security
-The documentation says that uploaded files are private by default. However, I was able to access files without any security policy changes. You might need to set the `bucketObjectsACL` setting of your [`@apostrophecms/uploadfs` module]() to `public-read`.
+While files uploaded to Vultr are private by default, the `@apostrophecms/uploadfs` module sets `bucketObjectsACL` to `public-read` by default. Therefore, you don't have to perform any further security changes in order for your site to be able to access the stored files.
 
 ## Using Wasabi for storage
 
-The Wasabi storage service has an expanded API that supports some features not found in the AWS S3 REST, but is compatible with the core S3 API that Apostrophe uses. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
+The Wasabi storage service has an expanded API that supports some features not found in the AWS S3 REST API, but is compatible with the core S3 API that Apostrophe uses. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
 
 1) Create a [Wasabi account](https://www.wasabi.com/).  While the service does have a free tier, it doesn't allow public access. This means our site won't be able to load resources, so you need to select one of their paid plans. You may be able to find a credit offer if you are a new customer.
 2) Once logged in, click on "Create Bucket".

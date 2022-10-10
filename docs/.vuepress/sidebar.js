@@ -120,7 +120,7 @@ module.exports = {
       collapsable: false,
       children: [
         [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ],
-        [ 'cookbook/using-S3-storage.md', 'Setting up S3 storage' ]
+        [ 'cookbook/using-s3-storage.md', 'Setting up S3 storage' ]
       ]
     },
     {
