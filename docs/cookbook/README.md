@@ -9,6 +9,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Hosting
 
 - [Ubuntu hosting setup](ubuntu-hosting.md)
+- [Deploying to Heroku](deploying-to-heroku.md)
 - [Setting up S3 storage](using-s3-storage.md)
 
 ## Profiling
