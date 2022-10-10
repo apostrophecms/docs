@@ -7,12 +7,12 @@ There are many cloud hosting services, but they all present the same challenges.
 
 [Heroku](http://heroku.com) is a great starting point for cloud hosting because it is simple to set up, but all of the cloud's challenges come into play. What we learn by deploying to Heroku can be applied equally to Amazon EC2, Microsoft Azure, and other cloud hosting services.
 
-To reduce costs for this how-to, we'll be using free services from Amazon Web Services and MongoDB Atlas, a MongoDB cloud hosting service from the creators of MongoDB. But remember that you can choose paid plans with much higher capacity and performance. Everything in this tutorial is designed to scale smoothly to those paid offerings. Heroku's offerings are in flux. They are eliminating their free tier, but they are offering low-price 'Eco' and 'Basic' plans that have the same provisioning as their free tier that was used to write this tutorial.
+To reduce costs for this how-to, we'll be using free services from Amazon Web Services and MongoDB Atlas, a MongoDB cloud hosting service from the creators of MongoDB. But remember that you can choose paid plans with much higher capacity and performance. Everything in this tutorial is designed to scale smoothly to those paid offerings. Heroku's offerings are in flux. They are eliminating the free tier, but they are offering low-price 'Eco' and 'Basic' plans with the same provisioning as the free tier used to write this tutorial.
 
 ## Before you begin
 
 ### Create the project (or use your own)
-First, build an Apostrophe site! See the [setting up page](CHANGEME) to get started with installation of the CLI. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
+First, build an Apostrophe site! See the [setting up page](../guide/setting-up.md) to get started with the installation of the CLI. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
 
 ```bash
 $ apos create heroku-tut
@@ -32,7 +32,7 @@ $ git commit -m "My first commit"
 
 ## First steps with Heroku
 
-Next, create an account at [heroku.com](http://heroku.com).
+Create an account at [heroku.com](http://heroku.com).
 
 Then create a Heroku app, choosing any app name and runtime location (US, Europe, etc.) you wish. While it is good to try and name your app the same as your project, this may not be possible if your app has a generic name like 'heroku-tut'. Remember the name of the app because we'll need it in future steps.
 
@@ -61,18 +61,23 @@ You should see output like, but with your app name at the end:
 heroku  https://githeroku.com/apos-heroku-tut.git (fetch)
 heroku  https://githeroku.com/apos-heroku-tut.git (push)
 ```
+At this point, we can also tell Heroku that the site we will be spinning up is a production site. To accomplish this we will set the `NODE_ENV` environment variable to `production` using `heroku config:set`. The command should look like this:
+
+```bash
+$ heroku config:set NODE_ENV=production
+```
 
 ## Add a MongoDB Atlas cluster
 With our project set-up to deploy to Heroku, we need a database.
 
 Heroku runs our node app, but it doesn't run MongoDB for us. So let's go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign up.
 
-Once you log-in to your account, create a project. I named my project 'apostrophe', but you can use any name you wish. Next, within that project, click on 'Build a Database'. Select the free'Shared' tier and pick 'AWS' as your cloud provider and the same region you chose for Heroku.
+Once you log-in to your account, create a project. I named my project 'apostrophe', but you can use any name you wish. Next, within that project, click on 'Build a Database'. Select the free 'Shared' tier and pick 'AWS' as your cloud provider and the same region you chose for Heroku.
 For "Cluster Tier" choose "M0 Sandbox".
 
 We recommend you give your cluster the same name as your project, in the case of this example, 'heroku-tut'.
 
-You will need to set up an administrative MongoDB user for your cluster. These will be part of your MongoDB database connection credentials. **Be sure to set a secure, separate username and password,** do not use your Atlas login credentials. One thing to note: the characters `: / ? ! # [ ] @` in either your username or password will need to be [URL-encoded](https://www.eso.org/~ndelmott/url_encode.html) in the database connection string.
+You will need to set up an administrative MongoDB user for your cluster. These will be part of your MongoDB database connection credentials. **Be sure to set a secure, separate username and password,** do not use your Atlas login credentials. One thing to note: the characters `: / ? ! # [ ] @` in your username or password will need to be [URL-encoded](https://www.eso.org/~ndelmott/url_encode.html) in the database connection string.
 
 ### IP address allowing
 
@@ -84,17 +89,17 @@ If you are buying a larger Atlas plan you may be able to use the "VPC Peering" o
 
 `0.0.0.0/0`
 
-This will allow you to connect for the purposes of this tutorial, but should be modified for a production site. One solution is to use the [fixie-socks](https://elements.heroku.com/addons/fixie-socks) add-on from Heroku.
+This will allow you to connect, but you might desire a fixed IP for your site. One solution is to use the [fixie-socks](https://elements.heroku.com/addons/fixie-socks) add-on from Heroku.
 
 ### Telling Heroku about your database
 
-You will need to set an environment variable in Heroku so that your dynos can communicate with the database.Within your new database deployment, click on the 'connect' button next to the name. Next, click on 'Connect your application'. By default, the driver drop-down menu should be set to 'Node.js' and version '4.1 or later'. If they aren't, change thhem and then copy the connection string. Paste the string into a text editor and add your password. Again, make sure to URL encode any special special characters. Now use this string to set set a environment variable in heroku. It should look something like this:
+You will need to set an environment variable in Heroku so that your dynos can communicate with the database. Within your new database deployment, click on the 'connect' button next to the name. Next, click on 'Connect your application'. By default, the driver drop-down menu should be set to 'Node.js' and version '4.1 or later'. If they aren't, change them and then copy the connection string. Paste the string into a text editor and add your password. Again, make sure to URL encode any special characters. Now use this string to set an environment variable in Heroku. It should look something like this:
 
 ```
-$ heroku config:set 'APOS_MONGODB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority)'
+$ heroku config:set 'APOS_MONGODB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority'
 ```
 
-We use the single quotes to avoid problems with most special characters in the URI. If you used the `'` character in the URI, you'll need to escape that with `\'`.
+We use single quotes to avoid problems with most special characters in the URI. If you used the `'` character in the URI, you'll need to escape that with `\'`.
 
 From here, you can test your site locally.
 
@@ -110,7 +115,7 @@ Press Control-C after you successfully test the site. Startup may take an extra 
 
 > If you do not run `npm start` with the environment variable set correctly, it'll seem to work because it will connect to your own mongodb. You can shut down your local mongodb server temporarily if you want to be really, really sure.
 
-Now Your database exists in the cloud, but it doesn't contain any users, so you won't be able to log in. Let's use the command line to connect again to fix that:
+Now Your database exists in the cloud, but it doesn't contain any users, so you won't be able to log in. So, let's use the command line to connect again to fix that:
 
 ```bash
 $ APOS_MONGODB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
@@ -158,7 +163,7 @@ $ APOS_S3_BUCKET=YOUR-bucket-name \
 
 Upload an image to your site, then right-click it and inspect the image URL. It should be on an Amazon S3 server at this point, **not localhost**.
 
-> "What if I want to use an S3-compatible service that isn't run by Amazon?" You can set the `APOS_S3_ENDPOINT` variable to a complete hostname. If you do, you should *not* set `APOS_S3_REGION`.
+> "What if I want to use an S3-compatible service that isn't run by Amazon?" You can set the `APOS_S3_ENDPOINT` variable to a complete hostname. If you do, you should *not* set `APOS_S3_REGION`. See the tutorial in the Cookbook section for more information.
 
 ### Adding the S3 variables to Heroku
 
@@ -171,9 +176,45 @@ $ heroku config:set APOS_S3_KEY=YOUR-s3-key
 $ heroku config:set APOS_S3_REGION=YOUR-chosen-region
 ```
 
+## Efficient asset delivery
+
+In this setup, images are delivered efficiently via S3, and everyone can see all of the assets. However, we can set one more environment variable so that static assets like CSS and JS are served from S3.
+
+```bash
+$ heroku config:set APOS_UPLOADFS_ASSETS=1
+```
+
+Now, those assets will be copied to the S3 file storage and served from there.
+
+> To ensure the contents of the bundle's `data/` subdirectory are still available, and to provide backwards compatibility for any URLs you have hard-coded in your templates that are not aware that the relevant contents of `public/` have been copied to S3, the assets are also extracted to the application's folder on Heroku. Apostrophe, however, will consistently reference the contents via S3 URLs instead.
+
 ## Deploying to Heroku
 
-As a final step, we need to add a release id. There are a number of ways to accomplish this, but we will use a file named 'release-id' at the root of our project. This file doesn't have an extension and takes a short, unique string, like the date. Any time you make code changes and need to redeploy, change the string. Once you create the file, commit it to your repo then type:
+As a final step, we need to add a release id. There are a number of ways to accomplish this, but we will use a file named 'release-id' at the root of our project. This file doesn't have an extension and takes a short, unique string, like the date. Any time you make code changes and need to redeploy, the string in this file needs to be changed. We can do this by updating our build script within the `package.json` file.
+
+First, create a new file called `heroku-release-tasks` within the `scripts` file at the root of your project. From the terminal at the root of your project issue the following command:
+
+```bash
+$ touch ./scripts/heroku-release-tasks && chmod 755 ./scripts/heroku-release-tasks
+```
+
+This command will create the file and then give it the permissions to be executed on the server. Open that file in your code editor and add the following:
+
+```bash
+export APOS_RELEASE_ID=`cat /dev/urandom |env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+
+echo $APOS_RELEASE_ID > ./release-id
+
+node app @apostrophecms/asset:build || exit 1
+```
+
+Next, the `"build"` script within the `package.json` file needs to be altered to run the new script. If you are building your project from scratch, you can simply replace the command that the `"build"` script runs with:
+
+```json
+"build": "bash ./scripts/heroku-release-tasks"
+```
+
+Commit all your new files to your git repo and then type:
 
 ```bash
 $ git push heroku main
@@ -191,6 +232,10 @@ https://YOUR-app-name-here.herokuapp.com/
 And log in.
 
 Victory!
+
+## Updating your site
+
+Any time we make changes to our project code we have to redeploy it to Heroku. Our modification to the `package.json` makes this easy. After making changes to our code, we simply have to commit those changes and push them to Heroku. Our script will give a new release id and rebuild the assets.
 
 ## If it doesn't work
 
@@ -213,10 +258,3 @@ Verify the value of `AllowedOrigin`. It should match the heroku url and/or the p
 ```
 <AllowedOrigin>https://example.herokuapp.com</AllowedOrigin>
 ```
-
-## Efficient asset delivery
-
-In this setup, images are delivered efficiently via S3, and everyone can see all of the assets. And so are static assets like CSS and JS. Those are copied to S3 during the release task. Old assets are cleaned up one hour after each new deployment, allowing a very generous period of time for any old Heroku dynos to shut down automatically.
-
-> To ensure the contents of the bundle's `data/` subdirectory are still available, and to provide backwards compatibility for any URLs you have hard-coded in your templates that are not aware that the relevant contents of `public/` have been copied to S3, the assets are also extracted to the application's folder on Heroku. Apostrophe, however, will consistently reference the contents via S3 URLs instead.
-
