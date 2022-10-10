@@ -8,7 +8,6 @@ This article covers the first steps to get started. MacOS and Linux users can di
 | ------------- | ------------- |
 | [Node.js](https://nodejs.org/en/) | 14.x+ |
 | [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.2+ |
-| [ImageMagick](https://imagemagick.org/script/download.php) (optional) | Any |
 
 See the links above to install each. To check that these are installed in your environment, try the following commands:
 
@@ -18,12 +17,10 @@ node -v && npm -v
 # if installed.
 mongod --version
 # This will display your MongoDB version, if installed.
-which convert && which identify
-# This will display the location of the ImageMagick utilities, if installed.
 ```
 
 ::: tip NOTE
-ImageMagick is optional, but recommended. It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. If you do not install it Apostrophe can still handle image uploads, though more slowly.
+[ImageMagick](https://imagemagick.org/script/download.php) can be used if your system doesn't support the default npm [`sharp` package](https://www.npmjs.com/package/sharp). It provides the `convert` and `identify` command line tools, which Apostrophe uses to scale and crop images quickly. Apostrophe will automatically install `sharp` when you `npm install` your project, you do not have to add it yourself. If for any reason Apostrophe is unable to install its `sharp` dependency and `ImageMagick` has been installed on your system, Apostrophe will fall back to `ImageMagick` automatically.
 :::
 
 ## The Apostrophe CLI tool

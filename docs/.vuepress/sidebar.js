@@ -120,7 +120,8 @@ module.exports = {
       collapsable: false,
       children: [
         [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ],
-        [ 'cookbook/deploying-to-heroku.md', 'Deploying to Heroku']
+        [ 'cookbook/deploying-to-heroku.md', 'Deploying to Heroku'],
+        [ 'cookbook/using-s3-storage.md', 'Setting up S3 storage' ]
       ]
     },
     {
