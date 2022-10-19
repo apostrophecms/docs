@@ -158,6 +158,8 @@ An `area` configured in this way can still take a `max` option to limit the numb
 
 The `previewImage` option takes the extension, without prefixing, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.<extension>`, where `extension` matches the string passed to the option.
 
+The displayed dimensions of the `previewImage` depend on the number of columns being used for the row in which it will be displayed. For two columns, the displayed dimensions are about 240 x 120, or 2:1. For three columns, the dimensions are about 160 x 90, or 16:9. For four columns, the dimensions are approximately 120 x 66, or approximately 16:9. Choosing an image with a ratio of 16:9, with the center of the image well placed should work with all column sizes.
+
 ::: note
 The extension should always be lower case.
 :::
