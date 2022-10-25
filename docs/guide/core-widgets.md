@@ -140,9 +140,44 @@ module.exports = {
 }
 ```
 
+### Adding placeholder content
+
+By default, the rich text widget displays default content. To block this behavior, set the `placeholder` option to a value of `false`. To change the content, pass either a simple string or a string containing a namespaced i18n string, to the `placeholderText` option.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    placeholderText: 'myNamespace:placeholder'
+  }
+};
+
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```json
+{
+  "placeholder": "Add text here..."
+}
+
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
+</template>
+</AposCodeBlock>
+
+
 ## Image widget
 
-The image widget supports displaying a single image including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
+The image widget supports displaying a single image, including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
 
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
@@ -239,11 +274,52 @@ The sizes available by default are:
 
 The final image size name is `original`, which delivers the original image file. This should be used carefully since it could be very large and slow to download.
 
+### Adding a placeholder image
+
+The image widget displays a holder image by default. To block this behavior, set the `placeholder` option to a value of `false`. The default image can be changed by saving the desired image in the `public` folder of your module. Then passing the final build path for that file to the `placeholderUrl` option.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    // for a file named 'placeholder.png' in the module public folder
+    placeholderUrl: '/modules/@apostrophecms/my-image-widget/placeholder.png'
+  }
+};
+
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
+
 ## Video widget
 
 The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default.
 
 <!-- TODO: Link to the `allowList` option on the oembed module once module references are available. -->
+
+### Adding a placeholder video
+
+By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL as the value of the `placeholderUrl` option.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    placeholderUrl: 'https://vimeo.com/375468729'
+  }
+};
+
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/video-widget/index.js
+</template>
+</AposCodeBlock>
 
 ## HTML widget
 
