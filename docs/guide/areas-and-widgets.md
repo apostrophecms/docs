@@ -166,6 +166,20 @@ The extension should always be lower case.
 
 The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons can be registered using the [`icons`](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
+## Adding placeholder content to widgets
+
+The rich text, image, and video widgets all display placeholder content by default. Additionally, these modules do not show an initial editing modal. This placeholder content will not be displayed in either the draft preview or the live page if published. This default behavior can be turned off by setting the `placeholder` option to `false`. This will eliminate the display of placeholder content and open the editing modal when the widget is selected.
+
+Custom placeholder content can be added to the image and video widgets through the `placeholderURL` option. For the image widget, this takes a path to the `public` folder of the module in the form of `/modules/@apostrophecms/my-image-widget/filename.ext`, where the filename and extension match the file. For the video widget, the `placeholderUrl` takes the URL to a hosted video.
+
+::: note
+Notice the use of `my-image-widget` in the path. Using `image-widget` will not work.
+:::
+
+The custom placeholder content for the rich text widget is passed as a string to the `placeholderText` option in the `/modules/@apostrophecms/rich-text-widget/index.js` file.
+
+Both the image and video widgets take `placeholderClass` option that takes a string and adds the indicated class to the content wrapper.
+
 ## Adding areas to templates
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
