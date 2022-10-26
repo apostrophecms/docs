@@ -142,7 +142,7 @@ module.exports = {
 
 ### Adding placeholder content
 
-By default, the rich text widget displays default content. To block this behavior, set the `placeholder` option to a value of `false`. To change the content, pass either a simple string or a string containing a namespaced i18n string, to the `placeholderText` option.
+By default, the rich text widget displays placeholder content. To block this behavior, set the `placeholder` option to a value of `false`. To change the content, pass either a simple string or a string containing a namespaced i18n key, to the `placeholderText` option.
 
 <AposCodeBlock>
 
@@ -296,7 +296,7 @@ module.exports = {
 </AposCodeBlock>
 
 ::: note
-The path to the custom image is to where the file will be located in the final build. If you customize the image widget at the project level, this is the `my-image-widget` folder, **not** the `image-widget` folder.
+The path to the custom image is where the file will be located in the final build. If you customize the image widget at the project level, the `asset` module will create the `my-image-widget` folder to hold the contents of the `/modules/@apostrophecms/image-widget/public` folder. This is the location where the path to the custom image should point, **not** the `image-widget` folder.
 :::
 
 ## Video widget
@@ -307,7 +307,7 @@ The core video widget accepts a video URL and fetches the embed code to display 
 
 ### Adding a placeholder video
 
-By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL string as the value of the `placeholderUrl` option.
+By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL string as the value of the `placeholderUrl` option. The video URL must be compatible with the video widget, e.g., a YouTube video page URL, Vimeo video page URL, etc.
 
 <AposCodeBlock>
 

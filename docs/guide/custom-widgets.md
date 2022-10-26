@@ -120,19 +120,19 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-This placeholder content will be present on the page when the widget is added, but won't appear in the page preview until it is edited. This data will also show up in the fields within the editor module. The `placeholder` option can also be used to fill the editor modal fields with suggested content without also adding it to the page by setting it to `false`, but still adding placeholder content to each field.
+This placeholder content will be present on the page when the widget is added. This content will never appear in the page preview. It will *only* appear on-page until you click Edit for that widget and save some real content. This data will also show up in the fields within the editor modal. The `placeholder` option can also be used to fill the editor modal fields with suggested content without also adding it to the page by setting it to `false`, but still adding placeholder content to each field.
 
 ::: note
 If you set `placeholder: true` in the options and have either a `date` or `time` schema field, it will be populated with the current date/time on the page - not in the editor modal. Like the other fields, this content will not appear on the live page or in preview until you edit the widget and add actual content. It isn't possible to pass placeholder content into either of these fields.
 :::
 
-The `placeholderClass` option can be used to add a class to the wrapper around your schema fields. This class will be removed once the widget is edited.
+The `placeholderClass` option can be used to add a class to the wrapper around the rendered display of the widget until it is edited for the first time.
 
-### Disabling the intial editor modal opening
-For some types of custom widgets it may be useful to disable automatic opening of the editor modal when it is first added to the page. This is similar to the behavior when adding placeholder content. The content is added to the page but the Editor has to open the modal manually. For example, a widget to display a variable number of products set by default to five items. The Editor would only open the modal if they wanted to change this amount. The `initialModal` option is set to `true` by default, but to prevent initial modal opening, set the value to `false`.
+### Disabling the initial editor modal
+Even when placeholder content is not needed, for some types of custom widgets, it may be useful to disable the automatic opening of the editor modal when it is first added to the page. This is similar to the behavior when adding placeholder content. The content is added to the page, but the Editor has to open the modal manually. For example, a widget to display a variable number of products set by default to five items. The Editor would only open the modal if they wanted to change this amount. The `initialModal` option is set to `true` by default, so to prevent initial modal opening, set the value to `false`.
 
 ::: note
-Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be over-ridden by passing a `true` value.
+Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be overridden by passing a `true` value.
 :::
 
 ## Widget templates
