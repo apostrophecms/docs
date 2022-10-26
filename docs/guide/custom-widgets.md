@@ -128,6 +128,13 @@ If you set `placeholder: true` in the options and have either a `date` or `time`
 
 The `placeholderClass` option can be used to add a class to the wrapper around your schema fields. This class will be removed once the widget is edited.
 
+### Disabling the intial editor modal opening
+For some types of custom widgets it may be useful to disable automatic opening of the editor modal when it is first added to the page. This is similar to the behavior when adding placeholder content. The content is added to the page but the Editor has to open the modal manually. For example, a widget to display a variable number of products set by default to five items. The Editor would only open the modal if they wanted to change this amount. The `initialModal` option is set to `true` by default, but to prevent initial modal opening, set the value to `false`.
+
+::: note
+Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be over-ridden by passing a `true` value.
+:::
+
 ## Widget templates
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
