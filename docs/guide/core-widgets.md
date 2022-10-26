@@ -276,7 +276,7 @@ The final image size name is `original`, which delivers the original image file.
 
 ### Adding a placeholder image
 
-The image widget displays a holder image by default. To block this behavior, set the `placeholder` option to a value of `false`. The default image can be changed by saving the desired image in the `public` folder of your module. Then passing the final build path for that file to the `placeholderUrl` option.
+The image widget displays a placeholder image by default. To block this behavior, set the `placeholder` option to a value of `false`. The default image can be changed by saving the desired image in the `public` folder of your module, then passing the final build path for that file to the `placeholderUrl` option.
 
 <AposCodeBlock>
 
@@ -295,6 +295,10 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
+::: note
+The path to the custom image is to where the file will be located in the final build. If you customize the image widget at the project level, this is the `my-image-widget` folder, **not** the `image-widget` folder.
+:::
+
 ## Video widget
 
 The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default.
@@ -303,7 +307,7 @@ The core video widget accepts a video URL and fetches the embed code to display 
 
 ### Adding a placeholder video
 
-By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL as the value of the `placeholderUrl` option.
+By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL string as the value of the `placeholderUrl` option.
 
 <AposCodeBlock>
 
