@@ -72,6 +72,69 @@ require('apostrophe')({
 });
 ```
 
+### Adding placeholder content
+
+Much like the core widgets, you can add placeholder content for many of the fields in your custom widgets. Within the widget options add `placeholder: true`. Then within individual fields add a `placeholder` property with a value appropriate to the type of schema field.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Custom Widget',
+    icon: 'text-subject',
+    placeholder: true,
+    placeholderClass: 'my-custom-widget-placeholder'
+  },
+  fields: {
+    add: {
+      email: {
+        type: 'email',
+        placeholder: 'bob@email.com'
+      },
+      float: {
+        type: 'float',
+        placeholder: 0.05
+      },
+      integer: {
+        type: 'integer',
+        placeholder: 2
+      },
+      string: {
+        type: 'string',
+        placeholder: 'widget-with-placeholder placeholder'
+      },
+      url: {
+        type: 'url',
+        placeholder: 'https://example.com'
+      }
+    }
+  }
+};
+
+```
+
+<template v-slot:caption>
+/modules/my-custom-widget/index.js
+</template>
+</AposCodeBlock>
+
+This placeholder content will be present on the page when the widget is added. This content will never appear in the page preview. It will *only* appear on-page until you click Edit for that widget and save some real content. This data will also show up in the fields within the editor modal. The `placeholder` option can also be used to fill the editor modal fields with suggested content without also adding it to the page by setting it to `false`, but still adding placeholder content to each field.
+
+::: note
+If you set `placeholder: true` in the options and have either a `date` or `time` schema field, it will be populated with the current date/time on the page - not in the editor modal. Like the other fields, this content will not appear on the live page or in preview until you edit the widget and add actual content. It isn't possible to pass placeholder content into either of these fields.
+:::
+
+The `placeholderClass` option can be used to add a class to the wrapper around the rendered display of the widget until it is edited for the first time.
+
+### Disabling the initial editor modal
+Even when placeholder content is not needed, for some types of custom widgets, it may be useful to disable the automatic opening of the editor modal when it is first added to the page. This is similar to the behavior when adding placeholder content. The content is added to the page, but the Editor has to open the modal manually. For example, a widget to display a variable number of products set by default to five items. The Editor would only open the modal if they wanted to change this amount. The `initialModal` option is set to `true` by default, so to prevent initial modal opening, set the value to `false`.
+
+::: note
+Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be overridden by passing a `true` value.
+:::
+
 ## Widget templates
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:

@@ -166,6 +166,20 @@ The extension should always be lower case.
 
 The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons can be registered using the [`icons`](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
+## Adding placeholder content to widgets
+
+The rich text, image, and video widgets all display placeholder content by default. Additionally, these modules do not show an initial editing modal. This placeholder content will not be displayed in either the draft preview or the live page if published. This default behavior can be turned off by setting the `placeholder` option of the relevant module to `false`. This will eliminate the display of placeholder content and open the editing modal when the widget is selected.
+
+Custom placeholder content can be added to the image and video widgets through the `placeholderUrl` option. For the image widget, this takes the final build path to an image added to the `public` folder of the module, `/modules/@apostrophecms/my-image-widget/<filename.ext>`. For the video widget, the `placeholderUrl` takes the URL to a hosted video.
+
+::: note
+Notice the use of `my-image-widget` and the lack of `/public` in the path for the custom placeholder of the image widget. Using `image-widget` will not work. During the build step, all of the files in the public folders of each module will be copied into the corresponding `/modules` folder of the specified release folder. In the case of the image widget, if you extend it from the project level `/modules` folder, those files are copied into a final release folder named `my-image-widget`.
+:::
+
+The custom placeholder content for the rich text widget is passed as a string to the `placeholderText` option in the `/modules/@apostrophecms/rich-text-widget/index.js` file. This can be either a simple string or a namespaced i18n string.
+
+Both the image and video widgets have a `placeholderClass` option that takes a string and adds that class to the content wrapper.
+
 ## Adding areas to templates
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
