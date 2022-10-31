@@ -90,6 +90,13 @@ add: {
     label: 'Do you have an uninformed opinion about the movie?',
     type: 'boolean'
   },
+  reviewerLevel: {
+    label: 'What is your reviewer level?',
+    type: 'select',
+    choices: [
+      // Various level options, including "intermediate" and "expert"...
+    ]
+  },
   rating: {
     label: 'Rate the movie from 1-5',
     type: 'integer',
