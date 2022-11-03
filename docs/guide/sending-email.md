@@ -96,7 +96,7 @@ The first parameter passed to this method is the page `req`.
 
 The next parameter, `template`, takes the name of a Nunjucks template that will make up the body of the email. This template should be located in the `views` template of the module.
 
-The `data` parameter take an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through <!--{%raw%} --> `{{ data.property }}` <!--{%endraw%}--> within the template.
+The `data` parameter take an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through `data.property` within the template.
 
 The final parameter, `options` should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`. Any of these can also be set in the `options` of the `@apostrophecms/email` module, just like the transport. Any parameters specified in each individual module will override those set in this manner.
 
@@ -214,7 +214,7 @@ Note that in the Nunjucks template, the area is passed in through the `data` con
 
 ## Triggering email from a route
 
-In addition to using `handlers` to trigger sending an email, you can use `apiRoutes()`.
+In addition to using `handlers` to trigger email delivery, you can use `apiRoutes()`. 
 
 
 
