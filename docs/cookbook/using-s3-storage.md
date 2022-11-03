@@ -5,7 +5,7 @@ Deploying Apostrophe to production requires that you specify hosting for the cod
 ## What is the S3 API?
 The S3 API  is a REST API developed by Amazon as a means of communicating with their Simple Storage Service (S3). Versions of this API have since been adopted by many other providers. These alternative providers can sometimes provide lower cost points or desirable features, like IPFS. The `@apostrophecms/uploadfs` module provides an easy way to connect to most S3 API-powered services through environmental variables.
 
- Depending on the service used for hosting your code base, there are different ways to set these variables. For example, Heroku as we show in our [hosting tutorial](), allows you to configure your app either through their CLI or dashboard. For other hosting environments, you may need to set these variables through a `.env` or `.bashrc` file.
+ Depending on the service used for hosting your code base, there are different ways to set these variables. For example, Heroku as we show in our [hosting tutorial](./deploying-to-heroku.md), allows you to configure your app either through their CLI or dashboard. For other hosting environments, you may need to set these variables through a `.env` or `.bashrc` file.
 
 Let's start by looking at how to connect with Amazon Web Services (AWS) S3.
 
