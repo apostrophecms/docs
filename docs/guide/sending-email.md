@@ -27,9 +27,11 @@ module.exports = {
 /modules/@apostrophecms/email
 </template>
 
+</AposCodeBlock>
+
 ## Configuring using generic SMTP
 
-Using a 3rd-party email delivery provider like Gmail, or mailgun will probably better guarantee delivery without the email being either bounced or sent to spam. Most providers use SMTP, in fact, the `sendmail` server application uses SMTP. It just performs most of the configuration for you automatically. To configure sending through other providers, you typically need to supply three different parameters to the `nodemailer` option through an object - the 'host', 'port', and 'auth' parameters. Depending on the host there are a number of other options that could be passed as outlined in the [`nodemailer` documentation](https://nodemailer.com/smtp/).
+Using a 3rd-party email delivery provider like Gmail, or Mailgun will probably better guarantee delivery without the email being either bounced or sent to spam. Most providers use SMTP. In fact, the `sendmail` server application uses SMTP. It just performs most of the configuration for you automatically. To configure sending through other providers, you typically need to supply three different parameters to the `nodemailer` option through an object - the 'host', 'port', and 'auth' parameters. Depending on the host there are a number of other options that could be passed as outlined in the [`nodemailer` documentation](https://nodemailer.com/smtp/).
 
 ### Example
 
@@ -53,6 +55,8 @@ module.exports = {
 <template v-slot:caption>
 /modules/@apostrophecms/email
 </template>
+
+</AposCodeBlock>
 
 ## Using specific service APIs
 
@@ -82,6 +86,7 @@ module.exports = {
 <template v-slot:caption>
 /modules/@apostrophecms/email
 </template>
+
 </AposCodeBlock>
 
 ## Sending email from a module
@@ -91,7 +96,7 @@ The first parameter passed to this method is the page `req`.
 
 The next parameter, `template`, takes the name of a Nunjucks template that will make up the body of the email. This template should be located in the `views` template of the module.
 
-The `data` parameter take an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through `{{ data.property }}` within the template.
+The `data` parameter take an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through <!--{%raw%} --> `{{ data.property }}` <!--{%endraw%}--> within the template.
 
 The final parameter, `options` should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`. Any of these can also be set in the `options` of the `@apostrophecms/email` module, just like the transport. Any parameters specified in each individual module will override those set in this manner.
 
@@ -179,7 +184,6 @@ module.exports = {
     }
   }
 };
-
 ```
 
 <template v-slot:caption>
@@ -187,6 +191,7 @@ module.exports = {
 </template>
 
 </AposCodeBlock>
+
 
 <AposCodeBlock>
 
@@ -200,14 +205,16 @@ module.exports = {
 <template v-slot:caption>
 /modules/article/views/email.html
 </template>
+
 </AposCodeBlock>
 
 ::: note
 Note that in the Nunjucks template, the area is passed in through the `data` context. It isn't being passed in through the `data.piece` context as it would for a normal Nunjucks template view.
+:::
 
 ## Triggering email from a route
 
-In addition to using `handlers` to trigger sending an email, you can use `apiRoutes`.
+In addition to using `handlers` to trigger sending an email, you can use `apiRoutes()`.
 
 
 
