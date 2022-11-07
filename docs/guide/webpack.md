@@ -342,7 +342,7 @@ Apostrophe will take care of deploying the output files of custom bundles alongs
 
 ### Rebundling resources
 
-In some cases, an npm package will provide front-end code that is either unbundled or bundled in a way that doesn't reflect the needs of the project. The bundle configuration set by each module can be overridden through the `rebundleModules` option of the `@apostrophecms/asset` module.
+In some cases, an npm package will provide front-end code that is either unbundled or bundled in a way that doesn't reflect the needs of the project. In these cases, the bundle configuration set by each module can be overridden through the `rebundleModules` option of the `@apostrophecms/asset` module.
 
 This option takes an object with module or module file names as properties and bundle names as values.
 
