@@ -369,12 +369,12 @@ modules/@apostrophecms/asset/index.js
 </template>
 </AposCodeBlock>
 
-If the module name is given, without specifying a file name, all of the JavaScript assets from the `module/ui/src` folder will be added to the named bundle. If a file name is provided by appending it to the module name with a `:`, then only that file will be added to the named bundle. Other assets in the same folder, for example `index.js`, will be added to the budle specified by the module.
+If the module name is given, without specifying a file name, all of the JavaScript assets from the `module/ui/src` folder will be added to the named bundle. If a file name is provided by appending it to the module name with a `:`, then only that file will be added to the named bundle. Other assets in the same folder, for example, `index.js`, will be added to the bundle specified by the module.
 
-The module name for project level modules, like `modules/@apostrophecms/home-page` should be `@apostrophecms/my-home-page`. To target the original (npm) module use: `@apostrophecms/home-page.
+The module name for project-level modules, like `modules/@apostrophecms/home-page` should be `@apostrophecms/my-home-page`. To target the original (npm) module use: `@apostrophecms/home-page`.
 
 ::: note
-Sending all of the module assets to one bundle and then designating a file in that same folder to go to a different bundle is considered invalid. Instead, individual files should be rebundled to achieve this goal.
+Sending all of the module assets to one bundle and then designating a file in that same folder to go to a different bundle is considered invalid. Instead, each individual file should be rebundled to achieve this goal.
 :::
 
 ## The Webpack cache

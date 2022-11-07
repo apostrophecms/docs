@@ -17,7 +17,8 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
 | [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
-| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance.
+| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
+| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
 
 ### `refreshOnRestart`
 
@@ -30,6 +31,38 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 ### `uploadfs`
 
 When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional property can be used to configure an `uploadfs` instance that differs from the one configured by the `attachment` module, allowing changes in where assets from the webpack build process are stored and how they are served. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
+
+### `rebundleModules`
+
+The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules add through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and individual file name from the module `ui/src` folder, as properties. Each property takes the name of the bundle where the file should be added as a string.
+
+#### Example
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    rebundleModules: {
+      // Everything from the fancy-form module should go in the regular "main" bundle
+      'fancy-form': 'main',
+      // Everything from the basic-product module should go in the "secondary" bundle
+      'basic-product': 'secondary',
+      // The ui/src/form.js code from the @dcad/form module should be retargeted to the
+      // "secondary" bundle — but only that code, leave ui/src/index.js in the main bundle
+      '@dcad/form:form': 'secondary'
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/asset/index.js
+</template>
+</AposCodeBlock>
+
+To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
+
 
 ## Command Line Tasks
 
