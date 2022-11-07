@@ -1,8 +1,8 @@
 # Sending email from your Apostrophe project
 
-Any module in Apostrophe can send email through the [`email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
+Any module in Apostrophe can send email by calling its own [`self.email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
 
-Due to the difficulty of ensuring that emails are delivered reliably, we recommend that you utilize a delivery provider. However, if your server is set-up with both [DKIM](https://www.dkim.org/) and [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) ([DMARC](https://en.wikipedia.org/wiki/DMARC)) configured correctly, you can easily use the `sendmail` server app.
+Due to the difficulty of ensuring that emails are delivered reliably, we recommend that you utilize a delivery provider. However, if your server is set up with both [DKIM](https://www.dkim.org/) and [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) ([DMARC](https://en.wikipedia.org/wiki/DMARC)) configured correctly, you can easily use the `sendmail` server app.
 
 ## Configuring to use `sendmail`
 
@@ -43,10 +43,11 @@ Using a 3rd-party email delivery provider like Gmail, or Mailgun will probably b
 module.exports = {
   options: {
     nodemailer: {
-      host: "smtp.example.com",
-      port: 587,
+      service: 'gmail'
+      host: "smtp.gmail.com.com",
       auth: {
-        user: "username",
+        // substitute in your actual Gmail credentials
+        user: "username@gmail.com",
         pass: "password"
       }
     }
@@ -60,9 +61,13 @@ module.exports = {
 
 </AposCodeBlock>
 
+::: note
+When using Gmail as the SMTP email relay, you need to make sure that the "from" address of your email matches the user name added to the nodemailer configuration. You will likely also have to allow [less secure apps](https://myaccount.google.com/lesssecureapps) and [disable Captcha]( https://accounts.google.com/DisplayUnlockCaptcha) from your Google account dashboard.
+:::
+
 ## Using specific service APIs
 
-The `nodemailer` app has three built-in transports - `sendmail`, `SES` - for sending by AWS SES, and `stream` - which is used for testing. You can create your own custom transport using the `nodemailer` [transport API documentation](https://nodemailer.com/plugins/create/#transports), or use one of the many transport plugins that are available. These can either be found on the providers site, or by [searching NPM](https://www.npmjs.com/search?q=nodemailer%20transport). Each transporter will have slightly different parameters configured through an object that is then passed along with the specific transport.
+The `nodemailer` app has four built-in transports - `sendmail`, `SES` - for sending by AWS SES, and the `stream` and `jsonTransport` transports - which are used for testing or passing data to another nodemailer extension for processing as detailed in the [nodemailer documentation](https://nodemailer.com/transports/stream/). You can create your own custom transport using the `nodemailer` [transport API documentation](https://nodemailer.com/plugins/create/#transports), or use one of the many transport plugins that are available. These can either be found on the provider's site or by [searching NPM](https://www.npmjs.com/search?q=nodemailer%20transport). Each transporter will have slightly different parameters configured through an object that is then passed along with the specific transport.
 
 ### Example for Mailgun
 
@@ -96,13 +101,13 @@ module.exports = {
 ## Sending email from a module
 Once the `@apostrophecms/email` module is configured, email can be sent from any module using the `self.email(req, template, data, options)` method.
 
-The first parameter passed to this method is the page `req`.
+The first parameter passed to this method is the `req`.
 
-The next parameter, `template`, takes the name of a Nunjucks template that will make up the body of the email. This template should be located in the `views` template of the module. The method will pass this template, as well as an automatically generated version, to the `options` parameter of the `nodemailer` app.
+The next parameter, `template`, takes the name of a Nunjucks template that will make up the body of the email. This template should be located in the `views` template of the module. The method will pass this HTML template, as well as an automatically generated plain text version, to the `nodemailer` transport object.
 
 The `data` parameter takes an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through `data.property` within the template.
 
-The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`. Any of these can have defaults set in the `options` of the `@apostrophecms/email` module, just like the transport. Any parameters specified in an individual module will override those set in this manner.
+The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`. Any of these can have defaults set in the `options` of the `@apostrophecms/email` module, just like the transport. Any parameters specified in an individual method call will override those set in this manner.
 
 ### Example usage
 
@@ -119,16 +124,14 @@ module.exports = {
   handlers(self) {
     return {
       'afterSave': {
-        async sendEmail(req, data) {
+        async sendEmail(req, piece) {
           const options = {
             from: 'admin@mysite.com',
             to: 'editors@mysite.com',
             subject: 'New Article added'
           };
-          const template = 'email.html';
           try {
-            await self.email(req, template, data, options);
-          return null;
+            await self.email(req, 'email.html', { data: { piece } }, options);
           } catch (err) {
             self.apos.util.error('email notification error: ', err);
           }
@@ -151,8 +154,8 @@ module.exports = {
 ```django
 <h1>A new article has been added to the site</h1>
 <p>Here is the blurb</p>
-{% data.title %}
-{% area data, 'blurb'}
+{% data.piece.title %}
+{% area data.piece, 'blurb'}
 ```
 
 <template v-slot:caption>
@@ -161,11 +164,68 @@ module.exports = {
 
 </AposCodeBlock>
 
-In this example, we are creating a custom piece type that implements an article. The `handlers()` function is being passed the `afterSave` server event. This event is emitted any time this custom module saves a new article. We are using this signal to send out an email to the site editors. The data coming from the page is passed into the `email.html` template through the `data` argument to add the title and blurb for the editors to review.
+In this example, we are creating a custom piece type that implements an article. The `afterSave` server event property is being added to the `handlers()` function. This event is emitted any time this custom module saves a new article and runs the function that is being passed in as a value. This function, in turn, sends out an email to the site editors. The data coming from the piece is passed into the `email.html` template through the `data` argument to add the title and blurb for the editors to review.
 
-::: note
-Note that in the Nunjucks template, the area is passed in through the `data` context. It isn't being passed in through the `data.piece` or `data.page` context as it would for a normal Nunjucks template view.
-:::
+The `self.email()` method returns `info`. This can be used to determine if message handoff to the mailing service has been completed successfully. Note: this does not mean that message delivery will complete successfully. The email could still be rejected en route or by the receiving server.
+The returned data can also be used along with the `stream` transporter to ensure that the header and body of the email have been correctly constructed.
+
+### Stream example
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    nodemailer: {
+      // enables the usage of the `stream` transport
+      streamTransport: true
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/email
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    lable: 'article',
+    pluralLabel: 'articles'
+  },
+  ...,
+  handlers(self) {
+    return {
+      'afterSave': {
+        async sendEmail(req, piece) {
+          const options = {
+            from: 'admin@mysite.com',
+            to: 'editors@mysite.com',
+            subject: 'New Article added'
+          };
+          try {
+            const info = await self.email(req, 'email.html', { data: { piece } }, options);
+          }
+          console.log(info.envelope);
+          console.log(info.messgeId);
+          info.message.pipe(process.stdout);
+        }
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+/modules/article/index.js
+</template>
+
+</AposCodeBlock>
 
 ## Triggering email from a route
 
@@ -185,11 +245,11 @@ module.exports = {
   apiRoutes(self) {
     return {
       post: {
-        submit: async function (req) {
+        async submit(req) {
           if (!req.body.email || !req.body.name) {
             throw self.apos.error('invalid');
           }
-          const email = self.apos.launder(req.body.email);
+          const email = self.apos.launder.string(req.body.email);
           const options = {
             from: 'admin@mysite.com',
             to: email,
@@ -201,9 +261,6 @@ module.exports = {
           const template = 'email.html';
           try {
             await self.email(req, template, data, options);
-            return null;
-          } catch (err) {
-            self.apos.util.error('email notification error: ', err);
           }
         }
       }
@@ -221,6 +278,6 @@ module.exports = {
 
 In this case, the `email.html` template is the same as the one used for mail delivery from our `handlers()`.
 
-So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected routes should get a separate function. In this case, we are passing the function through the `submit` property. This will monitor for a POST request to `https://www.mysite.com/api/v1/submit`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/submit`. This is useful for when the user is being redirected to a new page. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
+So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected routes should get a separate function. In this case, we are passing the submit function through the `post` property. This will monitor for a POST request to `https://www.mysite.com/api/v1/submit`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/submit`. This is useful for when the user is being redirected to a new page. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
 
-In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder()`. Finally, this information and the email template are passed to the `email()` method in a try...catch block.
+In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder.string()`. Finally, this information and the email template are passed to the `email()` method in a try...catch block.
