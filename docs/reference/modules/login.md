@@ -24,7 +24,7 @@ Defaults to `true`. If set to `false`, the normal login form at `/login` is comp
 
 ### `passwordReset`
 
-Defaults to `false`. If both `localLogin` and `passwordReset` are set to `true`, a password reset link is added to the login form. Clicking on this link brings up a form for the user to enter the email address associated with their account. The address is compared to the list of existing user emails and a reset link is sent if that email is found. Note, the site email settings must be correctly configured prior to using the password reset. See the [email documentation](/guide/front-end-assets.html) for help in configuring the module. It is also recommended that the `baseURL` be set in the `app.js` file. The user will not be notified if the email check fails or if the email fails to send due to improper configuration. Debug information will output in the terminal.
+Defaults to `false`. If both `localLogin` and `passwordReset` are set to `true`, a password reset link is added to the login form. Clicking on this link brings up a form for the user to enter the email address associated with their account. The address is compared to the list of existing user emails and a reset link is sent if that email is found. Note, the site email settings must be correctly configured prior to using the password reset. See the [email documentation](/guide/front-end-assets.html) for help in configuring the module. It is also recommended that the `baseURL` be set in the `app.js` file. The user will not be notified if the email check fails or if the email fails to send due to improper configuration. However, debug information will output in the terminal.
 
 ### `passwordResetHours`
 
