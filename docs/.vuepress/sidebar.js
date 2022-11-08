@@ -53,7 +53,8 @@ module.exports = {
             'guide/front-end-helpers.md'
           ]
         },
-        [ 'guide/media.md', 'Working with images and media' ]
+        [ 'guide/media.md', 'Working with images and media' ],
+        'guide/sending-email.md'
       ]
     },
     {
