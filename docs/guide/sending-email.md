@@ -229,7 +229,7 @@ module.exports = {
 
 ## Triggering email from a route
 
-In addition to using `handlers()` to trigger email delivery, you can use `apiRoutes()`. This can be used to send an email when a user gets redirected to a selected page or sends a POST request, like a form submission. All of the same arguments passed when invoking the `email()` method from a module need to be supplied when using the method in a route. In this case, we need to create options and our data object from our `req.body`.
+In addition to using `handlers()` to trigger email delivery, you can use `apiRoutes()`. This can be triggered by any selected HTTP request, like submission of FormData through PUT, or retrieval of a specified payload with GET. All of the same arguments passed when invoking the `email()` method from a module need to be supplied when using the method in a route.
 
 ### Example usage
 
@@ -245,7 +245,7 @@ module.exports = {
   apiRoutes(self) {
     return {
       post: {
-        async submit(req) {
+        async subscribe(req) {
           if (!req.body.email || !req.body.name) {
             throw self.apos.error('invalid');
           }
@@ -253,14 +253,13 @@ module.exports = {
           const options = {
             from: 'admin@mysite.com',
             to: email,
-            subject: 'Thanks for your submission!'
+            subject: 'Please confirm your subscription'
           };
           const data = {
-            name: self.apos.launder(req.body.name)
+            name: self.apos.launder.string(req.body.name)
           };
-          const template = 'email.html';
           try {
-            await self.email(req, template, data, options);
+            await self.email(req, 'email.html', data, options);
           }
         }
       }
@@ -276,8 +275,6 @@ module.exports = {
 
 </AposCodeBlock>
 
-In this case, the `email.html` template is the same as the one used for mail delivery from our `handlers()`.
+So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected route should get a separate function. In this case, we are passing the subscribe function through the `post` property. This will monitor for a POST request to `https://www.mysite.com/api/v1/subscribe`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/subscribe`. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
 
-So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected routes should get a separate function. In this case, we are passing the submit function through the `post` property. This will monitor for a POST request to `https://www.mysite.com/api/v1/submit`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/submit`. This is useful for when the user is being redirected to a new page. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
-
-In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder.string()`. Finally, this information and the email template are passed to the `email()` method in a try...catch block.
+In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder.string()`. Finally, this information and the email template are passed to the `email()` method in a try block. If passing the email to the handler fails, the exception will be caught automatically, logged, and reported as a 500 error.
