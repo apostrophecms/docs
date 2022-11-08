@@ -120,7 +120,7 @@ module.exports = {
     lable: 'article',
     pluralLabel: 'articles'
   },
-  ...,
+  // additional module code
   handlers(self) {
     return {
       'afterSave': {
@@ -131,7 +131,7 @@ module.exports = {
             subject: 'New Article added'
           };
           try {
-            await self.email(req, 'email.html', { data: { piece } }, options);
+            await self.email(req, 'email.html', { piece }, options);
           } catch (err) {
             self.apos.util.error('email notification error: ', err);
           }
@@ -166,8 +166,11 @@ module.exports = {
 
 In this example, we are creating a custom piece type that implements an article. The `afterSave` server event property is being added to the `handlers()` function. This event is emitted any time this custom module saves a new article and runs the function that is being passed in as a value. This function, in turn, sends out an email to the site editors. The data coming from the piece is passed into the `email.html` template through the `data` argument to add the title and blurb for the editors to review.
 
+## Debugging email delivery without sending
+
 The `self.email()` method returns `info`. This can be used to determine if message handoff to the mailing service has been completed successfully. Note: this does not mean that message delivery will complete successfully. The email could still be rejected en route or by the receiving server.
-The returned data can also be used along with the `stream` transporter to ensure that the header and body of the email have been correctly constructed.
+
+The returned data can also be used along with the `stream` transporter to ensure that the header and body of the email have been correctly constructed without sending the email.
 
 ### Stream example
 
@@ -198,7 +201,7 @@ module.exports = {
     lable: 'article',
     pluralLabel: 'articles'
   },
-  ...,
+  // additional module code
   handlers(self) {
     return {
       'afterSave': {
@@ -209,7 +212,7 @@ module.exports = {
             subject: 'New Article added'
           };
           try {
-            const info = await self.email(req, 'email.html', { data: { piece } }, options);
+            const info = await self.email(req, 'email.html', { piece }, options);
           }
           console.log(info.envelope);
           console.log(info.messgeId);
@@ -229,7 +232,7 @@ module.exports = {
 
 ## Triggering email from a route
 
-In addition to using `handlers()` to trigger email delivery, you can use `apiRoutes()`. This can be triggered by any selected HTTP request, like submission of FormData through PUT, or retrieval of a specified payload with GET. All of the same arguments passed when invoking the `email()` method from a module need to be supplied when using the method in a route.
+In addition to using `handlers()` to trigger email delivery, you can use `apiRoutes()`. This can be triggered by any selected HTTP request, like submission of FormData through POST, or retrieval of a specified payload with GET. All of the same arguments passed when invoking the `email()` method from a module need to be supplied when using the method in a route.
 
 ### Example usage
 
@@ -241,7 +244,7 @@ module.exports = {
   options: {
     lable: 'contact'
   },
-  ...,
+  // additional module code
   apiRoutes(self) {
     return {
       post: {
@@ -251,9 +254,9 @@ module.exports = {
           }
           const email = self.apos.launder.string(req.body.email);
           const options = {
-            from: 'admin@mysite.com',
-            to: email,
-            subject: 'Please confirm your subscription'
+            from: email,
+            to: 'admin@mysite.com',
+            subject: 'A new user has subscribed'
           };
           const data = {
             name: self.apos.launder.string(req.body.name)
@@ -275,6 +278,6 @@ module.exports = {
 
 </AposCodeBlock>
 
-So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected route should get a separate function. In this case, we are passing the subscribe function through the `post` property. This will monitor for a POST request to `https://www.mysite.com/api/v1/subscribe`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/subscribe`. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
+So, what is going on with this code? First, we are passing our `apiRoutes()` a `post` object. This contains the functions that should be used with a `POST` HTTP request. Each expected route should get a separate function. In this case, we are passing the `subscribe` function. This will monitor for a POST request to `https://www.mysite.com/api/v1/subscribe`. We could give the property a name prefixed with a slash to monitor that exact route - `https://www.mysite.com/subscribe`. See the [reference documentation](../reference/module-api/module-overview.html#naming-routes) for more details.
 
-In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder.string()`. Finally, this information and the email template are passed to the `email()` method in a try block. If passing the email to the handler fails, the exception will be caught automatically, logged, and reported as a 500 error.
+In the next block of code, we test to ensure that the information needed to construct the `options` and `data` arguments exists in the submission. If it does exist, the values for both those parameters are created with sanitization using `self.apos.launder.string()`. Finally, this information and the email template are passed to the `self.email()` method in a try block. If passing the email to the handler fails, the exception will be caught automatically, logged, and reported as a 500 error. Note that even if the `self.email()` method doesn't throw an error it does not mean that message delivery will be completed successfully. The email could still be rejected en route or by the receiving server.
