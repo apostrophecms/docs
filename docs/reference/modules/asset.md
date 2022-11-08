@@ -34,7 +34,9 @@ When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional p
 
 ### `rebundleModules`
 
-The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules add through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and individual file name from the module `ui/src` folder, as properties. Each property takes the name of the bundle where the file should be added as a string.
+The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
+
+Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
 
 #### Example
 
@@ -48,8 +50,9 @@ module.exports = {
       'fancy-form': 'main',
       // Everything from the basic-product module should go in the "secondary" bundle
       'basic-product': 'secondary',
-      // The ui/src/form.js code from the @dcad/form module should be retargeted to the
-      // "secondary" bundle — but only that code, leave ui/src/index.js in the main bundle
+      // Code originally designated as part of the `form` bundle from 
+      // the @dcad/form module should be retargeted to the"secondary" bundle
+      // but only that code, leave ui/src/index.js in the main bundle
       '@dcad/form:form': 'secondary'
     }
   }

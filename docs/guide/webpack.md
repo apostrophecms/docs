@@ -342,9 +342,9 @@ Apostrophe will take care of deploying the output files of custom bundles alongs
 
 ### Rebundling resources
 
-In some cases, an npm package will provide front-end code that is either unbundled or bundled in a way that doesn't reflect the needs of the project. In these cases, the bundle configuration set by each module can be overridden through the `rebundleModules` option of the `@apostrophecms/asset` module.
+In some cases, an npm package will provide front-end code that is bundled in a way that doesn't reflect the needs of the project. In these cases, the bundle configuration set by each module can be overridden through the `rebundleModules` option of the `@apostrophecms/asset` module.
 
-This option takes an object with module or module file names as properties and bundle names as values.
+This option takes an object with module names, optionally combined with a `:` and a bundle name, as properties and new bundle names as values.
 
 <AposCodeBlock>
 
@@ -356,8 +356,9 @@ module.exports = {
       'fancy-form': 'main',
       // Everything from the basic-product module should go in the "secondary" bundle
       'basic-product': 'secondary',
-      // The ui/src/form.js code from the @dcad/form module should be retargeted to the
-      // "secondary" bundle — but only that code, leave ui/src/index.js in the main bundle
+      // Code originally designated as part of the `form` bundle from 
+      // the @dcad/form module should be retargeted to the"secondary" bundle
+      // but only that code, leave ui/src/index.js in the main bundle
       '@dcad/form:form': 'secondary'
     }
   }
@@ -369,12 +370,12 @@ modules/@apostrophecms/asset/index.js
 </template>
 </AposCodeBlock>
 
-If the module name is given, without specifying a file name, all of the JavaScript assets from the `module/ui/src` folder will be added to the named bundle. If a file name is provided by appending it to the module name with a `:`, then only that file will be added to the named bundle. Other assets in the same folder, for example, `index.js`, will be added to the bundle specified by the module.
+If the module name is given, without specifying a bundle name, all of the JavaScript assets from the `module/ui/src` folder will be added to the newly specified bundle. If a bundle name is provided by appending it to the module name with a `:`, then only the assets of that bundle will be rebundled. Other assets in the same module's `ui/src` folder will behave according to the module's original bundle configuration, if any, or be left in the main bundle.
 
-The module name for project-level modules, like `modules/@apostrophecms/home-page` should be `@apostrophecms/my-home-page`. To target the original (npm) module use: `@apostrophecms/home-page`.
+To avoid ambiguity, when using `rebundleModules` to move assets provided as part of the project-level configuration of an apostrophe module originally loaded from npm, such as code found in `modules/@apostrophecms/home-page/ui/src/index.js`, use the module name `@apostrophecms/my-home-page`. Without the `my-` prefix the code from the original npm module would be moved.
 
 ::: note
-Sending all of the module assets to one bundle and then designating a file in that same folder to go to a different bundle is considered invalid. Instead, each individual file should be rebundled to achieve this goal.
+Sending all of the module assets to one bundle and then designating an entry point in that same folder to go to a different bundle is considered invalid. Instead, each individual entry point should be rebundled to achieve this goal.
 :::
 
 ## The Webpack cache
