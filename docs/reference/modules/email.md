@@ -61,4 +61,5 @@ If needed, you may assign the *fully* created transport directly to `self.transp
 
 ## Related documentation
 
-- [The `self.email()` method in every module](/docs/reference/modules/module.md#email-req-templatename-data-options)
+- [Guide to sending email from your Apostrophe project](/guide/sending-email.md)
+- [The `self.email()` method in every module](/reference/modules/module.md#email-req-templatename-data-options)
