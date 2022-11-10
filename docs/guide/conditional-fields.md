@@ -77,7 +77,7 @@ add: {
 
 Condition rules may be independent of one another. Add separate condition rules in an array using the key `$or` to show the field if any of the condition groups pass.
 
-In this example, the rating field will display if *either* `seenMovie` or `uninformedOpinion` is true.
+In this example, the rating field will display if *either* `seenMovie` or `uninformedOpinion` is true or if `contributorLevel` is 'intermediate' or 'expert'.
 
 ```javascript
 // A field schema's `add` configuration
@@ -90,6 +90,28 @@ add: {
     label: 'Do you have an uninformed opinion about the movie?',
     type: 'boolean'
   },
+  contributorLevel: {
+    label: 'How many movies have you previously rated in total?',
+    type: 'select',
+    choices: [
+      {
+        label: '<100',
+        value: 'beginner'
+      },
+      {
+        label: '100-500',
+        value: 'novice'
+      },
+      {
+        label: '501-1000',
+        value: 'intermediate'
+      },
+      {
+        label: '>1000',
+        value: 'expert'
+      }
+    ]
+  },
   rating: {
     label: 'Rate the movie from 1-5',
     type: 'integer',
@@ -99,7 +121,9 @@ add: {
     if: {
       $or: [
         { seenMovie: true },
-        { uninformedOpinion: true }
+        { uninformedOpinion: true },
+        { contributorLevel: 'intermediate' },
+        { contributorLevel: 'expert' },
       ]
     }
   }
