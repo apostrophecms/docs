@@ -3,8 +3,8 @@
 Tests are useful to guarantee that the requirements of your application are met over time.
 They also ensure that code changes don't generate breaking artifacts.
 
-Automating tests for expected scenarios saves significant time over having to mock those same scenarios manually each
-time there are code changes.
+Automating tests for expected scenarios saves significant time over having to manually execute a regression test plan
+each time there are code changes.
 
 There are many kinds of tests:
 
@@ -18,7 +18,7 @@ There are many kinds of tests:
 This documentation focuses on how to test Apostrophe modules, not Apostrophe itself using integration testing.
 
 Modules should be stand-alone npm packages. They need to be hosted somewhere that our testing can access. For this
-example, we are hosting this module in a github repo. We will use a fictitious module named `article` to illustrate how to
+example, we are hosting this module in a GitHub repo. We will use a fictitious module named `article` to illustrate how to
 write tests for modules.
 
 ## Requirements
@@ -89,7 +89,7 @@ e.g. for the module [@apostrophecms/login-hcaptcha](https://github.com/apostroph
   ```json
   {
     "/**": "This package.json file is not actually installed.",
-    " * ": "Apostrophe requires that all npm modules to be loaded by moog",
+    " * ": "Apostrophe requires that all npm modules to be loaded",
     " */": "exist in package.json at project level, which for a test is here",
     "dependencies": {
       "apostrophe": "^3.26.0",
@@ -147,10 +147,10 @@ Mocha does not play well with arrow-functions, more info at [https://mochajs.org
   };
 
   // describe and it functions are provided by mocha
-  // Usually use to "structure" the test file
+  // Usually used to "structure" the test file
   // They don't have a strict meaning from mocha's point of view
 
-  // describe is a test suite and used to group tests
+  // describe is a test suite and is used to group tests
   // You can have as many describe as you want in a test file
   // describe can be nested
   describe('article', function () {
