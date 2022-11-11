@@ -54,7 +54,8 @@ module.exports = {
           ]
         },
         [ 'guide/media.md', 'Working with images and media' ],
-        [ 'guide/writing-tests-for-modules.md', 'Writing tests for modules' ]
+        [ 'guide/writing-tests-for-modules.md', 'Writing tests for modules' ],
+        'guide/sending-email.md'
       ]
     },
     {
@@ -120,7 +121,9 @@ module.exports = {
       title: 'Hosting',
       collapsable: false,
       children: [
-        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ]
+        [ 'cookbook/ubuntu-hosting.md', 'Ubuntu hosting setup' ],
+        [ 'cookbook/deploying-to-heroku.md', 'Deploying to Heroku'],
+        [ 'cookbook/using-s3-storage.md', 'Setting up S3 storage' ]
       ]
     },
     {

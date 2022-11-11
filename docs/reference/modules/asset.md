@@ -17,7 +17,8 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
 | [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
-| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance.
+| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
+| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
 
 ### `refreshOnRestart`
 
@@ -31,12 +32,53 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 
 When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional property can be used to configure an `uploadfs` instance that differs from the one configured by the `attachment` module, allowing changes in where assets from the webpack build process are stored and how they are served. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
 
+### `rebundleModules`
+
+The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
+
+Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
+
+#### Example
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    rebundleModules: {
+      // Everything from the fancy-form module should go in the regular "main" bundle
+      'fancy-form': 'main',
+      // Everything from the basic-product module should go in the "secondary" bundle
+      'basic-product': 'secondary',
+      // Code originally designated as part of the `form` bundle from 
+      // the @dcad/form module should be retargeted to the"secondary" bundle
+      // but only that code, leave ui/src/index.js in the main bundle
+      '@dcad/form:form': 'secondary'
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/asset/index.js
+</template>
+</AposCodeBlock>
+
+To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
+
+
 ## Command Line Tasks
 
 ### `build`
 The build command triggers the compilation, processing, and output of files within the `ui/apos`  and `ui/src` folders of each module. Logged-in users will receive assets from both folders, while logged-out users will only receive the later. You don't need this task in a development environment, it runs automatically when you start your app. It is necessary in a production environment.
 
-Assets within the `ui/apos` folder modify the admin UI. Code to be passed to the build process should be organized into two subfolders, a `components` folder that contains any new Vue components, and a `apps` folder that takes any additional admin-facing JavaScript. During the build process code located in the `ui/apos` subdirectory of any module is automatically detected and incorporated. Assets in the `components` folder are registered automatically by name and do not need to be imported. Unlike assets in the `ui/src` folder where only the `index.js` file is an entry point, all files in the `ui/apos/apps` folder are entry points. If this behavior is undesirable any files that should not be entry points can be placed into a sub-directory and imported into the main entry point file. See the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/login) for an example, including import of the Vue library within the [`AposLogin.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js). Customizing the admin UI is covered in-depth in the [guide documentation](https://v3.docs.apostrophecms.org/guide/custom-ui.html#customizing-the-user-interface).
+Assets within the `ui/apos` folder modify the admin UI. Code to be passed to the build process should be organized into three subfolders, a `components` folder that contains any new Vue components, an `apps` folder that takes any additional admin-facing JavaScript, and a `tiptap-extensions` folder that contains any tiptap-extensions used within the admin UI.
+
+During the build process, code located in the `ui/apos` subdirectory of any module is automatically detected and incorporated. Assets in the `components` folder are registered automatically by name as Vue components and do not need to be imported.
+
+Unlike assets in the `ui/src` folder where only the `index.js` file is an entry point, all files in the `ui/apos/apps` folder are entry points. If this behavior is undesirable any files that should not be entry points can be placed into a sub-directory and imported into the main entry point file. See the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/login) for an example, including import of the Vue library within the [`AposLogin.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js). Customizing the admin UI is covered in-depth in the [guide documentation](https://v3.docs.apostrophecms.org/guide/custom-ui.html#customizing-the-user-interface).
+
+Every file in the tiptap-extensions folder must be a [tiptap](https://tiptap.dev/) WYSIWYG rich text editor [extension](https://tiptap.dev/extensions), written in that format. Every such extension will be loaded and made available for potential activation by the developer in the rich text widget's editing toolbar.
 
 Frontend JavaScript and SASS CSS for ordinary website visitors is located in the `ui/src` folders of each module. If a module has a `ui/src/index.js` file, that is automatically incorporated as a JavaScript entry point. If a module has a `ui/src/index.scss` file, that is automatically incorporated as a CSS entry point. `ui/src/index.js` files must export a function, and the browser will invoke these in the order the modules were configured.
 
