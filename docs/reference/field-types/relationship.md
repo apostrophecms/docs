@@ -118,3 +118,15 @@ _players: {
   withRelationships: [ '_specialties' ]
 }
 ```
+
+In the case of double nesting e.g., `_specialties` piece has a `_photo` relationship field with another piece `@apostrophecms/image`, then `_photo` can be accessed as `_specialties._photo`.
+
+```javascript
+// With this configuration, `_players` will include the populated `_specialties` and `_photo` documents rather than only the specialty and photo `_id` values.
+_players: {
+  label: 'Players',
+  type: 'relationship',
+  withType: 'player',
+  withRelationships: [ '_specialties._photo' ]
+}
+```
