@@ -615,6 +615,39 @@ modules/default-page/index.js
 
 To accommodate the 'Contact Us' page, we could also the widgets from the [form extension](https://apostrophecms.com/extensions/form-builder-3-x) in the `main` area. Since we are using the `default-page` which already exists in our project we don't need to modify either the `app.js` or `modules/@apostrophecms/page/index.js` files.
 
+### Modifying the logged-in page display
+If we were to take a look at our page right now while logged-in as an editor, we would see a couple of problems. First, the navigation section is styled to be added at the top of the page using a `postion: absolute` CSS rule. The problem with this is that this ends up putting our navigation *over* the ApostropheCMS admin-bar. Not only can we not see the navigation, but this also blocks access to the admin-bar menus. So, we need to add some code onto the page that will move our navigation below the admin-bar in the page flow.
+
+There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/@apostrophecms/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/@apostrophecms/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components.
+
+<AposCodeBlock>
+
+```js
+export default () => {
+  // check that the admin-bar module exists
+  const loggedIn = !!window.apos.modules['@apostrophecms/admin-bar'];
+  if (loggedIn) {
+    // wrap in a time out to give the admin bar object time to load the bar and return the height
+    setTimeout(() => {
+      //get the admin-bar height
+      const adminBarHeight =
+        window.apos.modules['@apostrophecms/admin-bar'].height;
+        // get the navigation ID - if you are using a different template, adjust accordingly
+      const pageNav = document.getElementById('mainNav');
+      // set the position of the navigation to after the admin-bar
+      pageNav.style.top = adminBarHeight + 'px';
+    }, 10);
+  }
+};
+
+```
+
+<template>
+modules/@apostrophecms/asset/ui/apos/apps/adminBarHeight.js
+</template>
+</AposCodeBlock>
+
+
 ## Add the blog pages
 
 The last two pages from the template are blog index and article pages. We could use the [blog module](https://apostrophecms.com/extensions/blog), but it has features we don't necessarily need for this template. So, to simplify this tutorial we will just create our blog piece-type and piece-page-type. We can do this using the CLI tool.
@@ -945,139 +978,3 @@ Now all that is left to do is add our pages to the site and give them some conte
 Any pre-made HTML template can be converted for use in Apostrophe through just two or three simple steps. First, add the styling to your Apostrophe project. Next, create a template for each of the template pages that substitutes data from schema fields into each area of the page that you want to edit. If needed, add special piece types and piece page types.
 
 In this tutorial, we took extra steps to create reusable navigation, header, and footer fragments. While this makes the overall project more compact it is completely optional. Hopefully, this will help you get your Apostrophe project up and running a little more quickly!
-
-## Bonus: creating a helper widget
-![movie of the admin toggle being used](../.vuepress/public/images/toggle.gif)
-
-Many Bootstrap templates use a navigation bar that is added to the top of the page using 'position: absolute'. When using Apostrophe, this means that the adminBar will be placed over the top of the navigation. In the case of this template, there is the extra problem that the navigation overlaps the adminBar and blocks some of the menu choices.
-
-To address these problems, I took advantage of the ease of creating new components in Apostrophe. I added a floating button that toggles the adminBar visibility and also changed the z-index of the adminBar so that it is not obstructed by the navigation.
-
-To start, I created a GitHub repo containing an `index.js` file. To be able to install this helper package into my project, I ran `npm init`. This allows you to either directly install the package from GitHub using npm, or use npm symlinking to add it to your `node_modules` folder.
-
-<AposCodeBlock>
-
-```js
-module.exports = {
-  options: {
-    components: {}
-  },
-  init(self) {
-    self.enableBrowserData();
-    self.apos.template.append('body', 'admin-toggle-for-apostrophe:toggle');
-  },
-  components(self) {
-    return {
-      async toggle(req, data) {}
-    };
-  },
-  methods(self) {
-    return {
-      getBrowserData(req) {
-        return {
-          components: 'TheAdminToggle'
-        };
-      }
-    };
-  }
-};
-
-```
-
-<template v-slot:caption>
-admin-toggle-for-apostrophe/index.js
-</template>
-</AposCodeBlock>
-
-Into the main file, I added an initialization function to call the `enableBrowserData()` method plus insert a small snippet of HTML contained in `views/toggle.html` into the page by appending it to the body. This gives an entry point within the DOM for next adding a custom Vue component. To add this snippet I needed to add it to a `components(self)` customization function. Finally, using a `methods(self)` function, I accessed the `getBrowserData(req)` method to inject the Vue component from a file located in the `ui/apos/components` folder.
-
-<AposCodeBlock>
-
-```django
-{% if (data.user and data.user.role !== 'guest') %}
-  <div id="admin-toggle"></div>
-{% endif %}
-```
-
-<template v-slot:caption>
-views/toggle.html
-</template>
-</AposCodeBlock>
-
-The `toggle.html` file contains a `<div>` with the id `admin-toggle`. This provides a specific id for targeting insertion of the Vue component.
-
-<AposCodeBlock>
-
-```vue
-<template>
-  <span class="ta-button" @click="toggle">
-    <span>+</span>
-  </span>
-</template>
-
-<script>
-export default {
-  name: 'AdminToggle',
-  methods: {
-    toggle(event) {
-      const adminBar = document.querySelector('.apos-admin-bar-wrapper');
-      adminBar.style.display = adminBar.style.display === 'none' ? 'block' : 'none';
-    }
-  }
-}
-</script>
-<style>
-.ta-button {
-  position: fixed;
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-  height: 60px;
-  bottom: 40px;
-  right: 40px;
-  font-size: 2.5em;
-  line-height: 40px;
-  background-color: #0c9;
-  color: #fff;
-  border-radius: 50px;
-  text-align:center;
-	box-shadow: 2px 2px 3px #999;
-}
-
-.apos-admin-bar-wrapper {
-  z-index: 2000 !important;
-}
-</style>
-```
-
-<template v-slot:caption>
-ui/apos/components/TheAdminToggle.vue
-</template>
-</AposCodeBlock>
-
-The Vue component contains a simple span with a `@click` listener that calls the `toggle()` method in the script. This method toggles the adminBar visibility. The component also contains a block of unscoped CSS in the `<style>` tags. This allows for styling of both the floating toggle, but also the adminBar itself.
-
-<AposCodeBlock>
-
-```js
-import Vue from 'Modules/@apostrophecms/ui/lib/vue';
-
-export default function() {
-  return new Vue({
-    el: '#admin-toggle',
-    render: function (h) {
-      return h('TheAdminToggle');
-    }
-  });
-};
-
-```
-
-<template v-slot:caption>
-ui/apos/apps/AdminToggle.js
-</template>
-</AposCodeBlock>
-
-Finally, the `AdminToggle.js` file triggers the insertion and rendering of the Vue component at the `admin-toggle` id.
-
