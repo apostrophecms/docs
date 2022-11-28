@@ -47,6 +47,7 @@ contactInfo: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+| `inline` | Boolean | false | If `true`, array field are edited inline with others, not in a separate dialog box. |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -61,6 +62,14 @@ contactInfo: {
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
+
+### `inline`
+
+Set `inline: true` on an array field to edit the array inline with the rest of the fields, rather than in a separate dialog box. This works best with a small number of fields in the array.
+
+You can also control whether each item has a toggle to expand it, or is always displayed in fully expanded form.
+
+By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
 
 ## Configuring the array field schema
 
