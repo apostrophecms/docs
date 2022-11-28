@@ -47,7 +47,7 @@ contactInfo: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
-| [`inline`](#inline) | Boolean | false | If `true`, array field are edited inline with others, not in a separate dialog box. |
+| [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
