@@ -79,7 +79,8 @@ module.exports = {
           title: 'Working with the database',
           children: [
             'guide/database-queries.md',
-            [ 'guide/database-insert-update.md', 'Inserting and updating docs' ]
+            [ 'guide/database-insert-update.md', 'Inserting and updating docs' ],
+            'guide/database-access.md'
           ]
         },
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
