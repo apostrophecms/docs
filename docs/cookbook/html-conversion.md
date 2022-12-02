@@ -531,7 +531,7 @@ modules/default-page/views/page.html
 </template>
 </AposCodeBlock>
 
-Next, we need to modify the schema fields of the `default-page/index.js` file to add the data to the header and the main body of the page.
+Next, we need to modify the schema fields of the `default-page/index.js` file to add the data to the header and the main body of the page. For a number of the schema fields below, I'm choosing to make them required. You could instead leave them optional, but then wrap the areas where they are added to the templates in conditional statements in case the editor leaves the fields empty.
 
 <AposCodeBlock>
 
