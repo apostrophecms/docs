@@ -9,28 +9,30 @@ Let's outline the steps that we need to perform.
 
 1. Create a new boilerplate project
 2. Add the styling and scripts from the template to our project
-3. Identify sections found on each page that can be converted into fragments
+3. Identify sections found on each page that can be converted into [fragments](../guide/fragments.md)
    - Navigation
    - Header
    - Footer
-4. Modify the project core layout
-5. Create the default page
-6. Add the blog pages
+4. Modify the project core layout in `views/layout.html`
+5. Create the apostrophe default page type
+6. Add the blog pages using `apostrophecms/page`
    - create the index.html page
    - create the show.html page
 
 ## Template Introduction
 
-This template is free to [download](https://startbootstrap.com/theme/clean-blog) and contains 4 simple pages. The "Home" page contains a listing of all the blog articles on the site.
+This recipe is based on the Clean Blog template which is a free [download](https://startbootstrap.com/theme/clean-blog) from Start Bootstrap. This template contains 4 simple pages.
+
+The "Home" page contains a listing of all the blog articles on the site.
 ![The template home page](../.vuepress/public/images/home-page.png)
 
-This has an accompanying page to show each individual article.
+This has an accompanying page to show the individual articles.
 
 ![The template 'show.html' page](../.vuepress/public/images/show-page.png)
 
 This structure matches up nicely with the structure of the apostrophe `piece-page-type` with an `index.html` template to list all of the pieces and a `show.html` template to show each individual piece.
 
-The final two pages are an "About" page and a "Contact Me" page, which have identical structure, just content differences.
+The final two pages are an "About" page and a "Contact Me" page, which have identical structures, just content differences.
 
 ![The 'Contact-me" page.'](../.vuepress/public/images/contact-me.png)
 
@@ -40,11 +42,11 @@ They also all display an identical footer containing social links and some copyr
 
 The styling of the template is a combination of the popular Bootstrap frontend styling framework and custom CSS.
 
-Let's get started converting this template to an Apostrophe project. The first step is to [download](https://startbootstrap.com/theme/clean-blog) the template and unarchive it to a directory where we can copy files into our Apostrophe project.
+Let's get started converting this template to an Apostrophe project!
 
 ## Creating a new project
 
-If you already have the apostrophe CLI app installed, creating a new project is simple. If not, follow the instructions [here](https://v3.docs.apostrophecms.org/guide/setting-up.html#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
+If you don't already have the apostrophe CLI installed, follow the instructions [here](https://v3.docs.apostrophecms.org/guide/setting-up.html#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
 
 <AposCodeBlock>
 
@@ -60,9 +62,9 @@ The CLI app will create the new project and an admin user. At the end of the ins
 
 ### Adding the styling
 
-This particular template comes with both "dist" and "src" folders. Within the dist folder, is a "css" folder that contains all of the compiled styling for the site. We could use this as the source for the styling of our project, but this wouldn't be as easy to modify with additional or custom styling variables.
+This particular template comes with both `dist` and `src` folders. Within the dist folder is a `css` folder that contains all of the compiled styling for the site. We could use this as the source for the styling of our project, but this wouldn't be as easy to modify with additional or custom styling variables.
 
-Alternatively, the src folder contains an "scss" folder with all of the styling sheets and imports. Since this template utilizes Bootstrap, which has a npm package, we are going to install and then include the main styling from the 'node-modules' folder. Open a terminal at the root of your project and install Bootstrap using:
+Alternatively, the `src` folder contains an `scss` folder with all of the styling sheets and imports. Since this template utilizes Bootstrap, which has a npm package, we are going to install and then include the main styling from the `node-modules` folder. Open a terminal at the root of your project and install Bootstrap using:
 
 ```sh
 npm install bootstrap
@@ -72,9 +74,9 @@ npm install bootstrap
 This template uses Bootstrap 5, which is the latest version as of this writing. If you need another version for your template, make sure to specify it during the install.
 :::
 
-The next thing we will do is copy the contents of the scss folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/@postrophecms/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
+The next thing we will do is copy the contents of the `scss` folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/@postrophecms/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
 
-For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the sub-sheets. Looking at the file path for each `@import` statement, each sub-sheet or folder of sub-sheets is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the sheets are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
+For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the partials. Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
 
 <AposCodeBlock>
 
@@ -105,7 +107,7 @@ modules/@apostrophecms/asset/ui/src/index.scss
 </template>
 </AposCodeBlock>
 
-The main Bootstrap components are loaded in from the `node_modules` where they were installed. An alternative to directly loading from the `node-modules`, which will load in every Bootstrap component, would be to create another folder and import only those components needed for the project.
+The main Bootstrap components are loaded in from the `node_modules` where they were installed. An alternative to directly loading from the `node-modules`, which will load in every Bootstrap component, would be to import only those components needed for the project using `@import 'bootstrap/scss/_buttons';`, for example.
 
 ### Adding the Bootstrap and project JavaScript
 
@@ -132,7 +134,6 @@ export default () => {
         if (currentTop > 0 && mainNav.classList.contains('is-fixed')) {
           mainNav.classList.add('is-visible');
         } else {
-          console.log(123);
           mainNav.classList.remove('is-visible', 'is-fixed');
         }
       } else {
@@ -159,13 +160,13 @@ modules/@apostrophecms/asset/ui/src/index.js
 
 ## Identifying common areas
 
-Each of the four pages included in this template has some common areas that can be converted into fragments. While all of the pages have both navigation and main header areas that occupy the same general area, we are going to split these into two fragments. That is because the navigation can get all of its settings from global, whereas the rest of the header area is going to get settings on a per-page basis. We will add each of the three fragments in the `views` folder at the project level.
+Each of the four pages included in this template has some common areas that can be converted into [fragments](../guide/fragments.md). While all of the pages have both navigation and main header areas that occupy the same general area, we are going to split these into two fragments. That is because the navigation can get all of its settings from global, whereas the rest of the header area is going to get settings on a per-page basis. We will add each of the three fragments in the `views` folder at the project level.
 
 ### Adding the navigation
 
 Inside the `views` folder create another folder named `fragments` and a file named `navigation.html`. To turn this page into a fragment, add opening and closing fragment block tags - `{% fragment navigationArea() %}` and `{% endfragment %}`.
 
-Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the href and logo in the first link with data from schema fields in the global settings. Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages we will use a `for` loop to add each page selected within the global settings.
+Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` and logo in the first link with data from schema fields in the apostrophe global settings. Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages we will use a `for` loop to add each page selected within the global settings.
 
 <AposCodeBlock>
 
@@ -221,7 +222,8 @@ module.exports = {
       },
       brand: {
         type: 'string',
-        label: 'Brand name'
+        label: 'Brand name',
+        required: true
       },
       pages: {
         type: 'array',
@@ -266,7 +268,7 @@ module.exports = {
 
 ### Adding the footer
 
-Much like we constructed the navigation, we are going to use a fragment populated with data from the global settings for the footer. Create a `views/fragments/footer.html` file with a fragment block and paste the navigation area from any of the template pages between the blocks. In this case, we are going to replace each of the social links and the copyright text. You can choose to make the link for each social media account be required, or wrap each of the list items in an `if` block to make them optional.
+Much like we constructed the navigation, we are going to use a fragment populated with data from the apostrophe global settings for the footer. Create a `views/fragments/footer.html` file with a fragment block and paste the navigation area from any of the template pages between the blocks. In this case, we are going to replace each of the social links and the copyright text. You can choose to make the link for each social media account be required, or wrap each of the list items in an `if` block to make them optional.
 
 <AposCodeBlock>
 
@@ -346,6 +348,7 @@ module.exports = {
       copyright: {
         type: 'string',
         label: 'Copyright text'
+        required: true
       }
     },
     group: {
@@ -361,11 +364,15 @@ modules/@apostrophecms/global/index.js
 </template>
 </AposCodeBlock>
 
+::: note
+An alternative way to add the social links would be to use an `array` schema field to collect the url and logo class information. Then within the template loop over each item in the array to add them to the page. This would make the template code and logic a little cleaner.
+:::
+
 ### Adding the header
 
 The headers of each page have an image and headline in common. They also each have a subheading, but the styling of that subheading depends on the type of page that is being displayed. Additionally, the header for the page displaying the individual blog articles also has metadata about the author and publication date. While we could have separate header template fragments, we can also add a conditional block to add the needed markup.
 
-Create a `views/fragments/header.html` file and add the fragment block tags. Unlike the navigation and footer fragments that got their data from the global settings, the header will get its data from the page. This means that we will have to pass data into our fragment within the block tags - `{% fragment headerArea(data) %}`.
+Create a `views/fragments/header.html` file and add the fragment block tags. Unlike the navigation and footer fragments that got their data from apostrophe's global settings, the header will get its data from the page. This means that we will have to pass data into our fragment within the block tags - `{% fragment headerArea(data) %}`.
 
 Paste the page header section from the `index.html` template page in between the tags. This markup is present on the home, about, and contact pages. Once we create the blog article page we will come back and add the conditional block. Modify the heading and subheading to get field schema data from the page settings.
 
@@ -478,7 +485,7 @@ views/layout.html
 </template>
 </AposCodeBlock>
 
-Note the use of `navigationArea()` and `footerArea()` in the `render` calls. If you look at the fragment files, you will see that the fragment blocks use these names. This is to allow for a single fragment file to have multiple fragments. We are using these names just to be a little clearer in our calls, but they could just be named `navigation()` and `footer()`.
+Note the use of `navigationArea()` and `footerArea()` in the `render` calls. If you look at the fragment files, you will see that the fragment blocks use these names. This is to allow for a single fragment file to have multiple fragments. We are using these names just to be a little clearer in our calls for this tutorial, but this could be cleaned up and both be called `area()` resulting in `{% render header.area() %}` and `{% render footer.area() %}`.
 
 ## Creating a default page
 
@@ -506,15 +513,15 @@ Second, we need to add the template styling and the main content area to the `ma
   {% render header.headerArea(data.page) %}
 {% endblock %}
 
-  {% block main %}
-    <div class="container px-4 px-lg-5">
-      <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-          {% area data.page, 'main' %}
-        </div>
+{% block main %}
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {% area data.page, 'main' %}
       </div>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}
 ```
 
 :::
@@ -524,7 +531,7 @@ modules/default-page/views/page.html
 </template>
 </AposCodeBlock>
 
-Next, we need to modify the schema fields of the default-page `index.js` file to add the data to the header and the main body of the page.
+Next, we need to modify the schema fields of the `default-page/index.js` file to add the data to the header and the main body of the page.
 
 <AposCodeBlock>
 
@@ -538,11 +545,13 @@ module.exports = {
     add: {
       heading: {
         type: 'string',
-        label: 'Heading'
+        label: 'Heading',
+        required: true
       },
       subheading: {
         type: 'string',
-        label: 'Subheading'
+        label: 'Subheading',
+        required: true
       },
       headerImage: {
         type: 'area',
@@ -613,12 +622,14 @@ modules/default-page/index.js
 </template>
 </AposCodeBlock>
 
-To accommodate the 'Contact Us' page, we could also the widgets from the [form extension](https://apostrophecms.com/extensions/form-builder-3-x) in the `main` area. Since we are using the `default-page` which already exists in our project we don't need to modify either the `app.js` or `modules/@apostrophecms/page/index.js` files.
+Since we are modifying the project's existing `default-page/index.js` file, we don't need to modify either the `app.js` or `modules/@apostrophecms/page/index.js` files.
+
+To accommodate the content on the 'Contact Us' page, we could also add the widgets from the [form extension](https://apostrophecms.com/extensions/form-builder-3-x) in the `main` area. 
 
 ### Modifying the logged-in page display
 If we were to take a look at our page right now while logged-in as an editor, we would see a couple of problems. First, the navigation section is styled to be added at the top of the page using a `postion: absolute` CSS rule. The problem with this is that this ends up putting our navigation *over* the ApostropheCMS admin-bar. Not only can we not see the navigation, but this also blocks access to the admin-bar menus. So, we need to add some code onto the page that will move our navigation below the admin-bar in the page flow.
 
-There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/@apostrophecms/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/@apostrophecms/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components.
+There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/@apostrophecms/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/@apostrophecms/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components and is only served to logged in users.
 
 <AposCodeBlock>
 
@@ -700,19 +711,23 @@ module.exports = {
       },
       heading: {
         type: 'string',
-        label: 'Heading'
+        label: 'Heading',
+        required: true
       },
       subheading: {
         type: 'string',
-        label: 'Subheading'
+        label: 'Subheading',
+        required: true
       },
       author: {
         type: 'string',
-        label: 'Author'
+        label: 'Author',
+        required: true
       },
       publicationDate: {
         type: 'date',
-        label: 'Publication date'
+        label: 'Publication date',
+        required: true
       },
       main: {
         type: 'area',
@@ -792,11 +807,13 @@ module.exports = {
       },
       heading: {
         type: 'string',
-        label: 'Heading'
+        label: 'Heading',
+        required: true
       },
       subheading: {
         type: 'string',
-        label: 'Subheading'
+        label: 'Subheading',
+        required: true
       }
     },
     group: {
@@ -824,7 +841,7 @@ In the code above we are adding a `perPage` option of `5`. This will limit the n
 
 ### The blog index.html page
 
-The "Home" page of the template is essentially an `index.html` page that lists all of the blog articles. Just like with the default page, we are going to add our header to a `beforeMain` block. Within the `main` block, we will copy the `Main Content` section from the `index.html` HTML template. To convert it to dynamically show all of the blog articles from our site we will delete all of the code in each of the `Post preview` sections except the first. Then, we will wrap the first `Post preview` section in a `for` loop. Finally, we will modify the `Pager` section to show both newer and older posts.
+The "Home" page of the template is essentially an `index.html` page that lists all of the blog articles. Just like with the default page, we are going to add our header to a `beforeMain` block. Within the `main` block, we will copy the `<!-- Main Content -->` section from the `index.html` HTML template. To convert it to dynamically show all of the blog articles from our site we will delete all of the code in each of the `<!-- Post preview -->` sections except the first. Then, we will wrap the first  `<!-- Post preview -->` section in a `for` loop. Finally, we will modify the `<!-- Pager -->` section to show both newer and older posts.
 
 <AposCodeBlock>
 ::: v-pre
@@ -880,23 +897,23 @@ modules/blog-page/index.html
 
 Focusing on the `for` loop in the code. We are stepping through all of the articles returned in `data.pieces` and outputing the relevant data. Again, since we specified a `perPage` value of `5` in the options, this will return the five newest blog articles. This can be further configured within the `blog-page` module options, for example with the [`sort` option](https://v3.docs.apostrophecms.org/reference/modules/piece-type.html#sort).
 
-The `Pager` section is expanded to conditionally show newer and older blog articles, unlike the original template, which only shows older articles. Within the section, we are taking advantage of some additional data that is being delivered to the `index.html` page. Within the `data` payload are `data.currentPage` and `data.totalPages`. The `data.totalPages` is how many individual data sets are present for the particular piece type if divided into groups based on the `perPage` option (the default is 10).
+The "Pager" section is expanded to conditionally show newer and older blog articles, unlike the original template, which only shows older articles. Within the section, we are taking advantage of some additional data that is being delivered to the `index.html` page. Within the `data` payload are `data.currentPage` and `data.totalPages`. The `data.totalPages` is how many individual data sets are present for the particular piece type if divided into groups based on the `perPage` option (the default is `10`).
 
 By default, we are showing the newest blog articles first. Therefore, if the `data.currentPage` is equal to `1` then we shouldn't display the button to load newer articles. If we are on any other page we want the button displayed, with a URL that adds a query to go to the previous page -
 ::: v-pre
-(`{{data.currentPage - 1}}`).
+`{{data.currentPage - 1}}`.
 :::
 
-We are only displaying the button to go to older posts if we aren't at the last set of pieces - (`data.totalPages > data.currentPage`). If this is true we display a button that points to the URL with a query that goes to the next set of pieces - 
+We are only displaying the button to go to older posts if we aren't at the last set of pieces - `data.totalPages > data.currentPage`. If this is true we display a button that points to the URL with a query that goes to the next set of pieces - 
 ::: v-pre
-(`{{data.currentPage + 1}}`).
+`{{data.currentPage + 1}}`.
 :::
 
 ### The blog show.html page
 
 The `show.html` page will display each of the individual blog articles and will be based on the original HTML template `post.html` page. Like the other pages, we start by rendering the header fragment in the `beforeMain` block. If we look at the `post.html` page we can see that the header looks slightly different from the other pages. It contains metadata not found on the other pages. After setting up the main part of the page we will alter the `header.html` fragment to address this.
 
-Open the `post.html` template file and copy the `Post Content` section into the `main` block of the `show.html` page. All of the content in `<p>` tags can be deleted because we will replace it with the content added to the `main` area of our blog pieces.
+Open the `post.html` template file and copy the "Post Content" section into the `main` block of the `show.html` page. All of the content in `p` tags can be deleted because we will replace it with the content added to the `main` area of our blog pieces.
 
 <AposCodeBlock>
 ::: v-pre
@@ -916,8 +933,7 @@ Open the `post.html` template file and copy the `Post Content` section into the 
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    {% area data.piece,
-                    'main' %}
+                    {% area data.piece, 'main' %}
                 </div>
             </div>
         </div>
@@ -969,12 +985,16 @@ views/fragments/header.html
 </template>
 </AposCodeBlock>
 
-So, what did we change? First, at the top, we created a new variable, `type`, and set it to the value of `data.type`. This is going to give us the type of page/piece that is being loaded. Looking at the code differences in the header section of the `post.html` template compared to the other three pages, the first thing we see is that the container for the header text has a class of `post-heading` instead of `site-heading`. In the code above, we conditionally set the class only if the page being loaded is of the type `blog`. Similarly, we only add the metadata if we are on this type of page.
+So, what did we change? First, at the top, we created a new variable, `type`, and set it to the value of `data.type`. This is going to give us the type of page or piece that is being loaded. Looking at the code differences in the header section of the `post.html` template compared to the other three pages, the first thing we see is that the container for the header text has a class of `post-heading` instead of `site-heading`. In the code above, we conditionally set the class only if the page being loaded is of the type `blog`. Similarly, we only add the metadata if we are on this type of page.
 
-Now all that is left to do is add our pages to the site and give them some content. The "About Me" and "Contact Me" both use the `default-page` template. The existing "Home" page should be swapped out for a `blog-page` template. All that is left to do is create your blog articles!
+Now we need to add our pages to the site and give them some content. The "About Me" and "Contact Me" both use the `default-page` template. The existing "Home" page should be swapped out for a `blog-page` template. All that is left to do is create your blog articles!
 
 ## Summary
 
-Any pre-made HTML template can be converted for use in Apostrophe through just two or three simple steps. First, add the styling to your Apostrophe project. Next, create a template for each of the template pages that substitutes data from schema fields into each area of the page that you want to edit. If needed, add special piece types and piece page types.
+Any pre-made HTML template can be converted for use in Apostrophe through some simple steps.
+
+- Add the front end assets to your Apostrophe project
+- Create an Apostrophe page type for each of the template pages that substitutes data from the schema fields into each area of the page that you want to edit.
+- Add special piece types and piece page types
 
 In this tutorial, we took extra steps to create reusable navigation, header, and footer fragments. While this makes the overall project more compact it is completely optional. Hopefully, this will help you get your Apostrophe project up and running a little more quickly!
