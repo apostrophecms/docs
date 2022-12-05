@@ -5,6 +5,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Common features
 
 - [Building site navigation](building-navigation.md)
+- [Converting an HTML template](html-conversion.md)
 
 ## Hosting
 

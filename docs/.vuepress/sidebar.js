@@ -113,7 +113,8 @@ module.exports = {
       title: 'Project features',
       collapsable: false,
       children: [
-        [ 'cookbook/building-navigation.md', 'Building site navigation' ]
+        [ 'cookbook/building-navigation.md', 'Building site navigation' ],
+        [ 'cookbook/html-conversion.md', 'Converting an HTML template' ]
       ]
     },
     {
