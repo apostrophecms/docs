@@ -653,7 +653,7 @@ export default () => {
 
 ```
 
-<template>
+<template v-slot:caption>
 modules/@apostrophecms/asset/ui/apos/apps/adminBarHeight.js
 </template>
 </AposCodeBlock>
