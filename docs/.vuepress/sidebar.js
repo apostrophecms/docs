@@ -88,6 +88,7 @@ module.exports = {
         {
           title: 'Other module config',
           children: [
+            [ 'guide/keyboard-shortcuts.md', 'Keyboard shortcuts' ],
             [ 'guide/batch-operations.md', 'Batch operations' ]
           ]
         },
