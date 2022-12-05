@@ -18,7 +18,7 @@ module.exports = {
     ]
   ],
   markdown: {
-    extendMarkdown: md => {
+    extendMarkdown: (md) => {
       md.use(require('markdown-it-attrs'));
     }
   },
@@ -120,25 +120,88 @@ module.exports = {
       apiKey: 'e11d95029c6a9ac596343664b7f622e4',
       indexName: 'apostrophecms',
       algoliaOptions: {
-        facetFilters: [ 'tags:v3' ]
+        facetFilters: ['tags:v3']
       }
     }
   },
   head: [
     // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
-    [ 'script', {
-      type: 'text/javascript',
-      id: 'hs-script-loader',
-      async: 'true',
-      defer: 'true',
-      src: '//js.hs-scripts.com/6104347.js'
-    } ],
-    ['link', {rel: 'icon', type: 'image/png', sizes: "32x32", href: '/images/favicon/favicon-32.png'}],
-    ['link', {rel: 'icon', type: 'image/png', sizes: "128x128", href: '/images/favicon/favicon-128.png'}],
-    ['link', {rel: 'icon', type: 'image/png', sizes: "192x192", href: 'images/favicon/favicon-192.png'}],
-    ['link', {rel: 'shortcut icon', type: 'image/png', sizes: "196x196", href: '/images/favicon/favicon-196.png'}],
-    ['link', {rel: 'apple-touch-icon', type: 'image/png', sizes: "152x152", href: '/images/favicon/favicon-152.png'}],
-    ['link', {rel: 'apple-touch-icon', type: 'image/png', sizes: "167x167", href: '/images/favicon/favicon-167.png'}],
-    ['link', {rel: 'apple-touch-icon', type: 'image/png', sizes: "180x180", href: '/images/favicon/favicon-180.png'}]
+    [
+      'script',
+      {
+        type: 'text/javascript',
+        id: 'hs-script-loader',
+        async: 'true',
+        defer: 'true',
+        src: '//js.hs-scripts.com/6104347.js'
+      }
+    ],
+    [
+      'script', {}, `
+      (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "emium5rsl8");
+      ` ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/images/favicon/favicon-32.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '128x128',
+        href: '/images/favicon/favicon-128.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '192x192',
+        href: 'images/favicon/favicon-192.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'shortcut icon',
+        type: 'image/png',
+        sizes: '196x196',
+        href: '/images/favicon/favicon-196.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        sizes: '152x152',
+        href: '/images/favicon/favicon-152.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        sizes: '167x167',
+        href: '/images/favicon/favicon-167.png'
+      }
+    ],
+    [
+      'link',
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        sizes: '180x180',
+        href: '/images/favicon/favicon-180.png'
+      }
+    ]
   ]
 };
