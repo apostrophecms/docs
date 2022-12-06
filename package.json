@@ -16,7 +16,6 @@
   "author": "Apostrophe Technologies, Inc.",
   "license": "MIT",
   "devDependencies": {
-    "@vuepress/plugin-google-analytics": "^1.5.4",
     "chalk": "^2.4.2",
     "eslint": "^7.1.0",
     "eslint-config-apostrophe": "^3.2.0",
