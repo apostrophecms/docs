@@ -1,7 +1,7 @@
 # Accessing the database directly
 
 ## Working with collections
-As stated earlier, the main goal of the Apostrophe JavaScript content API is to facilitate requests to the MongoDB database without the developer having to know advanced MongoDB syntax or worry about user permissions. However, there are instances where you might want to directly access and modify your collections without the overhead or restrictions of the API.
+As stated earlier, the main goal of the Apostrophe JavaScript content API is to facilitate requests to the MongoDB database without the developer having to know advanced MongoDB syntax or worry about user permissions. However, there are instances where you might want to directly access and modify your collections without the overhead or restrictions of the Apostrophe model layer.
 
 A good example is updating one document property, like a "view counter" of a blog article. Everyone can see the page, so you don't care about permissions. You don't need to update the entire document object. You just want to update one small piece of it.
 
