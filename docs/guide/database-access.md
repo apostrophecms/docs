@@ -1,7 +1,7 @@
 # Accessing the database directly
 
 ## Working with collections
-As stated earlier, the main goal of the Apostrophe JavaScript content API is to facilitate requests to the MongoDB database without the developer having to know advanced MongoDB syntax or worry about user permissions. However, there are instances where you might want to directly access and modify your collections without the overhead or restrictions of the Apostrophe model layer.
+As stated earlier, the main goal of the Apostrophe JavaScript content API is to facilitate requests to the MongoDB database without the developer having to know advanced MongoDB syntax or worry about user permissions. However, there are instances where you might want to directly access and modify your collections without the overhead or restrictions of the [Apostrophe model layer](database-insert-update.md) without the possibility of a race condition.
 
 A good example is updating one document property, like a "view counter" of a blog article. Everyone can see the page, so you don't care about permissions. You don't need to update the entire document object. You just want to update one small piece of it.
 
@@ -38,22 +38,18 @@ There are references to other core apostrophe collections that can be accessed i
 
 Next, we are invoking a method of the MongoDB collection saying that we want to update one document within the database. You can read about other methods within the [MongoDB Node.js driver docs](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/).
 
-We are passing two arguments to the MongoDB method. The first is an object that sets the `_id` property to the `_id` of the piece that the user is requesting. Note the use of the underscore `_` - this is because this is a MongoDB, not user, generated id.
+We are passing two arguments to the MongoDB method. The first is a MongoDB criteria object which ensures our query only matches the document whose `_id` property of the piece that the user is requesting. Note the use of the underscore `_` - this is because this is a MongoDB, not user, generated id.
 
 The second argument is an object which passes a MongoDB operator `$inc` set to the name and value of the field we want to alter. In this case, *incrementing* the `views` field by 1. This could then be accessed in the `show.html` template for the `blog-page` using `data.piece.views`.
 
-Keep in mind, this update to the record happened *after* the requested piece was already returned from the database because we used the `beforeShow()` method. So, if five people had looked at that blog article previously, `data.piece.views` in the template would be equal to 5, but the database record views would now be 6 due to our `$inc`.
+Keep in mind, this update to the record happened *after* the requested piece was already returned from the database because we used the `beforeShow()` method. So, if five people had looked at that blog article previously, `data.piece.views` in the template would be equal to 5 for the duration of the current request, but the database record views would now be 6 due to our `$inc`.
 
 In addition to the `$inc` operator, there are a number of other MongoDB operators where it makes sense to access database directly. This includes `$set`, `$pull`, `$push`, `$addToSet`, and `$unset`. You can read more about their usage in the MongoDB [documentation](https://www.mongodb.com/docs/v6.0/reference/operator/update/).
 
-## Modifying collections using tasks
-
-Let's look at another typical use case for directly modifying our collections. Any module can add command line (CLI) tasks through the `tasks(self)` configuration property.
-
-The Apostrophe modules expose multiple tasks, for example, adding users through `node app @apostrophecms/user:add <name> <role>`, or completely resetting your database (dangerous!) through `node app @apostrophecms/db:reset`. The [`task()` function](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#middleware-self) takes the as an argument, returning one or more CLI-invokable functions. You can access and modify documents within a CLI function just as you would from any module method.
+These same methods of altering documents outside of the Apostrophe model layer can be used in [tasks](/reference/module-api/module-overview.html#tasks-self) created by any module. As examples, the Apostrophe modules expose multiple tasks like adding users through `node app @apostrophecms/user:add <name> <role>` from the `@apostrophecms/user` module or completely resetting your database (dangerous!) through `node app @apostrophecms/db:reset`.
 
 ## Making your own database connections
 
 While the core of apostrophe depends on connections to MongoDB through the mongodb native module, that doesn't mean that your custom modules are limited in the same way. If you feel like using Mongoose, go ahead! If you want to use a different database, why not!
 
-Just install the packages you need and invoke your database connections with `await` within the `async init(self)` function of your module.
+Just install the packages you need and invoke the functions of the appropriate library with `await` within the `async init(self)` function of your module.
