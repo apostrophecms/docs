@@ -38,7 +38,7 @@ There are references to other core apostrophe collections that can be accessed i
 
 Next, we are invoking a method of the MongoDB collection saying that we want to update one document within the database. You can read about other methods within the [MongoDB Node.js driver docs](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/).
 
-We are passing two arguments to the MongoDB method. The first is a MongoDB criteria object which ensures our query only matches the document whose `_id` property of the piece that the user is requesting. Note the use of the underscore `_` - this is because this is a MongoDB, not user, generated id.
+We are passing two arguments to the MongoDB method. The first is a MongoDB criteria object which ensures our query only matches the document with the desired `_id`. MongoDB objects always have an `_id` property, a unique identifier that can always be used to find that specific document.
 
 The second argument is an object which passes a MongoDB operator `$inc` set to the name and value of the field we want to alter. In this case, *incrementing* the `views` field by 1. This could then be accessed in the `show.html` template for the `blog-page` using `data.piece.views`.
 
@@ -52,4 +52,19 @@ These same methods of altering documents outside of the Apostrophe model layer c
 
 While the core of apostrophe depends on connections to MongoDB through the mongodb native module, that doesn't mean that your custom modules are limited in the same way. If you feel like using Mongoose, go ahead! If you want to use a different database, why not!
 
-Just install the packages you need and invoke the functions of the appropriate library with `await` within the `async init(self)` function of your module.
+Just install the packages you need and invoke the functions of the appropriate library with `await` within the `async init(self)` function of your module. Then attach the returned connection object to a property of `self`, granting access to it later in any method, handler, route, etc. of the module. You should also clean up such connections in an `apostrophe:destroy` handler:
+
+<AposCodeBlock>
+
+``` javascript
+handlers(self) {
+   return {
+      'apostrophe:destroy': {
+        async closeMyConnection() {
+          await self.myConnection.close();
+        }
+      }
+   };
+}
+```
+</AposCodeBlock>
