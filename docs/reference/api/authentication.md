@@ -30,7 +30,7 @@ require('apostrophe')({
 Add an `authorization` [HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) to each request:
 
 ```
-Authorization: 'ApiKey myapikey1029384756'
+Authorization: ApiKey myapikey1029384756
 
 ```
 
