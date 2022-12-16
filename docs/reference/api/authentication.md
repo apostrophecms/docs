@@ -27,10 +27,11 @@ require('apostrophe')({
 
 ### Usage
 
-Add an `authorization` [HTTP header](https://javascript.info/fetch#request-headers) to each request:
+Add an `authorization` [HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) to each request:
 
 ```
-ApiKey myapikey1029384756
+Authorization: 'ApiKey myapikey1029384756'
+
 ```
 
 Alternatively, you may pass the api key as the `apikey` or `apiKey` query parameter:
