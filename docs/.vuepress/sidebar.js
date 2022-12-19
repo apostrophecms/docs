@@ -89,7 +89,8 @@ module.exports = {
         {
           title: 'Other module config',
           children: [
-            [ 'guide/batch-operations.md', 'Batch operations' ]
+            [ 'guide/batch-operations.md', 'Batch operations' ],
+            [ 'guide/command-menu.md', 'Command menu' ]
           ]
         },
         {
