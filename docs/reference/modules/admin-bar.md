@@ -80,11 +80,11 @@ export default () => {
       return;
     }
     // Custom code for button action
-  };
+  });
 }
 ```
   <template v-slot:caption>
-    /modules/myCustomModule/ui/apos/index.js
+    /modules/myCustomModule/ui/apos/apps/index.js
   </template>
 </AposCodeBlock>
 
