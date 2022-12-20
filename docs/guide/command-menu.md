@@ -21,7 +21,7 @@ module.exports = {
 </AposCodeBlock>
 
 ## Registering shortcut commands
-New shortcuts are registered by passing them as an object of objects to the `add` key. Each shortcut object requires a unique name as key. The best practice for ensuring the uniqueness of your shortcut name is to namespace it with the module name, for example, `custom-widget:shortcut-name`. If you are registering the same shortcut for several modules in a bundle, it may be programmatically easier to prefix with the registered name by using `` [`${self.__meta.name}:shortcut-name`] ``. Note the use of brackets and backticks to allow the use of template literals and dynamically set our object key.
+New shortcuts are registered by passing them as an object of objects to the `add` key. Each shortcut object requires a unique name as key. The best practice for ensuring the uniqueness of your shortcut name is to namespace it with the module name, for example, `custom-widget:shortcut-name`. If you are registering the same shortcut for several modules in a bundle, it may be programmatically easier to prefix with the registered name by using `` [`${self.__meta.name}:shortcut-name`] ``. Note the use of brackets and backticks to allow the use of template literals and to dynamically set our object key.
 
 <AposCodeBlock>
 
