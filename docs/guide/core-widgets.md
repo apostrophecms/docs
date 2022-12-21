@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
-There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`linkWithType`](#allowing-links-to-specific-piece-types). Add these to the widget configuration object when adding an area field. 
+There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field. 
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -32,8 +32,7 @@ widgets: {
         tag: 'h2',
         label: 'Heading 2 (H2)'
       }
-    ],
-    linkWithType: [ 'custom-piece', '@apostrophecms/any-page-type' ],
+    ]
   }
 }
 ```
@@ -87,10 +86,6 @@ Including a class with a style will not automatically apply any styles. You stil
 
 <!-- TODO: Link to how-to about configuring sanitize-html for pasting in rich text -->
 
-### Allowing links to specific piece-types
-
-By default, the rich text widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add any links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that the `piece-type` index page will be included in the collection retrieved by `@apostrophecms/any-page-type` and does not need to be added by default.
-
 ### Default rich text configuration
 
 ```javascript
@@ -122,8 +117,7 @@ By default, the rich text widget allows you to add links to URLs or internal pag
       tag: 'h4',
       label: 'Heading 4 (H4)'
     }
-  ],
-  linkWithType: [ '@apostrophecms/any-page-type' ]
+  ]
 },
 ```
 
@@ -141,14 +135,29 @@ module.exports = {
       ],
       styles: [
         // Your own default styles
-      ],
-      linkWithType: [
-        // Your default allowed links
       ]
     }
   }
 }
 ```
+### Allowing links to specific piece-types
+
+By default, the rich text widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that you don't need to change this setting if you just want to link to the main index page for a piece type.
+
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  options: {
+    linkWithType: [ '@apostrophecms/any-page-type', 'article' ]
+  }
+};
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>
 
 ### Adding placeholder content
 
