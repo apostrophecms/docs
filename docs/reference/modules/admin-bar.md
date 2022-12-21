@@ -84,7 +84,7 @@ export default () => {
 }
 ```
   <template v-slot:caption>
-    /modules/myCustomModule/ui/apos/apps/index.js
+    /modules/myCustomModule/ui/apos/apps/CustomFunctions.js
   </template>
 </AposCodeBlock>
 
