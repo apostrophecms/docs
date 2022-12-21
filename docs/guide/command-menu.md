@@ -40,7 +40,8 @@ module.exports = {
               name: 'CustomWidgetActionShortcut'
               props: {moduleName: 'custom-widget'}
             }
-          }
+          },
+          shortcut: [ 'Ctrl+Shift+P Meta+Shift+P' ]
         }
       },
       // ...
