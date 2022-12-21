@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
-There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field.
+There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field. 
 
 ```js
 // modules/@apostrophecms/home-page/index.js
@@ -48,6 +48,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
 | `'link'` | Add a link |
+| `'anchor'` | Add an anchor id |
 | `'horizontalRule'` | Add a visual horizontal rule |
 | `'bulletList'` | Bulleted list |
 | `'orderedList'` | Numbered list |
@@ -139,6 +140,24 @@ module.exports = {
   }
 }
 ```
+### Allowing links to specific piece-types
+
+By default, the rich text widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that you don't need to change this setting if you just want to link to the main index page for a piece type.
+
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  options: {
+    linkWithType: [ '@apostrophecms/any-page-type', 'article' ]
+  }
+};
+```
+
+<template v-slot:caption>
+/modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>
 
 ### Adding placeholder content
 
