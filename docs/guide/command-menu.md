@@ -1,6 +1,45 @@
 # Adding keyboard shortcuts
 
-The `@apostrophecms/command-menu` module adds keyboard shortcuts and additional pop-up menus to the Admin UI. The list of shortcuts can be accessed from any page or piece-type manager using the '?' key. There are several pre-programmed common shortcuts, with additional page-level shortcuts added automatically for each custom piece-type created. Any module can streamline the editorial workflow through the addition of custom shortcuts. These shortcuts are added to the `commands(self)` customization function section of the module's `index.js` file. Like the other customization functions, it should return an object. 
+The `@apostrophecms/command-menu` module adds keyboard shortcuts and additional pop-up menus to the Admin UI. The list of shortcuts can be accessed from any page or piece-type manager using the '?' key. There are several pre-programmed common shortcuts, with additional page-level shortcuts added automatically for each custom piece-type created. 
+
+## Reassigning automatic shortcuts
+Apostrophe assigns shortcuts for custom piece-types based on the first letter of the piece-type name. So, a piece-type of 'article' would get assigned a shortcut cord of `g` then `a`. However, you might have more than one module that starts with a particular letter, or starts with the same letter as a core piece-type. The automatically assigned shortcut can be changed by adding an array of the desired shortcut key combination(s) to the `shortcut` option in the module.
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    shortcut: ['g,z'],
+    // the remainder of the options
+  }
+};
+```
+<template v-slot:caption>
+/modules/custom-piece/index.js
+</template>
+</AposCodeBlock>
+
+There are three options - a single key, a key plus one or more modifiers, or a chord of two sequential key presses. You can pass multiple shortcuts by separating each with a space. **This is important when passing in shortcuts that use a modifier key that differs between Macintosh and Windows/Linux keymapping.** W3C has [published](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/) helpful guidance in selecting new shortcut keys.
+
+For a single key, just pass that key as the string value to `shortcut`. The 'comma', 'space', and modifier keys (see below) shouldn't be used, but every other standard key can. See the [table](#keymappings) for additional keymappings for keys like the left arrow.
+
+The modifiers that you can use are the 'command', 'option', 'alt', 'control', 'win', 'meta', and 'shift' keys. You can specify that one or more of these keys are held down at the same time as pressing a non-modifier key to activate the shortcut, for example, `Cmd+Shift+m`. See the [table](#keymappings) for the modifier keymappings.
+
+Finally, you can assign a chord of two sequential keypresses to any shortcut by passing a string with each key separated by a comma. Remember that a space can be used as a key, so don't add a space after the comma.
+
+❌ `shortcut: 'x, y'`
+
+✅ `shortcut: 'x,y'`
+
+
+::: note
+Shortcuts already defined by the browser cannot be used within the shortcut manager.
+:::
+
+### Adding custom shortcuts
+Any module can streamline the editorial workflow through the addition of custom shortcuts. These shortcuts are added to the `commands(self)` customization function section of the module's `index.js` file. Like the other customization functions, it should return an object. 
 
 <AposCodeBlock>
 
@@ -40,7 +79,8 @@ module.exports = {
               name: 'CustomWidgetActionShortcut'
               props: {moduleName: 'custom-widget'}
             }
-          }
+          },
+          shortcut: [ 'Ctrl+Shift+P Meta+Shift+P' ]
         }
       },
       // ...
@@ -85,22 +125,7 @@ async mounted() {
 </template>
 </AposCodeBlock>
 
-The final key required by the shortcut object is `shortcut`, which takes a string representing the key or key combination that triggers the action. There are three options - a single key, a key plus one or more modifiers, or a chord of two sequential key presses. You can pass multiple shortcuts by separating each with a space. **This is important when passing in shortcuts that use a modifier key that differs between Macintosh and Windows/Linux keymapping.** W3C has [published](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/) helpful guidance in selecting new shortcut keys.
-
-For a single key, just pass that key as the string value to `shortcut`. The 'comma', 'space', and modifier keys (see below) shouldn't be used, but every other standard key can. See the [table](#keymappings) for additional keymappings for keys like the left arrow.
-
-The modifiers that you can use are the 'command', 'option', 'alt', 'control', 'win', 'meta', and 'shift' keys. You can specify that one or more of these keys are held down at the same time as pressing a non-modifier key to activate the shortcut, for example, `Cmd+Shift+m`. See the [table](#keymappings) for the modifier keymappings.
-
-Finally, you can assign a chord of two sequential keypresses to any shortcut by passing a string with each key separated by a comma. Remember that a space can be used as a key, so don't add a space after the comma.
-
-❌ `shortcut: 'x, y'`
-
-✅ `shortcut: 'x,y'`
-
-
-::: note
-Shortcuts already defined by the browser cannot be used within the shortcut manager.
-:::
+The final key required by the shortcut object is `shortcut`. This is set identically to the top-level `shortcut` option that is used to reassign automatically added shortcuts.
 
 ## Keymappings
 Not that the key mappings below are shown with initial capitalization, but are case-insensitive.
