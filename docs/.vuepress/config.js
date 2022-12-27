@@ -27,6 +27,7 @@ module.exports = {
     prevLinks: true,
     editLinks: true,
     sidebar,
+    search: false,
     feedbackWidget: {
       docsRepoIssue: 'apostrophecms/a3-docs'
     },
@@ -110,16 +111,26 @@ module.exports = {
         ]
       }
     ],
-    algolia: {
-      apiKey: 'e11d95029c6a9ac596343664b7f622e4',
-      indexName: 'apostrophecms',
-      algoliaOptions: {
-        facetFilters: ['tags:v3']
-      }
-    }
+    // algolia: {
+    //   apiKey: 'e11d95029c6a9ac596343664b7f622e4',
+    //   indexName: 'apostrophecms',
+    //   algoliaOptions: {
+    //     facetFilters: ['tags:v3']
+    //   }
+    // }
   },
   head: [
     // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
+    [
+      'script',
+      {
+        type: 'text/javascript',
+        id: 'google-search-script-loader',
+        async: 'true',
+        defer: 'true',
+        src: 'https://cse.google.com/cse.js?cx=a5ea71de12ddd427f'
+      }
+    ],
     [
       'script',
       {
