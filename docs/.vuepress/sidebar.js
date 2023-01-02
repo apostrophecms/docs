@@ -80,7 +80,8 @@ module.exports = {
           title: 'Working with the database',
           children: [
             'guide/database-queries.md',
-            [ 'guide/database-insert-update.md', 'Inserting and updating docs' ]
+            [ 'guide/database-insert-update.md', 'Inserting and updating docs' ],
+            'guide/database-access.md'
           ]
         },
         [ 'guide/headless-cms.md', 'Using as a headless CMS' ],
@@ -89,7 +90,8 @@ module.exports = {
         {
           title: 'Other module config',
           children: [
-            [ 'guide/batch-operations.md', 'Batch operations' ]
+            [ 'guide/batch-operations.md', 'Batch operations' ],
+            [ 'guide/command-menu.md', 'Command menu' ]
           ]
         },
         {
@@ -114,7 +116,8 @@ module.exports = {
       title: 'Project features',
       collapsable: false,
       children: [
-        [ 'cookbook/building-navigation.md', 'Building site navigation' ]
+        [ 'cookbook/building-navigation.md', 'Building site navigation' ],
+        [ 'cookbook/html-conversion.md', 'Converting an HTML template' ]
       ]
     },
     {
