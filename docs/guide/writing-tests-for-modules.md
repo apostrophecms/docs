@@ -15,7 +15,7 @@ There are many kinds of tests:
 - [system testing](https://en.wikipedia.org/wiki/System_testing), sometimes referred as [end-to-end testing](https://www.indeed.com/career-advice/career-development/end-to-end-testing) where we test the entire application
 - and many more
 
-This documentation focuses on how to test Apostrophe modules, not Apostrophe itself using integration testing.
+This documentation focuses on how to test and lint Apostrophe modules, not Apostrophe itself using integration testing.
 
 Modules should be stand-alone npm packages. They need to be hosted somewhere that our testing can access. For this
 example, we are hosting this module in a GitHub repo. We will use a fictitious module named `article` to illustrate how to
@@ -30,8 +30,8 @@ write tests for modules.
 This setup assumes you will use the following packages
 
 - [apostrophe](https://www.npmjs.com/package/apostrophe): *ApostropheCMS is a full-featured, open source CMS built with Node.js that seeks to empower organizations by combining in-context editing and headless architecture in a full-stack JS environment*
-- [eslint](https://www.npmjs.com/package/eslint): *ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code*
-- [eslint-config-apostrophe](https://www.npmjs.com/package/eslint-config-apostrophe): *An ESLint configuration for ApostropheCMS core and officials modules*
+- [eslint](https://www.npmjs.com/package/eslint): *ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code, with the goal of making code more consistent and avoiding bugs.*
+- [eslint-config-apostrophe](https://www.npmjs.com/package/eslint-config-apostrophe): *An ESLint configuration for ApostropheCMS core and officials modules*. You can use your own [eslint configuration](https://eslint.org/docs/latest/user-guide/configuring/) instead.
 - [mocha](https://www.npmjs.com/package/mocha): *Simple, flexible, fun JavaScript test framework for Node.js & The Browser*
 ```sh
 npm install --save-dev apostrophe eslint eslint-config-apostrophe mocha
