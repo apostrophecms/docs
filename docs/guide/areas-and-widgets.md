@@ -152,11 +152,12 @@ module.exports = {
 An `area` configured in this way can still take a `max` option to limit the number of widgets to be added.
 
  ### Widget preview options
+
  If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed in the menu. These options are added directly into the options of the individual widget modules. The menu will show the widget `label`, but the optional `description` option can be used to provide additional descriptive text for display below the widget.
  
  By default, the widget will be displayed as a placeholder rectangle. However, there are two options for adding a different preview.
 
-The `previewImage` option takes the extension, without prefixing, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.<extension>`, where `extension` matches the string passed to the option.
+The `previewImage` option takes the extension, without prefixing, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.<extension>`, where `extension` matches the string passed to the option. If a file by this name exists in the `public/` subdirectory of the module's project-level configuration, that will automatically be used in preference to a version found in the core module, but still we recommend setting `previewImage` to match your file extension in case the extension of the original ever changes.
 
 The displayed dimensions of the `previewImage` depend on the number of columns being used for the row in which it will be displayed. For two columns, the displayed dimensions are about 240 x 120, or 2:1. For three columns, the dimensions are about 160 x 90, or 16:9. For four columns, the dimensions are approximately 120 x 66, or approximately 16:9. Choosing an image with a ratio of 16:9, with the center of the image well placed should work with all column sizes.
 
@@ -170,10 +171,14 @@ The second option is `previewIcon`. This option takes any icon that has already 
 
 The rich text, image, and video widgets all display placeholder content by default. Additionally, these modules do not show an initial editing modal. This placeholder content will not be displayed in either the draft preview or the live page if published. This default behavior can be turned off by setting the `placeholder` option of the relevant module to `false`. This will eliminate the display of placeholder content and open the editing modal when the widget is selected.
 
-Custom placeholder content can be added to the image and video widgets through the `placeholderUrl` option. For the image widget, this takes the final build path to an image added to the `public` folder of the module, `/modules/@apostrophecms/my-image-widget/<filename.ext>`. For the video widget, the `placeholderUrl` takes the URL to a hosted video.
+Custom placeholder content can be added to the image and video widgets through the `placeholderImage` and `placeholderUrl` options.
+
+For the image widget, the `placeholderImage` option takes **just the file extension,** like `jpg` (note no `.`). You must also copy a matching file in the `public` folder of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.jpg` (the name must be `placeholder` and the extension must match `placeholderImage`).
+
+For the video widget, the `placeholderUrl` option takes the URL of a video on a site that the video widget already supports, like YouTube.
 
 ::: note
-Notice the use of `my-image-widget` and the lack of `/public` in the path for the custom placeholder of the image widget. Using `image-widget` will not work. During the build step, all of the files in the public folders of each module will be copied into the corresponding `/modules` folder of the specified release folder. In the case of the image widget, if you extend it from the project level `/modules` folder, those files are copied into a final release folder named `my-image-widget`.
+For legacy reasons, `placeholderUrl` is also supported for image widgets, however we do not recommend its use because it is challenging to determine the correct asset URL. Use `placeholderImage` and let Apostrophe figure it out for you.
 :::
 
 The custom placeholder content for the rich text widget is passed as a string to the `placeholderText` option in the `/modules/@apostrophecms/rich-text-widget/index.js` file. This can be either a simple string or a namespaced i18n string.

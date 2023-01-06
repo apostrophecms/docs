@@ -295,18 +295,19 @@ The final image size name is `original`, which delivers the original image file.
 
 ### Adding a placeholder image
 
-The image widget displays a placeholder image by default. To block this behavior, set the `placeholder` option to a value of `false`. The default image can be changed by saving the desired image in the `public` folder of your module, then passing the final build path for that file to the `placeholderUrl` option.
+The image widget displays a placeholder image by default. To block this behavior, set the `placeholder` option to a value of `false`.
+
+Alternatively, the preview image can be changed for your project. For the image widget, the `placeholderImage` option takes **just the file extension,** like `png` (note no `.`). You must also copy a matching file to the `public` subdirectory of your project-level configuration of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.png` (the name must be `placeholder` and the extension must match `placeholderImage`).
 
 <AposCodeBlock>
 
 ```js
 module.exports = {
   options: {
-    // for a file named 'placeholder.png' in the module public folder
-    placeholderUrl: '/modules/@apostrophecms/my-image-widget/placeholder.png'
+    // for a file named 'placeholder.png' in the module's project-level public folder
+    placeholderImage: 'png'
   }
 };
-
 ```
 
 <template v-slot:caption>
@@ -315,7 +316,7 @@ module.exports = {
 </AposCodeBlock>
 
 ::: note
-The path to the custom image is where the file will be located in the final build. If you customize the image widget at the project level, the `asset` module will create the `my-image-widget` folder to hold the contents of the `/modules/@apostrophecms/image-widget/public` folder. This is the location where the path to the custom image should point, **not** the `image-widget` folder.
+A legacy `placeholderUrl` option also exists, but we do not recommend it. Use `placeholderImage` and let Apostrophe do the hard work of determing the asset URL for you.
 :::
 
 ## Video widget
