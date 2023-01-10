@@ -74,7 +74,7 @@ npm install bootstrap
 This template uses Bootstrap 5, which is the latest version as of this writing. If you need another version for your template, make sure to specify it during the install.
 :::
 
-The next thing we will do is copy the contents of the `scss` folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/@postrophecms/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
+The next thing we will do is copy the contents of the `scss` folder into our project. If you started your project with the command line interface, open the `modules/asset/ui/src` folder and delete the`index.scss` file and `scss` folder contained inside. These contain base stylings that will be replaced by the ones we copy in. If the folders don't already exist in your project, create them. In either case, copy the entirety of the `dist/scss` folder from the template folder into this Folder.
 
 For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the partials. Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
 
@@ -86,7 +86,7 @@ For the HTML template, the `styles.scss` file is the entry point for loading all
 
 // import bootstrap
 // This path is pointing to the Bootstrap package in the node_module folder
-@import 'bootstrap/scss/bootstrap.scss';
+@import 'bootstrap/scss/bootstrap';
 
 // Global CSS
 @import './scss/global';
@@ -103,7 +103,7 @@ For the HTML template, the `styles.scss` file is the entry point for loading all
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/src/index.scss
+modules/asset/ui/src/index.scss
 </template>
 </AposCodeBlock>
 
@@ -113,7 +113,7 @@ The main Bootstrap components are loaded in from the `node_modules` where they w
 
 Bootstrap has its own bundle of JavaScript. In addition, this template has a small, custom script that modifies the navigation based on scroll direction. We have multiple choices for adding the Bootstrap code to the page. We could elect to bring it in from a CDN. However, we have already installed the Bootstrap NPM package and are going to make a server call to load custom JavaScript, so instead, we can bundle all of our scripts into a single call.
 
-Create another file named `index.js` within the `modules/@apostrophecms/asset/ui/src` folder. Within this file, we can import the main Javascript bundle and add the custom script from the template `src/js/scripts.js` file.
+Create another file named `index.js` within the `modules/asset/ui/src` folder. Within this file, we can import the main Javascript bundle and add the custom script from the template `src/js/scripts.js` file.
 
 <AposCodeBlock>
 
@@ -153,7 +153,7 @@ export default () => {
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/src/index.js
+modules/asset/ui/src/index.js
 </template>
 
 </AposCodeBlock>
@@ -175,14 +175,14 @@ Open one of the template pages and copy the navigation section. Paste this betwe
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
   <div class="container px-4 px-lg-5">
-    <a class="navbar-brand" href="{{ data.global.homePage }}">{{ data.global.brand }}</a>
+    <a class="navbar-brand" href="{{ data.global._homePage }}">{{ data.global.brand }}</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu<i class="fas fa-bars"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ms-auto py-4 py-lg-0">
         {% for page in data.global.pages %}
         <li class="nav-item">
-          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ page.url }}">{{ page.label }}</a>
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ page._pages[0].url }}">{{ page.label }}</a>
         </li>
         {% endfor %}
       </ul>
@@ -207,8 +207,8 @@ Next, we need to add the schema fields to populate our navigation menu. If your 
 module.exports = {
   fields: {
     add: {
-      homePage: {
-        label: 'Page to link',
+      _homePage: {
+        label: 'Homepage',
         type: 'relationship',
         withType: '@apostrophecms/page',
         max: 1,
@@ -254,7 +254,7 @@ module.exports = {
     group: {
       navigation: {
         label: 'Navigation links',
-        fields: ['homePage', 'brand', 'pages']
+        fields: ['_homePage', 'brand', 'pages']
       }
     }
   }
@@ -629,7 +629,7 @@ To accommodate the content on the 'Contact Us' page, we could also add the widge
 ### Modifying the logged-in page display
 If we were to take a look at our page right now while logged-in as an editor, we would see a couple of problems. First, the navigation section is styled to be added at the top of the page using a `postion: absolute` CSS rule. The problem with this is that this ends up putting our navigation *over* the ApostropheCMS admin-bar. Not only can we not see the navigation, but this also blocks access to the admin-bar menus. So, we need to add some code onto the page that will move our navigation below the admin-bar in the page flow.
 
-There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/@apostrophecms/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/@apostrophecms/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components and is only served to logged in users.
+There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components and is only served to logged-in users.
 
 <AposCodeBlock>
 
@@ -639,7 +639,7 @@ export default () => {
   const loggedIn = !!window.apos.modules['@apostrophecms/admin-bar'];
   if (loggedIn) {
     // wrap in a time out to give the admin bar object time to load the bar and return the height
-    setTimeout(() => {
+    apos.util.onReady(() => {
       //get the admin-bar height
       const adminBarHeight =
         window.apos.modules['@apostrophecms/admin-bar'].height;
@@ -647,14 +647,14 @@ export default () => {
       const pageNav = document.getElementById('mainNav');
       // set the position of the navigation to after the admin-bar
       pageNav.style.top = adminBarHeight + 'px';
-    }, 10);
+    });
   }
 };
 
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/apos/apps/adminBarHeight.js
+modules/asset/ui/apos/apps/adminBarHeight.js
 </template>
 </AposCodeBlock>
 
@@ -868,7 +868,7 @@ The "Home" page of the template is essentially an `index.html` page that lists a
               <h2 class="post-title">{{ piece.heading }}</h2>
               <h3 class="post-subtitle">{{ piece.subheading }}</h3>
             </a>
-            <p class="post-meta"> Posted by {{ piece.author }} on {{ piece.publicationDate | date('MMMM d, YYYY') }}</p>
+            <p class="post-meta"> Posted by {{ piece.author }} on {{ piece.publicationDate | date('MMMM D, YYYY') }}</p>
           </div>
           <!-- Divider-->
           <hr class="my-4" />
