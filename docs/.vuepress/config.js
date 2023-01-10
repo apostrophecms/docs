@@ -126,7 +126,6 @@ module.exports = {
       {
         type: 'text/javascript',
         id: 'google-search-script-loader',
-        async: 'true',
         defer: 'true',
         src: 'https://cse.google.com/cse.js?cx=a5ea71de12ddd427f'
       }
