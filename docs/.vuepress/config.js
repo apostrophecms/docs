@@ -110,13 +110,14 @@ module.exports = {
         ]
       }
     ],
-    algolia: {
-      apiKey: 'e11d95029c6a9ac596343664b7f622e4',
-      indexName: 'apostrophecms',
-      algoliaOptions: {
-        facetFilters: ['tags:v3']
-      }
-    }
+
+    // algolia: {
+    //   apiKey: 'e11d95029c6a9ac596343664b7f622e4',
+    //   indexName: 'apostrophecms',
+    //   algoliaOptions: {
+    //     facetFilters: ['tags:v3']
+    //   }
+    // }
   },
   head: [
     // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
