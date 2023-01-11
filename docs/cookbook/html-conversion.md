@@ -74,9 +74,9 @@ npm install bootstrap
 This template uses Bootstrap 5, which is the latest version as of this writing. If you need another version for your template, make sure to specify it during the install.
 :::
 
-The next thing we will do is copy the contents of the `scss` folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
+The next thing we will do is copy the contents of the `scss` folder that contains all of the theme-specific styling into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
 
-For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the partials. Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
+For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the theme specific partials. Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
 
 <AposCodeBlock>
 
@@ -166,7 +166,9 @@ Each of the four pages included in this template has some common areas that can 
 
 Inside the `views` folder create another folder named `fragments` and a file named `navigation.html`. To turn this page into a fragment, add opening and closing fragment block tags - `{% fragment navigationArea() %}` and `{% endfragment %}`.
 
-Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` and logo in the first link with data from schema fields in the apostrophe global settings. Note that the homepage URL is populated from a `relationship` field. That data is delivered to the page in an array, so we need to specify that we are getting the `_url` from the first array item. Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages selected in the global settings we will use a `for` loop.
+Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` with the homepage URL from `data.home`, which is available to all [templates](../guide/pages.md). We will add a simple text logo from user input in the apostrophe global settings.
+
+Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages selected in the global settings we will use a `for` loop.
 
 <AposCodeBlock>
 
@@ -175,7 +177,7 @@ Open one of the template pages and copy the navigation section. Paste this betwe
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
   <div class="container px-4 px-lg-5">
-    <a class="navbar-brand" href="{{ data.global._homePage[0]._url }}">{{ data.global.brand }}</a>
+    <a class="navbar-brand" href="{{ data.home._url }}">{{ data.global.brand }}</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu<i class="fas fa-bars"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
@@ -197,7 +199,9 @@ Open one of the template pages and copy the navigation section. Paste this betwe
 </template>
 </AposCodeBlock>
 
-In this code block, we are surrounding one of the list items with our `for` loop. For each selected page we are adding a list item containing a link and label. All of the styling for our menu and each of the items will come from Bootstrap and the custom template styling.
+In this code block, we are surrounding one of the list items with our `for` loop. For each selected page we are adding a list item containing a link and label. This data will come from an `array` field schema field containing a `string` input for the label and a `relationship` field for the page link. Note that since this URL is populated from a `relationship` field, data will be delivered to the page in an array. So, we need to specify that we are getting the `_url` from the first array item.
+
+All of the styling for our menu and each of the items will come from the Bootstrap class names we copied over with the HTML markup.
 
 Next, we need to add the schema fields to populate our navigation menu. If your project doesn't already contain one, create a `modules/@apostrophecms/global/index.js` file. Our [tutorial](building-navigation.md) in the recipes section has some more complicated methods for adding navigation. In this case, we are going to add a simple array schema field with a relationship to our pages.
 
@@ -207,19 +211,6 @@ Next, we need to add the schema fields to populate our navigation menu. If your 
 module.exports = {
   fields: {
     add: {
-      _homePage: {
-        label: 'Homepage',
-        type: 'relationship',
-        withType: '@apostrophecms/page',
-        max: 1,
-        required: true,
-        builders: {
-          project: {
-            title: 1,
-            _url: 1
-          }
-        }
-      },
       brand: {
         type: 'string',
         label: 'Brand name',
@@ -254,7 +245,7 @@ module.exports = {
     group: {
       navigation: {
         label: 'Navigation links',
-        fields: ['_homePage', 'brand', 'pages']
+        fields: [ 'brand', 'pages' ]
       }
     }
   }
@@ -660,7 +651,7 @@ export default () => {
 ```
 
 <template v-slot:caption>
-modules/asset/ui/apos/apps/adminBarHeight.js
+modules/asset/ui/apos/apps/AdminBarHeight.js
 </template>
 </AposCodeBlock>
 
