@@ -74,7 +74,7 @@ npm install bootstrap
 This template uses Bootstrap 5, which is the latest version as of this writing. If you need another version for your template, make sure to specify it during the install.
 :::
 
-The next thing we will do is copy the contents of the `scss` folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/@postrophecms/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
+The next thing we will do is copy the contents of the `scss` folder into our project. There are multiple places that we could add these files, but the best place is in a project-level `modules/asset` folder. If the folder doesn't already exist in your project, create it. Next, within that folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
 
 For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. Next, we need to edit this file to point to all of the partials. Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
 
@@ -86,7 +86,7 @@ For the HTML template, the `styles.scss` file is the entry point for loading all
 
 // import bootstrap
 // This path is pointing to the Bootstrap package in the node_module folder
-@import 'bootstrap/scss/bootstrap.scss';
+@import 'bootstrap/scss/bootstrap';
 
 // Global CSS
 @import './scss/global';
@@ -103,7 +103,7 @@ For the HTML template, the `styles.scss` file is the entry point for loading all
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/src/index.scss
+modules/asset/ui/src/index.scss
 </template>
 </AposCodeBlock>
 
@@ -113,7 +113,7 @@ The main Bootstrap components are loaded in from the `node_modules` where they w
 
 Bootstrap has its own bundle of JavaScript. In addition, this template has a small, custom script that modifies the navigation based on scroll direction. We have multiple choices for adding the Bootstrap code to the page. We could elect to bring it in from a CDN. However, we have already installed the Bootstrap NPM package and are going to make a server call to load custom JavaScript, so instead, we can bundle all of our scripts into a single call.
 
-Create another file named `index.js` within the `modules/@apostrophecms/asset/ui/src` folder. Within this file, we can import the main Javascript bundle and add the custom script from the template `src/js/scripts.js` file.
+Create another file named `index.js` within the `modules/asset/ui/src` folder. Within this file, we can import the main Javascript bundle and add the custom script from the template `src/js/scripts.js` file.
 
 <AposCodeBlock>
 
@@ -153,7 +153,7 @@ export default () => {
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/src/index.js
+modules/asset/ui/src/index.js
 </template>
 
 </AposCodeBlock>
@@ -166,7 +166,7 @@ Each of the four pages included in this template has some common areas that can 
 
 Inside the `views` folder create another folder named `fragments` and a file named `navigation.html`. To turn this page into a fragment, add opening and closing fragment block tags - `{% fragment navigationArea() %}` and `{% endfragment %}`.
 
-Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` and logo in the first link with data from schema fields in the apostrophe global settings. Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages we will use a `for` loop to add each page selected within the global settings.
+Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` and logo in the first link with data from schema fields in the apostrophe global settings. Note that the homepage URL is populated from a `relationship` field. That data is delivered to the page in an array, so we need to specify that we are getting the `_url` from the first array item. Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages selected in the global settings we will use a `for` loop.
 
 <AposCodeBlock>
 
@@ -175,14 +175,14 @@ Open one of the template pages and copy the navigation section. Paste this betwe
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
   <div class="container px-4 px-lg-5">
-    <a class="navbar-brand" href="{{ data.global.homePage }}">{{ data.global.brand }}</a>
+    <a class="navbar-brand" href="{{ data.global._homePage[0]._url }}">{{ data.global.brand }}</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu<i class="fas fa-bars"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ms-auto py-4 py-lg-0">
         {% for page in data.global.pages %}
         <li class="nav-item">
-          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ page.url }}">{{ page.label }}</a>
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{{ page._page[0]._url }}">{{ page.label }}</a>
         </li>
         {% endfor %}
       </ul>
@@ -207,8 +207,8 @@ Next, we need to add the schema fields to populate our navigation menu. If your 
 module.exports = {
   fields: {
     add: {
-      homePage: {
-        label: 'Page to link',
+      _homePage: {
+        label: 'Homepage',
         type: 'relationship',
         withType: '@apostrophecms/page',
         max: 1,
@@ -254,7 +254,7 @@ module.exports = {
     group: {
       navigation: {
         label: 'Navigation links',
-        fields: ['homePage', 'brand', 'pages']
+        fields: ['_homePage', 'brand', 'pages']
       }
     }
   }
@@ -347,7 +347,7 @@ module.exports = {
       },
       copyright: {
         type: 'string',
-        label: 'Copyright text'
+        label: 'Copyright text',
         required: true
       }
     },
@@ -355,8 +355,12 @@ module.exports = {
       // ...
       footer: {
         label: 'Footer URLs and text',
-        fields: ['twitterUrl', 'facebookUrl', 'githubUrl', 'copyright' ]
+        fields: [ 'twitterUrl', 'facebookUrl', 'githubUrl', 'copyright' ]
       }
+    }
+  }
+};
+
 ```
 
 <template v-slot:caption>
@@ -365,7 +369,7 @@ modules/@apostrophecms/global/index.js
 </AposCodeBlock>
 
 ::: note
-An alternative way to add the social links would be to use an `array` schema field to collect the url and logo class information. Then within the template loop over each item in the array to add them to the page. This would make the template code and logic a little cleaner.
+An alternative way to add the social links would be to use an `array` schema field to collect the URL and logo class information. Then within the template loop over each item in the array to add them to the page. This would make the template code and logic a little cleaner.
 :::
 
 ### Adding the header
@@ -382,13 +386,15 @@ Adding an image as a background for the header will take some more complex modif
 
 ```django
 {% fragment headerArea(data) %}
-  {% set background = apos.image.first(data.headerImage) %}
+{% set background = apos.image.first(data.headerImage) %}
 
-  <!-- Page Header-->
-  {% if background %}
-    {% set backgroundUrl = apos.attachment.url(background, { size: 'max' }) %}
-    <header class="masthead" style="background-image: url('{{ backgroundUrl }}')">
-  {% endif %}
+<!-- Page Header-->
+{% if background %}
+  {% set backgroundUrl = apos.attachment.url(background, { size: 'max' }) %}
+  <header class="masthead" style="background-image: url('{{ backgroundUrl }}')">
+{% else %}
+  <header class="masthead" style="background-color: blue;">
+{% endif %}
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
@@ -430,7 +436,7 @@ The first modification we are going to make is to import our two fragments.
 
 This will bring our fragments into the template and name them `navigation` and `footer`.
 
-To load our font files we are going to take advantage of the `extraHead` section of the `outerLayout` template that our `layout.html` is extending. You can read the [documentation](https://v3.docs.apostrophecms.org/guide/layout-template.html#layout-templates) to learn about other sections of this template that can be extended. Add the `{% block extraHead %}{% endblock %}` tags after the `{% block title%}` section. Within those tags copy the fonts section of the head from any of the template pages. You can also see that there are links for the site favicon and some other meta tags in this section of the templates. You can elect to add those if you desire.
+To load our font files we are going to take advantage of the `extraHead` section of the `outerLayout` template that our `layout.html` is extending. You can read the [documentation](https://v3.docs.apostrophecms.org/guide/layout-template.html#layout-templates) to learn about other sections of this template that can be extended. Add the `{% block extraHead %}{% endblock %}` tags after the `{% block title %}` section. Within those tags copy the fonts section of the head from any of the template pages. You can also see that there are links for the site favicon and some other meta tags in this section of the template. You can elect to add those if you desire.
 
 Finally, delete all of the markup in the `beforeMain` and `afterMain` sections. into the `beforeMain` block render the navigation - `{% render navigation.navigationArea() %}`. In the `afterMain` block render the footer fragment = `{% render footer.footerArea() %}`. The final modification we can make to the template is to add the semantic `<main></main>` tags. Looking at the original template pages, we can see that the main section has a class of `mb-4`. This markup can be added around the `{% block main %}{% endblock %}` tags.
 
@@ -491,7 +497,7 @@ Note the use of `navigationArea()` and `footerArea()` in the `render` calls. If 
 
 Now all of our pages will have our navigation and footer areas, but we need to add our header and all of the body content. We could make a separate file for each page of our site, but it makes sense to have a default page that will be used for the non-blog pages. We can use the existing `modules/default-page`.
 
-We need to make two major modifications to the existing `default-page`. First, we need to import and display our header fragment. In this case, we want to *add* the header into the `beforeMain` block. In order to accomplish this we need to add the 
+We need to make two major modifications to the existing `default-page`. First, we need to import and display our header fragment. In this case, we want to add the header into the `beforeMain` block. In order to accomplish this we need to add the 
 ::: v-pre
 `{{ super() }}`
 :::
@@ -629,7 +635,7 @@ To accommodate the content on the 'Contact Us' page, we could also add the widge
 ### Modifying the logged-in page display
 If we were to take a look at our page right now while logged-in as an editor, we would see a couple of problems. First, the navigation section is styled to be added at the top of the page using a `postion: absolute` CSS rule. The problem with this is that this ends up putting our navigation *over* the ApostropheCMS admin-bar. Not only can we not see the navigation, but this also blocks access to the admin-bar menus. So, we need to add some code onto the page that will move our navigation below the admin-bar in the page flow.
 
-There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/@apostrophecms/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/@apostrophecms/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components and is only served to logged in users.
+There are several areas in our project where we could add code to solve this problem. In this case, we will add a small script to our asset module again. While we could add it to `modules/asset/ui/src/index.js` along with the template code, this would result in the delivery of extra unnecessary JavaScript to all users. Instead, we will add the code into `modules/asset/ui/apos/apps`. This folder is commonly used in projects to add new custom Vue UI components and is only served to logged-in users.
 
 <AposCodeBlock>
 
@@ -638,30 +644,30 @@ export default () => {
   // check that the admin-bar module exists
   const loggedIn = !!window.apos.modules['@apostrophecms/admin-bar'];
   if (loggedIn) {
-    // wrap in a time out to give the admin bar object time to load the bar and return the height
-    setTimeout(() => {
+    // wrap in `apos.util.onReady()` that fires when the page is loaded and at every refresh
+    apos.util.onReady(() => {
       //get the admin-bar height
       const adminBarHeight =
         window.apos.modules['@apostrophecms/admin-bar'].height;
         // get the navigation ID - if you are using a different template, adjust accordingly
       const pageNav = document.getElementById('mainNav');
-      // set the position of the navigation to after the admin-bar
+      // set the absolute position of the navigation to after the admin-bar
       pageNav.style.top = adminBarHeight + 'px';
-    }, 10);
+    });
   }
 };
 
 ```
 
 <template v-slot:caption>
-modules/@apostrophecms/asset/ui/apos/apps/adminBarHeight.js
+modules/asset/ui/apos/apps/adminBarHeight.js
 </template>
 </AposCodeBlock>
 
 
 ## Add the blog pages
 
-The last two pages from the template are blog index and article pages. We could use the [blog module](https://apostrophecms.com/extensions/blog), but it has features we don't necessarily need for this template. So, to simplify this tutorial we will just create our blog piece-type and piece-page-type. We can do this using the CLI tool.
+The last two pages from the template are blog index and article pages. We could use the [blog module](https://apostrophecms.com/extensions/blog), but it has features we don't necessarily need for this template. So, to simplify this tutorial we will just create our blog `piece-type` and `piece-page-type`. We can do this using the CLI tool.
 
 ```sh
 apos add piece blog --page
@@ -868,7 +874,7 @@ The "Home" page of the template is essentially an `index.html` page that lists a
               <h2 class="post-title">{{ piece.heading }}</h2>
               <h3 class="post-subtitle">{{ piece.subheading }}</h3>
             </a>
-            <p class="post-meta"> Posted by {{ piece.author }} on {{ piece.publicationDate | date('MMMM d, YYYY') }}</p>
+            <p class="post-meta"> Posted by {{ piece.author }} on {{ piece.publicationDate | date('MMMM D, YYYY') }}</p>
           </div>
           <!-- Divider-->
           <hr class="my-4" />
@@ -913,7 +919,7 @@ We are only displaying the button to go to older posts if we aren't at the last 
 
 The `show.html` page will display each of the individual blog articles and will be based on the original HTML template `post.html` page. Like the other pages, we start by rendering the header fragment in the `beforeMain` block. If we look at the `post.html` page we can see that the header looks slightly different from the other pages. It contains metadata not found on the other pages. After setting up the main part of the page we will alter the `header.html` fragment to address this.
 
-Open the `post.html` template file and copy the "Post Content" section into the `main` block of the `show.html` page. All of the content in `p` tags can be deleted because we will replace it with the content added to the `main` area of our blog pieces.
+Open the `post.html` template file and copy the `<!-- Post Content -->` section into the `main` block of the `show.html` page. All of the content in `p` tags can be deleted because we will replace it with the content added to the `main` area of our blog pieces.
 
 <AposCodeBlock>
 ::: v-pre
@@ -956,27 +962,39 @@ As outlined above, the header of the blog piece pages is different from the othe
 
 {% set type = data.type %}
 
+{% if type === 'default-page' %}
+  {% set pageClass = 'page-heading' %}
+{% elif type === 'blog-page' %}
+  {% set pageClass = 'site-heading' %}
+{% else %}
+  {% set pageClass = 'post-heading' %}
+{% endif %}
+
 <!-- Page Header-->
 {% if background %}
-{% set backgroundUrl = apos.attachment.url(background, { size: 'max' }) %}
-<header class="masthead" style="background-image: url('{{ backgroundUrl }}')">
+  {% set backgroundUrl = apos.attachment.url(background, { size: 'max' }) %}
+  <header class="masthead" style="background-image: url('{{ backgroundUrl }}')">
+{% else %}
+  <header class="masthead" style="background-color: blue;">
 {% endif %}
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class={{ "post-heading" if type === 'blog' else "site-heading"}}>
-          <h1>{{ data.heading }}</h1>
-          {% if type === 'blog' %}
-          <h2 class="subheading">{{ data.subheading }}</h2>
-          <span class="meta">Posted by <a href="{{ data.authorLink }}">{{ data.author }}</a> on {{ data.publicationDate }} </span>
-          {% else %}
-          <span class="subheading">{{ data.subheading }}</span>
-          {% endif %}
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="{{ pageClass }}">
+                    <h1>{{ data.heading }}</h1>
+                    {% if type != 'blog' %}
+                    <span class="subheading">{{ data.subheading }}</span>
+                    {% else %}
+                    <h2 class="subheading">{{ data.subheading }}</h2>
+                    <span class="meta">
+                        Posted by {{ data.author }} on {{ publicationData.date | date('MMMM D, YYYY') }}
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</header>
+  </header>
 {% endfragment %}
 ```
 
@@ -985,7 +1003,7 @@ views/fragments/header.html
 </template>
 </AposCodeBlock>
 
-So, what did we change? First, at the top, we created a new variable, `type`, and set it to the value of `data.type`. This is going to give us the type of page or piece that is being loaded. Looking at the code differences in the header section of the `post.html` template compared to the other three pages, the first thing we see is that the container for the header text has a class of `post-heading` instead of `site-heading`. In the code above, we conditionally set the class only if the page being loaded is of the type `blog`. Similarly, we only add the metadata if we are on this type of page.
+So, what did we change? First, at the top, we created a new variable, `type`, and set it to the value of `data.type`. This is going to give us the type of page or piece that is being loaded. Looking at the code differences in the header section of each of the three pages, we can see that the container for the header text has a different class depending on the template page type. In our header fragment, we conditionally set the `pageClass` variable based on the page type, either 'default-page', 'blog-page', or 'blog'. Next, within the code, we use this variable and wrap the HTML below the `h1` tag with a conditional statement to only add the metadata if we are on a blog page.
 
 Now we need to add our pages to the site and give them some content. The "About Me" and "Contact Me" both use the `default-page` template. The existing "Home" page should be swapped out for a `blog-page` template. All that is left to do is create your blog articles!
 
