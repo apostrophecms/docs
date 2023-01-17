@@ -9,6 +9,22 @@ module.exports = {
       {
         hostname: 'https://v3.docs.apostrophecms.org'
       }
+    ],
+    [
+      'flexsearch', {
+        maxSuggestions: 8,
+        search_options: {
+          encode: 'extra',
+          tokenize: 'full',
+          resolution: 3,
+          suggest: true,
+          threshold: 1,
+          doc: {
+            id: 'key',
+            field: [ 'title', 'content', 'headers' ]
+          }
+        }
+      }
     ]
   ],
   markdown: {
@@ -109,15 +125,7 @@ module.exports = {
           }
         ]
       }
-    ],
-
-    // algolia: {
-    //   apiKey: 'e11d95029c6a9ac596343664b7f622e4',
-    //   indexName: 'apostrophecms',
-    //   algoliaOptions: {
-    //     facetFilters: ['tags:v3']
-    //   }
-    // }
+    ]
   },
   head: [
     // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
