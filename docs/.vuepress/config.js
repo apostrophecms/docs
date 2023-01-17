@@ -14,14 +14,14 @@ module.exports = {
       'flexsearch', {
         maxSuggestions: 8,
         search_options: {
-          encode: "extra",
-          tokenize: "full",
+          encode: 'extra',
+          tokenize: 'full',
           resolution: 3,
           suggest: true,
           threshold: 1,
           doc: {
-            id: "key",
-            field: ["title", "content", "headers"],
+            id: 'key',
+            field: [ 'title', 'content', 'headers' ]
           }
         }
       }
