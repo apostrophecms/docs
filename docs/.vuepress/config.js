@@ -9,6 +9,22 @@ module.exports = {
       {
         hostname: 'https://v3.docs.apostrophecms.org'
       }
+    ],
+    [
+      'flexsearch', {
+        maxSuggestions: 8,
+        search_options: {
+          encode: "extra",
+          tokenize: "full",
+          resolution: 3,
+          suggest: true,
+          threshold: 1,
+          doc: {
+            id: "key",
+            field: ["title", "content", "headers"],
+          }
+        }
+      }
     ]
   ],
   markdown: {

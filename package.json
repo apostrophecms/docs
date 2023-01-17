@@ -29,11 +29,13 @@
     "stylelint": "^13.11.0",
     "stylelint-config-apostrophe": "^1.0.0",
     "stylelint-plugin-stylus": "^0.10.0",
-    "vuepress": "^1.5.4",
+    "vuepress": "^1.9.8",
     "vuepress-plugin-sitemap": "^2.3.1",
     "vuepress-theme-apostrophe": "^1.1.0"
   },
   "dependencies": {
-    "markdown-it": "^12.0.6"
+    "flexsearch": "^0.6.32",
+    "markdown-it": "^12.0.6",
+    "vuepress-plugin-flexsearch": "^0.3.0"
   }
 }
