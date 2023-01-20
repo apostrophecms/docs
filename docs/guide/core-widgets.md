@@ -58,6 +58,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'alignCenter'` | Text Align Center |
 | `'alignRight'` | Text Align Right |
 | `'alignJustify'` | Text Align Justify |
+| `'table'` | Insert and edit tables |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
 | `'|'` | Add a visual separator to the toolbar (not a formatting action) |
@@ -121,7 +122,7 @@ Including a class with a style will not automatically apply any styles. You stil
 },
 ```
 
-You can configure only one of the two sections (`toolbar` or `styles`), and use the default configuration for the other.
+If you prefer, you can configure only one of the two sections (`toolbar` or `styles`), and keep the default configuration for the other.
 
 **You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring these options on the `@apostrophecms/rich-text-widget` module.
 
