@@ -84,8 +84,6 @@ You can use the same tag in several styles with various CSS classes.
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
-<!-- TODO: Link to how-to about configuring sanitize-html for pasting in rich text -->
-
 ### Default rich text configuration
 
 ```javascript
