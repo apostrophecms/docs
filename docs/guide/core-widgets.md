@@ -47,6 +47,8 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'bold'` | Bold text |
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
+| `'superscript'` | Superscript text |
+| `'subscript'` | Subscript text |
 | `'link'` | Add a link |
 | `'anchor'` | Add an anchor id |
 | `'horizontalRule'` | Add a visual horizontal rule |
