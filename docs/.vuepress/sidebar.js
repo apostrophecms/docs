@@ -98,7 +98,8 @@ module.exports = {
           children: [
             [ 'guide/custom-schema-field-types.md', 'Custom field types' ],
             'guide/custom-login-requirements.md',
-            'guide/editing-custom-widgets-in-context.md'
+            'guide/editing-custom-widgets-in-context.md',
+            'guide/adding-custom-widget-placeholder-content.md'
           ]
         },
         'guide/webpack.md'
