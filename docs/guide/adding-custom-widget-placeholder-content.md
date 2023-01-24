@@ -1,6 +1,6 @@
 # Adding placeholders to custom widgets
 
-Custom widgets can take advantage of placeholders by adding code to the main module, preparing the widget template to show the custom placeholder content, and adding the placeholder content into an accessible folder.
+Custom widgets can also take advantage of non-schema field placeholders by adding code to the main module, preparing the widget template to show the custom placeholder content, and adding the placeholder content into an accessible folder.
 
 ## Basic placeholder addition
 
