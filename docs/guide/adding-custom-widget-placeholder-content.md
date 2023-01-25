@@ -1,12 +1,12 @@
 # Adding placeholders to custom widgets
 
-Custom widgets can also take advantage of non-schema field placeholders by adding code to the main module, preparing the widget template to show the custom placeholder content, and adding the placeholder content into an accessible folder.
+Custom widgets can also take advantage of non-schema field placeholders by adding code to the widget module in question, preparing the widget template to show the custom placeholder content, and adding the placeholder content into an accessible folder.
 
 ## Basic placeholder addition
 
 ### Altering the `index.js` file
 
- In order to add a custom image file, two options should be set within the main widget file, `placeholder: true` and the `placeholderImage` option with the value set to the file extension of the placeholder content without any `.` prefix.
+ In order to add a custom image file, two options should be set within the widget `index.js` file, `placeholder: true` and the `placeholderImage` option with the value set to the file extension of the placeholder content without any `.` prefix.
 
 Next, to supply the URL of the placeholder content, the module should invoke the `determineBestAssetUrl('placeholder')` method in the `init(self)` initialization function.
 
@@ -47,7 +47,7 @@ The specific alteration of the `widget.html` template will depend on the type of
 
 The first, `data.widget.aposPlaceholder`, allows for confirmation that the placeholder should be displayed. This will return `true` when the widget is first added and return `false` once the widget has been edited.
 
-The second, `data.manager.options.placeholderUrl`, will contain the path to the content placeholder asset. This will either be the path computed by the `determineBestAssetUrl()`, or the URL passed directly through the `placeholderUrl` option.
+The second, `data.manager.options.placeholderUrl`, will contain the path to the content placeholder asset. If you set the `placeholderImage`, this will either be the path computed by the call to `determineBestAssetUrl()`. Otherwise, it will be the URL passed directly through the `placeholderUrl` option.
 
 This example demonstrates adding an image.
 
@@ -62,6 +62,8 @@ This example demonstrates adding an image.
     alt="{{ __t('nameSpace:imagePlaceholder') }}"
     class="custom-widget-placeholder"
   />
+  {% else %}
+    <!-- markup displayed after the user edits the widget -->
   {% endif %}
 </section>
 ```
@@ -71,27 +73,20 @@ This example demonstrates adding an image.
 
 </AposCodeBlock>
 
-This example demonstrates adding a video. Depending on where the video is delivered from, you can either take advantage of the `@apostrophecms/oembed` and `@apostrophecms/video-widget` module's abilities to handle these types of content automatically. For project-uploaded videos, you will need to create appropriate markup.
+This example demonstrates adding a self-hosted video.
 
 <AposCodeBlock>
 
 ```twig
 <section data-custom-widget>
-  <!-- For videos hosted by services like YouTube -->
-  {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
-    <div
-      data-apos-video-widget
-      data-apos-video-url="{{ data.manager.options.placeholderUrl }}"
-    ></div>
-  {% endif %}
-  <!-- end hosted section -->
   <!-- For videos uploaded to the `public` folder -->
   {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
     <video controls width="250">
       <source src="{{ data.manager.options.placeholderUrl }}" type="video/mp4" />
     </video>
+  {% else %}
+    <!-- markup displayed after the user edits the widget -->
   {% endif %}
-  <!-- end uploaded video section -->
 </section>
 ```
 
