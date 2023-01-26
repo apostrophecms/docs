@@ -72,7 +72,7 @@ require('apostrophe')({
 });
 ```
 
-### Adding placeholder content
+### Adding schema field placeholder content
 
 Much like the core widgets, you can add placeholder content for many of the fields in your custom widgets. Within the widget options add `placeholder: true`. Then within individual fields add a `placeholder` property with a value appropriate to the type of schema field.
 
