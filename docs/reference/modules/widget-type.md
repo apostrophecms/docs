@@ -24,6 +24,7 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`defaultData`](#defaultdata) | Any | Default value of a contextual widget. |
 | [`deferred`](#deferred) | Boolean | This widget type should load last. |
 | [`icon`](#icon) | String | Icon name. |
+| [`initialModal`](#initialmodal) | Boolean | Determine whether to display modal when added to page. |
 | [`label`](#label) | String | Identifies this widget in a list of widget types. |
 | [`neverLoad`](#neverload) | Array | Widget types never loaded recursively by this widget. |
 | [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
@@ -72,6 +73,10 @@ Widget types may contain `relationship` and `relationshipReverse` fields that lo
 ### `icon`
 
 The name of the icon to be displayed for this widget type in a menu of widget types. This icon name must correspond to an icon loaded via [the `icons` module section](/reference/module-api/module-overview.md#icons). If not configured the widget type is listed without an icon.
+
+### `initialModal`
+
+The `initialModal` option is set to `true` by default. If set to `false`, it will prevent the initial modal from opening when a widget is added to the area.
 
 ### `label`
 
