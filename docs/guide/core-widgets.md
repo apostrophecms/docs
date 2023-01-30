@@ -199,6 +199,7 @@ module.exports = {
 
 The image widget supports displaying a single image, including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
 
+
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
 ```js
@@ -208,6 +209,7 @@ widgets: {
   '@apostrophecms/image': {}
 }
 ```
+
 
 ### Specifying a minimum size
 
@@ -247,7 +249,7 @@ When you set an aspect ratio, editors can still select differently shaped images
 
 A fixed ratio for all devices doesn't work for all designs. If your responsive design features custom CSS with different ratios at different breakpoints, consider encouraging editors to use the focal point feature as an alternative to setting `minSize`. The image widget emits CSS that biases the browser toward ensuring that the editor's chosen focal point remains visible, regardless of device.
 
-### Customizing responsive image sizes
+### Customizing responsive image sizes {#srcset}
 
 <!-- TODO: link to attachment module srcset method when reference is available. -->
 The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) value.
@@ -293,6 +295,39 @@ The sizes available by default are:
 | `one-sixth` | 190px | 350px |
 
 The final image size name is `original`, which delivers the original image file. This should be used carefully since it could be very large and slow to download.
+
+You can also elect to change the default size for all image widgets by passing a named size to the `size` option in a project-level image widget configuration. This size will be overridden by a `size` set in the area widget configuration.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    size: 'one-half'
+  }
+}
+```
+<template v-slot:caption>
+modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
+
+### Adding a `loading` attribute
+You can elect to add a `loading` attribute to your image markup by passing the `loadingType` option to either the project-level image widget configuration or within the area widget configuration. This [attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-loading) can take values of `lazy` or `eager` to alter when the image is loaded onto the page. As with the `size` option, setting this option in the area widget configuration will override the value added to project-level options.
+
+<AposCodeBlock>
+
+```js
+module.exports = {
+  options: {
+    loadingType: 'lazy'
+  }
+}
+```
+<template v-slot:caption>
+modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
 
 ### Adding a placeholder image
 
