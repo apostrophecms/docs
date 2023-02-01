@@ -181,6 +181,9 @@ Apostrophe will apply the specified classes to a `figure` element that will cont
 Note that writing styles for those classes to suit your needs is up to you. `image-float-left` does not ship with Apostrophe,
 it is just an example.
 
+Inline images can be handy, especially for floating, but image widgets and custom widgets are generally more
+flexible. The user experience of selecting an inline image is not mature yet.
+
 ### Allowing links to specific piece-types
 
 By default, the rich text widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that you don't need to change this setting if you just want to link to the main index page for a piece type.
