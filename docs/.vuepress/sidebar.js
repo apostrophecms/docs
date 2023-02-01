@@ -54,6 +54,7 @@ module.exports = {
           ]
         },
         [ 'guide/media.md', 'Working with images and media' ],
+        [ 'guide/writing-tests-for-modules.md', 'Writing tests for modules' ],
         'guide/sending-email.md'
       ]
     },
