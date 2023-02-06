@@ -365,7 +365,7 @@ An alternative way to add the social links would be to use an `array` schema fie
 
 ### Adding the header
 
-The headers of each page have an image and headline in common. They also each have a subheading, but the styling of that subheading depends on the type of page that is being displayed. Additionally, the header for the page displaying the individual blog articles also has metadata about the author and publication date. While we could have separate header template fragments, we can also add a conditional block to add the needed markup.
+The headers of each page have an image and headline in common. They also each have a subheading, but the styling of that subheading depends on the type of page that is being displayed. Additionally, the header for the page displaying the individual blog articles also has metadata about the author and publication date. While we could have separate header template fragments, we can also use a conditional block to add the needed markup.
 
 Create a `views/fragments/header.html` file and add the fragment block tags. Unlike the navigation and footer fragments that got their data from apostrophe's global settings, the header will get its data from the page. This means that we will have to pass data into our fragment within the block tags - `{% fragment headerArea(data) %}`.
 
@@ -978,7 +978,7 @@ As outlined above, the header of the blog piece pages is different from the othe
                     {% else %}
                     <h2 class="subheading">{{ data.subheading }}</h2>
                     <span class="meta">
-                        Posted by {{ data.author }} on {{ publicationData.date | date('MMMM D, YYYY') }}
+                        Posted by {{ data.author }} on {{ data.publicationDate | date('MMMM D, YYYY') }}
                     </span>
                     {% endif %}
                 </div>
