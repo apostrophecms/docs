@@ -978,7 +978,7 @@ As outlined above, the header of the blog piece pages is different from the othe
                     {% else %}
                     <h2 class="subheading">{{ data.subheading }}</h2>
                     <span class="meta">
-                        Posted by {{ data.author }} on {{ date.publicationDate | date('MMMM D, YYYY') }}
+                        Posted by {{ data.author }} on {{ data.publicationDate | date('MMMM D, YYYY') }}
                     </span>
                     {% endif %}
                 </div>
