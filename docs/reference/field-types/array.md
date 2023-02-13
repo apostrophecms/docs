@@ -74,6 +74,17 @@ By default, if `inline: true` is set and there are fewer than three fields, each
 
 ### `whenEmpty`
 
+Works only for inline arrays.
+
+```javascript
+{
+  whenEmpty: {
+    label: 'apostrophe:whemEmpty',
+    icon: 'file-document-icon'
+  }
+}
+```
+
 - `label` is the label to display when the inline array is empty.
 - `icon` is [configured in the `icons` module setting](/reference/module-api/module-overview.md#icons) in the example.
 
