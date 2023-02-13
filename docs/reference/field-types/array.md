@@ -53,6 +53,7 @@ contactInfo: {
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
 |`titleField` | String |  n/a | The name of one of the array schema fields. If provided, the user interface will use the value of that field as a label for the array tabs. |
+|[`whenEmpty`](#whenEmpty) | Object |  n/a | Display hint when the array is empty. |
 
 ::: tip NOTE
 - If there is no `titleField` value, the items are numbered.
@@ -70,6 +71,11 @@ Set `inline: true` on an array field to edit the array inline with the rest of t
 You can also control whether each item has a toggle to expand it, or is always displayed in fully expanded form.
 
 By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
+
+### `whenEmpty`
+
+- `label` is the label to display when the inline array is empty.
+- `icon` is [configured in the `icons` module setting](/reference/module-api/module-overview.md#icons) in the example.
 
 ## Configuring the array field schema
 
