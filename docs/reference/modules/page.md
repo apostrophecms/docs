@@ -398,7 +398,7 @@ Returns `true` if the document object, `doc` is identifiable as a page.
 
 ### `getBaseUrl(req)`
 
-Returns the effective base URL for the given request (`req`). If a hostname is configured for the active locale (`req.locale`), then the base URL will include it, inferring the protocol from `req.protocol`. Otherwise, if Apostrophe's top-level `baseUrl` option is set it will be used. If there is neither an active locale hostname nor a configured `baseUrl` option, the base URL will be an empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
+Returns the effective base URL for the given request (`req`). If a hostname is configured for the active locale (`req.locale`), then the base URL will include it, inferring the protocol from `req.protocol`. Otherwise, if Apostrophe's top-level `baseUrl` option or `APOS_BASE_URL` environment variable is set it will be used. If there is neither an active locale hostname nor a configured `baseUrl` option, the base URL will be an empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
 
 ### `inferIdLocaleAndMode(req, _id)`
 
