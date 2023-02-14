@@ -7,18 +7,24 @@ module.exports = {
   ],
   '/guide': [
     {
+      title: 'What is ApostropheCMS?',
+      collapsable: false,
+      children: [
+        'guide/introduction.md',
+        'guide/technical-overview.md'
+      ]
+    },
+    {
       title: 'Getting started',
       collapsable: false,
       children: [
-        'guide/setting-up.md',
-        'guide/technical-overview.md'
+        'guide/setting-up.md'
       ]
     },
     {
       title: 'Guide',
       collapsable: false,
       children: [
-        'guide/introduction.md',
         'guide/modules.md',
         'guide/content-schema.md',
         'guide/pages.md',
