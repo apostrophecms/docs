@@ -23,6 +23,7 @@ For creating page types, see the `@apostrophecms/page-type` module instead.
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
 | [`publicApiProjection`](#publicapiprojection) | Object | Set query builder values to be used when pages are served. |
 | [`quickCreate`](#quickcreate) | Boolean | Set to `false` to remove pages from the quick create menu. |
+| [`redirectFailedUppercaseUrls`](#redirectfaileduppercaseurls) | Boolean | Set to `false` to override the conversion of URLs to lowercase upon 404. |
 | [`types`](#types) | Array | Set the page types available for new pages. |
 
 
@@ -254,6 +255,10 @@ module.exports = {
   // ...
 }
 ```
+
+### `redirectFailedUppercaseUrls`
+
+If a requested URL is not found and the requested URL contains uppercase letters, by default the `@apostrophecms/page` module will convert the *entire* requested URL to lowercase and attempt to redirect to this altered URL. For example, the request `/pArent/Child.html` will be coverted to `/parent/child.html`. Setting the `redirectFailedUppercaseUrls` to false will override this behavior.
 
 ### `types`
 
