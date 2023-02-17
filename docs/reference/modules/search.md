@@ -58,36 +58,39 @@ modules/@apostrophecms/search/index.js
 </template>
 </AposCodeBlock>
 
-If no `types` option is set, the `@apostrophecms/search` module emits the `determineTypes` server side event with the array of registered types that can be modified in a [`handlers(self)` function](reference/module-api/module-overview.html#handlers-self). This can be used to pass a custom set of searchable page and piece type document names. This is primarily used by each of the page and piece type documents to self register for being searchable if they don't have an explicit option of `searchable: false`. **Note:** this event is emitted after recieving the `modulesRegistered` event, so it only happens once during initial startup - use with care!
+### Filters
+
+The `filters` option takes an array of objects that each have `name` and `label` properties. The `name` key takes a piece or page type document name as value. The `label` key takes a l10n-localizable string that is presented to the user. On the search page, the user will be presented with a list of filters by label, along with a checkbox to toggle the filter on and off. In addition to the filters derived from this array, users will also be presented with an `Everything else` filter that will allow the user to filter any other piece or page documents that are not included in the named filters.
 
 <AposCodeBlock>
 
 ```js
 module.exports = {
-  // remainder of code
-  handlers(self) {
-    return {
-      '@apostrophecms/search:determineTypes': {
-        async modifyTheSearch(types) {
-          // this limits searches to only the 'friendList' piece-type
-          self.types = [
-            'friendList'
-          ]
-        }
+  options: {
+    filters: [
+      {
+        name: 'product',
+        label: 'Product'
+      },
+      {
+        name: 'default-page',
+        label: 'Default Page'
       }
-    }
+    ]
   }
 };
 
 ```
+
 <template v-slot:caption>
-modules/friendList/index.js
+modules/@apostrophecms/search/index.js
 </template>
 </AposCodeBlock>
 
-### Filters
+## Module tasks
 
-The `filters` option takes an array of objects that each have a `name` and `label` property.
+### `index`
 
+Full command: `node app @apostrophecms/search:index`
 
-
+Rebuild the search index. Normally this happens automatically. This should only be needed if you have changed the "searchable" property for various fields or types.
