@@ -68,12 +68,16 @@ module.exports = {
         ariaLabel: 'Documentation sections',
         items: [
           {
+            text: 'What is ApostropheCMS?',
+            link: '/guide/introduction.md'
+          },
+          {
             text: 'Getting started',
             link: '/guide/setting-up.md'
           },
           {
             text: 'Guide',
-            link: '/guide/introduction.md'
+            link: '/guide/modules.md'
           },
           {
             text: 'Reference',
