@@ -47,7 +47,7 @@ The `types` option takes an array of page-type and piece-type document names tha
 ```js
 module.exports = {
   options: {
-    // search the product piece-type or any blog page-type
+    // search only the product piece-type or any blog page-type
     types: [ 'product', 'blog-page' ]
   }
 };
@@ -58,7 +58,7 @@ modules/@apostrophecms/search/index.js
 </template>
 </AposCodeBlock>
 
-If no `types` option is set, the `@apostrophecms/search` module emits the `determineTypes` server side event with the array of registered types for modification in a [`handlers(self)` function](reference/module-api/module-overview.html#handlers-self). This can be used to pass a custom set of searchable page and piece type document names. This is primarily used by each of the page and piece type documents to self register for being searchable if they don't have an explicit option of `searchable: false`. **Note:** this event is emitted after recieving the `modulesRegistered` event, so it only happens once during initial startup - use with care!
+If no `types` option is set, the `@apostrophecms/search` module emits the `determineTypes` server side event with the array of registered types that can be modified in a [`handlers(self)` function](reference/module-api/module-overview.html#handlers-self). This can be used to pass a custom set of searchable page and piece type document names. This is primarily used by each of the page and piece type documents to self register for being searchable if they don't have an explicit option of `searchable: false`. **Note:** this event is emitted after recieving the `modulesRegistered` event, so it only happens once during initial startup - use with care!
 
 <AposCodeBlock>
 
@@ -87,6 +87,7 @@ modules/friendList/index.js
 
 ### Filters
 
+The `filters` option takes an array of objects that each have a `name` and `label` property.
 
 
 
