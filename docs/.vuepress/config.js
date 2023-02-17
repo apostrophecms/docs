@@ -77,7 +77,7 @@ module.exports = {
           },
           {
             text: 'Guide',
-            link: '/guide/introduction.md'
+            link: '/guide/modules.md'
           },
           {
             text: 'Reference',
