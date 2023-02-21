@@ -207,7 +207,7 @@ There are many ways to build navigation with Apostrophe. One is to base site nav
 
 Pages can be organized into a page tree hierarchy while adding them or through the page manager interface.
 
-![A modal interface with pages organized in order and nested under one another](/images/page-tree.png)
+![A modal interface with pages organized in order and nested under one another](/images/new-page-tree.png)
 
 Apostrophe templates have data available to add navigation based on the page tree. This includes:
 
