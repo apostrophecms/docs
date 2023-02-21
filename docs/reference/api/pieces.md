@@ -40,7 +40,7 @@ Apostrophe provides built-in REST end points for all [piece types](/reference/gl
 |`search` | `?search=shoes` | A search query to filter the response |
 |`aposMode` | `?aposMode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
 |`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
-|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
 #### Custom filters
@@ -101,7 +101,7 @@ In case of an error an appropriate HTTP status code is returned.
 |----------|------|-------------|
 |`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to request a specific mode version of the piece. Authentication is required to get drafts. |
 |`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request the piece document version for that locale. |
-|`renderAreas` | `?renderAreas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
+|`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
