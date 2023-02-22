@@ -30,6 +30,15 @@ modules/@apostrophecms/page/index.js
 </template>
 </AposCodeBlock>
 
+## Customizing the search template
+
+The `@apostrophe/search` module template can be customized through adding files to the project-level `modules/@apostrophecms/search/views` folder. The module has two templates for returning search results. Depending on your site requirements you may only need to add a single template at the project level.
+
+The default template is `index.html`. The main block of this template contains a form for adding any filters to the search if the `filters` option has been populated, as well as the query terms. Below the form is a section to output the search results returned to the page in the `data.doc` object. Finally, the page includes the [standard pagination section](/guide/piece-pages.md#pagination). In this case, it is added using `{% include "pager.html" %}` to load it in from another file in the `views` folder so that it can be easily reused. You can elect to add the pager directly to your project template or keep it as a separate file.
+
+The `indexAjax.html` template will be displayed to the user if `req.xhr` or `req.query.xhr` are set to indicate that an AJAX request is being made. This template only contains the markup for displaying the information contained within the `data.docs` object returned from the search query.
+
+
 ## Options
 
 |  Property | Type | Description |
@@ -40,15 +49,18 @@ modules/@apostrophecms/page/index.js
 
 ### Types
 
-The `types` option takes an array of page-type and piece-type document names that will be included within the search results. By default, all page and piece docs are searched unless they have an option of `seachable: false`. Adding an array will restrict any search to just those types of pages and pieces, even if a module has an option of `searchable: true`.
+The `types` option takes an array of page-type and piece-type document names that will be included within the search results. By default, all page and piece docs are searchable. Piece types can opt out of searching by adding an option of `seachable: false`. Adding an array to the `types` option will provide search results from just those types of pages and pieces, regardless of the value of the `searchable` option of any piece type. Excluding a page type from the `types` array is the only way to exclude search results from a particular page type.
 
 <AposCodeBlock>
 
 ```js
 module.exports = {
   options: {
-    // search only the product piece-type or any blog page-type
-    types: [ 'product', 'blog-page' ]
+    // search only the product piece-type, blog piece-types, and blog page-types
+    // not adding 'product-page' will exclude results from product `index.html` page
+    // including '@apostrophecms/blog-page' will include the 'index.html' blog page,
+    // including `@apostrophecms/blog` will include results from individual 'show.html'pages
+    types: [ 'product', '@apostrophecms/blog', '@apostrophecms/blog-page' ]
   }
 };
 
