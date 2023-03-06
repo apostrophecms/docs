@@ -21,7 +21,7 @@ This module manages Apostrophe's standard login form and related capabilities.
 
 ### `loginUrl`
 
-The default login endpoint for access to the ApostropheCMS backend is `/login`. Passing a string to the `loginUrl` option will change this endpoint. Note that the desired end-point should be prefixed with a forward-slash, e.g. `/admin-login`.
+The default login endpoint for access to the ApostropheCMS backend is `/login`. Passing a string to the `loginUrl` option will change this endpoint. Note that the desired endpoint should be prefixed with a forward slash, e.g. `/admin-login`.
 ### `localLogin`
 
 Defaults to `true`. If set to `false`, the normal login form at `/login` is completely disabled.
