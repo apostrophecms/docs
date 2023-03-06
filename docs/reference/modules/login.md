@@ -12,12 +12,16 @@ This module manages Apostrophe's standard login form and related capabilities.
  
 |  Property | Type | Description |
 |---|---|---|
-|`localLogin` | Boolean | If false, the login form is disabled.|
-|`passwordReset` | Boolean | If true, a password reset link is added to the login. |
-| `passwordResetHours` | Integer | If `passwordReset` is true it controls how many hours a reset token is valid. |
-|`bearerTokens` | Object | If set to an object, the `lifetime` subproperty determines the lifetime of a bearer token for the REST API.| 
-|`throttle` | Object | Used to prevent brute-force password guessing.|
+| [`loginUrl`](#loginurl) | String | Sets the login endpoint.|
+|[`localLogin`](#locallogin) | Boolean | If false, the login form is disabled.|
+|[`passwordReset`](#passwordreset) | Boolean | If true, a password reset link is added to the login. |
+| [`passwordResetHours`](#passwordresethours) | Integer | If `passwordReset` is true it controls how many hours a reset token is valid. |
+|[`bearerTokens`](#bearertokens) | Object | If set to an object, the `lifetime` subproperty determines the lifetime of a bearer token for the REST API.| 
+|[`throttle`](#throttle) | Object | Used to prevent brute-force password guessing.|
 
+### `loginUrl`
+
+The default login endpoint for access to the ApostropheCMS backend is `/login`. Passing a string to the `loginUrl` option will change this endpoint. Note that the desired endpoint should be prefixed with a forward slash, e.g. `/admin-login`.
 ### `localLogin`
 
 Defaults to `true`. If set to `false`, the normal login form at `/login` is completely disabled.
