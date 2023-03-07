@@ -35,7 +35,7 @@ add: {
 
 ## Complex conditions
 
-In addition to simple field names, the conditional object can take the name of a method as a key. The sibling field value will be compared using strict equivalence to the value returned from the method. Like simple conditional fields, the returned value should be a string, number, or boolean.
+In addition to simple field names, the conditional object can take the name of a method as a key. The sibling field value will be compared using strict equivalence to the value returned from the method. Like simple conditional fields, the returned value should be a string, number, boolean, or any [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive).
 
 This conditional method can either be defined in the `methods` section of the same module as the conditional field, or another module by prefixing the method with the name of defining module followed by a colon. In either case, the method name must have parentheses appended to the end.
 
