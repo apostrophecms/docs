@@ -43,48 +43,53 @@ This conditional method can either be defined in the `methods` section of the sa
 The property here is a string, not the actual method, so you can't pass arguments back to the method within the parentheses.
 :::
 
-The method will recieve values of `(req, {docId})`, where the `docId` is `null` if the document is being created for the first time. Otherwise, the `docId` will contain the `_id` for a piece/page, or if the method is being called from a widget, the `_id` of the document where the widget is being added. The call is a server-side, asynchronous method, just like that supported for dynamic selection choices. It only occurs when the editor modal is first opened. This is unlike simple conditional fields which continuously poll other schema fields in the same module. Any changes that occur while the editor is open will not be reflected in the visibility of the conditional field. Additionally, the returned value is cached on the first call, so if multiple fields depend on the same method, that method will only be called once.
+The method will receive values of `(req, {docId})`, where the `docId` is `null` if the document is being created for the first time. Otherwise, the `docId` will contain the `_id` for a piece/page, or if the method is being called from a widget, the `_id` of the document where the widget is being added. The call is a server-side, asynchronous method, just like that supported for dynamic selection choices. It only occurs when the editor modal is first opened. This is unlike simple conditional fields which continuously poll other schema fields in the same module. Any changes that occur while the editor is open will not alter the original value returned from the call until the modal is closed. Additionally, the returned value is cached on the first call, so if multiple fields depend on the same method, that method will only be called once.
 
 <AposCodeBlock>
 
 ``` javascript
-// A field schema's `add` configuration
-add: {
-  selectSponsors: {
-    label: 'Select a project sponsor',
-    type: 'select',
-    // populate choices dynamically
-    choices: 'sponsorNames',
-    if: {
-      // `()` are mandatory, method defined in the `article` module
-      `isSponsored()`: true
+module.exports = {
+  fields: {
+    add: {
+      selectSponsors: {
+        label: 'Select a project sponsor',
+        type: 'select',
+        // populate choices dynamically
+        choices: 'sponsorNames',
+        if: {
+          // `()` are mandatory, method defined in the `article` module
+          'isSponsored()': true
+        }
+      },
+      grantName: {
+        label: 'Select a grant',
+        type: 'select',
+        choices: 'grantNames',
+        if: {
+          // method defined in `modules/grant/index.js`
+          'grant:multipleFundingSources()': 'multiple'
+        }
+      }
     }
+    // remainder of fields omitted for brevity
   },
-  grantName: {
-    label: 'Select a grant',
-    type: 'select',
-    choices: 'grantNames',
-    if: {
-      // method defined in `modules/grant/index.js`
-      'grant:multipleFundingSources()': 'multiple'
-    }
-  },
-  // additional field options
-methods(self) {
-  return {
-    async isSponsored(req, {docId}) {
-      // code to check sponsorship, potentially to outside API
-      const response = await fetch(url, {options});
-      const grantData = await response.json();
-      if (grantData.sponsored === true) {
-        // show the field
-        return true;
-      };
-      // don't show the field
-      return false;
-    }
+  methods(self) {
+    return {
+      async isSponsored(req, { docId }) {
+        // code to check sponsorship, potentially to outside API
+        const response = await fetch(url, {options});
+        const grantData = await response.json();
+        if (grantData.sponsored === true) {
+          // show the field
+          return true;
+        };
+        // don't show the field
+        return false;
+      }
+    };
   }
-}
+};
+
 ```
 
 <template v-slot:caption>
