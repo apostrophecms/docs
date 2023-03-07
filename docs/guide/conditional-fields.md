@@ -53,8 +53,8 @@ add: {
   selectSponsors: {
     label: 'Select a project sponsor',
     type: 'select',
-    // populate choices dynamically, `()` are optional
-    choices: 'sponsorNames()',
+    // populate choices dynamically
+    choices: 'sponsorNames',
     if: {
       // `()` are mandatory, method defined in the `article` module
       `isSponsored()`: true
@@ -63,7 +63,7 @@ add: {
   grantName: {
     label: 'Select a grant',
     type: 'select',
-    choices: 'grantNames()',
+    choices: 'grantNames',
     if: {
       // method defined in `modules/grant/index.js`
       'grant:multipleFundingSources()': 'multiple'
