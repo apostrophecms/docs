@@ -2,6 +2,15 @@
 
 Creating a web site from scratch can be a daunting process. Not only do you have to create the HTML markup, but also the styling to make it all look good. One way to get started quickly is to use one of the numerous premade templates available on the internet. In this tutorial, we will walk through the steps to convert the ["Start Bootstrap Clean Blog"](https://startbootstrap.com/theme/clean-blog) template into an Apostrophe template. While we are starting with a specific template, these steps can be generalized to any template you might download.
 
+## Prefer to read? Scroll past the video.
+
+::: tip
+This tutorial is available in video and textual forms. Watch the video, or continue reading if you prefer. Of course, you can do both!
+:::
+
+### Video - Converting an HTML template for use in Apostrophe
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/u86VFHaZ2_o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 ## Overview
 
