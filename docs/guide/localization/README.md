@@ -86,12 +86,12 @@ There's one thing left to configure these locales for use: We need to tell Apost
             hostname: 'example.mx'
           },
           'fr-CA': {
-            label: 'French (Canada)'
+            label: 'French (Canada)',
             hostname: 'example.ca',
             prefix: '/fr'
           },
           'en-CA': {
-            label: 'English (Canada)'
+            label: 'English (Canada)',
             hostname: 'example.ca',
             prefix: '/en'
           }
