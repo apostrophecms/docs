@@ -31,43 +31,14 @@ We configure locales through the `@apostrophecms/i18n` module. In a project code
   </template>
 </AposCodeBlock>
 
-**Each locale needs a short identifier**, which is typically a two letter country code, language code, or one of each with a dash separating them. This will be the object key for each locale. For example, if we had a USA-based business working across North America we might have locales for US/general English speakers (`en`) and Spanish speakers (`es`), residents of Mexico using Spanish (`es-MX`), Canadian French speakers (`fr-CA`), and Canadian English speakers (`en-CA`). The `label` property is used in the user interface.
-
-<AposCodeBlock>
-  ```javascript
-    module.exports = {
-      options: {
-        locales: {
-          en: {
-            label: 'English'
-          },
-          es: {
-            label: 'Spanish'
-          },
-          'es-MX': {
-            label: 'Spanish (Mexico)'
-          },
-          'fr-CA': {
-            label: 'French (Canada)'
-          },
-          'en-CA': {
-            label: 'English (Canada)'
-          }
-        }
-      }
-    }
-  ```
-  <template v-slot:caption>
-    modules/@apostrophecms/i18n/index.js
-  </template>
-</AposCodeBlock>
+**Each locale needs a short identifier**, which is typically a two-letter country code, language code, or one of each with a dash separating them. This will be the object key for each locale. For example, if we had a USA-based business working across North America we might have locales for US/general English speakers (`en`) and Spanish speakers (`es`), residents of Mexico using Spanish (`es-MX`), Canadian French speakers (`fr-CA`), and Canadian English speakers (`en-CA`). The `label` property is used in the user interface.
 
 ::: note
 - Locale names (e.g., `'en'`, `'fr-CA'`) must begin with an alphabetic (non-numeric) character.
 - The best practice for locale names is to use a two-character language code (`'en'`) or the language code with two character country code, capitalized (`'en-GB'`). This will improve compatibility with i18n features as they are added to Apostrophe.
 :::
 
-There's one thing left to configure these locales for use: We need to tell Apostrophe how to identify which one to use. This is done based on the URL used to access the website, either by the URL **hostname**, the URL path **prefix**, or a combination of the two.
+Additionally, we need to tell Apostrophe how to identify which one to use. This is done based on the URL used to access the website, either by the URL **hostname**, the URL path **prefix**, or a combination of the two.
 
 <AposCodeBlock>
   ```javascript
@@ -109,7 +80,7 @@ If `hostname` is used for any locale:
 - a `baseUrl` must be set on the application, defining the default hostname, OR
 - a `hostname` setting must be used on all locales
 
-For this example we'll assume we have `baseUrl: 'example.com'` set on the application.
+For this example, we'll assume we have `baseUrl: 'example.com'` set on the application.
 :::
 
 So how does Apostrophe choose the best locale to use? In many cases it is clear. If there is conflict, however, the best locale uses the following prioritization:
