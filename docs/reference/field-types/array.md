@@ -74,7 +74,7 @@ By default, if `inline: true` is set and there are fewer than three fields, each
 
 ### `whenEmpty`
 
-If no array items have been added, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through the modules [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
+If no array items have been added, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
  
 ## Configuring the array field schema
 
