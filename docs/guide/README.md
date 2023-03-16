@@ -1,3 +1,3 @@
 # Guide
 
-<AposRedirect path="/guide/introduction" />
+<AposRedirect path="/guide/modules" />

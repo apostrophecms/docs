@@ -23,6 +23,7 @@ For creating page types, see the `@apostrophecms/page-type` module instead.
 | [`park`](#park) | Array | Set pages to be created on site start with configuration. |
 | [`publicApiProjection`](#publicapiprojection) | Object | Set query builder values to be used when pages are served. |
 | [`quickCreate`](#quickcreate) | Boolean | Set to `false` to remove pages from the quick create menu. |
+| [`redirectFailedUppercaseUrls`](#redirectfaileduppercaseurls) | Boolean | Set to `false` to override the conversion of URLs to lowercase upon 404. |
 | [`types`](#types) | Array | Set the page types available for new pages. |
 
 
@@ -255,6 +256,10 @@ module.exports = {
 }
 ```
 
+### `redirectFailedUppercaseUrls`
+
+If a requested URL is not found and the requested URL contains uppercase letters, by default the `@apostrophecms/page` module will convert the *entire* requested URL to lowercase and attempt to redirect to this altered URL. For example, the request `/pArent/Child.html` will be coverted to `/parent/child.html`. Setting the `redirectFailedUppercaseUrls` to false will override this behavior.
+
 ### `types`
 
 The `types` array defines the page types available to users when creating or editing pages. Each item in the array should have a `label` property and a `name` property, which matches an active page type. If no `types` array is set, only the core "Home" page type will be available.
@@ -398,7 +403,7 @@ Returns `true` if the document object, `doc` is identifiable as a page.
 
 ### `getBaseUrl(req)`
 
-Returns the effective base URL for the given request (`req`). If a hostname is configured for the active locale (`req.locale`), then the base URL will include it, inferring the protocol from `req.protocol`. Otherwise, if Apostrophe's top-level `baseUrl` option is set it will be used. If there is neither an active locale hostname nor a configured `baseUrl` option, the base URL will be an empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
+Returns the effective base URL for the given request (`req`). If a hostname is configured for the active locale (`req.locale`), then the base URL will include it, inferring the protocol from `req.protocol`. Otherwise, if Apostrophe's top-level `baseUrl` option or `APOS_BASE_URL` environment variable is set it will be used. If there is neither an active locale hostname nor a configured `baseUrl` option, the base URL will be an empty string. This makes it easier to build absolute URLs (when `baseUrl` is configured), or to harmlessly prepend the empty string (when it is not configured). The Apostrophe queries used to fetch Apostrophe pages consult this method.
 
 ### `inferIdLocaleAndMode(req, _id)`
 
