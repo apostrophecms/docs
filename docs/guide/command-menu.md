@@ -11,7 +11,7 @@ Apostrophe assigns shortcuts for custom piece-types based on the first letter of
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
-    shortcut: ['g,z'],
+    shortcut: 'g,z',
     // the remainder of the options
   }
 };
@@ -21,7 +21,7 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-There are three options - a single key, a key plus one or more modifiers, or a chord of two sequential key presses. You can pass multiple shortcuts by separating each with a space. **This is important when passing in shortcuts that use a modifier key that differs between Macintosh and Windows/Linux keymapping.** W3C has [published](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/) helpful guidance in selecting new shortcut keys.
+There are three options - a single key, a key plus one or more modifiers, or a chord of two sequential key presses. You can pass multiple shortcuts by separating each with a space. **This is important when passing in shortcuts that use a modifier key that differs between Macintosh and Windows/Linux keymapping.** W3C has [published](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/) helpful guidance in selecting new shortcut keys. Keep in mind any existing shortcuts for [MacOS](https://support.apple.com/en-us/HT201236), [Windows 10 & 11](https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec), and [Ubuntu](https://help.ubuntu.com/stable/ubuntu-help/shell-keyboard-shortcuts.html.en).
 
 For a single key, just pass that key as the string value to `shortcut`. The 'comma', 'space', and modifier keys (see below) shouldn't be used, but every other standard key can. See the [table](#keymappings) for additional keymappings for keys like the left arrow.
 
@@ -80,7 +80,7 @@ module.exports = {
               props: {moduleName: 'custom-widget'}
             }
           },
-          shortcut: [ 'Ctrl+Shift+P Meta+Shift+P' ]
+          shortcut: 'Ctrl+Shift+P Meta+Shift+P' 
         }
       },
       // ...
@@ -102,7 +102,7 @@ The second, `label`, takes a string to display within the menu next to the short
 
 The `action` key takes an object with one required and one optional property. The `type` key is required and takes a string. This string will be emitted when the user completes the shortcut. This string can be detected and used to trigger a function using `apos.bus.$on('type-string', function)`. This can be added to the `mounted()` hook of your Vue component or in custom module JavaScript added to the `/modules/custom-widget/ui/apos/apps/custom.js` file. If used in a Vue component it is best practice to also remove the listener by adding `apos.bus.$off('type-string', function)` to the `destroyed()` hook. If this string is specific to this module it must be unique, but the string can also be shared by multiple modules to trigger changes. For example, many built-in piece-types like the `@apostrophecms/image` and `@apostrophecms/file` use a common string of `command-menu-manager-close` to trigger the closing of the manager modal.
 
-The optional `payload` key takes an object with properties that will be passed to the event listener. In the above example you would use:
+The optional `payload` key takes an object with properties that will be passed to the event listener. In the above example, you would use:
 
 <AposCodeBlock>
 
