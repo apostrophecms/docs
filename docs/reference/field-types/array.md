@@ -48,11 +48,14 @@ contactInfo: {
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
 | [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
+|`style` | String |  n/a | Only if `inline` is true. If set to `table`, the schema will be displayed as an HTML table |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
 |`titleField` | String |  n/a | The name of one of the array schema fields. If provided, the user interface will use the value of that field as a label for the array tabs. |
+|`draggable` | Boolean | true | If `false`, array items cannot be reordered using drag and drop feature. |
+|[`whenEmpty`](#whenempty) | Object | n/a | Displays a `label` and `icon` if no array items have been added |
 
 ::: tip NOTE
 - If there is no `titleField` value, the items are numbered.
@@ -71,6 +74,10 @@ You can also control whether each item has a toggle to expand it, or is always d
 
 By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
 
+### `whenEmpty`
+
+If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
+ 
 ## Configuring the array field schema
 
 Array field schemas are generally configured the same way as the module's overall field schema is configured. The module's schema is configured in its `fields` section's `add` subsection. Similarly, array field schema are configured in a `fields` property, using its `add` subproperty to configure the actual fields. Both use the field names as keys in the `add` object. Both can contain all field types, including nested `array` fields.

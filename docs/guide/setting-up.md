@@ -1,6 +1,6 @@
 # Setting up
 
-This article covers the first steps to get started. MacOS and Linux users can dive right in. If you have Windows, please follow our [Windows development](../cookbook/windows-development.md) cookbook article first.
+This article covers the first steps to get started. MacOS and Linux users can dive right in. If you have Windows, please follow our [Windows development](../cookbook/windows-development.md) cookbook article first. For technical reliability and technical support, we require that Windows users develop using the Windows Subsystem for Linux (WSL 2) or a Linux virtual machine.
 
 ## System requirements
 
@@ -107,4 +107,4 @@ If you are starting the site in a production environment or do not want the proc
 
 ## Next steps
 
-Now that Apostrophe is installed, you're ready to start building. Check out the essentials [guide](/guide/) to learn about essential features or read more about Apostrophe's inner workings in the [technical overview](/guide/technical-overview.md).
+Now that Apostrophe is installed, you're ready to start building. Check out the [guide](/guide/modules.html) to learn about essential features with plenty of code examples. If you are looking to explore Apostrophe's inner workings peruse the [reference guide](/reference/glossary.md). 
