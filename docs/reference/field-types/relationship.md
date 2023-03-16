@@ -57,6 +57,14 @@ _toppings: {
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 |`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationship) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
+|`browse` | Boolean | `true` | If `false`, hide the browse button. |
+|`suggestionLabel` | String | `apostrophe:relationshipSuggestionLabel` | The label at the top of the autocomplete suggestions |
+|`suggestionHelp` | String | `apostrophe:relationshipSuggestionHelp` | The text to display next to the autocomplete suggestion label |
+|`suggestionLimit` | Number | 25 | How many suggestions should be displayed when you focus the search field |
+|`suggestionSort` | Object | `{ updatedAt: -1 }` | How to sort the autocomplete results |
+|`suggestionIcon` | String | `text-box-icon` | The icon to display before the autocomplete item. Please refer to the [`icons` module setting](/reference/module-api/module-overview.md#icons) |
+|`suggestionFields` | Array | `[ 'slug' ]` | The document properties to display next to the autocomplete label |
+
 
 ::: tip
 To create relationships with pages, use `withType: '@apostrophecms/any-page-type'`.
