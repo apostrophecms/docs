@@ -78,6 +78,18 @@ By default, if `inline: true` is set and there are fewer than three fields, each
 
 If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
  
+```javascript
+{
+  whenEmpty: {
+    label: 'apostrophe:whemEmpty',
+    icon: 'file-document-icon'
+  }
+}
+```
+
+- `label` is the label to display when the inline array is empty.
+- `icon` is [configured in the `icons` module setting](/reference/module-api/module-overview.md#icons) in the example.
+
 ## Configuring the array field schema
 
 Array field schemas are generally configured the same way as the module's overall field schema is configured. The module's schema is configured in its `fields` section's `add` subsection. Similarly, array field schema are configured in a `fields` property, using its `add` subproperty to configure the actual fields. Both use the field names as keys in the `add` object. Both can contain all field types, including nested `array` fields.
