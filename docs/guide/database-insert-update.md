@@ -24,27 +24,30 @@ For example, if we had a dog adoption website that used an external API, we may 
     extend: '@apostrophecms/piece-type',
     // ...
     methods (self) {
-      // The hypothetical method is run once for each dog we're following from
-      // the API. A separate method would add any new dogs.
-      async updateDogStatus(req, dogId, status) {
-        const dogDocument = await self.find(req, {
-          dogId
-        }).toObject();
-
-        if (!dogDocument) {
-          return null;
-        };
-
-        // We update the `status` property.
-        dogDocument.status = status;
-
-        const updateResult = await self.update(req, dogDocument);
-
-        return updateResult;
-      }
+      return {
+        // The hypothetical method is run once for each dog we're following from
+        // the API. A separate method would add any new dogs.
+        async updateDogStatus(req, dogId, status) {
+          const dogDocument = await self.find(req, {
+            dogId
+          }).toObject();
+  
+          if (!dogDocument) {
+            return null;
+          };
+  
+          // We update the `status` property.
+          dogDocument.status = status;
+  
+          const updateResult = await self.update(req, dogDocument);
+  
+          return updateResult;
+        }
+      };
     }
   };
   ```
+  
   <template v-slot:caption>
     modules/dog/index.js
   </template>
