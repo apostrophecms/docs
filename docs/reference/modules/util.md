@@ -209,6 +209,10 @@ The `@` syntax works only for locating nested objects. You may not pass `@abc` w
 
 Returns a *new* `req` object with the properties of the original plus any in the optional `properties` parameter. Used when a request object with one change is desired, such as `mode: 'published'`. Avoids the need to push and pop properties of the original `req`. Also available as `req.clone(properties)`.
 
+#### `runPlayers(el)`
+
+Runs all the players that have not been run in the whole document. Passing an optional DOM element to the `el` parameter will restrict the search for unplayed players to that element only. This function is useful when dynamic content has been added after `apos.util.onReady` has fired.
+
 ## Template helpers
 
 Template helpers are methods available for use in template files. Because this module has an alias, you can call these in templates using the alias path. For example, `apos.util.log()`.
