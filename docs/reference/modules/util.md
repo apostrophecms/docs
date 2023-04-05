@@ -211,7 +211,7 @@ Returns a *new* `req` object with the properties of the original plus any in the
 
 #### `runPlayers(el)`
 
-Runs all the players that have not been run in the whole document. Passing an optional DOM element to the `el` parameter will restrict the search for unplayed players to that element only. This function is useful when dynamic content has been added after `apos.util.onReady` has fired.
+Runs all the widget players that have not been run in the whole document. Passing an optional DOM element to the `el` parameter will restrict the search for unplayed players to that element only. This function is useful when dynamic content has been added after `apos.util.onReady` has fired.
 
 ## Template helpers
 
