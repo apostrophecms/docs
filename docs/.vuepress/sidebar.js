@@ -201,7 +201,7 @@ module.exports = {
       children: getModuleRefs()
     },
     {
-      title: 'API routes',
+      title: 'REST API routes',
       path: '/reference/api',
       collapsable: false,
       children: [

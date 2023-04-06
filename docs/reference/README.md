@@ -14,7 +14,7 @@ This section contains information about the custom Nunjuck template tags for ret
 ### Core Modules
 This section contains information about the majority of the Apostrophe core modules, including relevent methods and command line tasks.
 
-### API Routes
+### REST API Routes
 This section contains information about using the API to request piece and page type documents. This section is a must read for anyone wanting to use Apostrophe as a headless CMS.
 
 ### Glossary
