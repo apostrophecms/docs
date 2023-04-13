@@ -148,3 +148,37 @@ module.exports = {
   }
 };
 ```
+
+## Allowing full `GET` access for guest users
+
+By default, even a logged-in user can only see content exposed by the `publicApiProjection`,
+unless they have at least some editing privileges.
+
+If your project involves "guest" users who have no editing privileges, or at least none
+that are exposed via Apostrophe permissions and roles, but should have full read access
+to the REST APIs you can enable this for each relevant piece type:
+
+```javascript
+// modules/product/index.js
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    guestApiAccess: true
+  }
+};
+```
+
+You can also enable it for pages:
+
+```javascript
+// modules/@apostrophecms/page/index.js
+module.exports = {
+  options: {
+    guestApiAccess: true
+  }
+};
+```
+
+This does not grant guest users access to anything the public could not see if it
+was being accessed as part of an ordinary website page. For instance, this does not
+mean that guests can view drafts.
