@@ -88,6 +88,29 @@ You can use the same tag in several styles with various CSS classes.
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
+While most tags that are not used by the formatting tools need to be added to the list of allowed tags in the widget before use, the `<span>` tag is allowed by default and useful for styling blocks of text. Selecting a block of text, even with spaces, and applying a style using the span tag will surround that block of text with span tags with class attribute(s). For example, you can highlight just a portion of a paragraph.
+
+Adding to the toolbar styles:
+
+```js
+{
+  styles: [
+    {
+      tag: 'span',
+      label: 'Highlight: Red',
+      class: 'highlight-red'
+    }
+  ]
+}
+```
+Adding to the stylesheet:
+
+```css
+.highlight-red { color: #FF0000; } 
+```
+
+![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../.vuepress/public/images/rich-text-highlighting.png)
+
 ### Default rich text configuration
 
 ```javascript
@@ -142,7 +165,31 @@ module.exports = {
   }
 }
 ```
+### Using Markdown in the Rich Text Widget
+The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). By default, a single octothorpe ('#') followed by a space will convert the following text into an H1 heading. Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strike-though~~`) for strike-through and double asterisk (`**bold**`) for bold. Support for additional heading shortcuts, e.g. `## `H2 heading` requires that you define them in your styles section. So for the default settings, headings `# H1`, `## H2`, `### H3`, and `#### H4` are defined.
 
+
+| Element | Syntax | Enabling |
+| --- | --- | --- |
+| `h1` | `# heading 1` | Default |
+| `h2` | `## heading 2` | Must be defined in 'styles' |
+| `h3` | `## heading 3` | Must be defined in 'styles' |
+| `h4` | `## heading 4` | Must be defined in 'styles' |
+| `h5` | `## heading 5` | Must be defined in 'styles' |
+| `h6` | `## heading 6` | Must be defined in 'styles' |
+| `strong` | `**bold**` | Default |
+| `em` | `*italics*` | Default |
+| `blockquote` | `> blockquote` | Default |
+| `ol` | `1. list item` | Default |
+| `ul` | `* list item` | Default |
+| `code` | \`code\` (single backticks)| Default |
+| `s` | `~~strikethrough~~` | Default |
+| `mark` | `==highlight==` | Default |
+| `hr` | --- | Default |
+
+:::note
+Spaces in the syntax between the symbol and any text in the table are required, e.g., `## heading`. Equally, a lack of space between symbols and any text is also required for proper formatting, e.g., `**bold**`.
+:::
 ### Configuring the `image` toolbar option
 
 If you choose to enable the `image` toolbar option, which is currently in beta and allows images to
