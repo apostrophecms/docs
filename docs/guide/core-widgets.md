@@ -88,7 +88,7 @@ You can use the same tag in several styles with various CSS classes.
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
-While most tags that are not used by the formatting tools need to be added to the list of allowed tags in the widget before use, the `<span>` tag is allowed by default and useful for styling blocks of text. Selecting a block of text, even with spaces, and applying a style using the span tag will surround that block of text with span tags with class attribute(s). For example, you can highlight just a portion of a paragraph.
+Some tags will wrap the selected text, rather than converting the entire block to be enclosed in a specific tag. For example, selecting just a few words within a paragraph and applying a style using the span tag will surround the selected text with span tags configured with the configured class attribute(s).
 
 Adding to the toolbar styles:
 
@@ -110,6 +110,8 @@ Adding to the stylesheet:
 ```
 
 ![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../.vuepress/public/images/rich-text-highlighting.png)
+
+The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
 ### Default rich text configuration
 
@@ -177,8 +179,8 @@ The rich text widget has limited support for using [Markdown syntax](https://www
 | `h4` | `## heading 4` | Must be defined in 'styles' |
 | `h5` | `## heading 5` | Must be defined in 'styles' |
 | `h6` | `## heading 6` | Must be defined in 'styles' |
-| `strong` | `**bold**` | Default |
-| `em` | `*italics*` | Default |
+| `strong` | `**bold**` or `__bold__` | Default |
+| `em` | `*italics*` or `_italics_`| Default |
 | `blockquote` | `> blockquote` | Default |
 | `ol` | `1. list item` | Default |
 | `ul` | `* list item` | Default |
