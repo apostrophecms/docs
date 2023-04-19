@@ -168,12 +168,14 @@ module.exports = {
 }
 ```
 ### Using Markdown in the Rich Text Widget
-The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). By default, a single octothorpe ('#') followed by a space will convert the following text into an H1 heading. Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strike-though~~`) for strike-through and double asterisk (`**bold**`) for bold. Support for additional heading shortcuts, e.g. `## `H2 heading` requires that you define them in your styles section. So for the default settings, headings `# H1`, `## H2`, `### H3`, and `#### H4` are defined.
+The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). Heading styles can be selected by adding the same number of octothorpe ('#') as the heading level, followed by a space, and then the heading text. This will only work if you have that heading added into your `styles` dropdown. If you do not have a particular heading added to your `styles`, the next heading lower will be substituted. For example, if you have the `h2` tag added but not the `h1`, using `# My Title` will result in your title having `h2` tags.
+
+Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strike-though~~`) for strike-through and double asterisk (`**bold**`) for bold. Support for additional heading shortcuts, e.g. `## `H2 heading` requires that you define them in your styles section. So for the default settings, headings `## H2`, `### H3`, and `#### H4` are defined.
 
 
 | Element | Syntax | Enabling |
 | --- | --- | --- |
-| `h1` | `# heading 1` | Default |
+| `h1` | `# heading 1` | Must be defined in 'styles' |
 | `h2` | `## heading 2` | Must be defined in 'styles' |
 | `h3` | `## heading 3` | Must be defined in 'styles' |
 | `h4` | `## heading 4` | Must be defined in 'styles' |
