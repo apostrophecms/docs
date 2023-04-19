@@ -46,8 +46,8 @@ genres: {
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
-| `style` | String | n/a | If set to 'combo', it adds a selection choices box and converts the choices to a dropdown list |
-| 'all' | Object | n/a | If style is also set to 'combo', this adds a choice to select every option with label set by the `label` key of the object |
+| `style` | String | n/a | If 'combo', adds a selection choices box and dropdown list of choices |
+| 'all' | Object | n/a | If `style: 'combo'`, adds a choice to select every option with a label set by the `label` property |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
