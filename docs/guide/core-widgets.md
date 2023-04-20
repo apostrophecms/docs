@@ -168,9 +168,9 @@ module.exports = {
 }
 ```
 ### Using Markdown in the Rich Text Widget
-The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). Heading styles can be selected by adding the same number of octothorpe ('#') as the heading level, followed by a space, and then the heading text. This will only work if you have that heading added into your `styles` dropdown. If you do not have a particular heading added to your `styles`, the next heading lower will be substituted. For example, if you have the `h2` tag added but not the `h1`, using `# My Title` will result in your title having `h2` tags.
+The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). Heading styles can be selected by adding the same number of octothorpe ('#') as the heading level, followed by a space, and then the heading text. This will only work if you have that heading added into your `styles` dropdown. If you do not have a particular heading added to your `styles`, the next heading lower will be substituted. For example, if you have the `h2` tag added but not the `h1`, using `# My Title` will result in your title having `h2` tags. For the default rich text widget settings, headings `## H2`, `### H3`, and `#### H4` are defined.
 
-Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strike-though~~`) for strike-through and double asterisk (`**bold**`) for bold. Support for additional heading shortcuts, e.g. `## `H2 heading` requires that you define them in your styles section. So for the default settings, headings `## H2`, `### H3`, and `#### H4` are defined.
+Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strike-though~~`) for strike-through and double asterisk (`**bold**`). See the table below for the entire list.
 
 
 | Element | Syntax | Enabling |
