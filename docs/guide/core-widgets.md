@@ -88,6 +88,31 @@ You can use the same tag in several styles with various CSS classes.
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
+Some tags will wrap the selected text, rather than converting the entire block to be enclosed in a specific tag. For example, selecting just a few words within a paragraph and applying a style using the span tag will surround the selected text with span tags configured with the configured class attribute(s).
+
+Adding to the toolbar styles:
+
+```js
+{
+  styles: [
+    {
+      tag: 'span',
+      label: 'Highlight: Red',
+      class: 'highlight-red'
+    }
+  ]
+}
+```
+Adding to the stylesheet:
+
+```css
+.highlight-red { color: #FF0000; } 
+```
+
+![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../.vuepress/public/images/rich-text-highlighting.png)
+
+The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
+
 ### Default rich text configuration
 
 ```javascript
@@ -142,7 +167,33 @@ module.exports = {
   }
 }
 ```
+### Using Markdown in the Rich Text Widget
+The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). Heading styles can be selected by adding the same number of octothorpe ('#') as the heading level, followed by a space, and then the heading text. This will only work if you have that heading added into your `styles` dropdown. If you do not have a particular heading added to your `styles`, the next heading lower will be substituted. For example, if you have the `h2` tag added but not the `h1`, using `# My Title` will result in your title having `h2` tags. For the default rich text widget settings, headings `## H2`, `### H3`, and `#### H4` are defined.
 
+Several other Markdown shortcuts are enabled by default, including double tilde (`~~ strikethrough~~`) for strikethrough and double asterisk (`**bold**`). See the table below for the entire list.
+
+
+| Element | Syntax | Enabling |
+| --- | --- | --- |
+| `h1` | `# heading 1` | Must be defined in 'styles' |
+| `h2` | `## heading 2` | Must be defined in 'styles' |
+| `h3` | `## heading 3` | Must be defined in 'styles' |
+| `h4` | `## heading 4` | Must be defined in 'styles' |
+| `h5` | `## heading 5` | Must be defined in 'styles' |
+| `h6` | `## heading 6` | Must be defined in 'styles' |
+| `strong` | `**bold**` or `__bold__` | Default |
+| `em` | `*italics*` or `_italics_`| Default |
+| `blockquote` | `> blockquote` | Default |
+| `ol` | `1. list item` | Default |
+| `ul` | `* list item` | Default |
+| `code` | \`code\` (single backticks)| Default |
+| `s` | `~~strikethrough~~` | Default |
+| `mark` | `==highlight==` | Default |
+| `hr` | `---` | Default |
+
+:::note
+Spaces in the syntax between the symbol and any text in the table are required, e.g., `## heading`. Equally, a lack of space between symbols and any text is also required for proper formatting, e.g., `**bold**`.
+:::
 ### Configuring the `image` toolbar option
 
 If you choose to enable the `image` toolbar option, which is currently in beta and allows images to
