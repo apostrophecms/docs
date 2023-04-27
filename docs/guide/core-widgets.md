@@ -61,12 +61,39 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'alignRight'` | Text Align Right |
 | `'alignJustify'` | Text Align Justify |
 | `'table'` | Insert and edit tables |
-| `'image'` | Insert and edit images (beta) |
+| `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
 | `'|'` | Add a visual separator to the toolbar (not a formatting action) |
 
 <!-- TODO: Add a link to the how-to on adding your own tools when available. -->
+
+### Configuring the insert menu
+
+Note that the toolbar appears only when text is already selected. Some features, like
+`table` and `image`, should be available all the time because they insert entirely
+new content unrelated to existing text.
+
+To accommodate this, you can enable the "insert menu" as well:
+
+```js
+// modules/@apostrophecms/home-page/index.js
+// In area field configuration options
+widgets: {
+  '@apostrophecms/rich-text': {
+    //  Toolbar configuration
+    toolbar: ['styles', 'bold', 'italic', 'table', 'image'],
+    // 👇 Insert menu configuration
+    insert: ['table', 'image']
+}
+```
+
+When you do so, the user receives a hint to press the `/` key at the start of any
+line to open the insert menu.
+
+Note that in this example, both insert menu options appear on the toolbar as well.
+This is because there are useful features included for editing *existing* tables and
+images, not just inserting new ones.
 
 ### Configuring text styles
 
@@ -194,12 +221,15 @@ Several other Markdown shortcuts are enabled by default, including double tilde 
 :::note
 Spaces in the syntax between the symbol and any text in the table are required, e.g., `## heading`. Equally, a lack of space between symbols and any text is also required for proper formatting, e.g., `**bold**`.
 :::
-### Configuring the `image` toolbar option
+### Configuring the `image` toolbar and insert menu option
 
-If you choose to enable the `image` toolbar option, which is currently in beta and allows images to
-appear inline in text, you will usually want to also configure the `imageStyles` option
-to the `@apostrophecms/rich-text-widget` module in order to specify CSS classes the user is allowed to select
-for the image:
+If you choose to enable the `image` toolbar option, which allows images to
+appear inline in text, you will usually want to also add it to the `insert` option so
+that the user can easily insert a brand new image without selecting tet first.
+
+In addition, you will likely want to configure the `imageStyles` option
+to the `@apostrophecms/rich-text-widget` module in order to specify CSS classes
+the user is allowed to select for the image:
 
 <AposCodeBlock>
 ```javascript
@@ -229,11 +259,11 @@ module.exports = {
 </AposCodeBlock>
 
 Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element.
-Note that writing styles for those classes to suit your needs is up to you. `image-float-left` does not ship with Apostrophe,
+Note that writing CSS styles for those classes to suit your needs is up to you. `image-float-left` does not ship with Apostrophe,
 it is just an example.
 
 Inline images can be handy, especially for floating, but image widgets and custom widgets are generally more
-flexible. The user experience of selecting an inline image is not mature yet.
+flexible.
 
 ### Allowing links to specific piece-types
 
