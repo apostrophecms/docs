@@ -225,10 +225,10 @@ Spaces in the syntax between the symbol and any text in the table are required, 
 
 If you choose to enable the `image` toolbar option, which allows images to
 appear inline in text, you will usually want to also add it to the `insert` option so
-that the user can easily insert a brand new image without selecting tet first.
+that the user can easily insert a brand new image without selecting text first.
 
 In addition, you will likely want to configure the `imageStyles` option
-to the `@apostrophecms/rich-text-widget` module in order to specify CSS classes
+of the `@apostrophecms/rich-text-widget` module, in order to specify CSS classes
 the user is allowed to select for the image:
 
 <AposCodeBlock>
