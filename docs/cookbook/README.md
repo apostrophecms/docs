@@ -6,6 +6,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 
 - [Building site navigation](building-navigation.md)
 - [Converting an HTML template](html-conversion.md)
+- [Creating custom schema fields](creating-custom-schema-fields.md)
 
 ## Hosting
 
