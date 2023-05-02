@@ -6,7 +6,7 @@ This article covers the first steps to get started. MacOS and Linux users can di
 
 | Software | Minimum Version |
 | ------------- | ------------- |
-| [Node.js](https://nodejs.org/en/) | 14.x+ |
+| [Node.js](https://nodejs.org/en/) | 16.x+ |
 | [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.2+ |
 
 See the links above to install each. To check that these are installed in your environment, try the following commands:
