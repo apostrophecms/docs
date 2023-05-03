@@ -43,7 +43,7 @@ Using a 3rd-party email delivery provider like Gmail, or Mailgun will probably b
 module.exports = {
   options: {
     nodemailer: {
-      service: 'gmail'
+      service: 'gmail',
       host: "smtp.gmail.com.com",
       auth: {
         // substitute in your actual Gmail credentials
