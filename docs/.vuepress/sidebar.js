@@ -115,7 +115,7 @@ module.exports = {
       children: [
         ['cookbook/building-navigation.md', 'Building site navigation'],
         ['cookbook/html-conversion.md', 'Converting an HTML template'],
-        ['cookbook/creating-custom-schema-fields.md', 'Creating custom schema fields']
+        ['cookbook/extending-the-ui.md', 'Extending the UI with standard schema fields']
       ]
     },
     {
