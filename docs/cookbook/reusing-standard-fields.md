@@ -1,7 +1,7 @@
-# Extending the UI with standard schema fields
+# Reusing standard schema fields in custom schema fields
 
 ## Introduction
-Apostrophe comes with a large number of [schema field types](/reference/field-types/). Many times when we need a custom field type, it is simply a combination of existing field types working together for a new outcome. Luckily, Apostrophe was designed to allow you to reuse existing field types to create new fields with a custom look.
+Apostrophe comes with a large number of [schema field types](/reference/field-types/). If these field types aren't sufficient for your project, Apostrophe makes adding a new custom schema field relatively easy and you can read more about it in the [documentation](/guide/custom-schema-field-types.html). However, many times when we need a custom field type, it is simply a combination of existing field types working together for a new outcome. Luckily, Apostrophe was designed to allow you to reuse existing field types to create new fields with a custom look.
 
 In this recipe, we are going to build two different customized schema fields. The first will be a simple set of `integer` fields to collect grade information. The second will be a gradient background creator with `integer` and `color` fields, within an `array`. Overall, the steps to building both will be almost identical. However, we are going to build the grade field as part of a piece and the gradient as a stand-alone module. This will demonstrate the changes you need to make when building your custom schema field in a module that doesn't extend another core module and changes that need to be made to `object` and `array` schema input fields when you use them this way.
 
@@ -45,7 +45,7 @@ module.exports = {
             },
             grades: {
               label: 'Class Grades',
-              type: 'gradeField'
+              type: 'grades'
             }
           }
         }
@@ -65,7 +65,7 @@ module.exports = {
     return {
       addGradeFieldType() {
         self.apos.schema.addFieldType({
-          name: 'gradeField',
+          name: 'grades',
           convert: self.convertInput,
           vueComponent: 'InputGradeField'
         });
@@ -90,11 +90,7 @@ module.exports = {
       async convertInput(req, field, data, object) {
         data = data[field.name];
         const errors = [];
-        const result = {
-          _id:
-            self.apos.launder.id(data && data._id) ||
-            self.apos.util.generateId()
-        };
+        const result = {};
         if (data == null || typeof data !== 'object' || Array.isArray(data)) {
           data = {};
         }
@@ -134,7 +130,7 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
-This piece contains only a two fields. A string field for the class name and the new schema field, `gradeField`, both inside an `array` schema field.
+This piece contains only two fields. A string field for the class name and the new schema field, `grades`, both inside an `array` schema field.
 
 Within the `init(self)` function, we make a call to the method that will register and create our new schema field type.
 
@@ -149,14 +145,14 @@ The `methods(self)` configuration function is a bit more complicated. There are 
 ```javascript
 addGradeFieldType() {
   self.apos.schema.addFieldType({
-    name: 'gradeField',
+    name: 'grades',
     convert: self.convertInput,
     vueComponent: 'InputGradeField'
   });
 }
 ```
 
-We are passing the `addFieldType()` method of the `@apostrophecms/schema` module an object with three properties. The first is the name that will be used within any schema utilizing this field, `gradeField`. The `convert` key points to the method that will be used to sanitize and store the data. Finally, the `vueComponent` key takes the file name for our Vue component located in the `modules/grade/ui/apos/components` folder.
+We are passing the `addFieldType()` method of the `@apostrophecms/schema` module an object with three properties. The first is the name that will be used within any schema utilizing this field, `grades`. The `convert` key points to the method that will be used to sanitize and store the data. Finally, the `vueComponent` key takes the file name for our Vue component located in the `modules/grade/ui/apos/components` folder.
 
 
 ```javascript
@@ -188,11 +184,7 @@ async convertInput(req, field, data, object) {
   data = data[field.name];
   const schema = self.exposeSchema();
   const errors = [];
-  const result = {
-    _id:
-      self.apos.launder.id(data && data._id) ||
-      self.apos.util.generateId()
-  };
+  const result = {};
   if (data == null || typeof data !== 'object' || Array.isArray(data)) {
     data = {};
   }
@@ -207,12 +199,11 @@ We next pull in the schema we defined above using the `exposeSchema()` method. T
 
 The `errors` and `results` variables are next initialized so that they can take values returned from the `@apostrophecms/schema` module `convert()` method.
 
-Note that for `result` we are making sure that an `_id` property exists and is sanitized, otherwise, we generate one.
-
 Before passing our data to the `convert()` method we ensure that it is a non-array object. If not, the data coming back from the component can't be sanitized and instead is discarded.
+
 After prepping the argument data, we invoke the `@apostrophecms/schema` module `convert()` method within a try-catch block.
 
-This either populates our `result` variable with the sanitized data, or throws errors that are pushed to the `errors` variable.
+This either populates our `result` variable with the sanitized data or throws errors that are pushed to the `errors` variable.
 
 Lastly, we assign those results to the `object` parameter. If no errors came back from the `convert()` method this object is saved to the database.
 
@@ -246,7 +237,7 @@ The custom field browser-side code should be added to your module's `ui/apos/com
     <template #body>
       <div class="custom-input-object">
         <div class="custom-input-wrapper">
-          <AposSchema :schema="gradeSchema" :trigger-validation="triggerValidation" :utility-rail="false" :generation="generation" v-model="gradeSchemaInput">
+          <AposSchema :schema="gradeSchema" :trigger-validation="triggerValidation" :generation="generation" v-model="gradeSchemaInput">
           </AposSchema>
           <span class="letter-grade">{{ letterGrade() }}</span>
         </div>
@@ -397,7 +388,7 @@ As a guide for selecting error type, the Apostrophe `array` and `object` fields 
 <template #body>
   <div class="custom-input-object">
     <div class="custom-input-wrapper">
-      <AposSchema :schema="gradeSchema" :trigger-validation="triggerValidation" :utility-rail="false" :generation="generation" v-model="gradeSchemaInput">
+      <AposSchema :schema="gradeSchema" :trigger-validation="triggerValidation" :generation="generation" v-model="gradeSchemaInput">
       </AposSchema>
       <span class="letter-grade">{{ letterGrade() }}</span>
     </div>
@@ -407,9 +398,9 @@ As a guide for selecting error type, the Apostrophe `array` and `object` fields 
 
 The `AposSchema` component does the majority of work constructing and displaying our schema fields, as well as passing data.
 
-In this case, we are wrapping it in some additional markup to allow for customized styling. In making your components, this may not be necessary. To return the letter grade we are adding an additional span after the `AposSchema` with content set by the `letterGrade()` method.
+In this case, we are wrapping it in some additional markup to allow for customized styling. In making your components, this may not be necessary. To return the letter grade we are adding a span after the `AposSchema` with content set by the `letterGrade()` method.
 
-The `AposSchema` component typically takes the `:trigger-validation`, `:utility-rail` and `:generation` props. These are used by Apostrophe for field validation, display, and updating.
+The `AposSchema` component typically takes the `:trigger-validation`, and `:generation` props. These are used by Apostrophe for field validation, display, and updating.
 
 To keep track of state within our component, we are passing `gradeSchemaInput` that comes from our `data()` method to `v-model`.
 
@@ -439,7 +430,7 @@ export default {
   mixins: [AposInputMixin],
 ```
 
-The main script starts with the `name` property, which is set by convention to the same value as the name of the file. This is followed by the `components` property, with an object of the components that we just loaded. If your component uses the button component, you would add `AposButton` to this object. Similarly, the `mixin` property takes an array of the mixins we just imported.
+The main script starts with the `name` property, which is set by convention to the same value as the name of the file. This is followed by the `components` property, with an object of the components that we just loaded. If your component uses the button component, you would add `AposButton` to this object. Similarly, the `mixins` property takes an array of the mixins we just imported.
 
 ```javascript
 props: {
@@ -470,12 +461,12 @@ data() {
 
 In this code, we are defining the initial state of our `AposSchema` Vue component using the data option. The data option is a function that returns an object with properties that represent the component's initial state.
 
-First, we call a self-defined method called `getNext()` to retrieve the current values for our schema fields and assign them to the `next` constant.
+First, we call a self-defined method called `getNext()` to retrieve the current values for our schema fields and assign them to `next`.
 
-Next, we access the schema we used in our `grade` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to add that schema to the `req` as `gradeSchema`.
+We access the schema we used in our `student` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to make the schema available as `gradeSchema`.
 
 Finally, we return an object with three properties:
-* `next`: the value of next
+* `next`: the initial value of next
 * `gradeSchemaInput`: an object with a property called data that contains the value of `next`. This is used to set the `v-model` of the `AposSchema` component
 * `gradeSchema`: the schema of our custom field as an array. This is used to set the `:schema` of the `AposSchema` component
   
@@ -536,9 +527,9 @@ methods: {
 ```
 The `getNext()` function of the `methods` section returns either the stored input field values, the individual field defaults set in the schema if there are no stored values, or an empty object in the absence of a stored value or field default value. As we will see for the color gradient custom field section, you can pre-populate your schema with input using this function.
 
-Every custom schema requires a `validate()` function. In this case, the code checks whether the `hasErrors` sub-property of the `gradeSchemaInput` object is true. If so, it returns the `invalid` error string. Otherwise, it returns `false`.
+Every input field requires a `validate()` function. In this case, the code checks whether the `hasErrors` sub-property of the `gradeSchemaInput` object is true. If so, it returns the `invalid` error string. Otherwise, it returns `false`.
 
-You can also choose to add further custom field validation that doesn't exist in the normal field schema to this method. For example, you might require that the `class` string always have a prefix that is added from a `following` field. You could access and value of the field using `value.class` and check it by a regular expression. You could then return a custom error string like, `needs prefix` to the user.
+You can also choose to add further custom field validation that doesn't exist in the normal field schema to this method. For example, you might require that the `class` string always have a prefix that is added from a `following` field. You could access and value of the field using `value.class` and check it using `.startsWith()`. You could then return a custom error string like, `needs prefix` to the user.
 
 The final method, `letterGrade()`, takes the value from the two inputs and returns a letter grade for our imaginary teacher. You can't do that with a standard Apostrophe schema!
 
@@ -547,7 +538,7 @@ The remainder of this file is styling and will be highly variable between custom
 ## Building the custom color gradient field type
 
 ![Screenshot of the custom color gradient picker schema field in the editor](../.vuepress/public/images/recipes/custom-schema-color-gradient.png)
-This custom schema field lets the editor create linear color gradients using any number of colors added through an inline array schema field. The output from this could be used for the background of a hero or text with a gradient of color.
+This custom schema field lets the editor create linear color gradients using any number of colors by taking advantage of an inline array schema field. The output from this could be used for the background of a hero or text with a gradient of color.
 
 Just like with our first example, we need to create server-side code to handle registering the schema field type, plus sanitizing and storing the data in the database. We also need to create the browser-side Vue component to display our fields to the editor.
 
@@ -617,11 +608,7 @@ module.exports = {
         data = data[field.name];
         const schema = self.exposeSchema();
         const errors = [];
-        const result = {
-          _id:
-            self.apos.launder.id(data && data._id) ||
-            self.apos.util.generateId()
-        };
+        const result = {};
         if (data == null || typeof data !== 'object' || Array.isArray(data)) {
           data = {};
         }
@@ -728,11 +715,7 @@ async convertInput(req, field, data, object) {
   data = data[field.name];
   const schema = self.exposeSchema();
   const errors = [];
-  const result = {
-    _id:
-      self.apos.launder.id(data && data._id) ||
-      self.apos.util.generateId()
-  };
+  const result = {};
   if (data == null || typeof data !== 'object' || Array.isArray(data)) {
     data = {};
   }
@@ -774,7 +757,6 @@ The remainder of the `methods(self)` method is nearly identical to the first exa
           <AposSchema
           :schema="gradientSchema"
           :trigger-validation="triggerValidation"
-          :utility-rail="false"
           :generation="generation"
           v-model="gradientSchemaInput">
           </AposSchema>
@@ -919,7 +901,7 @@ For this example, we aren't going to explain every single line of the code. We a
       <div class="apos-input-object">
         <div class="apos-input-wrapper">
           <div id="color-square" :style="{ background: gradient }" />
-          <AposSchema :schema="gradientSchema" :trigger-validation="triggerValidation" :utility-rail="false"
+          <AposSchema :schema="gradientSchema" :trigger-validation="triggerValidation"
             :generation="generation" v-model="gradientSchemaInput">
           </AposSchema>
         </div>
