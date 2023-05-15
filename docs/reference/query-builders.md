@@ -2,11 +2,38 @@
 sidebarDepth: 2
 ---
 
-# Query builders
+# Query builders (query filters)
 
-Server-side database query builders in Apostrophe help developer refine database document queries or refine the query results in some way. The sections below organize core query builders by the relevant document types.
+Server-side database query builders in Apostrophe help the developer refine database document queries or refine the query results in some way. In addition to the core query builders detailed below, most schema field types automatically add a query builder that can be used to filter query results.
 
 **See the [database querying guide](/guide/database-queries.md) for general information about using query builders.**
+
+## Using schema fields as builders
+
+Schema field types can be used to filter the results via the query string in our REST APIs, or as a chainable method after `find` in backend Node.js code.
+
+In the case of string fields and most other simple types, the query parameter and the field name are the same with only exact matches supported. Boolean fields support the values 1 and 0, but also true and false.
+
+<AposCodeBlock>
+
+```javascript
+...
+fields: {
+  add: {
+    lastName: {
+      type: 'string',
+      label: 'Last Name'
+    },
+    proMember: {
+      type: 'boolean',
+      label: 'Pro member'
+    }
+  }
+}
+For relationship fields, if the exact field name is used, e.g. `_products`, then the value must be the `_id`. Only documents related to the document with the specified id are returned. If the value is an array, then documents related to one or more of the specified IDs are returned.
+If the field name is used without the `_`, e.g. `products`, then the value must be the `slug`xx of the related document. Only documents related to the document with the specified id are returned. If the value is an array, then documents related to one or more of the specified slugs are returned.
+Relationship fields also support “AND” queries. If And is added to the field name, e.g. _productsAnd, and the value is an array then only documents related to all of the specified document ids are returned. The same goes for productsAnd, which matches only documents related to all of the specified document slugs. 
+
 
 ## Builders for all doc types
 

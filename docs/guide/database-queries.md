@@ -106,9 +106,9 @@ It's important to understand that the `find` method is not the end of the proces
 
 These are **query builders**. Let's look at what query builders are before we identify what is happening in this example.
 
-## Using query builders
+## Using query builders (query filters)
 
-Query builders are additional instructions added to the data query. These special methods may receive arguments, but many apply an effect without any arguments. They can be chained on a query, meaning that we can add multiple builders onto a query and each one will build on the rules established before it.
+Query builders, sometimes called query filters, are additional instructions added to the data query that refine the query results. These special methods may receive arguments, but many apply an effect without any arguments. They can be chained on a query, meaning that we can add multiple builders onto a query and each one will build on the rules established before it.
 
 Examples of query builders include:
 - `.limit(10)`: This limits the number of results that the query will return to the number we pass it.
