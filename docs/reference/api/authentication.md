@@ -42,7 +42,7 @@ http://example.net/api/v1/article?apikey=myapikey1029384756
 
 ## Bearer tokens
 
-Bearer tokens are more appropriate for browser use and headless applications because they are tied to a single user account. To obtain a bearer token, make a `POST` request to `/api/v1/login/login`, with the `username` and `password` body properties:
+Bearer tokens are more appropriate for browser use and headless applications because they are tied to a single user account. To obtain a bearer token, make a `POST` request to `/api/v1/@apostrophecms/login/login`, with the `username` and `password` body properties:
 
 ```javascript
 // Request inside an async function.
