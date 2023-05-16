@@ -1,5 +1,6 @@
-# Reusing standard schema fields in custom schema fields
+# Composing custom schemas from standard fields
 
+![A composite screenshot of the two custom schema fields being built in this recipe.](../.vuepress/public/images/recipes/composite-schema.png)
 ## Introduction
 Apostrophe comes with a large number of [schema field types](/reference/field-types/). If these field types aren't sufficient for your project, Apostrophe makes adding a new custom schema field relatively easy and you can read more about it in the [documentation](/guide/custom-schema-field-types.html). However, many times when we need a custom field type, it is simply a combination of existing field types working together for a new outcome. Luckily, Apostrophe was designed to allow you to reuse existing field types to create new fields with a custom look.
 
@@ -200,6 +201,23 @@ We next pull in the schema we defined above using the `exposeSchema()` method. T
 The `errors` and `results` variables are next initialized so that they can take values returned from the `@apostrophecms/schema` module `convert()` method.
 
 Before passing our data to the `convert()` method we ensure that it is a non-array object. If not, the data coming back from the component can't be sanitized and instead is discarded.
+
+```javascript
+try {
+  await self.apos.schema.convert(req, schema, data, result);
+} catch (e) {
+  for (const error of e) {
+    errors.push({
+      path: error.path,
+      error: error.error
+    });
+  }
+}
+object[field.name] = result;
+if (errors.length) {
+  throw errors;
+}
+```
 
 After prepping the argument data, we invoke the `@apostrophecms/schema` module `convert()` method within a try-catch block.
 
@@ -701,7 +719,7 @@ getBrowserData(req) {
 },
 ```
 
-Since we are in a stand-alone module with nothing to extend, we access `getBrowserData(req)` within the `methods(self) section, rather than the `extendMethods(self)` section. Again, we are adding the schema to the browser data so that we can access it within the Vue component.
+Since we are in a stand-alone module with nothing to extend, we access `getBrowserData(req)` within the `methods(self)` section, rather than the `extendMethods(self)` section. Again, we are adding the schema to the browser data so that we can access it within the Vue component.
 
 ```javascript
 addColorGradientFieldType() {
