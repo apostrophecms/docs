@@ -1,4 +1,4 @@
-# Composing custom schemas from standard fields
+# Composing custom schema fields from standard fields
 
 ![A composite screenshot of the two custom schema fields being built in this recipe.](../.vuepress/public/images/recipes/composite-schema.png)
 ## Introduction
