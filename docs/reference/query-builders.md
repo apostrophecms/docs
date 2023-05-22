@@ -30,6 +30,14 @@ fields: {
     }
   }
 }
+```
+
+</AposCodeBlock>
+
+```javascript
+
+```
+
 For relationship fields, if the exact field name is used, e.g. `_products`, then the value must be the `_id`. Only documents related to the document with the specified id are returned. If the value is an array, then documents related to one or more of the specified IDs are returned.
 If the field name is used without the `_`, e.g. `products`, then the value must be the `slug`xx of the related document. Only documents related to the document with the specified id are returned. If the value is an array, then documents related to one or more of the specified slugs are returned.
 Relationship fields also support “AND” queries. If And is added to the field name, e.g. _productsAnd, and the value is an array then only documents related to all of the specified document ids are returned. The same goes for productsAnd, which matches only documents related to all of the specified document slugs. 
