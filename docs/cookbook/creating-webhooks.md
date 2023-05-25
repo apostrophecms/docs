@@ -69,10 +69,7 @@ apiRoutes(self) {
       '/webhooks': async function(req) {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
-          return {
-            status: 403,
-            message: 'FORBIDDEN'
-          };
+          throw self.apos.error('forbidden');
         }
         // Implement your own authorization check here
         // to make sure the data is from a genuine source
@@ -86,10 +83,7 @@ apiRoutes(self) {
 
         // Most webhook providers expect a 200 response
         // or they will attempt to resend the webhook
-        return {
-          status: 200,
-          message: 'Success'
-        };
+        return {};
       }
     }
   };
@@ -103,8 +97,8 @@ apiRoutes(self) {
 
 In this code example, the webhook is being implemented using the `apiRoutes(self)` module configuration function. We are exposing a `POST` route, the one that is most typically used by webhook providers, by passing an object with our function to the `post` property. The function is named for the route it is exposing. In this case, it starts with a forward slash (`/`), indicating that this is relative to the project site itself, e.g. `https://www.my-project.com/webhooks`. You can read about the methods in the [`@apostrophecms/http` module documentation](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options).
 
-Within the function, we first are checking for the presence of an authorization header. If it isn't found we return an object with the status and a message. This will be sent back to the webhook originator, and what needs to be returned will depend on the service. Once authentication is complete you can pass the data off for sanitization and use.
+Within the function, we first are checking for the presence of an authorization header. If it isn't found we throw an error with the string 'forbidden'. This is mapped to a `403` error and returns it to the webhook originator. There are a number of other error strings detailed in the reference documentation for `apiRoutes`. Once authentication is complete you can pass the data off for sanitization and use.
 
-Finally, most providers require the return of some type of success message. Otherwise, they will attempt to resend the webhook.
+Finally, most providers require the return of some type of success message, otherwise, they will attempt to resend the webhook. If no information needs to be supplied you can simply return an empty object, or you can return an object that contains information to include in the body of the response.
 
 Lastly, since this page will be accessed using a POST method from an outside source, we have to add the route to the `csrfExceptions` option array to bypass CSRF protection.
