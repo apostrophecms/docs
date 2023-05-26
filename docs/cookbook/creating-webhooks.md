@@ -1,6 +1,6 @@
 # Creating webhooks
 
-Webhooks allow applications to communicate with each other in real time by sending HTTP requests when certain events or triggers occur. This can allow your site to automatically send notifications when events occur, like publishing a document, or receive updates, for example, from payment portals. This short recipe will demonstrate how to set up webhooks in your Apostrophe project.
+Webhooks allow applications to communicate with each other in real time by sending HTTP requests when certain events or triggers occur. This can allow your site to automatically send notifications when publishing a document or receive updates from payment portals, for example. This short recipe will demonstrate how to set up webhooks in your Apostrophe project.
 
 ## Sending information to a 3rd party webhook
 
@@ -48,13 +48,13 @@ handlers(self) {
 
 In this block of code, we are using the `handlers(self)` module configuration function. We could use any server event, but in this case we are using the `afterPublication` event that is emitted by our custom article piece-type module. This server event delivers two parameters, `req` and `data`. The `data` parameter contains information about the document being published including the content and whether this is the first time it is being published. In this case, we are adding an early return if this isn't the first time the document is being published.
 
-The next section of code is involved in setting up the HTTP `POST` request and will depend heavily on what the desired endpoint requires, and what content you want sent to the endpoint. In this example, we are adding the `title` and `_id`.
+The next section of code is involved in setting up the HTTP `POST` request and will depend heavily on what the desired endpoint requires, and what content you want sent to the endpoint. In this example, we are adding the piece `title` and `_id`.
 
-Finally, we are using the `post` method of the [`@apostrophecms/http` module documentation](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to actually send our data to the endpoint. Depending on the endpoint the response might be as simple as a `200` success or a `400` failed response, or a response containing additional data. That response can be handled to retry a failed response or in some way log the returned data.
+Finally, we are using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. That response can be handled to retry a failed response or in some way log the returned data.
 
 ## Setting up a webhook endpoint
 
-Your project may require a webhook endpoint for interfacing with a payment or subscription service. This can be accomplished by using the Apostrophe [`routes(self)` module configuration](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#routes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
+Your project may require a webhook endpoint for interfacing with a payment or subscription service. This can be accomplished by using the Apostrophe [`apiRoutes(self)` module configuration](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#apiroutes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
 
 <AposCodeBlock>
 
@@ -65,16 +65,17 @@ options: {
 apiRoutes(self) {
   return {
     post: {
-      // change to match the desired endpoint URL
+      // change function name to match the desired endpoint URL
       '/webhooks': async function(req) {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-          throw self.apos.error('forbidden');
-        }
+        
         // Implement your own authorization check here
         // to make sure the data is from a genuine source
         // Each webhook provider likely has guidance and 
         // a specific type of authorization
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+          throw self.apos.error('forbidden');
+        }
 
         // Use data passed by webhook to update database
         // or provide some other type of functionality
@@ -95,10 +96,10 @@ apiRoutes(self) {
 
 </AposCodeBlock>
 
-In this code example, the webhook is being implemented using the `apiRoutes(self)` module configuration function. We are exposing a `POST` route, the one that is most typically used by webhook providers, by passing an object with our function to the `post` property. The function is named for the route it is exposing. In this case, it starts with a forward slash (`/`), indicating that this is relative to the project site itself, e.g. `https://www.my-project.com/webhooks`. You can read about the methods in the [`@apostrophecms/http` module documentation](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options).
+In this code example, the webhook is being implemented using the `apiRoutes(self)` module configuration function. We are exposing a `POST` route, the one that is most typically used by webhook providers, by passing an object with our function to the `post` property. The function is named for the route it is exposing. In this case, it starts with a forward slash (`/`), indicating that this is relative to the project site itself, e.g. `https://www.my-project.com/webhooks`.
 
-Within the function, we first are checking for the presence of an authorization header. If it isn't found we throw an error with the string 'forbidden'. This is mapped to a `403` error and returns it to the webhook originator. There are a number of other error strings detailed in the reference documentation for `apiRoutes`. Once authentication is complete you can pass the data off for sanitization and use.
+Within the function, we first are checking for the presence of an authorization header. If it isn't found we throw an error with the string 'forbidden'. This is mapped to a `403` error and returns it to the webhook originator. There are a number of other error strings detailed in the reference documentation for [`apiRoutes`](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#returning-error-codes). Once authentication is complete you can pass the data off for sanitization and use.
 
-Finally, most providers require the return of some type of success message, otherwise, they will attempt to resend the webhook. If no information needs to be supplied you can simply return an empty object, or you can return an object that contains information to include in the body of the response.
+Finally, most providers require the return of some type of success message, otherwise, they will attempt to resend the webhook. If no information needs to be supplied you can simply return an empty object. Alternatively, you can return an object that contains information to include in the body of the response. The header will still indicate a response of `200/OK`.
 
 Lastly, since this page will be accessed using a POST method from an outside source, we have to add the route to the `csrfExceptions` option array to bypass CSRF protection.
