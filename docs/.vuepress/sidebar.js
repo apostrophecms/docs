@@ -114,7 +114,8 @@ module.exports = {
       collapsable: false,
       children: [
         ['cookbook/building-navigation.md', 'Building site navigation'],
-        ['cookbook/html-conversion.md', 'Converting an HTML template']
+        ['cookbook/html-conversion.md', 'Converting an HTML template'],
+        ['cookbook/reusing-standard-fields.md', 'Composing custom schema fields from existing fields']
       ]
     },
     {
