@@ -38,9 +38,7 @@ handlers(self) {
 
 In this block of code, we are using the `handlers(self)` module configuration function. We could use any server event, but in this case we are using the `afterPublication` event that is emitted by our custom article piece-type module. This server event delivers two parameters, `req` and `data`. The `data` parameter contains information about the document being published including the content and whether this is the first time it is being published. In this case, we are adding an early return if this isn't the first time the document is being published.
 
-The next section of code is involved in setting up the HTTP `POST` request and will depend heavily on what the desired endpoint requires, and what content you want sent to the endpoint. In this example, we are adding the piece `title` and `_id`.
-
-Finally, we are using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. That response can be handled to retry a failed response or in some way log the returned data.
+The next section of code is involved in setting up the HTTP `POST` request using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. That response can be handled to retry a failed response or in some way log the returned data.
 
 ## Incoming webhooks
 
