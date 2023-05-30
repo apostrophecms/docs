@@ -2,7 +2,7 @@
 
 Webhooks allow applications to communicate with each other in real time by sending HTTP requests when certain events or triggers occur. This can allow your site to automatically send notifications when publishing a document or receive updates from payment portals, for example. This short recipe will demonstrate how to set up webhooks in your Apostrophe project.
 
-## Sending information to a 3rd party webhook
+## Outgoing webhooks
 
 There are a wide variety of applications and services that expose webhooks for the transfer of information from your site. For example, you can post messages in specific Slack or Discord channels using a webhook. Apostrophe [handlers](/reference/module-api/module-overview.html#handlers-self) are able to capture a number of built-in [server-side events](../reference/server-events.md) and you also have the option of adding custom events emitted from your own modules. These events are perfect for automatically triggering the delivery of data about an event from your site to a 3rd party.
 
@@ -19,22 +19,12 @@ handlers(self) {
         if (!data.firstTime) {
           return;
         }
-        // The url added here should be changed to the desired endpoint
-        const url = 'https://enr061vpkj3d.x.pipedream.net/';
-        const options = {
-          headers: {
-            // Header information will depend on the endpoint you are sending to
-            'Content-Type': 'application/json'
-          },
+
+        await self.apos.http.post('https://slack-webhook-url-here', {
           body: {
-            docTitle: data.published.title,
-            docId: data.published._id
+            text: 'do something cool with the data'
           }
-        };
-        const response = await self.apos.http.post(url, options);
-        // the response will depend on the endpoint you are sending to
-        // Potentially add code to handle errors coming back
-        // like retrying if the response isn't successful
+        });
       }
     }
   };
@@ -52,9 +42,9 @@ The next section of code is involved in setting up the HTTP `POST` request and w
 
 Finally, we are using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. That response can be handled to retry a failed response or in some way log the returned data.
 
-## Setting up a webhook endpoint
+## Incoming webhooks
 
-Your project may require a webhook endpoint for interfacing with a payment or subscription service. This can be accomplished by using the Apostrophe [`apiRoutes(self)` module configuration](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#apiroutes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
+Your project may require a webhook endpoint to receive incoming notices from services, like a payment portal or subscription manager. Much like Slack can add a message to a channel when it receives data from your site on the correct endpoint, your site can be set up to make changes to the database or perform other tasks when data is received at a specific endpoint. This can be accomplished by using the Apostrophe [`apiRoutes(self)` module configuration](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#apiroutes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
 
 <AposCodeBlock>
 
@@ -80,7 +70,7 @@ apiRoutes(self) {
         // Use data passed by webhook to update database
         // or provide some other type of functionality
         const webhookData = req.body;
-        addNewSubscriber(webhookData);
+        async addNewSubscriber(webhookData);
 
         // Most webhook providers expect a 200 response
         // or they will attempt to resend the webhook
