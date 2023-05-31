@@ -352,7 +352,7 @@ Using `self.apos.doc.find` has limitations, however. Significantly, pieces will 
 ## Where in my code can I make database queries?
 
 You can make database queries in async components (as shown above), routes
-(such as in an `apiRoutes` function), [server event handlers](./server-events.md),
+(such as in an [`apiRoutes`](../reference/module-api/module-overview.md#apiroutes-self) function), [server event handlers](./server-events.md),
 middleware and in pretty much any async function in your server-side code.
 However, you should avoid making database queries:
 
