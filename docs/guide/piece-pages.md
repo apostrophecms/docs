@@ -19,7 +19,7 @@ There are two critical steps to adding a new module for a piece page type:
 Extending the right module is simple enough. These modules use the property:
 
 ```javascript
-`extend: '@apostrophecms/piece-page-type',`
+extend: '@apostrophecms/piece-page-type',
 ```
 
 Identifying the piece type can be done two ways: **using a module naming convention** or **using the `pieceModuleName` setting**. We can look at both options using a blog as our example.
