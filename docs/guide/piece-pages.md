@@ -80,7 +80,7 @@ apos add piece article --page
 
 We'll review each template's features next.
 
-Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module).
+Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module). Additionally, in order for your pages to show up in the page selection dropdown, you also need to add your module to the `module/@apostrophecms/page/index.js` file. As with other pages, you add an object with the name of the module and a label into the `types` option array.
 
 ::: warning 🛑 Hold up. ✋
 
