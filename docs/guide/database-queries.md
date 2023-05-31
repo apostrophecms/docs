@@ -10,9 +10,9 @@ This API also provides a layer of security. Queries made through Apostrophe (tha
 We use the terms "query" and "query builders" here. For developers with advanced Apostrophe 2 experience, these are generally the same as the A2 concepts of "cursors" and "cursor filters."
 :::
 
-## Initiating the data query
+## Initiating the database query
 
-The page module (`@apostrophecms/page`) and all modules that *extend* the piece type module (`@apostrophecms/piece-type`), the two big "doc type" categories, have access to **a `find()` method** that initiates a data query. Any query using a doc type module's `find` method will be limited to that module type. This means that we can know that calling `self.find()` in a `product` piece module will only return products.
+The page module (`@apostrophecms/page`) and all modules that *extend* the piece type module (`@apostrophecms/piece-type`), the two big "doc type" categories, have access to **a `find()` method** that initiates a database query. Any query using a doc type module's `find` method will be limited to that module type. This means that we can know that calling `self.find()` in a `product` piece module will only return products.
 
 The `find` method takes up to three arguments:
 
@@ -108,7 +108,7 @@ These are **query builders**. Let's look at what query builders are before we id
 
 ## Using query builders
 
-Query builders are additional instructions added to the data query. These special methods may receive arguments, but many apply an effect without any arguments. They can be chained on a query, meaning that we can add multiple builders onto a query and each one will build on the rules established before it.
+Query builders are additional instructions added to the database query. These special methods may receive arguments, but many apply an effect without any arguments. They can be chained on a query, meaning that we can add multiple builders onto a query and each one will build on the rules established before it.
 
 Examples of query builders include:
 - `.limit(10)`: This limits the number of results that the query will return to the number we pass it.
@@ -348,3 +348,22 @@ const featuredByType = self.apos.doc.find(req, {
 ```
 
 Using `self.apos.doc.find` has limitations, however. Significantly, pieces will not return with `_url` properties. We would have to run additional queries to the individual piece type module `find` methods once we knew what types we had. That is one reason why using `self.find()` from doc type modules is better when possible.
+
+## Where in my code can I make database queries?
+
+You can make database queries in async components (as shown above), routes
+(such as in an `apiRoutes` function), [server event handlers](./server-events.md),
+middleware and in pretty much any async function in your server-side code.
+However, you should avoid making database queries:
+
+* In the `init()` function of a module, because schemas of other related
+types might not yet be finalized, leading to errors in relationship queries.
+* In an `apostrophe:modulesRegistered` server event handler, for the same reason.
+
+If you wish to make queries in your module at the time the process
+starts up (not on every request), writing a
+`@apostrophecms/doc:beforeReplicate` server event handler is the safest
+choice. If you are trying to make a query on every page request,
+you should write an async component, or write an `@apostrophecms/page:beforeSend`
+server event handler which will receive `(req)` as its first argument, giving
+you a way to attach the query results to `req.data` for use in the template.
