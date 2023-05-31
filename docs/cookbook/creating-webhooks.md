@@ -22,7 +22,8 @@ handlers(self) {
 
         await self.apos.http.post('https://slack-webhook-url-here', {
           body: {
-            text: 'do something cool with the data'
+            docTitle: data.published.title
+            docId: data.published._id
           }
         });
       }
