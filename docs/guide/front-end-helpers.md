@@ -275,7 +275,7 @@ Send an HTTP request with a specific method to the given URL, returning the resp
 | `fullResponse` | If `true`, return an object with `status`, `headers` and `body` properties, rather than returning the body directly. The individual `headers` are canonicalized to lowercase names. If there are duplicate headers after canonicalizing only the last value is returned. If a header appears multiple times an array is returned for it. |
 | `downloadProgress` | Optional. A function accepting `received` and `total` arguments. It may never be called. If called, `received` will be the bytes sent so far and `total` will be the total bytes to be received. If the total is unknown, it will be `null` |
 | `uploadProgress` | Optional. A function accepting `sent` and `total` arguments. It may never be called. If it is called, `sent` will be the bytes sent so far and `total` will be the total bytes to be sent. If the total is unknown, it will be `null`. |
-| `prefix` | If explicitly set to `false`, do not automatically prefix the URL, even if the site has a site-wide prefix or locale prefix. It can become handy when the given url is already prefixed, which is the case when using the document's computed `_url` field for instance |
+| `prefix` | If explicitly set to `false`, do not automatically prefix the URL, even if the site has a site-wide prefix or locale prefix. It can become handy when the given url is already prefixed, which is the case when using the document's computed `_url` field for instance. |
 
 If the status code is greater than 400 an error is thrown. The error object will be similar to a `fullResponse` object, with a `status` property.
 
