@@ -19,12 +19,12 @@ handlers(self) {
         if (!data.firstTime) {
           return;
         }
-
+        const payload = {
+          text: `Article ${data.published.title} was published.`
+        };
+        const jsonPayload = JSON.stringify(payload);
         await self.apos.http.post('https://slack-webhook-url-here', {
-          body: {
-            docTitle: data.published.title
-            docId: data.published._id
-          }
+          body: jsonPayload
         });
       }
     }
@@ -37,9 +37,9 @@ handlers(self) {
 
 </AposCodeBlock>
 
-In this block of code, we are using the `handlers(self)` module configuration function. We could use any server event, but in this case we are using the `afterPublication` event that is emitted by our custom article piece-type module. This server event delivers two parameters, `req` and `data`. The `data` parameter contains information about the document being published including the content and whether this is the first time it is being published. In this case, we are adding an early return if this isn't the first time the document is being published.
+In this block of code, we are using the `handlers(self)` module configuration function. We could use any server event, but in this case, we are using the `afterPublication` event that is emitted by our custom article piece-type module. This server event delivers two parameters, `req` and `data`. The `data` parameter contains information about the document being published including the content and whether this is the first time it is being published. In this case, we are adding an early return if this isn't the first time the document is being published.
 
-The next section of code is involved in setting up the HTTP `POST` request using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. That response can be handled to retry a failed response or in some way log the returned data.
+The next section of code is involved in setting up the HTTP `POST` request using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. You can wrap your `POST` in a try-catch block to catch any exceptions. You can then decide whether to throw an error or notify the user of a problem with `self.apos.notify(req, 'We were unable to send a notification to Slack.');`
 
 ## Incoming webhooks
 
