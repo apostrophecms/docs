@@ -82,6 +82,32 @@ We'll review each template's features next.
 
 Once those template files exist, you would **add this to the `app.js` configuration** [like any other module](/guide/modules.html#setting-up-a-module). Additionally, in order for your pages to show up in the page selection dropdown, you also need to add your module to the `module/@apostrophecms/page/index.js` file. As with other pages, you add an object with the name of the module and a label into the `types` option array.
 
+<AposCodeBlock>
+
+```javascript
+module.export = {
+  options: {
+    types: [
+      // 👇 Adding our new page type
+      {
+        name: 'article-page',
+        label: 'Article page'
+      },
+      // 👇 Optionally including the core "Home page" type
+      {
+        name: '@apostrophecms/home-page',
+        label: 'Home page'
+      }
+    ]
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/page/index.js
+  </template>
+  
+</AposCodeBlock>
+
 ::: warning 🛑 Hold up. ✋
 
 You've reviewed the [page type guide](/guide/pages.md), right? The sections below will highlight the special features of index and show page templates. For general page template syntax, see that page type guide.
