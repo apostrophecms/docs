@@ -22,7 +22,6 @@ handlers(self) {
         const payload = {
           text: `Article ${data.published.title} was published.`
         };
-        const jsonPayload = JSON.stringify(payload);
         await self.apos.http.post('https://slack-webhook-url-here', {
           body: {
             text: `Article ${data.published.title} was published.`
