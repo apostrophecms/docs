@@ -262,13 +262,17 @@ The final step is to turn the array data from this into template markup. We will
           <li>
             {% set path = '' %}
             {% set pageTitle = '' %}
+            {% set selectedClass = '' %}
             {% if item.type === 'page' and item._page and item._page[0] %}
               {% set path = item._page[0]._url %}
               {% set pageTitle = item._page[0].title %}
+              {% if data.page.title == pageTitle %}
+                {% set selectedClass = 'selected' %}
+              {% endif %}
             {% elif item.type === 'custom' %}
               {% set path = item.customUrl %}
             {% endif %}
-            <a href="{{ path }}"
+            <a href="{{ path }}" class="{{ selectedClass }}"
               {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
             >{{ item.label or pageTitle }}</a>
           </li>
