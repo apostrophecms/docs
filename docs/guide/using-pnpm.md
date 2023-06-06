@@ -12,7 +12,7 @@ When using the Apostrophe CLI tool to create a new project `npm` will be used by
 
 This is as simple as deleting the `node_modules` folder and the `package-lock.json` files. Additionally, you want to change the `release` script of your `package.json` file to use `pnpm` instead of `npm`.
 
-Finally, to install your packages run `pnpm install`. Using version 8 this will install any non-optional peer dependencies by default. For version 7 of `pnpm`, you need to either turn this on by passing the configuration in using `pnpm install --config.auto-install-peers=true`, or by setting it using `pnpm set auto-install-peers=true --global`. Using global will force this configuration on all projects built locally and you can leave this off. You can see other options in the [pnpm ducumentation](https://pnpm.io/).
+Finally, to install your packages run `pnpm install`. Using version 8 this will install any non-optional peer dependencies by default. For version 7 of `pnpm`, you need to either turn this on by passing the configuration in using `pnpm install --config.auto-install-peers=true`, or by setting it using `pnpm set auto-install-peers=true --global`. Using global will force this configuration on all projects built locally and you can leave this off. You can see other options in the [pnpm documentation](https://pnpm.io/).
 
 Lastly, to spin your project up locally for development use `pnpm run dev` as you would with `npm`.
 
