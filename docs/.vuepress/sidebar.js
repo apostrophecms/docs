@@ -99,7 +99,8 @@ module.exports = {
             'guide/adding-custom-widget-placeholder-content.md'
           ]
         },
-        'guide/webpack.md'
+        'guide/webpack.md',
+        'guide/using-pnpm.md'
       ]
     },
     {
