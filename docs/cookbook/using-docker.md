@@ -298,7 +298,7 @@ While our Docker container is now configured for storing items on AWS S3, it won
 Just like with the Docker container previously, you can now bring the site up with:
 
 ```cli
-docker composer up
+docker compose up
 ```
 Any assets uploaded through the site will now be stored in your S3 bucket rather than on the server directly.
 
@@ -320,7 +320,7 @@ Since this will create a new database, once you bring your site up you should ad
 
 Then, to bring the site up use :
 ```cli
-docker composer up
+docker compose up
 ```
 
 ## Deploying
