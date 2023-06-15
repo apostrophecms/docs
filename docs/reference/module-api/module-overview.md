@@ -354,9 +354,17 @@ Batch operation modal options include:
 
 ### `icons`
 
-Many icons from the [Material Design Icons](https://materialdesignicons.com/) library are already available in Apostrophe for things like [widget menu labels](/reference/module-api/module-options.md#icon). Additional icons can be made available through the `icons` setting object.
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because there is no real semantic versioning for the names of the icons and they were changing at random with new releases, breaking Apostrophe. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
 
-Each property key will be the name to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
+Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
+
+``` bash
+// in your project, already npm installed
+
+cd node_modules/vue-material-design-icons
+ls *.vue
+```
+Each property key in the `icons` setting object will be the name used to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase without the `.vue` ending. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
 
 ```javascript
 // index.js
@@ -368,6 +376,22 @@ module.export = {
   }
 };
 ```
+
+To use an icon that is not included in the `vue-material-design-icons` list, add your icon Vue file to either a relative path in the project or via an `npm` package. Then register the icon with a property name that will be used to reference the icon in the project, and a value that points to the file.
+
+```javascript
+icons: {
+  // For an icon at ./icons in your project
+  'my-icon': '~./icons/MyIconName.vue',
+  // For an icon in the their-icon-bundle-package npm module
+  'their-icon': '~their-icon-bundle-package/TheirIconName.vue'
+}
+```
+Everything following the `~` becomes part of an `import` statement during the build process.
+
+If you need to convert your icon(s) to Vue components, you can use any of the icons in the `vue-material-design-icons` as a template for constructing a simple wrapper.
+
+At the present time, the same icon cannot be registered under two names (that is, it can't be registered as `my-icon` and as `core-icon` if they both refer to the same icon). Since this can be inconvenient and requires checking the `globalicons.js` file to make sure you are not registering a duplicate, we plan to correct it in an upcoming release.
 
 ## Initialization function
 
