@@ -4,7 +4,7 @@ An `array` field has its own [field schema](/reference/glossary.md#schema) and a
 
 This is useful for collections of structured data that clearly belong to a parent document but won't have relationships to other documents, such as multiple sets of contact information for business locations or tabs in a widget.
 
-See the [relationship](relationship.md) field if you exclusively, or primarily, need to indentify a series of other pieces or pages.
+See the [relationship](relationship.md) field if you exclusively, or primarily, need to identify a series of other pieces or pages.
 
 ## Module field definition
 
@@ -73,6 +73,87 @@ Set `inline: true` on an array field to edit the array inline with the rest of t
 You can also control whether each item has a toggle to expand it, or is always displayed in fully expanded form.
 
 By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
+
+Care should be taken when using `style: table` along with conditional fields. In general, conditional fields should "switch" between two fields that have the same label in order to maintain the table structure. For example:
+
+<AposCodeBlock>
+
+```javascript
+...
+  inlineArrayTableField: {
+    label: 'Dessert Table',
+    itemLabel: 'Dessert Item',
+    type: 'array',
+    inline: true,
+    style: 'table',
+    fields: {
+    add: {
+      brand: {
+        type: 'string',
+        label: 'Brand',
+        required: true
+      },
+      dessertType: {
+        type: 'select',
+        label: 'Dessert Type',
+        choices: [
+          {
+            label: 'Ice Cream',
+            value: 'iceCream'
+          },
+          {
+            label: 'Sorbet',
+            value: 'sorbet'
+          }
+        ],
+        def: 'iceCream'
+      },
+      iceCream: {
+        type: 'select',
+        label: 'Flavor',
+        choices: [
+          {
+            label: 'Cherry',
+            value: 'cherry'
+          },
+          {
+            label: 'Raspberry',
+            value: 'raspberry'
+          }
+        ],
+        if: {
+          dessertType: 'iceCream'
+        },
+        def: 'cherry',
+        required: true
+      },
+      sorbet: {
+        type: 'select',
+        label: 'Flavor',
+        choices: [
+          {
+            label: 'Orange',
+            value: 'orange'
+          },
+          {
+            label: 'Ginger',
+            value: 'ginger'
+          }
+        ],
+        if: {
+          dessertType: 'sorbet'
+        },
+        def: 'orange',
+        required: true
+      }
+    }
+  }
+}
+...
+```
+</AposCodeBlock>
+
+In this example, the third field will "switch" between the ice cream flavors and the sorbet flavors. Not that the label, `Flavor`, is the same for both fields. This means that the label at the top of the table will not change if one item in the array selects ice cream and another selects sorbet.
 
 ### `whenEmpty`
 
