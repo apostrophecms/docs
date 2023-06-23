@@ -105,7 +105,7 @@ The `label` will be the name displayed for the button on the menu bar.
 | `icon` | String | If `contextUtility` is `true` an icon name is required for display. |
 | `toggle` | Boolean | If truthy, the button will remain active until it is clicked a second time. |
 | `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with `activated` and `deactivated` strings. |
-| `user` | Boolean | Adds the button alongside the "Log Out" dropdown. Should be reserved for items that manage personal settings. |
+| `user` | Boolean | Adds the button alongside the "Log Out" button on the personal dropdown at the upper right. Should be reserved for items that manage personal settings. |
 
 ### `last`
 
