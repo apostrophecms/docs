@@ -221,7 +221,7 @@ module.exports = {
       action: 'myUniqueAction',
       label: 'My Menu Item',
       modal: 'MyModalComponent',
-      conditions: [ 'canEdit' ]
+      conditions: [ 'canEdit', 'canPublish' ]
     });
   }
 }
