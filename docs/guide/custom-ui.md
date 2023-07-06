@@ -241,7 +241,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 * Overriding the same `action` is possible (the last wins).
 * You may mark the action as "dangerous" via an optional property `modifiers: [ "danger" ]`.
 * An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
-* The `conditions` property is optional. It takes an array of one or more strings that determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'
+* The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'
 :::
 
 ## Adding custom login requirements
