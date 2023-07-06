@@ -29,6 +29,7 @@ birthday: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`max` | String | n/a | The maximum allowed date value for the field. Must be a date format (e.g., `YYYY-MM-DD`) |
 |`min` | String | n/a | The minimum allowed date value for the field. Must be a date format (e.g., `YYYY-MM-DD`) |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
