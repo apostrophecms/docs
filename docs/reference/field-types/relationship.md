@@ -111,7 +111,7 @@ _players: {
 }
 ```
 
-## Populating nested relationships using `withRelationship`
+## Populating nested relationships using `withRelationships`
 
 It is not unusual for one piece type to have situations with "nested relationships" across piece types. For example, `team` may have a relationship field connecting to `player` pieces, then `player` pieces connect to `specialty` pieces. Imagine that the players had multiple relationship fields, and suddenly the data populated two levels up on teams could get very large.
 
