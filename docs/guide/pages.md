@@ -90,7 +90,7 @@ There are a number of things at work here.
 {% extends "layout.html" %}
 ```
 
-`layout.html` is a base level template [used in official Apostrophe boilerplates](https://github.com/apostrophecms/a3-boilerplate/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
+`layout.html` is a base level template [used in official Apostrophe essentials starter kit](https://github.com/apostrophecms/starter-kit-essentials/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
 
 The layout template might look something like this:
 
