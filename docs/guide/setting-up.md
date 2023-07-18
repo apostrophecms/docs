@@ -53,7 +53,7 @@ The CLI will take care of installing dependencies and walk you through creating 
 To get started quickly without the CLI, clone the starter repository:
 
 ```bash
-git clone https://github.com/apostrophecms/a3-boilerplate apos-app
+git clone https://github.com/apostrophecms/starter-kit-essentials apos-app
 ```
 
 If you want to change the project directory name, please do so. We will continue referring to `apos-app`.

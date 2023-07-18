@@ -233,7 +233,7 @@ To complete the requirement we also need a Vue component on the browser side. As
 ::: note
 Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI automatically when you make changes to admin UI code, such as login requirement components.
 
-If your project is derived from `a3-boilerplate` you can type:
+If your project is derived from `starter-kit-essentials` you can type:
 
 ```bash
 APOS_DEV=1 npm run dev

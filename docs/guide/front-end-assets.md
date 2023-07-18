@@ -81,8 +81,8 @@ A funny thing about JavaScript `import` statements: they don't guarantee any ord
 
 Rules found in or imported by `ui/src/index.scss` files are compiled in the order the modules are activated in `app.js`.
 
-::: note The Boilerplate
-The [Apostrophe 3 boilerplate](https://github.com/apostrophecms/a3-boilerplate/) takes advantage of `ui/src` in exactly the same way. The `asset` module contains `ui/src/index.js` and `ui/src/index.scss` files, which Apostrophe automatically discovers.
+::: note The starter-kit-essentials boilerplate
+The [Apostrophe 3 starter-kit-essentials boilerplate](https://github.com/apostrophecms/starter-kit-essentials/) takes advantage of `ui/src` in exactly the same way. The `asset` module contains `ui/src/index.js` and `ui/src/index.scss` files, which Apostrophe automatically discovers.
 :::
 
 ## Supporting Internet Explorer 11
