@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "dev": "npm run docs:dev",
+    "docs:dev": "vitepress dev docs",
+    "build": "npm run docs:build",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "test": "npx eslint .",
+    "deploy": "npm run build && bash ./deploy && rm -r ./dist",
+    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./dist"
+  },
+  "dependencies": {
+    "eslint": "^8.44.0",
+    "eslint-config-apostrophe": "^4.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "stylelint": "^15.10.1",
+    "stylelint-config-apostrophe": "^3.0.0",
+    "vitepress-plugin-pagefind": "^0.2.4",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.3"
+  },
+  "devDependencies": {
+    "sitemap": "^7.1.1",
+    "stylelint-plugin-stylus": "^0.18.0",
+    "vitepress": "^1.0.0-beta.5",
+    "vitepress-plugin-search": "^1.0.4-alpha.20"
+  }
+}

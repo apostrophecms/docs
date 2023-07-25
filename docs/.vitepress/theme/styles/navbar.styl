@@ -1,0 +1,63 @@
+#app .navbar .site-name {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+#local-search {
+  width: 80%;
+}
+
+.VPContent .container {
+  padding-top: 30px;
+
+  & .aside-container {
+    padding-top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px) + var(--vp-doc-top-height, 0px) + 64px);
+    }
+  }
+
+.VPNavBarMenu {
+  padding-left: 32px;
+  }
+
+.apos-top-navbar nav {
+  width: 100%;
+
+    & a:last-of-type{
+      margin-left: auto;
+      border: 1px solid var(--accent-color);
+      border-radius: 4px;
+
+      &::after {
+        display: none;
+      }
+  }
+}
+
+.DocSearch-Button {
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  background-color: var(--accent-color-light);
+}
+
+html.dark .DocSearch-Button {
+
+  & .DocSearch-Search-Icon {
+    color: rgb(0,0,0);
+    }
+  & .DocSearch-Button-Placeholder {
+    color: rgb(0,0,0);
+    }
+  & .DocSearch-Button-Keys {
+    color: rgb(0,0,0);
+  }
+  & .DocSearch-Button-Key {
+    fill: rgb(0,0,0);
+    color: rgb(0,0,0);
+  }
+  & .DocSearch-Button .DocSearch-Button-Key:first-child {
+    color: rgb(0,0,0);
+  }
+}
+html.dark .DocSearch-Button .DocSearch-Button-Key:first-child:after {
+    color: rgb(0,0,0);
+  }

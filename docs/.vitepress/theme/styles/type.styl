@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack-subset.css');
+
+$type-size-base ?= 1rem;
+$type-size-h1 ?= 2.62rem;
+$type-size-h2 ?= 2.62rem;
+$type-size-h3 ?= 2rem;
+$type-size-h4 ?= 1.56rem;
+$type-size-h5 ?= 1.31rem;
+$type-size-p-large ?= 1.125rem;
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+}
+
+.vp-doc
+  h1, h2, h3, h4, h5 {
+    letter-spacing: -0.75px;
+    border-bottom: none;
+    line-height: 1.25;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+h4, h5 {
+  font-weight: 500;
+}
+
+h1, .vp-doc h1 {
+  font-size: $type-size-h1;
+}
+
+h2, .vp-doc h2 {
+  font-size: $type-size-h2;
+}
+
+h3, .vp-doc h3 {
+  font-size: $type-size-h3;
+}
+
+h4, .vp-doc h4 {
+  font-size: $type-size-h4;
+}
+
+h5, .vp-doc h5 {
+  font-size: $type-size-h5;
+}
+
+p.large {
+  font-size: $type-size-p-large;
+}
+
+code, div[class*='language-'] {
+  font-family: Hack, monospace;
+}
+
+.theme-default-content a code {
+  background-color: $accentColorLight;
+  color: $accentColor;
+}
+
+// Additional title styling
+.title {
+  white-space: pre-line;
+  }
+
+  table {
+  // Line height applied to paragraphs, used to make tables easier to read.
+  line-height: 1.7
+}
+

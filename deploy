@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -z "$ENV" ]; then
+  echo "💁‍♀️ Usage: ENV=staging npm run deploy"
+  echo "(or as appropriate)"
+  echo
+  rm -rf ./dist
+  exit 1
+fi
+
+if [ $ENV == "staging" ]
+then
+  ipAddress=34.207.22.194
+elif [ $ENV == "production" ]
+then
+  ipAddress=100.24.96.198
+else
+  echo "🤷‍♀️ Target unknown"
+  exit 1
+fi
+
+rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist nodeapps@$ipAddress:/opt/static/a3-docs &&
+echo "Synced up to $ENV"

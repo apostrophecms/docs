@@ -1,0 +1,35 @@
+{
+  "hash": "1b6e9590",
+  "browserHash": "187cc1a8",
+  "optimized": {
+    "vue": {
+      "src": "../../../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "ef317230",
+      "needsInterop": false
+    },
+    "vitepress > @vue/devtools-api": {
+      "src": "../../../../node_modules/@vue/devtools-api/lib/esm/index.js",
+      "file": "vitepress___@vue_devtools-api.js",
+      "fileHash": "05e14446",
+      "needsInterop": false
+    },
+    "body-scroll-lock": {
+      "src": "../../../../node_modules/body-scroll-lock/lib/bodyScrollLock.esm.js",
+      "file": "body-scroll-lock.js",
+      "fileHash": "0f6cd827",
+      "needsInterop": false
+    },
+    "@vueuse/core": {
+      "src": "../../../../node_modules/@vueuse/core/index.mjs",
+      "file": "@vueuse_core.js",
+      "fileHash": "7fe5168e",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-V634PGSD": {
+      "file": "chunk-V634PGSD.js"
+    }
+  }
+}
