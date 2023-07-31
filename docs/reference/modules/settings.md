@@ -8,14 +8,14 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`.
+This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`. As such, these settings are personal to the user. If you're looking for sitewide settings that govern overall site behavior, check out `@apostrophecms/global`.
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
-| [`subforms`](#subforms) | Object | Each object defines an input field in the Personal Settings menu. |
-| [`groups`](#groups) | Object | Like the property of the same name in the `fields` setting, this option organizes the subforms on tabs in the Personal Settings menu. |
+| [`subforms`](#subforms) | Object | Each object defines a set of input field in the Personal Settings dialog box, with its own Update button. |
+| [`groups`](#groups) | Object | This option allows for the organization of subforms on tabs in the Personal Settings menu. |
 
 <AposCodeBlock>
 
@@ -62,7 +62,7 @@ module.exports = {
 <template v-slot:cation>
   /modules/@apostrophecms/settings/index.js
 </template>
-</AposCOdeBlock>
+</AposCodeBlock>
 ### `subforms`
 
 The `subforms` option takes an object of named objects.  Each individual object has a required `fields` property that takes an array of strings that are the names of existing schema fields in the `@apostrophecms/user` settings. By default, the `password` and `adminLocale` fields are available for addition. Note that the `adminLocale` field needs to be enabled by [setting the `adminLocales` option](/reference/modules/i18n.html) of the `@apostrophecms/i18n` module.
@@ -75,7 +75,7 @@ The `help` property takes a field to display to the user in preview mode. If thi
 
 The `protection` property can take a value of either `true` or `"password"`. These values are equivalent and will require that the user enters their password when attempting to change the value(s) of this `fields` object. Additional fields that are added by default can be added through the `addProtectedField()` method of the module.
 
-Finally, the `reload` property defaults to false, but can take a value of `true` if the preview should update after the user makes a change. This isn't needed if the `help` property is set.
+Finally, the `reload` property defaults to false, but can take a value of `true` if the the page should update after the user makes a change, clarifying to the user that the setting change took effect.
 
 ### groups
 
@@ -83,7 +83,7 @@ The `groups` property takes an object of named objects. Each of the individual o
 
 ### `previewComponent`
 
-The preview component is displayed to the right of a `subforms` label when the user first opens a tab. If not supplied, Apostrophe will attempt to create a preview by combining the values of any schema fields within the individual `subforms` object as a space-separated string. For example, if the object has two schema fields, `firstName` and `lastName`, the resulting preview would be the equivalent to a template with `{{ firstName }} {{ lastName }}`. While this would work well for an object with a small number of fields, this might not be optimal for an object with a larger number.
+The preview component is displayed to the right of a `subforms` label when the user first opens a tab. If not supplied, Apostrophe will attempt either display the content supplied by the `preview` property or if `preview` is not present, Apostrophe will create a preview by combining the values of any schema fields within the individual `subforms` object as a space-separated string. For example, if the object has two schema fields, `firstName` and `lastName`, the resulting preview would be the equivalent to a template with `{{ firstName }} {{ lastName }}`. While this would work well for an object with a small number of fields, this might not be optimal for an object with a larger number.
 
 <AposCodeBlock>
 
