@@ -24,15 +24,9 @@ Open the users manager interface by clicking the "Users" button in the admin men
 
 ![The admin menu at the top of the browser window with the Users button highlighted](/images/users-admin-bar.png)
 
-When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), username, and password.
+When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), username, and password. At the same time, you can set the user admin UI language if the `@apostrophecms/i18n` module is configured for multiple `adminLocales` languages. See the [reference documentation for the `i18n` module](/reference/modules/i18n.html) for more information. If this hasn't been configured, then this selection input won't be shown. Otherwise, it will allow the user to select for the admin UI to match the language for the locale, or remain set to a specific language, no matter the locale language.  
 
 ![A user editor modal with values filled in for our user, "Sam Wilson"](/images/users-editor.png)
-
-## Logging into an Apostrophe website
-
-Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
-
-![The Apostrophe login page with username and password fields](/images/users-login.png)
 
 ## User roles
 
@@ -52,6 +46,12 @@ We can also change passwords through the command line task below. The `username`
 node app @apostrophecms/user:change-password username
 ```
 :::
+
+## Logging into an Apostrophe website
+
+Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
+
+![The Apostrophe login page with username and password fields](/images/users-login.png)
 
 ::: tip
 Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see. The "Guest" role can be used for that.
