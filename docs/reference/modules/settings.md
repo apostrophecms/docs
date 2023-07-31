@@ -17,6 +17,52 @@ This module governs the Personal Settings menu that allows users to change their
 | [`subforms`](#subforms) | Object | Each object defines an input field in the Personal Settings menu. |
 | [`groups`](#groups) | Object | Like the property of the same name in the `fields` setting, this option organizes the subforms on tabs in the Personal Settings menu. |
 
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  options: {
+    subforms: {
+      displayName: {
+        fields: [ 'displayName' ],
+        previewComponent: 'SettingsDisplayNamePreview',
+        protection: true,
+        reload: true
+      },
+      name: {
+        label: 'Name',
+        fields: [ 'firstName', 'lastName' ]
+        // This preview will be automatically generated.
+        // preview: '{{ firstName }} {{ lastName }}'
+      },
+      adminLocale: {
+        fields: [ 'adminLocale' ]
+      },
+      changePassword: {
+        // This will have `protection: true` automatically.
+        fields: [ 'password' ]
+      }
+    },
+
+    groups: {
+      account: {
+        label: 'Account',
+        subforms: [ 'name', 'displayName', 'changePassword' ]
+      },
+      preferences: {
+        label: 'Preferences',
+        subforms: [ 'adminLocale' ]
+      }
+    }
+  }
+};
+
+```
+
+<template v-slot:cation>
+  /modules/@apostrophecms/settings/index.js
+</template>
+</AposCOdeBlock>
 ### `subforms`
 
 The `subforms` option takes an object of named objects.  Each individual object has a required `fields` property that takes an array of strings that are the names of existing schema fields in the `@apostrophecms/user` settings. By default, the `password` and `adminLocale` fields are available for addition. Note that the `adminLocale` field needs to be enabled by [setting the `adminLocales` option](/reference/modules/i18n.html) of the `@apostrophecms/i18n` module.
@@ -27,7 +73,7 @@ The `label` property takes a string to display to the user in both preview and e
 
 The `help` property takes a field to display to the user in preview mode. If this property is present, it will replace any component added through the option `previewComponent` property. The `previewComponent` property takes the name of a Vue component that has been added to your project through any `modules/my-custom-module/ui/apos/components` folder. The string passed to this property should not contain the file extension. [See below](#previewcomponent) for further information about the component structure.
 
-The `protected` property can take a value of either `true` or `"password"`. These values are equivalent and will require that the user enters their password when attempting to change the value(s) of this `fields` object.
+The `protection` property can take a value of either `true` or `"password"`. These values are equivalent and will require that the user enters their password when attempting to change the value(s) of this `fields` object. Additional fields that are added by default can be added through the `addProtectedField()` method of the module.
 
 Finally, the `reload` property defaults to false, but can take a value of `true` if the preview should update after the user makes a change. This isn't needed if the `help` property is set.
 
