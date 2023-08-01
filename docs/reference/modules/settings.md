@@ -63,15 +63,18 @@ module.exports = {
   /modules/@apostrophecms/settings/index.js
 </template>
 </AposCodeBlock>
+
 ### `subforms`
 
 The `subforms` option takes an object of named objects.  Each individual object has a required `fields` property that takes an array of strings that are the names of existing schema fields in the `@apostrophecms/user` settings. By default, the `password` and `adminLocale` fields are available for addition. Note that the `adminLocale` field needs to be enabled by [setting the `adminLocales` option](/reference/modules/i18n.html) of the `@apostrophecms/i18n` module.
 
-In addition to the required `fields` property, each object can take five additional optional properties.
+In addition to the required `fields` property, each object can take six additional optional properties.
 
-The `label` property takes a string to display to the user in both preview and edit mode. If not supplied, Apostrophe will use the label for the first schema passed to the `fields` property. 
+The `label` property takes a string to display to the user in both preview, when not editing that subform, and edit mode. If not supplied, Apostrophe will use the label for the first schema passed to the `fields` property. 
 
-The `help` property takes a field to display to the user in preview mode. If this property is present, it will replace any component added through the option `previewComponent` property. The `previewComponent` property takes the name of a Vue component that has been added to your project through any `modules/my-custom-module/ui/apos/components` folder. The string passed to this property should not contain the file extension. [See below](#previewcomponent) for further information about the component structure.
+The `previewComponent` property takes the name of a Vue component that has been added to your project through any `modules/my-custom-module/ui/apos/components` folder. The string passed to this property should not contain the file extension. This component is rendered and displayed to the right of the subform label in the preview mode and has access to the values provided in the subform by the user. [See below](#previewcomponent) for further information about the component structure.
+
+If the `previewComponent` property is not set, the `help` property will be used instead. It takes a string (or i18n key) to display to the user. If this property is not present then the `preview` property will be used. This field receives a string that can include subform schema field names, like `{{ firstName }} {{ lastName}}`, leveraging i18next as a built-in templating system and allowing different locales to put them in different orders as appropriate. Finally, if none of these three properties are present, Apostrophe will create a preview by combining the values of any schema fields within the individual `subforms` object as a space-separated string. For example, if the object has two schema fields, `firstName` and `lastName`, the resulting preview would be equivalent to a `preview` template with `{{ firstName }} {{ lastName }}`. While this would work well for an object with a small number of fields, this might not be optimal for an object with a larger number.
 
 The `protection` property can take a value of either `true` or `"password"`. These values are equivalent and will require that the user enters their password when attempting to change the value(s) of this `fields` object. Additional fields that are added by default can be added through the `addProtectedField()` method of the module.
 
@@ -82,8 +85,6 @@ Finally, the `reload` property defaults to false, but can take a value of `true`
 The `groups` property takes an object of named objects. Each of the individual objects takes two properties, `label` and `subforms`. The label is displayed as the left hand tab name in the Personal Settings menu. The `subforms` property takes an array of `subforms` object names as strings. These subforms will be added to the tab in the order that they appear in the array. If no groups property is added to the settings, the `subforms` objects will be added to a tab named "Ungrouped" in the order that they were created. Similarly, any `subforms` objects not explicitly added to a `groups` object will be added to the "Ungrouped" tab.
 
 ### `previewComponent`
-
-The preview component is displayed to the right of a `subforms` label when the user first opens a tab. If not supplied, Apostrophe will attempt either display the content supplied by the `preview` property or if `preview` is not present, Apostrophe will create a preview by combining the values of any schema fields within the individual `subforms` object as a space-separated string. For example, if the object has two schema fields, `firstName` and `lastName`, the resulting preview would be the equivalent to a template with `{{ firstName }} {{ lastName }}`. While this would work well for an object with a small number of fields, this might not be optimal for an object with a larger number.
 
 <AposCodeBlock>
 
@@ -112,7 +113,6 @@ export default {
   }
 };
 </script>
-
 ```
 
 <template v-slot:caption>
@@ -121,7 +121,7 @@ export default {
 </AposCodeBlock>
 
 ::: note
-In this example, we are adding the preview component into the `@apostrophecms/settings` folder at project level. However, you could also elect to create a single module for all of the Vue components you are adding to your project, as long as the component files are being addeed to the `/ui/apos/components/` folder of the module.
+In this example, we are adding the preview component into the `@apostrophecms/settings` folder at the project level. However, you could also elect to create a single module for all of the Vue components you are adding to your project, as long as the component files are being added to the `/ui/apos/components/` folder of the module.
 :::
 
-The preview Vue component takes two props, `subform` and `values`. The values prop can be used to retrieve the values the user adds to the schema fields and then manipulate and output those values.
+The preview Vue component takes two props, `subform` and `values`. The values prop can be used to retrieve the values the user adds to the schema fields and then manipulate and output those values. In this example, we are simply retreiving and displaying the value of the `displayName` field from the associated subform.
