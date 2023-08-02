@@ -24,15 +24,9 @@ Open the users manager interface by clicking the "Users" button in the admin men
 
 ![The admin menu at the top of the browser window with the Users button highlighted](/images/users-admin-bar.png)
 
-When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), username, and password.
+When the manager opens, click the "New User" button to open a fresh content editor modal. Populate the required fields, including the user's "Display Name," [role](#user-roles), username, and password. By default, if a site is configured for [multiple locales](/reference/modules/i18n.html), and a user is viewing the site in a particular locale, then the user interface will also be displayed in that locale whenever possible. However, if the `adminLocales` option of the i18n module is set to an array of locales, then it becomes possible to 'lock' the admin UI to a particular language on a per-user basis. Users can change this setting themselves if the Personal Settings module is configured. If the [`defaultAdminLocale` option](/reference/modules/i18n.html) of the i18n module is configured, the admin UI language will default to that language.
 
 ![A user editor modal with values filled in for our user, "Sam Wilson"](/images/users-editor.png)
-
-## Logging into an Apostrophe website
-
-Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
-
-![The Apostrophe login page with username and password fields](/images/users-login.png)
 
 ## User roles
 
@@ -52,6 +46,12 @@ We can also change passwords through the command line task below. The `username`
 node app @apostrophecms/user:change-password username
 ```
 :::
+
+## Logging into an Apostrophe website
+
+Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.
+
+![The Apostrophe login page with username and password fields](/images/users-login.png)
 
 ::: tip
 Sometimes certain content should never be fully public. You may have subscribers who get special access or information that only employees should see. The "Guest" role can be used for that.
