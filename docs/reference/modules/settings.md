@@ -8,13 +8,13 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`. As such, these settings are personal to the user. If you're looking for sitewide settings that govern overall site behavior, check out `@apostrophecms/global`.
+This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`. As such, these settings are personal to the user. If you're looking for sitewide settings that govern overall site behavior, check out [`@apostrophecms/global`](https://v3.docs.apostrophecms.org/guide/global.html).
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
-| [`subforms`](#subforms) | Object | Each object defines a set of input field in the Personal Settings dialog box, with its own Update button. |
+| [`subforms`](#subforms) | Object | Each object defines a set of input fields in the Personal Settings dialog box, with its own Update button. |
 | [`groups`](#groups) | Object | This option allows for the organization of subforms on tabs in the Personal Settings menu. |
 
 <AposCodeBlock>
