@@ -47,6 +47,7 @@ contactInfo: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 | [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
 |`style` | String |  n/a | Only if `inline` is true. If set to `table`, the schema will be displayed as an HTML table |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
