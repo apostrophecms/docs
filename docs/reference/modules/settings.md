@@ -67,7 +67,7 @@ module.exports = {
 
 ### Requirements
 
-All fields must be part of the `@apostrophecms/user` schema, except `adminLocale` that will be added automatically to
+All fields added to the subforms except `adminLocale` must already exist as default schema fields of the core `@apostrophecms/user` module or be added at project level. 
 `@apostrophecms/user` if the `adminLocales` option is set in the `@apostrophecms/i18n` module.
 
 <AposCodeBlock>
