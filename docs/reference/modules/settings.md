@@ -59,8 +59,101 @@ module.exports = {
 
 ```
 
-<template v-slot:cation>
+<template v-slot:caption>
   /modules/@apostrophecms/settings/index.js
+</template>
+</AposCodeBlock>
+
+### Requirements
+
+All fields must be part of the `@apostrophecms/user` schema, except `adminLocale` that will be added automatically to
+`@apostrophecms/user` if the `adminLocales` option is set in the `@apostrophecms/i18n` module.
+
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  fields: {
+    add: {
+      firstName: {
+        type: 'string',
+        label: 'First Name'
+      },
+      lastName: {
+        type: 'string',
+        label: 'Last Name'
+      },
+      displayName: {
+        type: 'string',
+        label: 'Display Name'
+      }
+    },
+    group: {
+      account: {
+        label: 'Account',
+        fields: [
+          'firstName',
+          'lastName',
+          'displayName'
+        ]
+      }
+    }
+  }
+};
+
+```
+
+<template v-slot:caption>
+  /modules/@apostrophecms/user/index.js
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  options: {
+    defaultLocale: 'en',
+    locales: {
+      en: { label: 'English' },
+      fr: {
+        label: 'French',
+        prefix: '/fr'
+      },
+      sk: {
+        label: 'Slovak',
+        prefix: '/sk'
+      },
+      es: {
+        label: 'Spanish',
+        prefix: '/es'
+      },
+      'pt-BR': {
+        label: 'Portuguese',
+        prefix: '/pt'
+      }
+    },
+    adminLocales: [
+      {
+        label: 'English',
+        value: 'en'
+      },
+      {
+        label: 'French',
+        value: 'fr'
+      }
+    ]
+    // We should not set default UI language as this would
+    // break a lot of tests. The "default" behavior (field.def value
+    // and getBrowserData() otuput) is already tested in the apostrophe core.
+    // defaultAdminLocale: 'en'
+  }
+};
+
+```
+
+<template v-slot:caption>
+  /modules/@apostrophecms/i18n/index.js
 </template>
 </AposCodeBlock>
 
