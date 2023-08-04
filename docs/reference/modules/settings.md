@@ -143,9 +143,7 @@ module.exports = {
         value: 'fr'
       }
     ]
-    // We should not set default UI language as this would
-    // break a lot of tests. The "default" behavior (field.def value
-    // and getBrowserData() otuput) is already tested in the apostrophe core.
+    // We can also set default UI language as follow
     // defaultAdminLocale: 'en'
   }
 };
