@@ -35,7 +35,7 @@ module.exports = {
         // This preview will be automatically generated.
         // preview: '{{ firstName }} {{ lastName }}'
       },
-      // The `adminLocale` option must be configured in the `@apostrophecms/i18n` module for this to be allowed
+      // The `adminLocales` option must be configured in the `@apostrophecms/i18n` module for this to be allowed
       adminLocale: {
         fields: [ 'adminLocale' ]
       },
@@ -52,6 +52,7 @@ module.exports = {
       },
       preferences: {
         label: 'Preferences',
+        // The `adminLocales` option must be configured in the `@apostrophecms/i18n` module for this to be allowed
         subforms: [ 'adminLocale' ]
       }
     }
