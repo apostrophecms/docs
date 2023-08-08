@@ -1,4 +1,3 @@
-import { HeadConfig, createContentLoader } from 'vitepress';
 import { SitemapStream } from 'sitemap';
 import { createWriteStream } from 'node:fs';
 import { resolve } from 'node:path';
