@@ -1,4 +1,4 @@
 <template>
-  <br \>
+  <br/>
   Documentation
 </template>
