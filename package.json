@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "dev": "npm run docs:dev",
     "docs:dev": "vitepress dev docs",
