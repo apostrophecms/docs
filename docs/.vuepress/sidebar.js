@@ -100,7 +100,8 @@ module.exports = {
           ]
         },
         'guide/webpack.md',
-        'guide/using-pnpm.md'
+        'guide/using-pnpm.md',
+        'guide/logging.md'
       ]
     },
     {

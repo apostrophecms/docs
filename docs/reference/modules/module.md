@@ -101,5 +101,35 @@ The `emit()` method is used to emit server-side events. Events are automatically
 
 See the [server events guide](/guide/server-events.md) for more on this subject.
 
+### `logInfo(req, 'event-type', 'notification message', { key: 'value' })`
 
+The `logInfo()` method is used to log notifications with a severity of `info`. The `event-type` argument is required and uniquely identifies the notification. The remainder of the arguments are optional.
+
+Adding the `req` object populates the log notification with the `originalUrl`, `path`, `method`, `ip`, `query`, and `requestId` from this object.
+
+The `notification message` and object added as the final argument will both be added to the notification by the [`@apostrophecms/log` module](/reference/modules/log.html).
+
+### `logDebug(req, 'event-type', 'notification message', { key: 'value' })`
+
+The `logDebug()` method is used to log notifications with a severity of `debug`. The `event-type` argument is required and uniquely identifies the notification. The remainder of the arguments are optional.
+
+Adding the `req` object populates the log notification with the `originalUrl`, `path`, `method`, `ip`, `query`, and `requestId` from this object.
+
+The `notification message` and object added as the final argument will both be added to the notification by the [`@apostrophecms/log` module](/reference/modules/log.html).
+
+### `logWarn(req, 'event-type', 'notification message', { key: 'value' })`
+
+The `logWarn()` method is used to log notifications with a severity of `warn`. The `event-type` argument is required and uniquely identifies the notification. The remainder of the arguments are optional.
+
+Adding the `req` object populates the log notification with the `originalUrl`, `path`, `method`, `ip`, `query`, and `requestId` from this object.
+
+The `notification message` and object added as the final argument will both be added to the notification by the [`@apostrophecms/log` module](/reference/modules/log.html).
+
+### `logError(req, 'event-type', 'notification message', { key: 'value' })`
+
+The `logError()` method is used to log notifications with a severity of `error`. The `event-type` argument is required and uniquely identifies the notification. The remainder of the arguments are optional.
+
+Adding the `req` object populates the log notification with the `originalUrl`, `path`, `method`, `ip`, `query`, and `requestId` from this object.
+
+The `notification message` and object added as the final argument will both be added to the notification by the [`@apostrophecms/log` module](/reference/modules/log.html).
 
