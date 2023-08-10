@@ -8,18 +8,18 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module provides structured logging for Apostrophe projects. It intercepts the log notifications emitted by the `logDebug()`, `logInfo()`, `logWarn()`, and `logError()` methods of the [`@apostrophecms/module`](/reference/modules/module.html) and creates new objects. These objects can be sent to 3rd-party logging packages and easily filtered based on event-type and severity.
+This module provides structured logging for Apostrophe projects. It intercepts the log notifications emitted by the `logDebug()`, `logInfo()`, `logWarn()`, and `logError()` methods of every Apostrophe module and creates new objects. These objects can be sent to third-party logging packages and easily filtered based on event-type and severity.
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
-| [`logger`](#logger) | Object/Function | Optional. Used for outputting logs to 3rd-party packages or custom logging functions. |
+| [`logger`](#logger) | Object/Function | Optional. Used for outputting logs to third-party packages or custom logging functions. |
 | [`messageAs`](#messageas) | String | Optional. If this option is set, it converts the log notification from a string and object to just an object with the `messageAs` string as a property with the notification string as value. |
 | [`filter`](#filter) | Object | Optional. Takes named objects that determine what log notices are emitted |
 
 ### `logger`
-The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()`. Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a 3rd-party logging package as value.
+The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()`. An example implementation of these methods can be found in the Apostrophe [`util/lib/logger.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/util/lib/logger.js). Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a third-party logging package as value.
 
 <AposCodeBlock>
 
@@ -72,7 +72,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `messageAs`
-Some 3rd-party logging packages require an object for each log event. Setting the `messageAs` option to a string will convert the returned log notification from a string plus an object to an object only. The value of this option will be used as a key in the new object and the notification string will be added as value.
+Some third-party logging packages require an object for each log event. Setting the `messageAs` option to a string will convert the returned log notification from a string plus an object to an object only. The value of this option will be used as a key in the new object and the notification string will be added as value.
 
 For example:
 ``` javascript
