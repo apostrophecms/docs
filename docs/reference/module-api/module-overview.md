@@ -2,6 +2,7 @@
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
 - [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
+- [Configuration cascades](#configuration-cascades): Settings that can either be static or set via functions that have access to the module itself.
 - [Initialization function](#initialization-function): A function that runs once during application startup.
 - [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
