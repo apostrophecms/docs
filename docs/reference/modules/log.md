@@ -4,7 +4,7 @@ extends: '@apostrophecms/module'
 
 # `@apostrophecms/log`
 
-**Alias:** `apos.log`
+**Alias:** `apos.structuredLog`
 
 <AposRefExtends :module="$frontmatter.extends" />
 
@@ -19,7 +19,7 @@ This module provides structured logging for Apostrophe projects. It intercepts t
 | [`filter`](#filter) | Object | Optional. Takes named objects that determine what log notices are emitted |
 
 ### `logger`
-The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error`. Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a 3rd-party logging package as value.
+The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()`. Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a 3rd-party logging package as value.
 
 <AposCodeBlock>
 
@@ -99,7 +99,7 @@ If the `messageAs` is set to a string of `myMessage`, instead the log will retur
 }
 ```
 
-The string value for `messageAs` will depend on the logging package being used. Several examples are presented in the [logging section](/guide/logging.html) of the guide.
+The string value for `messageAs` will depend on the logging package being used. Several examples are presented in the [logging section](/guide/logging.html#popular-package-set-up) of the guide.
 
 ### `filter`
 The `filter` option allows for the selection of a subset of log notifications. It takes an object of named sub-objects. The name for each of the sub-objects should either be a module name, like `@apostrophecms/login`, or an `*` wildcard to indicate that the filtering rules should apply to all modules. Each sub-object can have two properties. The `severity` key takes an array of strings for each severity level that is allowed for the named module. If using the stock log methods, valid values are `debug`, `info`, `warn`, and `error`. The `events` key takes an array of strings for event-type names that are allowed for the named module. These event-type names are passed as the first argument to the [`@apostrophecms/module`](/reference/modules/module.html) module logging methods.
