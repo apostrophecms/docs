@@ -155,7 +155,7 @@ Use `add` to add additional settings and `remove` to remove existing base class 
 
 [Doc type](/reference/glossary.md#doc) modules have some fields configured by default, such as the `title` and `slug` fields. The `fields` setting is used for additional field management.
 
-The `fields` object is configured with subsections: `add`, `remove`, and `group`.
+ The `fields` setting can be added to the module using either an object or a function that returns an object. This object is configured with subsections: `add`, `remove`, and `group`.
 
 #### `add`
 
@@ -242,7 +242,7 @@ module.exports = {
 
 An object of field groups. Groupings are used by the editing interface. Note that `group` _does not apply to widget modules_.
 
-Groups are added as an object with their name as the object key and the following properties:
+Groups are added as an object or a function that returns an object with their name as the object key and the following properties:
 - `label`: The visible label (a string) for the group
 - `fields`: An array of field names to include in the group
 
@@ -299,11 +299,11 @@ module.exports = {
 
 In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default.
 
-The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
+The `filters` object is configured with subsections: `add` and `remove` and can either be added as a static object or a function that takes `self` and `options` and returns an object. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 
 #### `add`
 
-An object of filters to add to the piece type. Each filter is an object with its own configuration. If the filter choices are not configured directly, Apostrophe will find and set valid options automatically.
+An object of filters or a function that returns an object of filters to add to the piece type. Each filter is an object with its own configuration. If the filter choices are not configured directly, Apostrophe will find and set valid options automatically.
 
 Filter properties include:
 
@@ -314,6 +314,7 @@ Filter properties include:
 | `choices` | Manually set an array of choices. Choices require `label` and `value` properties. |
 | `def` | The default value for the manager filter. |
 
+Add `filters` with object:
 ```javascript
 // modules/article/index.js
 module.exports = {
@@ -330,6 +331,31 @@ module.exports = {
           { value: true, label: 'Show featured' },
           { value: false, label: 'Hide featured' }
         ]
+      }
+    }
+  }
+};
+```
+Add `filters` with function:
+```javascript
+// modules/article/index.js
+module.exports = {
+  filters(self, options) {
+    // Check self or options to dynamically add schema fields
+    return {
+      add: {
+        _category: { // 👈 Referencing a relationship field named `_category`
+          label: 'Article category'
+        },
+        featured: { // 👈 Referencing a boolean field name `featured`
+          labeled: 'Featured',
+          inputType: 'checkbox',
+          def: true,
+          choices: [
+            { value: true, label: 'Show featured' },
+            { value: false, label: 'Hide featured' }
+          ]
+        }
       }
     }
   }
@@ -356,7 +382,7 @@ For piece types, the `columns` setting configures the pieces manager, adding and
 
 #### `add`
 
-An object of columns to add to the piece type manager. Each column is an object with its own configuration. Column properties include:
+An object of columns or a function that returns an object of columns to add to the piece type manager. Each column is an object with its own configuration. Column properties include:
 
 | Property | Description |
 | ------- | ------- |
@@ -418,11 +444,11 @@ module.exports = {
 
 ### `batchOperations`
 
-Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has archive and restore (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
+Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has `archive` and `restore` (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
 
 #### `add`
 
-The `add` property is an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
+The `add` property is an object or function returning an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
 
 Each batch operation configuration should include the following properties:
 
@@ -484,6 +510,7 @@ This function runs once when the Apostrophe app first starts up. It takes the mo
 While [customization functions](#customization-functions) add functionality for the module in specific ways, `init` provides a space for more open code execution. It is useful for setting properties on the module that could not be set in other sections.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // ...
@@ -513,9 +540,11 @@ module.exports = {
   }
 };
 ```
+
   <template v-slot:caption>
     modules/product/index.js
   </template>
+
 </AposCodeBlock>
 
 ## Customization functions
