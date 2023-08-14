@@ -8,24 +8,14 @@ Module configuration objects may use the following configuration properties. The
 
 ## Configuration settings
 
-| Setting name | Value type | [Cascades](#cascading-settings) | Description | Module types |
+| Setting name | Value type | Description | Module types |
 | ------- | ------- | ------- | ------- | :-----: |
-| [`extend`](#extend) | String | No | Identify the base class module | All |
-| [`improve`](#improve) | String | No | Identify a module to enhance | All |
-| [`options`](#options) | Object | No | Configure module options | All |
-| [`instantiate`](#instantiate) | Boolean | No | Prevent a module from being fully instantiated | All |
-| [`bundle`](#bundle) | Object | No | Identify multiple modules to load | All |
-| [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
-| [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
-| [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
-| [`batchOperations`](#batchoperations) | Object | Yes | Configure manager batch operations | Piece |
-| [`icons`](#icons) | Object | No | Register a Material Design icon for the UI | All |
-
-### "Cascading" settings
-
-Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
-
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface. `order` only applies to columns, arranging columns in a particular order.
+| [`extend`](#extend) | String | Identify the base class module | All |
+| [`improve`](#improve) | String | Identify a module to enhance | All |
+| [`options`](#options) | Object | Configure module options | All |
+| [`instantiate`](#instantiate) | Boolean | Prevent a module from being fully instantiated | All |
+| [`bundle`](#bundle) | Object | Identify multiple modules to load | All |
+| [`icons`](#icons) | Object | Register a Material Design icon for the UI | All |
 
 ### `extend`
 
@@ -64,7 +54,7 @@ require('apostrophe')({
 
 ```javascript
 // modules/landing-page/index.js
-module.export = {
+module.exports = {
   extend: 'default-page'
 };
 ```
@@ -84,7 +74,7 @@ Within an application, you can alter installed or core module behavior by adding
 
 ```javascript
 // index.js
-module.export = {
+module.exports = {
   improve: '@apostrophecms/image'
   // Additional functionality ...
 };
@@ -104,6 +94,63 @@ Set to `false` to prevent the module from being fully instantiated in the applic
 
 Used to add multiple modules from a single npm module. Takes an object with two properties. The `directory` property takes a relative path to the directory of the modules to be loaded. The `modules` property takes an array of module names. THe original module and bundled modules loaded in this way still need to be added to the `app.js` file, unless they use [`improve`](#improve). Any modules that are to be used only as a base class for other modules should be added to `app.js`, but have their [`instantiate`](#instantiate) property set to `false`.
 
+### `icons`
+
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because there is no real semantic versioning for the names of the icons and they were changing at random with new releases, breaking Apostrophe. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
+
+Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
+
+``` bash
+// in your project, already npm installed
+
+cd node_modules/vue-material-design-icons
+ls *.vue
+```
+Each property key in the `icons` setting object will be the name used to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase without the `.vue` ending. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
+
+```javascript
+// index.js
+module.exports = {
+  // ...
+  icons: {
+    airhorn: 'AirHorn',
+    expander: 'ArrowUpDownBoldOutline'
+  }
+};
+```
+
+To use an icon that is not included in the `vue-material-design-icons` list, add your icon Vue file to either a relative path in the project or via an `npm` package. Then register the icon with a property name that will be used to reference the icon in the project, and a value that points to the file.
+
+```javascript
+icons: {
+  // For an icon at ./icons in your project
+  'my-icon': '~./icons/MyIconName.vue',
+  // For an icon in the their-icon-bundle-package npm module
+  'their-icon': '~their-icon-bundle-package/TheirIconName.vue'
+}
+```
+Everything following the `~` becomes part of an `import` statement during the build process.
+
+If you need to convert your icon(s) to Vue components, you can use any of the icons in the `vue-material-design-icons` as a template for constructing a simple wrapper.
+
+At the present time, the same icon cannot be registered under two names (that is, it can't be registered as `my-icon` and as `core-icon` if they both refer to the same icon). Since this can be inconvenient and requires checking the `globalicons.js` file to make sure you are not registering a duplicate, we plan to correct it in an upcoming release.
+
+## Configuration cascades
+
+| Setting name | Value type | Description | Module types |
+| ------- | ------- | ------- | ------- | :-----: |
+| [`fields`](#fields) | Object/Function | Configure doc type fields | Doc, Widget |
+| [`filters`](#filters) | Object/Function | Configure piece type filters | Piece |
+| [`columns`](#columns) | Object/Function | Configure piece type manager columns | Piece |
+| [`batchOperations`](#batchoperations) | Object/Function | Configure manager batch operations | Piece |
+
+### "Cascading" settings
+These settings can either be configured as a static object or through a function that takes `self` and `options` and returns a configuration object.
+
+As detailed for each setting, the configuration objects have `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
+
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option only applies to columns, arranging columns in a particular order.
+
 ### `fields`
 
 [Doc type](/reference/glossary.md#doc) modules have some fields configured by default, such as the `title` and `slug` fields. The `fields` setting is used for additional field management.
@@ -114,11 +161,17 @@ The `fields` object is configured with subsections: `add`, `remove`, and `group`
 
 An object of fields to add to the schema. See the [field type reference](/reference/field-types/README.md) for more on field type configuration.
 
+Adding a field using an object:
+
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   fields: {
     add: {
+      title: {
+        label: 'Title',
+        type: 'string'
+      },
       subtitle: {
         label: 'Subtitle',
         type: 'string'
@@ -128,18 +181,61 @@ module.export = {
 };
 ```
 
+Adding a field using a function:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  fields(self, options) {
+    let fields = {
+      add: {
+        title: {
+          label: 'Title',
+          type: 'string'
+        }
+      }
+    };
+
+    if (options.subtitle) {
+      fields.add.subtitle = {
+        label: 'Subtitle',
+        type: 'string'
+      };
+    }
+
+    return fields;
+  }
+}
+```
+
+
 #### `remove`
 
-An array of field names from the base class module to remove. Some default fields cannot be removed since they required by core functionality (e.g., `title`, `slug`, `visibility`).
+An array of field names from the base class module to remove. Some default fields cannot be removed since they are required by core functionality (e.g., `title`, `slug`, `visibility`).
+
+Removing a field using an object:
 
 ```javascript
 // modules/spotlight-article/index.js
-module.export = {
+module.exports = {
   extend: 'article',
   fields: {
     remove: [ 'subtitle' ]
   }
 };
+```
+Removing a field using a function:
+
+```javascript
+// modules/spoghtlight-article/index.js
+module.exports = {
+  extend: 'article',
+  fields(self, options) {
+    return {
+      remove: !self.options.subtitle ? [ 'subtitle' ] : []
+    }
+  }
+}
 ```
 
 #### `group`
@@ -152,9 +248,11 @@ Groups are added as an object with their name as the object key and the followin
 
 The `@apostrophecms/doc-type` module arranges the default fields in two groups: `basics` and `utility`. You can override these groups, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
 
+Grouping fields using an object:
+
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   fields: {
     add: {
       // ...
@@ -171,6 +269,30 @@ module.export = {
     }
   }
 };
+```
+Grouping fields using a function:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  fields(self, options) {
+    let groupFields = [ 'author', '_category' ];
+    if (options.subtitle) {
+      groupFields.push('subtitle');
+    }
+    return {
+      add: {
+        // ... 
+      },
+      group: {
+        meta: { // 👈 The group's identifying name is the object key.
+        label: 'Article metadata',
+        fields: groupFields
+        }
+      }
+    }
+  }
+}
 ```
 
 ### `filters`
@@ -194,7 +316,7 @@ Filter properties include:
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   filters: {
     add: {
       _category: { // 👈 Referencing a relationship field named `_category`
@@ -220,7 +342,7 @@ An array of filter names from the base class module to remove.
 
 ```javascript
 // modules/spotlight-article/index.js
-module.export = {
+module.exports = {
   extend: 'article',
   filters: {
     remove: [ 'featured' ]
@@ -244,7 +366,7 @@ An object of columns to add to the piece type manager. Each column is an object 
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Adds a column showing when the article was published.
@@ -264,7 +386,7 @@ An array of column names from the base class module to remove.
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Hides the column showing when the article was last updated.
@@ -279,7 +401,7 @@ An array of column names to sort the columns in a particular order. This will of
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     add: {
@@ -316,7 +438,7 @@ The following example uses a hypothetical batch operation that might reset piece
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   batchOperations: {
     add: {
       // This uses a hypothetical`reset` route added in `apiRoutes`
@@ -352,47 +474,6 @@ Batch operation modal options include:
 | `title` | The modal heading. |
 | `description` | Descriptive text for the confirmation modal. |
 | `confirmationButton` | The affirmative confirmation button label (to continue the operation). |
-
-### `icons`
-
-The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because there is no real semantic versioning for the names of the icons and they were changing at random with new releases, breaking Apostrophe. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
-
-Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
-
-``` bash
-// in your project, already npm installed
-
-cd node_modules/vue-material-design-icons
-ls *.vue
-```
-Each property key in the `icons` setting object will be the name used to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase without the `.vue` ending. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
-
-```javascript
-// index.js
-module.export = {
-  // ...
-  icons: {
-    airhorn: 'AirHorn',
-    expander: 'ArrowUpDownBoldOutline'
-  }
-};
-```
-
-To use an icon that is not included in the `vue-material-design-icons` list, add your icon Vue file to either a relative path in the project or via an `npm` package. Then register the icon with a property name that will be used to reference the icon in the project, and a value that points to the file.
-
-```javascript
-icons: {
-  // For an icon at ./icons in your project
-  'my-icon': '~./icons/MyIconName.vue',
-  // For an icon in the their-icon-bundle-package npm module
-  'their-icon': '~their-icon-bundle-package/TheirIconName.vue'
-}
-```
-Everything following the `~` becomes part of an `import` statement during the build process.
-
-If you need to convert your icon(s) to Vue components, you can use any of the icons in the `vue-material-design-icons` as a template for constructing a simple wrapper.
-
-At the present time, the same icon cannot be registered under two names (that is, it can't be registered as `my-icon` and as `core-icon` if they both refer to the same icon). Since this can be inconvenient and requires checking the `globalicons.js` file to make sure you are not registering a duplicate, we plan to correct it in an upcoming release.
 
 ## Initialization function
 
