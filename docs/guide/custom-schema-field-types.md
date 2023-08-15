@@ -112,7 +112,7 @@ export default {
 </style>
 ```
   <template v-slot:caption>
-    modules/star-range-field/ui/apos/components/InputStarRating.vue
+    modules/star-rating-field/ui/apos/components/InputStarRating.vue
   </template>
 </AposCodeBlock>
 
