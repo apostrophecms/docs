@@ -225,7 +225,8 @@ module.exports = {
       conditions: [ 'canEdit', 'canPublish' ],
       moduleName: 'some-specific-module',
       manuallyPublished: true,
-      modifiers: [ 'danger' ]
+      modifiers: [ 'danger' ],
+      if: 
     });
   }
 }
@@ -240,7 +241,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 :::
 
 ::: note
-* All
+* The `context`, `action`, `label`, and `modal` properties are required, the rest are optional.
 * The current API supports only `context: "update"` (the custom menu items are available for previously saved documents).
 * The `action` property should be globally unique.
 * Overriding the same `action` is possible (the last wins).
