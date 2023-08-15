@@ -84,6 +84,7 @@ module.exports = {
 This code makes reference to a Vue component, `ColumnStarRating`, that doesn't exist yet. Next we'll introduce that component:
 
 <AposCodeBlock>
+
 ```js
 <template>
   <p
@@ -216,12 +217,15 @@ module.exports = {
     pluralLabel: 'Articles'
   },
   init(self) {
-    self.apos.doc.addContextOperation(self.name, {
+    self.apos.doc.addContextOperation({
       context: 'update',
-      action: 'myUniqueAction',
+      action: 'my-unique-action',
       label: 'My Menu Item',
       modal: 'MyModalComponent',
-      conditions: [ 'canEdit', 'canPublish' ]
+      conditions: [ 'canEdit', 'canPublish' ],
+      moduleName: 'some-specific-module',
+      manuallyPublished: true,
+      modifiers: [ 'danger' ]
     });
   }
 }
@@ -232,10 +236,11 @@ module.exports = {
 </AposCodeBlock>
 
 ::: warning
-Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/components/AposDocContextMenu.vue) (computed property `menu`).
+Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component](ADD NEW LINK TO LOGIC) (computed property `menu`).
 :::
 
 ::: note
+* All
 * The current API supports only `context: "update"` (the custom menu items are available for previously saved documents).
 * The `action` property should be globally unique.
 * Overriding the same `action` is possible (the last wins).
