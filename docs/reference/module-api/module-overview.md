@@ -149,7 +149,7 @@ These settings can either be configured as a static object or through a function
 
 As detailed for each setting, the configuration objects have `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
 
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option allows for the arrangement of added fields in a particular order for `filters`, `columns`, and `batchOperations` which don't have a `group` property.
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option allows for the arrangement of added fields in a particular order for `filters`, `columns`, and `batchOperations`.
 
 ### `fields`
 
@@ -376,6 +376,37 @@ module.exports = {
 };
 ```
 
+#### `order`
+
+An array of field names to sort them in a particular order.
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  filters(self, options) {
+    // Check self or options to dynamically add schema fields
+    return {
+      add: {
+        _category: { // 👈 Referencing a relationship field named `_category`
+          label: 'Article category'
+        },
+        featured: { // 👈 Referencing a boolean field name `featured`
+          labeled: 'Featured',
+          inputType: 'checkbox',
+          def: true,
+          choices: [
+            { value: true, label: 'Show featured' },
+            { value: false, label: 'Hide featured' }
+          ]
+        }
+      },
+      order: [ 'featured', '_category' ]
+    }
+  }
+};
+```
+
+
 ### `columns`
 
 For piece types, the `columns` setting configures the pieces manager, adding and removing the piece data in the interface. Default columns include `title`, `updatedAt`, and `visibility`. Like the `fields` and `filters` settings, the `add`, `remove`, and `order` properties "cascade" from the base class.
@@ -500,6 +531,31 @@ Batch operation modal options include:
 | `title` | The modal heading. |
 | `description` | Descriptive text for the confirmation modal. |
 | `confirmationButton` | The affirmative confirmation button label (to continue the operation). |
+
+#### `order`
+
+An array of batch operation names to sort them in a particular order within the menu.
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  batchOperations: {
+    add: {
+      // This uses a hypothetical `reset` route added in `apiRoutes`
+      reset: {
+        // ... reset operation configuration object
+      },
+      rollback: {
+        // ...rollback operation configuration object
+      },
+      update: {
+        // ... update operation configuration object
+      }
+    },
+    order: [ 'update', 'reset', 'rollback' ]
+  }
+};
+```
 
 ## Initialization function
 
