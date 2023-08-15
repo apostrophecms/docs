@@ -2,7 +2,7 @@
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
 - [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
-- [Configuration cascades](#configuration-cascades): Settings that can either be static or set via functions that have access to the module itself.
+- [Configuration cascades](#configuration-cascades): Settings that merge as a module initializes, first adding properties from parent classes like piece-type and then properties from subclasses like your project-level content type.
 - [Initialization function](#initialization-function): A function that runs once during application startup.
 - [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
@@ -155,7 +155,7 @@ Use `add` to add additional settings and `remove` to remove existing base class 
 
 [Doc type](/reference/glossary.md#doc) modules have some fields configured by default, such as the `title` and `slug` fields. The `fields` setting is used for additional field management.
 
- The `fields` setting can be added to the module using either an object or a function that returns an object. This object is configured with subsections: `add`, `remove`, and `group`.
+ The `fields` setting object contains properties of `add`, `remove`, and `group`, which is either provided directly, or via a function that takes `self` and `options` and returns the object.
 
 #### `add`
 
@@ -242,9 +242,9 @@ module.exports = {
 
 An object of field groups. Groupings are used by the editing interface. Note that `group` _does not apply to widget modules_.
 
-Groups are added as an object or a function that returns an object with their name as the object key and the following properties:
-- `label`: The visible label (a string) for the group
-- `fields`: An array of field names to include in the group
+`groups` accepts an object composed of named sub-objects. Each sub-object corresponds to a tab in the editing modal, displaying the fields specified within that sub-object. Every sub-object has the following properties:
+- `label`: A string used to label the tab for the group.
+- `fields`: An array of field names to included in the group.
 
 The `@apostrophecms/doc-type` module arranges the default fields in two groups: `basics` and `utility`. You can override these groups, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
 
@@ -286,8 +286,8 @@ module.exports = {
       },
       group: {
         meta: { // 👈 The group's identifying name is the object key.
-        label: 'Article metadata',
-        fields: groupFields
+          label: 'Article metadata',
+          fields: groupFields
         }
       }
     }
@@ -297,7 +297,7 @@ module.exports = {
 
 ### `filters`
 
-In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default.
+In piece-type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default. These settings "cascade" from the base classes to project-level classes without requiring those settings be declared again.
 
 The `filters` object is configured with subsections: `add` and `remove` and can either be added as a static object or a function that takes `self` and `options` and returns an object. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 
@@ -378,7 +378,7 @@ module.exports = {
 
 ### `columns`
 
-For piece types, the `columns` setting configures the pieces manager, adding and removing the piece data in the interface. Default columns include `title`, `updatedAt`, and `visibility`.
+For piece types, the `columns` setting configures the pieces manager, adding and removing the piece data in the interface. Default columns include `title`, `updatedAt`, and `visibility`. Like the `fields` and `filters` settings, the `add`, `remove`, and `order` properties "cascade" from the base class.
 
 #### `add`
 
