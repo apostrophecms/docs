@@ -27,7 +27,7 @@ Because this module has an alias, you can call these from another module from th
 
 ### Logging utilities
 
-The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior. The `info`, `debug`, `warn`, and `error` methods have been deprecated going forward in favor of the methods exposed by the [`@apostrophecms/log` module](/reference/modules/log.html).
+The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior. The `info`, `debug`, `warn`, and `error` methods have been deprecated going forward in favor of the structured logging methods `logInfo`, `logDebug`, `logWarn`, and `logError`, respectively, available on every module.
 
 #### `log(msg)`
 
