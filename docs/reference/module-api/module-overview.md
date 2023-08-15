@@ -96,7 +96,7 @@ Used to add multiple modules from a single npm module. Takes an object with two 
 
 ### `icons`
 
-The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because there is no real semantic versioning for the names of the icons and they were changing at random with new releases, breaking Apostrophe. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
 
 Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
 
@@ -149,7 +149,7 @@ These settings can either be configured as a static object or through a function
 
 As detailed for each setting, the configuration objects have `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
 
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option only applies to columns, arranging columns in a particular order.
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option allows for the arrangement of added fields in a particular order for `filters`, `columns`, and `batchOperations` which don't have a `group` property.
 
 ### `fields`
 
@@ -244,7 +244,7 @@ An object of field groups. Groupings are used by the editing interface. Note tha
 
 `groups` accepts an object composed of named sub-objects. Each sub-object corresponds to a tab in the editing modal, displaying the fields specified within that sub-object. Every sub-object has the following properties:
 - `label`: A string used to label the tab for the group.
-- `fields`: An array of field names to included in the group.
+- `fields`: An array of field names to be included in the group.
 
 The `@apostrophecms/doc-type` module arranges the default fields in two groups: `basics` and `utility`. You can override these groups, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
 
@@ -467,7 +467,7 @@ The following example uses a hypothetical batch operation that might reset piece
 module.exports = {
   batchOperations: {
     add: {
-      // This uses a hypothetical`reset` route added in `apiRoutes`
+      // This uses a hypothetical `reset` route added in `apiRoutes`
       reset: {
         label: 'Reset',
         messages: {
