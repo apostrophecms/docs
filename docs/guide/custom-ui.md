@@ -154,6 +154,7 @@ There can be only one `AposDocsManager` component definition in a project, but s
 Here is an example of how to do that:
 
 <AposCodeBlock>
+
 ```js
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -201,9 +202,9 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. The menu registration should happen in the initialization phase.
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue). The menu registration should happen in the initialization phase.
 
-Here is an example of how to add custom context menu item labeled "My Menu Item".
+Here is an example of how to add a custom context menu item labeled "My Menu Item".
 
 ![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../.vuepress/public/images/ui-custom-context-menu.png)
 
@@ -219,14 +220,10 @@ module.exports = {
   init(self) {
     self.apos.doc.addContextOperation({
       context: 'update',
-      action: 'my-unique-action',
+      action: 'myUniqueAction',
       label: 'My Menu Item',
       modal: 'MyModalComponent',
-      conditions: [ 'canEdit', 'canPublish' ],
-      moduleName: 'some-specific-module',
-      manuallyPublished: true,
-      modifiers: [ 'danger' ],
-      if: 
+      conditions: [ 'canEdit', 'canPublish' ] 
     });
   }
 }
@@ -237,22 +234,24 @@ module.exports = {
 </AposCodeBlock>
 
 ::: warning
-Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component](ADD NEW LINK TO LOGIC) (computed property `menu`).
+Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
 :::
 
 ::: note
-* The `context`, `action`, `label`, and `modal` properties are required, the rest are optional.
-* The current API supports only `context: "update"` (the custom menu items are available for previously saved documents).
+* The `context`, `action`, `label`, and `modal` properties are required.
+* The current API supports only `context: 'update'` (the custom menu items are available for previously saved documents).
 * The `action` property should be globally unique.
 * Overriding the same `action` is possible (the last wins).
-* You may mark the action as "dangerous" via an optional property `modifiers: [ "danger" ]`.
+* You may mark the action as "dangerous" via an optional property `modifiers: [ 'danger' ]` (see the 'Archive' and 'Unpublish' menu items).
 * An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
 * The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'
+* The optional `moduleName` property can be used to invoke the action API on a module other than the defining module.
+* For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
 ## Adding custom login requirements
 
-In some cases we might wish to enhance Apostrophe's login form with additional, custom steps.
+In some cases, we might wish to enhance Apostrophe's login form with additional, custom steps.
 
 This too is a larger topic that touches on more than just UI, so we've created a [separate article on how to add a custom login requirement](/guide/custom-login-requirements.md).
 
