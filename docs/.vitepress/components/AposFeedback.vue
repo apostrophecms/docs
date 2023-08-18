@@ -136,12 +136,13 @@ export default {
 }
 
 .feedback-heading, .feedback-actions {
-  margin-left: 1rem;
-  margin-right: 1rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .feedback-heading {
   font-weight: 700;
+  margin-bottom: 1rem;
 
   @media (min-width: var(--mq-mobile-narrow)) {
     flex-shrink: 0;
@@ -152,7 +153,7 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  // justify-content: center;
   flex-wrap: wrap;
   width: 100%;
   gap: 10px;
@@ -199,11 +200,12 @@ export default {
   }
 
   &:hover, &:focus, &.is-hover {
-    background-color: var(--accent-dark-color);
+    background-color: var(--neutral-color-dark);
+    
+  }
 
-    span {
-      border-bottom: 1px solid #fff;
-    }
+  &.yes:hover, &.yes:focus, &.yes.is-hover {
+   background-color: var(--accent-dark-color); 
   }
 }
 

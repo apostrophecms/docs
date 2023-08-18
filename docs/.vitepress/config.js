@@ -7,7 +7,7 @@ import { readdirSync } from 'node:fs';
 import { join } from 'path';
 
 export default defineConfig({
-  title: 'Apostrophe',
+  title: 'ApostropheCMS',
   description: 'Documentation for Apostrophe 3',
 
   ignoreDeadLinks: 'localhostLinks',
@@ -179,7 +179,7 @@ export default defineConfig({
     ]
   },
   themeConfig: {
-    logo: '/apos-dark.png',
+    logo: '/apostrophe-primary-mark.svg',
     lastUpdated: true,
     docsRepo: 'https://github.com/apostrophecms/a3-docs',
     docsBranch: 'main',
@@ -202,7 +202,8 @@ export default defineConfig({
     ],
     sidebar: [
       {
-        text: '🌟 Introduction',
+        icon: 'sun',
+        text: 'Introduction',
         link: 'guide/introduction',
         collapsed: true,
         items: [
@@ -210,11 +211,13 @@ export default defineConfig({
         ]
       },
       {
-        text: '🚀 Getting Started',
+        icon: 'list',
+        text: 'Getting Started',
         link: ' guide/setting-up.md'
       },
       {
-        text: '📚 Cookbooks',
+        icon: 'book',
+        text: 'Cookbooks',
         link: 'cookbook/index.md',
         collapsed: true,
         items: [
@@ -279,7 +282,8 @@ export default defineConfig({
         ]
       },
       {
-        text: '♻️ Migrating from A2 to A3',
+        icon: 'change',
+        text: 'Migrating from A2 to A3',
         collapsed: true,
         link: 'guide/migration/overview.md',
         items: [
@@ -437,7 +441,8 @@ export default defineConfig({
       },
       { break: true },
       {
-        text: '📦 Core Modules',
+        icon: 'core',
+        text: 'Core Modules',
         collapsed: true,
         items: getItemRefs(
           ['_template'],
@@ -447,7 +452,8 @@ export default defineConfig({
         )
       },
       {
-        text: '🎛️ Field Types',
+        icon: 'field',
+        text: 'Field Types',
         collapsed: true,
         link: 'reference/field-types/index.md',
         items: getItemRefs(
@@ -458,7 +464,8 @@ export default defineConfig({
         )
       },
       {
-        text: '🔧 Module Configuration',
+        icon: 'cog',
+        text: 'Module Configuration',
         collapsed: true,
         link: 'reference/module-api/module-overview.md',
         items: [
@@ -477,13 +484,15 @@ export default defineConfig({
         ]
       },
       {
-        text: '📖 REST API Reference',
+        icon: 'brain-circuit',
+        text: 'REST API Reference',
         link: 'reference/api/README.md',
         collapsed: true,
         items: getItemRefs(['README'], '', 'reference', 'api')
       },
       {
-        text: '📔 Glossary',
+        icon: 'open-book',
+        text: 'Glossary',
         link: 'reference/glossary.md'
       },
       { break: true },

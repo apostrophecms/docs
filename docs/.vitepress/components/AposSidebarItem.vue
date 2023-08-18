@@ -4,6 +4,7 @@ import type { DefaultTheme } from 'vitepress/theme'
 import { useSidebarControl } from 'vitepress/dist/client/theme-default/composables/sidebar'
 import VPIconChevronRight from 'vitepress/dist/client/theme-default/components/icons/VPIconChevronRight.vue'
 import VPLink from 'vitepress/dist/client/theme-default/components/VPLink.vue'
+import AposSidebarIcon from './AposSidebarIcon.vue'
 import { onBeforeUnmount, onUnmounted } from 'vue'
 
 
@@ -96,11 +97,21 @@ function onLinkClick(e: MouseEvent) {
           <VPIconChevronRight class="caret-icon" />
         </div>
         <div v-else class="apos-caret-placeholder" />
-
-        <VPLink v-if="item.link" :tag="linkTag" class="link" :href="item.link" @click="onLinkClick">
+        <VPLink
+          v-if="item.link"
+          :tag="linkTag"
+          :href="item.link"
+          @click="onLinkClick"
+          class="link"
+        >
+          <AposSidebarIcon v-if="item.icon" :name="item.icon" />
           <component :is="textTag" class="text" v-html="item.text" />
         </VPLink>
-        <component v-else :is="textTag" class="text" v-html="item.text" />
+        <span v-else class="item-wrapper">
+          <AposSidebarIcon v-if="item.icon" :name="item.icon" />
+          <component :is="textTag" class="text" v-html="item.text" />
+        </span>
+        
       </div>
 
       <div v-if="item.items && item.items.length" class="items">
@@ -118,13 +129,20 @@ function onLinkClick(e: MouseEvent) {
 </template>
 
 
-<style scoped>
-.VPSidebarItem.level-0 {
-  padding-bottom: 24px;
+<style scoped lang="scss">
+hr {
+  border: none;
+  border-bottom: 1px solid #EAEAEA;
 }
 
-.VPSidebarItem.collapsed.level-0 {
-  /* padding-bottom: 10px; */
+.collapsible:not(.collapsed) .VPSidebarItem {
+  &.level-1 .item .apos-caret-placeholder {
+    width: 24px;
+  }
+}
+
+.VPSidebarItem.level-0 {
+  padding-bottom: 24px;
 }
 
 .item {
@@ -153,22 +171,27 @@ function onLinkClick(e: MouseEvent) {
   background-color: var(--vp-c-brand);
 }
 
-.link {
+.VPSidebarItem .link, .VPSidebarItem .item-wrapper {
   display: flex;
   align-items: center;
   flex-grow: 1;
+  &:hover {
+    &, .text, & :deep svg path {
+      color: var(--vp-c-brand) !important;
+      font-weight: 500 !important;
+    }
+  }
 }
 
 .text {
   flex-grow: 1;
   padding: 4px 0;
   line-height: 24px;
-  font-size: 14px;
+  font-size: 13px;
   transition: color 0.25s;
 }
 
-.VPSidebarItem.level-0 .text {
-  font-weight: 600;
+.VPSidebarItem .text {
   color: var(--vp-c-text-1);
 }
 
@@ -181,32 +204,32 @@ function onLinkClick(e: MouseEvent) {
   color: var(--vp-c-text-2);
 }
 
-.VPSidebarItem.level-0.is-link > .item > .link:hover .text,
-.VPSidebarItem.level-1.is-link > .item > .link:hover .text,
-.VPSidebarItem.level-2.is-link > .item > .link:hover .text,
-.VPSidebarItem.level-3.is-link > .item > .link:hover .text,
-.VPSidebarItem.level-4.is-link > .item > .link:hover .text,
-.VPSidebarItem.level-5.is-link > .item > .link:hover .text {
-  color: var(--vp-c-brand);
-}
+// .VPSidebarItem.level-0.is-link > .item > .link:hover .text,
+// .VPSidebarItem.level-1.is-link > .item > .link:hover .text,
+// .VPSidebarItem.level-2.is-link > .item > .link:hover .text,
+// .VPSidebarItem.level-3.is-link > .item > .link:hover .text,
+// .VPSidebarItem.level-4.is-link > .item > .link:hover .text,
+// .VPSidebarItem.level-5.is-link > .item > .link:hover .text {
+//   color: var(--vp-c-brand);
+// }
 
-.VPSidebarItem.level-0.has-active > .item > .link > .text,
-.VPSidebarItem.level-1.has-active > .item > .link > .text,
-.VPSidebarItem.level-2.has-active > .item > .link > .text,
-.VPSidebarItem.level-3.has-active > .item > .link > .text,
-.VPSidebarItem.level-4.has-active > .item > .link > .text,
-.VPSidebarItem.level-5.has-active > .item > .link > .text {
-  color: var(--vp-c-text-1);
-}
+// .VPSidebarItem.level-0.has-active > .item > .link > .text,
+// .VPSidebarItem.level-1.has-active > .item > .link > .text,
+// .VPSidebarItem.level-2.has-active > .item > .link > .text,
+// .VPSidebarItem.level-3.has-active > .item > .link > .text,
+// .VPSidebarItem.level-4.has-active > .item > .link > .text,
+// .VPSidebarItem.level-5.has-active > .item > .link > .text {
+//   color: var(--vp-c-text-1);
+// }
 
-.VPSidebarItem.level-0.is-active > .item .link > .text,
-.VPSidebarItem.level-1.is-active > .item .link > .text,
-.VPSidebarItem.level-2.is-active > .item .link > .text,
-.VPSidebarItem.level-3.is-active > .item .link > .text,
-.VPSidebarItem.level-4.is-active > .item .link > .text,
-.VPSidebarItem.level-5.is-active > .item .link > .text {
-  color: var(--vp-c-brand);
-}
+// .VPSidebarItem.level-0.is-active > .item .link > .text,
+// .VPSidebarItem.level-1.is-active > .item .link > .text,
+// .VPSidebarItem.level-2.is-active > .item .link > .text,
+// .VPSidebarItem.level-3.is-active > .item .link > .text,
+// .VPSidebarItem.level-4.is-active > .item .link > .text,
+// .VPSidebarItem.level-5.is-active > .item .link > .text {
+//   color: var(--vp-c-brand);
+// }
 
 .caret {
   display: flex;
@@ -238,9 +261,9 @@ function onLinkClick(e: MouseEvent) {
 }
 
 .caret-icon {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
+  width: 14px;
+  height: 14px;
+  fill: #8a8a8a;
   transform: rotate(90deg);
   transition: transform 0.25s;
 }

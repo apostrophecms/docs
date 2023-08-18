@@ -64,7 +64,7 @@ const classes = computed(() => ({
 <style scoped>
 .VPNavBar {
   position: relative;
-  border-bottom: 1px solid transparent;
+  /* border-bottom: 1px solid transparent; */
   padding: 0 8px 0 24px;
   height: calc(var(--vp-nav-height) + 30px);
   pointer-events: none;

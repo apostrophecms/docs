@@ -26,9 +26,12 @@
       margin-left: auto;
       border: 1px solid var(--accent-color);
       border-radius: 4px;
+      padding: 5px 15px;
+      height: 40px;
 
       &::after {
         display: none;
+        margin-left: 8px !important;
       }
   }
 }
@@ -60,4 +63,9 @@ html.dark .DocSearch-Button {
 }
 html.dark .DocSearch-Button .DocSearch-Button-Key:first-child:after {
     color: rgb(0,0,0);
+  }
+
+  .VPNavBarTitle.has-sidebar .title {
+    border: none !important;
+    font-weight: 500 !important;
   }
