@@ -202,7 +202,7 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items (edit mode) from within any module, targeting any Vue component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue). The menu registration should happen in the initialization phase.
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items from within any module, targeting any Vue component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue). The menu registration should happen in the initialization phase.
 
 Here is an example of how to add a custom context menu item labeled "My Menu Item".
 
@@ -223,7 +223,7 @@ module.exports = {
       action: 'myUniqueAction',
       label: 'My Menu Item',
       modal: 'MyModalComponent',
-      conditions: [ 'canEdit', 'canPublish' ] 
+      conditions: [ 'canEdit', 'canPublish' ]
     });
   }
 }
@@ -245,7 +245,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 * You may mark the action as "dangerous" via an optional property `modifiers: [ 'danger' ]` (see the 'Archive' and 'Unpublish' menu items).
 * An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
 * The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'
-* The optional `moduleName` property can be used to invoke the action API on a module other than the defining module.
+* The optional `moduleName` property can be used to pass a module name other than `self.name` to the component.
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
