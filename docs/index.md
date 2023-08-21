@@ -5,7 +5,7 @@ layout: doc
 
 <div align="center">
   <a href="https://github.com/apostrophecms/apostrophe">
-    <img src="./images/apos-dark.png" alt="Logo" width="80" height="80">
+    <img src="./images/apostrophe-primary-mark.svg" alt="Logo" width="50" height="50">
   </a>
   <h1 align="center">ApostropheCMS</h1>
 </div>

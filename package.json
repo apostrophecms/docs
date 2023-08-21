@@ -18,9 +18,11 @@
     "stylelint-config-apostrophe": "^3.0.0",
     "vitepress-plugin-pagefind": "^0.2.4",
     "vue": "^3.3.4",
+    "vue-inline-svg": "^3.1.2",
     "vue-router": "^4.2.3"
   },
   "devDependencies": {
+    "sass": "^1.64.2",
     "sitemap": "^7.1.1",
     "stylelint-plugin-stylus": "^0.18.0",
     "vitepress": "^1.0.0-beta.5",

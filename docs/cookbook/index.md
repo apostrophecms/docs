@@ -1,7 +1,8 @@
 ---
 title: Code Cookbook
 prev:
-  text: '🚀 Getting Started'
+  icon: 'list'
+  text: 'Getting Started'
   link: 'guide/setting-up.md'
 next:
   text: 'Building navigation'

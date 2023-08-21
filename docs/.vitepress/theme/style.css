@@ -6,15 +6,20 @@
 /**
  * Colors
  * -------------------------------------------------------------------------- */
-
  :root {
-  --vp-c-brand: #646cff;
+  --vp-c-brand: #6236FF;
   --vp-c-brand-light: #747bff;
   --vp-c-brand-lighter: #9499ff;
   --vp-c-brand-lightest: #bcc0ff;
   --vp-c-brand-dark: #535bf2;
   --vp-c-brand-darker: #454ce1;
   --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-sidebar-bg-color: #fff;
+}
+
+.dark {
+  --vp-c-brand: #9679ff;
+  --vp-sidebar-bg-color: #1e1e20;
 }
 
 /**
