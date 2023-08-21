@@ -4,7 +4,6 @@ import { isActive } from 'vitepress/dist/client/shared'
 import { getSidebar, getFlatSideBarLinks } from 'vitepress/dist/client/theme-default/support/sidebar'
 
 export function usePrevNext() {
-  console.log('eeeeee')
   const { page, theme, frontmatter } = useData()
 
   return computed(() => {

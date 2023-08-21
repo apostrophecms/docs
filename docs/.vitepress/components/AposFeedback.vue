@@ -153,7 +153,6 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-  // justify-content: center;
   flex-wrap: wrap;
   width: 100%;
   gap: 10px;

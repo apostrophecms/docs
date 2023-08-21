@@ -204,32 +204,32 @@ hr {
   color: var(--vp-c-text-2);
 }
 
-// .VPSidebarItem.level-0.is-link > .item > .link:hover .text,
-// .VPSidebarItem.level-1.is-link > .item > .link:hover .text,
-// .VPSidebarItem.level-2.is-link > .item > .link:hover .text,
-// .VPSidebarItem.level-3.is-link > .item > .link:hover .text,
-// .VPSidebarItem.level-4.is-link > .item > .link:hover .text,
-// .VPSidebarItem.level-5.is-link > .item > .link:hover .text {
-//   color: var(--vp-c-brand);
-// }
+.VPSidebarItem.level-0.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-1.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-2.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-3.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-4.is-link > .item > .link:hover .text,
+.VPSidebarItem.level-5.is-link > .item > .link:hover .text {
+  color: var(--vp-c-brand);
+}
 
-// .VPSidebarItem.level-0.has-active > .item > .link > .text,
-// .VPSidebarItem.level-1.has-active > .item > .link > .text,
-// .VPSidebarItem.level-2.has-active > .item > .link > .text,
-// .VPSidebarItem.level-3.has-active > .item > .link > .text,
-// .VPSidebarItem.level-4.has-active > .item > .link > .text,
-// .VPSidebarItem.level-5.has-active > .item > .link > .text {
-//   color: var(--vp-c-text-1);
-// }
+.VPSidebarItem.level-0.has-active > .item > .link > .text,
+.VPSidebarItem.level-1.has-active > .item > .link > .text,
+.VPSidebarItem.level-2.has-active > .item > .link > .text,
+.VPSidebarItem.level-3.has-active > .item > .link > .text,
+.VPSidebarItem.level-4.has-active > .item > .link > .text,
+.VPSidebarItem.level-5.has-active > .item > .link > .text {
+  color: var(--vp-c-text-1);
+}
 
-// .VPSidebarItem.level-0.is-active > .item .link > .text,
-// .VPSidebarItem.level-1.is-active > .item .link > .text,
-// .VPSidebarItem.level-2.is-active > .item .link > .text,
-// .VPSidebarItem.level-3.is-active > .item .link > .text,
-// .VPSidebarItem.level-4.is-active > .item .link > .text,
-// .VPSidebarItem.level-5.is-active > .item .link > .text {
-//   color: var(--vp-c-brand);
-// }
+.VPSidebarItem.level-0.is-active > .item .link > .text,
+.VPSidebarItem.level-1.is-active > .item .link > .text,
+.VPSidebarItem.level-2.is-active > .item .link > .text,
+.VPSidebarItem.level-3.is-active > .item .link > .text,
+.VPSidebarItem.level-4.is-active > .item .link > .text,
+.VPSidebarItem.level-5.is-active > .item .link > .text {
+  color: var(--vp-c-brand);
+}
 
 .caret {
   display: flex;

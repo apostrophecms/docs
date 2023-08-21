@@ -69,7 +69,6 @@ watchPostEffect(async () => {
   max-width: 320px;
   background-color: var(--vp-sidebar-bg-color);
   opacity: 0;
-  /* box-shadow: var(--vp-c-shadow-3); */
   overflow-x: hidden;
   overflow-y: auto;
   transform: translateX(-100%);

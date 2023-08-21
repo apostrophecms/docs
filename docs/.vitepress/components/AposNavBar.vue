@@ -42,21 +42,14 @@ const classes = computed(() => ({
         <div class="curtain" />
         <div class="content-body">
           <div class="apos-custom-navbar apos-top-navbar">
-              <VPNavBarSearch class="search" />
-              <VPNavBarMenu class="menu" />
-              <VPNavBarAppearance class="appearance" />
-              <VPNavBarSocialLinks class="social-links" />
-              <VPNavBarTranslations class="translations" />
-              <VPNavBarExtra class="extra" />
-              <slot name="nav-bar-content-after" />
-              <VPNavBarHamburger class="hamburger" :active="isScreenOpen" @click="$emit('toggle-screen')" />
-            <!-- <div class="apos-top-navbar-group apos-top-navbar-group--left">
-              
-              <slot name="nav-bar-content-before" />
-            </div>
-            <div class="apos-top-navbar-group apos-top-navbar-group--right">
-
-            </div> -->
+            <VPNavBarSearch class="search" />
+            <VPNavBarMenu class="menu" />
+            <VPNavBarAppearance class="appearance" />
+            <VPNavBarSocialLinks class="social-links" />
+            <VPNavBarTranslations class="translations" />
+            <VPNavBarExtra class="extra" />
+            <slot name="nav-bar-content-after" />
+            <VPNavBarHamburger class="hamburger" :active="isScreenOpen" @click="$emit('toggle-screen')" />
           </div>
           <div class="apos-custom-navbar apos-bottom-navbar">
             <slot name="apos-bottom-navbar-before" />
