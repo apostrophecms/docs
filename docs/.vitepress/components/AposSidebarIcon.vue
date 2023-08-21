@@ -7,7 +7,6 @@
 <script setup>
   import InlineSvg from 'vue-inline-svg';
   import { withBase } from 'vitepress'
-  import { onMounted } from 'vue';
   const props = defineProps({
     name: {
       type: String,

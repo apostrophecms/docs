@@ -31,6 +31,12 @@ export default defineConfig({
           replacement: fileURLToPath(
             new URL('./components/AposSidebarItem.vue', import.meta.url)
           )
+        },
+        {
+          find: /^.*\/VPDocFooter\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./components/AposDocFooter.vue', import.meta.url)
+          )
         }
       ]
     }
@@ -188,13 +194,8 @@ export default defineConfig({
     ignoreDeadLinks: 'localhostLinks',
     editLinkText: 'Edit this page on GitHub',
     nav: [
-      { text: 'Features', link: 'https://apostrophecms.com/features' },
       { text: 'Extensions', link: 'https://apostrophecms.com/extensions' },
       { text: 'Community', link: 'https://discord.com/invite/XkbRNq7' },
-      {
-        text: 'Compare Solutions',
-        link: 'https://apostrophecms.com/compare-cms-solutions'
-      },
       {
         text: 'Enterprise Solutions',
         link: 'https://apostrophecms.com/pricing'

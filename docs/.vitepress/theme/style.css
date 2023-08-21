@@ -14,6 +14,12 @@
   --vp-c-brand-dark: #535bf2;
   --vp-c-brand-darker: #454ce1;
   --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
+  --vp-sidebar-bg-color: #fff;
+}
+
+.dark {
+  --vp-c-brand: #9679ff;
+  --vp-sidebar-bg-color: #1e1e20;
 }
 
 /**

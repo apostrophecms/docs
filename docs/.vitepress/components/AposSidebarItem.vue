@@ -132,7 +132,7 @@ function onLinkClick(e: MouseEvent) {
 <style scoped lang="scss">
 hr {
   border: none;
-  border-bottom: 1px solid #EAEAEA;
+  border-bottom: 1px solid var(--vp-c-divider);
 }
 
 .collapsible:not(.collapsed) .VPSidebarItem {

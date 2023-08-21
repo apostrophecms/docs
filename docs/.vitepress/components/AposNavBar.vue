@@ -42,18 +42,24 @@ const classes = computed(() => ({
         <div class="curtain" />
         <div class="content-body">
           <div class="apos-custom-navbar apos-top-navbar">
-          <slot name="nav-bar-content-before" />
-          <VPNavBarMenu class="menu" />
-          <VPNavBarTranslations class="translations" />
-          <VPNavBarExtra class="extra" />
-          <slot name="nav-bar-content-after" />
-          <VPNavBarHamburger class="hamburger" :active="isScreenOpen" @click="$emit('toggle-screen')" />
+              <VPNavBarSearch class="search" />
+              <VPNavBarMenu class="menu" />
+              <VPNavBarAppearance class="appearance" />
+              <VPNavBarSocialLinks class="social-links" />
+              <VPNavBarTranslations class="translations" />
+              <VPNavBarExtra class="extra" />
+              <slot name="nav-bar-content-after" />
+              <VPNavBarHamburger class="hamburger" :active="isScreenOpen" @click="$emit('toggle-screen')" />
+            <!-- <div class="apos-top-navbar-group apos-top-navbar-group--left">
+              
+              <slot name="nav-bar-content-before" />
+            </div>
+            <div class="apos-top-navbar-group apos-top-navbar-group--right">
+
+            </div> -->
           </div>
           <div class="apos-custom-navbar apos-bottom-navbar">
             <slot name="apos-bottom-navbar-before" />
-            <VPNavBarSearch class="search" />
-            <VPNavBarAppearance class="appearance" />
-            <VPNavBarSocialLinks class="social-links" />
           </div>
         </div>
       </div>
@@ -69,7 +75,13 @@ const classes = computed(() => ({
   height: calc(var(--vp-nav-height) + 30px);
   pointer-events: none;
   white-space: nowrap;
-  padding-top: 30px;
+  /* padding-top: 30px; */
+}
+
+@media (min-width: 640px) {
+  .VPNavBar {
+    padding-top: 15px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -111,6 +123,7 @@ const classes = computed(() => ({
   .VPNavBar.has-sidebar .container {
     max-width: 100%;
     background-color: var(--vp-sidebar-bg-color);
+    border-bottom: 1px solid var(--vp-c-divider);
   }
 }
 
@@ -124,11 +137,28 @@ const classes = computed(() => ({
   transition: background-color 0.5s;
 }
 
+.VPNavBar .title {
+  margin-top: 15px;
+}
+
+@media (min-width: 640px) {
+  .VPNavBar .title {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .VPNavBar .title {
+    margin-top: 15px;
+  }
+}
+
 @media (min-width: 960px) {
   .VPNavBar.has-sidebar .title {
     position: absolute;
-    top: 30px;
+    top: 15px;
     left: 0;
+    margin-top: 0;
     z-index: 2;
     padding: 0 32px;
     width: var(--vp-sidebar-width);
@@ -159,8 +189,33 @@ const classes = computed(() => ({
 
 @media (min-width: 1440px) {
   .VPNavBar.has-sidebar .content {
-    
     padding-left: calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width));
+  }
+}
+
+/* @media (min-width: 640px) { */
+.VPNavBar .content {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+/* } */
+
+@media (min-width: 640px) {
+  .VPNavBar .content {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 960px) {
+  .content-body {
+    border-bottom: 1px solid var(--vp-c-divider);
+  }
+}
+
+@media (min-width: 768px) {
+  .content-body {
+    width: 100%;
   }
 }
 
@@ -173,12 +228,14 @@ const classes = computed(() => ({
   transition: background-color 0.5s;
   padding-top: 30px;
   padding-right: 32px;
-  width: 100%;
+  padding-bottom: 10px;
 }
+
 .apos-custom-navbar {
   display: flex;
-  flex: 1 0;
+  /* flex: 1 0; */
   width: 100%;
+  justify-content: flex-end;
 }
 
 .apos-top-navbar {
@@ -267,6 +324,13 @@ const classes = computed(() => ({
   .VPNavBar.has-sidebar .curtain {
     width: calc(100% - ((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width)));
   }
+}
+
+.apos-top-navbar-group {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  align-content: center;
 }
 
 

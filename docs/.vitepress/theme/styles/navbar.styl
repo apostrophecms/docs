@@ -3,12 +3,8 @@
   font-size: 1.1rem;
 }
 
-#local-search {
-  width: 80%;
-}
-
 .VPContent .container {
-  padding-top: 30px;
+  padding-top: 20px;
 
   & .aside-container {
     padding-top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px) + var(--vp-doc-top-height, 0px) + 64px);
@@ -16,56 +12,66 @@
   }
 
 .VPNavBarMenu {
-  padding-left: 32px;
+  display: flex;
+  align-items: center;
   }
 
-.apos-top-navbar nav {
-  width: 100%;
+.apos-top-navbar {
+  align-items: center;
+}
 
-    & a:last-of-type{
-      margin-left: auto;
-      border: 1px solid var(--accent-color);
-      border-radius: 4px;
-      padding: 5px 15px;
-      height: 40px;
-
-      &::after {
-        display: none;
-        margin-left: 8px !important;
-      }
-  }
+.DocSearch-Search-Icon path,
+.DocSearch-Button-Placeholder,
+.DocSearch-Button-Key,
+.DocSearch-Button-Key:after {
+  transition: all 0.2s ease;
 }
 
 .DocSearch-Button {
-  border: 1px solid var(--accent-color);
   border-radius: 4px;
-  background-color: var(--accent-color-light);
+  background-color: transparent;
+  border: none !important;
+
+  &:hover {
+    background-color: transparent;
+    border: none;
+    .DocSearch-Search-Icon path {
+      stroke: var(--vp-c-black);
+    }
+    .DocSearch-Button-Placeholder {
+      color: var(--vp-c-black);
+    }
+    .DocSearch-Button-Key {
+      border-color: var(--vp-c-brand);
+      color: var(--vp-c-brand);
+      &:after {
+        color: var(--vp-c-brand);
+      }
+    }
+  }
 }
 
-html.dark .DocSearch-Button {
-
-  & .DocSearch-Search-Icon {
-    color: rgb(0,0,0);
-    }
-  & .DocSearch-Button-Placeholder {
-    color: rgb(0,0,0);
-    }
-  & .DocSearch-Button-Keys {
-    color: rgb(0,0,0);
+.dark .DocSearch-Button:hover {
+  .DocSearch-Search-Icon path {
+    stroke: var(--vp-c-white);
   }
-  & .DocSearch-Button-Key {
-    fill: rgb(0,0,0);
-    color: rgb(0,0,0);
-  }
-  & .DocSearch-Button .DocSearch-Button-Key:first-child {
-    color: rgb(0,0,0);
+  .DocSearch-Button-Placeholder {
+    color: var(--vp-c-white);
   }
 }
-html.dark .DocSearch-Button .DocSearch-Button-Key:first-child:after {
-    color: rgb(0,0,0);
-  }
 
   .VPNavBarTitle.has-sidebar .title {
     border: none !important;
     font-weight: 500 !important;
   }
+
+.VPNavBarSearch {
+  flex-grow: 0;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarExtra {
+    display: flex !important;
+    align-items: center;
+  }
+}
