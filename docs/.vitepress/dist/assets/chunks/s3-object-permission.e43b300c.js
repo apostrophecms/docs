@@ -1,0 +1,1 @@
+const s="/assets/s3-permissions-tab.a5a20225.png",t="/assets/s3-public-permissions.4aeb88bc.png",o="/assets/s3-object-ownership.1316bd2e.png",e="/assets/s3-object-permission.6f190be7.png";export{s as _,t as a,o as b,e as c};
