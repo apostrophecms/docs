@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Composing custom schema fields from standard fields
 
 ![A composite screenshot of the two custom schema fields being built in this recipe.](../images/recipes/composite-schema.png)

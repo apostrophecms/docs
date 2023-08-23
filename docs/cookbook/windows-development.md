@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Windows development environment
 
 ## Installing Windows Subsystem for Linux

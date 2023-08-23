@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Ubuntu hosting setup
 
 ## Setting up the Ubuntu VPS

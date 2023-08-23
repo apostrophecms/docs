@@ -1,5 +1,6 @@
 ---
-lastUpdated: '12-06-1969'
+prev: false
+next: false
 ---
 # Building site navigation
 
@@ -23,9 +24,10 @@ The Apostrophe demo site is a small example of common page tree structure. Under
 Apostrophe templates have access to this page tree using `data.home._children`, an array of top-level page data objects. Templates also have access to the children of the page a visitor is on, but since we're focused on the main site navigation, we want to use the home page's children. Home page children do not change as visitors move around the website.
 
 As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tree-navigation), we can loop over `data.home._children` and print the pages' URLs and titles in a list. Once you add some classes and CSS, this can work great as site navigation. And since it is based on the page tree structure **it will automatically stay up to date as editors update page content**.
+
 <AposCodeBlock>
 
-  ``` njk {this.js}
+  ``` nunjucks
   <header>
     <nav>
       <ul>
@@ -39,11 +41,9 @@ As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tre
     </nav>
   </header>
   ```
-
   <template v-slot:caption>
     views/layout.html
   </template>
-
 </AposCodeBlock>
 
 ### Change page tree data in templates
@@ -54,7 +54,7 @@ The *default* query builder options for the page module look like this:
 
 <AposCodeBlock>
 
-  ```javascript
+  ``` javascript
   module.exports = {
     options: {
       builders: {
@@ -103,7 +103,7 @@ By default the page data object includes all properties from the database docume
 
 <AposCodeBlock>
 
-  ```javascript
+  ``` javascript
   module.exports = {
     options: {
       builders: {
@@ -128,7 +128,7 @@ If pages had **thumbnail images we wanted to show in the navigation**, we can in
 
 <AposCodeBlock>
 
-  ```javascript
+  ``` javascript
   module.exports = {
     options: {
       builders: {
@@ -152,7 +152,7 @@ If pages had **thumbnail images we wanted to show in the navigation**, we can in
 
 We would then display the image [using an `area` tag](/guide/media.html#the-image-widget-option) or [the template methods for accessing the image attachment](/guide/media.html#the-relationship-field-option).
 
-As you can see, page templates come ready with page tree data that is ready to become site navigation. With additional configuration we can customize the data that templates give us. The examples above are only a few such ways to configure it.
+As you can see, page templates come ready with page tree data that is ready to become site navigation. With additional configuration, we can customize the data that templates give us. The examples above are only a few such ways to configure it.
 
 ## Add fields for manual nav building
 
@@ -168,7 +168,7 @@ With those ideas in mind, we can look at an example of project-level global modu
 
 <AposCodeBlock>
 
-  ```javascript
+  ``` javascript
   module.exports = {
     fields: {
       add: {
@@ -249,7 +249,7 @@ With those ideas in mind, we can look at an example of project-level global modu
 
 The field schema above adds an array field whose schema has five additional fields (remember: array fields have their own field schema for each array item):
 
-1. The nav item label, which is also the array field's titleField for the user interface (removed backticks)
+1. The nav item label, which is also the array field's `titleField` for the user interface
 2. The link type (linking to an internal page or external URL)
 3. A relationship field to an internal page, if the page link option is chosen
 4. A URL field, if the custom URL option is chosen
@@ -264,7 +264,7 @@ The final step is to turn the array data from this into template markup. We will
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
   <header>
     <nav>
       <ul>
@@ -273,13 +273,17 @@ The final step is to turn the array data from this into template markup. We will
           <li>
             {% set path = '' %}
             {% set pageTitle = '' %}
+            {% set selectedClass = '' %}
             {% if item.type === 'page' and item._page and item._page[0] %}
               {% set path = item._page[0]._url %}
               {% set pageTitle = item._page[0].title %}
+              {% if data.page.title == pageTitle %}
+                {% set selectedClass = 'selected' %}
+              {% endif %}
             {% elif item.type === 'custom' %}
               {% set path = item.customUrl %}
             {% endif %}
-            <a href="{{ path }}"
+            <a href="{{ path }}" class="{{ selectedClass }}"
               {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
             >{{ item.label or pageTitle }}</a>
           </li>
@@ -307,7 +311,7 @@ The only tricky part comes at the end. If a visitor is on a piece's [show page](
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
   {# Breadcrumb trail to the current page or piece. Not on the home page #}
   {% if data.page and data.page._ancestors.length %}
     <nav class="breadcrumb">
