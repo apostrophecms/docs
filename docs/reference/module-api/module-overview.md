@@ -74,7 +74,7 @@ Similarly to `extend`, `improve` is used to name another existing module. Instea
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
 
-::: note
+::: info
 Within an application, you can alter installed or core module behavior by adding an `index.js` file for it in the `module` directory as if it is a new module. Installed modules cannot share their name with an existing module, so they `improve` those existing modules instead.
 :::
 
