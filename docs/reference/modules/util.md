@@ -15,7 +15,7 @@ The `@apostrophecms/util` module contains utility methods and tools that do not 
 
 |  Property | Type | Description |
 |---|---|---|
-|`logger` | Function | A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). |
+|`logger` | Function | Deprecated in favor of the new option exposed in the `@apostrophecms/logging` module. A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). |
 | `stackLimit` | Integer | Defaults to 50. This is the maximum size of the asynchronous stack, tracking active widget loaders, async components, and relationship loaders. |
 
 ## Featured methods
@@ -27,7 +27,7 @@ Because this module has an alias, you can call these from another module from th
 
 ### Logging utilities
 
-The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior.
+The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior. The `info`, `debug`, `warn`, and `error` methods have been deprecated going forward in favor of the structured logging methods `logInfo`, `logDebug`, `logWarn`, and `logError`, respectively, available on every module.
 
 #### `log(msg)`
 

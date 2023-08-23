@@ -437,7 +437,8 @@ export default defineConfig({
           { text: 'Server-side events', link: 'guide/server-events.md' },
           { text: 'Hosting in production', link: 'guide/hosting.md' },
           { text: 'Webpack', link: 'guide/webpack.md' },
-          { text: 'Using pnpm', link: 'guide/using-pnpm.md' }
+          { text: 'Using pnpm', link: 'guide/using-pnpm.md' },
+          { text: 'Logging in Apostrophe', link: 'guide/logging.md' }
         ]
       },
       { break: true },
