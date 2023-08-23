@@ -32,6 +32,7 @@ fontSize: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`max` | Number | n/a | The maximum allowed value for the field |
 |`min` | Number | n/a | The minimum allowed value for the field |
 |`step` | Number | 1 | The interval between numbers (it may be a floating point number) |
@@ -43,7 +44,7 @@ fontSize: {
 
 ## Use in templates
 
-``` njk
+```nunjucks
 {{ data.widget.fontSize }}
 
 {# data.widget.fontSize is a number #}

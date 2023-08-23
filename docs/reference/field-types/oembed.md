@@ -35,6 +35,7 @@ video: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
@@ -45,7 +46,7 @@ video: {
 
 Simplest usage could involve simply printing the thumbnail image (if available) and linking to the media:
 
-``` njk
+```nunjucks
 {% if data.piece.video and data.piece.video.thumbnail %}
   {% set video = data.piece.video %}
   <a href="{{ video.url }}">

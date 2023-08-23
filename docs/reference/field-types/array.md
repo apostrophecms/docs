@@ -4,7 +4,7 @@ An `array` field has its own [field schema](/reference/glossary.md#schema) and a
 
 This is useful for collections of structured data that clearly belong to a parent document but won't have relationships to other documents, such as multiple sets of contact information for business locations or tabs in a widget.
 
-See the [relationship](relationship.md) field if you exclusively, or primarily, need to indentify a series of other pieces or pages.
+See the [relationship](relationship.md) field if you exclusively, or primarily, need to identify a series of other pieces or pages.
 
 ## Module field definition
 
@@ -47,6 +47,7 @@ contactInfo: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 | [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
 |`style` | String |  n/a | Only if `inline` is true. If set to `table`, the schema will be displayed as an HTML table |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
@@ -74,6 +75,87 @@ You can also control whether each item has a toggle to expand it, or is always d
 
 By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
 
+Care should be taken when using `style: table` along with conditional fields. In general, conditional fields should "switch" between two fields that have the same label in order to maintain the table structure. For example:
+
+<AposCodeBlock>
+
+```javascript
+...
+  inlineArrayTableField: {
+    label: 'Dessert Table',
+    itemLabel: 'Dessert Item',
+    type: 'array',
+    inline: true,
+    style: 'table',
+    fields: {
+    add: {
+      brand: {
+        type: 'string',
+        label: 'Brand',
+        required: true
+      },
+      dessertType: {
+        type: 'select',
+        label: 'Dessert Type',
+        choices: [
+          {
+            label: 'Ice Cream',
+            value: 'iceCream'
+          },
+          {
+            label: 'Sorbet',
+            value: 'sorbet'
+          }
+        ],
+        def: 'iceCream'
+      },
+      iceCream: {
+        type: 'select',
+        label: 'Flavor',
+        choices: [
+          {
+            label: 'Cherry',
+            value: 'cherry'
+          },
+          {
+            label: 'Raspberry',
+            value: 'raspberry'
+          }
+        ],
+        if: {
+          dessertType: 'iceCream'
+        },
+        def: 'cherry',
+        required: true
+      },
+      sorbet: {
+        type: 'select',
+        label: 'Flavor',
+        choices: [
+          {
+            label: 'Orange',
+            value: 'orange'
+          },
+          {
+            label: 'Ginger',
+            value: 'ginger'
+          }
+        ],
+        if: {
+          dessertType: 'sorbet'
+        },
+        def: 'orange',
+        required: true
+      }
+    }
+  }
+}
+...
+```
+</AposCodeBlock>
+
+In this example, the third field will "switch" between the ice cream flavors and the sorbet flavors. Not that the label, `Flavor`, is the same for both fields. This means that the label at the top of the table will not change if one item in the array selects ice cream and another selects sorbet.
+
 ### `whenEmpty`
 
 If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
@@ -100,7 +182,7 @@ Array schema configuration differs from module schema configuration in that _arr
 
 Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
 
-``` njk
+```nunjucks
 <ul>
 {% for contact in data.piece.contactInfo %}
   <li>{{ contact.city }}: {{ contact.email }}</li>

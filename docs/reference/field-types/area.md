@@ -57,6 +57,7 @@ main: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | `boolean` | false | If true, it will prevent the field from appearing in a dialog box | -->
@@ -218,7 +219,7 @@ Use the `area` template tag with arguments for the context and the name of the a
 
 The "context" may be a page, piece, widget, or [array field](/reference/field-types/array.md) item, as referenced in the template. All configuration from the field definition is applied automatically from the relevant schema configuration.
 
-``` njk
+```nunjucks
 <!-- Inserting the `main` area field for a page. -->
 <section>
   {% area data.page, 'main' %}

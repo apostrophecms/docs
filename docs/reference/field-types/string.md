@@ -38,6 +38,7 @@ biography: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -77,7 +78,7 @@ Migrations like this only need to be run once because on future updates or inser
 
 The Nunjucks [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) tag can help print textarea strings with line breaks.
 
-``` njk
+```nunjucks
 <h2>{{ data.piece.dogName }}</h2>
 <p>
   {{ data.piece.biography | striptags(true) | escape | nl2br }}
