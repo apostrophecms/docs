@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useData } from 'vitepress/dist/client/theme-default/composables/data'
 import type { DefaultTheme } from 'vitepress/theme'
 import { useSidebarControl } from 'vitepress/dist/client/theme-default/composables/sidebar'
 import VPIconChevronRight from 'vitepress/dist/client/theme-default/components/icons/VPIconChevronRight.vue'
@@ -7,29 +8,37 @@ import VPLink from 'vitepress/dist/client/theme-default/components/VPLink.vue'
 import AposSidebarIcon from './AposSidebarIcon.vue'
 import { onBeforeUnmount, onUnmounted } from 'vue'
 
+const { page } = useData();
 
-    onBeforeUnmount(() => {
-      console.log('Component is about to be unmounted');
-    });
-    onUnmounted(() => {
-      console.log('Component has been unmounted');
-    });
+watch(page, newValue => {
+  myIsActive.value = newValue.relativePath === props.item.link;
+})
+
+onBeforeUnmount(() => {
+  console.log('Component is about to be unmounted');
+});
+onUnmounted(() => {
+  console.log('Component has been unmounted');
+});
 
 const props = defineProps<{
   item: DefaultTheme.SidebarItem & { break?: boolean }
   depth: number
 }>()
 
-
 const {
-  collapsed,
   collapsible,
+  collapsed,
   isLink,
   isActiveLink,
   hasActiveLink,
   hasChildren,
   toggle
-} = useSidebarControl(computed(() => props.item))
+} = useSidebarControl(computed(() => props.item));
+const myCollapsed = ref(false);
+const myIsActive = ref(false);
+const myHasActive = ref(false);
+myIsActive.value = page.value.relativePath === props.item.link;
 
 const sectionTag = computed(() => hasChildren.value ? 'section' : `div`)
 
@@ -43,13 +52,32 @@ const textTag = computed(() => {
 
 const itemRole = computed(() => isLink.value ? undefined : 'button')
 
+let hasActiveChild = false;
+if (props.item.items) {
+  checkForActivePage(props.item.items, page.value);
+}
+
+myCollapsed.value = props.item.items ? !hasActiveChild : null;
+myHasActive.value = !myCollapsed.value;
+
+function checkForActivePage(items, page) {
+  items.forEach(item => {
+    if (page.relativePath === item.link) {
+      hasActiveChild = true;
+    }
+    if (item.items) {
+      checkForActivePage(item.items, page);
+    }
+  });
+}
+
 const classes = computed(() => [
   [`level-${props.depth}`],
   { collapsible: collapsible.value },
-  { collapsed: collapsed.value },
+  { collapsed: myCollapsed.value },
   { 'is-link': isLink.value },
-  { 'is-active': isActiveLink.value },
-  { 'has-active': hasActiveLink.value }
+  { 'is-active': myIsActive.value },
+  { 'has-active': myHasActive.value }
 ])
 
 
@@ -57,26 +85,30 @@ function onItemInteraction(e: MouseEvent | Event) {
   if ('key' in e && e.key !== 'Enter') {
     return
   }
-  !props.item.link && toggle()
+  !props.item.link && myToggle()
 }
 
 function onCaretClick() {
-  props.item.link && toggle()
+  props.item.link && myToggle()
 }
 
 function onLinkClick(e: MouseEvent) {
   if (props.item.items) {
     // prevent following the link when the item can be toggled
     e.preventDefault()
-    toggle()
+    myToggle()
   }
+}
+
+function myToggle() {
+  myCollapsed.value = !myCollapsed.value;
 }
 
 </script>
 
 <template>
   <component :is="sectionTag" class="VPSidebarItem" :class="classes">
-    <hr v-if="item.break">
+    <hr v-if="item.break || (item?.items && item.items[0] && item.items[0].break)">
     <div v-else>
       <div v-if="item.text"
         class="item"
@@ -86,7 +118,7 @@ function onLinkClick(e: MouseEvent) {
       >
         <div class="indicator" />
 
-        <div v-if="item.collapsed != null"
+        <div v-if="myCollapsed != null"
           class="caret"
           role="button"
           aria-label="toggle section"
@@ -169,6 +201,13 @@ hr {
 .VPSidebarItem.level-4.is-active > .item > .indicator,
 .VPSidebarItem.level-5.is-active > .item > .indicator {
   background-color: var(--vp-c-brand);
+}
+
+.VPSidebarItem.is-active .item .link {
+  &, .text {
+    color: var(--vp-c-brand) !important;
+    font-weight: 600 !important;
+  }
 }
 
 .VPSidebarItem .link, .VPSidebarItem .item-wrapper {
