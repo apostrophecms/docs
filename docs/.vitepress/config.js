@@ -208,13 +208,13 @@ export default defineConfig({
         link: 'guide/introduction',
         collapsed: true,
         items: [
-          { text: 'Technical Overview', link: ' guide/technical-overview.md' }
+          { text: 'Technical Overview', link: 'guide/technical-overview.md' }
         ]
       },
       {
         icon: 'list',
         text: 'Getting Started',
-        link: ' guide/setting-up.md'
+        link: 'guide/setting-up.md'
       },
       {
         icon: 'book',
@@ -537,8 +537,8 @@ function getItemRefs(
       return {
         text: `${titlePrefix}${filename.replace('.md', '')}`,
         link: subFolder
-          ? `/${folder}/${subFolder}/${filename}`
-          : `/${folder}/${filename}`
+          ? `${folder}/${subFolder}/${filename}`
+          : `${folder}/${filename}`
       };
     });
 }

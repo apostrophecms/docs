@@ -4,7 +4,7 @@ prev:
   link: 'guide/introduction'
 next:
   text: '🚀 Getting Started'
-  link: ' guide/setting-up.md'
+  link: 'guide/setting-up.md'
 ---
 
 # Technical overview
