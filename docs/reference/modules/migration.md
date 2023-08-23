@@ -26,6 +26,7 @@ Add a migration function (`fn`) to be invoked when the `@apostrophecms/migration
 Functions receive no arguments, but have access to the modules where they are registered (via `self`) and the Apostrophe object (`self.apos`).
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/piece-type'
