@@ -34,8 +34,17 @@ export default {
       title.value = pageData.title
     })
 
+    watch(
+    () => dataObject.page.value,
+    (newPageData, oldPageData) => {
+      relativePath.value = newPageData.relativePath;
+      title.value = newPageData.title;
+    },
+    { deep: true }
+  );
+
     const openIssueLink = computed(() => {
-      return `https://github.com/apostrophecms/a3-docs/issues/new?assignees=&labels=OKR+3%3A+Content+Improvement%2C+docs-ipfs&template=documentation-issue.md&title=%5BDOCS+ISSUE%5D+Page:+${title.value}`;
+      return `https://github.com/apostrophecms/a3-vitepress-docs/issues/new?assignees=&labels=OKR+3%3A+Content+Improvement%2C+docs-ipfs&template=documentation-issue.md&title=%5BDOCS+ISSUE%5D+Page:+${title.value}`;
     })
 
     function createEditLink(docsRepo, docsDir, docsBranch, path) {
@@ -81,12 +90,6 @@ export default {
       editLinkText,
       openIssueLink,
       createEditLink
-    }
-  },
-  watch: {
-  'relativePath.value': function() {
-      relativePath.value = pageData.relativePath
-      title.value = pageData.title
     }
   }
 }
