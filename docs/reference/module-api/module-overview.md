@@ -10,29 +10,20 @@ next:
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
 - [Configuration settings](#configuration-settings): Static module settings. Once the module is initialized these settings are fixed and can't access the module itself or any other module's settings.
+- [Configuration cascades](#configuration-cascades): Settings that merge as a module initializes, first adding properties from parent classes like piece-type and then properties from subclasses like your project-level content type.
 - [Initialization function](#initialization-function): A function that runs once during application startup.
 - [Customization functions](#customization-functions): Settings via functions that have access to the module itself as an argument and can access other settings.
 
 ## Configuration settings
 
-| Setting name | Value type | [Cascades](#cascading-settings) | Description | Module types |
-| ------- | ------- | ------- | ------- | :-----: |
-| [`extend`](#extend) | String | No | Identify the base class module | All |
-| [`improve`](#improve) | String | No | Identify a module to enhance | All |
-| [`options`](#options) | Object | No | Configure module options | All |
-| [`instantiate`](#instantiate) | Boolean | No | Prevent a module from being fully instantiated | All |
-| [`bundle`](#bundle) | Object | No | Identify multiple modules to load | All |
-| [`fields`](#fields) | Object | Yes | Configure doc type fields | Doc, Widget |
-| [`filters`](#filters) | Object | Yes | Configure piece type filters | Piece |
-| [`columns`](#columns) | Object | Yes | Configure piece type manager columns | Piece |
-| [`batchOperations`](#batchoperations) | Object | Yes | Configure manager batch operations | Piece |
-| [`icons`](#icons) | Object | No | Register a Material Design icon for the UI | All |
-
-### "Cascading" settings
-
-Many Apostrophe module sections are structured as objects with `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
-
-Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user facing settings in the editing interface. `order` only applies to columns, arranging columns in a particular order.
+|Setting name | Value type | Description | Module types |
+|-------|-------|-------|-------|
+| [`extend`](#extend) | String | Identify the base class module | All |
+| [`improve`](#improve) | String | Identify a module to enhance | All |
+| [`options`](#options) | Object | Configure module options | All |
+| [`instantiate`](#instantiate) | Boolean | Prevent a module from being fully instantiated | All |
+| [`bundle`](#bundle) | Object | Identify multiple modules to load | All |
+| [`icons`](#icons) | Object | Register a Material Design icon for the UI | All |
 
 ### `extend`
 
@@ -71,7 +62,7 @@ require('apostrophe')({
 
 ```javascript
 // modules/landing-page/index.js
-module.export = {
+module.exports = {
   extend: 'default-page'
 };
 ```
@@ -83,7 +74,7 @@ Similarly to `extend`, `improve` is used to name another existing module. Instea
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
 
-::: info
+::: note
 Within an application, you can alter installed or core module behavior by adding an `index.js` file for it in the `module` directory as if it is a new module. Installed modules cannot share their name with an existing module, so they `improve` those existing modules instead.
 :::
 
@@ -91,7 +82,7 @@ Within an application, you can alter installed or core module behavior by adding
 
 ```javascript
 // index.js
-module.export = {
+module.exports = {
   improve: '@apostrophecms/image'
   // Additional functionality ...
 };
@@ -111,21 +102,84 @@ Set to `false` to prevent the module from being fully instantiated in the applic
 
 Used to add multiple modules from a single npm module. Takes an object with two properties. The `directory` property takes a relative path to the directory of the modules to be loaded. The `modules` property takes an array of module names. THe original module and bundled modules loaded in this way still need to be added to the `app.js` file, unless they use [`improve`](#improve). Any modules that are to be used only as a base class for other modules should be added to `app.js`, but have their [`instantiate`](#instantiate) property set to `false`.
 
+### `icons`
+
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
+
+Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
+
+``` bash
+// in your project, already npm installed
+
+cd node_modules/vue-material-design-icons
+ls *.vue
+```
+Each property key in the `icons` setting object will be the name used to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase without the `.vue` ending. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
+
+```javascript
+// index.js
+module.exports = {
+  // ...
+  icons: {
+    airhorn: 'AirHorn',
+    expander: 'ArrowUpDownBoldOutline'
+  }
+};
+```
+
+To use an icon that is not included in the `vue-material-design-icons` list, add your icon Vue file to either a relative path in the project or via an `npm` package. Then register the icon with a property name that will be used to reference the icon in the project, and a value that points to the file.
+
+```javascript
+icons: {
+  // For an icon at ./icons in your project
+  'my-icon': '~./icons/MyIconName.vue',
+  // For an icon in the their-icon-bundle-package npm module
+  'their-icon': '~their-icon-bundle-package/TheirIconName.vue'
+}
+```
+Everything following the `~` becomes part of an `import` statement during the build process.
+
+If you need to convert your icon(s) to Vue components, you can use any of the icons in the `vue-material-design-icons` as a template for constructing a simple wrapper.
+
+At the present time, the same icon cannot be registered under two names (that is, it can't be registered as `my-icon` and as `core-icon` if they both refer to the same icon). Since this can be inconvenient and requires checking the `globalicons.js` file to make sure you are not registering a duplicate, we plan to correct it in an upcoming release.
+
+## Configuration cascades
+
+| Setting name | Value type | Description | Module types |
+| ------- | ------- | ------- | ------- |
+| [`fields`](#fields) | Object/Function | Configure doc type fields | Doc, Widget |
+| [`filters`](#filters) | Object/Function | Configure piece type filters | Piece |
+| [`columns`](#columns) | Object/Function | Configure piece type manager columns | Piece |
+| [`batchOperations`](#batchoperations) | Object/Function | Configure manager batch operations | Piece |
+
+### "Cascading" settings
+These settings can either be configured as a static object or through a function that takes `self` and `options` and returns a configuration object.
+
+As detailed for each setting, the configuration objects have `add`, `remove`, `group`, and `order` properties. This pattern allows these settings to "cascade" from the base classes to project-level classes without requiring those settings be declared again.
+
+Use `add` to add additional settings and `remove` to remove existing base class settings. Use `group` to organize user-facing settings in the editing interface. The `order` option allows for the arrangement of added fields in a particular order for `filters`, `columns`, and `batchOperations`.
+
 ### `fields`
 
 [Doc type](/reference/glossary.md#doc) modules have some fields configured by default, such as the `title` and `slug` fields. The `fields` setting is used for additional field management.
 
-The `fields` object is configured with subsections: `add`, `remove`, and `group`.
+ The `fields` setting object contains properties of `add`, `remove`, and `group`, which is either provided directly, or via a function that takes `self` and `options` and returns the object.
 
 #### `add`
 
 An object of fields to add to the schema. See the [field type reference](/reference/field-types/index.md) for more on field type configuration.
 
+Adding a field using an object:
+
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   fields: {
     add: {
+      title: {
+        label: 'Title',
+        type: 'string'
+      },
       subtitle: {
         label: 'Subtitle',
         type: 'string'
@@ -135,33 +189,78 @@ module.export = {
 };
 ```
 
+Adding a field using a function:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  fields(self, options) {
+    let fields = {
+      add: {
+        title: {
+          label: 'Title',
+          type: 'string'
+        }
+      }
+    };
+
+    if (options.subtitle) {
+      fields.add.subtitle = {
+        label: 'Subtitle',
+        type: 'string'
+      };
+    }
+
+    return fields;
+  }
+}
+```
+
+
 #### `remove`
 
-An array of field names from the base class module to remove. Some default fields cannot be removed since they required by core functionality (e.g., `title`, `slug`, `visibility`).
+An array of field names from the base class module to remove. Some default fields cannot be removed since they are required by core functionality (e.g., `title`, `slug`, `visibility`).
+
+Removing a field using an object:
 
 ```javascript
 // modules/spotlight-article/index.js
-module.export = {
+module.exports = {
   extend: 'article',
   fields: {
     remove: [ 'subtitle' ]
   }
 };
 ```
+Removing a field using a function:
+
+```javascript
+// modules/spoghtlight-article/index.js
+module.exports = {
+  extend: 'article',
+  fields(self, options) {
+    return {
+      remove: !self.options.subtitle ? [ 'subtitle' ] : []
+    }
+  }
+}
+```
 
 #### `group`
 
 An object of field groups. Groupings are used by the editing interface. Note that `group` _does not apply to widget modules_.
 
-Groups are added as an object with their name as the object key and the following properties:
-- `label`: The visible label (a string) for the group
-- `fields`: An array of field names to include in the group
+`groups` accepts an object composed of named sub-objects. Each sub-object corresponds to a tab in the editing modal, displaying the fields specified within that sub-object. Every sub-object has the following properties:
+- `label`: A string used to label the tab for the group.
+- `fields`: An array of field names to be included in the group.
 
 The `@apostrophecms/doc-type` module arranges the default fields in two groups: `basics` and `utility`. You can override these groups, but those default fields will become ungrouped unless you arrange them again. Any fields not added to a group will be placed in an "Ungrouped" section in the editing interface.
 
+Grouping fields using an object:
+
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   fields: {
     add: {
       // ...
@@ -179,16 +278,40 @@ module.export = {
   }
 };
 ```
+Grouping fields using a function:
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  fields(self, options) {
+    let groupFields = [ 'author', '_category' ];
+    if (options.subtitle) {
+      groupFields.push('subtitle');
+    }
+    return {
+      add: {
+        // ... 
+      },
+      group: {
+        meta: { // 👈 The group's identifying name is the object key.
+          label: 'Article metadata',
+          fields: groupFields
+        }
+      }
+    }
+  }
+}
+```
 
 ### `filters`
 
-In piece type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default.
+In piece-type modules, the `filters` setting configures the pieces manager interface by adding and removing filtering fields (to view only certain pieces). `archived` and `visibility` filters are included by default. These settings "cascade" from the base classes to project-level classes without requiring those settings be declared again.
 
-The `filters` object is configured with subsections: `add` and `remove`. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
+The `filters` object is configured with subsections: `add` and `remove` and can either be added as a static object or a function that takes `self` and `options` and returns an object. Filters must correspond to an existing fields name or custom [query builder](#queries-self-query) on the piece type.
 
 #### `add`
 
-An object of filters to add to the piece type. Each filter is an object with its own configuration. If the filter choices are not configured directly, Apostrophe will find and set valid options automatically.
+An object of filters or a function that returns an object of filters to add to the piece type. Each filter is an object with its own configuration. If the filter choices are not configured directly, Apostrophe will find and set valid options automatically.
 
 Filter properties include:
 
@@ -199,9 +322,10 @@ Filter properties include:
 | `choices` | Manually set an array of choices. Choices require `label` and `value` properties. |
 | `def` | The default value for the manager filter. |
 
+Add `filters` with object:
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   filters: {
     add: {
       _category: { // 👈 Referencing a relationship field named `_category`
@@ -220,6 +344,31 @@ module.export = {
   }
 };
 ```
+Add `filters` with function:
+```javascript
+// modules/article/index.js
+module.exports = {
+  filters(self, options) {
+    // Check self or options to dynamically add schema fields
+    return {
+      add: {
+        _category: { // 👈 Referencing a relationship field named `_category`
+          label: 'Article category'
+        },
+        featured: { // 👈 Referencing a boolean field name `featured`
+          labeled: 'Featured',
+          inputType: 'checkbox',
+          def: true,
+          choices: [
+            { value: true, label: 'Show featured' },
+            { value: false, label: 'Hide featured' }
+          ]
+        }
+      }
+    }
+  }
+};
+```
 
 #### `remove`
 
@@ -227,7 +376,7 @@ An array of filter names from the base class module to remove.
 
 ```javascript
 // modules/spotlight-article/index.js
-module.export = {
+module.exports = {
   extend: 'article',
   filters: {
     remove: [ 'featured' ]
@@ -235,13 +384,44 @@ module.export = {
 };
 ```
 
+#### `order`
+
+An array of field names to sort them in a particular order.
+
+```javascript
+// modules/article/index.js
+module.exports = {
+  filters(self, options) {
+    // Check self or options to dynamically add schema fields
+    return {
+      add: {
+        _category: { // 👈 Referencing a relationship field named `_category`
+          label: 'Article category'
+        },
+        featured: { // 👈 Referencing a boolean field name `featured`
+          labeled: 'Featured',
+          inputType: 'checkbox',
+          def: true,
+          choices: [
+            { value: true, label: 'Show featured' },
+            { value: false, label: 'Hide featured' }
+          ]
+        }
+      },
+      order: [ 'featured', '_category' ]
+    }
+  }
+};
+```
+
+
 ### `columns`
 
-For piece types, the `columns` setting configures the pieces manager, adding and removing the piece data in the interface. Default columns include `title`, `updatedAt`, and `visibility`.
+For piece types, the `columns` setting configures the pieces manager, adding and removing the piece data in the interface. Default columns include `title`, `updatedAt`, and `visibility`. Like the `fields` and `filters` settings, the `add`, `remove`, and `order` properties "cascade" from the base class.
 
 #### `add`
 
-An object of columns to add to the piece type manager. Each column is an object with its own configuration. Column properties include:
+An object of columns or a function that returns an object of columns to add to the piece type manager. Each column is an object with its own configuration. Column properties include:
 
 | Property | Description |
 | ------- | ------- |
@@ -251,7 +431,7 @@ An object of columns to add to the piece type manager. Each column is an object 
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Adds a column showing when the article was published.
@@ -271,7 +451,7 @@ An array of column names from the base class module to remove.
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Hides the column showing when the article was last updated.
@@ -286,7 +466,7 @@ An array of column names to sort the columns in a particular order. This will of
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
     add: {
@@ -303,11 +483,11 @@ module.export = {
 
 ### `batchOperations`
 
-Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has archive and restore (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
+Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has `archive` and `restore` (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
 
 #### `add`
 
-The `add` property is an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
+The `add` property is an object or function returning an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
 
 Each batch operation configuration should include the following properties:
 
@@ -323,10 +503,10 @@ The following example uses a hypothetical batch operation that might reset piece
 
 ```javascript
 // modules/article/index.js
-module.export = {
+module.exports = {
   batchOperations: {
     add: {
-      // This uses a hypothetical`reset` route added in `apiRoutes`
+      // This uses a hypothetical `reset` route added in `apiRoutes`
       reset: {
         label: 'Reset',
         messages: {
@@ -360,19 +540,27 @@ Batch operation modal options include:
 | `description` | Descriptive text for the confirmation modal. |
 | `confirmationButton` | The affirmative confirmation button label (to continue the operation). |
 
-### `icons`
+#### `order`
 
-Many icons from the [Material Design Icons](https://materialdesignicons.com/) library are already available in Apostrophe for things like [widget menu labels](/reference/module-api/module-options.md#icon). Additional icons can be made available through the `icons` setting object.
-
-Each property key will be the name to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
+An array of batch operation names to sort them in a particular order within the menu.
 
 ```javascript
-// index.js
-module.export = {
-  // ...
-  icons: {
-    airhorn: 'AirHorn',
-    expander: 'ArrowUpDownBoldOutline'
+// modules/article/index.js
+module.exports = {
+  batchOperations: {
+    add: {
+      // This uses a hypothetical `reset` route added in `apiRoutes`
+      reset: {
+        // ... reset operation configuration object
+      },
+      rollback: {
+        // ...rollback operation configuration object
+      },
+      update: {
+        // ... update operation configuration object
+      }
+    },
+    order: [ 'update', 'reset', 'rollback' ]
   }
 };
 ```
@@ -416,9 +604,11 @@ module.exports = {
   }
 };
 ```
+
   <template v-slot:caption>
     modules/product/index.js
   </template>
+
 </AposCodeBlock>
 
 ## Customization functions
@@ -624,7 +814,7 @@ module.exports = {
 
 Using in a template:
 
-``` njk
+```nunjucks
 {# modules/product-page/views/show.html #}
 {{ apos.product.formatPrice(data.piece) }}
 ```
