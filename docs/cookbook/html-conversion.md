@@ -16,7 +16,7 @@ This tutorial is available in video and textual forms. Watch the video, or conti
 
 Let's outline the steps that we need to perform.
 
-1. Create a new starter kit boilerplate project
+1. Create a new starter kit project
 2. Add the styling and scripts from the template to our project
 3. Identify sections found on each page that can be converted into [fragments](/guide/fragments.md)
    - Navigation

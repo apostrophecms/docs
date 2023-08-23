@@ -230,7 +230,7 @@ To complete the requirement we also need a Vue component on the browser side. As
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI automatically when you make changes to admin UI code, such as login requirement components.
 
 If your project is derived from `starter-kit-essentials` you can type:
@@ -246,7 +246,7 @@ If this is unfamiliar to you we recommend reading [Customizing the user interfac
 
 This Vue component has only one job: take the props returned by the server-side `props` function, display an appropriate interface, and emit a `done` Vue event with the user's response to the challenge. Everything else is handled for us by Apostrophe.
 
-::: note
+::: info
 Apostrophe looks for a Vue component with the same name as the requirement.
 :::
 
@@ -303,7 +303,7 @@ This code isn't too different from the `MathProblem` requirement. The most impor
 
 * `props()` and `verify()` both receive `(req, user)`. While the user is not completely logged in yet, we have access to the `user` piece in these functions. This allows us to use a MongoDB `updateOne` operation to `$set` a random 2FA challenge code on the first call to `props()`. Note that we only return the code the first time, as otherwise any script can "sniff" the right answer and defeat the requirement. In this simple example, the user is expected to remember it.
 
-::: note
+::: info
 In a real 2FA system, a new challenge might be texted to the user's device each time — or a stored code much like this one, but longer and more secure, might be used to generate a time-based one-time password (TOTP) as with Google Authenticator.
 
 A real 2FA system requiring a "setup code" like this one would also continue to display it until the user successfully verifies it for the first time, marking the code as confirmed, in case the user doesn't succeed in setting it up on the first try.

@@ -20,7 +20,7 @@ In brief, the main technologies behind Apostrophe are:
 
 ## Directory structure
 
-There are a few directories and top-level files that are especially important in Apostrophe projects. Here is a rough overview of these files and folders you will see in the official boilerplate.
+There are a few directories and top-level files that are especially important in Apostrophe projects. Here is a rough overview of these files and folders you will see in the official boilerplate, starter-kit-essentials.
 
 | Folder/File | What is it? |
 | ------ | ------ |

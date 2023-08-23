@@ -40,7 +40,7 @@ sudo npm install -g pm2
 sudo useradd nodeapps -d /home/nodeapps -m -s /bin/bash
 ```
 
-::: note
+::: info
 The Apostrophe convention is to name this user `nodeapps`. This name is not required, but we will continue to use it in this recipe.
 
 We're specifying the `bash` shell here because the default `sh` shell is no one's favorite, but you can change this.
@@ -62,7 +62,7 @@ From here on out we never run a command as root, except as explicitly noted. Thi
 
 ### Deploying a site for the first time
 
-::: note
+::: info
 You can do this series of steps each time you want to add a new site to the VPS. You can run more than one site on a server, but for security and performance you might prefer to run them on separate servers in production.
 :::
 
@@ -130,7 +130,7 @@ server {
 # To save, press CTL+x, then follow the steps to confirm.
 ```
 
-::: note
+::: info
 The `proxy_set_header` statements pass information to Apostrophe so it can still see the visitor's IP address.
 
 The `root` and `try_files` statements let nginx serve static files directly, for
