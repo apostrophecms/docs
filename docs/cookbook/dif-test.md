@@ -16,9 +16,9 @@ This tutorial is available in video and textual forms. Watch the video, or conti
 
 Let's outline the steps that we need to perform.
 
-1. Create a new starter kit boilerplate project
+1. Create a new boilerplate project
 2. Add the styling and scripts from the template to our project
-3. Identify sections found on each page that can be converted into [fragments](/guide/fragments.md)
+3. Identify sections found on each page that can be converted into [fragments](../guide/fragments.md)
    - Navigation
    - Header
    - Footer
@@ -59,7 +59,7 @@ If you don't already have the apostrophe CLI installed, follow the instructions 
 
 <AposCodeBlock>
 
-``` sh
+```sh
 apos create template-app
 ```
 
@@ -75,7 +75,7 @@ This particular template comes with both `dist` and `src` folders. Within the di
 
 Alternatively, the `src` folder contains an `scss` folder with all of the styling sheets and imports. Since this template utilizes Bootstrap, which has a npm package, we are going to install and then include the main styling from the `node-modules` folder. Open a terminal at the root of your project and install Bootstrap using:
 
-``` sh
+```sh
 npm install bootstrap
 ```
 
@@ -83,13 +83,13 @@ npm install bootstrap
 This template uses Bootstrap 5, which is the latest version as of this writing. If you need another version for your template, make sure to specify it during the install.
 :::
 
-The next thing we will do is copy the contents of the `scss` folder that contains all of the theme-specific styling into our project. While these files could be added to any Apostrophe module, we recommend creating an "asset" module just for your project. If you are using the CLI-created starter kit project, this module will already exist. If not, create a `modules/asset` folder and add the `asset` module to your `app.js` file. Next, within the `modules/asset` folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
+The next thing we will do is copy the contents of the `scss` folder that contains all of the theme-specific styling into our project. While these files could be added to any Apostrophe module, we recommend creating an "asset" module just for your project. If you are using the CLI-created boilerplate project, this module will already exist. If not, create a `modules/asset` folder and add the `asset` module to your `app.js` file. Next, within the `modules/asset` folder create a `ui/src` folder and copy the entirety of the `dist/scss` folder.
 
 For the HTML template, the `styles.scss` file is the entry point for loading all of the individual scss sheets. For our Apostrophe project, we are going to move this sheet up one level from the `/scss` folder into the `ui/src` folder and rename it `index.scss`. If an Apostrophe module has a `ui/src/index.js` file it is automatically recognized and loaded. Other Sass files won't be loaded unless imported by such a file. Next, we need to edit this file to point to all of the theme-specific [partials](https://sass-lang.com/guide#topic-4). Looking at the file path for each `@import` statement, each partial or folder of partials is expected to be found in the same folder as the entry sheet. After copying it into our project, this is no longer true. Instead, all of the partials are located within the `scss` folder of the same directory. Modify all of the `@import` statements (except for the Bootstrap import) to point to the correct location by prefixing the path with the folder name:
 
 <AposCodeBlock>
 
-``` scss
+```scss
 // Import variables
 @import './scss/variables';
 
@@ -126,7 +126,7 @@ Create another file named `index.js` within the `modules/asset/ui/src` folder. W
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 // import the bootstrap.js and popper.js files from the node_modules
 import bootstrap from 'bootstrap';
 
@@ -162,7 +162,7 @@ export default () => {
 ```
 
 <template v-slot:caption>
-  modules/asset/ui/src/index.js
+modules/asset/ui/src/index.js
 </template>
 
 </AposCodeBlock>
@@ -175,13 +175,13 @@ Each of the four pages included in this template has some common areas that can 
 
 Inside the `views` folder create another folder named `fragments` and a file named `navigation.html`. To turn this page into a fragment, add opening and closing fragment block tags - `{% fragment navigationArea() %}` and `{% endfragment %}`.
 
-Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` with the homepage URL from `data.home._url`, which is available to all [templates](/guide/pages.md). We will add a simple text logo from user input in the apostrophe global settings.
+Open one of the template pages and copy the navigation section. Paste this between the two fragment tags. To add the website brand to the navigation, we will replace the `href` with the homepage URL from `data.home._url`, which is available to all [templates](../guide/pages.md). We will add a simple text logo from user input in the apostrophe global settings.
 
 Next, within the unordered list, delete the last three `<li>` items. To populate the list with each of the pages selected in the global settings we will use a `for` loop.
 
 <AposCodeBlock>
 
-``` nunjucks
+``` njk
 {% fragment navigationArea() %}
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
@@ -204,7 +204,7 @@ Next, within the unordered list, delete the last three `<li>` items. To populate
 ```
 
 <template v-slot:caption>
-  views/fragments/navigation.html
+/views/fragments/navigation.html
 </template>
 </AposCodeBlock>
 
@@ -216,7 +216,7 @@ Next, we need to add the schema fields to populate our navigation menu. If your 
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 module.exports = {
   fields: {
     add: {
@@ -262,7 +262,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  modules/@apostrophecms/global/index.js
+/modules/@apostrophecms/global/index.js
 </template>
 </AposCodeBlock>
 
@@ -272,7 +272,7 @@ Much like we constructed the navigation, we are going to use a fragment populate
 
 <AposCodeBlock>
 
-``` nunjucks
+``` njk
 {% fragment footerArea() %}
 <!-- Footer-->
 <footer class="border-top">
@@ -320,7 +320,7 @@ Much like we constructed the navigation, we are going to use a fragment populate
 ```
 
 <template v-slot:caption>
-  views/fragments/footer.html
+views/fragments/footer.html
 </template>
 </AposCodeBlock>
 
@@ -328,7 +328,7 @@ Modify the global settings file to include the new footer schema fields.
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 module.exports = {
   fields: {
     add: {
@@ -364,7 +364,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  modules/@apostrophecms/global/index.js
+modules/@apostrophecms/global/index.js
 </template>
 </AposCodeBlock>
 
@@ -384,7 +384,7 @@ Adding an image as a background for the header will take some more complex modif
 
 <AposCodeBlock>
 
-``` nunjucks
+``` njk
 {% fragment headerArea(data) %}
 {% set background = apos.image.first(data.headerImage) %}
 
@@ -410,7 +410,7 @@ Adding an image as a background for the header will take some more complex modif
 ```
 
 <template v-slot:caption>
-  views/fragments/header.html
+views/fragments/header.html
 </template>
 </AposCodeBlock>
 
@@ -428,22 +428,23 @@ The first modification we are going to make is to import our two fragments.
 
 <AposCodeBlock>
 
-``` nunjucks
+``` njk
 {% import 'fragments/navigation.html' as navigation %}
 {% import 'fragments/footer.html' as footer %}
 ```
-
 </AposCodeBlock>
 
 This will bring our fragments into the template and name them `navigation` and `footer`.
 
-To load our font files we are going to take advantage of the `extraHead` section of the `outerLayout` template that our `layout.html` is extending. You can read the [documentation](/guide/layout-template.html) to learn about other sections of this template that can be extended. Add the `{% block extraHead %}{% endblock %}` tags after the `{% block title %}` section. Within those tags copy the fonts section of the head from any of the template pages. You can also see that there are links for the site favicon and some other meta tags in this section of the template. You can elect to add those if you desire.
+To load our font files we are going to take advantage of the `extraHead` section of the `outerLayout` template that our `layout.html` is extending. You can read the [documentation](https://v3.docs.apostrophecms.org/guide/layout-template.html#layout-templates) to learn about other sections of this template that can be extended. Add the `{% block extraHead %}{% endblock %}` tags after the `{% block title %}` section. Within those tags copy the fonts section of the head from any of the template pages. You can also see that there are links for the site favicon and some other meta tags in this section of the template. You can elect to add those if you desire.
 
 Finally, delete all of the markup in the `beforeMain` and `afterMain` sections. into the `beforeMain` block render the navigation - `{% render navigation.navigationArea() %}`. In the `afterMain` block render the footer fragment = `{% render footer.footerArea() %}`. The final modification we can make to the template is to add the semantic `<main></main>` tags. Looking at the original template pages, we can see that the main section has a class of `mb-4`. This markup can be added around the `{% block main %}{% endblock %}` tags.
 
 <AposCodeBlock>
 
-``` nunjucks
+``` js
+
+
 {% import 'fragments/navigation.html' as navigation %}
 {% import 'fragments/footer.html' as footer %}
 
@@ -487,7 +488,7 @@ Finally, delete all of the markup in the `beforeMain` and `afterMain` sections. 
 ```
 
 <template v-slot:caption>
-  views/layout.html
+views/layout.html
 </template>
 </AposCodeBlock>
 
@@ -507,7 +508,9 @@ Second, we need to add the template styling and the main content area to the `ma
 
 <AposCodeBlock>
 
-``` nunjucks
+::: v-pre
+
+``` njk
 {% extends "layout.html" %}
 
 {% import "fragments/header.html" as header %}
@@ -528,8 +531,10 @@ Second, we need to add the template styling and the main content area to the `ma
 {% endblock %}
 ```
 
+:::
+
 <template v-slot:caption>
-  modules/default-page/views/page.html
+modules/default-page/views/page.html
 </template>
 </AposCodeBlock>
 
@@ -537,7 +542,7 @@ Next, we need to modify the schema fields of the `default-page/index.js` file to
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
@@ -620,7 +625,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  modules/default-page/index.js
+modules/default-page/index.js
 </template>
 </AposCodeBlock>
 
@@ -635,7 +640,7 @@ There are several areas in our project where we could add code to solve this pro
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 export default () => {
   // check that the admin-bar module exists
   const loggedIn = !!window.apos.modules['@apostrophecms/admin-bar'];
@@ -656,7 +661,7 @@ export default () => {
 ```
 
 <template v-slot:caption>
-  modules/asset/ui/apos/apps/AdminBarHeight.js
+modules/asset/ui/apos/apps/AdminBarHeight.js
 </template>
 </AposCodeBlock>
 
@@ -665,7 +670,7 @@ export default () => {
 
 The last two pages from the template are blog index and article pages. We could use the [blog module](https://apostrophecms.com/extensions/blog), but it has features we don't necessarily need for this template. So, to simplify this tutorial we will just create our blog `piece-type` and `piece-page-type`. We can do this using the CLI tool.
 
-``` sh
+```sh
 apos add piece blog --page
 ```
 
@@ -673,7 +678,7 @@ Once we have these added to our project we need to modify the `app.js` file to i
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 require('apostrophe')({
   modules: {
     // ...
@@ -685,7 +690,7 @@ require('apostrophe')({
 ```
 
 <template v-slot:caption>
-  app.js
+app.js
 </template>
 </AposCodeBlock>
 
@@ -695,7 +700,7 @@ Next, we will modify the `modules/blog/index.js` file to include the necessary f
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   fields: {
@@ -780,7 +785,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  modules/blog/index.js
+modules/blog/index.js
 </template>
 </AposCodeBlock>
 
@@ -788,7 +793,7 @@ The `index.js` file for the `blog-page` will also be quite similar. Again, it wi
 
 <AposCodeBlock>
 
-``` javascript
+``` js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -835,7 +840,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  modules/blog-page/index.js
+modules/blog-page/index.js
 </template>
 </AposCodeBlock>
 
@@ -846,8 +851,9 @@ In the code above we are adding a `perPage` option of `5`. This will limit the n
 The "Home" page of the template is essentially an `index.html` page that lists all of the blog articles. Just like with the default page, we are going to add our header to a `beforeMain` block. Within the `main` block, we will copy the `<!-- Main Content -->` section from the `index.html` HTML template. To convert it to dynamically show all of the blog articles from our site we will delete all of the code in each of the `<!-- Post preview -->` sections except the first. Then, we will wrap the first  `<!-- Post preview -->` section in a `for` loop. Finally, we will modify the `<!-- Pager -->` section to show both newer and older posts.
 
 <AposCodeBlock>
+::: v-pre
 
-``` nunjucks
+``` njk
 {% extends 'layout.html' %}
 
 {% import 'fragments/header.html' as header %}
@@ -889,9 +895,10 @@ The "Home" page of the template is essentially an `index.html` page that lists a
 
 {% endblock %}
 ```
+:::
 
 <template v-slot:caption>
-  modules/blog-page/index.html
+modules/blog-page/index.html
 </template>
 </AposCodeBlock>
 
@@ -917,8 +924,8 @@ Open the `post.html` template file and copy the `<!-- Post Content -->` section 
 
 <AposCodeBlock>
 
-``` nunjucks
-{% extends "layout.html" %}
+``` njk
+{% extends 'layout.html' %}
 
 {% import 'fragments/header.html' as header %}
 
@@ -942,7 +949,7 @@ Open the `post.html` template file and copy the `<!-- Post Content -->` section 
 ```
 
 <template v-slot:caption>
-  modules/blog-page/views/show.html
+modules/blog-page/views/show.html
 </template>
 </AposCodeBlock>
 
@@ -950,7 +957,7 @@ As outlined above, the header of the blog piece pages is different from the othe
 
 <AposCodeBlock>
 
-``` nunjucks
+``` njk
 {% fragment headerArea(data) %}
 {% set background = apos.image.first(data.headerImage) %}
 
@@ -993,7 +1000,7 @@ As outlined above, the header of the blog piece pages is different from the othe
 ```
 
 <template v-slot:caption>
-  views/fragments/header.html
+views/fragments/header.html
 </template>
 </AposCodeBlock>
 

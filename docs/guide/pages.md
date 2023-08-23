@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Schema Fields | Working with images and media'
-  link: 'guide/media.md'
-next:
-  text: 'Areas and Widgets | Areas'
-  link: 'guide/areas-and-widgets.md'
----
 # Pages and page types
 
 Every page in an Apostrophe website is assigned a **"page type"**. The page type tells Apostrophe **what template to use** to render the page and **what configuration to apply**. Configurations will often at least include the field schema for the page type.
@@ -14,14 +6,14 @@ Every page in an Apostrophe website is assigned a **"page type"**. The page type
 
 Apostrophe core only includes a "Home page" type with some basic default content options. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`.
 
-``` js
+```js
 // modules/default-page/index.js
 module.exports = {
   extend: '@apostrophecms/page-type'
 };
 ```
 
-``` js
+```js
 // app.js
 require('apostrophe')({
   shortName: 'my-website',
@@ -34,7 +26,7 @@ require('apostrophe')({
 <!-- TODO: Replace area field link to a guide page when available. -->
 If we add a string field for the subtitle and an [area field](/reference/field-types/area.md) for rich text and images, the Default page type would look like:
 
-``` js
+```js
 // modules/default-page/index.js
 module.exports = {
   extend: '@apostrophecms/page-type',
@@ -75,7 +67,7 @@ Each page type requires a template. The only exception to that rule is if a page
 Page templates are added in a `views` directory for the page type as `page.html`. The template for the previous example's default page would be `modules/default-page/views/page.html`. A very simple page template for the Default page might look like this:
 <!-- TODO: Consider adding a file tree component when available. -->
 
-``` njk
+``` nunjucks
 {# modules/default-page/views/page.html #}
 {% extends "layout.html" %}
 
@@ -94,15 +86,15 @@ There are a number of things at work here.
 
 ### The template is extending a `layout.html` template
 
-``` njk
+``` nunjucks
 {% extends "layout.html" %}
 ```
 
-`layout.html` is a base level template [used in official Apostrophe boilerplates](https://github.com/apostrophecms/a3-boilerplate/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
+`layout.html` is a base level template [used in official Apostrophe essentials starter kit](https://github.com/apostrophecms/starter-kit-essentials/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
 
 The layout template might look something like this:
 
-``` njk
+``` nunjucks
 {% extends data.outerLayout %}
 
 {% block beforeMain %}
@@ -128,7 +120,7 @@ The layout template might look something like this:
 
 ### We are inserting page template markup in a template block
 
-``` njk
+``` nunjucks
 {% block main %}
 {% endblock %}
 ```
@@ -137,7 +129,7 @@ Apostrophe uses the Nunjucks template language, which has a [block system](https
 
 ### Page data is on `data.page`
 
-``` njk
+``` nunjucks
 {{ data.page.title }}
 ```
 
@@ -145,7 +137,7 @@ Templates have access to a `data` object containing information about the Apostr
 
 Naming specific properties in the double brackets syntax, `{{}}`, prints them in the template.
 
-``` njk
+``` nunjucks
 {% if data.page.subtitle %}
   <p>{{ data.page.subtitle }}</p>
 {% endif %}
@@ -156,14 +148,14 @@ Nunjucks offers additional tags, including the [`{% if %}` conditional tag](http
 ::: tip
 If you want to know what is available in a template object, you can log it in your terminal using the template method `apos.log()`. This looks like:
 
-``` njk
+``` nunjucks
 {{ apos.log(data.page) }}
 ```
 :::
 
 ### The widget area is added using the `area` tag
 
-``` njk
+``` nunjucks
 {% area data.page, 'main' %}
 ```
 
@@ -230,7 +222,7 @@ By default, one level of children are available on each ancestor, as well as on 
 
 With that available data, we could construct navigation for the website header using the Nunjucks `{% for %}` loop tag. The `layout.html` `beforeMain` block could look like:
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 {% block beforeMain %}
 <div>

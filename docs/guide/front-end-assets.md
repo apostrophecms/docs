@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Modules'
-  link: 'guide/modules.md'
-next:
-  text: 'Front end code tips'
-  link: 'guide/front-end-tips.md'
----
 # Adding front end CSS and JavaScript
 
 ApostropheCMS approaches CSS and client-side JavaScript by trying to taking care of as much of the hard parts as possible. To that end, the developers main job is to **put their SCSS and client-side JavaScript into `ui/src/index.scss` and `ui/src/index.js` files in the relevant module**. Apostrophe will then:
@@ -81,7 +73,7 @@ The output will **sing** before it **dances**. If the modules are instantiated i
 
 the output will **dance** before it **sings**.
 
-::: info Why do I have to export a function?
+::: note Why do I have to export a function?
 A funny thing about JavaScript `import` statements: they don't guarantee any order in which the files are loaded. To fix that, Apostrophe requires you to export a function from each `ui/src/index.js` file so that it can call them in the order the modules are initialized.
 :::
 
@@ -89,8 +81,8 @@ A funny thing about JavaScript `import` statements: they don't guarantee any ord
 
 Rules found in or imported by `ui/src/index.scss` files are compiled in the order the modules are activated in `app.js`.
 
-::: info The Boilerplate
-The [Apostrophe 3 boilerplate](https://github.com/apostrophecms/a3-boilerplate/) takes advantage of `ui/src` in exactly the same way. The `asset` module contains `ui/src/index.js` and `ui/src/index.scss` files, which Apostrophe automatically discovers.
+::: note The starter-kit-essentials boilerplate
+The [Apostrophe 3 starter-kit-essentials boilerplate](https://github.com/apostrophecms/starter-kit-essentials/) takes advantage of `ui/src` in exactly the same way. The `asset` module contains `ui/src/index.js` and `ui/src/index.scss` files, which Apostrophe automatically discovers.
 :::
 
 ## Supporting Internet Explorer 11
@@ -99,7 +91,7 @@ Internet Explorer 11 is [going away soon](https://blogs.windows.com/windowsexper
 
 By default, Apostrophe does *not* guarantee that code written in modern JavaScript in `ui/src/index.js` files will run in Internet Explorer 11. However, you can turn on support by setting the `es5: true` option of the `@apostrophecms/asset` module:
 
-``` js
+```js
 // modules/@apostrophecms/asset/index.js
 module.exports = {
   options: {
@@ -112,7 +104,7 @@ This configures Apostrophe to compile two JavaScript bundles: one for Internet E
 
 That makes the bundle larger, but Apostrophe serves a separate, small and fast bundle to non-IE11 users, so there is **no performance penalty** for them.
 
-::: info Internet Explorer 11 limitations
+::: note Internet Explorer 11 limitations
 Apostrophe uses babel's `@babel/preset-env` module to provide as much support as possible for JavaScript language features, including promises, `async/await` and more. However, Apostrophe does not provide polyfills for all browser API features, and some, such as `Observable`, cannot be implemented for Internet Explorer 11. Apostrophe also does not attempt to fix the limitations of CSS in Internet Explorer 11. And the most important limitation is that **Apostrophe's editing interface is not available in Internet Explorer 11.** You should test your sites thoroughly in all browsers you intend to support.
 :::
 
