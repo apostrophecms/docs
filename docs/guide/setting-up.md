@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Technical Overview'
-  link: ' guide/technical-overview.md'
-next:
-  text: '📚 Cookbooks'
-  link: 'cookbook/index.md'
----
 # Setting up
 
 This article covers the first steps to get started. MacOS and Linux users can dive right in. If you have Windows, please follow our [Windows development](../cookbook/windows-development.md) cookbook article first. For technical reliability and technical support, we require that Windows users develop using the Windows Subsystem for Linux (WSL 2) or a Linux virtual machine.
@@ -15,7 +7,7 @@ This article covers the first steps to get started. MacOS and Linux users can di
 | Software | Minimum Version |
 | ------------- | ------------- |
 | [Node.js](https://nodejs.org/en/) | 16.x+ |
-| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.2+ |
+| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.4+ |
 
 See the links above to install each. To check that these are installed in your environment, try the following commands:
 
@@ -50,18 +42,28 @@ Once installed you have access to the `apos` command. Simply use that command, o
 
 Before creating a project, make sure you start [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) locally following their instructions. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a place for ApostropheCMS to store its information.
 
-The easiest way to get started with Apostrophe is to use the official starter project. If you have the CLI installed, go into your normal projects directory and use the command:
+The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
 
 ``` bash
 apos create apos-app
 ```
+
+This will install the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit. 
+
+::: tip
+💡 To install other starter kits, pass the `--starter` flag, along with the short name of one of our [starter kits](https://github.com/orgs/apostrophecms/repositories?q=starter-kit&type=all&language=&sort=). For example:
+
+``` bash
+apos create apos-app --starter=ecommerce
+```
+:::
 
 The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
 
 To get started quickly without the CLI, clone the starter repository:
 
 ```bash
-git clone https://github.com/apostrophecms/a3-boilerplate apos-app
+git clone https://github.com/apostrophecms/starter-kit-essentials apos-app
 ```
 
 If you want to change the project directory name, please do so. We will continue referring to `apos-app`.
