@@ -187,7 +187,7 @@ export default defineConfig({
   themeConfig: {
     logo: '/apostrophe-primary-mark.svg',
     lastUpdated: true,
-    docsRepo: 'https://github.com/apostrophecms/a3-docs',
+    docsRepo: 'https://github.com/apostrophecms/a3-vitepress-docs',
     docsBranch: 'main',
     docsDir: 'docs',
     lastUpdatedText: 'Last updated',
