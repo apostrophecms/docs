@@ -329,7 +329,7 @@ hr {
   padding-left: 16px;
 }
 
-.VPSidebarItem.collapsed .items {
+.VPSidebarItem.collapsed.collapsible .items {
   display: none;
 }
 </style>
