@@ -7,8 +7,8 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "test": "npx eslint .",
-    "deploy": "npm run build && bash ./deploy && rm -r ./dist",
-    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./dist"
+    "deploy": "npm run build && bash ./deploy && rm -r ./docs/.vitepress/dist",
+    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./docs/.vitepress/dist"
   },
   "dependencies": {
     "eslint": "^8.44.0",
