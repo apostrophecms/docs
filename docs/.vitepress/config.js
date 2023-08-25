@@ -368,6 +368,10 @@ export default defineConfig({
         ]
       },
       {
+        text: 'Global Settings',
+        link: 'guide/global.md'
+      },
+      {
         text: 'User and User Roles',
         link: '/guide/users.md'
       },
@@ -386,6 +390,10 @@ export default defineConfig({
           },
           { text: 'Caching', link: 'guide/caching.md' },
           {
+            text: 'Sending email',
+            link: 'guide/sending-email.md'
+          },
+          {
             text: 'Working with the database',
             collapsed: true,
             items: [
@@ -399,6 +407,10 @@ export default defineConfig({
                 link: 'guide/database-access.md'
               }
             ]
+          },
+          {
+            text: 'Using as a headless CMS',
+            link: 'guide/headless-cms.md'
           },
           {
             text: 'Customizing the user interface',
