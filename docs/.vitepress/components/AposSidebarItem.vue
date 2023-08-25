@@ -12,6 +12,11 @@ const { page } = useData();
 
 watch(page, newValue => {
   myIsActive.value = newValue.relativePath === props.item.link;
+  if (props.item.items) {
+    const hasActiveChild = checkForActivePage(props.item.items, newValue);
+    myCollapsed.value = !hasActiveChild;
+    myHasActive.value = hasActiveChild;
+  }
 })
 
 onBeforeUnmount(() => {
@@ -52,24 +57,27 @@ const textTag = computed(() => {
 
 const itemRole = computed(() => isLink.value ? undefined : 'button')
 
-let hasActiveChild = false;
-if (props.item.items) {
-  checkForActivePage(props.item.items, page.value);
-}
-
-myCollapsed.value = props.item.items ? !hasActiveChild : null;
-myHasActive.value = !myCollapsed.value;
-
 function checkForActivePage(items, page) {
+  let hasActiveChild = false;
   items.forEach(item => {
     if (page.relativePath === item.link) {
       hasActiveChild = true;
     }
     if (item.items) {
-      checkForActivePage(item.items, page);
+      hasActiveChild = hasActiveChild || checkForActivePage(item.items, page);
     }
   });
+  return hasActiveChild;
 }
+
+let hasActiveChild = false;
+if (props.item.items) {
+  hasActiveChild = checkForActivePage(props.item.items, page.value);
+}
+
+myCollapsed.value = props.item.items ? !hasActiveChild : null;
+myHasActive.value = hasActiveChild;
+
 
 const classes = computed(() => [
   [`level-${props.depth}`],
