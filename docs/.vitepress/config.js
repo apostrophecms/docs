@@ -364,7 +364,8 @@ export default defineConfig({
           { text: 'Template data', link: 'guide/template-data.md' },
           { text: 'Template filters', link: 'guide/template-filters.md' },
           { text: 'Template fragments', link: 'guide/fragments.md' },
-          { text: 'Async Components', link: 'guide/async-components.md' }
+          { text: 'Async Components', link: 'guide/async-components.md' },
+          { text: 'Custom Nunjucks tags', link: 'reference/template-tags.md' },
         ]
       },
       {
