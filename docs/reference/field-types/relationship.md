@@ -49,6 +49,7 @@ _toppings: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`idsStorage` | String | n/a | The name of the property in which to store related document IDs. If not set, the IDs property will be based on the field name. |
 |`ifOnlyOne` | Boolean | `false` | If `true`, the related doc data will only be populated if the original document was the only one requested. [See below](#limiting-returned-data-with-ifonlyone) for more. |
 |`min` | Integer |  n/a | The minimum number of related docs required |
@@ -111,7 +112,7 @@ _players: {
 }
 ```
 
-## Populating nested relationships using `withRelationship`
+## Populating nested relationships using `withRelationships`
 
 It is not unusual for one piece type to have situations with "nested relationships" across piece types. For example, `team` may have a relationship field connecting to `player` pieces, then `player` pieces connect to `specialty` pieces. Imagine that the players had multiple relationship fields, and suddenly the data populated two levels up on teams could get very large.
 

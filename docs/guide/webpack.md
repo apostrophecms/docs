@@ -1,7 +1,7 @@
 ---
 prev:
-  text: 'Hosting in production'
-  link: 'guide/hosting.md'
+  text: 'Sending email'
+  link: 'guide/sending-email.md'
 next:
   text: 'Using pnpm'
   link: 'guide/using-pnpm.md'

@@ -30,6 +30,7 @@ eventDateAndTime: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
@@ -39,6 +40,6 @@ Times are stored, and will print, in the ISO 8601 format `YYYY-MM-DDTHH:MM:SSZ`.
 
 To print them in the format of your choice pass a [momentjs/datejs compliant format string](https://momentjs.com/docs/#/displaying/) to the date Nunjucks filter, like this:
 
-``` njk
+```nunjucks
 {{ data.piece.eventDateAndTime | date("dddd, MMMM Do YYYY, h:mm:ss a") }}
 ```

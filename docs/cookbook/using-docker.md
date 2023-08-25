@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Hosting an Apostrophe project with Docker
 
 [Docker](https://www.docker.com/) is a containerization platform that lets developers build an image for their projects and then run it anywhere. This guide is for production, not development. If you want to use Docker as a development environment, you can explore using a persistent Docker volume for your project, but bear in mind that commands like npm install can be very slow in such a configuration.
@@ -298,7 +302,7 @@ While our Docker container is now configured for storing items on AWS S3, it won
 Just like with the Docker container previously, you can now bring the site up with:
 
 ```sh
-docker composer up
+docker compose up
 ```
 Any assets uploaded through the site will now be stored in your S3 bucket rather than on the server directly.
 
@@ -320,7 +324,7 @@ Since this will create a new database, once you bring your site up you should ad
 
 Then, to bring the site up use :
 ```sh
-docker composer up
+docker compose up
 ```
 
 ## Deploying

@@ -34,6 +34,7 @@ resume: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
@@ -61,7 +62,7 @@ The most common helper method for attachments in templates is `apos.attachments.
 
 <!-- TODO: Link to the attachment module for other helpers. -->
 
-``` njk
+```nunjucks
 <!-- `data.piece.resume` is an attachment object -->
 <a href="{{ apos.attachment.url(data.piece.resume) }}">Download</a>
 ```

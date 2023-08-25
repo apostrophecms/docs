@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Ubuntu hosting setup
 
 ## Setting up the Ubuntu VPS
@@ -67,13 +71,13 @@ You can do this series of steps each time you want to add a new site to the VPS.
 :::
 
 1. If you didn't already, SSH to the `ubuntu` user on your server (the last step of the previous section). Then run `sudo su - nodeapps` to switch users.
-2. **Deploy the Apostrophe site code to the VPS.** We'll use the `a3-boilerplate` project as an example.
+2. **Deploy the Apostrophe site code to the VPS.** We'll use the a3 essentials starter kit project as an example.
    - We'll `git clone` a project in the home directory as a simple way to deploy it. You may use a CI/CD tool or some other method for regular deployments. You will also likely want to put the code in another location (e.g., `/var/www`).
 
 ```sh
-git clone https://github.com/apostrophecms/a3-boilerplate
+git clone https://github.com/apostrophecms/starter-kit-essentials
 
-cd a3-boilerplate
+cd starter-kit-essentials
 
 npm install
 ```
@@ -82,14 +86,14 @@ npm install
 
 ```sh
 npm run build
-# This script in the boilerplate is an alias for the Apostrophe task
+# This script in the starter kit is an alias for the Apostrophe task
 # `NODE_ENV=production node app @apostrophecms/asset:build`
 ```
 
-4. **Now we instruct `pm2` to launch the site and to keep it running.** Substitute the shortname of your own project for `a3-boilerplate` below.
+4. **Now we instruct `pm2` to launch the site and to keep it running.** Substitute the shortname of your own project for `starter-kit-essentials` below.
 
 ```sh
-pm2 --name=a3-boilerplate start npm -- run serve
+pm2 --name=starter-kit-essentials start npm -- run serve
 pm2 save
 # The second command saves our `pm2` configuration for future reboots.
 ```
@@ -106,7 +110,7 @@ At this point Apostrophe is running on port `3000`. We need to configure nginx a
 sudo nano /etc/nginx/conf.d/your-project-shortname-here.conf
 ```
 
-3. In the editor, **paste the following, replacing `your.host.name` and `a3-boilerplate` as directed**:
+3. In the editor, **paste the following, replacing `your.host.name` and `starter-kit-essentials` as directed**:
 
 ```nginx
 server {
@@ -121,8 +125,8 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
   location / {
-    # Remember to replace `a3-boilerplate` with your project directory name
-    root /home/nodeapps/a3-boilerplate/public;
+    # Remember to replace `starter-kit-essentials` with your project directory name
+    root /home/nodeapps/starter-kit-essentials/public;
     try_files $uri @proxy;
     expires 7d;
   }
@@ -175,7 +179,7 @@ To update your site later, follow these steps using the `nodeapps` (non-sudo) us
 
 ```sh
 # Make sure we're in our project root directory.
-cd && cd a3-boilerplate
+cd && cd starter-kit-essentials
 # Pull our code.
 git pull
 ```
@@ -187,23 +191,23 @@ npm install && npm run build && node app @apostrophecms/migration:migrate
 ```
 
 ::: tip
-In projects based on the `a3-boilerplate` code starter, the `npm run release` script takes care of all of this in one command. If your codebase does not include that script you will need to run each command directly.
+In projects based on the `starter-kit-essentials` code starter, the `npm run release` script takes care of all of this in one command. If your codebase does not include that script you will need to run each command directly.
 :::
 
 3. Instruct `pm2` to restart the site:
 
 ```sh
-pm2 restart a3-boilerplate
+pm2 restart starter-kit-essentials
 ```
 
-Your site will restart after a few seconds. You can check the process logs with `pm2 logs a3-boilerplate` to see whether it has started up yet.
+Your site will restart after a few seconds. You can check the process logs with `pm2 logs starter-kit-essentials` to see whether it has started up yet.
 
 ### Viewing the Node.js console
 
 Your site's console log messages are available from `pm2`:
 
 ```sh
-pm2 logs a3-boilerplate
+pm2 logs starter-kit-essentials
 ```
 
 ## Recommended enhancements
@@ -226,7 +230,7 @@ If your preferred deployment process does not involve running `git clone` on the
 
 ```sh
 APOS_RELEASE_ID=myLatestReleaseID npm run build &&
-APOS_RELEASE_ID=myLatestReleaseID pm2 restart a3-boilerplate
-# Remember, a3-boilerplate is the name of the pm2 process from this example.
+APOS_RELEASE_ID=myLatestReleaseID pm2 restart starter-kit-essentials
+# Remember, starter-kit-essentials is the name of the pm2 process from this example.
 # Replace that with the name of your pm2 process.
 ```

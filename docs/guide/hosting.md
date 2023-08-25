@@ -3,8 +3,8 @@ prev:
   text: 'Server-side events'
   link: 'guide/server-events.md'
 next:
-  text: 'Webpack'
-  link: 'guide/webpack.md'
+  text: 'Sending email'
+  link: 'guide/sending-email.md'
 ---
 # Hosting Apostrophe in production
 

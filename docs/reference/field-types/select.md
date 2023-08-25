@@ -44,6 +44,7 @@ theme: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 
@@ -74,6 +75,6 @@ It is usually a good idea to perform at least short-term caching in your choices
 
 Select field data is stored as the string `value` property of the selected choice.
 
-``` njk
+```nunjucks
 {{ data.page.theme }}
 ```

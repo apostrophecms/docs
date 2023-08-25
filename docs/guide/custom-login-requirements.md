@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Custom field types'
-  link: 'guide/custom-schema-field-types.md'
-next:
-  text: 'Editing custom widgets in context'
-  link: 'guide/editing-custom-widgets-in-context.md'
----
 # Custom login requirements
 
 Apostrophe's built-in login form handles the typical case where a user logs in with a username and password. And the [@apostrophecms/passport-bridge](https://github.com/apostrophecms/passport-bridge) module handles "single sign-on," in which users log in via a third-party system like Google Workspace, Twitter, Facebook, etc. These two solutions cover most situations. However in some cases developers may wish to extend the built-in login form with additional, custom login requirements. Often these are shipped as npm modules. This guide will explain how to implement such requirements.
@@ -17,7 +9,6 @@ The main focus of this guide is on implementing requirements involving custom UI
 While [most password complexity rules are often counterproductive](https://arstechnica.com/information-technology/2013/06/password-complexity-rules-more-annoying-less-effective-than-length-ones/), some organizations may have a business requirement to implement them. Currently the easiest rule to implement, and the most effective one, is to set a minimum length. You can do that by configuring the `@apostrophecms/user` module at project level:
 
 <AposCodeBlock>
-
   ```javascript
   module.exports = {
     fields: {
@@ -66,7 +57,6 @@ Each requirement has:
 To illustrate, the general structure on the server side is:
 
 <AposCodeBlock>
-
   ```javascript
   module.exports = {
     requirements(self) {
@@ -113,7 +103,6 @@ Each component is responsible for:
 While there is no fixed structure for the Vue components, a typical outline looks like:
 
 <AposCodeBlock>
-
   ```javascript
   <template>
     <fieldset>
@@ -156,7 +145,6 @@ While there is no fixed structure for the Vue components, a typical outline look
 Here is complete server-side code for a simple requirement to solve a math problem when logging in. The UI appears at the bottom of the login form because the password has not been verified yet.
 
 <AposCodeBlock>
-
   ```javascript
   module.exports = {
     requirements(self) {
@@ -205,7 +193,6 @@ This simple example uses `req.session`, however be aware that if your site uses 
 To complete the requirement we also need a Vue component on the browser side. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project, like this:
 
 <AposCodeBlock>
-
   ```javascript
   <template>
     <fieldset>
@@ -246,7 +233,7 @@ To complete the requirement we also need a Vue component on the browser side. As
 ::: info
 Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI automatically when you make changes to admin UI code, such as login requirement components.
 
-If your project is derived from `a3-boilerplate` you can type:
+If your project is derived from `starter-kit-essentials` you can type:
 
 ```bash
 APOS_DEV=1 npm run dev
@@ -270,7 +257,6 @@ Unlike the other phase, requirements displayed in the `afterPasswordVerified` ph
 Below is a simple example of a requirement to solve a weak form of 2FA challenge: entering a code that is assigned the first time the user logs in successfully.
 
 <AposCodeBlock>
-
   ```javascript
   module.exports = {
     requirements(self) {
@@ -326,7 +312,6 @@ A real 2FA system requiring a "setup code" like this one would also continue to 
 Here is the front-end Vue component code for this requirement:
 
 <AposCodeBlock>
-
   ```javascript
   <template>
     <fieldset>

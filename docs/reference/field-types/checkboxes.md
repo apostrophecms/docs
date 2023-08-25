@@ -4,7 +4,7 @@ A `checkboxes` field allows a list of options where a user can select one or mor
 
 ## Module field definition
 
-```javascript
+``` javascript
 // Configuring the `genres` field in a module's `fields.add` subsection:
 genres: {
   label: 'Select the genres that apply to this book',
@@ -44,6 +44,7 @@ genres: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 | `style` | String | n/a | If 'combo', adds a selection choices box and dropdown list of choices |
@@ -75,7 +76,7 @@ It is usually a good idea to perform at least short-term caching in your choices
 
 The checkboxes field data value is stored in an array of the selected options' value. Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) that you can use to loop over the array.
 
-``` njk
+```nunjucks
 <ul>
   {% for genre in data.piece.genres %}
     <li>{{ genre }}</li>

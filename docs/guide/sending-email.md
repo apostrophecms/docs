@@ -1,3 +1,11 @@
+---
+prev:
+  text: 'Hosting in production'
+  link: 'guide/hosting.md'
+next:
+  text: 'Webpack'
+  link: 'guide/webpack.md'
+---
 # Sending email from your Apostrophe project
 
 Any module in Apostrophe can send email by calling its own [`self.email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
@@ -12,7 +20,7 @@ If your server has `sendmail` installed, `nodemailer` can use the service to sen
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   options: {
     nodemailer: {
@@ -39,7 +47,7 @@ Using a 3rd-party email delivery provider like Gmail, or Mailgun will probably b
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   options: {
     nodemailer: {
@@ -61,7 +69,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-::: info
+::: note
 When using Gmail as the SMTP email relay, you need to make sure that the "from" address of your email matches the user name added to the nodemailer configuration. You will likely also have to allow [less secure apps](https://myaccount.google.com/lesssecureapps) and [disable Captcha]( https://accounts.google.com/DisplayUnlockCaptcha) from your Google account dashboard.
 :::
 
@@ -73,7 +81,7 @@ The `nodemailer` app has four built-in transports - `sendmail`, `SES` - for send
 
 <AposCodeBlock>
 
-``` js
+```js
 const mg = require('nodemailer-mailgun-transport');
 
 const auth = {
@@ -113,7 +121,7 @@ The final parameter, `options`, should be an object that contains the informatio
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -151,7 +159,7 @@ module.exports = {
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <h1>A new article has been added to the site</h1>
 <p>Here is the blurb</p>
 {{ data.piece.title }}
@@ -159,7 +167,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-/modules/article/views/email.html
+  /modules/article/views/email.html
 </template>
 
 </AposCodeBlock>
@@ -176,7 +184,7 @@ The returned data can also be used along with the `stream` transporter to ensure
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   options: {
     nodemailer: {
@@ -194,7 +202,7 @@ module.exports = {
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -238,7 +246,7 @@ In addition to using `handlers()` to trigger email delivery, you can use `apiRou
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {

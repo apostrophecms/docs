@@ -1,10 +1,10 @@
 ---
 prev:
   text: 'Customizing the user interface'
-  link: 'guide/custom-ui.md'
+  link: 'guide/custom-ui.html'
 next:
   text: 'Custom login requirements'
-  link: 'guide/custom-login-requirements.md'
+  link: 'guide/custom-login-requirements.html'
 ---
 # Custom schema field types
 
@@ -20,7 +20,7 @@ Note that this code could be in any module. Here we've chosen to create a module
 
 <AposCodeBlock>
 
-``` js
+```js
 module.exports = {
   init(self) {
     self.addStarRatingFieldType();
@@ -68,7 +68,7 @@ On the browser side, we'll need a custom Vue.js component. Apostrophe provides a
 
 <AposCodeBlock>
 
-``` js
+```js
 <template>
   <AposInputWrapper
     :modifiers="modifiers" :field="field"
@@ -122,7 +122,7 @@ export default {
 </style>
 ```
   <template v-slot:caption>
-    modules/star-range-field/ui/apos/components/InputStarRating.vue
+    modules/star-rating-field/ui/apos/components/InputStarRating.vue
   </template>
 </AposCodeBlock>
 

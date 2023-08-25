@@ -3,8 +3,8 @@ prev:
   text: 'Webpack'
   link: 'guide/webpack.md'
 next:
-  text: '📦 Core Modules | @apostrophecms/admin-bar'
-  link: 'reference/modules/admin-bar.md'
+  text: 'Logging in Apostrophe'
+  link: 'guide/logging.md'
 ---
 # Using pnpm
 
