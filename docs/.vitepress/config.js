@@ -219,7 +219,7 @@ export default defineConfig({
       {
         icon: 'book',
         text: 'Cookbooks',
-        link: 'cookbook/index.md',
+        link: 'cookbook',
         collapsed: true,
         items: [
           {
