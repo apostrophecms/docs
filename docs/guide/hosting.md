@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Server-side events'
-  link: 'guide/server-events.md'
-next:
-  text: 'Sending email'
-  link: 'guide/sending-email.md'
----
 # Hosting Apostrophe in production
 
 ## Server requirements

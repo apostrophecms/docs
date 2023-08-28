@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Template filters'
-  link: 'guide/template-filters.md'
-next:
-  text: 'Async Components'
-  link: 'guide/async-components.md'
----
 # Template fragments
 
 We will often find that template code is reused across multiple files or that it simply gets overly complicated for a single file. **Template fragments** help solve this by splitting template code into smaller, managable pieces that can be used in other templates.

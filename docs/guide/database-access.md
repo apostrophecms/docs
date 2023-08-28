@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Inserting and updating docs'
-  link: 'guide/database-insert-update.md'
-next:
-  text: 'Customizing the user interface'
-  link: 'guide/custom-ui.md'
----
 # Accessing the database directly
 
 ## Working with collections

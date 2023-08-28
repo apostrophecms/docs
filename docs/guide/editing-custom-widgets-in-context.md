@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Custom login requirements'
-  link: 'guide/custom-login-requirements.md'
-next:
-  text: 'Adding placeholders to custom widgets'
-  link: 'guide/adding-custom-widget-placeholder-content.md'
----
 # Editing custom widgets in context
 
 ::: info

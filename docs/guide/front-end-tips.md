@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Front end CSS and JS'
-  link: 'guide/front-end-assets.md'
-next:
-  text: 'Front end helper methods'
-  link: 'guide/front-end-helpers.md'
----
 <!-- # Front end best practices -->
 <!-- ☝️ Broader title once other examples are added. -->
 

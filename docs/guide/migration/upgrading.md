@@ -1,13 +1,6 @@
 ---
-sidebarDepth: 2
-prev:
-  text: '♻️ Migrating from A2 to A3'
-  link: 'guide/migration/overview.md'
-next:
-  text: 'Code organization | Modules'
-  link: 'guide/modules.md'
+next: false
 ---
-
 # Migration from Apostrophe 2
 
 While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 (A3), there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to A3. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work](#migration-tools-and-process).

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Customizing the user interface'
-  link: 'guide/custom-ui.html'
-next:
-  text: 'Custom login requirements'
-  link: 'guide/custom-login-requirements.html'
----
 # Custom schema field types
 
 Apostrophe's [schema field types](../guide/content-schema.md) cover many situations, but we might wish to add a new one. This section of the documentation covers the creation of an entirely new schema field type. However, Apostrophe also allows you to easily combine existing field types to create a new input type which you can read about in the [cookbook](../cookbook/reusing-standard-fields.md).

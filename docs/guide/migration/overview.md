@@ -1,10 +1,8 @@
 ---
-prev:
-  text: '📚 Cookbooks'
-  link: 'cookbook/index.md'
 next:
   text: 'Upgrading from A2'
-  link: 'guide/migration/upgrading.md'
+  link: '/guide/migration/upgrading.html'
+prev: false
 ---
 # Changes from Apostrophe 2
 

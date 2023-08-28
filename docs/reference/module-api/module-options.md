@@ -1,11 +1,3 @@
----
-prev:
-  text: '🔧 Module Configuration'
-  link: 'reference/module-api/module-overview.md'
-next:
-  text: 'Server events'
-  link: 'reference/server-events.md'
----
 # Module configuration options
 
 Apostrophe modules can be configured with settings that influence functionality without having to write custom JavaScript. The sections below describe the options available in all modules as well as those specific to certain module types.

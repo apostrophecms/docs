@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Additional customization | Adding placeholders to custom widgets'
-  link: 'guide/adding-custom-widget-placeholder-content.md'
-next:
-  text: 'Command menu'
-  link: 'guide/command-menu.md'
----
 # Custom batch operations
 
 Apostrophe piece type modules have access to a batch operation system in the user interface. This allows editors to take an action, such as archiving, on many pieces at once. By default, all piece types have batch operation UI for archiving pieces and restoring pieces from the archive, for example.

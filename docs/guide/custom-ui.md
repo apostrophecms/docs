@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Database queries'
-  link: 'guide/database-queries.html'
-next:
-  text: 'Custom schema field types'
-  link: 'guide/custom-schema-field-types.html'
----
 # Customizing the user interface
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.

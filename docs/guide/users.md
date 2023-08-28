@@ -1,8 +1,3 @@
----
-next:
-  text: 'Localization: Overview'
-  link: 'guide/localization/'
----
 # Users and user roles
 
 A **"user"** in Apostrophe is an account (usually for a human or benevolent robot) that can be used to log into the application. Beyond that, users get specific sets of permissions based on the **role** they are assigned.

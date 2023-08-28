@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Areas'
-  link: 'guide/areas-and-widgets.md'
-next:
-  text: 'Custom Widgets'
-  link: 'guide/custom-widgets.md'
----
 # Core widgets
 
 Apostrophe comes with some content widgets you can use in areas right away. See below for their descriptions and options.

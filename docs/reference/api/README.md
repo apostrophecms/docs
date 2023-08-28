@@ -1,10 +1,10 @@
 ---
 prev:
   text: '🔧 Module Configuration | Query builders'
-  link: 'reference/query-builders.md'
+  link: '/reference/query-builders.md'
 next:
   text: 'Authentication'
-  link: 'reference/api/authentication.html'
+  link: '/reference/api/authentication.html'
 ---
 # REST API route reference
 

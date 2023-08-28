@@ -1,11 +1,5 @@
 ---
 sidebarDepth: 2
-prev:
-  text: 'Server events'
-  link: 'reference/server-events.md'
-next:
-  text: '📖 REST API Reference'
-  link: 'reference/api/README.md'
 ---
 
 # Query builders

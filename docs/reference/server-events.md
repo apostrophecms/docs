@@ -1,11 +1,5 @@
 ---
 sidebarDepth: 2
-prev:
-  text: 'Module options'
-  link: 'reference/module-api/module-options.md'
-next:
-  text: 'Query builders'
-  link: 'reference/query-builders.md'
 ---
 
 # Server-side events

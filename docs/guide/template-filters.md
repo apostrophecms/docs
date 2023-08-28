@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Template data'
-  link: 'guide/template-data.md'
-next:
-  text: 'Template fragments'
-  link: 'guide/fragments.md'
----
 # Template filters
 
 ## Nunjucks supplied filters
@@ -14,7 +6,7 @@ The Nunjucks templating language comes with several [built-in filters](https://m
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <h1>{{ data.page.headline | replace("foo", "bar" ) | upper }}</h1>
 ```
 </AposCodeBlock>

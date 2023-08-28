@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Pieces | Piece Pages'
-  link: 'guide/piece-pages.md'
-next:
-  text: 'Layout templates'
-  link: 'guide/layout-template.md'
----
 # Working with templates
 
 Templates are where code and content turn into web pages people can actually see and use. Apostrophe templates use the Nunjucks templating language and generally look like normal HTML markup with special tags and variables sprinkled throughout to render data.

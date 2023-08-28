@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Field types | url'
-  link: 'reference/field-types/url.html'
-next:
-  text: 'Module configuration options'
-  link: 'reference/module-api/module-options.html'
----
 # Module configuration
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:

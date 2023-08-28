@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Batch-operations'
-  link: 'guide/batch-operations.md'
-next:
-  text: 'Server-side events'
-  link: 'guide/server-events.md'
----
 # Adding keyboard shortcuts
 
 The `@apostrophecms/command-menu` module adds keyboard shortcuts and additional pop-up menus to the Admin UI. The list of shortcuts can be accessed from any page or piece-type manager using the '?' key. There are several pre-programmed common shortcuts, with additional page-level shortcuts added automatically for each custom piece-type created. 

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Core widgets'
-  link: 'guide/core-widgets.md'
-next:
-  text: 'Pieces'
-  link: 'guide/pieces.md'
----
 # Custom widgets
 
 Creating new widget options in addition to the [core widgets](/guide/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.

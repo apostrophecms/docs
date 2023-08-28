@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Template fragments'
-  link: 'guide/fragments.md'
-next:
-  text: 'User and User Roles'
-  link: '/guide/users.md'
----
 # Async components
 
 Writing template files is how we turn data into HTML to display in browsers (or any number of other interfaces). When the data we are using comes directly from [standard document or widget fields](/reference/field-types/index), normal templates already have it ready to use. But what if the data we want to display needs to be freshly queried from the database or fetched from a third-party source?

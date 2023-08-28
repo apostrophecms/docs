@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Nested module folders'
-  link: 'guide/nested-module-subdirs.md'
-next:
-  text: 'Schema fields | Content fields'
-  link: 'guide/content-schema.md'
----
 # Using static module assets
 
 While developers can place static files in the top-level `/public` folder of the project, which allows a file like `/public/images/bg.png` to be accessed via the URL `https://example.com/images/bg.png`, this isn't a good solution for some situations. One issue is that the URL does not change with each new deployment, so if `bg.png` has been changed a stale version may be served by the browser's cache.
