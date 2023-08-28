@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Overview'
-  link: 'guide/localization/'
-next:
-  text: 'Dynamic i10n'
-  link: 'guide/localization/dynamic.md'
----
 # Static string localization
 
 This section covers localization of strings throughout template files and Apostrophe user interface. These strings are hard-coded, not editable by logged-in users, and thus are not stored in the database. Instead, this localization is stored in JSON files associated with the various locales.
