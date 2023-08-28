@@ -6,7 +6,6 @@
 
 <script setup>
   import InlineSvg from 'vue-inline-svg';
-  import { withBase } from 'vitepress'
   const props = defineProps({
     name: {
       type: String,
