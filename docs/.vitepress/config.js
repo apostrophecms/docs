@@ -219,7 +219,7 @@ export default defineConfig({
       {
         icon: 'book',
         text: 'Cookbooks',
-        link: 'cookbook/index.md',
+        link: 'cookbook',
         collapsed: true,
         items: [
           {
@@ -379,7 +379,7 @@ export default defineConfig({
             text: 'Localization',
             collapsed: true,
             items: [
-              { text: 'Overview', link: 'guide/localization/' },
+              { text: 'Overview', link: 'guide/localization' },
               { text: 'Static i10n', link: 'guide/localization/static.md' },
               { text: 'Dynamic i10n', link: 'guide/localization/dynamic.md' }
             ]
