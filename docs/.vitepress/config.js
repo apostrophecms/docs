@@ -300,6 +300,10 @@ export default defineConfig({
         items: [
           { text: 'Modules', link: 'guide/modules.md' },
           {
+            text: 'Nested module folders',
+            link: 'guide/nested-module-subdirs.md'
+          },
+          {
             text: 'Front End Code',
             collapsed: true,
             items: [
@@ -311,10 +315,6 @@ export default defineConfig({
               {
                 text: 'Front end helper methods',
                 link: 'guide/front-end-helpers.md'
-              },
-              {
-                text: 'Nested module folders',
-                link: 'guide/nested-module-subdirs.md'
               },
               { text: 'Static assets', link: 'guide/static-module-assets.md' }
             ]
