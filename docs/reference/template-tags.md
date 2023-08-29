@@ -20,12 +20,12 @@ The `area` tag inserts an area field into the template. The area field [must alr
 
 ### Usage
 
-``` njk
+``` nunjucks
 {% area context, areaName with contextOptions %}
 ```
 
 **Example:**
-``` njk
+``` nunjucks
 {# Without context options (most typical) #}
 {% area data.page, 'sidebar' %}
 
@@ -63,12 +63,12 @@ The `component` tag inserts an asynchronous component into the template. See the
 
 ### Usage
 
-``` njk
+``` nunjucks
 {% component 'module:componentName' with data %}
 ```
 
 **Example:**
-``` njk
+``` nunjucks
 {% component 'product:newest' with { max: 3 } %}
 ```
 
@@ -90,14 +90,14 @@ This tag must be closed with an `endfragment` tag.
 
 ### Usage
 
-``` njk
+``` nunjucks
 {% fragment name(parameters) %}
   {# Fragment markup #}
 {% endfragment %}
 ```
 
 **Examples:**
-``` njk
+``` nunjucks
 {% fragment button(text, action, options = {}) %}
   <button class="o-button {{ options.class }}" data-action="{{ action }}">
     {{ text }}
@@ -105,7 +105,7 @@ This tag must be closed with an `endfragment` tag.
 {% endfragment %}
 ```
 
-``` njk
+``` nunjucks
 {% fragment card(data = {}) %}
   <section class="o-card">
     <h2>{{ data.heading }}</h2>
@@ -129,12 +129,12 @@ The `render` tag is used to insert a [fragment](/guide/fragments.md) in a templa
 
 ### Usage
 
-``` njk
+``` nunjucks
 {% render name(arguments) %}
 ```
 
 **Example:**
-``` njk
+``` nunjucks
 {% render button('Click me', 'send', { class: 'is-blue' }) %}
 ```
 
@@ -152,13 +152,13 @@ This tag must be closed with an `endrendercall` tag.
 
 ### Usage
 
-``` njk
+``` nunjucks
 {% rendercall name(arguments) %}
 {% endrendercall %}
 ```
 
 **Example:**
-``` njk
+``` nunjucks
 {% rendercall card({ heading: 'Featured image' }) %}
   {% area data.widget, 'photo' %}
 {% endrendercall %}
@@ -175,12 +175,12 @@ The name of the fragment to render. It may include a source reference [if the fr
 
 The `widget` template tag will usually not be used in Apostrophe project templates. It is used in the core area template file to render individual widgets.
 
-``` njk
+``` nunjucks
 {% widget widgetObject, widgetOptions with contextOptions %}
 ```
 
 **Example:**
-``` njk
+``` nunjucks
 {# Example from modules/@apostrophecms/area/views/area.html in A3 core #}
 {% widget item, widgetOptions with data._with %}
 ```

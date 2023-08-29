@@ -61,7 +61,7 @@ This example demonstrates adding an image.
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <section data-custom-widget>
   <h1>Custom Widget</h1>
   {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
@@ -85,7 +85,7 @@ This example demonstrates adding a self-hosted video.
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <section data-custom-widget>
   <!-- For videos uploaded to the `public` folder -->
   {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}

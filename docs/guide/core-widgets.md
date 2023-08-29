@@ -389,7 +389,7 @@ The image widget's default `srcset` attribute for responsive behavior assumes th
 
 This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets.md#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
-``` njk
+``` nunjucks
 {% area data.page, 'main' with {
   '@apostrophecms/image': {
     sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'

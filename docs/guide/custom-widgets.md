@@ -147,7 +147,7 @@ Adding `placeholder: true` in the options for a widget automatically sets `initi
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
 
-``` njk
+``` nunjucks
 {# modules/two-column-widget/views/widget.html #}
 <section class="two-col">
   <div class="two-col__column">
@@ -221,7 +221,7 @@ module.exports = {
 
 **Module template**
 
-``` njk
+``` nunjucks
 {# modules/collapse-widget/views/widget.html #}
 <section data-collapser class="collapser">
   <h2>
@@ -304,7 +304,7 @@ Template files on the other hand, *do* have access to widget data (they are rend
 
 For example, we could change our collapse widget to include a `color` field value:
 
-``` njk
+``` nunjucks
 {# modules/collapse-widget/views/widget.html #}
 <section data-collapser data-color="{{ data.widget.color }}" class="collapser">
   {# The rest of the code is the same... #}
@@ -330,7 +330,7 @@ The player *does* have access to the widget's wrapping element, so we use `el.da
 ::: tip
 We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a properly escaped string first. Use the `jsonAttribute` template filter to do this.
 
-``` njk
+``` nunjucks
 <div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
 ```
 

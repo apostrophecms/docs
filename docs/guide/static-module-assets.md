@@ -40,7 +40,7 @@ It's usually simpler to just put your public assets in a module specific to your
 
 In Nunjucks templates we can convert asset paths to URs by calling the `apos.asset.url` helper function. Again, the rendered template will include the complete asset URL:
 
-``` njk
+``` nunjucks
 {{ apos.asset.url('/modules/custom-module/images/bg.png') }}
 ```
 

@@ -12,7 +12,7 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 
 **Let's look at a simple layout template file at `views/layout.html`.**
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 {% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
 
@@ -40,7 +40,7 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 
 You might notice is that this does not have essential web page elements such as a `head` or `body` tag. That is because the first thing this template does is extend another template:
 
-``` njk
+``` nunjucks
 {% extends data.outerLayout %}
 ```
 
@@ -48,7 +48,7 @@ You might notice is that this does not have essential web page elements such as 
 
 This layout template then includes two template blocks, **`beforeMain` and `afterMain`**, containing markup that wraps most page content.
 
-``` njk
+``` nunjucks
 {% block beforeMain %}
   {# Page opening markup... #}
 {% endblock %}

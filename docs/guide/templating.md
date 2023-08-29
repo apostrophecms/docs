@@ -26,7 +26,7 @@ When you use the `{% extends %}` tag in a template, it will inherit all of the m
 
 For example, the layout template will often be structured like this:
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 {% extends data.outerLayout %}
 
@@ -43,7 +43,7 @@ For example, the layout template will often be structured like this:
 
 Individual page type templates will extend that layout:
 
-``` njk
+``` nunjucks
 {# modules/default-page/views/page.html #}
 {% extends "layout.html" %}{# 👈 Our template extension #}
 
@@ -64,7 +64,7 @@ You may have noticed that the layout template above also extends another templat
 
 For example, this may be in your layout file:
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 
 {% block main %}
@@ -74,7 +74,7 @@ For example, this may be in your layout file:
 
 In my home page template I could extend the layout template and use `super()` to include that `h1` tag before new content markup:
 
-``` njk
+``` nunjucks
 {# modules/@apostrophecms/home-page/views/page.html #}
 
 {% block main %}
@@ -91,7 +91,7 @@ See another example [in the Nunjucks documentation](https://mozilla.github.io/nu
 
 The `{% include %}` template tag pulls one template *into* another template. This can be useful to break large template files into pieces. For example, you might write your site footer in a template file: `views/footer.html`. The layout template could include that like so:
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 
 {% block afterMain %}
@@ -112,7 +112,7 @@ In some cases, **we will need to extend or include a template file that belongs 
 
 For example, we may have a default page type that includes a sidebar we want to use in other page types:
 
-``` njk
+``` nunjucks
 {# modules/default-page/views/page.html #}
 {% extends "layout.html" %}
 
@@ -130,7 +130,7 @@ For example, we may have a default page type that includes a sidebar we want to 
 
 Let's extend it in a contact page type to reuse that sidebar. We will only replace the `content` block. To do this, the `{% extend %}` tag must include the name of the default page module:
 
-``` njk
+``` nunjucks
 {% extends "default-page:page.html" %}
 
 {% block content %}

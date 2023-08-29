@@ -35,6 +35,6 @@ workEmail: {
 
 ## Use in templates
 
-``` njk
+``` nunjucks
 Email: {{ data.piece.workEmail }}
 ```

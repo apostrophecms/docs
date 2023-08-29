@@ -14,7 +14,7 @@ The Nunjucks templating language comes with several [built-in filters](https://m
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <h1>{{ data.page.headline | replace("foo", "bar" ) | upper }}</h1>
 ```
 </AposCodeBlock>
@@ -92,7 +92,7 @@ To use this new filter you would simply pipe your data to the filter from within
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
   <section data-link-widget>
     <a href="{{ data.widget.url }}">{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</a>
   </section>
