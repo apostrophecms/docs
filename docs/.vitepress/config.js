@@ -172,12 +172,12 @@ export default defineConfig({
     await new Promise((r) => writeStream.on('finish', r));
   },
   markdown: {
-    theme: 'material-theme-palenight',
+    theme: require('./theme/dracula-at-night.json'),
     languages: [
       {
         id: 'njk-html',
         scopeName: 'text.html.njk',
-        grammar: require('./njk-html.tmLanguage.json'),
+        grammar: require('./theme/njk-html.tmLanguage.json'),
         displayName: 'Nunjucks',
         embeddedLangs: ['html'],
         aliases: ['njk', 'nunjucks']
