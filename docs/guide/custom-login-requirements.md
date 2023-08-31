@@ -312,6 +312,7 @@ A real 2FA system requiring a "setup code" like this one would also continue to 
 Here is the front-end Vue component code for this requirement:
 
 <AposCodeBlock>
+
   ```javascript
   <template>
     <fieldset>

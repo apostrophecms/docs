@@ -77,7 +77,7 @@ When adding code blocks that represent parts of a file, include the location of 
 
 Nunjucks template example:
 
-``` njk
+``` nunjucks
 {# views/layout.html #}
 ```
 

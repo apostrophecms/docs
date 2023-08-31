@@ -46,7 +46,7 @@ module.exports = {
 };
 ```
 
-``` njk
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
 
@@ -175,7 +175,7 @@ Relationship fields can be referenced in templates like any other field as a pro
 
 A blog article show page template may include this code snippet:
 
-``` njk
+``` nunjucks
 {# modules/article-page/views/show.html #}
 <p>Topics:</p>
 <ul>
@@ -187,7 +187,7 @@ A blog article show page template may include this code snippet:
 
 Since the data is fetched in an array, we use the `{% for %}` tag to loop it. **If there is a maximum of one connected doc**, you could reference it directly using the array index:
 
-``` njk
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% if data.piece._topics.length > 0 %}
   <p>Topic: {{ data.piece._topics[0] }}</p>
@@ -228,7 +228,7 @@ This field is identifying the connected doc type with the `withType` setting, th
 
 With this field in place, you could display connected articles in a topics show page the same way you displayed article topics above.
 
-``` njk
+``` nunjucks
 {# modules/topic-page/views/show.html #}
 <p>Articles:</p>
 <ul>

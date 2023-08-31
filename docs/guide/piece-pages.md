@@ -125,7 +125,7 @@ You've reviewed the [page type guide](/guide/pages.md), right? The sections belo
 
 Index page templates look very similar to other page templates.
 
-``` njk
+``` nunjucks
 {# modules/article-page/views/index.html #}
 
 {% extends "layout.html" %}
@@ -154,7 +154,7 @@ Index page templates look very similar to other page templates.
 
 The first new thing here is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
 
-``` njk
+``` nunjucks
 {% for article in data.pieces %}
   <article>
     <h2>
@@ -177,7 +177,7 @@ The `data` object properties unique to index pages are:
 
 ### Pagination
 
-``` njk
+``` nunjucks
 {% import '@apostrophecms/pager:macros.html' as pager with context %}
 
 {{ pager.render({
@@ -239,7 +239,7 @@ module.exports = {
 }
 ```
 
-``` njk
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
 

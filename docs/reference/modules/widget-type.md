@@ -37,7 +37,7 @@ All of the core widget type modules of Apostrophe, such as `@apostrophecms/image
 
 Custom widgets have no default template, but may choose to support the same pattern:
 
-``` njk
+``` nunjucks
 {# in a custom widget.html file #}
 
 {% if data.options.className %}

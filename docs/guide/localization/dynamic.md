@@ -172,7 +172,7 @@ Here is an example of `data.localizations` for the page from the screenshots abo
 
 Here is an example of using the `data.localizations` array to generate a locale switcher for a page.
 
-``` njk
+``` nunjucks
 <div class="locales">
   {# A button to open the list of locales (nothing special here) #}
   <button class="locales__toggler" data-locales-toggle aria-expanded="false">
