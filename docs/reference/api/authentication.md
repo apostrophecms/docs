@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Authentication
 
 ## API keys
@@ -32,7 +36,7 @@ Add an `authorization` [HTTP header](https://developer.mozilla.org/en-US/docs/We
 ```
 Authorization: ApiKey myapikey1029384756
 
-```
+```--
 
 Alternatively, you may pass the api key as the `apikey` or `apiKey` query parameter:
 

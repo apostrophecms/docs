@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Page type REST API
 
 All [page types](/reference/glossary.md#page) use a single set of API endpoints, unlike piece types.
@@ -21,7 +25,7 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 ### Additional page endpoints
 
 | Method | Path | Description |
-|---------|---------|---------|---------|
+|---------|---------|---------|
 |`GET` | [`/:_url?aposRefresh=1`](#get-url-aposrefresh-1) | Get a page's rendered content |
 |`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
