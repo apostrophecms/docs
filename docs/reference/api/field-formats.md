@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # API response field examples
 
 Simple examples of how each field type might be returned in a document from the REST APIs.
