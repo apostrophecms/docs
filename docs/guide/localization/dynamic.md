@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Static i10n'
-  link: 'guide/localization/static.md'
-next:
-  text: 'Caching'
-  link: 'guide/caching.md'
----
 # Dynamic content localization
 
 Dynamic content localization (or simply "content localization") refers to the process of translating and customizing Apostrophe site content for different locales. In most cases this is primarily a matter of translation, but it can be much more than that depending on the website.

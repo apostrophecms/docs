@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Connecting content with relationships'
-  link: 'guide/relationships.md'
-next:
-  text: 'Pages'
-  link: 'guide/pages.md'
----
 # Working with images and media files
 
 There are a few ways to configure a field schema to allow editors to select images or other media files.

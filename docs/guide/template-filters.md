@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Template data'
-  link: 'guide/template-data.md'
-next:
-  text: 'Template fragments'
-  link: 'guide/fragments.md'
----
 # Template filters
 
 ## Nunjucks supplied filters

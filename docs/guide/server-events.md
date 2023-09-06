@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Module configuration | Command menu'
-  link: 'guide/command-menu.md'
-next:
-  text: 'Hosting in production'
-  link: 'guide/hosting.md'
----
 # Using server side events
 
 Apostrophe emits many sever-side events to allow project code and installed modules to respond as needed. These range from start-up events to events triggered by normal editor actions. For example, if we had a website to track ghost sightings, we could watch for new sighting submissions and respond by sending the location address to a mapping API for validation and additional location information.

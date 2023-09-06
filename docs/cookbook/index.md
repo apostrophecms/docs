@@ -1,12 +1,7 @@
 ---
 title: Code Cookbook
-prev:
-  icon: 'list'
-  text: 'Getting Started'
-  link: 'guide/setting-up.md'
-next:
-  text: 'Building navigation'
-  link: 'cookbook/building-navigation.md'
+prev: false
+next: false
 ---
 
 # Apostrophe code cookbook

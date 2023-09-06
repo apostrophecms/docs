@@ -1,10 +1,3 @@
----
-prev:
-  text: 'Conditional Fields'
-  link: 'guide/conditional-fields.md'
-next:
-  text: 'Working with images and media' link: 'guide/media.md'
----
 # Connecting content with relationships
 
 Creating and displaying content is great, but the power of a CMS really shines when you start connecting pieces of content to one another. In Apostrophe we do that with **relationship fields**.

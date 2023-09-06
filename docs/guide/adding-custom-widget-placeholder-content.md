@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Editing custom widgets in context'
-  link: 'guide/editing-custom-widgets-in-context.md'
-next:
-  text: 'Module configuration | Batch-operations'
-  link: 'guide/batch-operations.md' 
----
 # Adding placeholders to custom widgets
 
 Custom widgets can also take advantage of non-schema field placeholders by adding code to the widget module in question, preparing the widget template to show the custom placeholder content, and adding the placeholder content into an accessible folder.

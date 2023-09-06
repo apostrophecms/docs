@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Pieces'
-  link: 'guide/pieces.md'
-next:
-  text: 'Templating | Working with templates'
-  link: 'guide/templating.md'
----
 # Piece index and show pages
 
 **Index pages** list pieces of a particular type. Once one is created, each individual piece automatically has its own web page, known in Apostrophe as a **show page**. If you're familiar with blogs, you know this model all too well.

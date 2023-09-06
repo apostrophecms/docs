@@ -1,11 +1,6 @@
 ---
 title: "Code organization"
-prev:
-  text: 'Upgrading from A2'
-  link: 'guide/migration/upgrading.md'
-next:
-  text: 'Front end code | Front end CSS and JS'
-  link: 'guide/front-end-assets.md'
+prev: false
 ---
 
 # Code organization with modules

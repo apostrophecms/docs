@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Using pnpm'
-  link: 'guide/using-pnpm.md'
-next:
-  text: '📦 Core Modules | @apostrophecms/admin-bar'
-  link: 'reference/modules/admin-bar.md'
----
 # Logging in Apostrophe
 
 Logging is a fundamental aspect of any web application, especially those that require user authentication. It serves as a vital tool for monitoring system behavior, troubleshooting issues, and maintaining security. By recording various events and transactions within the system, logs provide insights into user interactions, system performance, and potential errors. 

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Sending email'
-  link: 'guide/sending-email.md'
-next:
-  text: 'Using pnpm'
-  link: 'guide/using-pnpm.md'
----
 # Webpack
 
 Apostrophe automatically provides a [webpack](https://webpack.js.org/)-powered build process for our frontend JavaScript and SCSS. Most of the time we don't have to think about this. As long as we [follow the documentation](front-end-assets.md) Apostrophe will take care of it for us.

@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Webpack'
-  link: 'guide/webpack.md'
-next:
-  text: 'Logging in Apostrophe'
-  link: 'guide/logging.md'
----
 # Using pnpm
 
 `pnpm` and `npm` are both package managers for JavaScript projects, but they have different approaches to managing dependencies. Node comes pre-packaged with `npm`, but `pnpm` presents a number of advantages such as better security, and monorepo support.

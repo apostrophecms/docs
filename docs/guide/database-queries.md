@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Caching'
-  link: 'guide/caching.md'
-next:
-  text: 'Inserting and updating docs'
-  link: 'guide/database-insert-update.md'
----
 # Querying the database
 
 When designing custom modules or customizing existing modules, it can quickly become necessary to fetch data that Apostrophe does not automatically make available. We might want to display a random image in a page banner or a few dynamically-chosen articles related to the page a visitor is on. Apostrophe has an API designed to help developers get as creative as they need to be.

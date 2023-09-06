@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Dynamic i10n'
-  link: 'guide/localization/dynamic.md'
-next:
-  text: 'Working with the Database | Database Queries'
-  link: 'guide/database-queries.md'
----
 # Caching
 
 ## Express Cache on Demand

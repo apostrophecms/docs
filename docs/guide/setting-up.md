@@ -1,3 +1,11 @@
+---
+prev:
+  text: 'Introduction'
+  link: 'guide/introduction.md'
+next:
+  text: 'Code Organization/Modules'
+  link: 'guide/modules.md'
+---
 # Setting up
 
 This article covers the first steps to get started. MacOS and Linux users can dive right in. If you have Windows, please follow our [Windows development](../cookbook/windows-development.md) cookbook article first. For technical reliability and technical support, we require that Windows users develop using the Windows Subsystem for Linux (WSL 2) or a Linux virtual machine.

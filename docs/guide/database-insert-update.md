@@ -1,11 +1,3 @@
----
-prev:
-  text: 'Database Queries'
-  link: 'guide/database-queries.md'
-next:
-  text: 'Accessing the database directly'
-  link: 'guide/database-access.md'
----
 # Inserting and updating in server-side code
 
 Apostrophe provides module methods for inserting and updating content documents in the database. These methods should be the primary tools for developers doing server-side data operations since they [emit events](/guide/server-events.md) that the CMS uses to keep all database collections updated and in sync. We will look at methods for both pieces and pages, which are similar but have some important differences.
