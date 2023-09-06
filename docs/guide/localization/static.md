@@ -14,7 +14,7 @@ That section of our show page template might look like this:
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
     {# More article template stuff above ⤴ #}
     <section>
       <h2>Related articles</h2> {# 👈 We need to localize this. #}
@@ -34,7 +34,7 @@ Localizing that string is as easy as wrapping it in a template helper: `__t()`. 
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
     {# More article template stuff above ⤴ #}
     <section>
       <h2>{{ __t('Related articles') }}</h2> {# 🎉 It's localized! #}
@@ -54,7 +54,7 @@ In that example, we passed the actual text to the localization helper. This has 
 
 Our other option is to use a **localization key that is different from the original text**. Taking our example, that heading tag might instead look like:
 
-``` njk
+``` nunjucks
 <h2>{{ __t('relatedArticles') }}</h2>
 ```
 
@@ -110,7 +110,7 @@ Template example:
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
     {{ __t('Contact the {{ city }} office', {
       city: data.piece.city
     }) }}
@@ -136,7 +136,7 @@ The arguments would look essentially identical in server-side or a UI file, usin
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
     {{ __t('contactOffice', {
       city: data.piece.city
     }) }}
@@ -225,7 +225,7 @@ Although you can set the `i18n.ns` option of the module instead to define the na
 
 Then when you use the localization keys in template files (or elsewhere), start each key with the namespace:
 
-``` njk
+``` nunjucks
 <h2>__t('ourTeam:relatedArticles')</h2>
 ```
 

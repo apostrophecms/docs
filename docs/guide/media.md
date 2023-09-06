@@ -46,7 +46,7 @@ If presenting an image using the image widget and its template, the process is n
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% area data.piece, 'photo' %}
 ```
   <template v-slot:caption>
@@ -95,7 +95,7 @@ For non-image attachments, simply pass the attachment object into the method.
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set fileUrl = apos.attachment.url(data.piece.fileUpload) %}
 
 <a href="{{ fileUrl }}">Download</a>
@@ -110,7 +110,7 @@ For image attachments, doing the same thing will return the URL for the `full` i
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set imgUrl = apos.attachment.url(data.piece.photoUpload, {
   size: 'one-third'
 }) %}
@@ -127,7 +127,7 @@ For image attachments, doing the same thing will return the URL for the `full` i
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set srcset = apos.image.srcset(data.piece.photoUpload) %}
 
 <img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
@@ -174,7 +174,7 @@ Since relationship fields can accept multiple values (e.g., connecting multiple 
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set filesObject = apos.attachment.all(data.piece._files) %}
 
 {% for file in filesObject %}
@@ -191,7 +191,7 @@ When the relationship field has the `max: 1` limit, or when we only want the fir
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set imageObject = apos.attachment.first(data.piece._image) %}
 
 <img src="{{ apos.attachment.url(imageObject) }}" alt="{{ imageObject._alt }}" />
@@ -207,7 +207,7 @@ When working with images, additional helpers are available. As an example, see t
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% set attachment = apos.image.first(data.widget._image) %}
 
 {% if attachment %}

@@ -84,7 +84,7 @@ To use this new filter you would simply pipe your data to the filter from within
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
   <section data-link-widget>
     <a href="{{ data.widget.url }}">{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</a>
   </section>

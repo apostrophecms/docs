@@ -265,7 +265,7 @@ The `options` parameter is optional and takes an object with several potential p
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set images = apos.attachment.all(data.page._people, { group: 'images' }) %}
   {% for selfie in images %}
@@ -296,7 +296,7 @@ The `options` parameter is optional and takes an object with several potential p
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
    <img src="{{ image._urls['one-third'] }}">
@@ -313,7 +313,7 @@ If the attachment has a focal point defined, this helper will return the focal p
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set focalPoint = apos.attachment.focalPointToObjectPosition(image) %}
@@ -331,7 +331,7 @@ If the attachment has a focal point defined, this helper will return an object c
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set focalPoint = apos.attachment.getFocalPoint(image) %}
@@ -349,7 +349,7 @@ Returns either the original size attachment height, or the cropped height if the
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set imageHeight = apos.attachment.getHeight(image) %}  <img src="{{ image._urls['one-third'] }}" height="{{ imageHeight }}" >
@@ -365,7 +365,7 @@ Returns either the original size attachment width or the cropped width if the im
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set imageWidth = apos.attachment.getWidth(image) %}
@@ -382,7 +382,7 @@ Returns `true` if the image attachment associated with the document has a focal 
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% if hasFocalPoint(image) %}

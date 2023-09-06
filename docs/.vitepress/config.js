@@ -172,12 +172,12 @@ export default defineConfig({
     await new Promise((r) => writeStream.on('finish', r));
   },
   markdown: {
-    theme: 'material-theme-palenight',
+    theme: require('./theme/dracula-at-night.json'),
     languages: [
       {
         id: 'njk-html',
         scopeName: 'text.html.njk',
-        grammar: require('./njk-html.tmLanguage.json'),
+        grammar: require('./theme/njk-html.tmLanguage.json'),
         displayName: 'Nunjucks',
         embeddedLangs: ['html'],
         aliases: ['njk', 'nunjucks']
@@ -219,7 +219,7 @@ export default defineConfig({
       {
         icon: 'book',
         text: 'Cookbooks',
-        link: 'cookbook/index.md',
+        link: 'cookbook',
         collapsed: true,
         items: [
           {
@@ -300,6 +300,10 @@ export default defineConfig({
         items: [
           { text: 'Modules', link: 'guide/modules.md' },
           {
+            text: 'Nested module folders',
+            link: 'guide/nested-module-subdirs.md'
+          },
+          {
             text: 'Front End Code',
             collapsed: true,
             items: [
@@ -311,10 +315,6 @@ export default defineConfig({
               {
                 text: 'Front end helper methods',
                 link: 'guide/front-end-helpers.md'
-              },
-              {
-                text: 'Nested module folders',
-                link: 'guide/nested-module-subdirs.md'
               },
               { text: 'Static assets', link: 'guide/static-module-assets.md' }
             ]
@@ -364,8 +364,13 @@ export default defineConfig({
           { text: 'Template data', link: 'guide/template-data.md' },
           { text: 'Template filters', link: 'guide/template-filters.md' },
           { text: 'Template fragments', link: 'guide/fragments.md' },
-          { text: 'Async Components', link: 'guide/async-components.md' }
+          { text: 'Async Components', link: 'guide/async-components.md' },
+          { text: 'Custom Nunjucks tags', link: 'reference/template-tags.md' },
         ]
+      },
+      {
+        text: 'Global Settings',
+        link: 'guide/global.md'
       },
       {
         text: 'User and User Roles',
@@ -379,12 +384,16 @@ export default defineConfig({
             text: 'Localization',
             collapsed: true,
             items: [
-              { text: 'Overview', link: 'guide/localization/' },
+              { text: 'Overview', link: 'guide/localization' },
               { text: 'Static i10n', link: 'guide/localization/static.md' },
               { text: 'Dynamic i10n', link: 'guide/localization/dynamic.md' }
             ]
           },
           { text: 'Caching', link: 'guide/caching.md' },
+          {
+            text: 'Sending email',
+            link: 'guide/sending-email.md'
+          },
           {
             text: 'Working with the database',
             collapsed: true,
@@ -399,6 +408,10 @@ export default defineConfig({
                 link: 'guide/database-access.md'
               }
             ]
+          },
+          {
+            text: 'Using as a headless CMS',
+            link: 'guide/headless-cms.md'
           },
           {
             text: 'Customizing the user interface',

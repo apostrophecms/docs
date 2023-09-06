@@ -116,7 +116,7 @@ The resulting directory tree looks like this:
 /modules/products/product-widget (index.js, views/widget.html, etc.)
 ```
 
-::: warn
+::: warning
 It is important to understand that **the names of the subdirectories do not matter.** The The subdirectories are purely there for your convenience in organizing your code and they are **not part of the name of the modules within them.** The names of the actual
 module folders within them must still match the full name of each module.
 :::

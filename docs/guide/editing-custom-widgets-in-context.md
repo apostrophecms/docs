@@ -98,7 +98,7 @@ Don't forget to also enable the module in `app.js`, like any other module.
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <h1 class="contextual-heading" style="width: {{ data.widget.width }}%">
   {{ data.widget.heading }}
 </h1>

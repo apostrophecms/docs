@@ -196,7 +196,7 @@ module.exports = {
 
 You might use that value as a fallback for user-editable fields.
 
-``` njk
+``` nunjucks
 {# In `modules/heading-widget/index.js` #}
 {% set bgColor = data.widget.color or data.defaultColor %}
 <h2 style="background-color: {{ bgColor }}">

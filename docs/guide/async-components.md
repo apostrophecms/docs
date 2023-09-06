@@ -8,7 +8,7 @@ Writing template files is how we turn data into HTML to display in browsers (or 
 
 In the template, an async component looks like this:
 
-``` njk
+``` nunjucks
 {% component 'product:newest' with { max: 3 } %}
 ```
 
@@ -89,7 +89,7 @@ Since the name of the component function is `newest`, our template partial for i
 
 <AposCodeBlock>
 
-``` njk
+``` nunjucks
 <h2>Newest products</h2>
 <ul>
   {% for product in data.products %}

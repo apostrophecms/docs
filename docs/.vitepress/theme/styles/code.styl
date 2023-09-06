@@ -28,6 +28,16 @@ div[class^="language-"]:before {
   left: 1.5em;
 }
 
+.vp-doc [class*='language-'] code {
+  padding: 0;
+}
+
+// overrides language dissapearance on hover
+.vp-doc [class*='language-']:hover > button.copy + span.lang,
+.vp-doc [class*='language-'] > button.copy:focus + span.lang {
+  opacity: 1;
+}
+
 div[class^="language-"]:after {
   content: '';
   height: 1px;

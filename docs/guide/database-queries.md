@@ -61,7 +61,7 @@ For context, this is what it would look like to invoke this async component in a
 
 <AposCodeBlock>
 
-  ``` njk
+  ``` nunjucks
   {% component 'product:latest' with { productId: data.piece._id } %}
   ```
   <template v-slot:caption>
