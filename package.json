@@ -5,6 +5,7 @@
     "docs:dev": "vitepress dev docs",
     "build": "npm run docs:build",
     "docs:build": "vitepress build docs",
+    "preview": "npm run docs:preview",
     "docs:preview": "vitepress preview docs",
     "test": "npx eslint .",
     "deploy": "npm run build && bash ./deploy && rm -r ./docs/.vitepress/dist",
