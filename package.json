@@ -11,19 +11,23 @@
     "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./docs/.vitepress/dist"
   },
   "dependencies": {
-    "eslint": "^8.44.0",
-    "eslint-config-apostrophe": "^4.0.0",
-    "eslint-config-standard": "^17.1.0",
-    "stylelint": "^15.10.1",
-    "stylelint-config-apostrophe": "^3.0.0",
     "vitepress-plugin-pagefind": "^0.2.4",
     "vue": "^3.3.4",
     "vue-inline-svg": "^3.1.2",
     "vue-router": "^4.2.3"
   },
   "devDependencies": {
+    "eslint": "^8.48.0",
+    "eslint-config-apostrophe": "^4.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
     "sass": "^1.64.2",
     "sitemap": "^7.1.1",
+    "stylelint": "^15.10.3",
+    "stylelint-config-apostrophe": "^3.0.0",
     "stylelint-plugin-stylus": "^0.18.0",
     "vitepress": "^1.0.0-beta.5",
     "vitepress-plugin-search": "^1.0.4-alpha.20"
