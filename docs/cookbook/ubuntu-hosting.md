@@ -13,7 +13,7 @@ We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many servi
 5. **Install MongoDB Community Edition.**  Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
    - **Be sure not to miss the command `sudo systemctl enable mongod`** which ensures it starts up on every reboot.
    - Don't use an Ubuntu package for this since they may be outdated.
-6. **Install Node.js 16.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 16.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+6. **Install Node.js 18.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 18.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
    - Again, it's best to not use an Ubuntu package for this.
 7. **Install nginx.** This one is up to date in nginx, so it's one line:
 
