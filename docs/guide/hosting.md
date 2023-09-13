@@ -8,8 +8,8 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 | ------------- | ------------- |
 | Ubuntu | 16+ |
 | [NGINX](https://www.nginx.com/) (or another proxy server) | Latest |
-| [Node.js](https://nodejs.org/en/) | 16.x+ |
-| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.2+ |
+| [Node.js](https://nodejs.org/en/) | 18.x+ |
+| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.4+ |
 
 
 | Hardware specification | Minimum recommendation |
