@@ -10,7 +10,7 @@ Content l10n also is generally done completely through the user interface. There
 - developer tools to give visitors and editors navigation between locales ([skip to this](#template-data-for-l10n))
 
 ::: info
-Localizing content is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](index.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
+Localizing content is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](overview.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
 :::
 
 ## Localizing editable content

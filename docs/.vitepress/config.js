@@ -384,7 +384,7 @@ export default defineConfig({
             text: 'Localization',
             collapsed: true,
             items: [
-              { text: 'Overview', link: 'guide/localization' },
+              { text: 'Overview', link: 'guide/localization/overview.md' },
               { text: 'Static i10n', link: 'guide/localization/static.md' },
               { text: 'Dynamic i10n', link: 'guide/localization/dynamic.md' }
             ]
