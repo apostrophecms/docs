@@ -46,21 +46,68 @@ the regular Linux install commands work fine for development purposes.
 Because we'll be running several commands as root, we'll use `sudo bash` to switch to the root user first:
 
 ```bash
+sudo bash
 wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc |  gpg --dearmor | sudo tee /usr/share/keyrings/mongodb.gpg > /dev/null
 echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
 apt update
 apt install mongodb-org
+# Stop being root! It's much safer not to be root all the time
+exit
 ```
 
 These commands will install MongoDB 6.x.
 
-When that command completes, possibly with a harmless warning or two, it's time to start MongoDB
-and ensure it always runs when restarting WSL:
+When that command completes, possibly with a harmless warning or two, we're ready to
+set up a data folder and launch MongoDB.
 
+## Creating a data folder for MongoDB
+
+MongoDB needs a place to store your database, and the default is a system folder. For development purposes, we want to leave system folders alone. So let's create our own place for it:
+
+```bash
+mkdir -p ~/mongodb-data/6.0
 ```
-systemctl enable mongod
-systemctl start mongod
+
+## Launching MongoDB (every time you start work)
+
+Now we're ready to launch MongoDB. We'll do this at the start of every session of work with ApostropheCMS:
+
+```bash
+mongod --dbpath=/home/apostrophe/mongodb-data/6.0
 ```
+
+::: warning
+Since `--dbpath` doesn't understand `~` as a shortcut for "my home directory" in WSL2, we've used the full path to our home directory here. In this case, we chose the username `apostrophe` when we set up Ubuntu 22.04. If you're not sure what username you created when you installed Ubuntu 22.04, type `echo $HOME` to find out.
+:::
+
+You'll see quite a bit of output, and the command prompt should **not** return. It should just keep running — and that's exactly what we want. You should **leave it running in this window for as long as you're working with ApostropheCMS, and open another, separate Ubuntu Window** to continue your work.
+
+::: warning
+If the command prompt does return, and you see a message like `fatal assertion`, then `mongod` was unable to start. Most likely you previously tried to run MongoDB in another way, and you need to fix a permissions problem and try again, like this:
+
+```bash
+sudo rm /tmp/mongodb-27017.sock
+mongod --dbpath=/home/apostrophe/mongodb-data/6.0
+```
+
+You should only have to do this once to clean up the mess. In the future, **just remember: don't use `sudo`, you don't need it and it only makes a mess.** If there's an exception we'll explicitly show that in our tutorials.
+
+Another possibility is that you tried to write `--dbpath=~/mongodb-data/6.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
+:::
+
+::: note
+If typing this every time seems like a pain, try adding this line to your `.bashrc` file:
+
+```bash
+alias start-mongo="mongod --dbpath=/home/apostrophe/mongodb-data/6.0"
+```
+
+Save and close the file, restart your shell, and you can just type:
+
+```bash
+start-mongo
+```
+:::
 
 ## Installing ApostropheCMS
 
@@ -73,3 +120,7 @@ nvm use 18
 Now you're ready to use the current stable version of Node.js in this shell.
 
 And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](https://v3.docs.apostrophecms.org/guide/setting-up.html). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
+
+::: warning
+One more quick reminder: be sure to **leave `mongod` running in a separate Ubuntu window** while you work with Apostrophe.
+:::
