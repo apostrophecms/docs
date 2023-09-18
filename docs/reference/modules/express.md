@@ -49,6 +49,7 @@ The `session` options object is passed to the
 By default Apostrophe stores sessions in MongoDB so it is not necessary to install another solution. If you want to use another session store, you can pass an instance as the store sub-option, but it's easier to let Apostrophe do the work of setting it up:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     options: {

@@ -470,7 +470,6 @@ export default defineConfig({
         icon: 'field',
         text: 'Field Types',
         collapsed: true,
-        link: 'reference/field-types/index.md',
         items: getItemRefs(
           ['_choices-setting', 'index'],
           '',
@@ -482,8 +481,11 @@ export default defineConfig({
         icon: 'cog',
         text: 'Module Configuration',
         collapsed: true,
-        link: 'reference/module-api/module-overview.md',
         items: [
+          {
+            text: 'Module overview',
+            link: 'reference/module-api/module-overview.md'
+          },
           {
             text: 'Module options',
             link: 'reference/module-api/module-options.md'
@@ -501,7 +503,6 @@ export default defineConfig({
       {
         icon: 'brain-circuit',
         text: 'REST API Reference',
-        link: 'reference/api/README.md',
         collapsed: true,
         items: getItemRefs(['README'], '', 'reference', 'api')
       },
