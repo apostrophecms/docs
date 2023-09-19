@@ -38,7 +38,7 @@ require('apostrophe')({
 });
 ```
 
-A more realistic product piece might also include [fields](/reference/field-types/index) for the product price, description, and photo, as well as explicit labels for the UI.
+A more realistic product piece might also include [fields](/reference/field-types/an-overview) for the product price, description, and photo, as well as explicit labels for the UI.
 
 ``` js
 // modules/product/index.js

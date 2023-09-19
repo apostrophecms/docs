@@ -41,7 +41,7 @@ Content schemas are configured in the `fields` setting. In this case, `fields` h
 
 Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section.
 
-See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/index) for more information.
+See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/an-overview) for more information.
 
 ## Using existing field groups
 
