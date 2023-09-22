@@ -1,7 +1,7 @@
 ---
 next:
-  text: 'Getting Started'
-  link: 'guide/setting-up.md'
+  text: 'Technical Overview'
+  link: 'guide/technical-overview.md'
 ---
 # What is ApostropheCMS?
 
