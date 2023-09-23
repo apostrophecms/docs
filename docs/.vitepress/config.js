@@ -205,7 +205,7 @@ export default defineConfig({
       {
         icon: 'sun',
         text: 'Introduction',
-        link: 'guide/introduction',
+        link: 'guide/introduction.md',
         collapsed: true,
         items: [
           { text: 'Technical Overview', link: 'guide/technical-overview.md' }
@@ -219,7 +219,7 @@ export default defineConfig({
       {
         icon: 'book',
         text: 'Cookbooks',
-        link: 'cookbook',
+        link: '/cookbook/',
         collapsed: true,
         items: [
           {
