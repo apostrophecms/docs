@@ -5,7 +5,6 @@ prev:
 next:
   text: 'area'
   link: 'reference/field-types/area.html'
-title: 'overview'
 ---
 # Schema Field Type Reference
 
