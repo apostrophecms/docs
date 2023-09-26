@@ -159,7 +159,7 @@ Use `add` to add additional settings and `remove` to remove existing base class 
 
 #### `add`
 
-An object of fields to add to the schema. See the [field type reference](/reference/field-types/an-overview) for more on field type configuration.
+An object of fields to add to the schema. See the [field type reference](/reference/field-types/index.md) for more on field type configuration.
 
 Adding a field using an object:
 

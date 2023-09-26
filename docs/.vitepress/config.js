@@ -470,6 +470,7 @@ export default defineConfig({
         icon: 'field',
         text: 'Field Types',
         collapsed: true,
+        link: 'reference/field-types/index.md',
         items: getItemRefs(
           ['_choices-setting', 'index'],
           '',

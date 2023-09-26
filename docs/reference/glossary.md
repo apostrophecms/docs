@@ -149,7 +149,7 @@ The manager, or manager modal, is a UI modal that displays a table or list of pa
 
 ### Editor
 
-The editor modal is a traditional interface with [discrete fields](/reference/field-types/an-overview) to add or update a document's content. This is distinct from the "in-context" editing experience where editors update content in the page as any visitor would see it.
+The editor modal is a traditional interface with [discrete fields](/reference/field-types/index.md) to add or update a document's content. This is distinct from the "in-context" editing experience where editors update content in the page as any visitor would see it.
 
 ## Localization terms
 
