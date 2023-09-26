@@ -1,6 +1,6 @@
 # Async components
 
-Writing template files is how we turn data into HTML to display in browsers (or any number of other interfaces). When the data we are using comes directly from [standard document or widget fields](/reference/field-types/an-overview), normal templates already have it ready to use. But what if the data we want to display needs to be freshly queried from the database or fetched from a third-party source?
+Writing template files is how we turn data into HTML to display in browsers (or any number of other interfaces). When the data we are using comes directly from [standard document or widget fields](/reference/field-types/index.md), normal templates already have it ready to use. But what if the data we want to display needs to be freshly queried from the database or fetched from a third-party source?
 
 **Async components** offer a great way to use data from asynchronous requests in templates. They also make it easy to *reuse* that template code. For developers familiar with the previous major version of Apostrophe, this replaces some clunkier and less clear ways to use async data in templates.
 
