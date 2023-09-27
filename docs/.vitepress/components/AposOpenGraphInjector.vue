@@ -49,7 +49,6 @@ export default {
     });
 
     watch(route, () => {
-      console.log('Route changed')
       updateOpenGraphTags();
     });
 
