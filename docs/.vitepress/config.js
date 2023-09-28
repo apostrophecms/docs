@@ -42,7 +42,27 @@ export default defineConfig({
     }
   },
   head: [
-    // <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/6104347.js"></script>
+    [
+      'meta',
+      {
+        property: 'og:image',
+        content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
+      }
+    ],
+    [
+      'meta',
+      {
+        property: 'og:image:width',
+        content: '2400'
+      }
+    ],
+    [
+      'meta',
+      {
+        property: 'og:image:height',
+        content: '1260'
+      }
+    ],
     [
       'script',
       {
