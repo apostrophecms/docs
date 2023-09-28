@@ -218,7 +218,7 @@ Several other Markdown shortcuts are enabled by default, including double tilde 
 | `mark` | `==highlight==` | Default |
 | `hr` | `---` | Default |
 
-:::note
+::: info
 Spaces in the syntax between the symbol and any text in the table are required, e.g., `## heading`. Equally, a lack of space between symbols and any text is also required for proper formatting, e.g., `**bold**`.
 :::
 ### Configuring the `image` toolbar and insert menu option

@@ -18,7 +18,7 @@ First, you must [install WSL according to the documentation](https://docs.micros
 
 Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl`.
 
-::: note
+::: info
 From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
 :::
 
@@ -99,7 +99,7 @@ You should only have to do this once to clean up the mess. In the future, **just
 Another possibility is that you tried to write `--dbpath=~/mongodb-data/6.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
 :::
 
-::: note
+::: info
 If typing this every time seems like a pain, try adding this line to your `.bashrc` file:
 
 ```bash

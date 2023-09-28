@@ -61,7 +61,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-::: note
+::: info
 When using Gmail as the SMTP email relay, you need to make sure that the "from" address of your email matches the user name added to the nodemailer configuration. You will likely also have to allow [less secure apps](https://myaccount.google.com/lesssecureapps) and [disable Captcha]( https://accounts.google.com/DisplayUnlockCaptcha) from your Google account dashboard.
 :::
 
