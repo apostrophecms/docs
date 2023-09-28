@@ -144,14 +144,6 @@ export default defineConfig({
       }
     ]
   ],
-  transformHead: function ({ pageData }) {
-    const head = [];
-
-    head.push(['meta', { property: 'og:title', content: pageData.title }]);
-    //head.push(['meta', { property: 'og:description', content: pageData.frontmatter.description }]);
-
-    return head;
-  },
   buildEnd: async ({ outDir, ...siteData }) => {
     console.log('Generating sitemap', siteData);
     const sitemap = new SitemapStream({
