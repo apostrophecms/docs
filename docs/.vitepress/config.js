@@ -144,24 +144,16 @@ export default defineConfig({
       }
     ]
   ],
-  buildEnd: async ({ outDir, ...siteData }) => {
-    console.log('Generating sitemap', siteData);
-    const sitemap = new SitemapStream({
-      hostname: 'https://v3.docs.apostrophecms.org/'
-    });
-    // const pages = await createContentLoader('*.md').load()
-    const writeStream = createWriteStream(resolve(outDir, 'sitemap.xml'));
+  sitemap: {
+    hostname: 'https://v3.docs.apostrophecms.org/',
+    transformItems: (items) => {
+      items.forEach(page => {
+        page.changefreq = 'monthly';
+      });
 
-    sitemap.pipe(writeStream);
-    siteData.pages.forEach((page) =>
-      sitemap.write({
-        url: page,
-        changefreq: 'daily'
-      })
-    );
-    sitemap.end();
-
-    await new Promise((r) => writeStream.on('finish', r));
+      console.log('items', items);
+      return items;
+    }
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
@@ -171,8 +163,8 @@ export default defineConfig({
         scopeName: 'text.html.njk',
         grammar: require('./theme/njk-html.tmLanguage.json'),
         displayName: 'Nunjucks',
-        embeddedLangs: ['html'],
-        aliases: ['njk', 'nunjucks']
+        embeddedLangs: [ 'html' ],
+        aliases: [ 'njk', 'nunjucks' ]
       }
     ]
   },
