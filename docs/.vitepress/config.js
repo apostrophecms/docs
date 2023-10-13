@@ -165,7 +165,7 @@ export default defineConfig({
   },
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
-    let description = await processText(docText);
+    const description = await processText(docText);
     const returnedArray = [
       [
         'meta',
