@@ -46,7 +46,7 @@ export default defineConfig({
       'meta',
       {
         property: 'og:image',
-        content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
+        content: 'https://v3.docs.apostrophecms.org/images/apos-dark.png'
       }
     ],
     [
@@ -569,4 +569,17 @@ function getItemRefs(
           : `${folder}/${filename}`
       };
     });
+}
+
+function addOgMeta() {
+  console.log('Adding og meta', process.env.NODE_ENV);
+  const meta =
+    [
+      'meta',
+      {
+        property: 'og:image',
+        content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
+      }
+    ];
+  return meta;
 }
