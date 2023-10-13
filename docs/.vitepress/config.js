@@ -5,6 +5,8 @@ import { defineConfig } from 'vitepress';
 import { fileURLToPath, URL } from 'node:url';
 import { readdirSync } from 'node:fs';
 import { join } from 'path';
+import { JSDOM } from 'jsdom';
+import nlp from 'compromise';
 
 export default defineConfig({
   title: 'ApostropheCMS',
@@ -42,27 +44,6 @@ export default defineConfig({
     }
   },
   head: [
-    [
-      'meta',
-      {
-        property: 'og:image',
-        content: 'https://v3.docs.apostrophecms.org/images/apos-dark.png'
-      }
-    ],
-    [
-      'meta',
-      {
-        property: 'og:image:width',
-        content: '2400'
-      }
-    ],
-    [
-      'meta',
-      {
-        property: 'og:image:height',
-        content: '1260'
-      }
-    ],
     [
       'script',
       {
@@ -165,7 +146,6 @@ export default defineConfig({
     ]
   ],
   buildEnd: async ({ outDir, ...siteData }) => {
-    console.log('Generating sitemap', siteData);
     const sitemap = new SitemapStream({
       hostname: 'https://v3.docs.apostrophecms.org/'
     });
@@ -182,6 +162,48 @@ export default defineConfig({
     sitemap.end();
 
     await new Promise((r) => writeStream.on('finish', r));
+  },
+  transformHead: async (context) => {
+    const docText = await parseContent(context.content);
+    let description = await processText(docText);
+    const returnedArray = [
+      [
+        'meta',
+        {
+          property: 'og:title',
+          content: context.pageData.title
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:description',
+          content: description
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:image',
+          content: 'https://v3.docs.apostrophecms.org/images/apos-dark.png'
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:image:width',
+          content: '1200'
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:image:height',
+          content: '630'
+        }
+      ]
+    ];
+    return returnedArray;
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
@@ -377,7 +399,7 @@ export default defineConfig({
           { text: 'Template filters', link: 'guide/template-filters.md' },
           { text: 'Template fragments', link: 'guide/fragments.md' },
           { text: 'Async Components', link: 'guide/async-components.md' },
-          { text: 'Custom Nunjucks tags', link: 'reference/template-tags.md' },
+          { text: 'Custom Nunjucks tags', link: 'reference/template-tags.md' }
         ]
       },
       {
@@ -571,15 +593,43 @@ function getItemRefs(
     });
 }
 
-function addOgMeta() {
-  console.log('Adding og meta', process.env.NODE_ENV);
-  const meta =
-    [
-      'meta',
-      {
-        property: 'og:image',
-        content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
-      }
-    ];
-  return meta;
+async function parseContent(htmlBlock) {
+  const dom = new JSDOM(htmlBlock);
+  const h1Element = dom.window.document.querySelector('h1');
+  let textContent;
+
+  if (h1Element) {
+    const parentElement = h1Element.parentElement;
+    parentElement.removeChild(h1Element);
+    textContent = parentElement.textContent.trim();
+  }
+  return textContent;
+}
+
+async function processText(htmlBlock) {
+  if (!htmlBlock) {
+    return '';
+  }
+  const truncate = (str, length) => {
+    if (str.length <= length) return str;
+    const trimmedStr = str.substr(0, length);
+    return (
+      trimmedStr.substr(
+        0,
+        Math.min(trimmedStr.length, trimmedStr.lastIndexOf(' '))
+      ) + '...'
+    );
+  };
+  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function(match) {
+    if (match === '\u200B') {
+      return ' ';
+    }
+    return '';
+  });
+
+  const analysis = nlp(strippedHTML);
+  const sentences = analysis.sentences().out('array');
+  let summary = sentences.join(' ');
+  summary = truncate(summary, 300);
+  return summary;
 }

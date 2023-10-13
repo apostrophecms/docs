@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "body-scroll-lock": "^4.0.0-beta.0",
+    "compromise": "^14.10.0",
+    "jsdom": "^22.1.0",
     "vitepress-plugin-pagefind": "^0.2.4",
     "vue": "^3.3.4",
     "vue-inline-svg": "^3.1.2",
