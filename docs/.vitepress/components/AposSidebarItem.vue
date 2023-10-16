@@ -74,10 +74,13 @@ let hasActiveChild = false;
 if (props.item.items) {
   hasActiveChild = checkForActivePage(props.item.items, page.value);
 }
-
-myCollapsed.value = props.item.items ? !hasActiveChild : null;
+myCollapsed.value = props.item.items ? (!hasActiveChild) : null;
 myHasActive.value = hasActiveChild;
 
+// if the item has been configured not to collapse, then don't collapse it
+if (props.item.collapsed === false) {
+  myCollapsed.value = false;
+}
 
 const classes = computed(() => [
   [`level-${props.depth}`],
@@ -87,7 +90,6 @@ const classes = computed(() => [
   { 'is-active': myIsActive.value },
   { 'has-active': myHasActive.value }
 ])
-
 
 function onItemInteraction(e: MouseEvent | Event) {
   if ('key' in e && e.key !== 'Enter') {

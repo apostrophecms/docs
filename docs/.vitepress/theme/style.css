@@ -23,6 +23,25 @@
 }
 
 /**
+ * Typography
+ * -------------------------------------------------------------------------- */
+main h1, .vp-doc h1 {
+  font-size: 1.8rem !important;
+}
+main h2, .vp-doc h2 {
+  font-size: 1.6rem !important;
+}
+main h3, .vp-doc h3 {
+  font-size: 1.4rem !important;
+}
+main h4, .vp-doc h4 {
+  font-size: 1.2rem !important;
+}
+main h5, .vp-doc h5 {
+  font-size: 1rem !important;
+}
+
+/**
  * Component: Button
  * -------------------------------------------------------------------------- */
 
@@ -94,3 +113,10 @@
   --docsearch-primary-color: var(--vp-c-brand) !important;
 }
 
+/**
+ * Component: Sidebar
+ * -------------------------------------------------------------------------- */
+
+.group {
+  margin-bottom: 20px;
+}
