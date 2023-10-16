@@ -145,23 +145,14 @@ export default defineConfig({
       }
     ]
   ],
-  buildEnd: async ({ outDir, ...siteData }) => {
-    const sitemap = new SitemapStream({
-      hostname: 'https://v3.docs.apostrophecms.org/'
-    });
-    // const pages = await createContentLoader('*.md').load()
-    const writeStream = createWriteStream(resolve(outDir, 'sitemap.xml'));
-
-    sitemap.pipe(writeStream);
-    siteData.pages.forEach((page) =>
-      sitemap.write({
-        url: page,
-        changefreq: 'daily'
-      })
-    );
-    sitemap.end();
-
-    await new Promise((r) => writeStream.on('finish', r));
+  sitemap: {
+    hostname: 'https://v3.docs.apostrophecms.org/',
+    transformItems: (items) => {
+      items.forEach(page => {
+        page.changefreq = 'monthly';
+      });
+      return items;
+    }
   },
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
@@ -213,8 +204,8 @@ export default defineConfig({
         scopeName: 'text.html.njk',
         grammar: require('./theme/njk-html.tmLanguage.json'),
         displayName: 'Nunjucks',
-        embeddedLangs: ['html'],
-        aliases: ['njk', 'nunjucks']
+        embeddedLangs: [ 'html' ],
+        aliases: [ 'njk', 'nunjucks' ]
       }
     ]
   },
