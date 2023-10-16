@@ -150,8 +150,6 @@ export default defineConfig({
       items.forEach(page => {
         page.changefreq = 'monthly';
       });
-
-      console.log('items', items);
       return items;
     }
   },
