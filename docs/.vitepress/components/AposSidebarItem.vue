@@ -16,6 +16,11 @@ watch(page, newValue => {
     const hasActiveChild = checkForActivePage(props.item.items, newValue);
     myCollapsed.value = (!hasActiveChild && !myIsActive.value);
     myHasActive.value = hasActiveChild;
+
+    // if the item has been configured not to collapse, then don't collapse it
+    if (props.item.collapsed === false) {
+      myCollapsed.value = false;
+    }
   }
 })
 
