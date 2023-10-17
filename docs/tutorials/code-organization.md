@@ -28,7 +28,6 @@ node app @apostrophecms/user:add <user-name> <user-role>
 
 ## Essentials starter kit organization
 
-![screenshot of the Apostrophe boilerplate directory structure](images/sec2-1b-directory.png)
 
 ### `app.js`
 At the root level of your project is the `app.js` file. This file is used to register any modules that are being used in the project. It can also be used to initialize other services that should be started when the project spins up, for example, site telemetry. You can pass some configuration options, like class names for core widgets, but most options should be passed in the individual module files.
@@ -39,7 +38,6 @@ Also at the root of your project is the `views` folder. This folder contains the
 ### `modules`
 The modules folder is where you will add all of your project-specific modules. Within the `modules` folder, there are three additional folders in the essentials project.
 
-![screenshot of the open modules folder](images/sec2-1b-modules-folder.png)
 
 The topmost of these is the `@apostrophecms` folder. Any modules in this folder will implicitly `improve` the core Apostrophe module of the same name. Any module which then `extends` that core module will also have access to these improvements. We will come back to `improve` and `extend` later in this tutorial. From within your project, you can see what modules are part of core by navigating to the `node_modules/apostrophe/modules/@apostrophecms` folder. Note: there is a `node_modules/@apostrophecms` folder. This is used for additional extensions added from your package manager, not for the core modules.
 
@@ -49,7 +47,6 @@ We will touch on the other two folders within `modules/`, `asset` and `default-p
 
 ### `package.json`
 
-![boilerplate package.json code](images/sec2-1b-package.png)
 As with all Node.js apps, the `package.json` file plays a vital role in managing Apostrophe projects. It allows developers to define and control project dependencies, set up custom scripts for various tasks, and provide essential information about the project. In the case of the A3 essentials starter kit, it sets up several useful scripts that we use to build and run our project. You will end up using `npm run dev` quite a bit during local development!
 
 ### `public`
