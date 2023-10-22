@@ -1,6 +1,7 @@
 ---
-prev: false
-next: false
+next:
+  text: 'Code Organization - Modules'
+  link: '/guide/modules.html'
 ---
 # Windows development environment
 
