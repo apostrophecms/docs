@@ -3,7 +3,7 @@ const sidebarTutorials = [
     text: 'Basic Tutorials',
     collapsed: false,
     items: [
-      { text: 'Introduction', link: 'tutorials/' },
+      { text: 'Introduction', link: 'tutorials/introduction.md' },
       { text: 'Code Organization', link: 'tutorials/code-organization.md' },
       { text: 'Creating Pages', link: 'tutorials/pages.md' },
       { text: 'Add CSS and JS Assets', link: 'tutorials/assets.md' },
