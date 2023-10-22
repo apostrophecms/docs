@@ -1,3 +1,6 @@
+---
+next: false
+---
 # Adding extensions to your project
 
 Extensions are a way to easily add functionality to your project, whether by adding modules created by other developers, or a set of self-developed, custom modules that get installed in your project. Apostrophe's own library of extension also contains great examples for learning Apostrophe's codebase.
