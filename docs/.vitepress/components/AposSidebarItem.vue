@@ -306,7 +306,6 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: -7px;
   width: 32px;
   height: 32px;
   color: var(--vp-c-text-3);
@@ -318,8 +317,7 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: -7px;
-  width: 32px;
+  width: 0;
   height: 32px;
 }
 

@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Welcome to the Tutorials Section
 
 This section is designed to offer comprehensive, step-by-step exploration of various topics, complete with practical applications that go beyond the technical explanations found in our Guide or Reference sections. Whether you're a beginner looking to build foundational knowledge or an advanced user aiming to master intricate features, our tutorials are tailored to facilitate in-depth understanding and hands-on experience.
