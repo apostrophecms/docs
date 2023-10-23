@@ -6,6 +6,7 @@ const sidebarGuide = [
     text: 'Getting Started',
     collapsed: false,
     items: [
+      { text: 'Introduction', link: 'guide/introduction.md' },
       { text: 'Why Apostrophe', link: 'guide/why-apostrophe.md' },
       { text: 'Technical Overview', link: 'guide/technical-overview.md' },
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
