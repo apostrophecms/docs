@@ -128,6 +128,7 @@ const sidebarGuide = [
       { text: 'Custom Field Types', link: 'guide/custom-schema-field-types.md' },
       { text: 'Custom Auth Requirements', link: 'guide/custom-login-requirements.md' },
       { text: 'Webpack Configuration', link: 'guide/webpack.md' },
+      { text: 'Using pnpm', link: 'guide/using-pnpm.md' },
       { text: 'Webhooks', link: 'cookbook/creating-webhooks.md' },
     ]
   },

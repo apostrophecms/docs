@@ -1,11 +1,3 @@
----
-prev:
-  text: 'User and User Roles'
-  link: 'guide/users.md'
-next:
-  text: 'Static i10n'
-  link: 'guide/localization/static.md'
----
 # Localization in Apostrophe
 
 For Apostrophe, "localization," often abbreviated as **l10n**, is the process of adapting the Apostrophe user interface and Apostrophe website content for different "locales," or groups of people (usually based on language and country). This can include text translation, date formats, content variation, and much more.
