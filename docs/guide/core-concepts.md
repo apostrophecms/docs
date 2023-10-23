@@ -31,8 +31,6 @@ Out of the box, Apostrophe defines a `home-page` type for you that is "parked" a
 ::: info
 📌 For additional information on configuring pages, see [Page Templates](https://v3.docs.apostrophecms.org/guide/pages.html) in the Apostrophe docs.
 :::
-<br/>
-
 
 ## Pieces
 
@@ -44,8 +42,9 @@ Pieces can be displayed using pieces pages, which are specialized page types, or
 
 Common examples of pieces are articles, events, or products.
 
-<aside>
-📌 For additional information on schema field types, see the [Schema Field Type reference](https://v3.docs.apostrophecms.org/reference/field-types/) in the Apostrophe docs. </aside>
+::: info
+📌 For additional information on schema field types, see the [Schema Field Type reference](https://v3.docs.apostrophecms.org/reference/field-types/) in the Apostrophe docs.
+:::
 
 ## Widgets
 
@@ -57,6 +56,6 @@ Apostrophe provides several simple widgets to help you get started building your
 
 Common examples of widgets are Rich Text Widgets, Image Widgets, Slideshow Widgets, or an Article Widget.
 
-<aside>
+::: info
 📌 For a list of the included widgets, see [Standard (Included) Widgets](https://v3.docs.apostrophecms.org/guide/core-widgets.html) in the Apostrophe docs.
-</aside>
+:::
