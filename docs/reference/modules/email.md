@@ -12,7 +12,7 @@ This module manages general email functionality that Apostrophe modules use. The
 
 |  Property | Type | Description |
 |---|---|---|
-|`from` | String | The default "from" address," either as the email address or with full name (e.g., `'"Jane Doe" <jane@doe.com>'`). |
+|`from` | String | The default "from" address, either as the email address or with full name (e.g., `'"Jane Doe" <jane@doe.com>'`). |
 |`nodemailer` | Object | An options object for Nodemailer. Required for sending email unless the transport is directly set on `self.transport`. It is passed to nodemailer's `createTransport` method. See the [Nodemailer](https://nodemailer.com/smtp/) documentation. |
 
 
@@ -27,6 +27,7 @@ If using a pre-configured Nodemailer transport package that must be passed to th
 
   module.exports = {
     options: {
+      from: '"Jane Doe" <jane.doe@my-website.com>',
       nodemailer: mailjetTransport({
         /// Mailjet configuration...
       })
