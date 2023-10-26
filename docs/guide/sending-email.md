@@ -109,7 +109,7 @@ The `data` parameter takes an object that will be passed to the Nunjucks templat
 
 The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`.  The `from` parameter can alternatively be given a default by setting the `{ email: { from: 'some@address.com' } }` option in the module that is calling `self.email`, or by setting the `from: 'some@address.com'` option (not nested in a parent option) on the `@apostrophecms/email` module itself.  The `from` address used will then be (1) the `from` property given in the final parameter to `sendEmail`, or (2) the `from` subproperty of the `email` option configured on the module sending the email, or (3) the `from` option configured on the `@apostrophecms/email` module, in that order.
 
-### Example usage
+### Example usage setting `from` in `sendEmail`
 
 <AposCodeBlock>
 
@@ -165,6 +165,35 @@ module.exports = {
 </AposCodeBlock>
 
 In this example, we are creating a custom piece type that implements an article. The `afterSave` server event property is being added to the `handlers()` function. This event is emitted any time this custom module saves a new article and runs the function that is being passed in as a value. This function, in turn, sends out an email to the site editors. The data coming from the piece is passed into the `email.html` template through the `data` argument to add the title and blurb for the editors to review.
+
+### Example usage setting `from` in the module configuration
+
+<AposCodeBlock>
+
+``` javascript
+module.exports = {
+  options: {
+    // Allow password reset, requires that the `@apostrophecms/email` module
+    // is configured
+    passwordReset: true,
+    // Limit validity of reset token to 12 hours, 48 is the default
+    passwordResetHours: 12,
+    // Set specific `from` address for password reset
+    // This will override a default password set in the `@apostrophecms/email`
+    // module configuration
+    email: {
+      from: '"Password Assistance" <password.assistance@mysite.com>'
+    }
+  },
+}
+```
+<template v-slot:caption>
+  modules/@apostrophecms/login
+</template>
+
+</AposCodeBlock>
+
+In this example, we are setting a unique `from` address for the e-mail that is sent to users when they want to reset their login password. This address will override any address set in the `@apostrophecms/email` options. Note, that if you pass a `from` property in the `options` object of `sendEmail()` it will **not* be overridden by this module option. 
 
 ## Debugging email delivery without sending
 
