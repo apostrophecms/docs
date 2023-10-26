@@ -21,6 +21,7 @@ This module manages general email functionality that Apostrophe modules use. The
 If using a pre-configured Nodemailer transport package that must be passed to the Nodemailer `createTransport` method (e.g., `nodemailer-mailjet-transport`, `nodemailer-mailgun-transport`), you may assign that package to the `nodemailer` option as well.
 
 <AposCodeBlock>
+
   ```javascript
   const mailjetTransport = require('nodemailer-mailjet-transport');
 
@@ -31,7 +32,7 @@ If using a pre-configured Nodemailer transport package that must be passed to th
       })
     }
   };
-  ````
+  ```
   <template v-slot:caption>
     modules/@apostrophecms/email/index.js
   </template>
@@ -40,6 +41,7 @@ If using a pre-configured Nodemailer transport package that must be passed to th
 If needed, you may assign the *fully* created transport directly to `self.transport` and omit the `nodemailer` option.
 
 <AposCodeBlock>
+
   ```javascript
   const nodemailer = require('nodemailer');
   const mailjetTransport = require('nodemailer-mailjet-transport');
@@ -53,7 +55,7 @@ If needed, you may assign the *fully* created transport directly to `self.transp
       })
     }
   };
-  ````
+  ```
   <template v-slot:caption>
     modules/@apostrophecms/email/index.js
   </template>
