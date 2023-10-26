@@ -1,6 +1,6 @@
 const sidebarTutorials = [ 
   {
-    text: 'A Comprehensive Guide to<wbr> Web Development with ApostropheCMS',
+    text: 'Learn ApostropheCMS',
     collapsed: false,
     items: [
       { text: 'Introduction', link: 'tutorials/introduction.md' },
@@ -15,16 +15,22 @@ const sidebarTutorials = [
     ]
   },
   {
-    text: 'From HTML to ApostropheCMS',
-    link: 'tutorials/html-conversion.md'
-  },
-  {
-    text: 'Composing custom schema fields from standard fields',
-    link: 'tutorials/reusing-standard-fields.md'
-  },
-  {
-    text: 'Building navigation',
-    link: 'tutorials/building-navigation.md'
+    text: 'Beyond the Basics',
+    collapsed: false,
+    items: [
+      {
+        text: 'From HTML to ApostropheCMS',
+        link: 'tutorials/html-conversion.md'
+      },
+      {
+        text: 'Composing custom schema fields from standard fields',
+        link: 'tutorials/reusing-standard-fields.md'
+      },
+      {
+        text: 'Building navigation',
+        link: 'tutorials/building-navigation.md'
+      }
+    ]
   },
   {
     icon: 'book',
