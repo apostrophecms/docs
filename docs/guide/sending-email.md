@@ -107,7 +107,7 @@ The next parameter, `template`, takes the name of a Nunjucks template that will 
 
 The `data` parameter takes an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through `data.property` within the template.
 
-The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`. Any of these can have defaults set in the `options` of the `@apostrophecms/email` module, just like the transport. Any parameters specified in an individual method call will override those set in this manner.
+The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`.  The `from` parameter can alternatively be given a default by setting the `{ email: { from: 'some@address.com' } }` option in the module that is calling `self.email`, or by setting the `from: 'some@address.com'` option (not nested in a parent option) on the `@apostrophecms/email` module itself.  The `from` address used will then be (1) the `from` property given in the final parameter to `sendEmail`, or (2) the `from` subproperty of the `email` option configured on the module sending the email, or (3) the `from` option configured on the `@apostrophecms/email` module, in that order.
 
 ### Example usage
 
