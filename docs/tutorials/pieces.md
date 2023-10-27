@@ -1107,6 +1107,58 @@ Now with styling added, our review widget would look better, but we still need t
 
 > Unless you have added content, including reviews and category pages for any review types, the links for this widget won't be correctly formed. That is because each review document depends on having a computed `_parentURL` to create the link.
 
+#### Fixing the Bootstrap styling issue
+
+![Screenshot of the UI problem with the radio selector caused by Bootstrap](../images/sec2-5-bootstrap-fix.png)
+
+The Apostrophe Admin UI styling is designed to be agnostic with regard to your project styling. In this case, the stylesheet that Bootstrap is using to normalize or reset all the base browser styling is causing a problem with the Apostrophe `radio` schema input field. The choices for where we want our image when we are displaying a single review piece are pushed off the right side of the page due to a rule on the `legend` selector. To fix this we need to add some additional styling.
+
+Open the `modules/asset/ui/src/scss` folder and create a `_bootstrap-fixes.scss` file. Add the following code:
+
+<AposCodeBlock>
+
+``` scss
+legend {
+  float: unset;
+}
+```
+  <template v-slot:caption>
+    modules/asset/ui/src/scss/_bootstrap-fixes.scss
+  </template>
+
+</AposCodeBlock>
+
+Next, open the `modules/asset/ui/src/index.scss` file and add an import for the new partial:
+
+<AposCodeBlock>
+
+``` javascript
+/*
+Anything in this file will be compiled into the final CSS file.
+Apostrophe automatically includes the index.scss file from any
+module that has a ui/src directory.
+*/
+
+// Add theme SASS variables
+@import './scss/_theme-settings';
+// Add theme fonts and base styles
+@import './scss/_theme-main';
+// Add styling for theme topbar
+@import './scss/_theme-topbar';
+// Add styling for reviews
+@import './scss/_theme-reviews';
+// Add fix for Bootstrap
+@import './scss/bootstrap-fixes';
+
+// Add theme framework styles
+@import 'bootstrap';
+```
+  <template>
+    modules/asset/ui/src/index.scss
+  </template>
+
+</AposCodeBlock>
+
 ## Adding pieces to the footer
 
 ![Screenshot of the footer with the review pieces added.](../images/sec2-5-footer-reviews.png)
