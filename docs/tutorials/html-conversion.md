@@ -216,7 +216,7 @@ In this code block, we are surrounding one of the list items with our `for` loop
 
 All of the styling for our menu and each of the items will come from the Bootstrap class names we copied over with the HTML markup.
 
-Next, we need to add the schema fields to populate our navigation menu. If your project doesn't already contain one, create a `modules/@apostrophecms/global/index.js` file. Our [tutorial](building-navigation.md) in the recipes section has some more complicated methods for adding navigation. In this case, we are going to add a simple array schema field with a relationship to our pages.
+Next, we need to add the schema fields to populate our navigation menu. If your project doesn't already contain one, create a `modules/@apostrophecms/global/index.js` file. Our [tutorial](/tutorials/building-navigation.md) section has some more complicated methods for adding navigation. In this case, we are going to add a simple array schema field with a relationship to our pages.
 
 <AposCodeBlock>
 
