@@ -5,10 +5,15 @@ Throughout this tutorial, we will incrementally construct a sample website using
 
 We have structured this project into distinct sections, each focusing on a specific building block of ApostropheCMS. These sections are interdependent, often expanding or refining the code from the preceding ones. Depending on the complexity of the topic, each section may be broken up into several shorter tutorials. To offer you a comprehensive view of the development process, the completed project's code is available on the `main` branch of our [GitHub project repository](https://github.com/apostrophecms/a3-onboarding-project). 
 
-For each tutorial, we will add a new branch to our repository, which will include the cumulative progress from all preceding tutorials. This allows you to follow along at your own pace. At the start of each tutorial, you'll be directed to the appropriate branch of the repository to check out.
+For each tutorial, we will add a new branch to our repository, which will include the cumulative progress from all preceding tutorials. This allows you to follow along at your own pace. At the start of each tutorial, you'll be directed to the appropriate branch of the repository. You can then use `git switch <branch-name>` to open the branch locally.
 
-## Summary of what we are covering per section
----
+If you want to start the project locally, when you first clone it you will have to run `npm install`. After the install, run `node app @apostrophecms/user:add admin admin` to add an admin user. With each branch you switch to you should run `npm update`.
+
+The main branch has a folder named `database-backup`. This folder contains the final project database populated with pieces and pages. You can copy this database to your local MongoDB server at any time using `npm run copy-db`. Note that this will completely overwrite your existing database for this project, including your users. After running this command you will have to create a new admin user. Also of note, if you spin up a project from a branch other than `main` you may get errors because of content being added to pages for which modules haven't been created. These errors shouldn't cause the site to crash. Just be aware of this fact.
+
+The main branch also has all the images used in the final site, located at `public/uploads/attachments`. The majority of images come from [Unsplash](https://unsplash.com) and that folder also contains a file, `unsplash-credit.json` with the author credits for the images.
+
+## **Summary of what we are covering per section**
 
 ## Code Overview
 
@@ -123,7 +128,7 @@ Let's delve into the specific topics we'll cover from the ApostropheCMS document
 
 - **Adding a Button:** We'll walk you through the process of adding a custom button to the admin bar and setting up listeners. This can be used to create dynamic responses to user actions, enhancing the interactivity of your CMS.
 
-- **Customizing the Personal Settings Menu:** Finally, we will take a look at customizing the personal settinds menu. This menu can be set-up to allow editors to change their password and language preferences. We will also look at how to add additional functionality to this menu.
+- **Customizing the Personal Settings Menu:** Finally, we will take a look at customizing the personal settings menu. This menu can be set-up to allow editors to change their password and language preferences. We will also look at how to add additional functionality to this menu.
 
 By the end of this tutorial, you'll be adept at modifying the admin bar, tailoring it to best suit the needs of your editors.
 

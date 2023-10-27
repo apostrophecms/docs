@@ -379,10 +379,322 @@ helpers(self) {
 
 In order to pass our environmental variable to the template, we are going to use a `helper()` configuration method in our asset module. This method essentially adds helper functions to the Nunjucks templates. In this case, we are adding a simple function, `async debugMode()`, that doesn't take any arguments. You can see by the function declaration that you could leverage the 'await' keyword to pause execution until a Promise is resolved, ensuring sequential execution where necessary. In this case, we are simply checking the `DEBUG` environment value and passing a boolean to the template based on that value. In the first line of code in the template, `{% set debugMode = apos.modules['asset'].debugMode() %}` we are calling the method. Since the template is located within the top-level `views` folder we need to use `apos.modules['asset']` to identify the module supplying the method. Let's reiterate, in this instance we're not passing any arguments from the template to the method. However, in your custom helpers, you might want to pass a value such as `data.piece.productPrice`. This could be useful, for instance, when calculating a sale price or regional taxes. Finally, we check that the returned value is `true`, indicating that the project was started with the `DEBUG` environment variable set to `true`. This results in the `debugMode` variable in our template being set to true, allowing the breadcrumb navigation to be rendered. To see your breadcrumbs start the site using `DEBUG=true npm run dev`.
 
-### Summary and next steps
+## Adding quick links to the footer
+In addition to primary navigation elements like breadcrumbs and menus, a website's footer serves as a secondary navigation area that's crucial for enhancing the user experience. One common feature is a section for 'Quick Links,' which provides easy access to important pages on your site or to external resources. Currently, our quick links section is populated with hard-coded links. To convert this to user selected links we are going to reuse code that we already added to the `modules/@apostrophecms/global/index.js` file. Open that file and add the following into the `add` object of the `property` below the `primaryNav` array field:
+
+<AposCodeBlock>
+
+``` javascript
+quickLinks: {
+  label: 'Quick links',
+  type: 'array',
+  titleField: 'label',
+  help: 'Add, remove, and reorder navigation items.',
+  // The array schema for each item
+  fields: {
+    add: {
+      label: {
+        label: 'Nav item label',
+        type: 'string'
+      },
+      type: {
+        label: 'Link type',
+        type: 'select',
+        choices: [
+          {
+            label: 'Page',
+            value: 'page'
+          },
+          {
+            label: 'Custom URL',
+            value: 'custom'
+          }
+        ]
+      },
+      _page: {
+        label: 'Page to link',
+        type: 'relationship',
+        withType: '@apostrophecms/page',
+        max: 1,
+        required: true,
+        builders: {
+          project: {
+            title: 1,
+            _url: 1
+          }
+        },
+        // Only if it's a page link
+        if: {
+          type: 'page'
+        }
+      },
+      customUrl: {
+        label: 'URL for custom link',
+        type: 'url',
+        required: true,
+        // Only if it's a custom link
+        if: {
+          type: 'custom'
+        }
+      },
+      // A nice option to have the link open in a new tab
+      target: {
+        label: 'Will the link open a new browser tab?',
+        type: 'checkboxes',
+        choices: [
+          {
+            label: 'Open in new tab',
+            value: '_blank'
+          }
+        ]
+      }
+    }
+  }
+},
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/global/index.js
+  </template>
+
+</AposCodeBlock>
+
+This code almost completely duplicates the `primaryNav` field. In a real production site we would likely factor the fields for each array out into a separate file to be imported and added, rather than duplicating the code. Add the `quickLinks` to the `footer` tab of the groups:
+
+<AposCodeBlock>
+
+``` javascript
+group: {
+  navigation: {
+    label: 'Navigation',
+    fields: [ 'primaryNav' ]
+  },
+  footer: {
+    label: 'Footer',
+    fields: ['_featuredPost', 'quickLinks' ]
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/global/index.js
+  </template>
+
+</AposCodeBlock>
+
+### Modifying the `footer.html` fragment
+To display our new `quickLinks`, we need to change the Nunjucks markup for the first column in the div with a class of row. Replace the entire first column (with classes of `col-lg-4` and `py-3`) with the following:
+
+<AposCodeBlock>
+
+``` nunjucks
+<div class="col-lg-4 py-3">
+  <h2 class="fw-bold h5 mb-4 text-primary text-uppercase">Quick Links</h2>
+  <div class="row">
+    <div class="col-sm-6">
+      <ul class="list-unstyled">
+        {% for item in data.global.quickLinks %}
+          <li class="mb-3">
+            {% set path = '' %}
+            {% if item.type === 'page' and item
+              ._page and item
+              ._page[0] %}
+              {% set path = item
+                ._page[0]
+                ._url %}
+            {% elif item.type === 'custom' %}
+              {% set path = item.customUrl %}
+            {% endif %}
+            <a href="{{ path }}" class="text-secondary" {% if item.target[0] === '_blank' %} target="_blank" {% endif %}>{{ item.label }}</a>
+          </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="col-sm-6">
+      <ul class="list-unstyled">
+        <li class="mb-3">
+          <a href="#" class="text-secondary">Web Design</a>
+        </li>
+        <li class="mb-3">
+          <a href="#" class="text-secondary">Web Development</a>
+        </li>
+        <li class="mb-3">
+          <a href="#" class="text-secondary">WordPress</a>
+        </li>
+        <li class="mb-3">
+          <a href="#" class="text-secondary">Digital Marketing</a>
+        </li>
+        <li class="mb-3">
+          <a href="#" class="text-secondary">Content Writing</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+```
+  <template v-slot:caption>
+    views/fragments/footer.html
+  </template>
+
+</AposCodeBlock>
+
+This will cause the first set of links in the quick links section to be replaced with the user's selection. It uses a `{% for ... in %}` loop to output each item as a list item. As with the `primaryNav` in the `views/fragments/navigation.html` that we added previously in this tutorial, we have some code to correctly set the link if it is a page or custom URL.
+
+## Bonus: Adding social links to the footer
+While the primary function of a website's footer is to assist with internal navigation, it can also serve as a bridge to external platforms, specifically social media channels. Including social media links in your footer is a strategic way to extend the user's journey beyond your website and encourage engagement on various social platforms. Next we will finish out this tutorial by quickly adding social media links using the font-awesome icon set wee installed when creating the `rating-widget` module.
+
+### Adding the schema fields
+We will be adding our fields to select the social media links into the footer, so it makes sense to once again modify the `global` module. Open the `modules/@apostrophecms/global.index.js` file and add the following code to the `add` object of the `fields` property:
+
+<AposCodeBlock>
+
+``` javascript
+socialLinks: {
+  label: 'Social Links',
+  type: 'array',
+  titleField: 'label',
+  fields: {
+    add: {
+      label: {
+        label: 'Social Media Name',
+        type: 'string',
+        required: true
+      },
+      url: {
+        label: 'Account URL',
+        type: 'url',
+        required: true
+      },
+      icon: {
+        label: 'Icon',
+        type: 'select',
+        choices: [
+          {
+            label: 'Facebook',
+            value: 'fab fa-facebook'
+          },
+          {
+            label: 'Twitter',
+            value: 'fab fa-twitter'
+          },
+          {
+            label: 'Instagram',
+            value: 'fab fa-instagram'
+          },
+          {
+            label: 'YouTube',
+            value: 'fab fa-youtube'
+          },
+          {
+            label: 'Pinterest',
+            value: 'fab fa-pinterest'
+          },
+          {
+            label: 'LinkedIn',
+            value: 'fab fa-linkedin'
+          },
+          {
+            label: 'RSS',
+            value: 'fas fa-rss'
+          }
+        ],
+        required: true,
+        def: 'fa-brands fa-facebook'
+      }
+    }
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/global/index.js
+  </template>
+
+</AposCodeBlock>
+
+First up we are asking for the name of the social media network. This isn't really needed for the end markup, the first field in an array will give it a name in the list of array items. Next, we are capturing the link address, and finally we are providing an icon through a `select` field. The values for each choice are the font-awesome classes for that social network.
+
+Make sure to add your new array field to the footer tab.
+<AposCodeBlock>
+
+``` javascript
+group: {
+  navigation: {
+    label: 'Navigation',
+    fields: [ 'primaryNav' ]
+  },
+  footer: {
+    label: 'Footer',
+    fields: ['_featuredPost', 'quickLinks', 'socialLinks' ]
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/global/index.js
+  </template>
+
+</AposCodeBlock>
+
+### Adding social links to the footer markup
+Open the `views/fragments/footer.html` file and replace the code for the third column with the following code:
+
+<AposCodeBlock>
+
+``` nunjucks
+<div class="col-lg-4 py-3">
+  <h2 class="fw-bold h5 mb-4 text-primary text-uppercase">Other</h2>
+  <p class="mb-3">Subscribe to our newsletter and get exclusive updates directly in your inbox.</p>
+  <form class="mb-4">
+    <div class="bg-white border input-group overflow-hidden p-1 rounded-pill">
+      <input
+        type="email"
+        class="border-0 form-control pe-3 ps-3"
+        placeholder="Enter email..."
+        aria-label="Recipient's email"
+        aria-describedby="button-addon2"
+        required>
+        <button class="btn btn-primary pb-2 pe-4 ps-4 pt-2 rounded-pill" type="submit" id="button-addon2" aria-label="submit">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="d-inline-block" height="16" width="16">
+            <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454
+              19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+          </svg>
+        </button>
+      </div>
+  </form>
+  <h2 class="fw-bold h5 mb-2 text-primary text-uppercase">Get Social</h2>
+  <div class="d-inline-flex flex-wrap">
+      {% for account in data.global.socialLinks %}
+        {% set path = '' %}
+        {% if account.url %}
+          {% set path = account.url %}
+        {% endif %}
+        <a href="{{ path }}" class="p-1 text-secondary" aria-label="{{ account.label }}" target="_blank"><i class="{{ account.icon }}"></i></a>
+      {% endfor %}
+  </div>
+  <div class="pb-3 pt-3 small">
+    <hr class="mt-0 ">
+    <div class="align-items-center row">
+      <div class="col-md pb-2 pt-2">
+        <p class="mb-0">&copy; 2002 - 2020. All Rights Reserved - Company Name</p>
+      </div>
+      <div class="col-md-auto pb-2 pt-2">
+        <a href="#" class="text-secondary">Privacy Policy</a>
+        |
+        <a href="#" class="text-secondary">Terms of Use</a>
+      </div>
+    </div>
+</div>
+```
+  <template v-slot:caption>
+    views/fragments/footer.html
+  </template>
+
+</AposCodeBlock>
+We are only altering the portion of code in the div below the `Get Social` H2 tag. Once again, we are using a `{% for ... in %}` loop to step through our array elements. This time we are just outputing a link with the URL entered by the user surrounding a span with the icon class names.
+
+## Summary and next steps
 
 In this tutorial, we looked at two different methods for constructing page navigation. The first used the `data` object that Apostrophe makes accessible from every template. For the second we revisited how to use the `@apostrophecms/global` module configuration schema to make data available from any page. For both of these methods, we took advantage of fragments and the `views/layout.html` file to add the navigation to our page. Unlike when we added the topbar and footer fragments, we added multiple fragments to the same file.
 
 Although we only touched on it briefly, we also looked at how to add breadcrumbs to pages. While we only used the `data` object to accomplish this, we could also have used the global configuration. We also added this markup directly into the layout, but we could have easily added it as a fragment in the `views/fragments/navigation.html` file. We also touched on how `helper(self)` configuration methods can manipulate and pass data for use in your templates.
+
+Finally, we looked at how to make the links in our footer more dynamic by allowing the user to add new quick links and social media links through the global site configuration editor.
 
 In the next tutorial, we are going to look at some ways that the admin UI can be altered, including a look at re-organizing the admin-bar and how to configure the Personal Settings menu.
