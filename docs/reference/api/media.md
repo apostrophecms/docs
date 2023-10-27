@@ -1,7 +1,3 @@
----
-prev: false
-next: false
----
 # Media APIs
 
 The `@apostrophecms/attachment` module manages all media file uploading. Once uploaded, an attachment object should typically be added to an Apostrophe piece or page document (including, but not limited to, `@apostrophecms/image` and `@apostrophecms/file` pieces). It is not common, and not generally recommended, to leave uploaded attachments unconnected from any Apostrophe document.

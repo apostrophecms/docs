@@ -6,11 +6,12 @@ const sidebarGuide = [
     text: 'Getting Started',
     collapsed: false,
     items: [
+      { text: 'Introduction', link: 'guide/introduction.md' },
       { text: 'Why Apostrophe', link: 'guide/why-apostrophe.md' },
       { text: 'Technical Overview', link: 'guide/technical-overview.md' },
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
       { text: 'Development Setup', link: 'guide/development-setup.md' },
-      { text: 'Windows Development', link: 'cookbook/windows-development.md' },
+      { text: 'Windows Development', link: 'cookbook/windows-development.md' }
     ]
   },
   {
@@ -129,6 +130,7 @@ const sidebarGuide = [
       { text: 'Custom Field Types', link: 'guide/custom-schema-field-types.md' },
       { text: 'Custom Auth Requirements', link: 'guide/custom-login-requirements.md' },
       { text: 'Webpack Configuration', link: 'guide/webpack.md' },
+      { text: 'Using pnpm', link: 'guide/using-pnpm.md' },
       { text: 'Webhooks', link: 'cookbook/creating-webhooks.md' },
     ]
   },

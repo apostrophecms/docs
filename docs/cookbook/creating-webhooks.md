@@ -1,7 +1,3 @@
----
-prev: false
-next: false
----
 # Creating webhooks
 
 Webhooks allow applications to communicate with each other in real time by sending HTTP requests when certain events or triggers occur. This can allow your site to automatically send notifications when publishing a document or receive updates from payment portals, for example. This short recipe will demonstrate how to set up webhooks in your Apostrophe project.
