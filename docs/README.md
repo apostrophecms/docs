@@ -11,7 +11,7 @@ title: 'Apostrophe 3 Documentation'
 
 ## Apostrophe 3 Documentation
 
-ApostropheCMS is a full-featured, open source CMS built with Node.js that seeks to empower organizations by combining in-context editing and headless architecture in a full-stack JS environment.
+ApostropheCMS is a full-featured, open-source CMS built with Node.js that seeks to empower organizations by combining in-context editing and headless architecture in a full-stack JS environment.
 
 [Demo](http://demo.apostrophecms.com/) · [Roadmap](https://portal.productboard.com/apostrophecms/1-product-roadmap) · [Report v3 Bug](https://github.com/apostrophecms/apostrophe/issues/new?assignees=&labels=3.0,bug&template=bug_report.md&title=)
 
