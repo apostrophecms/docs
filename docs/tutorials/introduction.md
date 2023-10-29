@@ -18,7 +18,7 @@ Before digging into custom code creation, we are going to spin up a new project 
 
 ### Pages
 
-![Screenshot of the index.js and view.html code of the home page](../images/sec2-1-pages.png)
+![Screenshot of the index.js and view.html code of the home page](../images/sec2-1-pages-comp.jpg)
 
 Our journey begins with a key component of any website, pages. As we start building our product review site, we'll develop a landing page, category-specific pages, and individual product pages. One of the standout features of ApostropheCMS is its ability to programmatically generate a multitude of sub-pages from a single template. This means you can focus on crafting one exemplary template, and ApostropheCMS will do the heavy lifting of creating numerous sub-pages, eliminating the need to write additional code for each page.
 
@@ -42,7 +42,7 @@ As we journey through these topics, you'll gain a solid understanding of how Apo
 
 ## Adding project assets
 
-![screenshot of the project asset folder and files](../images/sec2-1-assets.png)
+![screenshot of the project asset folder and files](../images/sec2-1-assets.jpg)
 
 Diving deeper into our journey with ApostropheCMS, we now arrive at a critical aspect of web development - incorporating CSS, font files and JavaScript assets. This process is crucial to both the look and functionality of your website, so it's essential to understand how ApostropheCMS version 3 manages these assets.
 
@@ -58,7 +58,7 @@ By the end of this section, you will be adept at handling CSS and JavaScript ass
 
 ## Crafting Widgets
 
-![screenshot of row widget index.js and widget.html files](../images/sec2-1-widgets.png)
+![screenshot of row widget index.js and widget.html files](../images/sec2-1-widget-comp.jpg)
 
 As we continue to deepen our understanding of ApostropheCMS, our next venture is into the realm of widget creation. In this tutorial, we will breathe life into our website by developing several custom widgets that will revamp our page layouts and offer new avenues for content management.
 
@@ -82,7 +82,7 @@ By the end of this tutorial, you'll have the skills to create a range of dynamic
 
 ## Crafting Pieces
 
-![screenshot of piece index.js and widget html files](../images/sec2-1-pieces.png)
+![screenshot of piece index.js and widget html files](../images/sec2-1-pieces-comp.jpg)
 
 As we proceed with our ApostropheCMS journey, our next pit-stop is the creation of 'Pieces', flexible and powerful building blocks for content in ApostropheCMS. In this tutorial, we will create a 'review' piece that Editors can use to add their review articles. As covered in the [core concepts](/guide/core-concepts.html#pieces) section of our documentation, pieces are used for any content that can be potentially used in multiple places on a website, like blog articles. Our review piece will include an image attachment, a space to write the review, and a rating widget for input from both the content creators and the content consumers.
 
@@ -107,7 +107,7 @@ By mastering the creation of pieces and their applications, you'll gain more con
 
 ## Implementing Navigation
 
-![screenshot of global index.js and navigation.html fragment code](../images/sec2-1-navigation.png)
+![screenshot of pagetree generated navigation](../images/sec2-6-pagetree-nav.png)
 
 As we continue our ApostropheCMS journey, our next milestone is adding navigation to our site. In this tutorial, we'll explore various strategies for creating navigation and select one to implement on our pages. We'll delve into the data that's automatically available to templates, provide an introduction to the page tree concept, and revisit how to add data to the global module. Additionally, we'll touch on `array` and `relationship` schemas, and their application in creating dynamic navigation.
 
@@ -125,6 +125,7 @@ By mastering navigation, you'll empower users to explore your site with ease, im
 
 ## Refining the Admin Bar
 
+![Screenshot of the admin bar with the 'Personal Settings' modal open](../images/sec2-1-navigation-comp.png)
 In the next leg of our ApostropheCMS journey, we'll focus on modifying the admin bar. The admin bar in ApostropheCMS serves as the primary interface for editors, enabling them to create new pieces and pages, manage media files, and handle user roles and permissions. Additionally, it offers access to global configuration settings, locale selection and the personal settings menu. One of its crucial functions is managing the document publication workflow, providing notifications to users with appropriate permissions about documents awaiting approval.
 
 In this tutorial, our aim is to streamline the admin bar to enhance the process of adding content to pages. We'll also touch on the process of adding custom buttons to further customize your ApostropheCMS experience.
@@ -143,7 +144,7 @@ By the end of this tutorial, you'll be adept at modifying the admin bar, tailori
 
 ## Adding Optional Extensions
 
-![Adding and using the Open Graph extension](../images/sec2-1-extensions-comp.jpg)
+![Adding and using the SEO extension](../images/sec2-1-extensions-comp.jpg)
 
 In our continuing journey to unlock the full potential of ApostropheCMS, the next step involves incorporating optional extensions into our project. In this tutorial, we'll add two incredibly useful extensions — `SEO` and `Blog`. We will demonstrate the steps for integration, and we'll also dissect the structure of these extensions, shedding light on the `bundle` option. Gaining an understanding of this concept is useful for creating and publishing reusable modules that can be used for multiple projects.
 
