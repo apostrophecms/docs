@@ -31,17 +31,17 @@ node app @apostrophecms/user:add <user-name> <user-role>
 ![screenshot of the Apostrophe boilerplate directory structure](../images/sec2-1b-directory.png)
 
 ### `app.js`
-At the root level of your project is the `app.js` file. This file is used to register any modules that are being used in the project. It can also be used to initialize other services that should be started when the project spins up, for example, site telemetry. You can pass some configuration options, like class names for core widgets, but most options should be passed in the individual module files.
+At the root level of your project is the `app.js` file. This file is used to register any modules that are being used in the project. It can also be used to initialize other services that should be started when the project spins up, for example, [site telemetry](/cookbook/opentelemetry.html). You can pass some configuration options, like class names for core widgets, but most options should be passed in the individual module files. At the top of the file there is a `shortname` property. Again, this determines the database name that will be used and should be unique within a MongoDB instance to avoid overwriting another project's content. If you use our CLI this shortname is automatically set to the name you pass as an argument to the `apos create` command. If you elect to clone a project from a repo, you will need to change this manually.
 
 ### `views`
-Also at the root of your project is the `views` folder. This folder contains the main page layout file, `layout.html`, that you extend within your other page modules. We will get into the details of this in the next tutorial. This folder can also be used for project-wide template "fragments". We will be using fragments to construct both the header and footer sections of our page.
+Also at the root of your project is the `views` folder. This folder contains the main page layout file, `layout.html`, that you extend within your other page modules. We will get into the details of this in the ["Creating Pages"](/tutorials/pages.html) tutorial. This folder can also be used for project-wide template "fragments". We will be using fragments to construct both the header and footer sections of our page.
 
 ### `modules`
 The modules folder is where you will add all of your project-specific modules. Within the `modules` folder, there are three additional folders in the essentials project.
 
 ![screenshot of the open modules folder](../images/sec2-1b-modules-folder.png)
 
-The topmost of these is the `@apostrophecms` folder. Any modules in this folder will implicitly `improve` the core Apostrophe module of the same name. Any module which then `extends` that core module will also have access to these improvements. We will come back to `improve` and `extend` later in this tutorial. From within your project, you can see what modules are part of core by navigating to the `node_modules/apostrophe/modules/@apostrophecms` folder. Note: there is a `node_modules/@apostrophecms` folder. This is used for additional extensions added from your package manager, not for the core modules.
+The topmost of these is the `@apostrophecms` folder. Any modules in this folder will implicitly `improve` the core Apostrophe module of the same name. Any module which then `extends` that core module will also have access to these improvements. We will come back to `improve` and `extend` later in this tutorial. From within your project, you can see what modules are part of core by navigating to the `node_modules/apostrophe/modules/@apostrophecms` folder. *Note*: there is a `node_modules/@apostrophecms` folder. This is used for additional extensions added from your package manager, not for the core modules. As a rule, you should not add any custom module into any of the `node_modules` folders. Any code should be added from hosted packages.
 
 Drilling down in the `@apostrophecms` folder we can see that there are four modules. We will cover the `home-page` and `page` module folders in the next tutorial. In the `express` folder, you should now set the session secret to a unique, random string. This is required by Express.js to sign the session ID cookie.
 
@@ -59,14 +59,14 @@ The `public` folder can be used for static assets, although this isn't always th
 To decrease build time webpack creates a cache file that is stored within the data folder. When customizing the admin UI, this caching behavior can cause problems. If you find that elements aren't updating after code changes as expected you can try eliminating the `data` folder using `rm -rf data`. You can try eliminating the `apos-build` folder that is generated during the build step, as well. These folders will regenerate the next time you bring the project up.
 
 ### `lib`
-The 'lib' folder is completely optional but typically contains code that is shared across different parts of the project or provides functionality that is not directly related to the main application logic. These files often consist of utility functions, helper classes, or custom modules that encapsulate reusable code. In the essentials project it contains a single file, `area.js`, that can be used for configuring page areas. We will revisit this in the next tutorial.
+The 'lib' folder is completely optional but typically contains code that is shared across different parts of the project or provides functionality that is not directly related to the main application logic. These files often consist of utility functions, helper classes, or custom modules that encapsulate reusable code. In the essentials project it contains a single file, `area.js`, that can be used for configuring page areas. We will revisit this in the ["Creating Pages"](/tutorials/pages.html) tutorial.
 
 ### `deployment` and `scripts`
 The `deployment` and `scripts` folders house bash scripts that are primarily used internally by the Apostrophe team for the deployment of sites and cloning of the project's database for local development. In most cases, you are going to want to eliminate these folders and implement your own solutions, but they provide good examples of how to accomplish these tasks.
 
 ## Module basics
 
-As we introduced in the first section, in Apostrophe each module is responsible for providing one feature, such as a type of widget, a type of customized page, or a service. All the modules use the same API. This means that they all have access to a number of core features.
+As introduced in the [Core Concepts](/guide/core-concepts.html#modules) section of the documentation, in Apostrophe each module is responsible for providing one feature, such as a type of widget, a type of customized page, or a service. All the modules use the same API. This means that they all have access to a number of core features.
 
 ### Creation
 
@@ -80,10 +80,10 @@ module.exports = {
 The CLI tool provides an easy way to make piece, widget, and generic modules for your project.
 
 ``` sh
-apos add piece article
+apos add widget article
 ```
 
-The `add` command takes the type of module to be created (`piece`, `widget`, or `module`) and a name for the module. For both the widget modules it will automatically add the correct ending. So for this example it would create a folder named `article-widget`. You can also pass an optional flag of `--page` when creating a `piece`. This will set up the folder and files for your views that we will be talking about in the 'Pieces' tutorial. When adding a `widget` you can pass the optional `--player` flag. This will create the folder and file structure for adding browser-side JavaScript to your widget that we will talk about in the 'Widgets' tutorial.
+The `add` command takes the type of module to be created (`piece`, `widget`, or `module`) and a name for the module. For a widget module, it will automatically add the correct ending. So for this example it would create a folder named `article-widget`. You can also pass an optional flag of `--page` when creating a `piece`. This will set up the folder and files for your views that we will be talking about in the [Creating Pieces](/tutorials/pieces.html) tutorial. When adding a `widget` you can pass the optional `--player` flag. This will create the folder and file structure for adding browser-side JavaScript to your widget that we will talk about in the [Creating Widgets](/tutorials/widgets.html) tutorial.
 
 Making a new module from scratch is fairly easy. A basic module in Apostrophe consists of a folder that is named for the module being created, so `default-page`, or `column-widget`. Modules that create pages are typically appended with `-page` and those that create widgets with `-widget`. Within that folder, at minimum, there needs to be an `index.js` file that has a `module.exports` object. That object will contain code to configure and power the functionality of that module. As we will cover in additional tutorials, the module folder can also contain additional folders that can be used to deliver style sheets and JavaScript to the front end, create new Admin UI components, and more.
 
@@ -143,7 +143,7 @@ module.exports = {
 
 Depending on the type of module you can add a variety of `options` and `fields`. The `options` configuration object can allow you to set a label for your module that is shown to the editor or turn on localization. We will be covering these options as we dive into further tutorials.
 
-The `fields` configuration option lets you add and group schema fields that determine what content an editor can add in your piece or page. In 'Pages' tutorial, we will begin to look at schema fields in more detail. In this code example, we are passing an object to the fields key, however it can also be a function taking `self` and `options` as arguments and returns the object This is covered in our [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#fields). This allows you to further customize what content can be added and this will be covered further in the 'Adding Extensions' tutorial.
+The `fields` configuration option lets you add and group schema fields that determine what content an editor can add in your piece or page. In the ["Creating Pages"](/tutorials/pages.html) tutorial, we will begin to look at schema fields in more detail. In this code example, we are passing an object to the `fields` key, however this key can also take a function with `self` and `options` as arguments that returns the object. This is covered in our [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#fields). This allows you to further customize what content can be added and will be covered further in the [Adding Extensions](/tutorials/adding-extensions.html) tutorial.
 
 ### Customization
 
@@ -163,7 +163,7 @@ You can use this function to power asynchronous template components. This allows
 
 ### `handlers(self)`
 
-This function allows you to listen for events emitted by core Apostrophe and custom modules and then trigger an action based on that event. For example, you could send an outgoing webhook anytime a new article is published.
+This function allows you to listen for events emitted by core Apostrophe and custom modules and then trigger an action based on that event. For example, you could send an [outgoing webhook](/cookbook/creating-webhooks.html#outgoing-webhooks) anytime a new article is published.
 
 ## Next steps
 In this tutorial, you learned a little more about the basics of Apostrophe code organization. We will apply this knowledge throughout the rest of this tutorial series. Next, we will begin constructing our review site homepage.
