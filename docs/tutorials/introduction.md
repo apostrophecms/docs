@@ -68,7 +68,7 @@ Let's look at the exciting array of widgets we'll be creating:
 
 - **Deal Widget:** This versatile widget will allow editors to insert links to special pages such as e-commerce pages or affiliate links, creating an opportunity to generate additional revenue and promote strategic partnerships.
 
-- **Ratings Widget:** Last but not least, our ratings widget will let editors incorporate the overall ratings for a product from the review site, providing a quick, at-a-glance summary for your visitors. This widget will also allow readers to provide their own feedback and will introduce database manipulation.
+- **Rating Widget:** Last but not least, our rating widget will let editors incorporate the overall ratings for a product from the review site, providing a quick, at-a-glance summary for your visitors. This widget will also allow readers to provide their own feedback and will introduce database manipulation.
 
 Now, let's examine the specific topics from the ApostropheCMS documentation that we'll cover in this section:
 
