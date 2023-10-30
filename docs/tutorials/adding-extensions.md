@@ -276,11 +276,31 @@ Overall, this extension provides a good blueprint for how to modify all the page
 
 ## The `blog` extension
 
-The [`blog` extension](https://apostrophecms.com/extensions/blog) adds a new `blog` piece-type and piece-page-type to your project. Like the `seo` extension it uses the `bundle` option to make an additional module available. A main feature of the blog module is the ability to filter the posts in the piece management modal by publication date that uses both `filters` and custom `queries`. The extensions code will also allow us to examine the `piecesFilters` option introduced in the "Pieces" tutorial.
+The [`blog` extension](https://apostrophecms.com/extensions/blog) adds a new `blog` piece-type and piece-page-type to your project. Like the `seo` extension it uses the `bundle` option to make an additional module available. A main feature of the blog module is the ability to filter the posts in the piece management modal by publication date that uses both `filters` and custom `queries`. The extensions code will also allow us to examine the `piecesFilters` option introduced in the [Creating Pieces](/tutorials/pieces.html) tutorial.
 
 ### Installation
 
-To install the `@apostrophecms/blog` module, navigate to the [extension page](https://apostrophecms.com/extensions/blog) and follow the installation instructions. After running `npm install @apostrophecms/blog` in the root of our project a number of follow up steps are necessary.
+To install the `@apostrophecms/blog` module, navigate to the [extension page](https://apostrophecms.com/extensions/blog) and follow the installation instructions. After running `npm install @apostrophecms/blog` in the root of our project a number of follow-up steps are necessary.
+
+<AposCodeBlock>
+
+``` javascript
+require('apostrophe')({
+  shortName: 'a3-onboarding-project',
+  bundles: [ '@apostrophecms/blog' ],
+  modules: {
+    // other project modules
+    '@apostrophecms/blog': {},
+    '@apostrophecms/blog-page': {}
+  }
+});
+
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+
+</AposCodeBlock>
 
 Unlike the `seo` extension, the `@apostrophecms/blog` module should be added to the `bundles` array of the project `app.js`. The modules added through this package `extend` the `@apostrophecms/piece-type` and `@apostrophecms/piece-page-types` core modules. For the `seo` extension, all the modules improved rather than extending the core modules, so it was sufficient to add the base `@apostrophecms/seo` module to the `modules` configuration object. Adding `@apostrophecms/blog` to the bundles can also allow you to use the two modules of the extension as a base to further extend your own custom modules without adding either of the extension modules to the `modules` configuration object.
 
@@ -327,7 +347,7 @@ columns: {
 },
 ```
 
-As covered in the "Pieces" tutorial, the `columns` configuration object adds additional columns to the piece manager. In this case it adds the value of the `publishedAt` schema field.
+As covered in the [Creating Pieces](/tutorials/pieces.html) tutorial, the `columns` configuration object adds additional columns to the piece manager. In this case it adds the value of the `publishedAt` schema field.
 
 ``` javascript
 fields: {
@@ -371,7 +391,7 @@ filters: {
 },
 queries,
 ```
-The `filters` configuration object adds four different filters to the piece manager. As covered in the "Pieces" tutorial, this configuration object can take a `fields` schema field name or a custom query builder. In this case, all four use a custom query that is supplied by the `queries.js` helper file that was required at the beginning of the `index.js` file, and added just after the `filters`. We will look at the helper file next.
+The `filters` configuration object adds four different filters to the piece manager. As covered in the [Creating Pieces](/tutorials/pieces.html) tutorial, this configuration object can take a `fields` schema field name or a custom query builder. In this case, all four use a custom query that is supplied by the `queries.js` helper file that was required at the beginning of the `index.js` file, and added just after the `filters`. This adds the object returned by the helper file to the [`queries(self, query)` configuration customization function](/reference/module-api/module-overview.html#queries-self-query). We will look at the helper file next.
 
 ``` javascript
 extendMethods(self) {
@@ -639,11 +659,11 @@ module.exports = {
 
 The primary take-away from this file is how filters are added and modified in the piece pages. Within the `options` object three of the four custom filters are added to the page. This allows filtering of the pieces that are included in the `data.pieces` object that is delivered to the index page through adding query parameters to the page URL.
 
-Within the `extendMethods()` configuration object there are two core methods being extended. Again, as was covered in the "Pieces" tutorial, the method being extended should take `_super` and any arguments that were passed to the original method. In this case we are modifying the query object that is being passed to the filters of either the index page for the `indexQuery()` method, or the individual piece show pages with the `showQuery()` method. In both cases, we override the value of the `future` key in order to exclude an unpublished blog pieces. This same `extendMethods()` function can be used at project-level to change the value of `future` to `null` or `true`. For example, you could check the users permissions, like was performed in the main piece `index.js` field, and allow users who can edit the piece type to see unpublished articles.
+Within the `extendMethods()` configuration object there are two core methods being extended. Again, as was covered in the [Creating Pieces](/tutorials/pieces.html) tutorial, the method being extended should take `_super` and any arguments that were passed to the original method. In this case we are modifying the query object that is being passed to the filters of either the index page for the `indexQuery()` method, or the individual piece show pages with the `showQuery()` method. In both cases, we override the value of the `future` key in order to exclude an unpublished blog pieces. This same `extendMethods()` function can be used at project-level to change the value of `future` to `null` or `true`. For example, you could check the users permissions, like was performed in the main piece `index.js` field, and allow users who can edit the piece type to see unpublished articles.
 
 #### The `index.html` and `show.html` files
 
-These two markup files are fairly standard for piece-page-types and for more in-depth explanations you can look at the "Pieces" tutorial in this series. Both templates extend the `@apostrophecms/template/views/outerLayout.html` file. The `index.js` file imports the `macros.html` file from the `@apostrophecms/pager` module in order to paginate the pieces. Within the `index.js` file there is a loop, `{% for piece in data.pieces %}` to step through all the pieces. Since the filters change the `data.pieces` object, no changes have to be made in order for the content to be filterable. The `show.html` page is also quite standard, simply displaying the data passed through the `data.piece` object.
+These two markup files are fairly standard for piece-page-types and for more in-depth explanations you can look at the [Creating Pieces](/tutorials/pieces.html) tutorial. Both templates extend the `@apostrophecms/template/views/outerLayout.html` file. The `index.js` file imports the `macros.html` file from the `@apostrophecms/pager` module in order to paginate the pieces. Within the `index.js` file there is a loop, `{% for piece in data.pieces %}` to step through all the pieces. Since the filters change the `data.pieces` object, no changes have to be made in order for the content to be filterable. The `show.html` page is also quite standard, simply displaying the data passed through the `data.piece` object.
 
 #### The `filters.html` file
 
