@@ -1,12 +1,12 @@
 # Widget Creation
 
-In our tutorial on creating pages in our Apostrophe project, we made use of the core widgets for adding content to our home page areas. In this tutorial, we shift focus towards custom widget development, aiming to furnish our editors with unique tools to augment the site's aesthetics.
+In our tutorial on [Creating Pages](/tutorials/pages.html) in our Apostrophe project, we made use of the core widgets for adding content to our home page areas. In this tutorial, we shift focus towards custom widget development, aiming to furnish our editors with unique tools to augment the site's aesthetics.
 
 We will create a basic layout widget, a pivotal step toward accomplishing our final project's envisioned appearance. This will introduce template helper functions, schema field conditionals, and introduce how we register icons for use in our project.
 
 Next we will formulate a 'deal widget', designed to empower editors with the capability of presenting links, garnished with images and headings, in a singular or multiple format. This will introduce some additional options and methods for working with images in schemas and templates.
 
-Finally, we will create a 'rating widget' that allows the editors to add ratings to the different products using a star system. In the creation of this widget, we will also begin to learn about async components, a powerful way to add dynamic content to pages asynchronously and revisit adding module styling.
+Finally, we will create a 'rating widget' that allows the editors to add ratings to the different products using a star system. In the creation of this widget, we will also begin to learn about async components, a powerful way to add dynamic content to pages asynchronously, giving your widgets access to site settings and data supplied by APIs, plus we will revisit adding module styling.
 
 Again, you can follow along with the tutorial to modify your own project, or to see the progress of the project while following this tutorial switch to the `sec2-4-widgets` branch of the [a3-onboarding-project](https://github.com/apostrophecms/a3-onboarding-project) repo on GitHub.
 
@@ -16,7 +16,7 @@ Creating a new widget is much like creating a new page. A widget module extends 
 
 While widgets and pages have some similarities, there are some key differences. As with pages, the content schema fields of widgets are added through the `fields` property. Unlike page modules, where the `fields` property takes both `add` and `group` properties, widgets take only the `add` property. Fields are not currently grouped by tabs and are added into the modal according to their order in the `add` object.
 
-Another key difference occurs behind the scenes in how Apostrophe handles content added through a page versus a widget. When you save a page, Apostrophe creates a new document in the database. As we will cover in a later tutorial, that document and the content within it can be retrieved from the database with a unique id. This isn't true of widgets. They don't exist as documents within the database outside the page where they are added.
+Another key difference occurs behind the scenes in how Apostrophe handles content added through a page versus a widget. When you save a page, Apostrophe creates a new document in the database. That document and the content within it can be retrieved from the database with a unique id. This isn't true of widgets. They don't exist as documents within the database outside the page where they are added. However, as we will cover when we create the `rating-widget` in this tutorial, each widget gets a unique id that we can use to retrieve content.
 
 Because widgets aren't meant to be stand-alone documents, the markup file that you add to the module is different also. Rather than creating markup for a whole page, you only create a block of HTML code that can be slotted into any page. This means that generally, you aren't going to have a template that you are extending. Although if you have a series of interrelated widgets, you can certainly opt to create a template or fragments to be used within each.
 
@@ -56,7 +56,7 @@ We are setting both the `icon` and optional `previewIcon` to the same icon. The 
 
 ### Registering an icon
 
-The icon being used in this module isn't currently registered by Apostrophe in the [`globalIcons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) The icon is available within the [`vue-material-design-icons` v4.12.1 package](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd), which is installed in our project. In order to use this icon within our module we need to add a new configuration property to our module's `index.js` file.
+The icon being used in this module isn't currently registered by Apostrophe in the [`globalIcons.js`](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) file. The icon is available within the [`vue-material-design-icons` v4.12.1 package](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd), which is installed in our project. In order to use this icon within our module we need to add a new configuration property to our module's `index.js` file.
 
 ``` javascript
 // ...
@@ -228,7 +228,7 @@ const fields = {
   }
 }
 ```
-Next, we are creating the first schema field for our widget. In this case, it is named `columns` and has a field type of `select` and some help text that will be presented to the user. Our select is getting a default value of `1` using the optional `def` property. The `choices` property receives an array of objects that are each composed of a label that is presented in the dropdown to the user, and the corresponding value for that selection. For the equal-width columns, we are just passing the number of columns desired. For the columns that require different widths, we are passing a string that has the width of each column. Full-width in Bootstrap is 12 columns, 50% width would be `6`, 25% would be `3`, etc... This is idiosyncratic to Bootstrap and will be different with other frameworks.
+Next, we are creating the first schema field for our widget. In this case, it is named `columns` and has a field type of `select` and some help text that will be presented to the user. Our select is getting a default value of `1` using the optional `def` property. The `choices` property receives an array of objects that are each composed of a label that is presented in the dropdown to the user, and the corresponding value for that selection. For the equal-width columns, we are just passing the number of columns desired. For the columns that require different widths, we are passing a string that has the width of each column. Full-width in Bootstrap is `12` columns, 50% width would be `6`, 25% would be `3`, etc... This is idiosyncratic to Bootstrap and will be different with other frameworks.
 
 ``` javascript
 const colsIf = [ null, false, [ 2, 3, 4, '4-8', '8-4', '3-9', '9-3' ], [ 3, 4 ], [ 4 ] ];
@@ -301,7 +301,7 @@ This will add all of our schema fields for our widget. While we aren't quite fin
 
 ### Templating our layout
 
-In the tutorial on creating pages, we touched on the basic usage of Nunjucks. Within these templates, plain HTML markup can be intermixed with tags that are interpreted and utilized during rendering. These include conditional tags that selectively display content and others that provide loops to add repetitive items, like list items. 
+In the [Creating Pages](/tutorials/pages.html) tutorial, we touched on the basic usage of Nunjucks. Within these templates, plain HTML markup can be intermixed with tags that are interpreted and utilized during rendering. These include conditional tags that selectively display content and others that provide loops to add repetitive items, like list items. 
 
 If you open the `widget.html` file of our module you will see that a section with an attribute of `data-row-widget` has been added. You can elect to place your code inside this section or eliminate it within your project. In this case, I'm going to eliminate the section because it makes the Bootstrap styling more difficult.
 
@@ -683,7 +683,7 @@ module.exports = {
 
 While the schema fields in this code are of a new type, the majority of the code should look familiar. The `range` field type allows the developer to specify a range of numbers from `min` to `max` that the user can enter using a slider. You can optionally add a `step` size that determines the interval between each value. This code adds three different schema fields to collect quality, safety, and value ratings, all added to the `basics` tab. 
 
-The last section of code is the novel part. In our template, we want to convert the number entered by the user into stars displayed on the front end. We could use a loop directly in the template, but we would have to add the loop code to the template three times, one for each schema field. Instead, we will use an `async components()` customization function. Components are a little like fragments. Unlike fragments, however, you can run a database query or fetch information from a 3rd party API to populate it.
+The last section of code is the novel part. In our template, we want to convert the number entered by the user into stars displayed on the front end. We could use a loop directly in the template, but we would have to add the loop code to the template three times, one for each schema field. Instead, we will use an `async components()` customization function. Components are a little like fragments. Unlike fragments, however, you can run a database query or fetch information from a 3rd party API to populate it. You can also access site information to further customize your widget to things like locale.
 
 At the moment, this component is very simple. We will expand on it when we add the reader section of the widget to collect information on the frontend. A component function takes the module as an argument and returns an object of functions that can be used within templates. There are two differences from the `helper()` functions that we have already learned about. First, `helpers` must be synchronous, `components` can be asynchronous. Second, `components` return markup to the template, rather than a value or object.
 
@@ -1137,12 +1137,12 @@ Starting at the beginning of the constructor, we define a helper function called
     let currentStarRating = -1;
     const starElements = [];
 ```
-Next we are initializing some variables. The most important one for this tutorial is `defaultStarRating`. Remember that in the markup, each of our three sections had a `data-default-rating`.
+Next we are initializing some variables. The most important one for this tutorial is `defaultStarRating`. Remember that in the markup, each of our three sections had a `data-default-rating` attribute.
 
 ``` nunjucks
 <span class="simple-rating" data-category="quality" data-default-rating="3"></span>
 ```
-Our target element doesn't have a `data-stars` attribute, but this would give us the ability to change the number of stars from a slight change to the markup and a schema field asking the editor to assign a maximum number.
+Our target element doesn't have a `data-max-stars` attribute, but this would give us the ability to change the number of stars from a slight change to the markup and a schema field asking the editor to assign a maximum number.
 
 ``` javascript
 // Create star elements
