@@ -76,7 +76,7 @@ The `label` property provides a label on the admin-bar that is displayed to the 
 
 ### The quick create menu
 
-By default, the quick create menu is located after the other menu items on the left side of the admin-bar and contains buttons for creating a new page and any custom piece-types. Clicking these buttons will skip the opening of the initial manager modal and opens a new item for editing directly. You can elect to block this default behavior by setting the `quickCreate` option to false in the `/modules/@apostrophecms/page/index.js` file for pages, or any custom piece-type module.
+By default, the quick create menu is located after the other menu items on the left side of the admin-bar and contains buttons for creating a new page and any custom piece-types. Clicking these buttons will skip the opening of the initial manager modal and opens a new item for editing directly. You can elect to block this default behavior by setting the `quickCreate` option to `false` in the `/modules/@apostrophecms/page/index.js` file for pages, or any custom piece-type module.
 
 ## Creating a custom menu item
 
@@ -109,7 +109,7 @@ The second parameter specifies the label that appears on the button in the admin
 
 The third argument is the permissions required for a user to be able to see the button based on the action that it will perform. Setting it to false will let any logged-in user view and click the button. Delving into the object of actions and types this argument can take is beyond the scope of this tutorial, but is covered in the [documentation](https://v3.docs.apostrophecms.org/reference/modules/admin-bar.html#add-name-label-permission-options).
 
-The final argument is an optional object of properties that dictate the position and display of the custom button. If you are adding multiple custom buttons, they are added in the order that the modules are registered in the `app.js` file. Setting the `last` option to `true` will place the button just to the left of the quick create menu icon, irrespective of when it is registered. The `contextUtility` option also takes a boolean value and if set to `true` will cause the button to show up on the right-hand side of the admin bar before any potential localization or the personal settings menu. If you set this option to true you must also set the `icon` option to a registered icon name as was covered in Section 2, tutorial 4 on widgets - you can also read about this in the [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
+The final argument is an optional object of properties that dictate the position and display of the custom button. If you are adding multiple custom buttons, they are added in the order that the modules are registered in the `app.js` file. Setting the `last` option to `true` will place the button just to the left of the quick create menu icon, irrespective of when it is registered. The `contextUtility` option also takes a boolean value and if set to `true` will cause the button to show up on the right-hand side of the admin bar before any potential localization or the personal settings menu. If you set this option to true you must also set the `icon` option to a registered icon name as was covered in the [Creating Widgets](/tutorials/widgets.html) tutorial - you can also read about this in the [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
 
 ### Adding button functionality
 
