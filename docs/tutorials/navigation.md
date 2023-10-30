@@ -481,7 +481,7 @@ group: {
 </AposCodeBlock>
 
 ### Modifying the `footer.html` fragment
-To display our new `quickLinks`, we need to change the Nunjucks markup for the first column in the div with a class of row. Replace the entire first column (with classes of `col-lg-4` and `py-3`) with the following:
+To display our new `quickLinks`, we need to change the Nunjucks markup for the first column in the `div` with a class of `row`. Replace the entire first column (with classes of `col-lg-4` and `py-3`) with the following:
 
 <AposCodeBlock>
 
@@ -539,7 +539,7 @@ To display our new `quickLinks`, we need to change the Nunjucks markup for the f
 This will cause the first set of links in the quick links section to be replaced with the user's selection. It uses a `{% for ... in %}` loop to output each item as a list item. As with the `primaryNav` in the `views/fragments/navigation.html` that we added previously in this tutorial, we have some code to correctly set the link if it is a page or custom URL.
 
 ## Bonus: Adding social links to the footer
-While the primary function of a website's footer is to assist with internal navigation, it can also serve as a bridge to external platforms, specifically social media channels. Including social media links in your footer is a strategic way to extend the user's journey beyond your website and encourage engagement on various social platforms. Next we will finish out this tutorial by quickly adding social media links using the font-awesome icon set wee installed when creating the `rating-widget` module.
+While the primary function of a website's footer is to assist with internal navigation, it can also serve as a bridge to external platforms, specifically social media channels. Including social media links in your footer is a strategic way to extend the user's journey beyond your website and encourage engagement on various social platforms. We will finish out this tutorial by quickly adding social media links using the font-awesome icon set we installed when creating the `rating-widget` module.
 
 ### Adding the schema fields
 We will be adding our fields to select the social media links into the footer, so it makes sense to once again modify the `global` module. Open the `modules/@apostrophecms/global.index.js` file and add the following code to the `add` object of the `fields` property:
@@ -687,6 +687,7 @@ Open the `views/fragments/footer.html` file and replace the code for the third c
   </template>
 
 </AposCodeBlock>
+
 We are only altering the portion of code in the div below the `Get Social` H2 tag. Once again, we are using a `{% for ... in %}` loop to step through our array elements. This time we are just outputing a link with the URL entered by the user surrounding a span with the icon class names.
 
 ## Summary and next steps
