@@ -48,8 +48,7 @@ module.exports = {
         options: {
           widgets: {
             '@apostrophecms/image': {}
-          },
-          exportPlainText: true
+          }
         }
       },
       content: {
@@ -135,13 +134,25 @@ module.exports = {
 
 The `fields` object of this code adds five input schema fields and groups them into two tabs, `content` and `meta`. The three fields on the content tab are what you would expect for a review article. First the `author` of the piece, next, a single image from the article that can be featured in any markup as `featuredImage`, and finally the actual `content`, with the rich-text and image widgets, along with our custom ratings widget for the author to rate the product.
 
+::: info
+The `featuredImage` has an `area` schema field type that we are adding an image-widget into for the editor to add a single image. In this case it might have been preferable to use a [`relationship`](/guide/media.html#the-relationship-field-option), instead.
+``` nunjucks
+_featuredImage: {
+  label: 'Image',
+  type: 'relationship',
+  withType: '@apostrophecms/image',
+  max: 1
+}
+```
+:::
+
 In the meta tab, we are adding two fields. First, we are assigning the article to a review-type `category`. We will use this for selective display and filtering of the reviews onto individual index pages. Second, we are adding the ability for the user to toggle whether the review should be featured with a boolean field, `isFeatured`. We will also use this to filter the reviews that we display in the browser.
 
 #### Adding filters to the piece manager
 
 ![Screenshot of the piece manager filters](../images/sec2-5-piece-filters.png)
 
-Following the `fields` object, there is a `filters` object. The `filters` object is configured with subsections: `add` and `remove` and can either be added as a static object or a function that takes `self` and `options` and returns an object. Filters must correspond to an existing fields name or custom query builder on the piece type. We will cover custom `queries` in the "Adding Extensions" tutorial.
+Following the `fields` object, there is a `filters` object. The `filters` object can be configured with subsections: `add` and `remove`. This configuration can either be added as a static object, as in this example, or a function that takes `self` and `options` and returns an object. Filters must correspond to an existing `fields` name or custom query builder on the piece type. We will cover custom `queries` in the [Adding Extensions](/tutorials/adding-extensions.html) tutorial.
 
 ``` javascript
 filters: {
@@ -156,7 +167,7 @@ filters: {
 }
 ```
 
-The code introduces filters for the `isFeatured` and `category` fields, enabling the user to display or exclude featured pieces and reviews from particular categories, respectively. We will return to how we can use the `isFeatured` filter in the section on [creating review pages.](#adding-the-review-pages)
+This block of code introduces filters for the `isFeatured` and `category` fields, enabling the user to display or exclude featured pieces and reviews from particular categories, respectively. We will return to how we can use the `isFeatured` filter in the section on [creating review pages.](#adding-the-review-pages)
 
 #### Piece manager columns
 
@@ -169,12 +180,12 @@ columns: {
   }
 }
 ```
-By default, the piece manager displays the piece title and the date the piece was last edited. Like the `filters` object, the `columns` object allows for the addition or removal of columns based on the schema fields of the module.
+By default, the piece manager displays the piece title and the date the piece was last edited. Like the `filters` object, the `columns` object allows for the addition or removal of columns based on the schema fields of the module. In this case we are electing to display the category of the review to the right of the 'Last Edited' column in the piece manager.
 
 
 #### Localizing the UI
 ![Screenshot of the UI for adding a new review piece localized to German](../images/sec2-5-review-localization.png)
-In the `options` object, we have the standard `label` and `pluralLable` properties, but we have a new property `i18n`. This option allows us to localize the review piece admin UI to different languages by passing `browser: true`. It is slightly different from the localization that we introduced when creating our `views/fragments/topbar.html` fragment. There, we were adding localization to our template, not the interface the author is using. In the template, our localized strings were within Nunjucks tags and passed to the `__t()` helper.
+In the `options` object, we have the standard `label` and `pluralLable` properties, but we have a new property `i18n`. This option allows us to localize the review piece admin UI to different languages by passing `browser: true`. It is slightly different from the localization that we introduced when creating our `views/fragments/topbar.html` fragment. There, we were adding localization to our template, not the interface the author is using. In the template, our localized strings were within Nunjucks tags and passed to the `__t()` helper. In this case, we don't have to do anything extra. Adding the `i18n` option will let Apostrophe know that we want to translate any label where we have supplied a corresponding translation string.
 
 Just like with the topbar, we need to create a module-level folder for our translation strings. Create a `modules/review/i18n` folder and add a file named `en.json` inside. Into that file, we are going to add all the labels from each of the schema fields, including the labels for the choices in the select field.
 
@@ -249,7 +260,7 @@ We also need a translations file for our `de` locale, so create a `de.json` file
 
 ![Screenshot of the adminbar with the reviews piece type added](../images/sec2-5-adminbar.png)
 
-We now have a way to create review pieces. If we were to spin up our project we would see a new item 'Reviews' in the admin bar. Clicking on the plus icon we would get a dropdown that will let us quickly add a new review piece. As we will revisit in a later tutorial, you can configure this bar to group items or prevent them from appearing in the quick create menu.
+We now have a way to create review pieces. If we were to spin up our project we would see a new item 'Reviews' in the admin bar. Clicking on the plus icon we would get a dropdown that will let us quickly add a new review piece by creating the piece and opening the edit modal without having to open the piece manager first. As we will revisit in the [admin bar configuration](/tutorials/admin-ui.html) tutorial, you can configure this bar to group items or prevent them from appearing in the quick create menu.
 
 While we can now create new review pieces, they won't be displayed anywhere in our site. One way that we can display our pieces is to use a `piece-page-type`. Our CLI command has already created a `modules/review-page` folder for us. Opening the `index.js` file, we can see the normal `extend` and `options` properties. Because this folder is named `review-page`, Apostrophe automatically knows that these pages should be associated with the `review` piece-type. If we wanted to give this module a different name, we would have to add the `pieceModuleName` property to the `options` object with a value of `review`. We will alter this file after we create our `index.html` page.
 
@@ -386,9 +397,11 @@ The final block below the main content adds in the markup for our navigation bre
   class: 'fs-3 ms-5'
 }, data.url) }}
 ```
-This code calls the imported macro and passes in several items from the `data` object that is available on any `piece-page-type` index page. The `currentPage` contains what page of results is currently being shown starting with 1. The `totalPages` gives the total number of pages that there are given the current group size. The `shown` option defines the maximum number of pages that should be displayed in the pager display. If the total number of pages exceeds this the macro will insert ellipses either at the beginning or end to indicate that there are more pages available. The optional `class` property will add these classes to the wrapper around the breadcrumbs. Finally, the macro needs the URL of the page in order to correctly construct the links. All of this data is available for you to create your own navigation macros.
+This code calls the imported macro and passes in several items from the `data` object that is available on any `piece-page-type` index page. The `currentPage` contains what page of results is currently being shown starting with 1. The `totalPages` gives the total number of pages that there are given the current group size. The optional `shown` option defines the maximum number of pages that should be displayed in the pager breadcrumb display at one time. If the total number of pages exceeds this the macro will insert ellipses either at the beginning or end to indicate that there are more pages available. The optional `class` property will add these classes to the wrapper around the breadcrumbs. Finally, the macro needs the URL of the page in order to correctly construct the links. All of this data is available for you to create your own navigation macros.
 
 ``` nunjucks
+<!-- This grabs the current URL for adding query parameters to filter -->
+{% set currentPath = data.page._url %}
 <!-- This is the main content area -->
 {% block main %}
   <div class="container ms-5 me-5">
@@ -404,26 +417,27 @@ This code calls the imported macro and passes in several items from the `data` o
     </div>
 ```
 
-After adding a tag to add our markup to the `main` block, we open a Bootstrap container. Within that container we add a wrapper `div` containing the main heading for the page and another `div`. Within that wrapper `div`, we apply Bootstrap classes for flexbox layout (`d-flex`), justifying the content to be evenly spaced between the start and the end (`justify-content-between`), and vertically aligning items in the center (`align-items-center`). We also add a margin-bottom (`mb-5`) for spacing.
+Returning to the main markup of the page, after adding a tag to add our markup to the `main` block, we open a Bootstrap container. Within that container we add a wrapper `div` containing the main heading for the page and another `div`. Within that wrapper `div`, we apply Bootstrap classes for flexbox layout (`d-flex`), justifying the content to be evenly spaced between the start and the end (`justify-content-between`), and vertically aligning items in the center (`align-items-center`). We also add a margin-bottom (`mb-5`) for spacing.
 
 Inside this wrapper `div`, there are two main elements:
 
 1. The first is an `<h1>` tag that serves as the main heading for the page, labeled 'Reviews'. It uses the Bootstrap class `display-6` for styling, additional padding (`ps-2`), and a margin-bottom (`mb-5`). A custom underline is also applied with the `custom-underline` class.
 
-2. The second is another `div` that contains conditional logic to render a button. This is done using the `{% if %}` and `{% endif %}` tags, which are part of the template engine. If `data.query.isFeatured` is 'true', a 'Show All' button is displayed with a secondary Bootstrap styling (`btn btn-secondary`). Clicking on this button will remove the `isFeatured` query parameter from the current URL. Otherwise, a 'Show Featured Only' button appears with primary Bootstrap styling (`btn btn-primary`). Clicking on this button will add the `isFeatured: true` query parameter to the current URL.
+2. The second is another `div` that contains conditional logic to render a button. This is done using the `{% if %}` and `{% endif %}` tags, which are part of the template engine.
 
-::: v-pre
-The buttons' URLs are dynamically generated using the `{{ currentPath | build({}) }}` template expression, which constructs the URL based on the `currentPath` variable and the specified query parameters.
-:::
+  ``` nunjucks
+  <!-- This grabs the current URL for adding query parameters to filter -->
+  {% set currentPath = data.page._url %}
+  ```
 
-Please note that this is completely independent of the fact that we are using `isFeatured` as a filter for the piece manager. Most [schema fields have filters](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#piecesfilters) already available. The values of the fields will get added to fields in the database document. So for example, we could add `?author=name` and the page would only display review pieces by that author. For fields that contain strings, individual words are added to the document search fields. So for example, a piece titled "Best Bed Buys for 2023" would be returned by adding a query parameter of `?title=bed` to the URL. However, a custom filter is needed if you want to filter based on a derived value, like the year of publication when the date field also contains the month and day. We will cover this in the "Adding extensions" tutorial.
+  Above the main block we are getting the current URL of the page, including any query parameters, using `data.page._url`. If that URL has a query parameter of `isFeatured=true`, a 'Show All' button is displayed with a secondary Bootstrap styling (`btn btn-secondary`). The URL for the button is dynamically generated by passing the page URL to the Apostrophe template filter [`build`](/guide/template-filters.html#build-url-path-data) - <span v-pre>`{{ currentPath | build({isFeatured: null}) }}`</span>. This will remove the `isFeatured` query parameter by setting it to `null`. If the query parameter isn't present in the current page URL, a 'Show Featured Only' button with primary Bootstrap styling (`btn btn-primary`) will be added. The URL for this button will be constructed with the same filter, but the `isFeatured=true` query parameter will be added to the current URL.
 
-The main content body of the page uses familiar concepts from past tutorials. 
-``` nunjucks
-{% for review in data.pieces %}
-```
+Please note that this is completely independent of the fact that we are using `isFeatured` as a filter for the piece manager. Most [schema fields have filters](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#piecesfilters) already available. The values of the fields will get added to fields in the database document. So for example, we could add `?author=name` and the page would only display review pieces by that author. For fields that contain strings, individual words are added to the document search fields. So for example, a piece titled "Best Bed Buys for 2023" would be returned by adding a query parameter of `?title=bed` to the URL. However, a custom filter is needed if you want to filter based on a derived value, like the year of publication when the date field also contains the month and day. We will cover this in the [Adding extensions](/tutorials/adding-extensions.html) tutorial.
 
-We set up a loop to go through all the piece objects available in the `data.pieces` array. For each, we extract a featured image, a link to the individual piece page, the piece title, and the piece author. Note that we are getting the link as `_url`. The underscore in front indicates that it is a property that is computed, not retrieved from the database. In this case, this is because pieces can be assigned to different parent pages and these links need to be computed dynamically at the time of rendering. We will cover assigning pieces to different pages in the next sections.
+We aren't going to step through the remainder of the main content markup of the page in detail since it uses familiar concepts from past tutorials.
+
+
+In brief, we set up a loop to go through all the piece objects available in the `data.pieces` array. For each, we extract a featured image, a link to the individual piece page, the piece title, and the piece author. Note that we are getting the link as `_url`. The underscore in front indicates that it is a property that is computed, not retrieved from the database. In this case, this is because pieces can be assigned to different parent pages and these links need to be computed dynamically at the time of rendering. We will cover assigning pieces to different pages in the next sections.
 
 Now that we have our index page created, we can reopen our `modules/review-page/index.js` file and update our `options` object to add `perPage: 9` which will cause the review pieces to be displayed in groups of 9 per page. At this point, you can go ahead and spin the site up and create some review pieces. You can then add a new page, selecting `Category Pages` for the page type from the dropdown on the right.
 
@@ -580,9 +594,9 @@ const allReviews = await self.apos.modules.review.find(req)
   })
   .toArray();
 ```
-The first constant definition in the method that we added uses the `find()` method, passing it the request object from the index page. From within the `review` module, we could use `await self.find(req)` because the method would be restricted to only review pieces. In this case, we need to reference the `find()` method of that module using `self.apos.modules.review.find(req)`. This query will initialize a query to return all the review pieces. These results are next passed to several "query builders". These query builders can alternatively be passed as an object to the `options` argument of the `find()` method, instead of chaining them, as is shown here.
+The `allReviews` variable uses the `find()` method, passing it the request object from the index page. From within the `review` module, we could use `await self.find(req)` because the method would be restricted to only review pieces. In this case, we are querying the `review` pieces from the `review-page` module, so we need to reference the `find()` method of that `review` module using `self.apos.modules.review.find(req)`. This query will initialize a query to return all the review pieces. These results are next filtered and modified by several "query builders". These query builders can alternatively be passed as an object to the `options` argument of the `find()` method, instead of chaining them, as is shown here.
 
-The first query builder we are adding is `project()`. This query builder limits the data that is returned from our find operation and takes an object with document properties to be included as keys, and the value of each set to `1` or `true`. In this case, we want to provide our content editor with a list of all the review categories. We don't need to supply the titles or authors, so we limit the amount of data that needs to be passed. Some other common query builders are `sort()` and `limit()`. You can read more about them in the [documentation](https://v3.docs.apostrophecms.org/guide/database-queries.html).
+The first query builder we are adding is `project()`. This query builder limits the data that is returned from our find operation and takes an object with document properties to be included as keys, and the value of each set to `1` or `true`. You can also use `project()` to eliminate fields by setting the value to `0` or `false`, but you **can not** provide a `project()` with both inclusion and exclusion criteria. In this case, we want to provide our content editor with a list of all the review categories. We don't need to supply the titles or authors, so we limit the amount of data that needs to be passed. Some other common query builders are `sort()` and `limit()`. You can read more about them in the [documentation](https://v3.docs.apostrophecms.org/guide/database-queries.html).
 
 Finally, we pass our query to the `toArray()` query method. The other common query method is `toObject()`. Both these methods take the criteria and refinements added by the query builders and add logic to tell the database how we want the data returned, as an array of objects or a single object, respectively.
 
@@ -672,11 +686,15 @@ Again, the original method took two arguments that we are prefacing with the `_s
 
 First, we are checking that the category is set for the piece that is being requested and that there is more than one `review-page`. If not, then we return the results of the original method, using `_super(pages, piece)`. Otherwise, we set the `pieceCategory` constant to either the value the author selected or `all` if the field doesn't have a string value. This is then used with the *JavaScript* `Array.prototype.find()`, not the Apostrophe query initiator, to select a page from the `pages` array. As fallback, if no page has been created with a matching category it will fall back to the parental method to select the correct page.
 
-At this point, you can spin the project up and create a new page for every category, plus another for 'all' to display all the pieces, or if you haven't done so yet, you can import the database from the final project (see the Introduction to learn how to accomplish this). In the next tutorial, we will add site navigation to link these pages to the homepage. Next, we are going to look at two further ways to display pieces on our pages.
+::: info
+This `chooseParentPage()` extended method is relatively simple. We could have elected to add it as a method instead, passing `data.pages[0]` back instead of the results of `_super(pages, piece)`.
+:::
+
+At this point, you can spin the project up and create a new page for every category, plus another for 'all' to display all the pieces, or if you haven't done so yet, you can import the database from the final project (see the [repository README](https://github.com/apostrophecms/a3-onboarding-project/blob/main/README.md) to learn how to accomplish this). In the next tutorial, we will add site navigation to link these pages to the homepage. Next, we are going to look at two further ways to display pieces on our pages.
 
 ## Creating a piece widget
 
-So far, we can only display pieces on a dedicated page, but obviously, we also want to be able to display pieces on other pages throughout our site. One way this can be accomplished is through the creation of a widget that can be added to any area. We are going to create three different widgets, a simple ones to display any review article, and a more complex one that allows the content creator to select from either a featured review or the latest review.
+So far, we can only display pieces on a dedicated page, but obviously, we also want to be able to display pieces on other pages throughout our site. One way this can be accomplished is through the creation of a widget that can be added to any area. We are going to create two different widgets, a simple one to display any review article, and a more complex one that allows the content creator to select from either a featured review or the latest review.
 
 ### Adding the all reviews widget
 
