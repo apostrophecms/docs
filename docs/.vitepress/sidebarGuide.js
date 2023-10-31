@@ -17,13 +17,13 @@ const sidebarGuide = [
   {
     icon: 'book',
     text: 'Learn Apostrophe with a tutorial project',
-    link: 'tutorials/',
+    link: '/tutorials/',
   },
   {
     text: 'Essentials',
     collapsed: false,
     items: [
-      { 
+      {
         text: 'Code Organization',
         collapsed: true,
         items: [
