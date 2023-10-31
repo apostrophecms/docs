@@ -9,7 +9,7 @@ next:
 
 # Displaying conditional fields
 
-When defining a field schema, you may make the display of fields conditional on other field values using the `if` setting. Until the `if` setting conditions are met, the field will be hidden. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass.
+When defining a field schema, you may make fields conditional on other field values using the `if` setting. Until the `if` setting conditions are met, the field will be hidden from the content creator. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass.
 
 ::: info
 Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans.
@@ -37,6 +37,9 @@ add: {
   }
 }
 ```
+## Nested Conditional Fields
+
+You can also create a hierarchy of conditional fields where child field visibility depends on a parent field. While the display of this parent field, in turn, is influenced by the value of another field in the schema. The child fields will remain hidden until both the parent field conditional display criteria is satisfied and the value of the parent field fulfills the child field conditional.
 
 ## Complex conditions
 
