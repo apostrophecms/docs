@@ -32,6 +32,7 @@ projectSlug: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`page` | Boolean | `false` | If `true`, then slashes are allowed since the slug field is describing a page doc |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
