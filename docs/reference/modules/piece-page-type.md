@@ -98,6 +98,7 @@ These include:
     - slug
     - string
     - url
+* The `search` query builder that gives access to the MongoDB fulltext search
 
 When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
