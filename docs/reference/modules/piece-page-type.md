@@ -98,7 +98,6 @@ These include:
     - slug
     - string
     - url
-* The `search` query builder that gives access to the MongoDB fulltext search
 
 When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
@@ -193,6 +192,8 @@ module.exports = {
 data.piecesFilters
 </template>
 </AposCodeBlock>
+
+Any `piece-page-type` index can be further filtered using the `search` query parameter. This parameter takes any word located in the record as a value. In the example above, you could append `?search=Gibson` to retrieve pieces associated with that author. The search query parameter is restricted to the piece-type of that particular index page.
 
 ### `pieceModuleName`
 Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
