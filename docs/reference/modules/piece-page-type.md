@@ -8,11 +8,29 @@ extends: '@apostrophecms/doc-type'
 
 This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the  ['@apostrophecms/page'](/reference/modules/page.md) module.
 
-Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL, and to view individual pieces of the relevant type by adding the slug of any piece to the page's URL, like this: `/slug/of/page/slug-of-piece`
-
-This default behavior can be customized as described below.
+Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL, and to view individual pieces of the relevant type by adding the slug of any piece to the page's URL, like this: `/slug/of/page/slug-of-piece`.
 
 It is possible to add more than one such page to the site for the same type, and to add custom logic to decide which pieces should be associated with each such page.
+
+Any index page is searchable using the `search` query parameter. This parameter takes advantage of MongoDB indexes created by the `@apostrophecms/doc` module on the `title`, `highSearchText`, and `lowSearchText` fields. This query is limited to the piece data being delivered to the page, so any `piecesFilters` will limit the results that are returned.
+
+<AposCodeBlock>
+
+``` nunjucks
+<form action="" method="GET">
+  <input type="text" name="search" placeholder="Search here..." value="{{ data.query.search | e }}" />
+  <button type="submit">Search</button>
+</form>
+```
+  <template v-slot:caption>
+    modules/review-page/views/index.html
+  </template>
+
+</AposCodeBlock>
+
+This example code could be used to add an input box to an `index.html` field to use the `search` parameter to filter the page to only display those pieces matching the user's search term.
+
+This default behavior can be customized as described below.
 
 ## Options
 
@@ -193,10 +211,8 @@ data.piecesFilters
 </template>
 </AposCodeBlock>
 
-Any `piece-page-type` index can be further filtered using the `search` query parameter. This parameter takes any word located in the record as a value. In the example above, you could append `?search=Gibson` to retrieve pieces associated with that author. The search query parameter is restricted to the piece-type of that particular index page.
-
 ### `pieceModuleName`
-Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
+Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.., to support different functionality in each).
 
 <AposCodeBlock>
 
