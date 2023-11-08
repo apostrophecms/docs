@@ -93,7 +93,8 @@ const classes = computed(() => [
   { collapsed: myCollapsed.value },
   { 'is-link': isLink.value },
   { 'is-active': myIsActive.value },
-  { 'has-active': myHasActive.value }
+  { 'has-active': myHasActive.value },
+  { [`is-style-${props.item.style}`]: props.item.style }
 ])
 
 function onItemInteraction(e: MouseEvent | Event) {
@@ -257,7 +258,7 @@ hr {
 .text {
   flex-grow: 1;
   padding: 4px 0;
-  line-height: 24px;
+  line-height: 1.4;
   font-size: 13px;
   transition: color 0.25s;
 }
@@ -361,5 +362,32 @@ hr {
 
 .VPSidebarItem.collapsed.collapsible .items {
   display: none;
+}
+
+.is-style-cta {
+  background-color: var(--neutral-color);
+  border-radius: 5px;
+  padding: 8px 10px;
+  width: calc(var(--vp-sidebar-width) - 25px);
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: var(--neutral-color-dark);
+  }
+
+  & .link:hover {
+    .text { color: var(--vp-c-text-1) !important; }
+    :deep(svg) {
+      path, polyline, circle, g, rect {
+        stroke: var(--vp-c-text-1);
+        color: var(--vp-c-text-1);
+      } 
+    }
+  }
+  
+  .text {
+    padding: 0;
+    font-weight: 500;
+  }
 }
 </style>

@@ -18,6 +18,7 @@ const sidebarGuide = [
     icon: 'book',
     text: 'Learn Apostrophe with a tutorial project',
     link: '/tutorials/',
+    style: 'cta'
   },
   {
     text: 'Essentials',

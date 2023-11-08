@@ -35,7 +35,8 @@ const sidebarTutorials = [
   {
     icon: 'book',
     text: 'Master Apostrophe with the guide and reference material',
-    link: '../'
+    link: '../',
+    style: 'cta'
   }
 ];
 
