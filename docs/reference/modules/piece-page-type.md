@@ -6,20 +6,23 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the ['@apostrophecms/page'](/reference/modules/page.md) module.
+This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
 
 Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL. Individual pieces of the relevant type can be viewed by adding the piece slug to the page's URL, like this: `/slug-of-index-page/slug-of-piece`.
 
-It is possible to add more than one index page for a particular piece-type and add custom logic to decide which pieces should be associated with each. For example, you could have an `article` piece type with index pages for different topics, like sports, finance, and tech. This can be accomplished by overriding the [`filterByIndexPage()`](#filterbyindexpage-query-page) method to set each article type to the correct page and the [`chooseParentPage()`](#chooseparentpage-pages-piece) method to associate the individual review show pages with the correct index..
+It is possible to add more than one index page for a particular piece-type and add custom logic to decide which pieces should be associated with each. For example, you could have an `article` piece type with index pages for different topics, like sports, finance, and tech. This can be accomplished by overriding the [`filterByIndexPage()`](#filterbyindexpage-query-page) method to fetch the pieces you think most appropriate given the settings of each index page. Conversely, override [`chooseParentPage()`](#chooseparentpage-pages-piece) to associate the individual review show pages with the correct index.
 
-Any index page is searchable using the `search` query parameter. This parameter takes advantage of MongoDB indexes created by the `@apostrophecms/doc` module on the `title`, `highSearchText`, and `lowSearchText` fields. This query is limited to the piece data being delivered to the page, so any [`piecesFilters`](#piecesfilters) will limit the results that are returned.
+Any index page is searchable using the `search` query parameter. This parameter takes advantage of MongoDB indexes automatically created by the `@apostrophecms/doc` module. This query is limited to the piece data being delivered to the page, so any [`piecesFilters`](#piecesfilters) will limit the results that are returned.
 
 <AposCodeBlock>
 
-``` nunjucks
+```nunjucks
 <form action="" method="GET">
-  <input type="text" name="search" placeholder="Search here..." value="{{ data.query.search | e }}" />
+  <input type="text" name="search" placeholder="Search here..." value="{{ data.query.search | safe }}" />
   <button type="submit">Search</button>
+  {% if data.query.search %}
+    <button type="button" onclick="window.location.href='{{ data.url | build({search: null}) }}'">Clear Search</button>
+  {% endif %}
 </form>
 ```
   <template v-slot:caption>
@@ -28,9 +31,9 @@ Any index page is searchable using the `search` query parameter. This parameter 
 
 </AposCodeBlock>
 
-This example code could be used to add an input box to an `index.html` field to use the `search` parameter to filter the page to only display those pieces matching the user's search term.
+This example implements a search box that can be integrated into an `index.html` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `data.query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the AApostrophe-supplied Nunjucks [`build()` filter](https://v3.docs.apostrophecms.org/guide/template-filters.html#build-url-path-data) to manipulate the query parameters.
 
-Pieces can also be filtered by the contents of the piece's schema fields. For instance, on an article piece index page, you could filter by an `author` schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`.
+Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `author` schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.html` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
 
 ## Options
 
@@ -119,6 +122,7 @@ These include:
 
 When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
+A simplified schema for a 'book' `piece-type`:
 <AposCodeBlock>
 
 ```javascript
@@ -134,8 +138,8 @@ module.exports = {
         label: 'Author',
         type: 'relationship'
       },
-      category: {
-        label: 'Category',
+      genre: {
+        label: 'Genre',
         type: 'select',
         choices: [
           // category choices here
@@ -151,6 +155,7 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
+A partial schema, including a `piecesFilters` option, for the 'book-page' `piece-page-type`:
 <AposCodeBlock>
 
 ```javascript
@@ -160,11 +165,12 @@ module.exports = {
     piecesFilters: [
       { name: '_author' },
       {
-        name: 'category',
+        name: 'genre',
         counts: true
       }
     ]
   }
+  // ...
 };
 ```
   <template v-slot:caption>
@@ -172,6 +178,7 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
+An example of the `data.piecesFilters` object delivered to the 'book-page' `index.html` template:
 <AposCodeBlock>
 
 ```
@@ -199,20 +206,58 @@ module.exports = {
       value: 'cl64zs5h0000ngelsbhzvgdpc:en:draft'
     }
   ],
-  category: [
-    { value: 'cyberpunk', label: 'cyberpunk', count: 4 },
-    { value: 'dystopian', label: 'dystopian', count: 9 },
-    { value: 'fantasy', label: 'fantasy', count: 7 }
+  genre: [
+    { value: 'cyberpunk', label: 'Cyberpunk', count: 4 },
+    { value: 'dystopian', label: 'Dystopian', count: 9 },
+    { value: 'fantasy', label: 'Fantasy', count: 7 }
   ]
 }
 ```
 <template v-slot:caption>
 data.piecesFilters
 </template>
+
+</AposCodeBlock>
+
+Example usage of the `data.piecesFilter`:
+
+<AposCodeBlock>
+
+```nunjucks
+{% extends data.outerlayout %}
+
+{%- macro here(url, changes) -%}
+  {{ url | build({
+    author: data.query.author,
+    genre: data.query.genre
+  }, changes) }}
+  {%- endmacro -%}
+
+{% set authors=data.picesFilters._authors %}
+{% set genres=data.piecesFilters.genre %}
+
+<h3>Authors</h3>
+<ul>
+  {% for author in authors %}
+    <li><a style="{{ 'font-style: italic' if data.query.author == author.label }}" href="{{ here(data.url, {author: author.label}) }}">{{ author.label }}</a></li>
+  {% endfor %}
+</ul>
+<h3>Genres</h3>
+<ul>
+  {% for genre in genres %}
+    <li><a style="{{ 'font-style: italic' if data.query.genre == genre.label }}" href="{{ here(data.url, {genre: genre.label}) }}">{{ genre.label }} has {{ genre.count }} entries</a></li>
+  {% endfor %}
+</ul>
+// Markup to display pieces returned in the `data.pieces` object
+```
+  <template v-slot:caption>
+    modules/book-page/views/index.html
+  </template>
+
 </AposCodeBlock>
 
 ### `pieceModuleName`
-Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.., to support different functionality in each).
+Piece page types are associated with a single piece type. If named with the pattern `[piece name]-page`, the associated piece type will be identified automatically. You can override this pattern by explicitly setting `pieceModuleName` to an active piece type. This is useful if there is more than one piece page type for a single piece type (e.g., to support different functionality in each).
 
 <AposCodeBlock>
 
