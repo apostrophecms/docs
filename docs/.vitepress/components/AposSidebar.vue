@@ -64,7 +64,7 @@ watchPostEffect(async () => {
   bottom: 0;
   left: 0;
   z-index: var(--vp-z-index-sidebar);
-  padding: 32px 32px 96px;
+  padding: 36px 12px 96px;
   width: calc(100vw - 64px);
   max-width: 320px;
   background-color: var(--vp-sidebar-bg-color);

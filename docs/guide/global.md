@@ -1,3 +1,8 @@
+---
+next:
+  text: 'Localization - Overview'
+  link: 'guide/localization/overview.md'
+---
 # Global settings
 
 Editable content or settings used across your app can be managed through the **global doc**. You can use this for many things, including configuring:

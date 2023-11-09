@@ -103,7 +103,8 @@ Each component is responsible for:
 While there is no fixed structure for the Vue components, a typical outline looks like:
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   <template>
     <fieldset>
       <label>What code did you receive?</label>
@@ -145,7 +146,8 @@ While there is no fixed structure for the Vue components, a typical outline look
 Here is complete server-side code for a simple requirement to solve a math problem when logging in. The UI appears at the bottom of the login form because the password has not been verified yet.
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   module.exports = {
     requirements(self) {
       return {
@@ -193,7 +195,8 @@ This simple example uses `req.session`, however be aware that if your site uses 
 To complete the requirement we also need a Vue component on the browser side. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project, like this:
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   <template>
     <fieldset>
       <label>Math Problem: what is {{ mathProblem }}?</label>
@@ -235,7 +238,7 @@ Don't forget to set the `APOS_DEV` environment variable to `1` when developing a
 
 If your project is derived from `starter-kit-essentials` you can type:
 
-```bash
+``` bash
 APOS_DEV=1 npm run dev
 ```
 
@@ -257,7 +260,8 @@ Unlike the other phase, requirements displayed in the `afterPasswordVerified` ph
 Below is a simple example of a requirement to solve a weak form of 2FA challenge: entering a code that is assigned the first time the user logs in successfully.
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   module.exports = {
     requirements(self) {
       return {
