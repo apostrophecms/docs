@@ -1,7 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { join } from 'path';
 
-const sidebarGuide = [ 
+const sidebarGuide = [
   {
     text: 'Getting Started',
     collapsed: false,
