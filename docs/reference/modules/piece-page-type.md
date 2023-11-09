@@ -163,7 +163,7 @@ module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
     piecesFilters: [
-      { name: '_author' },
+      { name: 'author' },
       {
         name: 'genre',
         counts: true
@@ -183,33 +183,39 @@ An example of the `data.piecesFilters` object delivered to the 'book-page' `inde
 
 ```
 {
-  _author: [
+  author: [
     {
-      slug: 'gibson',
+      _id: 'cloqajh0v0007selseq2c2np6:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Gibson',
-      value: 'cl64zrra8000fgels5v1k8ums:en:draft'
+      value: 'gibson'
     },
     {
-      slug: 'herbert',
+      _id: 'cloqak2rl000jsels2a20anjt:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Herbert',
-      value: 'cl64zsgi1000vgels1xoi2b9o:en:draft'
+      value: 'herbert'
     },
     {
-      slug: 'le-guin',
+      _id: 'cloqajsju000dsels8o2e3dgb:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Le Guin',
-      value: 'cl64zs5h0000ngelsbhzvgdpc:en:draft'
+      value: 'le-guin'
     }
   ],
   genre: [
-    { value: 'cyberpunk', label: 'Cyberpunk', count: 4 },
-    { value: 'dystopian', label: 'Dystopian', count: 9 },
-    { value: 'fantasy', label: 'Fantasy', count: 7 }
+    { value: 'cyberpunk', label: 'Cyberpunk', count: 6 },
+    { value: 'dystopian', label: 'Dystopian', count: 3 },
+    { value: 'fantasy', label: 'Fantasy', count: 9 }
   ]
 }
 ```
@@ -224,31 +230,35 @@ Example usage of the `data.piecesFilter`:
 <AposCodeBlock>
 
 ```nunjucks
-{% extends data.outerlayout %}
+{% extends "layout.html" %}
 
 {%- macro here(url, changes) -%}
   {{ url | build({
     author: data.query.author,
     genre: data.query.genre
   }, changes) }}
-  {%- endmacro -%}
+{%- endmacro -%}
 
-{% set authors=data.picesFilters._authors %}
+{% set authors=data.piecesFilters.author %}
 {% set genres=data.piecesFilters.genre %}
 
+{% block main%}
 <h3>Authors</h3>
 <ul>
   {% for author in authors %}
-    <li><a style="{{ 'font-style: italic' if data.query.author == author.label }}" href="{{ here(data.url, {author: author.label}) }}">{{ author.label }}</a></li>
+    <li><a style="{{ 'font-style: italic' if data.query.author == author.value }}" href="{{ here(data.url, {author: author.value}) }}">{{ author.label }}</a></li>
   {% endfor %}
 </ul>
 <h3>Genres</h3>
 <ul>
   {% for genre in genres %}
-    <li><a style="{{ 'font-style: italic' if data.query.genre == genre.label }}" href="{{ here(data.url, {genre: genre.label}) }}">{{ genre.label }} has {{ genre.count }} entries</a></li>
+    <li><a style="{{ 'font-style: italic' if data.query.genre == genre.value }}" href="{{ here(data.url, {genre: genre.value}) }}">{{ genre.label }} has {{ genre.count }} entries</a></li>
   {% endfor %}
 </ul>
-// Markup to display pieces returned in the `data.pieces` object
+{% for piece in data.pieces %}
+  <p><strong>{{ piece.title }}</strong> ({{ piece.genre }}) by {{ piece._author[0].name }} </p>
+{% endfor %}
+{% endblock %}
 ```
   <template v-slot:caption>
     modules/book-page/views/index.html
