@@ -232,7 +232,6 @@ const sidebarGuide = [
   }
 ];
 
-
 function getItemRefs(
   excludeStartsWith = [],
   titlePrefix = '',
