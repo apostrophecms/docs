@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Profiling ApostropheCMS with OpenTelemetry
 
 Sometimes developers need insight into performance issues with their websites. [OpenTelemetry](https://opentelemetry.io/) is a widely adopted, open source solution for collecting performance "traces" that provide insight into where the time is going when a website responds to a request.

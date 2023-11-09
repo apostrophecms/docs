@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # REST API route reference
 
 - [Authentication API](authentication.md)

@@ -1,6 +1,6 @@
 # Custom schema field types
 
-Apostrophe's [schema field types](../guide/content-schema.md) cover many situations, but we might wish to add a new one. This section of the documentation covers the creation of an entirely new schema field type. However, Apostrophe also allows you to easily combine existing field types to create a new input type which you can read about in the [tutorials](../tutorials/reusing-standard-fields.md).
+Apostrophe's [schema field types](../guide/content-schema.md) cover many situations, but we might wish to add a new one. This section of the documentation covers the creation of an entirely new schema field type. However, Apostrophe also allows you to easily combine existing field types to create a new input type which you can read about in the [cookbook](../cookbook/reusing-standard-fields.md).
 
 A schema field has two parts: a server-side part and a browser-side part. The server-side part is responsible for sanitizing the input received from the browser, while the browser-side part is responsible for providing the admin UI.
 
