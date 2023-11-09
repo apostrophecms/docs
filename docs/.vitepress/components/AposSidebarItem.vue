@@ -375,6 +375,10 @@ hr {
     background-color: var(--neutral-color-dark);
   }
 
+  .text, .icon {
+    color: var(--accent-dark-color);
+  }
+
   & .link:hover {
     .text { color: var(--vp-c-text-1) !important; }
     :deep(svg) {
