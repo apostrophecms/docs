@@ -6,7 +6,7 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
+This module adds two specialized views to those exposed by the `page-type` module, which `piece-page-type` extends. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
 
 Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL. Individual pieces of the relevant type can be viewed by adding the piece slug to the page's URL, like this: `/slug-of-index-page/slug-of-piece`.
 
@@ -31,9 +31,9 @@ Any index page is searchable using the `search` query parameter. This parameter 
 
 </AposCodeBlock>
 
-This example implements a search box that can be integrated into an `index.html` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `data.query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the AApostrophe-supplied Nunjucks [`build()` filter](https://v3.docs.apostrophecms.org/guide/template-filters.html#build-url-path-data) to manipulate the query parameters.
+This example implements a search box that can be integrated into an `index.html` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `data.query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the Apostrophe-supplied Nunjucks [`build()` filter](https://v3.docs.apostrophecms.org/guide/template-filters.html#build-url-path-data) to manipulate the query parameters.
 
-Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `author` schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.html` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
+Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `_author` relationship schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.html` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
 
 ## Options
 
@@ -239,8 +239,8 @@ Example usage of the `data.piecesFilter`:
   }, changes) }}
 {%- endmacro -%}
 
-{% set authors=data.piecesFilters.author %}
-{% set genres=data.piecesFilters.genre %}
+{% set authors = data.piecesFilters.author %}
+{% set genres = data.piecesFilters.genre %}
 
 {% block main%}
 <h3>Authors</h3>
