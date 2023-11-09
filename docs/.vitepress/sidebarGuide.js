@@ -206,19 +206,28 @@ const sidebarGuide = [
         icon: 'open-book',
         text: 'Glossary',
         link: 'reference/glossary.md'
-      },
+      }
     ]
   },
   {
     icon: 'sun',
     text: 'Upgrading From Apostrophe 2',
-    link: '',
+    link: 'guide/migration/upgrading.md'
   },
   {
-    text: 'Extensions',
+    text: 'Pro Extensions',
     collapsed: false,
     items: [
       { text: 'Multisite', link: 'https://apostrophecms.com/extensions/multisite-apostrophe-assembly' },
+      { text: 'Advanced Permissions', link: 'https://apostrophecms.com/extensions/advanced-permission' },
+      { text: 'Document Versions', link: 'https://apostrophecms.com/extensions/document-version' },
+      { text: 'Template Library', link: 'https://apostrophecms.com/extensions/template-library' },
+      { text: 'Palette Design Editor', link: 'https://apostrophecms.com/extensions/palette-3' },
+      { text: 'Apostrophe Basics', link: 'https://apostrophecms.com/extensions/apostrophe-basics' },
+      { text: 'Data Set', link: 'https://apostrophecms.com/extensions/data-set' },
+      { text: 'Account Signup', link: 'https://apostrophecms.com/extensions/account-signup' },
+      { text: 'Automated Testing Tools', link: 'https://apostrophecms.com/extensions/automated-testing-tools' },
+      { text: 'Apostrophe Pro Starter', link: 'https://apostrophecms.com/extensions/apostrophe-pro-starter' }
     ]
   }
 ];

@@ -1,6 +1,8 @@
 ---
 prev: false
-next: false
+next:
+  text: 'Web Development Introduction'
+  link: '/tutorials/introduction.html'
 ---
 # Welcome to the Tutorials Section
 
