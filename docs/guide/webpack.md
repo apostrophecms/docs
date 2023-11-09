@@ -141,7 +141,7 @@ Example:
         // Extension can be a function and return the final config
         addAlias (options) {
           return {
-            stats: options.stats,
+            mode: options.mode,
             resolve: {
               alias: options.alias || {}
             }
@@ -199,7 +199,7 @@ Example:
         // It also can be a simple object if nothing has to be merged
         // We take care of merging first level properties
         addAlias: {
-          stats: 'normal'
+          mode: 'production'
         }
       }
     }
@@ -217,7 +217,7 @@ Following this example, the options object passed to the `addAlias` extension wi
     Special: path.join(process.cwd(), 'lib/different/'),
     New: path.join(process.cwd(), 'lib/new/')
   },
-  stats: 'normal'
+  mode: 'production'
 }
 ```
 
