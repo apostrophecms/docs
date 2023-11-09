@@ -1,7 +1,3 @@
----
-prev: false
-next: false
----
 # Piece type REST API
 
 Apostrophe provides built-in REST end points for all [piece types](/reference/glossary.md#piece). The exact document properties returned will depend on the piece type's fields.
