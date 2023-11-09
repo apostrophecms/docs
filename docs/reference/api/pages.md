@@ -1,3 +1,7 @@
+---
+prev: false
+next: false
+---
 # Page type REST API
 
 All [page types](/reference/glossary.md#page) use a single set of API endpoints, unlike piece types.

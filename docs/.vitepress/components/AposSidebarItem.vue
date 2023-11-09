@@ -16,11 +16,6 @@ watch(page, newValue => {
     const hasActiveChild = checkForActivePage(props.item.items, newValue);
     myCollapsed.value = (!hasActiveChild && !myIsActive.value);
     myHasActive.value = hasActiveChild;
-
-    // if the item has been configured not to collapse, then don't collapse it
-    if (props.item.collapsed === false) {
-      myCollapsed.value = false;
-    }
   }
 })
 
@@ -79,13 +74,10 @@ let hasActiveChild = false;
 if (props.item.items) {
   hasActiveChild = checkForActivePage(props.item.items, page.value);
 }
-myCollapsed.value = props.item.items ? (!hasActiveChild) : null;
+
+myCollapsed.value = props.item.items ? !hasActiveChild : null;
 myHasActive.value = hasActiveChild;
 
-// if the item has been configured not to collapse, then don't collapse it
-if (props.item.collapsed === false) {
-  myCollapsed.value = false;
-}
 
 const classes = computed(() => [
   [`level-${props.depth}`],
@@ -93,9 +85,9 @@ const classes = computed(() => [
   { collapsed: myCollapsed.value },
   { 'is-link': isLink.value },
   { 'is-active': myIsActive.value },
-  { 'has-active': myHasActive.value },
-  { [`is-style-${props.item.style}`]: props.item.style }
+  { 'has-active': myHasActive.value }
 ])
+
 
 function onItemInteraction(e: MouseEvent | Event) {
   if ('key' in e && e.key !== 'Enter') {
@@ -258,7 +250,7 @@ hr {
 .text {
   flex-grow: 1;
   padding: 4px 0;
-  line-height: 1.4;
+  line-height: 24px;
   font-size: 13px;
   transition: color 0.25s;
 }
@@ -307,6 +299,7 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: -7px;
   width: 32px;
   height: 32px;
   color: var(--vp-c-text-3);
@@ -318,7 +311,8 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 0;
+  margin-right: -7px;
+  width: 32px;
   height: 32px;
 }
 
@@ -362,36 +356,5 @@ hr {
 
 .VPSidebarItem.collapsed.collapsible .items {
   display: none;
-}
-
-.is-style-cta {
-  background-color: var(--neutral-color);
-  border-radius: 5px;
-  padding: 8px 10px;
-  width: calc(var(--vp-sidebar-width) - 25px);
-  transition: all 0.25s ease;
-
-  &:hover {
-    background-color: var(--neutral-color-dark);
-  }
-
-  .text, .icon {
-    color: var(--accent-dark-color);
-  }
-
-  & .link:hover {
-    .text { color: var(--vp-c-text-1) !important; }
-    :deep(svg) {
-      path, polyline, circle, g, rect {
-        stroke: var(--vp-c-text-1);
-        color: var(--vp-c-text-1);
-      } 
-    }
-  }
-  
-  .text {
-    padding: 0;
-    font-weight: 500;
-  }
 }
 </style>
