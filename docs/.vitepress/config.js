@@ -166,7 +166,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://v3.docs.apostrophecms.org/images/apos-dark.png'
+          content: 'https://v3.docs.apostrophecms.org/images/apostrophe-og-image.png'
         }
       ],
       [
