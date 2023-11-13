@@ -147,7 +147,26 @@ export default defineConfig({
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
     const description = await processText(docText);
+
+    const relativePath = context.pageData.relativePath;
+    // console.log('relativePath', relativePath);
+    const absolutePath = `https://v3.docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
+
     const returnedArray = [
+      [
+        'meta',
+        {
+          property: 'og:url',
+          content: absolutePath
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:type',
+          content: 'website'
+        }
+      ],
       [
         'meta',
         {
@@ -181,6 +200,48 @@ export default defineConfig({
         {
           property: 'og:image:height',
           content: '630'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:card',
+          content: 'summary_large_image'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:domain',
+          content: 'v3.docs.apostrophecms.org'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:url',
+          content: absolutePath
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'twitter:title',
+          content: context.pageData.title
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'twitter:description',
+          content: description
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'twitter:image',
+          content: 'https://v3.docs.apostrophecms.org/images/apostrophe-og-image.png'
         }
       ]
     ];
