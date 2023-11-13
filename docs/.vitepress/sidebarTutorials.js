@@ -1,5 +1,10 @@
 const sidebarTutorials = [ 
   {
+    text: 'Master Apostrophe with the guide and reference material &#8594',
+    link: '../',
+    style: 'cta'
+  },
+  {
     text: 'Learn ApostropheCMS',
     collapsed: false,
     items: [
@@ -23,20 +28,14 @@ const sidebarTutorials = [
         link: 'tutorials/html-conversion.md'
       },
       {
-        text: 'Composing custom schema fields from standard fields',
+        text: 'Composing Custom Fields',
         link: 'tutorials/reusing-standard-fields.md'
       },
       {
-        text: 'Building navigation',
+        text: 'Navigation Building Techniques',
         link: 'tutorials/building-navigation.md'
       }
     ]
-  },
-  {
-    icon: 'book',
-    text: 'Master Apostrophe with the guide and reference material',
-    link: '../',
-    style: 'cta'
   }
 ];
 
