@@ -368,7 +368,7 @@ hr {
   background-color: var(--neutral-color);
   border-radius: 5px;
   padding: 10px 16px;
-  width: calc(var(--vp-sidebar-width) - 25px);
+  width: calc(var(--vp-sidebar-width) - 32px);
   transition: all 0.25s ease;
 
   &:hover {
