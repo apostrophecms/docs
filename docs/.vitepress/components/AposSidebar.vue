@@ -128,6 +128,10 @@ watchPostEffect(async () => {
   outline: 0;
 }
 
+.group {
+  margin-bottom: 24px;
+}
+
 .group + .group {
   border-top: 1px solid var(--vp-c-divider);
   /* padding-top: 10px; */

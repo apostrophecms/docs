@@ -15,8 +15,7 @@ const sidebarGuide = [
     ]
   },
   {
-    icon: 'book',
-    text: 'Learn Apostrophe with a tutorial project',
+    text: 'Learn Apostrophe with a tutorial project &#8594',
     link: '/tutorials/',
     style: 'cta'
   },
@@ -210,11 +209,6 @@ const sidebarGuide = [
     ]
   },
   {
-    icon: 'sun',
-    text: 'Upgrading From Apostrophe 2',
-    link: 'guide/migration/upgrading.md'
-  },
-  {
     text: 'Pro Extensions',
     collapsed: false,
     items: [
@@ -229,6 +223,11 @@ const sidebarGuide = [
       { text: 'Automated Testing Tools', link: 'https://apostrophecms.com/extensions/automated-testing-tools' },
       { text: 'Apostrophe Pro Starter', link: 'https://apostrophecms.com/extensions/apostrophe-pro-starter' }
     ]
+  },
+  {
+    text: 'Upgrade From Apostrophe 2 &#8594',
+    link: 'guide/migration/upgrading.md',
+    style: 'cta'
   }
 ];
 
