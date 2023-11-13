@@ -185,7 +185,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://v3.docs.apostrophecms.org/images/apostrophe-og-image.png'
+          content: 'https://v3.docs.apostrophecms.org/images/apos-og-image.png'
         }
       ],
       [
@@ -241,7 +241,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://v3.docs.apostrophecms.org/images/apostrophe-og-image.png'
+          content: 'https://v3.docs.apostrophecms.org/images/apos-og-image.png'
         }
       ]
     ];
@@ -274,7 +274,7 @@ export default defineConfig({
       { text: 'Guide', link: '/', activeMatch: '^/(?!tutorials)' },
       { text: 'Tutorials', link: '/tutorials/', activeMatch: '/tutorials/' },
       {
-        text: 'More', 
+        text: 'More',
         items: [
           { text: 'Extensions', link: 'https://apostrophecms.com/extensions' },
           { text: 'Starter Kits', link: 'https://apostrophecms.com/starter-kits' },
