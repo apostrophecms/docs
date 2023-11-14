@@ -95,7 +95,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        href: 'images/favicon/favicon-192.png'
+        href: '/images/favicon/favicon-192.png'
       }
     ],
     [
@@ -185,7 +185,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://v3.docs.apostrophecms.org/images/apos-og-image.png'
+          content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
         }
       ],
       [
@@ -241,7 +241,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://v3.docs.apostrophecms.org/images/apos-og-image.png'
+          content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
         }
       ]
     ];
