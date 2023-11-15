@@ -224,8 +224,8 @@ hr {
 
   &,
   .text {
-    color: var(--vp-c-brand) !important;
-    font-weight: 600 !important;
+    color: var(--vp-c-brand);
+    font-weight: 600;
   }
 }
 
