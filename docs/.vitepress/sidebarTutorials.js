@@ -34,6 +34,10 @@ const sidebarTutorials = [
       {
         text: 'Navigation Building Techniques',
         link: 'tutorials/building-navigation.md'
+      },
+      {
+        text: 'Creating Custom Rich Text Extensions',
+        link: 'tutorials/rich-text-extensions.md'
       }
     ]
   }
