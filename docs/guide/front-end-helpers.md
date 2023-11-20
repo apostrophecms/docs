@@ -206,7 +206,7 @@ Send a `GET` request. The response will be returned via a Promise unless a callb
 | Argument | What is it? |
 | -------- | ----------- |
 | `url` | The path to a resource or service |
-| `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. |
+| `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. Required |
 | `callback` | An optional callback function, required when not using Promises. Receives `error` and `result` arguments. |
 
 ```javascript
@@ -214,7 +214,7 @@ async function logArticles() {
   let articles;
 
   try {
-    articles = await apos.http.get('/api/v1/article');
+    articles = await apos.http.get('/api/v1/article', {});
     console.info(articles);
   } catch (err) {
     console.error(err);
