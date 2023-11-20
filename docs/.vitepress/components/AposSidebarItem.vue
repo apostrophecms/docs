@@ -220,21 +220,12 @@ hr {
   background-color: var(--vp-c-brand);
 }
 
-.VPSidebarItem.is-active:not(.level-0) .item .link {
+.VPSidebarItem.is-active>div>.item .link {
 
   &,
   .text {
-    color: var(--vp-c-brand) !important;
-    font-weight: 600 !important;
-  }
-}
-
-.VPSidebarItem.is-active.level-0>div>.item .link {
-
-  &,
-  .text {
-    color: var(--vp-c-brand) !important;
-    font-weight: 600 !important;
+    color: var(--vp-c-brand);
+    font-weight: 600;
   }
 }
 

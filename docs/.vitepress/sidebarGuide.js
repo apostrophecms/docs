@@ -166,10 +166,11 @@ const sidebarGuide = [
         collapsed: true,
         link: 'reference/field-types/index.md',
         items: getItemRefs(
-          ['_choices-setting', 'index'],
+          [ '_choices-setting', 'index' ],
           '',
           'reference',
-          'field-types'
+          'field-types',
+          { 'relationship-reverse.md': 'relationshipReverse' }
         )
       },
       {
@@ -235,7 +236,8 @@ function getItemRefs(
   excludeStartsWith = [],
   titlePrefix = '',
   folder = '',
-  subFolder = ''
+  subFolder = '',
+  customDisplayNames = {}
 ) {
   const moduleFiles = readdirSync(
     join(process.cwd(), 'docs', folder, subFolder)
@@ -252,13 +254,19 @@ function getItemRefs(
       return true;
     })
     .map((filename) => {
+      // Use custom display name if it exists, otherwise use the default name
+      let displayText = customDisplayNames[filename]
+        ? customDisplayNames[filename]
+        : filename.replace('.md', '');
+
       return {
-        text: `${titlePrefix}${filename.replace('.md', '')}`,
+        text: `${titlePrefix}${displayText}`,
         link: subFolder
           ? `${folder}/${subFolder}/${filename}`
           : `${folder}/${filename}`
       };
     });
 }
+
 
 export { sidebarGuide }
