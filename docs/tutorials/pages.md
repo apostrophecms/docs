@@ -113,8 +113,6 @@ topArea: {
           'blockquote',
           'codeBlock',
           '|',
-          'horizontalRule',
-          '|',
           'undo',
           'redo'
         ],
@@ -143,7 +141,8 @@ topArea: {
         ],
         insert: [
           'table',
-          'image'
+          'image',
+          'horizontalRule'
         ]
       }
     }
@@ -729,8 +728,6 @@ module.exports = {
       'blockquote',
       'codeBlock',
       '|',
-      'horizontalRule',
-      '|',
       'undo',
       'redo'
     ],
@@ -750,7 +747,8 @@ module.exports = {
     ],
     insert: [
       'table',
-      'image'
+      'image',
+      'horizontalRule'
     ]
   }
 };
