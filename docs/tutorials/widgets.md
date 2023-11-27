@@ -541,8 +541,6 @@ const basicConfig = {
       'blockquote',
       'codeBlock',
       '|',
-      'horizontalRule',
-      '|',
       'undo',
       'redo'
     ],
@@ -571,7 +569,8 @@ const basicConfig = {
     ],
     insert: [
       'table',
-      'image'
+      'image',
+      'horizontalRule'
     ]
   }
 };

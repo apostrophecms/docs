@@ -71,7 +71,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 ### Configuring the insert menu
 
 Note that the toolbar appears only when text is already selected. Some features, like
-`table` and `image`, should be available all the time because they insert entirely
+`table`, `image`, and `horizontalRule` should be available all the time because they insert entirely
 new content unrelated to existing text.
 
 To accommodate this, you can enable the "insert menu" as well:
@@ -84,7 +84,7 @@ widgets: {
     //  Toolbar configuration
     toolbar: ['styles', 'bold', 'italic', 'table', 'image'],
     // 👇 Insert menu configuration
-    insert: ['table', 'image']
+    insert: ['table', 'image', 'horizontalRule']
 }
 ```
 
