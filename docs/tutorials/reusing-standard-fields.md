@@ -131,7 +131,7 @@ module.exports = {
 
 ```
   <template v-slot:caption>
-    /modules/grade/index.js
+    /modules/student/index.js
   </template>
 </AposCodeBlock>
 
