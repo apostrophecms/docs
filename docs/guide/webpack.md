@@ -4,7 +4,7 @@ Apostrophe automatically provides a [webpack](https://webpack.js.org/)-powered b
 
 However, sometimes we want to extend the way webpack processes our frontend code, specifically in two ways:
 
-* By changing webpack's rules (the webpack configuration) via "extensions," or
+* By changing the webpack rules (the webpack configuration) via "extensions," or
 * By breaking up the bundle into two or more files, to be loaded only on pages that really require them ("extra bundles").
 
 This guide covers how to address both situations.
@@ -141,7 +141,7 @@ Example:
         // Extension can be a function and return the final config
         addAlias (options) {
           return {
-            mode: options.mode,
+            stats: options.stats,
             resolve: {
               alias: options.alias || {}
             }
@@ -199,7 +199,7 @@ Example:
         // It also can be a simple object if nothing has to be merged
         // We take care of merging first level properties
         addAlias: {
-          mode: 'production'
+          stats: 'normal'
         }
       }
     }
@@ -217,7 +217,7 @@ Following this example, the options object passed to the `addAlias` extension wi
     Special: path.join(process.cwd(), 'lib/different/'),
     New: path.join(process.cwd(), 'lib/new/')
   },
-  mode: 'production'
+  stats: 'normal'
 }
 ```
 
