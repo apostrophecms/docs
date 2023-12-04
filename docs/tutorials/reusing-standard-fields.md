@@ -157,7 +157,7 @@ addGradeFieldType() {
 }
 ```
 
-We are passing the `addFieldType()` method of the `@apostrophecms/schema` module an object with three properties. The first is the name that will be used within any schema utilizing this field, `grades`. The `convert` key points to the method that will be used to sanitize and store the data. Finally, the `vueComponent` key takes the file name for our Vue component located in the `modules/grade/ui/apos/components` folder.
+We are passing the `addFieldType()` method of the `@apostrophecms/schema` module an object with three properties. The first is the name that will be used within any schema utilizing this field, `grades`. The `convert` key points to the method that will be used to sanitize and store the data. Finally, the `vueComponent` key takes the file name for our Vue component located in the `modules/student/ui/apos/components` folder.
 
 
 ```javascript
@@ -180,7 +180,7 @@ exposeSchema() {
 }
 ```
 
-The next method, `exposeSchema()`, allows us to reuse the schema for our component in the convert method, as well as in our Vue component. 
+The next method, `exposeSchema()`, allows us to reuse the schema for our component in the convert method, as well as in our Vue component.
 
 The schema should be passed as an *array* of objects. This is slightly different than how we typically format our schema as an object composed of named objects, so the name field moves inside the object.
 
@@ -291,7 +291,7 @@ export default {
   },
   data() {
     const next = this.getNext();
-    const gradeSchema = apos.modules['student'].gradeSchema;
+    const gradeSchema = apos.modules['grade'].gradeSchema;
     return {
       next,
       gradeSchemaInput: {
@@ -402,7 +402,7 @@ For our custom schema field, we are utilizing two helper components from the `@a
 
 The only one that we might want to change the value of is `:error`. It can take values of either `"null"` or `"effectiveError"`. If you are making a component that has multiple schema fields and set `:error` to "null", errors will only be shown for the individual fields, not the top-level component. Setting it to "effectiveError" will show errors in the individual fields, as well as the entire custom schema field. It is a judgment call to determine which will result in a better user experience.
 
-:::note
+::: info NOTE
 As a guide for selecting error type, the Apostrophe `array` and `object` fields use `:error="null"`. This provides clear guidance on which field is in error, without a second error message being displayed for the entire component. You may want to change this if your custom field has a requirement such as `min: 1`.
 :::
 
@@ -438,7 +438,7 @@ import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/c
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
 ```
 
-In this case, we are bringing the `AposInputMixin` mixin into our script. This provides prop declarations for several of the props used in both the `AposInputWrapper` and `AposSchema` components. 
+In this case, we are bringing the `AposInputMixin` mixin into our script. This provides prop declarations for several of the props used in both the `AposInputWrapper` and `AposSchema` components.
 
 We are also importing the files for the actual components. While not shown here, button controls can be added by bringing in the `<AposButton>` component from `apostrophe/modules/@apostrophecms/ui/ui/apos/components/AposButton.vue`.
 
@@ -465,12 +465,12 @@ props: {
   }
   ```
 
-Next, we declare the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type. 
+Next, we declare the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type.
 
 ```javascript
 data() {
   const next = this.getNext();
-  const gradeSchema = apos.modules['student'].gradeSchema;
+  const gradeSchema = apos.modules['grade'].gradeSchema;
   return {
     next,
     gradeSchemaInput: {
@@ -485,7 +485,7 @@ In this code, we are defining the initial state of our `AposSchema` Vue componen
 
 First, we call a self-defined method called `getNext()` to retrieve the current values for our schema fields and assign them to `next`.
 
-We access the schema we used in our `student` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to make the schema available as `gradeSchema`.
+We access the schema we used in our `grade` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to make the schema available as `gradeSchema`.
 
 Finally, we return an object with three properties:
 * `next`: the initial value of next
