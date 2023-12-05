@@ -183,7 +183,7 @@ export default replacementEmojis;
 
 </AposCodeBlock>
 
-The `replacementEmojis.js` file in the `lib` folder contains each of those rules as an array of objects. Each object has two properties. The `find` property takes a regular expression pattern matching the characters that should be replaced within the editor as the user types. The `replace` property takes a string that contains the character(s) that should replace the matched string.
+The `replacementEmojis.js` file in the `lib` folder contains each of those rules as an array of objects. Each object has two properties. The `find` property takes a regular expression pattern matching the characters that should be replaced within the editor as the user types. The `replace` property takes a string that contains the character(s) that should replace the matched string. Note that any special characters, like in the `replace` string need to be escaped.
 
 ```javascript
 const Smilie = Extension.create({
@@ -205,4 +205,6 @@ First up in this object, there is a `name` property. Adding a unique name allows
 
 Next, we are using the `addInputRules()` method of the `Extension()`. Again, this helper method is used to define input rules that automatically replace or format text as the user types. It needs to return an array of rules, as we defined in the `replacementEmojis.js` file. For each extension, Tiptap will call this method to compile an array of all the rules.
 
-The remainder of this code uses the `tone` option passed when the extension is instantiated by the `smilies/ui/apos/tiptap-extensions/smilie.js`. This file, like the `typography/ui/apos/tiptap-extension/typography.js` file that was covered previously, collects the per-area and global configuration and passes it to the extension instance.
+The remainder of this code uses the `tone` option passed when the extension is instantiated by the `smilies/ui/apos/tiptap-extensions/smilie.js`. A great improvement to this extension would be the addition of an additional UI element to change the emoji skin tone as it is added.
+
+In conclusion, in this tutorial we created a basic text replacement extension that can be used as a template for your custom extensions. This could be as simple as changing out the `replacementEmojis.js` file with your own text strings, or using this extension as a foundation for more complex functionality. The flexibility of this setup allows for a wide range of creative applications, from adding custom emoji sets to implementing unique text transformation features. By leveraging and modifying the concepts presented here, you can create powerful and unique text editing experiences that cater to a diverse array of use cases.
