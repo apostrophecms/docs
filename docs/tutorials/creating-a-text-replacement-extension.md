@@ -1,10 +1,64 @@
-## The `@apostrophecms/smilies` extension
+# The `@apostrophecms/smilies` extension
 ![Screenshot of emojis added in the ApostropheCMS rich-test-widget](../images/smilies.png)
 
 The `@apostrophecms/smilies` extension adds a host of text shortcuts for smilie and other emojis, plus my favorite non-emoji, `:ashrug ` (`¯\_(ツ)_/¯`). You can see the full list in the `modules/@apostrophecms/smilies/lib/replacementEmojis.js` file. This extension also takes a `tone` option passed in the `smiliesConfig` object in either the per-area or global rich-text-widget configuration. This option takes a number from 1-5 to provide a skin tone for modifiable emojis. Note that which emojis are modifiable varies based on operating system. See the [repository README](https://github.com/apostrophecms/rich-text-example-extensions/blob/main/README.md) for more detailed information.
 
+The overall structure of the module is almost the same as the typography module that we covered in the [first tutorial](/tutorials/using-tiptap-extensions.html) so we will only briefly review the repetative files in this extension.
 
-The overall structure of the module is almost the same as the typography module. There is the `index.js` file that improves the widget and extends the `getBrowserData()` method. There is also a `ui/apos/tiptap-extensions` folder containing the `smilie.js` file that collects the per-area and project-wide configuration options and instantiates the extension. The only change here is that there is a `lib` folder with two files.
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  improve: '@apostrophecms/rich-text-widget',
+  options: {
+    smiliesConfig: {}
+  },
+  extendMethods(self) {
+    return {
+      // We need to extend this method so that our configuration data is available
+      getBrowserData(_super, req) {
+        const initialData = _super(req);
+        const finalData = {
+          ...initialData,
+          aposSmiliesConfig: self.options.smiliesConfig
+        }
+        return finalData;
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    @apostrophcms/smilies/index.js
+  </template>
+
+</AposCodeBlock>
+
+The `index.js` file improves the rich-text-widget and extends the `getBrowserData()` method. This allows us to pass global and per-area configuration to the widget through the `smiliesConfig` object.
+
+<AposCodeBlock>
+
+```javascript
+import { Smilie } from '../../../lib/smilies.js';
+export default (options) => {
+  // gets options added in each area
+  const perAreaConfig = options.smiliesConfig || {};
+  // gets options added at project level to the widget `modules/@apostrophecms/rich-text-widget/index.js`
+  const globalConfig = self.apos.modules['@apostrophecms/rich-text-widget'].aposSmiliesConfig || {};
+  const configuration = Object.assign({}, globalConfig, perAreaConfig);
+  // instantiates the extension with our options
+  return Smilie.configure(configuration);
+};
+```
+  <template v-slot:caption>
+    @apostrophcms/smilies/ui/apos/tiptap-extensions/smilie.js
+  </template>
+
+</AposCodeBlock>
+
+The first extension also had a `ui/apos/tiptap-extensions` folder containing the core code to instantiate the Tiptap extension. The `smilie.js` file collects the per-area and project-wide configuration options and instantiates the extension.
+
+The biggest change here from the typography extension code is the presence of a `lib` folder with two files. Let's look more closely at these files.
 
 ### The `lib` folder
 The `smilies/lib/extensions-smilies.js` file provides the code that extends the Tiptap functionality like the `@tiptap/extension-typography` files did for our first module.
@@ -83,8 +137,10 @@ Let's walk through the most relevant parts of this code.
 import { textInputRule, Extension } from '@tiptap/core';
 ```
 
-We start by importing two key methods from the Tiptap core package. The `Extension` method is a foundational component that follows a factory pattern, providing an interface for creating objects without specifying the exact class of objects. It exposes a number of lifecycle methods and hooks that are then available for extending editor functionality. Some commonly used methods and hooks include:
+We start by importing two key methods from the Tiptap core package. The `Extension` method is a foundational component that follows a factory pattern, providing an interface for creating objects without specifying the exact class of objects. It exposes a number of lifecycle methods and hooks that are then available for extending editor functionality.
 
+::: details Some commonly used Tiptap methods and hooks
+You can read more about these methods and hooks in the [Tiptap API documentation](https://tiptap.dev/api/introduction) and [ProseMirror reference documentation](https://prosemirror.net/docs/ref/).
 1.  **`addInputRules()`**: Used to define input rules that automatically replace or format text as the user types. For example, you could create an input rule to automatically replace `:)` with an emoji smiley face. These rules are useful for adding simple, automated text transformations based on user input.
 
 2.  **`onTransaction()`**: This hook gets called every time a new ProseMirror transaction occurs. It allows you to respond to changes in the editor's state. This will be used in the third extension.
@@ -102,8 +158,7 @@ We start by importing two key methods from the Tiptap core package. The `Extensi
 8. **`addAttributes()`**: Adds custom attributes to existing nodes or marks. This can be useful for adding data attributes, classes, or inline styles.
 
 9.  **`onCreate()`** and **`onDestroy()`**: Lifecycle hooks that get called when the extension is created or destroyed, respectively. They can be useful for setting up and tearing down anything associated with your extension.
-
-By combining these methods and hooks, you can create a highly customized editing experience. Each of these methods often exposes a set of options and parameters, giving you a lot of control over how they behave.
+:::
 
 In the Smilies extension, the `addInputRules()` method is used to dynamically create and add a series of `textInputRule` instances to an array.
 
