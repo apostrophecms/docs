@@ -9,7 +9,7 @@ next:
 
 # Displaying conditional fields
 
-When defining a field schema, fields can be made conditional based on the values of other fields using the `if` setting. These conditional fields remain hidden until the specified `if` conditions are satisfied. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass. When matching values from a `checkboxes` field, the condition is considered met if *any* of the checkbox values selected by the user match any of the values specified in the `if` condition.
+When defining a field schema, fields can be made conditional based on the values of other fields using the `if` setting. These conditional fields remain hidden until the specified `if` conditions are satisfied. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass. When matching values from a `checkboxes` field, the condition is considered met if *any* of the checkbox values selected by the user match any of the values specified in the `if` condition. This can allow for the conditional display of many fields.
 
 ::: info
 Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans. This can include simple `string`, `boolean`, or `integer` fields, but also `checkboxes`, `select`, or even `date` or `time` since they are returned as strings.
