@@ -1,4 +1,4 @@
-## The `@apostrophecms/typography` extension
+# The `@apostrophecms/typography` extension
 ![Examples of character conversion in the typography extension](../images/typography.png)
 
 The first module, `@apostrophecms/typography` adds a whole series of autocomplete actions to your editor. For example, typing `(tm)` will autoconvert to `™`.  It serves as a template for how we can install a premade Tiptap extension into our project. For the whole list of autocomplete actions check out the [documentation](https://tiptap.dev/api/extensions/typography) for the extension on the Tiptap site. Note that some auto-convert rules (like fractions) won't work if you have the insert menu turned on.
