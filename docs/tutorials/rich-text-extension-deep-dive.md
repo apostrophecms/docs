@@ -1,5 +1,4 @@
-
-## The `@apostrophecms/characterCount` extension
+# The `@apostrophecms/characterCount` extension
 ![Screenshot of the insert menu character count modal](../images/character-count.png)
 
 The third Tiptap extension added by our bundle of modules is the `characterCount` extension. While you might find this extension useful in your project, the main point is to show how to add a new button to the toolbar or item to the insert menu. It will also introduce us to some additional Tiptap methods that we touched on briefly in covering the `smilies` extension.
@@ -83,7 +82,7 @@ const finalInsert = {
   }
 };
 ```
-The next block of code adds to the `insertMenu` object. This object contains properties for all the items that can be added to the insert menu. Again, we spread the original object and then add our new property. This time we are passing a `label` and `icon` in the `characterCount` object. These will both be displayed the menu item. Of note, the [icon has already been registered](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons), so we don't have to do it in this module. Once again, the `component` property passes the name of the Vue component file located in the `characterCount/ui/apos/components/` folder.
+The next block of code adds to the `insertMenu` object. This object contains properties for all the items that can be added to the insert menu. Again, we spread the original object and then add our new property. This time we are passing a `label` and `icon` in the `characterCount` object to be displayed in the menu item. Of note, the [icon has already been registered](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons), so we don't have to do it in this module. Once again, the `component` property passes the name of the Vue component file located in the `characterCount/ui/apos/components/` folder.
 
 ```javascript
 const finalData = {
@@ -356,7 +355,7 @@ watch: {
   },
 },
 ```
-The `watch` object contains a function that monitors changes to the `active` property. When `active` changes to `true`, the numbers of characters are recalculated using the methods in this script and the mixin.
+The `watch` object contains a function that monitors changes to the `active` property. When `active` changes to `true`, the number of characters is recalculated using the methods in this script and the mixin.
 
 ```javascript
 methods: {
@@ -380,7 +379,7 @@ methods: {
   },
 }
 ```
-There are four method functions. The `close()` method is contains code that is somewhat important for Tiptap development. First, we are toggling the active state to close the modal. Then we are using the Tiptap `chain()` and `focus()` methods to return focus to the editor box when the dialog box closes. In this case, we actually don't need the `chain()` method since we are only passing a single additional method, and not a chain of them. But for teaching purposes, it is good to know it exists.
+There are four method functions. In the `close()` method we are toggling the active state to close the modal and then using the Tiptap `chain()` and `focus()` methods to return focus to the editor box when the dialog box closes. In this case, we don't need the `chain()` method since we are only passing a single additional method, and not a chain of them. But for teaching purposes, it is good to know it exists.
 
 The `takeAction()` method also toggles the `active` state, this time when the toolbar button is clicked. If `active` is true, it then calls the `populateFields()` method that is defined in the mixin. This method increments the `generation` data property, triggering an update of the DOM. This is a common pattern used by components in Apostrophe.
 
@@ -601,7 +600,7 @@ data() {
 },
 ```
 
-The `totalCharactersCount` and `totalWordsCount` initialize these two properties for extension-specific data. The `generation` property is commonly used in Apostrophe components to trigger a re-render through a watcher. The `triggerValidation` is used to validate any input prior to insertion. For this extension we aren't receiving any input from the user, so we could eliminate this property. In your own custom editor you might need to include it. Finally, we are passing a `formModifiers` property to keep track of modal styling.
+The `totalCharactersCount` and `totalWordsCount` initialize these two properties for extension-specific data. The `generation` property is commonly used in Apostrophe components to trigger a re-render through a watcher. The `triggerValidation` is used to validate any input prior to insertion. For this extension we aren't receiving any input from the user, so we could eliminate this property. In your custom editor extension you might need to include it. Finally, we are passing a `formModifiers` property to keep track of modal styling.
 
 ```javascript
 props: {
@@ -616,7 +615,7 @@ props: {
 },
 ```
 
-Within the `props` object we are passing two props from the parent `AposRichTextWidgetEditor.vue` component. This includes the `editor` instance.
+Within the `props` object, we are passing two props from the parent `AposRichTextWidgetEditor.vue` component. This includes the `editor` instance.
 
 ```javascript
 computed: {
@@ -1023,10 +1022,10 @@ return true;
 ```
 Finally, we use some conditional logic to first test if the final number of characters would be greater than the limit if the transaction is allowed. If not, we return true. If it exceeds the limit and the content is being pasted into the editor we then delete the incoming content to make it fit the limit. The `transaction.selection.$head.pos` is going to get the position of the cursor within the transaction. Given that it was just pasted, this will be the end of the pasted content. We then set the `from` position to the number of characters over the limit back from the end of the pasted content and the `to` to the end of the selection (we could also have used `pos` directly, but the code is clearer using `to`). The `deleteRange()` method is then used to delete the characters between the two positions before returning `true` to allow the transaction. If the transaction is coming from the user typing and going over the limit it won't be permitted by returning `false`.
 
-This extension was created to allow for the counting of both total and highlighted characters in our rich-text editor. There is also an official [Tiptap extension](https://tiptap.dev/api/extensions/character-count) that will return the total number of characters in the editor. This extension takes a slightly different route than the extension that we just covered. It makes use of `storage` to hold the word and character values and updates with every transaction, rather than calculating when the modal is activated. The primary purpose of `storage` in a Tiptap extension is to hold data or state relevant to the extension's functionality. This can include settings, temporary data, or any other information the extension needs to function correctly. The `storage` is tied to the lifecycle of the extension itself. It is created when the extension is instantiated and exists as long as the extension is active. The scope of the storage is limited to the extension, meaning it is not directly accessible by other parts of the Tiptap editor or other extensions unless explicitly designed to be so. This is a very useful Tiptap feature that can be used in your custom extensions/
+This extension was created to allow for the counting of both total and highlighted characters in our rich-text editor. There is also an official [Tiptap extension](https://tiptap.dev/api/extensions/character-count) that will return the total number of characters in the editor. This extension takes a slightly different route than the extension that we just covered. It makes use of `storage` to hold the word and character values and updates with every transaction, rather than calculating when the modal is activated. The primary purpose of `storage` in a Tiptap extension is to hold data or state relevant to the extension's functionality. This can include settings, temporary data, or any other information the extension needs to function correctly. The `storage` is tied to the lifecycle of the extension itself. It is created when the extension is instantiated and exists as long as the extension is active. The scope of the storage is limited to the extension, meaning it is not directly accessible by other parts of the Tiptap editor or other extensions unless explicitly designed to be so. This is a very useful Tiptap feature that can be used in your custom extensions.
 
 ## Summation
-In this tutorial, we walked through how you can improve and customize the ApostropheCMS `rich-text-widget`. On the Apostrophe side, we learned a little about how to add custom options for your modules that improve the core modules using the `getBrowserData()` extended method. We also learned what is needed to add a new button to the toolbar or an item to the insert menu to activate your new functionality.
+In this tutorial series, we walked through how you can improve and customize the ApostropheCMS `rich-text-widget`. On the Apostrophe side, we learned a little about how to add custom options for your modules that improve the core modules using the `getBrowserData()` extended method. We also learned what is needed to add a new button to the toolbar or an item to the insert menu to activate your new functionality.
 
 On the Tiptap side, we introduced how you can use premade extensions from [Tiptap](https://tiptap.dev/) and other developers. We also demonstrated how to make a simple plugin for adding your own string replacements. Finally, we dug deep into Tiptap and ProseMirror development, creating an extension that added a plugin to ProseMirror.
 
