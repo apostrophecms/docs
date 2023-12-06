@@ -8,6 +8,8 @@ import AposTag from '../components/AposTag.vue';
 import AposRefExtends from '../components/AposRefExtends.vue';
 import AposFeedback from '../components/AposFeedback.vue';
 import EditOrIssue from '../components/EditOrIssue.vue';
+import AposTwoColumns from '../components/AposTwoColumns.vue';
+import AposCtaButton from '../components/AposCtaButton.vue';
 
 export default {
   ...Theme,
@@ -22,5 +24,7 @@ export default {
     app.component('AposCodeBlock', AposCodeBlock);
     app.component('AposTag', AposTag);
     app.component('AposRefExtends', AposRefExtends);
+    app.component('AposTwoColumns', AposTwoColumns);
+    app.component('AposCtaButton', AposCtaButton);
   }
 };

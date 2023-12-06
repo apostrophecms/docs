@@ -80,6 +80,84 @@ This is a dangerous warning.
 This is a details block.
 :::
 
+# My own example
+
+**Input**
+
+````
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Series"
+      title="Clickable example"
+      content="Clickable content"
+      url="/get-started"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Unclickable title"
+      content="Unclickable content"
+    />
+  </template>
+</AposTwoColumns>
+
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Title 3"
+      content="Content 3"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Title 4"
+      content="Content 4"
+    />
+  </template>
+</AposTwoColumns>
+````
+
+**Output**
+
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Series"
+      title="Clickable example"
+      content="Clickable content"
+      url="/get-started"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Unclickable title"
+      content="Unclickable content"
+    />
+  </template>
+</AposTwoColumns>
+
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Title 3"
+      content="Content 3"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Title 4"
+      content="Content 4"
+    />
+  </template>
+</AposTwoColumns>
+
 ## More
 
 Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).
