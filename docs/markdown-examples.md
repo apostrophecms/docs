@@ -129,7 +129,7 @@ This is a details block.
       detail-heading="Series"
       title="Clickable example"
       content="Clickable content"
-      url="/get-started"
+      url="/guide/introduction.html"
     />
   </template>
   <template #rightColumn>
