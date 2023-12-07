@@ -34,6 +34,25 @@ const sidebarTutorials = [
       {
         text: 'Navigation Building Techniques',
         link: 'tutorials/building-navigation.md'
+      },
+      {
+        text: 'Creating Custom Rich Text Extensions',
+        collapsed: true,
+        link: 'tutorials/introduction-to-rich-text-extensions.md',
+        items: [
+          {
+            text: 'Using Tiptap Extensions',
+            link: 'tutorials/using-tiptap-extensions.md'
+          },
+          {
+            text: 'Creating a Text Replacement Extension',
+            link: 'tutorials/creating-a-text-replacement-extension.md'
+          },
+          {
+            text: 'Toolbar and Insert Menu Extensions',
+            link: 'tutorials/rich-text-extension-deep-dive.md'
+          }
+        ]
       }
     ]
   }
