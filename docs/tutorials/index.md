@@ -4,10 +4,43 @@ next:
   text: 'Web Development Introduction'
   link: '/tutorials/introduction.html'
 ---
-# Welcome to the Tutorials Section
+# Tutorials
 
-This section is designed to offer comprehensive, step-by-step exploration of various topics, complete with practical applications that go beyond the technical explanations found in our Guide or Reference sections. Whether you're a beginner looking to build foundational knowledge or an advanced user aiming to master intricate features, our tutorials are tailored to facilitate in-depth understanding and hands-on experience.
+Comprehensive, step-by-step exploration of various topics, complete with practical applications that go beyond the technical explanations found in our Guide or Reference sections.
 
-Unlike the Guide section, which offers general overviews and quick solutions, or the Reference section, where you'll find specific technical details, the Tutorial section takes a pedagogical approach. Each tutorial is structured like a lesson, complete with examples, and tips to reinforce learning. By walking you through each concept methodically, we aim to provide a learning pathway that leads you from confusion to clarity.
-
-We’re excited to support you on your learning journey and are always open to feedback to make this section even more helpful for you.
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Series"
+      title="Learn ApostropheCMS by building a site"
+      content="In this series we will construct a sample website and cover basic concepts to get you started quickly."
+      url="/tutorials/introduction.md"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="From HTML to ApostropheCMS"
+      content="This tutorial will walk through the conversion of a pre-made HTML template for use in an ApostropheCMS project."
+      url="/tutorials/html-conversion.md"
+    />
+  </template>
+</AposTwoColumns>
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Custom schema fields"
+      content="You can quickly create custom schema fields using the existing Apostrophe fields and this tutorial will show you how."
+      url="/tutorials/reusing-standard-fields.md"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Building navigation"
+      content="This tutorial will touch on the various ways Apostrophe provides to construct navigation menus for your site."
+      url="/tutorials/navigation.md"
+    />
+  </template>
+</AposTwoColumns>
