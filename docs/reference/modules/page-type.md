@@ -6,7 +6,7 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module serves as the cornerstone for creating page types in Apostrophe. It allows developers to define multiple page types, each with its own configuration methods, schema fields, and template(s). This module extends the schema fields provided by the `@apostrophecms/doc-type` module with the `type` field and introduces the `orphan` field (labeled `visibility`), which controls page visibility in the navigation. Any newly created page type needs to be added to the `app.js` file, but also to the `types` array in the options of the [`@apostrophecms/page` module](/reference/modules/page.html). The object for each page type should have a `name` property that takes the module name and a `label` property that is used to populate the choices of page types presented to the content manager when they create a new page.
+This module serves as the cornerstone for creating page types in Apostrophe. It allows developers to define multiple page types, each with their own configuration methods, schema fields, and template(s). This module extends the schema fields provided by the `@apostrophecms/doc-type` module with the `type` field and introduces the `orphan` field (labeled `visibility`), which controls page visibility in the navigation. Any newly created page type needs to be added to the `app.js` file, but also to the `types` array in the options of the [`@apostrophecms/page` module](/reference/modules/page.html). The object for each page type should have a `name` property that takes the module name and a `label` property that is used to populate the choices of page types presented to the content manager when they create a new page.
 
 <AposCodeBlock>
 
