@@ -1,8 +1,13 @@
-const sidebarTutorials = [ 
+const sidebarTutorials = [
   {
-    text: 'Master Apostrophe with the guide and reference material &#8594',
-    link: '../',
-    style: 'cta'
+    text: 'Tutorials',
+    link: '/tutorials/',
+    icon: 'home'
+  },
+  {
+    text: 'Guide',
+    link: '/',
+    icon: 'book-marked'
   },
   {
     text: 'Learn ApostropheCMS',
