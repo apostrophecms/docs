@@ -1,13 +1,8 @@
 const sidebarTutorials = [
   {
-    text: 'Tutorials',
+    text: 'Tutorials Home',
     link: '/tutorials/',
     icon: 'home'
-  },
-  {
-    text: 'Guide',
-    link: '/',
-    icon: 'book-marked'
   },
   {
     text: 'Learn ApostropheCMS',
@@ -60,6 +55,12 @@ const sidebarTutorials = [
         ]
       }
     ]
+  },
+  {
+    text: 'Return to the guide &#8594',
+    link: '/',
+    icon: 'book-marked',
+    style: 'cta'
   }
 ];
 
