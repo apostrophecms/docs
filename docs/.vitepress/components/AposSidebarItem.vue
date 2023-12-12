@@ -32,7 +32,7 @@ onUnmounted(() => {
 });
 
 const props = defineProps<{
-  item: DefaultTheme.SidebarItem & { break?: boolean }
+  item: DefaultTheme.SidebarItem & { break?: boolean, customClass?: string }
   depth: number
 }>()
 
@@ -94,7 +94,8 @@ const classes = computed(() => [
   { 'is-link': isLink.value },
   { 'is-active': myIsActive.value },
   { 'has-active': myHasActive.value },
-  { [`is-style-${props.item.style}`]: props.item.style }
+  { [`is-style-${props.item.style}`]: props.item.style },
+  props.item.customClass
 ])
 
 function onItemInteraction(e: MouseEvent | Event) {
