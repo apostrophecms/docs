@@ -15,13 +15,14 @@ export default {
     leftColumn: String,
     rightColumn: String
   }
-}
+};
 </script>
 
 <style scoped>
 .two-columns {
   display: flex;
-  gap: 32px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .column {

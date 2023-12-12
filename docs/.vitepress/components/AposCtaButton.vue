@@ -45,6 +45,7 @@
   
 <style scoped>
   .cta-button {
+    height: 100%;
     transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     border: 1px solid var(--vp-c-divider);
     background-color: transparent;
@@ -54,7 +55,7 @@
 
   .cta-button__detail-heading {
     color: var(--vp-c-text-2);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     margin-bottom: 12px;
   }
