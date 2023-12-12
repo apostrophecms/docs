@@ -11,7 +11,7 @@
       <p class="cta-button__detail-heading">{{ detailHeading }}</p>
       <p class="cta-button__title">{{ title }}</p>
       <p>{{ content }}<span v-if="url"> &#8594</span> </p>
-    </div>
+   </div>
   </template>
   
   <script>
