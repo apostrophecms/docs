@@ -2,7 +2,8 @@ const sidebarTutorials = [
   {
     text: 'Tutorials Home',
     link: '/tutorials/',
-    icon: 'home'
+    icon: 'home',
+    customClass: 'reduce-bottom-margin'
   },
   {
     text: 'Learn ApostropheCMS',
