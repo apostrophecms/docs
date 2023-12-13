@@ -11,7 +11,8 @@ const sidebarGuide = [
       { text: 'Technical Overview', link: 'guide/technical-overview.md' },
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
       { text: 'Development Setup', link: 'guide/development-setup.md' },
-      { text: 'Windows Development', link: 'cookbook/windows-development.md' }
+      { text: 'Windows Development', link: 'cookbook/windows-development.md' },
+      { text: 'Upgrade From Apostrophe 2', link: 'guide/migration/upgrading.md'}
     ]
   },
   {
@@ -224,11 +225,6 @@ const sidebarGuide = [
       { text: 'Automated Testing Tools', link: 'https://apostrophecms.com/extensions/automated-testing-tools' },
       { text: 'Apostrophe Pro Starter', link: 'https://apostrophecms.com/extensions/apostrophe-pro-starter' }
     ]
-  },
-  {
-    text: 'Upgrade From Apostrophe 2 &#8594',
-    link: 'guide/migration/upgrading.md',
-    style: 'cta'
   }
 ];
 
