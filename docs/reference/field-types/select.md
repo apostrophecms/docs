@@ -40,6 +40,7 @@ theme: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|[`autocomplete`](#autocomplete) | String | 'off' | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | Varies | n/a | The default value for the field. Must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
@@ -71,6 +72,9 @@ Second, implement that method in your module so that it takes `(req, data)` argu
 The `data` argument is an object containing the parent's `docId` for further inspection by your function.
 
 It is usually a good idea to perform at least short-term caching in your choices method, in order to limit the impact on performance when editing.
+
+### autocomplete
+The string supplied to the `autocomplete` option is used as the value of the `autocomplete` attribute for the field, as specified in the HTML standards. This feature suggests possible values based on user inputs and previously entered data, streamlining data entry and improving form usability. This also takes a string of `off` to disable autocomplete for sensitive fields. For detailed information on how the `autocomplete` attribute works and the values it accepts, refer to the [MDN documentation on autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete).
 
 ## Use in templates
 
