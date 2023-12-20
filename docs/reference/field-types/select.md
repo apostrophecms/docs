@@ -40,7 +40,7 @@ theme: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|[`autocomplete`](#autocomplete) | String | 'off' | Sets the value of the `autocomplete` attribute on the field. |
+|[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | Varies | n/a | The default value for the field. Must be from the defined choices' values. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
