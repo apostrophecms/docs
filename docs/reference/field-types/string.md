@@ -33,7 +33,7 @@ biography: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
-|[`autocomplete`](#autocomplete) | String | 'off' | Sets the value of the `autocomplete` attribute on the field. |
+|[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
 |[`following`](#following) | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.|
 |`help` | String | n/a | Help text for the content editor |
