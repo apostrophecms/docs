@@ -62,6 +62,9 @@ The `clear()` method is an asynchronous method and should be called with await. 
 This method clears an entire namespace. To overwrite a single key's value, just call the `set()` method again.
 :::
 
+### `async delete(key, namespace)`
+The `delete()` method is asynchronous and should be called with await. The method allows the removal of a single `key` from the specified `namespace`.
+
 ## Module tasks
 
 ### `clear-cache <namespace(s)>`
