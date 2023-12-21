@@ -28,9 +28,16 @@ See the `nvm` page for more options.
 
 ### 2. MongoDB 6.0+<br>
 
+You can make a MongoDB instance available to your project in two main ways. For completely local development you can install the MongoDB community edition server. You can also elect to use a hosted version of the server, either through the MongoDB [Atlas service](https://www.mongodb.com/atlas/database), or self-hosted. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017<project-shortName>` where the `shortName` is set in the project `app.js` file. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable.
+
+For example:
+```bash
+APOS_MONGODB_URI=mongodb://db_user:D1fficultP%40ssw0rd@mongodb0.example.com:27017/?authSource=apos-site-db node app
+```
+
 Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS. Again, Windows users should install from within WSL2 and follow the instructions for their Linux distribution.
 
-::: info 📌 When using Ubuntu 22.04, the only currently supported MongoDB version is 6.04 or newer. If your production environement requires that you use an earlier version of MongoDB for development, we advise you use Ubuntu 20.04.
+::: info 📌 When using Ubuntu 22.04, the only currently supported MongoDB version is 6.04 or newer. If your production environment requires that you use an earlier version of MongoDB for development, we advise you use Ubuntu 20.04.
 :::
 
 In addition to installing MongoDB Community Edition, there are options in the instructions for restarting MongoDB following a system reboot. You can opt to either follow these instructions or manually start mongoDB each time you reboot.
@@ -58,11 +65,9 @@ Install the CLI globally through npm.
 ::: info 📌 You can review more information about the Apostrophe CLI in the doc [here](https://www.npmjs.com/package/@apostrophecms/cli)
 :::
 
-**The CLI is not required** to work with Apostrophe. It primarily makes developing with Apostrophe faster and takes care of the more repetitive tasks during development.
-
 ## Creating a project
 
-Before creating a project, make sure you have started your MongoDB server locally. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a place for ApostropheCMS to store its information.
+If you are running your MongoDB server locally, make sure that it has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for 
 
 The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
 
