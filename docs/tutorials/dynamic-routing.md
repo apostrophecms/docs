@@ -110,15 +110,12 @@ dispatchAll() {
   self.dispatch('/:breed/:variety?', async (req) => {
     const { breed, variety } = req.params;
 
-    // Set the URL for the breed page to power the back button
-    const backUrl = req.get('Referer') || '/';
-    req.data.backUrl = backUrl;
-
     // Build the API URL and cache key
     const apiUrl = variety
       ? `https://dog.ceo/api/breed/${breed}/${variety}/images`
       : `https://dog.ceo/api/breed/${breed}/images`;
     const cacheKey = variety ? `${breed}-${variety}` : breed;
+
     // Fetch and cache breed images
     req.data.images = await self.fetchAndCacheData(
       apiUrl,
@@ -142,9 +139,15 @@ The first `dispatch()` method has a pattern of `/`. This means that it will matc
 #### Fetching the breed images
 Looking at the [breed list returned by the API](https://dog.ceo/dog-api/documentation/), we can see that for some of the breeds, there are multiple varieties, while for others there is only a single. This means that we need to come up with a strategy to provide routes for both. The second `dispatch()` method has a more complicated pattern, `/:breed/:variety?` to deal with this situation. It will match the base slug for the page, plus at least one additional dynamic parameter that specifies the breed and an optional parameter for the variety as indicated by the appended question mark. So this pattern would match both `https://mysite.com/dogs/pug` and `https://mysite.com/dogs/bulldog/boston`.
 
-The handler in this case is also a little more complicated in order to construct the correct endpoint for whether there is a variety included or not. The returned data is again added to the `req` object and then used to designate that the `breedImages.html` template should be rendered in the browser.
+An alternative to combining these two routes in one pattern is to create two separate `dispatch()` methods. The first would set the template based on breed and the second on variety.
 
-There is one additional piece of information being added to the `req` object by this handler. We are using `req.get('Referer')`, if it exists, to gather the URL of the referring page. This will be used in our template in a button to take the user back to the list view. This is optional, as we will cover when we examine the `breedImages.html` template.
+```javascript
+self.dispatch('/:breed', async req => { ... })
+self.dispatch('/:breed/:variety', async req => { ... })
+```
+Separation of the routes makes sense when the handling of the dynamic parameters differs significantly.
+
+The handler in this case is also a little more complicated in order to construct the correct endpoint for whether there is a variety included or not. The returned data is again added to the `req` object and then used to designate that the `breedImages.html` template should be rendered in the browser.
 
 ## Creating the template files
 Now that we have set up our dispatch routes, we need to create the templates that will be used for each route. To keep the tutorial simple, we will only cover the parts of the templates that are specific to dealing with data returned by the dispatch callbacks. However, these templates also have some custom styling to create a lightbox for the images and allow the user to return to the list of all breeds.
@@ -213,7 +216,7 @@ To display the breed images to the user we need a separate template that parses 
   </div>
   {% endfor %}
 </div>
-<a href="{{ data.backUrl }}" role="button" class="back-to-list-button">Back to Breed List</a>
+<a href="{{ data.page._url }}" role="button" class="back-to-list-button">Back to Breed List</a>
 {% endblock %}
 ```
   <template v-slot:caption>
@@ -222,7 +225,9 @@ To display the breed images to the user we need a separate template that parses 
 
 </AposCodeBlock>
 
-Again, this is a straightforward Nunjucks template. We are using a loop to display each of the images sent back from the API. To allow for lightbox functionality when the user clicks an image, we have enclosed each in a link with a `href` created from the `loop.index`. We have also created a div with an `id` constructed from this same index. Finally, since clicking on an image will alter the browser history and back button behavior, we are providing a button to go back to the breed list.
+Again, this is a straightforward Nunjucks template. We are using a loop to display each of the images sent back from the API. To allow for lightbox functionality when the user clicks an image, we have enclosed each in a link with a `href` created from the `loop.index`. We have also created a div with an `id` constructed from this same index.
+
+Finally, since clicking on an image to open a lightbox will alter the browser history and the functionality of the back button, we are providing a button to go back to the breed list. Individual breed pages, like `/dogs/pug`, aren't stored in the database but are dynamically generated. As such, navigating to one of these breed-specific pages is still technically a request for the parent `/dogs` page, so the URL for the breed list page will be contained in `data.page._url`.
 
 ### Adding styling
 The only thing left to do on this project is to add a bit of styling. There are a number of locations in your ApostropheCMS project where you can add styling. If you prefer to keep your styling all in one place you can add it to a folder like `modules/asset/ui/src` or you can add it to a similar location on a per-module level. We are going to do the later, so create a `modules/dog-page/ui/src/index.scss` file. In general, I prefer to add my styling into individual files within a `scss` folder and then import them through the `index.scss` file. In this case, we will take the simple route of adding the styling directly to the index. Add the following code:
@@ -405,6 +410,7 @@ li {
 
 </AposCodeBlock>
 
-Congratulations on reaching the end of this tutorial! We've covered a lot of ground, delving into dynamic routing in ApostropheCMS using the `dispatch()` and `dispatchAll()` methods. By now, you should have a good understanding of how to create dynamic modules for fetching and displaying content from an API. It's worth noting that `dispatch()` is versatile and not limited to API use cases. You can also use it for dynamically serving content from local files, perfect for static datasets, mock data during development, or offline functionality.
+Congratulations on reaching the end of this tutorial! We've covered a lot of ground, delving into dynamic routing in ApostropheCMS using the `dispatch()` and `dispatchAll()` methods. By now, you should have a good understanding of how to create dynamic modules for fetching and displaying content from an API. It's worth noting that `dispatch()`
+ is versatile and not limited to API use cases. You can also use it for dynamically serving content from local files, perfect for static datasets, mock data during development, or offline functionality.
 
 We hope you found this tutorial enlightening and enjoyable. Happy coding, and may your projects be as dynamic and lively as the dog breeds we explored! 🎉🐕🌐
