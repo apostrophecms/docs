@@ -54,6 +54,10 @@ const sidebarTutorials = [
             link: 'tutorials/rich-text-extension-deep-dive.md'
           }
         ]
+      },
+      {
+        text: "Harnessing Dynamic Routing in ApostropheCMS",
+        link: "tutorials/dynamic-routing.md"
       }
     ]
   },
