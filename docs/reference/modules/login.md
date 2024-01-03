@@ -36,7 +36,8 @@ Defaults to `48`, giving the user 48 hours to reset the password based on the em
 
 ### `bearerTokens`
 
-If set to an object with a `lifetime` subproperty, a bearer token is valid for that many seconds. If this option is not set, the lifetime defaults to 2 weeks.
+If set to an object with a `lifetime` subproperty, a bearer token is valid for that many milliseconds. If this option is not set, the lifetime defaults to 2 weeks. To
+convert days to milliseconds, you can use logic like: `86400 * 1000 * days`
 
 ### `throttle`
 
