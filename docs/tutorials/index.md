@@ -52,5 +52,11 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
     />
   </template>
   <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Harnessing dynamic routing in ApostropheCMS"
+      content="Discover how to dynamically route and display content using the `dispatch()` and `dispatchAll()` methods, offering a flexible solution for both API and local data sources."
+      url="/tutorials/dynamic-routing.html"
+    />
   </template>
 </AposTwoColumns>
