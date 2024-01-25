@@ -28,16 +28,22 @@ See the `nvm` page for more options.
 
 ### 2. MongoDB 6.0+<br>
 
-You can make a MongoDB instance available to your project in two main ways. For completely local development you can install the MongoDB community edition server. You can also elect to use a hosted version of the server, either through the MongoDB [Atlas service](https://www.mongodb.com/atlas/database), or self-hosted. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017<project-shortName>` where the `shortName` is set in the project `app.js` file. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable.
+You can make a MongoDB instance available to your project in two main ways:
+
+MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free-tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
 
 For example:
 ```bash
-APOS_MONGODB_URI=mongodb://db_user:D1fficultP%40ssw0rd@mongodb0.example.com:27017/?authSource=apos-site-db node app
+APOS_MONGODB_URI="mongodb://db_user:D1fficultP%40ssw0rd@mongodb0.example.com:27017/?authSource=apos-site-db" node app
 ```
+
+For offline local development, you can install the MongoDB community edition server. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The community edition server uses this port, so no changes are needed.
+
+The following steps are only required if you intend to develop on a locally hosted MongoDB instance.
 
 Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS. Again, Windows users should install from within WSL2 and follow the instructions for their Linux distribution.
 
-::: info 📌 When using Ubuntu 22.04, the only currently supported MongoDB version is 6.04 or newer. If your production environment requires that you use an earlier version of MongoDB for development, we advise you use Ubuntu 20.04.
+::: info 📌 When using Ubuntu 22.04, the only currently supported self-hosted MongoDB version is 6.04 or newer. If your production environment requires that you use an earlier version of MongoDB for development, we advise you to use Ubuntu 20.04.
 :::
 
 In addition to installing MongoDB Community Edition, there are options in the instructions for restarting MongoDB following a system reboot. You can opt to either follow these instructions or manually start mongoDB each time you reboot.
@@ -67,7 +73,7 @@ Install the CLI globally through npm.
 
 ## Creating a project
 
-If you are running your MongoDB server locally, make sure that it has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for 
+If you are not using Atlas, make sure your local server has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for your initial admin user.
 
 The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
 
@@ -85,7 +91,18 @@ apos create apos-app --starter=ecommerce
 ```
 :::
 
-The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
+If you are using a MongoDB Atlas instance, add the `--mongodb-uri` flag, along with the URL of your Atlas instance. It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters. For example:
+
+``` bash
+apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority"
+```
+
+Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
+`
+
+The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. 
+
+### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
 
 To get started quickly without the CLI, clone the starter repository:
 
@@ -111,12 +128,25 @@ Excellent! Back in your terminal, we'll install dependencies:
 npm install
 ```
 
-Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
+Before starting up you'll need to create an admin-level user, either in your Atlas instance or local database, so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
 
+Atlas Database
+```bash
+APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
+# Replace `my-user` with the name you want for your first user.
+```
+
+OR
+
+Local Database
 ```bash
 node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
+
+::: tip
+It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters.
+:::
 
 ### Finishing touches
 
@@ -136,7 +166,7 @@ module.exports = {
 
 ### Starting up the website
 
-Start the site with `npm run dev`. The app will then watch for changes in client-side code, rebuild the packages, then refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
+Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_MONGODB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in client-side code, rebuild the packages, then refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
 
 ::: tip
 If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js`.
