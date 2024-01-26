@@ -30,16 +30,16 @@ See the `nvm` page for more options.
 
 You can make a MongoDB instance available to your project in two main ways:
 
-MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free-tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
+MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
 
 For example:
 ```bash
-APOS_MONGODB_URI="mongodb://db_user:D1fficultP%40ssw0rd@mongodb0.example.com:27017/?authSource=apos-site-db" node app
+export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority"
 ```
 
 For offline local development, you can install the MongoDB community edition server. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The community edition server uses this port, so no changes are needed.
 
-The following steps are only required if you intend to develop on a locally hosted MongoDB instance.
+**The following steps are only required if you intend to develop on a locally hosted MongoDB instance.**
 
 Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS. Again, Windows users should install from within WSL2 and follow the instructions for their Linux distribution.
 
@@ -102,7 +102,7 @@ Where the original unescaped connection string is: `mongodb+srv://username:pa$$w
 
 The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. 
 
-### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
+#### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
 
 To get started quickly without the CLI, clone the starter repository:
 
@@ -145,7 +145,9 @@ node app @apostrophecms/user:add my-user admin
 ```
 
 ::: tip
-It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters.
+* When using MongoDB Atlas, it's a good practice to enclose your entire connection string in quotes to prevent any issues with special characters. Also, use percent-encoding for special characters in your password.
+
+* Consider exporting your APOS_MONGODB_URI environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
 :::
 
 ### Finishing touches
