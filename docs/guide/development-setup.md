@@ -34,7 +34,7 @@ MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongo
 
 For example:
 ```bash
-export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority"
+export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
 For offline local development, you can install the MongoDB community edition server. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The community edition server uses this port, so no changes are needed.
@@ -94,7 +94,7 @@ apos create apos-app --starter=ecommerce
 If you are using a MongoDB Atlas instance, add the `--mongodb-uri` flag, along with the URL of your Atlas instance. It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters. For example:
 
 ``` bash
-apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority"
+apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR_PROJECT_NAME?retryWrites=true&w=majority"
 ```
 
 Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
@@ -132,7 +132,7 @@ Before starting up you'll need to create an admin-level user, either in your Atl
 
 Atlas Database
 ```bash
-APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
+APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
 
