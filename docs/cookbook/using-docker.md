@@ -29,7 +29,7 @@ USER node
 
 COPY --chown=node package*.json /srv/www/apostrophe/
 
-NODE_ENV=production
+ENV NODE_ENV=production
 RUN npm ci
 
 COPY --chown=node . /srv/www/apostrophe/
@@ -79,7 +79,7 @@ node app @apostrophecms/asset:build
 ```
 
 <template v-slot:caption>
-  scripts/build-asset.sh
+  scripts/build-assets.sh
 </template>
 
 </AposCodeBlock>
