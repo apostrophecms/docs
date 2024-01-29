@@ -9,6 +9,7 @@ The main focus of this guide is on implementing requirements involving custom UI
 While [most password complexity rules are often counterproductive](https://arstechnica.com/information-technology/2013/06/password-complexity-rules-more-annoying-less-effective-than-length-ones/), some organizations may have a business requirement to implement them. Currently the easiest rule to implement, and the most effective one, is to set a minimum length. You can do that by configuring the `@apostrophecms/user` module at project level:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     fields: {
@@ -57,6 +58,7 @@ Each requirement has:
 To illustrate, the general structure on the server side is:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     requirements(self) {
