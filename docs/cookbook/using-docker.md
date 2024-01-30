@@ -29,7 +29,7 @@ USER node
 
 COPY --chown=node package*.json /srv/www/apostrophe/
 
-NODE_ENV=production
+ENV NODE_ENV=production
 RUN npm ci
 
 COPY --chown=node . /srv/www/apostrophe/
@@ -64,7 +64,7 @@ Everything until this point helped build the container image. Those commands onl
 
 ### Creating the install script
 
-The alpine linux distribution is slim and doesn't include bash, but we can access a the "busybox" shell, which is compatible with the basics, at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
+The alpine linux distribution is slim and doesn't include bash, but we can access the "busybox" shell, which is compatible with the basics, at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
 
 <AposCodeBlock>
 
@@ -79,7 +79,7 @@ node app @apostrophecms/asset:build
 ```
 
 <template v-slot:caption>
-  scripts/build-asset.sh
+  scripts/build-assets.sh
 </template>
 
 </AposCodeBlock>
