@@ -458,7 +458,7 @@ modules/@apostrophecms/image-widget/index.js
 
 The image widget displays a placeholder image by default. To block this behavior, set the `placeholder` option to a value of `false`.
 
-Alternatively, the preview image can be changed for your project. For the image widget, the `placeholderImage` option takes **just the file extension,** like `png` (note no `.`). You must also copy a matching file to the `public` subdirectory of your project-level configuration of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.png` (the name must be `placeholder` and the extension must match `placeholderImage`).
+Alternatively, the placeholder image can be changed for your project. For the image widget, the `placeholderImage` option takes **just the file extension,** like `png` (note no `.`). You must also copy a matching file to the `public` subdirectory of your project-level configuration of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.png` (the name must be `placeholder` and the extension must match `placeholderImage`).
 
 <AposCodeBlock>
 
@@ -476,8 +476,33 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
+### Specifying a custom URL to a placeholder image
+
+While `placeholderImage` is usually the straightforward choice, sometimes more customization is desired. The `placeholderUrl` option supports Apostrophe asset paths as well as full URLs, making it easier to serve images kept in a particular module. If you do not wish to use the default filename, or wish to serve the image from a different location, this option gives you the flexibility to achieve that.
+
+**For example:** if you wish to serve the file `special-placeholder.jpg` from your project-level `modules/@apostrophecms/image-widget/public` folder,
+you can do that with the following configuration:
+
+<AposCodeBlock>
+
+``` js
+module.exports = {
+  options: {
+    // The "my-" prefix tells Apostrophe to use the project-level
+    // folder, not the one in the core apostrophe module
+    placeholderUrl: '/modules/@apostrophecms/my-image-widget/special-placeholder.jpg'
+  }
+}
+```
+<template v-slot:caption>
+  modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
+
 ::: info
-A legacy `placeholderUrl` option also exists, but we do not recommend it. Use `placeholderImage` and let Apostrophe do the hard work of determing the asset URL for you.
+Note the `my-` prefix in `@apostrophecms/my-image-widget`. Without this
+prefix, Apostrophe would look for the file in the core Apostrophe npm
+module, and would not find it.
 :::
 
 ## Video widget
