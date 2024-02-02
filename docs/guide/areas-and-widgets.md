@@ -173,7 +173,8 @@ your project-level `modules/@apostrophecms/image-widget/public` folder,
 you can do that with the following configuration:
 
 <AposCodeBlock>
-```
+
+```javascript
 module.exports = {
   options: {
     // The "my-" prefix tells Apostrophe to use the project-level
