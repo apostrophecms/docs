@@ -153,7 +153,7 @@ export default () => {
 
 ```
   <template v-slot:caption>
-    modules/article/ui/src/index.js
+    modules/article/ui/apos/apps/index.js
   </template>
 
 </AposCodeBlock>
