@@ -289,3 +289,18 @@ Once this is added, editors can select an "Edit Relationship" option from the co
 ![The relationship field now with a menu button and "edit relationship" option](/images/relationship-fields.png)
 
 ![The editor interface for the relationship's "team role" field](/images/relationship-editor.png)
+
+### Accessing the fields of a relationship
+
+Once a relationship with fields has been populated, we can access it, for instance from a template, using the `_fields` property of each related document:
+
+```nunjucks
+<h3>Members of Team {{ data.piece.title }}</h3>
+<ul>
+{% for person in data.piece._people %}
+  <li><a href="{{ person._url }}">{{ person.title }} ({{ person._fields.teamRole }})</a></li>
+{% endfor %}
+```
+
+Notice that within each element of the `data.piece._people` array, we can access `person._fields.teamRole`.
+This information is not about the person or the team in general — it is specific to the relationship between the two.
