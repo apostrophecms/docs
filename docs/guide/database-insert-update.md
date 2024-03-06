@@ -179,3 +179,43 @@ As with pieces, this process will normally begin by generating an empty page doc
 ::: info
 With very few exceptions, the `_id` property is an automatically generated, randomized, and (always) unique property. It is also special in that it can never change for a given document.
 :::
+
+## Inserting and updating relationships
+
+As we have seen, [relationships](/guide/relationships.html) can be accessed as array properties after we locate
+documents with the `find` method.
+
+By the same principle, relationships can be inserted or updated as array properties. If our
+`dog` piece type seen above has an `_owner` relationship with `person` pieces, we can prepopulate it like this:
+
+```javascript
+  // assumes the alias: 'person' option has been set for the person piece type
+  const owner = await self.apos.person.find(req, { title: 'Frank' });
+  // Before calling insert() in the example above
+  newDog._owner = [ owner ];
+  const insertResult = await self.insert(req, newDog);
+```
+
+We can do the same thing with `self.update`.
+
+Note that inserting or updating a relationship in this way cannot insert or update related pieces
+that do not already exist. This technique only updates the relationship.
+
+## Inserting and updating relationship subfields
+
+Some relationships have [subfields of their own](/guide/relationships.html#accessing-the-fields-of-a-relationship)
+describing the relationship itself. These subfields can be set in the same way they are accessed:
+by populating the `_fields` property of each related document. Here is an example:
+
+```javascript
+  // For this example to work, the _owner relationship field of the "dog" piece type
+  // must have a "favorite" subfield of type boolean
+  const owner = await self.apos.person.find(req, { title: 'Frank' });
+  owner._fields = {
+    favorite: true
+  };
+  newDog._owner = [ owner ];
+  const insertResult = await self.insert(req, newDog);
+```
+
+This works the same way whether we are inserting or updating.
