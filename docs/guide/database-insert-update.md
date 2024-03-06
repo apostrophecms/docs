@@ -182,7 +182,7 @@ With very few exceptions, the `_id` property is an automatically generated, rand
 
 ## Inserting and updating relationships
 
-As we have seen, [relationships](../relationships.md) can be accessed as array properties after we locate
+As we have seen, [relationships](/guide/relationships.html) can be accessed as array properties after we locate
 documents with the `find` method.
 
 By the same principle, relationships can be inserted or updated as array properties. If our
@@ -203,7 +203,7 @@ that do not already exist. This technique only updates the relationship.
 
 ## Inserting and updating relationship subfields
 
-Some relationships have [subfields of their own](../relationships.md#accessing-the-fields-of-a-relationship)
+Some relationships have [subfields of their own](/guide/relationships.html#accessing-the-fields-of-a-relationship)
 describing the relationship itself. These subfields can be set in the same way they are accessed:
 by populating the `_fields` property of each related document. Here is an example:
 
