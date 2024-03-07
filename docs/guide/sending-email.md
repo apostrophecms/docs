@@ -244,7 +244,7 @@ module.exports = {
             const info = await self.email(req, 'email.html', { piece }, options);
           }
           console.log(info.envelope);
-          console.log(info.messgeId);
+          console.log(info.messageId);
           info.message.pipe(process.stdout);
         }
       }
