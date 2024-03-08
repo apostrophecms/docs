@@ -30,6 +30,8 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The Nunjucks template name to render. |
+| [`width`](#width) | String | Define the size of the widget modal. |
+| [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 
 ### `className`
 
@@ -97,6 +99,23 @@ If this option is set to `true`, and the widget has relationships with documents
 ### `template`
 
 The name of the template in the `views` folder of the module that should be rendered to display the widget. This option defaults to `widget`, and it is generally not necessary to change it.
+
+### `width`
+
+The size of the widget modal can be configured via this option:
+- `undefined` (default): the widget modal width is set to 540px.
+- `"half"`: the widget modal takes 50% of the screen.
+- `"two-thirds"`: the widget modal takes 66% of the screen.
+- `"full"`: the widget modal takes 100% of the screen.
+
+Any other value will not impact the width of the modal, resulting in keeping the default width.
+
+No matter what, the widget modal width will take 100% of the screen for screens with a width below 800px.
+
+### `origin`
+
+Choose the side from where the widget modal will open:
+`left` or `right` (default).
 
 ## Related documentation
 
