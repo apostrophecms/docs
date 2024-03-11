@@ -7,7 +7,7 @@ Extensions are a way to easily add functionality to your project, whether by add
 
 For the final tutorial of our basic project build, we are going to install two different extensions. First, we will install the `seo` extension. This extension is a good example of how a set of bundled modules can improve multiple core modules as well as modify the project layout template. Next, we will install the `blog` extension. In this case, the `blog` extension doesn't improve any core modules, but it provides a useful example of how to implement piece-type filters, queries, and the `extendMethods()` function when creating a new piece-type.
 
-The amount of actual code creation in this template will be minimal,but you can switch to the `sec2-8-adding-extensions` branch of the [project repository](https://github.com/apostrophecms/a3-onboarding-project) like with previous tutorials. Alternatively, you can just install the two extensions using the npm commmands detailed below and add the modules into the `app.js` file of your local project.
+The amount of actual code creation in this template will be minimal,but you can switch to the `sec2-8-adding-extensions` branch of the [project repository](https://github.com/apostrophecms/apostrophe-onboarding-project) like with previous tutorials. Alternatively, you can just install the two extensions using the npm commmands detailed below and add the modules into the `app.js` file of your local project.
 
 ## The ApostropheCMS extensions page
 
@@ -23,13 +23,13 @@ The `@apostrophecms/seo` module adds meta fields to all pages and pieces, which 
 
 ### Installation
 
-To install the `seo` extension we will go to the [extension page](https://apostrophecms.com/extensions/seo-tools-3) and follow the installation instructions. There are two steps. First, from within the root directory of your project run `npm install @apostrophecms/seo`. This command installs the modules into your `npm_modules/@apostrophecms` folder and update your `package.json` file. Next, we open our `app.js` file and add it to our `modules` configuration as you would with any new project-level module. 
+To install the `seo` extension we will go to the [extension page](https://apostrophecms.com/extensions/seo-tools-3) and follow the installation instructions. There are two steps. First, from within the root directory of your project run `npm install @apostrophecms/seo`. This command installs the modules into your `npm_modules/@apostrophecms` folder and updates your `package.json` file. Next, we open our `app.js` file and add it to our `modules` configuration as you would with any new project-level module. 
 
 <AposCodeBlock>
 
 ``` javascript
 require('apostrophe')({
-  shortName: 'a3-onboarding-project',
+  shortName: 'apostrophe-onboarding-project',
   modules: {
     '@apostrophecms/seo': {},
     // the remainder of the project modules
@@ -43,7 +43,7 @@ require('apostrophe')({
 
 </AposCodeBlock>
 
-A base URL is necessary for deploying an SEO extension enabled project to production. Adding one can be done either by using the `APOS_BASE_URL` environment variable, or by setting the `baseUrl` option during deployment. If the base URL is set during local development you will see problems with asset loading and login.
+A base URL is necessary for deploying an SEO extension-enabled project to production. Adding one can be done either by using the `APOS_BASE_URL` environment variable, or by setting the `baseUrl` option during deployment. If the base URL is set during local development you will see problems with asset loading and login.
 
 ### Package structure
 Like the other custom modules we created for this onboarding project, the top level of this package is an `index.js` file.
@@ -286,7 +286,7 @@ To install the `@apostrophecms/blog` module, navigate to the [extension page](ht
 
 ``` javascript
 require('apostrophe')({
-  shortName: 'a3-onboarding-project',
+  shortName: 'apostrophe-onboarding-project',
   bundles: [ '@apostrophecms/blog' ],
   modules: {
     // other project modules
