@@ -111,5 +111,5 @@ Inside Apostrophe, async components are used to implement the `{% area %}` tag.
 :::
 
 ::: warning
-Standard Nunjucks template macros cannot run asyncronous code, including async components. The Apostrophe template [fragment](fragments.md) feature *can* run async code and is a general purpose replacement for macros in Apostrophe 3.
+Standard Nunjucks template macros cannot run asyncronous code, including async components. The Apostrophe template [fragment](fragments.md) feature *can* run async code and is a general purpose replacement for macros in ApostropheCMS.
 :::
