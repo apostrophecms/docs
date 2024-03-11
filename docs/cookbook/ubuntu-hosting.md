@@ -67,7 +67,7 @@ You can do this series of steps each time you want to add a new site to the VPS.
 :::
 
 1. If you didn't already, SSH to the `ubuntu` user on your server (the last step of the previous section). Then run `sudo su - nodeapps` to switch users.
-2. **Deploy the Apostrophe site code to the VPS.** We'll use the a3 essentials starter kit project as an example.
+2. **Deploy the Apostrophe site code to the VPS.** We'll use the Apostrophe essentials starter kit project as an example.
    - We'll `git clone` a project in the home directory as a simple way to deploy it. You may use a CI/CD tool or some other method for regular deployments. You will also likely want to put the code in another location (e.g., `/var/www`).
 
 ```sh
