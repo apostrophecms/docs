@@ -6,7 +6,7 @@ This guide focuses on how to customize Apostrophe's administrative user interfac
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
 * Make sure there is not a better way to achieve the desired goal. This includes [asking for help in Discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
-* At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue.js 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
+* Apostrophe version 3.x used Vue 2.x to power the Admin UI components. With newer versions of Apostrophe, those same components are powered by Vue.js 3.x. We have taken care to include as much backward compatibility as possible, but custom components added in earlier versions of Apostrophe may need modification.
 :::
 
 ## Apostrophe admin UI file structure
@@ -17,7 +17,7 @@ Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` f
 
 For performance reasons, Apostrophe projects are not configured to automatically rebuild the admin UI every time your code changes. This makes sense because in most projects there is no custom admin UI code, and it takes time to build.
 
-However we can "opt in" to rebuilding the UI on every code change, like this:
+However, we can "opt-in" to rebuilding the UI on every code change, like this:
 
 ```bash
 APOS_DEV=1 npm run dev
@@ -35,7 +35,7 @@ Of course the admin UI is always rebuilt when deploying. No special changes or e
 
 Apostrophe's [schema field types](content-schema.md) cover many situations, but we might wish to add a new one.
 
-Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However note that you will find it easier to follow the remainder of this article if you read that article first.
+Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However, note that you will find it easier to follow the remainder of this article if you read that article first.
 
 ## Adding custom columns to the piece type manager
 
