@@ -4,7 +4,7 @@ Pieces are stand-alone documents containing structured content. This content can
 
 In this tutorial, we are going to create a review piece-type and accompanying pages for showing individual pieces, as well as all the pieces belonging to a specific category. This will introduce us to filtering and query builders. We will also dive further into localizing our user interface. Finally, we will create several additional widgets to allow the display of editor-specified pieces in page areas.
 
-You can follow along and create the new modules for our project, or switch to the `sec2-5-pieces` branch of the [GitHub repo](https://github.com/apostrophecms/a3-onboarding-project).
+You can follow along and create the new modules for our project, or switch to the `sec2-5-pieces` branch of the [GitHub repo](https://github.com/apostrophecms/apostrophe-onboarding-project).
 
 ## Creating the review piece
 
@@ -690,7 +690,7 @@ First, we are checking that the category is set for the piece that is being requ
 This `chooseParentPage()` extended method is relatively simple. We could have elected to add it as a method instead, passing `data.pages[0]` back instead of the results of `_super(pages, piece)`.
 :::
 
-At this point, you can spin the project up and create a new page for every category, plus another for 'all' to display all the pieces, or if you haven't done so yet, you can import the database from the final project (see the [repository README](https://github.com/apostrophecms/a3-onboarding-project/blob/main/README.md) to learn how to accomplish this). In the next tutorial, we will add site navigation to link these pages to the homepage. Next, we are going to look at two further ways to display pieces on our pages.
+At this point, you can spin the project up and create a new page for every category, plus another for 'all' to display all the pieces, or if you haven't done so yet, you can import the database from the final project (see the [repository README](https://github.com/apostrophecms/apostrophe-onboarding-project/blob/main/README.md) to learn how to accomplish this). In the next tutorial, we will add site navigation to link these pages to the homepage. Next, we are going to look at two further ways to display pieces on our pages.
 
 ## Creating a piece widget
 
@@ -1119,7 +1119,7 @@ Within this markup, we are creating a `for...in` loop to step through each of th
 
 #### Adding styling
 
-If we were to spin our site up now, we could populate our home page with our new widgets, but it wouldn't look quite like our final project, because we still need to add some additional styling. Just as a reminder, this styling can be placed in several locations within our project. It could be placed into a `ui/src` folder in our `review-widget` module. This would require adding or importing the styles into an `index.scss` file within that folder. Instead, we can create a new file in the `modules/asset/ui/src/scss` folder and import it in the `index.scss` file of that same module. Rather than adding the code here, I recommend copying the `_theme-reviews.scss` file from the `sec2-5-pieces` branch of the [GitHub repo](https://github.com/apostrophecms/a3-onboarding-project). Next, open the `modules/asset/ui/src/index.scss` file and add `@import './scss/_theme-reviews';`.
+If we were to spin our site up now, we could populate our home page with our new widgets, but it wouldn't look quite like our final project, because we still need to add some additional styling. Just as a reminder, this styling can be placed in several locations within our project. It could be placed into a `ui/src` folder in our `review-widget` module. This would require adding or importing the styles into an `index.scss` file within that folder. Instead, we can create a new file in the `modules/asset/ui/src/scss` folder and import it in the `index.scss` file of that same module. Rather than adding the code here, I recommend copying the `_theme-reviews.scss` file from the `sec2-5-pieces` branch of the [GitHub repo](https://github.com/apostrophecms/apostrophe-onboarding-project). Next, open the `modules/asset/ui/src/index.scss` file and add `@import './scss/_theme-reviews';`.
 
 Now with styling added, our review widget would look better, but we still need to pick where to display it! Open the `lib/area.js` file and add it to the end of the `fullConfig` object. Spinning the site up now will allow the addition of our new widget to any area that has a `row` widget. In the finished project this widget was used in both the upper and lower homepage areas.
 
