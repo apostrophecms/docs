@@ -8,7 +8,7 @@ Next we will formulate a 'deal widget', designed to empower editors with the cap
 
 Finally, we will create a 'rating widget' that allows the editors to add ratings to the different products using a star system. In the creation of this widget, we will also begin to learn about async components, a powerful way to add dynamic content to pages asynchronously, giving your widgets access to site settings and data supplied by APIs, plus we will revisit adding module styling.
 
-Again, you can follow along with the tutorial to modify your own project, or to see the progress of the project while following this tutorial switch to the `sec2-4-widgets` branch of the [a3-onboarding-project](https://github.com/apostrophecms/a3-onboarding-project) repo on GitHub.
+Again, you can follow along with the tutorial to modify your own project, or to see the progress of the project while following this tutorial switch to the `sec2-4-widgets` branch of the [apostrophe-onboarding-project](https://github.com/apostrophecms/apostrophe-onboarding-project) repo on GitHub.
 
 ## Widget Overview
 
