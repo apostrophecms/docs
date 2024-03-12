@@ -4,7 +4,7 @@ Creating an intuitive and functional navigation system is a critical element in 
 
 While we will be mainly focused on producing navigation for our project, we will also revisit changing our page layout using fragments, including multiple fragments in a single file, and utilizing the global configuration. Lastly, while covering the addition of breadcrumb navigation to our pages, we will also look at the `helper(self)` configuration function.
 
-You can follow along by either editing the code of your project, or by switching to the `sec2-6-navigation` branch of the [GitHub repo](https://github.com/apostrophecms/a3-onboarding-project).
+You can follow along by either editing the code of your project, or by switching to the `sec2-6-navigation` branch of the [GitHub repo](https://github.com/apostrophecms/apostrophe-onboarding-project).
 
 ## Generating site navigation from the page tree
 

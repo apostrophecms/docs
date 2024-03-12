@@ -181,7 +181,7 @@ The `widget` template tag will usually not be used in Apostrophe project templat
 
 **Example:**
 ``` nunjucks
-{# Example from modules/@apostrophecms/area/views/area.html in A3 core #}
+{# Example from modules/@apostrophecms/area/views/area.html in apostrophe core #}
 {% widget item, widgetOptions with data._with %}
 ```
 

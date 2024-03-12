@@ -1,6 +1,6 @@
 # Overview of Apostrophe code organization
 
-In this tutorial, we'll initialize our project with the Apostrophe Command Line Interface (CLI) tool. After creating our project we'll delve into its organization, focusing on the fundamental modules and files that comprise the Essentials starter kit project. We'll also revisit the concept of module inheritance, which was introduced in the first section. Lastly, we'll explore the application of `nestedModuleSubdirs` as an optional approach to reorganizing our project. While you will be creating this project locally using the CLI tool, you can also clone the [GitHub repo](https://github.com/apostrophecms/a3-onboarding-project) and checkout branch `sec2-1b`.
+In this tutorial, we'll initialize our project with the Apostrophe Command Line Interface (CLI) tool. After creating our project we'll delve into its organization, focusing on the fundamental modules and files that comprise the Essentials starter kit project. We'll also revisit the concept of module inheritance, which was introduced in the first section. Lastly, we'll explore the application of `nestedModuleSubdirs` as an optional approach to reorganizing our project. While you will be creating this project locally using the CLI tool, you can also clone the [GitHub repo](https://github.com/apostrophecms/apostrophe-onboarding-project) and checkout branch `sec2-1b`.
 
 ## Creating our project
 
@@ -50,7 +50,7 @@ We will touch on the other two folders within `modules/`, `asset` and `default-p
 ### `package.json`
 
 ![boilerplate package.json code](../images/sec2-1b-package.png)
-As with all Node.js apps, the `package.json` file plays a vital role in managing Apostrophe projects. It allows developers to define and control project dependencies, set up custom scripts for various tasks, and provide essential information about the project. In the case of the A3 essentials starter kit, it sets up several useful scripts that we use to build and run our project. You will end up using `npm run dev` quite a bit during local development!
+As with all Node.js apps, the `package.json` file plays a vital role in managing Apostrophe projects. It allows developers to define and control project dependencies, set up custom scripts for various tasks, and provide essential information about the project. In the case of the Apostrophe essentials starter kit, it sets up several useful scripts that we use to build and run our project. You will end up using `npm run dev` quite a bit during local development!
 
 ### `public`
 The `public` folder can be used for static assets, although this isn't always the best solution because using cloud storage for other assets will break relative URLs and updating the asset won't cause a cache refresh. However, this folder is used by the Apostrophe default build process to store the various CSS and JS bundles.

@@ -2,7 +2,7 @@
 
 The admin-bar serves as the primary interface for editors, enabling them to create new pieces and pages, manage media files, and handle user roles and permissions. Additionally, it offers access to global configuration settings, locale selection and the personal settings menu. One of its crucial functions is managing the document publication workflow, providing notification to users with appropriate permissions about documents awaiting approval.
 
-In this tutorial, we aim to streamline the admin-bar to enhance the process of adding content to pages. We'll also touch on the process of adding custom buttons to further enhance your ApostropheCMS experience. You can either elect to make code changes as you follow along with the tutorial, or you can switch to branch `sec2-7-ui-customization` of the [repo](https://github.com/apostrophecms/a3-onboarding-project).
+In this tutorial, we aim to streamline the admin-bar to enhance the process of adding content to pages. We'll also touch on the process of adding custom buttons to further enhance your ApostropheCMS experience. You can either elect to make code changes as you follow along with the tutorial, or you can switch to branch `sec2-7-ui-customization` of the [repo](https://github.com/apostrophecms/apostrophe-onboarding-project).
 
 ## Managing menu items
 
