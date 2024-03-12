@@ -19,7 +19,7 @@ npm install @opentelemetry/sdk-node@0.27.0 \
 
 > NOTE: we can update our dependency versions based on the [OpenTelemetry compatibality matrix](https://github.com/open-telemetry/opentelemetry-js#compatibility-matrix). It's recommended to install the OpenTelemtry dependencies with fixed versions until [this PR is resolved](https://github.com/open-telemetry/opentelemetry-js/pull/2874).
 
-**Also make sure `apostrophe` is updated to at least version 3.18.0, preferably the newest 3.x release available.**
+**Also make sure `apostrophe` is updated to at least version 3.18.0, preferably the newest 4.x release available.**
 
 ## 2. Install Jaeger
 

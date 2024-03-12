@@ -29,21 +29,21 @@ Page types are created by extending the `@apostrophecms/page-type` module and ca
 Out of the box, Apostrophe defines a `home-page` type for you that is "parked" at the top of the page tree. Other pages are typically sub-pages of the home page.
 
 ::: info
-📌 For additional information on configuring pages, see [Page Templates](https://v3.docs.apostrophecms.org/guide/pages.html) in the Apostrophe docs.
+📌 For additional information on configuring pages, see [Page Templates](https://docs.apostrophecms.org/guide/pages.html) in the Apostrophe docs.
 :::
 
 ## Pieces
 
-**["Piece types"](https://v3.docs.apostrophecms.org/guide/pieces.html)** in Apostrophe are collections of structured content, often referred to as "content types" in other systems. Each item created from a piece type is a **"piece."** Pieces are typically organized by date or taxonomy.
+**["Piece types"](https://docs.apostrophecms.org/guide/pieces.html)** in Apostrophe are collections of structured content, often referred to as "content types" in other systems. Each item created from a piece type is a **"piece."** Pieces are typically organized by date or taxonomy.
 
-[**Field schemas**](https://v3.docs.apostrophecms.org/guide/content-schema.html) are used to define the data modal of a particular piece type. When you define a piece type by extending the `@apostrophecms/piece-type` module, Apostrophe will include basic required schema fields out of the box, such as the title and slug fields. You can then configure your schema with more fields to fit your requirements.
+[**Field schemas**](https://docs.apostrophecms.org/guide/content-schema.html) are used to define the data modal of a particular piece type. When you define a piece type by extending the `@apostrophecms/piece-type` module, Apostrophe will include basic required schema fields out of the box, such as the title and slug fields. You can then configure your schema with more fields to fit your requirements.
 
 Pieces can be displayed using pieces pages, which are specialized page types, or widgets. Pieces pages can show a collection of pieces through the `index.html` template page, or an individual piece using the `show.html` template page. Using widgets to display pieces allows you to show pieces in the context of other relevant content, like related articles. We'll explore this later, just know for now that there are different ways to display pieces.
 
 Common examples of pieces are articles, events, or products.
 
 ::: info
-📌 For additional information on schema field types, see the [Schema Field Type reference](https://v3.docs.apostrophecms.org/reference/field-types/) in the Apostrophe docs.
+📌 For additional information on schema field types, see the [Schema Field Type reference](https://docs.apostrophecms.org/reference/field-types/) in the Apostrophe docs.
 :::
 
 ## Widgets
@@ -57,5 +57,5 @@ Apostrophe provides several simple widgets to help you get started building your
 Common examples of widgets are Rich Text Widgets, Image Widgets, Slideshow Widgets, or an Article Widget.
 
 ::: info
-📌 For a list of the included widgets, see [Standard (Included) Widgets](https://v3.docs.apostrophecms.org/guide/core-widgets.html) in the Apostrophe docs.
+📌 For a list of the included widgets, see [Standard (Included) Widgets](https://docs.apostrophecms.org/guide/core-widgets.html) in the Apostrophe docs.
 :::

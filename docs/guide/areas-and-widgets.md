@@ -197,7 +197,7 @@ module, and would not find it.
 
 #### `previewIcon`: when you prefer an icon to an image
 
-The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
 ## Adding placeholder content to widgets
 
