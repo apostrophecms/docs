@@ -59,7 +59,7 @@ Let's get started converting this template to an Apostrophe project!
 
 ## Creating a new project
 
-If you don't already have the apostrophe CLI installed, follow the instructions [here](https://v3.docs.apostrophecms.org/guide/setting-up.html#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
+If you don't already have the apostrophe CLI installed, follow the instructions [here](https://docs.apostrophecms.org/guide/setting-up.html#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
 
 <AposCodeBlock>
 
@@ -899,7 +899,7 @@ The "Home" page of the template is essentially an `index.html` page that lists a
 </template>
 </AposCodeBlock>
 
-Focusing on the `for` loop in the code. We are stepping through all of the articles returned in `data.pieces` and outputing the relevant data. Again, since we specified a `perPage` value of `5` in the options, this will return the five newest blog articles. This can be further configured within the `blog-page` module options, for example with the [`sort` option](https://v3.docs.apostrophecms.org/reference/modules/piece-type.html#sort).
+Focusing on the `for` loop in the code. We are stepping through all of the articles returned in `data.pieces` and outputing the relevant data. Again, since we specified a `perPage` value of `5` in the options, this will return the five newest blog articles. This can be further configured within the `blog-page` module options, for example with the [`sort` option](https://docs.apostrophecms.org/reference/modules/piece-type.html#sort).
 
 The "Pager" section is expanded to conditionally show newer and older blog articles, unlike the original template, which only shows older articles. Within the section, we are taking advantage of some additional data that is being delivered to the `index.html` page. Within the `data` payload are `data.currentPage` and `data.totalPages`. The `data.totalPages` is how many individual data sets are present for the particular piece type if divided into groups based on the `perPage` option (the default is `10`).
 

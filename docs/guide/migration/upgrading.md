@@ -1,7 +1,7 @@
 ---
 next: false
 ---
-# Migration from Apostrophe 2
+# Migration from Apostrophe 2 to Apostrophe 4
 
 While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 and now in the latest versions of Apostrophe, there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to the newest Apostrophe. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work](#migration-tools-and-process).
 

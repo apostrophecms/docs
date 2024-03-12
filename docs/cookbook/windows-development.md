@@ -124,7 +124,7 @@ nvm use 18
 
 Now you're ready to use the current stable version of Node.js in this shell.
 
-And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](https://v3.docs.apostrophecms.org/guide/setting-up.html). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
+And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](https://docs.apostrophecms.org/guide/setting-up.html). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
 
 ::: warning
 One more quick reminder: be sure to **leave `mongod` running in a separate Ubuntu window** while you work with Apostrophe.

@@ -1,7 +1,7 @@
 # How to update Apostrophe CMS documentation
 
 
-This project contains [the documentation site](https://v3.docs.apostrophecms.org/)
+This project contains [the documentation site](https://docs.apostrophecms.org/)
 for [ApostropheCMS](https://apostrophecms.com).
 
 You don't need to read this page to read the documentation! This page

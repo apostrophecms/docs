@@ -488,7 +488,7 @@ uploadfs({
 
 ## Related documentation
 
-- [Attachment schema field](https://v3.docs.apostrophecms.org/reference/field-types/attachment.html#attachment)
-- [API attachment response](https://v3.docs.apostrophecms.org/reference/api/field-formats.html#attachment)
-- [API crop endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-crop)
-- [API upload endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-upload)
+- [Attachment schema field](https://docs.apostrophecms.org/reference/field-types/attachment.html#attachment)
+- [API attachment response](https://docs.apostrophecms.org/reference/api/field-formats.html#attachment)
+- [API crop endpoint](https://docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-crop)
+- [API upload endpoint](https://docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-upload)

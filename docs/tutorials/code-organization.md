@@ -143,11 +143,11 @@ module.exports = {
 
 Depending on the type of module you can add a variety of `options` and `fields`. The `options` configuration object can allow you to set a label for your module that is shown to the editor or turn on localization. We will be covering these options as we dive into further tutorials.
 
-The `fields` configuration option lets you add and group schema fields that determine what content an editor can add in your piece or page. In the ["Creating Pages"](/tutorials/pages.html) tutorial, we will begin to look at schema fields in more detail. In this code example, we are passing an object to the `fields` key, however this key can also take a function with `self` and `options` as arguments that returns the object. This is covered in our [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#fields). This allows you to further customize what content can be added and will be covered further in the [Adding Extensions](/tutorials/adding-extensions.html) tutorial.
+The `fields` configuration option lets you add and group schema fields that determine what content an editor can add in your piece or page. In the ["Creating Pages"](/tutorials/pages.html) tutorial, we will begin to look at schema fields in more detail. In this code example, we are passing an object to the `fields` key, however this key can also take a function with `self` and `options` as arguments that returns the object. This is covered in our [documentation](https://docs.apostrophecms.org/reference/module-api/module-overview.html#fields). This allows you to further customize what content can be added and will be covered further in the [Adding Extensions](/tutorials/adding-extensions.html) tutorial.
 
 ### Customization
 
-Each module can take multiple initialization and configuration functions. We will just cover a couple of the most essential ones in this tutorial. Some of the other functions will be touched on during this tutorial series, but to see the full list take a look at the [documentation](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html).
+Each module can take multiple initialization and configuration functions. We will just cover a couple of the most essential ones in this tutorial. Some of the other functions will be touched on during this tutorial series, but to see the full list take a look at the [documentation](https://docs.apostrophecms.org/reference/module-api/module-overview.html).
 
 ### `async init(self)`
 
