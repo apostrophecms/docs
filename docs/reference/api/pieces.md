@@ -154,6 +154,18 @@ const document = await response.json();
 
 The successful `POST` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
 
+### Duplicating existing pieces
+
+The optional `_copyingId` property may be added to the **body** of the
+request, e.g. included in the `data` object passed to `JSON.stringify`
+above. If this property contains the `_id` of an existing piece of the
+same type, the properties of that piece will be applied first as
+defaults, and then overridden by any other properties present in the body.
+
+In addition, this value becomes the `copyOfId` property of the new piece.
+[`beforeInsert` handlers](/reference/server-events.md#beforeinsert) of individual piece types can access this property
+to duplicate additional application-specific resources as needed.
+
 ## `PUT /api/v1/:piece-name/:_id`
 
 ### Query parameters
