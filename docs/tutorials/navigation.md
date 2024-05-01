@@ -145,11 +145,11 @@ With this one new line, we are adding the markup from the `pagetreeNavigation` f
 
 The appearance of your navigation will depend on how many pages you have added to your site. Right now, if you were to switch the localization of your site, unless you have already localized all of your review pages, your navigation would disappear. If you haven't localized them yet, while in edit mode on the homepage open the context menu (three horizontal dots) and select 'Localize...'. You will then get a modal asking what content you want to localize. If you select 'This document and related documents' it will localize all the review pages to the selected locale as drafts. You will then have to publish all the pages in the new locale. Since we are building our navigation from the page titles, you will need to translate the titles to match the new locale before publishing to have them added to the navigation in the correct language.
 
-### Generating navigation manually
+## Generating navigation manually
 
 Another approach to generating your navigation that can be more flexible, but also requires more work for the content editors, is by providing schema fields for adding menu items. Since the navigation is appearing on all pages, we will create the additional fields in the `modules/@apostrophecms/global` module. If you prefer, you could instead create a stand-alone piece-type module to hold your navigation items. This would be created using the CLI by running `apos add piece navigation`, adding the new module to the `app.js` file, and then adding the code we are going to add to the global module.
 
-#### Adding the navigation schema
+### Adding the navigation schema
 
 Open the `modules/@postrophecms/global/index.js` file and add the following to the `fields/add` object:
 
@@ -257,11 +257,11 @@ Adding the `inline: true` and `draggable: true` properties convert the UI presen
 
 ![Screenshot of the navigation with inline style set to table.](../images/sec2-6-table-nav-array.png)
 
-Finally, if we add the `style: table` property in addition to the `inline: true` property then each array appears as a row in a table. Again, each of the individual arrays is draggable. This method of display isn't recommended if your arrays have conditional fields, as it will change the column labels if some arrays have a field while others do not. In this case, the `type` field conditionally impacts what schema field is added in the third column. Unless the content editor selects the same type for all the links, there will be cases where the label for the column won't match the type of input. 
+Finally, if we add the `style: 'table'` property in addition to the `inline: true` property then each array appears as a row in a table. Again, each of the individual arrays is draggable. This method of display isn't recommended if your arrays have conditional fields, as it will change the column labels if some arrays have a field while others do not. In this case, the `type` field conditionally impacts what schema field is added in the third column. Unless the content editor selects the same type for all the links, there will be cases where the label for the column won't match the type of input.
 
 Drilling down into the schema fields of each array, we are allowing the user to either select an existing page through a `relationship` type field or to add a custom link through a `url` field. We are also allowing the content editor to alter the behavior of the link. We could also decide to programmatically add `target='_blank'` to the links only if they are a custom type.
 
-#### Adding the navigation markup
+### Adding the navigation markup
 
 Once again, we are going to add our markup to the `views/fragments/navigation.html` file. Open this file and add the following to the end:
 
