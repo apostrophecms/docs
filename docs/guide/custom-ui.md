@@ -252,7 +252,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 
 ## Adding custom modal controls
 
-Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the new computed `_id` if a new document is created, or 'undefined' if the modal is cancelled. This method enables the editing modal to open regardless of user permissions; therefore, permissions must be verified. With the standard Apostrophe permissions you only need to check that the `canCreate` property for the piece type or `@apostrophecms/page` is true. If you are using the [`@apostrophecms-pro/advanced-permission`](https://apostrophecms.com/extensions/advanced-permission) extension you can separately check that `canEdit` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. With Advanced Permission the ability of a user to create a document is given separately from the permission to edit it, so the `canEdit` property should be checked before adding a method call for editing a document.
+Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled. This method enables the editing modal to open regardless of user permissions; therefore, permissions must be verified. With the standard Apostrophe permissions you only need to check that the `canCreate` property for the piece type or `@apostrophecms/page` is true. If you are using the [`@apostrophecms-pro/advanced-permission`](https://apostrophecms.com/extensions/advanced-permission) extension you can separately check that `canEdit` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. With Advanced Permission, the ability of a user to create a document is given separately from the permission to edit it, so the `canEdit` property should be checked before adding a method call for editing a document.
 
 ### Creating a new document
 
@@ -270,8 +270,8 @@ export default () => {
           const createdDocument = await apos.doc.edit({
             type: 'blog'
           });
-          if (editedDocument) {
-            console.log('Document was created:', editedDocument);
+          if (createdDocument) {
+            console.log('Document was created:', createdDocument);
           }
         } catch (error) {
           console.error('Error creating document:', error);
@@ -300,7 +300,7 @@ apos.doc.edit({
 
 ### Duplicating an existing document
 
-The method also gives you the option to create a new document of the designated type, but pre-filled with fields from an existing document of the same type. This is very similar to editing an existing document except that the `_id` of the existing document to be copied should be passed through the `copyOfId` property. In this case, you can pass the `_id` of either the draft or published document if they both exist.
+The `apos.doc.edit()` method also gives you the option to create a new document of the designated type, but pre-filled with fields from an existing document of the same type. This is very similar to editing an existing document except that the `_id` of the existing document to be copied should be passed through the `copyOfId` property. In this case, you can pass the `_id` of either the draft or published document if they both exist.
 
 ```js
 apos.doc.edit({
