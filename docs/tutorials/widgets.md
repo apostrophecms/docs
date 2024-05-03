@@ -14,6 +14,7 @@ videoList:
 <div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
   <iframe width="655" height="365" src="https://www.youtube.com/embed/KS4o4IUmSGE?si=W6vCP5pZfleMtVUg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
+
 In our tutorial on [Creating Pages](/tutorials/pages.html) in our Apostrophe project, we made use of the core widgets for adding content to our home page areas. In this tutorial, we shift focus towards custom widget development, aiming to furnish our editors with unique tools to augment the site's aesthetics.
 
 We will create a basic layout widget, a pivotal step toward accomplishing our final project's envisioned appearance. This will introduce template helper functions, schema field conditionals, and introduce how we register icons for use in our project.

@@ -8,6 +8,8 @@ import { join } from 'path';
 import { JSDOM } from 'jsdom';
 import nlp from 'compromise';
 
+import nunjucks from './theme/njk-html.tmLanguage.json';
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for Apostrophe 3',
@@ -253,7 +255,7 @@ export default defineConfig({
       {
         id: 'njk-html',
         scopeName: 'text.html.njk',
-        grammar: require('./theme/njk-html.tmLanguage.json'),
+        ...nunjucks,
         displayName: 'Nunjucks',
         embeddedLangs: ['html'],
         aliases: ['njk', 'nunjucks']

@@ -17,7 +17,7 @@ export default {
   Layout: () => {
     return h(Theme.Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
-      'aside-outline-after': () => [h(AposFeedback), h(EditOrIssue)]
+      'aside-outline-after': () => [h(AposVideoSidebar), h(AposFeedback), h(EditOrIssue)]
     });
   },
   enhanceApp({ app, router, siteData }) {
