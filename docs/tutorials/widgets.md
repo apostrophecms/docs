@@ -1,10 +1,24 @@
+---
+videoList:
+  - id: 'KS4o4IUmSGE'
+    title: 'Creating a layout widget'
+    link: '#widget-creation'
+  - id: 'TZzXsBNWGbQ'
+    title: 'Creating a CTA widget'
+    link: '#creating-a-cta-widget'
+  - id: 'x2tHUIvJr9w'
+    title: 'Creating the rating widget'
+    link: '#creating-the-rating-widget'
+---
 # Widget Creation
-
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="655" height="365" src="https://www.youtube.com/embed/KS4o4IUmSGE?si=W6vCP5pZfleMtVUg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 In our tutorial on [Creating Pages](/tutorials/pages.html) in our Apostrophe project, we made use of the core widgets for adding content to our home page areas. In this tutorial, we shift focus towards custom widget development, aiming to furnish our editors with unique tools to augment the site's aesthetics.
 
 We will create a basic layout widget, a pivotal step toward accomplishing our final project's envisioned appearance. This will introduce template helper functions, schema field conditionals, and introduce how we register icons for use in our project.
 
-Next we will formulate a 'deal widget', designed to empower editors with the capability of presenting links, garnished with images and headings, in a singular or multiple format. This will introduce some additional options and methods for working with images in schemas and templates.
+Next we will formulate a CTA 'deal widget', designed to empower editors with the capability of presenting links, garnished with images and headings, in a singular or multiple format. This will introduce some additional options and methods for working with images in schemas and templates.
 
 Finally, we will create a 'rating widget' that allows the editors to add ratings to the different products using a star system. In the creation of this widget, we will also begin to learn about async components, a powerful way to add dynamic content to pages asynchronously, giving your widgets access to site settings and data supplied by APIs, plus we will revisit adding module styling.
 
@@ -399,7 +413,11 @@ Now that we have a functional row widget, we need to add it to the areas where w
 
 Remember, to edit a page you need to be logged in, then just navigate to the page and click the edit button at the upper right. If you don't see the new row widget in your areas when you open the drop-down or flyout menus, you may need to clear your former builds first before bringing the project up, making sure to pass the `APOS_DEV=1` flag. So: `rm -rf apos-build data && APOS_DEV=1 npm run dev`.
 
-## Creating the deal widget
+## Creating a CTA widget
+
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="655" height="365" src="https://www.youtube.com/embed/TZzXsBNWGbQ?si=gJKZsNhnOSxxi858" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 ![Screenshot of the deal widget from the proof-of-concept site](../images/sec2-4-deal-widget.png)
 
@@ -608,7 +626,9 @@ const { fullConfig } = require('../../../lib/area');
 You can now spin up your site and add a deal widget. First, add a row widget to either the top or bottom area and select a column size. Second, add a deal widget and populate the fields with title, link, and image. In a real production site it would probably be better to modify the link field to give the user a choice between an existing page or an outside URL. We will build this when we are creating our site navigation.
 
 ## Creating the rating widget
-
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="655" height="365" src="https://www.youtube.com/embed/x2tHUIvJr9w?si=nrrAisMGN64cuA-S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 What is a review site without the ability of the authors and readers to submit ratings!? To wrap up our tutorial on widgets we will take a look at another way to deliver template content and begin the creation of our ratings widget. We will create a section for editors to add their product ratings from a set of schema fields, and a way for reader's to submit their ratings on the front end. This will highlight an important aspect of widget creation, adding a 'player' for front-end JavaScript.
 
 ### Adding the async component method

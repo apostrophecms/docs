@@ -10,6 +10,7 @@ import AposFeedback from '../components/AposFeedback.vue';
 import EditOrIssue from '../components/EditOrIssue.vue';
 import AposTwoColumns from '../components/AposTwoColumns.vue';
 import AposCtaButton from '../components/AposCtaButton.vue';
+import AposVideoSidebar from '../components/AposVideoSidebar.vue';
 
 export default {
   ...Theme,
