@@ -5,7 +5,7 @@
 </div>
 
 ::: tip Howdy! 👋🏻
-This video is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
 :::
 
 We're thrilled to guide you on this explorative journey through the ApostropheCMS ecosystem. Our goal with this series of tutorials is to provide a robust foundation to comprehend and harness the power of ApostropheCMS effectively.

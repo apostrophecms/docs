@@ -1,5 +1,9 @@
 # Why Apostrophe?
 
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/AwprTZ_Ujjk?si=XwD6tpWSuCcNSE_m" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
 ## **Overview**
 
 We developed Apostrophe because we found ourselves repeating the same tasks, making the same changes, and expressing the same complaints whenever we started a project with another framework or CMS.

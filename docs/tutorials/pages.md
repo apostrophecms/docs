@@ -1,4 +1,21 @@
+---
+videoList:
+  - id: '3Ojv9v36zfk'
+    title: 'Pages: Schema & Templates'
+    link: '#page-creation'
+  - id: 'j0Shrq6xjC0'
+    title: 'Pages: Fragments & Localization'
+    link: '#using-fragments'
+---
 # Page Creation
+
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/3Ojv9v36zfk?si=X7ZVJ7RzK5v1TTit" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the videos and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
 
 In an Apostrophe project, pages provide a way to show static content, as well as dynamic content delivered by both widgets and pieces. The `@apostrophecms/page-type` module allows for the creation of page types. The selection of these page types by a user tells Apostrophe what template to use to render the page, what content types can be added to a page by the editor through the field schema, as well as what additional dynamic content should be added. You can have as many or as few page types as needed for your site. You can either elect to make code changes as you follow along with the tutorial, or you can switch to branch `sec2-2-pages` of the [repo](https://github.com/apostrophecms/apostrophe-onboarding-project).
 
@@ -429,7 +446,12 @@ Depending on the document type of the module, the template has a lot of addition
  An alternative to this is using `<script> console.log({{ page.data | json}})</script>`. This will pipe the log output to the browser console since the script will be run on the client-side. This is useful for parsing through large objects or using other console methods. Note the use of `| json` within the interpreted expression. This is saying that the `page.data` should be piped to the Nunjucks `json` filter. Filters in Nunjucks apply a function to any template data and are used to sanitize or modify the input that is piped to them. In this case, the `json` filter will properly escape data into a json string for output in a script tag. There are several [Nunjucks-](https://mozilla.github.io/nunjucks/templating.html#filters) and [Apostrophe-supplied](https://docs.apostrophecms.org/guide/template-filters.html#apostrophe-supplied-filters) filters, plus you can create [custom filters](https://docs.apostrophecms.org/guide/template-filters.html#custom-template-filters). We will explore this further in a future tutorial.
 :::
 
-### Using fragments
+## Using fragments
+
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="655" height="365" src="https://www.youtube.com/embed/j0Shrq6xjC0?si=IOQUtQnwdxHePFC4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
 Another tool we have to help us in constructing pages is fragments. Fragments can be used in templates for pages, pieces, and widgets. They are useful for template code that is reused across multiple files, but also to organize complicated layouts by splitting the code into smaller, more manageable pieces. Fragments are very similar to Nunjucks macros, but they support fetching data to add to the fragment asynchronously. We will revisit this in the [Creating Pieces](/tutorials/pieces.html) tutorial.
 
 Looking back at the project overview in the tutorial [Introduction](/tutorials/introduction.html), we can see that all the pages are going to have a top bar with our branding, a navbar, and a footer. We could elect to directly add this markup to our `views/layout.html` file, but instead, we are going to use fragments for each.

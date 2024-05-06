@@ -1,5 +1,13 @@
 # Overview of Apostrophe code organization
 
+<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
+  <iframe width="655" height="365" src="https://www.youtube.com/embed/yd9HV5JNqLw?si=kCgnQ6cV4noHzJJV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+::: tip Howdy! 👋🏻
+This video is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
+
 In this tutorial, we'll initialize our project with the Apostrophe Command Line Interface (CLI) tool. After creating our project we'll delve into its organization, focusing on the fundamental modules and files that comprise the Essentials starter kit project. We'll also revisit the concept of module inheritance, which was introduced in the first section. Lastly, we'll explore the application of `nestedModuleSubdirs` as an optional approach to reorganizing our project. While you will be creating this project locally using the CLI tool, you can also clone the [GitHub repo](https://github.com/apostrophecms/apostrophe-onboarding-project) and checkout branch `sec2-1b`.
 
 ## Creating our project

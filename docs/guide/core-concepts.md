@@ -1,5 +1,9 @@
 # **Apostrophe Core Concepts**
 
+<div style="display: flex; justify-content: center;">
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/0YSvNb2rMto?si=Zws1VF1XMMdh5x1a" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
 ## Overview
 
 In this section, we'll discuss the key concepts to understand in order to architect and build your applications efficiently. We will discuss each concept more deeply in other guides. This is simply an overview to become familiar with the terms.

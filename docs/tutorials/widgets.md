@@ -12,8 +12,12 @@ videoList:
 ---
 # Widget Creation
 <div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
-  <iframe width="655" height="365" src="https://www.youtube.com/embed/KS4o4IUmSGE?si=W6vCP5pZfleMtVUg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/KS4o4IUmSGE?si=W6vCP5pZfleMtVUg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the videos and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
 
 In our tutorial on [Creating Pages](/tutorials/pages.html) in our Apostrophe project, we made use of the core widgets for adding content to our home page areas. In this tutorial, we shift focus towards custom widget development, aiming to furnish our editors with unique tools to augment the site's aesthetics.
 
@@ -417,7 +421,7 @@ Remember, to edit a page you need to be logged in, then just navigate to the pag
 ## Creating a CTA widget
 
 <div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
-  <iframe width="655" height="365" src="https://www.youtube.com/embed/TZzXsBNWGbQ?si=gJKZsNhnOSxxi858" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/TZzXsBNWGbQ?si=gJKZsNhnOSxxi858" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
 
 ![Screenshot of the deal widget from the proof-of-concept site](../images/sec2-4-deal-widget.png)
@@ -627,9 +631,11 @@ const { fullConfig } = require('../../../lib/area');
 You can now spin up your site and add a deal widget. First, add a row widget to either the top or bottom area and select a column size. Second, add a deal widget and populate the fields with title, link, and image. In a real production site it would probably be better to modify the link field to give the user a choice between an existing page or an outside URL. We will build this when we are creating our site navigation.
 
 ## Creating the rating widget
+
 <div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
-  <iframe width="655" height="365" src="https://www.youtube.com/embed/x2tHUIvJr9w?si=nrrAisMGN64cuA-S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe width="660" height="370" src="https://www.youtube.com/embed/x2tHUIvJr9w?si=nrrAisMGN64cuA-S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
+
 What is a review site without the ability of the authors and readers to submit ratings!? To wrap up our tutorial on widgets we will take a look at another way to deliver template content and begin the creation of our ratings widget. We will create a section for editors to add their product ratings from a set of schema fields, and a way for reader's to submit their ratings on the front end. This will highlight an important aspect of widget creation, adding a 'player' for front-end JavaScript.
 
 ### Adding the async component method
