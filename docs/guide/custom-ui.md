@@ -252,7 +252,9 @@ Do not use core actions as your `action` property value - this would lead to unp
 
 ## Adding custom modal controls
 
-Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled. This method enables the editing modal to open regardless of user permissions; therefore, permissions must be verified. With the standard Apostrophe permissions you only need to check that the `canCreate` property for the piece type or `@apostrophecms/page` is true. If you are using the [`@apostrophecms-pro/advanced-permission`](https://apostrophecms.com/extensions/advanced-permission) extension you can separately check that `canEdit` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. With Advanced Permission, the ability of a user to create a document is given separately from the permission to edit it, so the `canEdit` property should be checked before adding a method call for editing a document.
+Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled.
+
+While this method enables the editing and management modals to open for any user, it does not bypass Apostrophe's permission checks. A user without permission to perform an operation on a particular page or piece will still be blocked. Best practice is to toggle any custom controls so that are only visible or active for a user with correct permissions. This can be done by checking that the value of the `canCreate` and `canEdit` properties for the piece type or `@apostrophecms/page` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. The `canEdit` property should be checked before adding a method call for editing a document.
 
 ### Creating a new document
 
@@ -264,7 +266,7 @@ In order to create a new document, whether page or piece, you pass the required 
 export default () => {
   apos.util.onReady(() => {
     const button = document.getElementById('create-new-piece');
-    if (button && apos.module['blog'].canCreate) {
+    if (button && apos.module?.blog?.canCreate) {
       button.addEventListener('click', async function () {
         try {
           const createdDocument = await apos.doc.edit({
