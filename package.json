@@ -32,7 +32,7 @@
     "stylelint": "^15.10.3",
     "stylelint-config-apostrophe": "^3.0.0",
     "stylelint-plugin-stylus": "^0.18.0",
-    "vitepress": "1.0.0-rc.29",
-    "vitepress-plugin-search": "^1.0.4-alpha.20"
+    "vitepress": "^1.0.0",
+    "vitepress-plugin-search": "1.0.4-alpha.22"
   }
 }

@@ -98,10 +98,7 @@ export default {
 
 <style lang="stylus" scoped>
 .local-page-edit {
-  margin-top: 2rem;
-  margin-left: 1rem;
   font-size: 12px;
-
   }
 
 .local-edit-link {

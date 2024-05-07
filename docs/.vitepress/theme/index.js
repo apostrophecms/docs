@@ -10,13 +10,14 @@ import AposFeedback from '../components/AposFeedback.vue';
 import EditOrIssue from '../components/EditOrIssue.vue';
 import AposTwoColumns from '../components/AposTwoColumns.vue';
 import AposCtaButton from '../components/AposCtaButton.vue';
+import AposVideoSidebar from '../components/AposVideoSidebar.vue';
 
 export default {
   ...Theme,
   Layout: () => {
     return h(Theme.Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
-      'aside-outline-after': () => [h(AposFeedback), h(EditOrIssue)]
+      'aside-outline-after': () => [h(AposVideoSidebar), h(AposFeedback), h(EditOrIssue)]
     });
   },
   enhanceApp({ app, router, siteData }) {

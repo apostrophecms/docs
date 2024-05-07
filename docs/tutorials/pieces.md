@@ -1,4 +1,19 @@
+---
+videoList:
+  - id: 'jsJqO9K14dc'
+    title: 'Pieces: Creating Pieces'
+    link: '#piece-creation'
+  - id: 'vl8ex11H0XY'
+    title: 'Pieces: Creating a Piece Widget'
+    link: '#creating-a-piece-widget'
+---
 # Piece Creation
+
+<iframe src="https://www.youtube.com/embed/jsJqO9K14dc?si=8VT5i7ms0jcSUvX2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the videos and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
 
 Pieces are stand-alone documents containing structured content. This content can be material that is presented on a page, like a blog article, or a team roster. However, pieces can also be used for storing other types of data. For example, the `@apostrophecms/user` module extends the `@apostrophecms/piece-type` module and stores each project user as a piece. Because pieces are stand-alone documents, they can easily be retrieved from the database.
 
@@ -693,6 +708,8 @@ This `chooseParentPage()` extended method is relatively simple. We could have el
 At this point, you can spin the project up and create a new page for every category, plus another for 'all' to display all the pieces, or if you haven't done so yet, you can import the database from the final project (see the [repository README](https://github.com/apostrophecms/apostrophe-onboarding-project/blob/main/README.md) to learn how to accomplish this). In the next tutorial, we will add site navigation to link these pages to the homepage. Next, we are going to look at two further ways to display pieces on our pages.
 
 ## Creating a piece widget
+
+<iframe src="https://www.youtube.com/embed/vl8ex11H0XY?si=aZiuoEc9XG_9_WXG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 So far, we can only display pieces on a dedicated page, but obviously, we also want to be able to display pieces on other pages throughout our site. One way this can be accomplished is through the creation of a widget that can be added to any area. We are going to create two different widgets, a simple one to display any review article, and a more complex one that allows the content creator to select from either a featured review or the latest review.
 

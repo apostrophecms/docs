@@ -1,5 +1,11 @@
 # Assets
 
+<iframe src="https://www.youtube.com/embed/qrQUlcDPFg8?si=z_6MKL8BfiGclGiN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
+
 In an Apostrophe project, you have multiple options for where to add assets. It is all dependent on how you feel most comfortable organizing your codebase. 
 
 Apostrophe automatically provides a [webpack](https://webpack.js.org/)-powered process for bundling project frontend JavaScript and stylesheets. You can elect to use SCSS or CSS in your styling and Apostrophe will compile and bundle it for delivery to the front end. The webpack configuration can be altered to include additional file types, additional processing steps, or aid in codebase organization. You can also elect to use your own build process or opt resources out of the built-in build process.

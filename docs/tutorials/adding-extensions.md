@@ -3,6 +3,12 @@ next: false
 ---
 # Adding extensions to your project
 
+<iframe src="https://www.youtube.com/embed/HSpGCfnBIe8?si=P-KSSpaM4vZFePv-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
+
 Extensions are a way to easily add functionality to your project, whether by adding modules created by other developers, or a set of self-developed, custom modules that get installed in your project. Apostrophe's own library of extension also contains great examples for learning Apostrophe's codebase.
 
 For the final tutorial of our basic project build, we are going to install two different extensions. First, we will install the `seo` extension. This extension is a good example of how a set of bundled modules can improve multiple core modules as well as modify the project layout template. Next, we will install the `blog` extension. In this case, the `blog` extension doesn't improve any core modules, but it provides a useful example of how to implement piece-type filters, queries, and the `extendMethods()` function when creating a new piece-type.

@@ -1,4 +1,21 @@
+---
+videoList:
+  - id: 'nTjDATerqEg'
+    title: 'Setup for MacOS'
+    link: '#setting-up-your-environment'
+  - id: 'Ep_FvRt8thI'
+    title: 'Setup for Windows and Linux'
+    link: '#setting-up-your-environment'
+---
+
 # Setting Up Your Environment
+
+::: tip Howdy! 👋🏻
+This documentation is available in textual and video forms. Watch the video for your operating system, or continue reading if you prefer. Of course, you can also do both!
+:::
+
+<iframe src="https://www.youtube.com/embed/nTjDATerqEg?si=ItkK3gz4-CJmI1WI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/Ep_FvRt8thI?si=XEThrEvtaNyTdKo7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Overview
 This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. While these steps will work directly for Mac OS and many Linux distributions, Windows OS users will need to [install WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) first. **Importantly**, for both WSL2 and other Linux users we recommend checking to make sure that the Linux distribution you are installing or using is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/), which is OS agnostic.

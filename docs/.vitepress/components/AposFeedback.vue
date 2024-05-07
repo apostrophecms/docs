@@ -113,7 +113,6 @@ export default {
 }
 
 .feedback {
-  margin-top: 2rem;
   @media (min-width: var(--mq-mobile-narrow)) {
     display: flex;
     align-items: center;
@@ -135,11 +134,6 @@ export default {
   }
 }
 
-.feedback-heading, .feedback-actions {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .feedback-heading {
   font-weight: 700;
   margin-bottom: 1rem;
@@ -158,7 +152,7 @@ export default {
   gap: 10px;
 
   .feedback-button {
-    width: 40%;
+    flex-grow: 1;
   }
 
   @media (min-width: var(--mq-mobile-narrow)) {

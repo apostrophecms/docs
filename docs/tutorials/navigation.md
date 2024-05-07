@@ -1,5 +1,11 @@
 # Navigation
 
+<iframe src="https://www.youtube.com/embed/kFPzdD2zLA0?si=8TSASkvNzwWi0mWA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
+
 Creating an intuitive and functional navigation system is a critical element in web design, and ApostropheCMS provides robust and flexible tools to achieve just this. In this tutorial, we will go through two methods for adding whole site navigation. The techniques we will be outlining can also be used for the creation of contextual navigation for the children of a page, for example. We will also take a shallow dive into generating breadcrumb navigation.
 
 While we will be mainly focused on producing navigation for our project, we will also revisit changing our page layout using fragments, including multiple fragments in a single file, and utilizing the global configuration. Lastly, while covering the addition of breadcrumb navigation to our pages, we will also look at the `helper(self)` configuration function.
