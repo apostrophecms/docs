@@ -1,8 +1,6 @@
 # Navigation
 
-<div style="display: flex; justify-content: center;">
-  <iframe width="660" height="370" src="https://www.youtube.com/embed/kFPzdD2zLA0?si=8TSASkvNzwWi0mWA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
+<iframe src="https://www.youtube.com/embed/kFPzdD2zLA0?si=8TSASkvNzwWi0mWA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ::: tip Howdy! 👋🏻
 This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!

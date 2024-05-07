@@ -33,8 +33,6 @@ export default {
       updateVideos();
     });
 
-    //onContentUpdated(updateVideos);
-
     onMounted(() => {
       updateVideos();  // Initial load
     });

@@ -9,9 +9,7 @@ videoList:
 ---
 # Page Creation
 
-<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
-  <iframe width="660" height="370" src="https://www.youtube.com/embed/3Ojv9v36zfk?si=X7ZVJ7RzK5v1TTit" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
+<iframe src="https://www.youtube.com/embed/3Ojv9v36zfk?si=X7ZVJ7RzK5v1TTit" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ::: tip Howdy! 👋🏻
 This tutorial is available in textual and video forms. Watch the videos and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
@@ -448,9 +446,7 @@ Depending on the document type of the module, the template has a lot of addition
 
 ## Using fragments
 
-<div style="display: flex; flex-direction: column; align-items: center; padding-top: 10px;">
-  <iframe width="655" height="365" src="https://www.youtube.com/embed/j0Shrq6xjC0?si=IOQUtQnwdxHePFC4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
+<iframe src="https://www.youtube.com/embed/j0Shrq6xjC0?si=IOQUtQnwdxHePFC4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Another tool we have to help us in constructing pages is fragments. Fragments can be used in templates for pages, pieces, and widgets. They are useful for template code that is reused across multiple files, but also to organize complicated layouts by splitting the code into smaller, more manageable pieces. Fragments are very similar to Nunjucks macros, but they support fetching data to add to the fragment asynchronously. We will revisit this in the [Creating Pieces](/tutorials/pieces.html) tutorial.
 
