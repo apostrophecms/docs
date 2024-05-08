@@ -27,7 +27,7 @@ For example:
 self.logError('event-type', 'notification message', { key: 'value' });
 ```
 Will log:
-```
+``` sh
 'current-module-name: event-type: notification message'
 {
   type: 'event-type',
@@ -122,7 +122,7 @@ Example output when using Pino as configured below:
     username: "admin"
     attempts: 0
 ```
-::: note
+::: info
 The `ip` here `::1` because the project is being run on `localhost:3000`
 :::
 

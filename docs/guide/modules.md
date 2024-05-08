@@ -1,5 +1,6 @@
 ---
 title: "Code organization"
+prev: false
 ---
 
 # Code organization with modules
@@ -8,7 +9,7 @@ Apostrophe code is organized in a system of modules. Modules are the building bl
 
 Each module defines a specific set of functionality, from configuring blog post fields to governing internationalization. Common Apostrophe project modules will define custom content types, page types, or editable widget types.
 
-All modules use [the same API](/reference/module-api/). That shared foundation means that all have access to powerful features, such as custom command line tasks and API routes. It's the same API the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
+All modules use [the same API](/reference/module-api/module-overview). That shared foundation means that all have access to powerful features, such as custom command line tasks and API routes. It's the same API the core team uses to build the CMS, so it is well tested and designed to be as intuitive as possible.
 
 To find both official and community-supported Apostrophe modules to install, see [the Extensions and Integrations index](https://apostrophecms.com/extensions).
 
@@ -31,7 +32,7 @@ module.exports = {
 
 The final step to use this blog post module is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its `modules` object.
 
-```js
+``` js
 // app.js
 require('apostrophe')({
   modules: {
@@ -42,11 +43,11 @@ require('apostrophe')({
 
 The module API supports many different configuration options. See the [module API reference](/reference/module-api/module-overview.md) for more detail.
 
-::: note
+::: info
 Module names may not include periods (`.`).
 
-- Bad: `blog.post`
-- Good: `blog-post`
+- Bad: `blog.post` ❌
+- Good: `blog-post` ✅
 :::
 
 ## Module inheritance

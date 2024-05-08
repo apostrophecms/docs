@@ -15,7 +15,7 @@ The rich text widget provides a space for entering and editing formatted text. E
 
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field. 
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -71,12 +71,12 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 ### Configuring the insert menu
 
 Note that the toolbar appears only when text is already selected. Some features, like
-`table` and `image`, should be available all the time because they insert entirely
+`table`, `image`, and `horizontalRule` should be available all the time because they insert entirely
 new content unrelated to existing text.
 
 To accommodate this, you can enable the "insert menu" as well:
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -84,7 +84,7 @@ widgets: {
     //  Toolbar configuration
     toolbar: ['styles', 'bold', 'italic', 'table', 'image'],
     // 👇 Insert menu configuration
-    insert: ['table', 'image']
+    insert: ['table', 'image', 'horizontalRule']
 }
 ```
 
@@ -111,7 +111,7 @@ A single style including class might look like:
 
 You can use the same tag in several styles with various CSS classes.
 
-::: note
+::: info
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
@@ -119,7 +119,7 @@ Some tags will wrap the selected text, rather than converting the entire block t
 
 Adding to the toolbar styles:
 
-```js
+``` js
 {
   styles: [
     {
@@ -136,7 +136,7 @@ Adding to the stylesheet:
 .highlight-red { color: #FF0000; } 
 ```
 
-![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../.vuepress/public/images/rich-text-highlighting.png)
+![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../images/rich-text-highlighting.png)
 
 The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
@@ -218,7 +218,7 @@ Several other Markdown shortcuts are enabled by default, including double tilde 
 | `mark` | `==highlight==` | Default |
 | `hr` | `---` | Default |
 
-:::note
+::: info
 Spaces in the syntax between the symbol and any text in the table are required, e.g., `## heading`. Equally, a lack of space between symbols and any text is also required for proper formatting, e.g., `**bold**`.
 :::
 ### Configuring the `image` toolbar and insert menu option
@@ -232,6 +232,7 @@ of the `@apostrophecms/rich-text-widget` module, in order to specify CSS classes
 the user is allowed to select for the image:
 
 <AposCodeBlock>
+
 ```javascript
 // modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
@@ -290,7 +291,7 @@ By default, the rich text widget displays placeholder content. To block this beh
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     placeholderText: 'myNamespace:placeholder'
@@ -306,7 +307,7 @@ module.exports = {
 
 <AposCodeBlock>
 
-```json
+``` json
 {
   "placeholder": "Add text here..."
 }
@@ -326,7 +327,7 @@ The image widget supports displaying a single image, including its alt text. It 
 
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -339,7 +340,7 @@ widgets: {
 
 You can specify a minimum size for any image widget:
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -355,7 +356,7 @@ This widget won't allow the editor to select any image under 1000 pixels wide, o
 
 You can specify an aspect ratio for any image widget:
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -380,7 +381,7 @@ The image widget's default `srcset` attribute for responsive behavior assumes th
 
 This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets.md#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
-```django
+``` nunjucks
 {% area data.page, 'main' with {
   '@apostrophecms/image': {
     sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
@@ -397,7 +398,7 @@ by 1140px, for the `src` value.
 
 You can change this in the area field widget options, using another image size name.
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
@@ -424,7 +425,7 @@ You can also elect to change the default size for all image widgets by passing a
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     size: 'one-half'
@@ -441,7 +442,7 @@ You can elect to add a `loading` attribute to your image markup by passing the `
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     loadingType: 'lazy'
@@ -457,11 +458,11 @@ modules/@apostrophecms/image-widget/index.js
 
 The image widget displays a placeholder image by default. To block this behavior, set the `placeholder` option to a value of `false`.
 
-Alternatively, the preview image can be changed for your project. For the image widget, the `placeholderImage` option takes **just the file extension,** like `png` (note no `.`). You must also copy a matching file to the `public` subdirectory of your project-level configuration of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.png` (the name must be `placeholder` and the extension must match `placeholderImage`).
+Alternatively, the placeholder image can be changed for your project. For the image widget, the `placeholderImage` option takes **just the file extension,** like `png` (note no `.`). You must also copy a matching file to the `public` subdirectory of your project-level configuration of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.png` (the name must be `placeholder` and the extension must match `placeholderImage`).
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     // for a file named 'placeholder.png' in the module's project-level public folder
@@ -475,8 +476,33 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-::: note
-A legacy `placeholderUrl` option also exists, but we do not recommend it. Use `placeholderImage` and let Apostrophe do the hard work of determing the asset URL for you.
+### Specifying a custom URL to a placeholder image
+
+While `placeholderImage` is usually the straightforward choice, sometimes more customization is desired. The `placeholderUrl` option supports Apostrophe asset paths as well as full URLs, making it easier to serve images kept in a particular module. If you do not wish to use the default filename, or wish to serve the image from a different location, this option gives you the flexibility to achieve that.
+
+**For example:** if you wish to serve the file `special-placeholder.jpg` from your project-level `modules/@apostrophecms/image-widget/public` folder,
+you can do that with the following configuration:
+
+<AposCodeBlock>
+
+``` js
+module.exports = {
+  options: {
+    // The "my-" prefix tells Apostrophe to use the project-level
+    // folder, not the one in the core apostrophe module
+    placeholderUrl: '/modules/@apostrophecms/my-image-widget/special-placeholder.jpg'
+  }
+}
+```
+<template v-slot:caption>
+  modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
+
+::: info
+Note the `my-` prefix in `@apostrophecms/my-image-widget`. Without this
+prefix, Apostrophe would look for the file in the core Apostrophe npm
+module, and would not find it.
 :::
 
 ## Video widget
@@ -491,7 +517,7 @@ By default, the video widget displays a placeholder video. To block this behavio
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     placeholderUrl: 'https://vimeo.com/375468729'
@@ -528,7 +554,7 @@ There are two options to set classes on core widgets. You can add a `className` 
 
 Configuring on the module widget level:
 
-```js
+``` js
 // app.js
 require('apostrophe') {
   modules: {
@@ -543,7 +569,7 @@ require('apostrophe') {
 
 Configuring on the area field widget options:
 
-```js
+``` js
 // modules/@apostrophecms/home-page/index.js
 module.exports = {
   fields: {

@@ -52,6 +52,7 @@ animalType: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
@@ -62,8 +63,10 @@ animalType: {
 
 ## `choices` configuration
 
-<!-- Importing choices description -->
-<Content :page-key="$site.pages.find(p => p.relativePath === 'reference/field-types/_choices-setting.md').key"/>
+The `choices` setting in `checkboxes`, `radio`, or `select` fields configures the options that a user will see in the interface and the values that the server will allow in validation. The `choices` value is an array of objects with `label` and `value` properties.
+
+- `value` is used in the field's database value
+- `label` is the more human-readable version used in interfaces
 
 ## Populating `choices` dynamically
 
@@ -81,6 +84,6 @@ It is usually a good idea to perform at least short-term caching in your choices
 
 Radio field data is stored as the string `value` property of the selected choice.
 
-```django
+```nunjucks
 {{ data.piece.animalType }}
 ```

@@ -35,6 +35,7 @@ This module's named errors are used in the `apos.error()` method. The default er
 Unnamed errors are returned with the 500 error code, so it does not need to be registered. Additional error codes can be added with the `addErrors` option.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     options: {
@@ -47,6 +48,7 @@ Unnamed errors are returned with the 500 error code, so it does not need to be r
   <template v-slot:caption>
     modules/@apostrophecms/http/index.js
   </template>
+  
 </AposCodeBlock>
 
 ## Related documentation

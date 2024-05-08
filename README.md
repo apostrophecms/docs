@@ -1,11 +1,10 @@
 # How to update Apostrophe CMS documentation
-========================
 
-This project contains [the documentation site](https://docs.apostrophecms.com)
+
+This project contains [the documentation site](https://docs.apostrophecms.org/)
 for [ApostropheCMS](https://apostrophecms.com).
 
-You don't need to read this page to read the documentation! [Read the
-actual documentation here.](https://docs.apostrophecms.com) This page
+You don't need to read this page to read the documentation! This page
 is about *contributing to* the documentation.
 
 ## Building the docs
@@ -15,11 +14,11 @@ is about *contributing to* the documentation.
 Clone the repo.
 
 ```bash
-$ git clone https://github.com/apostrophecms/a3-docs.git
-$ cd a3-docs
+$ git clone https://github.com/apostrophecms/a3-vitepress-docs.git
+$ cd a3-vitepress-docs
 ```
 
-Next, install the dependencies for the main Vuepress documentation build.
+Next, install the dependencies for the main Vitepress documentation build.
 
 ```
 npm install
@@ -36,8 +35,24 @@ For testing, or
 ```
 npm run build
 ```
+followed by
+```
+npm run preview
+```
+Note that the build version is *less* tolerant of errors in your markdown files, so it is important to do this step before deployment. 
 
-Before deployment with the `deploy` script (requires credentials of course).
+For deployment (requires credentials of course), you can select to deploy to staging, production, or both. For deployment to staging only, for example, you would use
+
+```
+ENV=staging npm run deploy
+```
+For deployment to production only (unusual), change the `NODE_ENV` environment variable to `production`.
+
+For deployment to both, 
+
+```
+npm run deploy-all
+```
 
 ### 2. Editing content
 
@@ -49,7 +64,7 @@ Images should be added to `images/assets` and embedded with relative paths, like
 ![](../../../images/assets/user-menu.png)
 ```
 
-**If you add a new top level page,** you will need to edit `docs/.vuepress/config.js`. **If you add a new deeper page,** you will need to edit `docs/.vuepress/sidebar.json`.  Otherwise it will not appear in the navigation.
+**If you add a new top level page,** you will need to edit `docs/.vitepress/config.js`.  Otherwise it will not appear in the navigation.
 
 ### 3. Linking to other pages
 
@@ -61,13 +76,8 @@ directory. So you would link to `docs/devops/email.md` with
 
 ### 4. Submit for review
 
-First, make sure you've built and reviewed your documentation locally (`npm run dev`) and
+First, make sure you've built and reviewed your documentation locally using build and preview (`npm run build && npm run preview`) and
 confirmed that your links work properly. Submit your changes as a pull request
-on the [a3-docs](https://github.com/apostrophecms/a3-docs/)
+on the [a3-vitepress-docs](https://github.com/apostrophecms/a3-vitepress-docs/)
 repository. Please include as much context for the change as is reasonable in
 the PR description.
-
-## Notes about using the Apostrophe Vuepress theme
-This site uses [`vuepress-theme-apostrophe`](https://github.com/apostrophecms/vuepress-theme-apostrophe), which imports *stylesheets, components, and plugins (and their configurations)*. Other modifications, like enhancements to the markdown parser, must be present at project level across all vuepress sites that need them.
-
-Use this space to make other notes particular to the theme's shared resources

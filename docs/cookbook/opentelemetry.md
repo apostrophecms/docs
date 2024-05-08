@@ -19,7 +19,7 @@ npm install @opentelemetry/sdk-node@0.27.0 \
 
 > NOTE: we can update our dependency versions based on the [OpenTelemetry compatibality matrix](https://github.com/open-telemetry/opentelemetry-js#compatibility-matrix). It's recommended to install the OpenTelemtry dependencies with fixed versions until [this PR is resolved](https://github.com/open-telemetry/opentelemetry-js/pull/2874).
 
-**Also make sure `apostrophe` is updated to at least version 3.18.0, preferably the newest 3.x release available.**
+**Also make sure `apostrophe` is updated to at least version 3.18.0, preferably the newest 4.x release available.**
 
 ## 2. Install Jaeger
 
@@ -55,7 +55,7 @@ Jaeger will keep running in the background. We can stop it later with:
 docker stop jaeger && docker rm jaeger
 ```
 
-Now we can open `http://localhost:16686` in the browser to ensure Jaeger is working properly.
+Now we can open <span v-pre>`http://localhost:16686`</span> in the browser to ensure Jaeger is working properly.
 
 ## 3. Configure OpenTelemetry
 
@@ -63,7 +63,7 @@ There are various ways to configure and integrate OpenTelemetry in a project. We
 
 Create `telemetry.js` in the project root:
 
-```js
+``` js
 // ./telemetry.js
 const { NodeSDK, resources } = require('@opentelemetry/sdk-node');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
@@ -109,7 +109,7 @@ module.exports = {
 
 Now we'll need to refactor `app.js` a little bit to connect OpenTelemetry with Apostrophe:
 
-```js
+``` js
 // ./app.js
 // The Apostrophe bootstrap
 const apostrophe = require('apostrophe');
@@ -240,7 +240,7 @@ fi
 
 Open your `package.json` and add the following scripts at the end of the `scripts` section:
 
-```json
+``` json
   "scripts": {
     "start:telemetry": "APOS_OPENTELEMETRY=1 node app",
     "jaeger:start": "./jaeger start",
@@ -266,7 +266,7 @@ npm run jaeger:stop
 You can use the tracing API of the OpenTelemetry to trace your own code. Apostrophe exposes `self.apos.telemetry`. It contains the OpenTelemtry API, some useful helpers and the tracer used internally by the Apostrophe core. You could use it or you could add application level OpenTelemetry API dependency and trace your code as you see fit.
 
 A common scenario using an Apostrophe helper:
-```js
+``` js
 // Somewhere in your application code or module.
 const telemetry = self.apos.telemetry;
 // Create an OpenTelemetry span, that is "connected" (child) to 

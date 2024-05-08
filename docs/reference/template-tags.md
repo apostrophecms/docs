@@ -20,12 +20,12 @@ The `area` tag inserts an area field into the template. The area field [must alr
 
 ### Usage
 
-```django
+``` nunjucks
 {% area context, areaName with contextOptions %}
 ```
 
 **Example:**
-```django
+``` nunjucks
 {# Without context options (most typical) #}
 {% area data.page, 'sidebar' %}
 
@@ -53,7 +53,7 @@ The context options object is added after area tag arguments following the `with
 
 Context options are optional for all core and official Apostrophe widget types.
 
-::: note
+::: info
 Context options are not the best place for most widget configuration. That should be done in the [area field configuration](/reference/field-types/area.md#widgets). Context options are used to supplement that with options that only apply to the specific template context. Context options cannot change which widgets are permitted in an area.
 :::
 
@@ -63,12 +63,12 @@ The `component` tag inserts an asynchronous component into the template. See the
 
 ### Usage
 
-```django
+``` nunjucks
 {% component 'module:componentName' with data %}
 ```
 
 **Example:**
-```django
+``` nunjucks
 {% component 'product:newest' with { max: 3 } %}
 ```
 
@@ -90,14 +90,14 @@ This tag must be closed with an `endfragment` tag.
 
 ### Usage
 
-```django
+``` nunjucks
 {% fragment name(parameters) %}
   {# Fragment markup #}
 {% endfragment %}
 ```
 
 **Examples:**
-```django
+``` nunjucks
 {% fragment button(text, action, options = {}) %}
   <button class="o-button {{ options.class }}" data-action="{{ action }}">
     {{ text }}
@@ -105,7 +105,7 @@ This tag must be closed with an `endfragment` tag.
 {% endfragment %}
 ```
 
-```django
+``` nunjucks
 {% fragment card(data = {}) %}
   <section class="o-card">
     <h2>{{ data.heading }}</h2>
@@ -129,12 +129,12 @@ The `render` tag is used to insert a [fragment](/guide/fragments.md) in a templa
 
 ### Usage
 
-```django
+``` nunjucks
 {% render name(arguments) %}
 ```
 
 **Example:**
-```django
+``` nunjucks
 {% render button('Click me', 'send', { class: 'is-blue' }) %}
 ```
 
@@ -152,13 +152,13 @@ This tag must be closed with an `endrendercall` tag.
 
 ### Usage
 
-```django
+``` nunjucks
 {% rendercall name(arguments) %}
 {% endrendercall %}
 ```
 
 **Example:**
-```django
+``` nunjucks
 {% rendercall card({ heading: 'Featured image' }) %}
   {% area data.widget, 'photo' %}
 {% endrendercall %}
@@ -175,13 +175,13 @@ The name of the fragment to render. It may include a source reference [if the fr
 
 The `widget` template tag will usually not be used in Apostrophe project templates. It is used in the core area template file to render individual widgets.
 
-```django
+``` nunjucks
 {% widget widgetObject, widgetOptions with contextOptions %}
 ```
 
 **Example:**
-```django
-{# Example from modules/@apostrophecms/area/views/area.html in A3 core #}
+``` nunjucks
+{# Example from modules/@apostrophecms/area/views/area.html in apostrophe core #}
 {% widget item, widgetOptions with data._with %}
 ```
 

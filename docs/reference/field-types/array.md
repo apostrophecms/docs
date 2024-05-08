@@ -46,7 +46,8 @@ contactInfo: {
 |`def` | Array | n/a | The default value for the field. It must comply with the array fields schema. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 | [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
 |`style` | String |  n/a | Only if `inline` is true. If set to `table`, the schema will be displayed as an HTML table |
@@ -158,7 +159,7 @@ In this example, the third field will "switch" between the ice cream flavors and
 
 ### `whenEmpty`
 
-If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
+If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
  
 ```javascript
 {
@@ -182,7 +183,7 @@ Array schema configuration differs from module schema configuration in that _arr
 
 Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
 
-```django
+```nunjucks
 <ul>
 {% for contact in data.piece.contactInfo %}
   <li>{{ contact.city }}: {{ contact.email }}</li>

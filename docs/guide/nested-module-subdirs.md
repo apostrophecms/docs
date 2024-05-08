@@ -10,6 +10,7 @@ When the top-level `nestedModuleSubdirs` option is set to `true`, Apostrophe wil
 We can set the `nestedModuleSubdirs` option to `true` in `app.js`, like this:
 
 <AposCodeBlock>
+
 ```javascript
 require('apostrophe')({
   shortName: 'my-project',
@@ -29,6 +30,7 @@ require('apostrophe')({
 Now you can nest modules in subdirectories, like the example `modules/products` folder explored below. Start with a `modules.js` file in the parent `modules/products` folder. Here you can activate all of the modules that relate to products, making `app.js` shorter:
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // This code merges with the `modules` section of `app.js`
@@ -42,13 +44,14 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 You do not have to use `modules.js` files if you don't want to. You can still activate your modules in `app.js` if you prefer. It usually makes sense to reduce clutter in both places: the `modules/` folder and `app.js`. But, it's up to you. This feature is entirely for your convenience.
 :::
 
 Now we'll implement those modules in their own sub-subdirectories:
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -63,6 +66,7 @@ module.exports = {
 </AposCodeBlock>
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
@@ -77,6 +81,7 @@ module.exports = {
 </AposCodeBlock>
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/widget-type',
@@ -111,7 +116,7 @@ The resulting directory tree looks like this:
 /modules/products/product-widget (index.js, views/widget.html, etc.)
 ```
 
-::: warn
+::: warning
 It is important to understand that **the names of the subdirectories do not matter.** The The subdirectories are purely there for your convenience in organizing your code and they are **not part of the name of the modules within them.** The names of the actual
 module folders within them must still match the full name of each module.
 :::

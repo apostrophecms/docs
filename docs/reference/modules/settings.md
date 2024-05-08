@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`. As such, these settings are personal to the user. If you're looking for sitewide settings that govern overall site behavior, check out [`@apostrophecms/global`](https://v3.docs.apostrophecms.org/guide/global.html).
+This module governs the Personal Settings menu that allows users to change their preferences. Apostrophe projects can configure this menu through `@apostrophecms/settings`. As such, these settings are personal to the user. If you're looking for sitewide settings that govern overall site behavior, check out [`@apostrophecms/global`](https://docs.apostrophecms.org/guide/global.html).
 
 ## Options
 
@@ -269,7 +269,7 @@ export default {
 </template>
 </AposCodeBlock>
 
-::: note
+::: info
 In this example, we are adding the preview component into the `@apostrophecms/settings` folder at the project level. However, you could also elect to create a single module for all of the Vue components you are adding to your project, as long as the component files are being added to the `/ui/apos/components/` folder of the module.
 :::
 

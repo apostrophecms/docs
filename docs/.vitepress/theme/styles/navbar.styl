@@ -1,0 +1,77 @@
+#app .navbar .site-name {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.VPContent .container {
+  padding-top: 20px;
+
+  & .aside-container {
+    padding-top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px) + var(--vp-doc-top-height, 0px) + 64px);
+    }
+  }
+
+.VPNavBarMenu {
+  display: flex;
+  align-items: center;
+  }
+
+.apos-top-navbar {
+  align-items: center;
+}
+
+.DocSearch-Search-Icon path,
+.DocSearch-Button-Placeholder,
+.DocSearch-Button-Key,
+.DocSearch-Button-Key:after {
+  transition: all 0.2s ease;
+}
+
+.DocSearch-Button {
+  border-radius: 4px;
+  background-color: transparent;
+  border: none !important;
+
+  &:hover {
+    background-color: transparent;
+    border: none;
+    .DocSearch-Search-Icon path {
+      stroke: var(--vp-c-black);
+    }
+    .DocSearch-Button-Placeholder {
+      color: var(--vp-c-black);
+    }
+    .DocSearch-Button-Key {
+      border-color: var(--vp-c-brand);
+      color: var(--vp-c-brand);
+      &:after {
+        color: var(--vp-c-brand);
+      }
+    }
+  }
+}
+
+.dark .DocSearch-Button:hover {
+  .DocSearch-Search-Icon path {
+    stroke: var(--vp-c-white);
+  }
+  .DocSearch-Button-Placeholder {
+    color: var(--vp-c-white);
+  }
+}
+
+  .VPNavBarTitle.has-sidebar .title {
+    border: none !important;
+    font-weight: 500 !important;
+  }
+
+.VPNavBarSearch {
+  flex-grow: 0;
+}
+
+@media (min-width: 768px) {
+  .VPNavBarExtra {
+    display: flex !important;
+    align-items: center;
+  }
+}

@@ -1,41 +1,38 @@
 {
-  "name": "a3-docs",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "npm run docs:dev",
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs --dest dist",
+    "docs:dev": "vitepress dev docs",
     "build": "npm run docs:build",
+    "docs:build": "vitepress build docs",
+    "preview": "npm run docs:preview",
+    "docs:preview": "vitepress preview docs",
     "test": "npx eslint .",
-    "deploy": "npm run build && bash ./deploy && rm -r ./dist",
-    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./dist"
-  },
-  "author": "Apostrophe Technologies, Inc.",
-  "license": "MIT",
-  "devDependencies": {
-    "chalk": "^2.4.2",
-    "eslint": "^7.1.0",
-    "eslint-config-apostrophe": "^3.2.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "esm": "^3.2.25",
-    "markdown-it-attrs": "^4.0.0",
-    "stylelint": "^13.11.0",
-    "stylelint-config-apostrophe": "^1.0.0",
-    "stylelint-plugin-stylus": "^0.10.0",
-    "vuepress": "^1.9.8",
-    "vuepress-plugin-sitemap": "^2.3.1",
-    "vuepress-theme-apostrophe": "^1.1.0"
+    "deploy": "npm run build && bash ./deploy && rm -r ./docs/.vitepress/dist",
+    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./docs/.vitepress/dist"
   },
   "dependencies": {
-    "flexsearch": "^0.6.32",
-    "markdown-it": "^12.0.6",
-    "vuepress-plugin-flexsearch": "^0.3.0"
+    "body-scroll-lock": "^4.0.0-beta.0",
+    "compromise": "^14.10.0",
+    "jsdom": "^22.1.0",
+    "vitepress-plugin-pagefind": "^0.2.4",
+    "vue": "^3.3.4",
+    "vue-inline-svg": "^3.1.2",
+    "vue-router": "^4.2.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "eslint-config-apostrophe": "^4.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "sass": "^1.64.2",
+    "sitemap": "^7.1.1",
+    "stylelint": "^15.10.3",
+    "stylelint-config-apostrophe": "^3.0.0",
+    "stylelint-plugin-stylus": "^0.18.0",
+    "vitepress": "^1.0.0",
+    "vitepress-plugin-search": "1.0.4-alpha.22"
   }
 }

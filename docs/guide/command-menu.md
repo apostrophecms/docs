@@ -34,7 +34,7 @@ Finally, you can assign a chord of two sequential keypresses to any shortcut by 
 ✅ `shortcut: 'x,y'`
 
 
-::: note
+::: info
 Shortcuts already defined by the browser cannot be used within the shortcut manager.
 :::
 
@@ -158,7 +158,7 @@ The addition of shortcuts to the main page-level menu is accomplished by passing
 
 Each of the keys in the `default` object should start with `@apostrophecms/command-menu:` and be prefixed with the name of an existing or new section. For example, to add a new shortcut to the "general" section the key would be `@apostrophecms/command-menu:general`. For values, each key takes an object with a `commands` and an optional `label` property. The value of `commands` should be an array containing the names of all the shortcuts to be added to the section. The `label` key should be set to a string that will be added as a menu section header.
 
-::: note
+::: info
 If you add a `label` property to a key that specifies an existing section, the passed-in `lable` string will override the existing label.
 :::
 
@@ -196,7 +196,7 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-![command menu with custom shortcut added to the "Modes" section](../.vuepress/public/images/shortcut-menu.png)
+![command menu with custom shortcut added to the "Modes" section](../images/shortcut-menu.png)
 
 ### Adding shortcuts to the piece-type menu
 
@@ -240,7 +240,7 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-![piece-type command menu with custom shortcut added](../.vuepress/public/images/piece-shortcut-menu.png)
+![piece-type command menu with custom shortcut added](../images/piece-shortcut-menu.png)
 
 In this case, we could add our listener into some custom JavaScript that powers our hypothetical spell checker.
 

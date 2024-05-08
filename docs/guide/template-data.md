@@ -4,7 +4,7 @@ All Apostrophe template files have access to a `data` object. It contains conten
 
 The table below lists the data properties available from Apostrophe core as well as the template types where they are available.
 
-::: note
+::: info
 **Template type indicators:**
 - <AposTag text="All pages"/>: The property is present in all page templates, including piece index pages and show pages.
 - <AposTag text="Show pages" :tagStyle="0"/>: The property is present in piece show page templates and not in other normal page templates.

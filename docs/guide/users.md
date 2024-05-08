@@ -39,10 +39,10 @@ Users are assigned one of four **user roles**. Each role is assigned a set of pe
 | **Editor** | Editors have all the permissions of contributors. They can also *publish* content and upload files. They cannot take any action on users. |
 | **Admin** | Administrators have permissions to create, edit, archive, and publish any content. They are the only role that may create, update, or archive users. At the time of writing, an admin account is needed to reset passwords through the user interface. |
 
-::: note
+::: info
 We can also change passwords through the command line task below. The `username` argument will be the username of the account you are updating.
 
-```bash
+``` bash
 node app @apostrophecms/user:change-password username
 ```
 :::

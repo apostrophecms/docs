@@ -154,7 +154,7 @@ If set to an object, there may be `ns` and `browser` properties.
 | `ns` | String | A namespace for localization string keys in this module. If undefined, Apostrophe will use the `'default'` namespace. That namespace is intended for project-level localization. |
 | `browser` | Boolean | Set to `true` to make the JSON key/string pairs available on the browser window (e.g., `apos.i18n.i18n.en.default`) *when logged in*. Necessary when localizing strings in the UI, including doc type labels. |
 
-::: note
+::: info
 The namespace `'apostrophe'` is reserved for Apostrophe's UI. You may intentionally set `ns` to `'apostrophe'` if your goal is to localize the Apostrophe user interface.
 :::
 
@@ -196,7 +196,7 @@ module.exports = {
 
 You might use that value as a fallback for user-editable fields.
 
-```django
+``` nunjucks
 {# In `modules/heading-widget/index.js` #}
 {% set bgColor = data.widget.color or data.defaultColor %}
 <h2 style="background-color: {{ bgColor }}">

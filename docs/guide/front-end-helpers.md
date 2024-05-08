@@ -136,7 +136,7 @@ apos.util.getCookie('cookiename');
 
 Runs the function passed in when the page loads as well as when Apostrophe refreshes page content during editing. When logged out it will run the function on initial page load. This is not necessary in [widget players](/guide/custom-widgets.md#client-side-javascript-for-widgets).
 
-::: note
+::: info
 This method was previously named `onReadyAndRefresh`. The name was changed, though the previous name will still work through the 3.x major version.
 :::
 
@@ -180,7 +180,7 @@ const targetUrl = 'https://some-website.rocks/api/gems'
 const siteMatches = apos.util.sameSite(targetUrl);
 ```
 
-::: note
+::: info
 There is also a `runPlayers` method on `apos.util`. That is run for us using `apos.util.onReady` and runs all registered widget players. It is unlikely that it will need to be run in project-level code.
 :::
 
@@ -206,7 +206,7 @@ Send a `GET` request. The response will be returned via a Promise unless a callb
 | Argument | What is it? |
 | -------- | ----------- |
 | `url` | The path to a resource or service |
-| `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. |
+| `options` | Request options. See [`apos.http.remote`](#remote-method-url-options-callback) for details. Required. |
 | `callback` | An optional callback function, required when not using Promises. Receives `error` and `result` arguments. |
 
 ```javascript
@@ -214,7 +214,7 @@ async function logArticles() {
   let articles;
 
   try {
-    articles = await apos.http.get('/api/v1/article');
+    articles = await apos.http.get('/api/v1/article', {});
     console.info(articles);
   } catch (err) {
     console.error(err);
@@ -252,7 +252,7 @@ See [the `get` method](#get-url-options-callback) for argument details and a rel
 
 Send an HTTP request with a specific method to the given URL, returning the response body. The response will be returned via a Promise unless a callback is included. You do NOT have to pass a callback unless you must support IE11 and do not otherwise have Promise support.
 
-::: note
+::: info
 **This method is used to power the individual HTTP request methods. We recommend using those instead.** They will produce the same result as using `remote` and including the proper HTTP method name.
 :::
 
@@ -275,7 +275,6 @@ Send an HTTP request with a specific method to the given URL, returning the resp
 | `fullResponse` | If `true`, return an object with `status`, `headers` and `body` properties, rather than returning the body directly. The individual `headers` are canonicalized to lowercase names. If there are duplicate headers after canonicalizing only the last value is returned. If a header appears multiple times an array is returned for it. |
 | `downloadProgress` | Optional. A function accepting `received` and `total` arguments. It may never be called. If called, `received` will be the bytes sent so far and `total` will be the total bytes to be received. If the total is unknown, it will be `null` |
 | `uploadProgress` | Optional. A function accepting `sent` and `total` arguments. It may never be called. If it is called, `sent` will be the bytes sent so far and `total` will be the total bytes to be sent. If the total is unknown, it will be `null`. |
-| `prefix` | If explicitly set to `false`, do not automatically prefix the URL, even if the site has a site-wide prefix or locale prefix. It can become handy when the given url is already prefixed, which is the case when using the document's computed `_url` field for instance. |
 
 If the status code is greater than 400 an error is thrown. The error object will be similar to a `fullResponse` object, with a `status` property.
 
@@ -300,7 +299,7 @@ const simpleParams = apos.http.parseQuery('?refresh=true&number=7');
 const nestedParams = apos.http.parseQuery('?product%5Bprice%5D=50&product%5Bname%5D=Cheese')
 ```
 
-::: note
+::: info
 `apos.http.parseQuery()` supports query parameter objects and arrays (when escaped), as well as bracket nesting.
 :::
 

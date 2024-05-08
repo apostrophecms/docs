@@ -27,11 +27,13 @@ projectSlug: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
 |`following` | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`page` | Boolean | `false` | If `true`, then slashes are allowed since the slug field is describing a page doc |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
@@ -41,6 +43,9 @@ projectSlug: {
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
 <!-- |pattern | String | | Regular expression to validate entries |
 |patternErrorMessage | String | | Error message to display if `pattern` does not match | -->
+
+### autocomplete
+The string supplied to the `autocomplete` option is used as the value of the `autocomplete` attribute for the field, as specified in the HTML standards. This feature suggests possible values based on user inputs and previously entered data, streamlining data entry and improving form usability. This also takes a string of `off` to disable autocomplete for sensitive fields. For detailed information on how the `autocomplete` attribute works and the values it accepts, refer to the [MDN documentation on autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete).
 
 ::: tip
 If you are overriding a piece type or page type's `slug` field and that doc type uses a [slug prefix](/reference/module-api/module-options.md#slugprefix), the `slug` field should include `'archived'` in the `following` option. It is used by the slug field type to manage prefixes, though its value is not included in the slug name.
@@ -61,6 +66,6 @@ Overriding the `slug` field is typically only necessary if you want to change th
 
 If adding a new field with the `slug` type, it is most likely not going to be used in templates, but it is allowed as a string value.
 
-```django
+```nunjucks
 {{ data.piece.projectSlug }}
 ```

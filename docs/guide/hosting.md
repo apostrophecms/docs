@@ -19,7 +19,7 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 
 1GB of RAM may be sufficient if using a remote database service (e.g., MongoDB Atlas). Sites running in a multicore configuration will require additional 2G or more RAM and, of course, CPU cores.
 
-::: note
+::: info
 MongoDB requires a minimum of 5GB free disk space at all times. Small websites may not need much more additional space than that. We have found that 20GB is sufficient for most Apostrophe applications, but more space may be necessary to handle an especially large number of file uploads or especially large uploaded files.
 :::
 
@@ -50,5 +50,5 @@ Apostrophe concatenates [project-level front end code](/guide/front-end-assets.m
 
 ## Hosting recipes
 
-The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/cookbook/README.md#hosting).
+The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/cookbook/index.md#hosting).
 

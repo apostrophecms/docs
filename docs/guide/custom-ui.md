@@ -6,7 +6,7 @@ This guide focuses on how to customize Apostrophe's administrative user interfac
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
 * Make sure there is not a better way to achieve the desired goal. This includes [asking for help in Discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
-* At some point during the lifetime of Apostrophe 3.x we intend to migrate to Vue.js 3.x. We will do so with as much backwards compatibility as possible and make the community aware of the timeline, but when coding custom admin UI components it must be understood that minor changes may be necessary in the future.
+* Apostrophe version 3.x used Vue 2.x to power the Admin UI components. With newer versions of Apostrophe, those same components are powered by Vue.js 3.x. We have taken care to include as much backward compatibility as possible, but custom components added in earlier versions of Apostrophe may need modification.
 :::
 
 ## Apostrophe admin UI file structure
@@ -17,7 +17,7 @@ Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` f
 
 For performance reasons, Apostrophe projects are not configured to automatically rebuild the admin UI every time your code changes. This makes sense because in most projects there is no custom admin UI code, and it takes time to build.
 
-However we can "opt in" to rebuilding the UI on every code change, like this:
+However, we can "opt-in" to rebuilding the UI on every code change, like this:
 
 ```bash
 APOS_DEV=1 npm run dev
@@ -35,7 +35,7 @@ Of course the admin UI is always rebuilt when deploying. No special changes or e
 
 Apostrophe's [schema field types](content-schema.md) cover many situations, but we might wish to add a new one.
 
-Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However note that you will find it easier to follow the remainder of this article if you read that article first.
+Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However, note that you will find it easier to follow the remainder of this article if you read that article first.
 
 ## Adding custom columns to the piece type manager
 
@@ -46,6 +46,7 @@ Another common extension is a custom column for the piece type manager. By defau
 Let's look at a simple piece type module called `review` that takes advantage of the [`starRating` field type we define in a separate article](/guide/custom-schema-field-types.md). We'll add a `rating` field to the schema for the piece type, and also add a column to display it in the manager modal:
 
 <AposCodeBlock>
+
 ```js
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -143,7 +144,7 @@ Apostrophe will use only the last version of a component that it finds during st
 
 For instance, if the last module in our project's `app.js` modules list contains a `ui/apos/components/AposLogPadless.vue` file, that logo will be used in the admin bar, in place of the version that is normally loaded from Apostrophe core or in any module configured earlier.
 
-::: note
+::: info
 For more information about the patterns used, props provided and APIs needed to override an existing core component, it's necessary to study the source code of the original.
 :::
 
@@ -188,7 +189,7 @@ Of course there are other components that can be overridden in this way, and the
 
 For readability's sake, a `.` is used in the table above to separate sub-properties of `options` (see the example above for what the actual configuration looks like). If an option exists for `@apostrophecms/piece-type` it can be used for any module that extends it.
 
-::: note
+::: info
 Since the type of an existing page can be changed, there is only one manager modal and only one editor modal for all pages, and those component names are configured on the `@apostrophecms/page` module. Piece and widget types can have their own type-specifc overrides.
 
 If an option ends in `Modal`, the component is required to embed the `AposModal` component. For examples, look at the source code of the default components listed above.
@@ -206,7 +207,7 @@ Apostrophe offers a context menu that can be used to carry out certain operation
 
 Here is an example of how to add a custom context menu item labeled "My Menu Item".
 
-![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../.vuepress/public/images/ui-custom-context-menu.png)
+![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
 
 <AposCodeBlock>
 
@@ -237,7 +238,7 @@ module.exports = {
 Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
 :::
 
-::: note
+::: info
 * The `context`, `action`, `label`, and `modal` properties are required.
 * The current API supports only `context: 'update'` (the custom menu items are available for previously saved documents).
 * The `action` property should be globally unique.
@@ -248,6 +249,67 @@ Do not use core actions as your `action` property value - this would lead to unp
 * The optional `moduleName` property can be used to override the `moduleName` prop passed to the modal. By default, it will be the name of the piece type module corresponding to the individual piece, or `@apostrophecms/page` in the case of pages.
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
+
+## Adding custom modal controls
+
+Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled.
+
+While this method enables the editing and management modals to open for any user, it does not bypass Apostrophe's permission checks. A user without permission to perform an operation on a particular page or piece will still be blocked. Best practice is to toggle any custom controls so that are only visible or active for a user with correct permissions. This can be done by checking that the value of the `canCreate` and `canEdit` properties for the piece type or `@apostrophecms/page` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. The `canEdit` property should be checked before adding a method call for editing a document.
+
+### Creating a new document
+
+In order to create a new document, whether page or piece, you pass the required `type` property set to either the piece type or `@apostrophecms/page` for creating a new page. For example, to trigger the creation of a new `blog` piece type from a button with an id of `create-new-piece` you could use the following code:
+
+<AposCodeBlock>
+
+```js
+export default () => {
+  apos.util.onReady(() => {
+    const button = document.getElementById('create-new-piece');
+    if (button && apos.module?.blog?.canCreate) {
+      button.addEventListener('click', async function () {
+        try {
+          const createdDocument = await apos.doc.edit({
+            type: 'blog'
+          });
+          if (createdDocument) {
+            console.log('Document was created:', createdDocument);
+          }
+        } catch (error) {
+          console.error('Error creating document:', error);
+        }
+      });
+    }
+  });
+};
+```
+  <template v-slot:caption>
+    modules/blog/ui/src/index.js
+  </template>
+</AposCodeBlock>
+
+
+### Editing an existing document
+
+To trigger editing of an existing piece or page you need to pass the computed `_id` of the document through the `_id` property along with the required `type`. Note that you will want to use the `_id` of the draft version of the document, not the published version.
+
+```js
+apos.doc.edit({
+  type: '@apostrophecms/page',
+  _id: 'clkie2enx00033xlsgus4a4nj:en:draft'
+})
+```
+
+### Duplicating an existing document
+
+The `apos.doc.edit()` method also gives you the option to create a new document of the designated type, but pre-filled with fields from an existing document of the same type. This is very similar to editing an existing document except that the `_id` of the existing document to be copied should be passed through the `copyOfId` property. In this case, you can pass the `_id` of either the draft or published document if they both exist.
+
+```js
+apos.doc.edit({
+  type: '@apostrophecms/page',
+  copyOfId: 'clkie2enx00033xlsgus4a4nj:fr:published'
+})
+```
 
 ## Adding custom login requirements
 

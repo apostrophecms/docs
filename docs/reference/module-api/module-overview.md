@@ -8,8 +8,8 @@ Module configuration objects may use the following configuration properties. The
 
 ## Configuration settings
 
-| Setting name | Value type | Description | Module types |
-| ------- | ------- | ------- | ------- | :-----: |
+|Setting name | Value type | Description | Module types |
+|-------|-------|-------|-------|
 | [`extend`](#extend) | String | Identify the base class module | All |
 | [`improve`](#improve) | String | Identify a module to enhance | All |
 | [`options`](#options) | Object | Configure module options | All |
@@ -66,7 +66,7 @@ Similarly to `extend`, `improve` is used to name another existing module. Instea
 **This is only valid in modules that are installed into an Apostrophe app**, either on their own or as a part of a bundle, and not in those that are built into the app directly. It is most often used to add functionality to core Apostrophe modules.
 <!-- TODO: link to a definition of a bundle when available. -->
 
-::: note
+::: info
 Within an application, you can alter installed or core module behavior by adding an `index.js` file for it in the `module` directory as if it is a new module. Installed modules cannot share their name with an existing module, so they `improve` those existing modules instead.
 :::
 
@@ -96,7 +96,7 @@ Used to add multiple modules from a single npm module. Takes an object with two 
 
 ### `icons`
 
-The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://v3.docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
 
 Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
 
@@ -138,7 +138,7 @@ At the present time, the same icon cannot be registered under two names (that is
 ## Configuration cascades
 
 | Setting name | Value type | Description | Module types |
-| ------- | ------- | ------- | ------- | :-----: |
+| ------- | ------- | ------- | ------- |
 | [`fields`](#fields) | Object/Function | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object/Function | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object/Function | Configure piece type manager columns | Piece |
@@ -159,7 +159,7 @@ Use `add` to add additional settings and `remove` to remove existing base class 
 
 #### `add`
 
-An object of fields to add to the schema. See the [field type reference](/reference/field-types/README.md) for more on field type configuration.
+An object of fields to add to the schema. See the [field type reference](/reference/field-types/index.md) for more on field type configuration.
 
 Adding a field using an object:
 
@@ -806,7 +806,7 @@ module.exports = {
 
 Using in a template:
 
-```django
+```nunjucks
 {# modules/product-page/views/show.html #}
 {{ apos.product.formatPrice(data.piece) }}
 ```

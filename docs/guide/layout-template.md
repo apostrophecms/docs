@@ -4,7 +4,7 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 
 **Let's look at a simple layout template file at `views/layout.html`.**
 
-```django
+``` nunjucks
 {# views/layout.html #}
 {% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
 
@@ -32,7 +32,7 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 
 You might notice is that this does not have essential web page elements such as a `head` or `body` tag. That is because the first thing this template does is extend another template:
 
-```django
+``` nunjucks
 {% extends data.outerLayout %}
 ```
 
@@ -40,7 +40,7 @@ You might notice is that this does not have essential web page elements such as 
 
 This layout template then includes two template blocks, **`beforeMain` and `afterMain`**, containing markup that wraps most page content.
 
-```django
+``` nunjucks
 {% block beforeMain %}
   {# Page opening markup... #}
 {% endblock %}
@@ -67,7 +67,7 @@ The most important templates blocks from that core layout template are:
 
 The layout template and any page, index page, or show page template could use these blocks to overwrite them or add to them ([using the `super()` tag](/guide/templating.md#the-super-tag)).
 
-::: note NOTES
+::: info NOTES
 The `beforeMain`, `main`, and `afterMain` blocks are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside those blocks will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related JavaScript belongs in a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets).
 
 `layout.html` is a naming convention in Apostrophe, but is not a required file name. You can name it anything you like. Just remember to  extend `data.outerLayout` and update page templates to extend it by its new name.

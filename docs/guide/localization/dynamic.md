@@ -9,8 +9,8 @@ Content l10n also is generally done completely through the user interface. There
 - the content editor's experience of localization
 - developer tools to give visitors and editors navigation between locales ([skip to this](#template-data-for-l10n))
 
-::: note
-Localizing content is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](README.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
+::: info
+Localizing content is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](overview.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
 :::
 
 ## Localizing editable content
@@ -24,6 +24,7 @@ Localizing means that **we make a clone of the content for a new locale, then ma
 Let's take a look at this process using a new page in the Apostrophe demo as an example. In this example we will have three locales configured:
 
 <AposCodeBlock>
+
   ```javascript
     module.exports = {
       options: {
@@ -163,7 +164,7 @@ Here is an example of `data.localizations` for the page from the screenshots abo
 
 Here is an example of using the `data.localizations` array to generate a locale switcher for a page.
 
-```django
+``` nunjucks
 <div class="locales">
   {# A button to open the list of locales (nothing special here) #}
   <button class="locales__toggler" data-locales-toggle aria-expanded="false">

@@ -2,8 +2,8 @@
 
 This section covers localization of strings throughout template files and Apostrophe user interface. These strings are hard-coded, not editable by logged-in users, and thus are not stored in the database. Instead, this localization is stored in JSON files associated with the various locales.
 
-::: note
-Localizing static strings is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](README.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
+::: info
+Localizing static strings is only possible if the Apostrophe app has configured locales. If you are looking for information on configuring locales, see the [localization landing page](overview.md#configuring-locales). There is also a [glossary section](/reference/glossary.md#localization-terms) of related terms.
 :::
 
 ## Localizing strings
@@ -13,7 +13,8 @@ There are often good reasons to hard-code text in templates even if we operate i
 That section of our show page template might look like this:
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
     {# More article template stuff above ⤴ #}
     <section>
       <h2>Related articles</h2> {# 👈 We need to localize this. #}
@@ -32,7 +33,8 @@ That section of our show page template might look like this:
 Localizing that string is as easy as wrapping it in a template helper: `__t()`. Make sure the string passed to the helper is in quotes and any matching quotes in the string are escaped (e.g., `__t('Gritty\'s friends')`).
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
     {# More article template stuff above ⤴ #}
     <section>
       <h2>{{ __t('Related articles') }}</h2> {# 🎉 It's localized! #}
@@ -52,7 +54,7 @@ In that example, we passed the actual text to the localization helper. This has 
 
 Our other option is to use a **localization key that is different from the original text**. Taking our example, that heading tag might instead look like:
 
-```django
+``` nunjucks
 <h2>{{ __t('relatedArticles') }}</h2>
 ```
 
@@ -107,7 +109,8 @@ Regardless of whether we are localizing text in templates, server-side code, or 
 Template example:
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
     {{ __t('Contact the {{ city }} office', {
       city: data.piece.city
     }) }}
@@ -120,7 +123,8 @@ Template example:
 The arguments would look essentially identical in server-side or a UI file, using the respective l10n functions (`req.t()` and `this.$t()`, respectively). This also works if the first argument was a localization key that had that string assigned as its value.
 
 <AposCodeBlock>
-  ```json
+
+  ``` json
     {
       "contactOffice": "Contact the {{ city }} office"
     }
@@ -131,7 +135,8 @@ The arguments would look essentially identical in server-side or a UI file, usin
 </AposCodeBlock>
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
     {{ __t('contactOffice', {
       city: data.piece.city
     }) }}
@@ -163,7 +168,8 @@ Each JSON file will include key/value pairs with the localization key and a stri
 If the only localization key we registered in our project was `relatedArticles` from above, our files would look like:
 
 <AposCodeBlock>
-  ```json
+
+  ``` json
   {
     "relatedArticles": "Related articles"
   }
@@ -174,7 +180,8 @@ If the only localization key we registered in our project was `relatedArticles` 
 </AposCodeBlock>
 
 <AposCodeBlock>
-  ```json
+
+  ``` json
   {
     "relatedArticles": "Artículos relacionados"
   }
@@ -203,7 +210,8 @@ Although you can set the `i18n.ns` option of the module instead to define the na
 :::
 
 <AposCodeBlock>
-  ```json
+
+  ``` json
   {
     "relatedArticles": "Related articles"
   }
@@ -217,7 +225,7 @@ Although you can set the `i18n.ns` option of the module instead to define the na
 
 Then when you use the localization keys in template files (or elsewhere), start each key with the namespace:
 
-```django
+``` nunjucks
 <h2>__t('ourTeam:relatedArticles')</h2>
 ```
 
@@ -272,7 +280,7 @@ Once that file is in place we can populate the `/modules/team-ui/i18n/ourTeamUI`
 
 To access our phrases in our custom admin UI Vue components, we invoke `this.$t()` when writing Vue methods, or just `$t()` when in the template block. In all other respects invoking `$t()` works the same way as `__t()`, discussed earlier.
 
-::: note
+::: info
 As a reminder, the Vue.js components of the user interface are not connected to any Vue app you may be running for your website visitors. The registration method will not be automatically available outside the UI components.
 :::
 

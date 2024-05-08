@@ -7,7 +7,7 @@
 An instance of the `uploadfs` module is available through `self.apos.uploadfs`. This can be used for custom uploads as long as the existing `/attachments` and `/apos-frontend` prefixes are avoided. This is the typical use case. If you really need access to the `@apostrophecms/uploadfs` module itself in order to obtain a new, separate instance of uploadfs for an unusual application, use `self.apos.modules['@apostrophecms/uploadfs']`.
 
 ## Selected Options
-::: note
+::: info
 These are only selected options. For additional options, see the [documentation](https://www.npmjs.com/package/uploadfs) for the `uploadfs` npm package. While the `uploadfs` module handles image manipulation, these image-related options are configured mostly by the `attachment` module and will be covered by the reference page for that module.
 :::
 

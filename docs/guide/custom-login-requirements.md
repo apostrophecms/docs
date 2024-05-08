@@ -9,6 +9,7 @@ The main focus of this guide is on implementing requirements involving custom UI
 While [most password complexity rules are often counterproductive](https://arstechnica.com/information-technology/2013/06/password-complexity-rules-more-annoying-less-effective-than-length-ones/), some organizations may have a business requirement to implement them. Currently the easiest rule to implement, and the most effective one, is to set a minimum length. You can do that by configuring the `@apostrophecms/user` module at project level:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     fields: {
@@ -34,9 +35,10 @@ While [most password complexity rules are often counterproductive](https://arste
 
 Apart from password complexity, most enhancements to the login form involve at least some new UI code. UI components added this way are integrated into the existing login interface. This involves both backend Node.js development and frontend Vue 2 [component](https://vuejs.org/v2/guide/components.html) development.
 
-Apostrophe allows you to add extra login requirements during two different phases of the login process:
+Apostrophe allows you to add extra login requirements during three different phases of the login process:
 
-* `beforeSubmit`: Requirements in this phase are displayed before the user clicks the Login button. If the requirement has a visible UI, it appears at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
+* `beforeSubmit`: Requirements in this phase are displayed before the user clicks the Login button. If the requirement has a visible UI, it appears at the bottom of the login form itself. Best used for requirements that have no visible interface but need to monitor user behavior on the form to determine if the user is "real," like [hCaptcha](https://docs.hcaptcha.com).
+ * `uponSubmit`: Requirements in this phase are displayed after the user clicks the Login button, but before any password verification takes place. Best used for requirements that that have no visible interface and must re-run each time the user clicks on the Login button like [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3).
 * `afterPasswordVerified`: Requirements in this phase are displayed after the form is completed, the Login button is clicked, and the password is verified. Best used for requirements that have a visible interface and which require any special knowledge about the user, such as a Two-Factor Authentication (2FA) challenge. 
 
 ## The server side
@@ -49,14 +51,15 @@ Each requirement must have a unique name. The name of each requirement should be
 
 Each requirement has:
 
-* A `phase` property, which must be `beforeSubmit` or `afterPasswordVerified`.
-* A `props()` function, which may be `async` and returns an object. The properties of the returned object become Vue `props` of the Vue component, as explained below. For `beforeSubmit` the `props()` function receives `(req)`, for `afterPasswordVerified` it receives `(req, user)`.  The `req` object allows access to the [current Express request](https://expressjs.com/en/api.html#req), including `req.session` which can be useful for temporary storage not revealed to the browser. The `user` object allows access to the current user even though login is not yet complete.
-* A `verify()` function, which may be `async`. For `beforeSubmit` the `verify()` function receives `(req, data)`, for `afterPasswordVerified` it receives `(req, data, user)`. This function is responsible for throwing an exception if the requirement has not been met. Any data provided by the Vue component will be accessible here as the `data` argument.
+* A `phase` property, which must be `beforeSubmit`, `uponSubmit` or `afterPasswordVerified`.
+* A `props()` function, which may be `async` and returns an object. The properties of the returned object become Vue `props` of the Vue component, as explained below. For `beforeSubmit` and `uponSubmit` the `props()` function receives `(req)`, for `afterPasswordVerified` it receives `(req, user)`.  The `req` object allows access to the [current Express request](https://expressjs.com/en/api.html#req), including `req.session` which can be useful for temporary storage not revealed to the browser. The `user` object allows access to the current user even though login is not yet complete.
+* A `verify()` function, which may be `async`. For `beforeSubmit` and `uponSubmit` the `verify()` function receives `(req, data)`, for `afterPasswordVerified` it receives `(req, data, user)`. This function is responsible for throwing an exception if the requirement has not been met. Any data provided by the Vue component will be accessible here as the `data` argument.
 * For `afterPasswordVerified` requirements only, an optional `askForConfirmation: true` property. If present the corresponding Vue component is responsible for displaying its own success message and emitting a `confirm` event as described later. Otherwise flow proceeds automatically to the next step.
 
 To illustrate, the general structure on the server side is:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     requirements(self) {
@@ -89,21 +92,23 @@ To illustrate, the general structure on the server side is:
 
 Each distinct requirement also has browser-side code, which is implemented as a Vue component. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project. For this purpose they are typically placed in the `modules/@apostrophecms/login/ui/apos/components` module at project level, or in an npm module that enhances `@apostrophecms/login` via `improve`.
 
-The developer is responsible for the appearance of the component. For `beforeSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterPasswordVerified` requirements, it will appear on its own, after the Login button is clicked and the password is verified. If there are multiple `afterPasswordVerified` requirements, the user will see them presented one at a time. Transitions are provided by Apostrophe and do not need to be included in login requirement components.
+The developer is responsible for the appearance of the component. For `beforeSubmit` and `uponSubmit` requirements, the component will appear at the bottom of the login form itself. For `afterPasswordVerified` requirements, it will appear on its own, after the Login button is clicked and the password is verified. If there are multiple `afterPasswordVerified` requirements, the user will see them presented one at a time. Transitions are provided by Apostrophe and do not need to be included in login requirement components.
 
 Each component is responsible for:
 
-* Presenting its own UI, if any. Note that `afterPasswordVerified` requirements will appear in isolation, one at a time, while any UI for `beforeSubmit` components will appear simultaneously with the login form.
+* Presenting its own UI, if any. Note that `afterPasswordVerified` requirements will appear in isolation, one at a time, while any UI for `beforeSubmit` components will appear simultaneously with the login form. Any UI for uponSubmit will appear after the Login button is clicked and remain until each has emitted a `done` event.
 * Accepting the properties of the object returned by the server-side `props(req)` function as props.
 * Emitting a `done` event with a payload providing proof that the requirement has been met. This proof is accessible to the `verify(req)` function on the server side as `req.body.requirements.RequirementName`. In the case of `afterPasswordVerified` requirements, the `done` event should not be emitted until the user has indicated their response is complete in some way.
 * `beforeSubmit` requirements may emit a `block` event to cancel a previous `done` event so that the Login button cannot be clicked yet.
+* `uponSubmit` requirements may emit a `block` event to cancel a previous `done` event so that the Login button can be clicked again.
 * `afterPaswordVerified` requirements are responsible for displaying a custom error message when the `error` Vue prop is set to an error object.
 * `afterPasswordVerified` requirements that set the `askForConfirmation` property are also responsible for displaying a custom success message when the `success` Vue prop is true.
 
 While there is no fixed structure for the Vue components, a typical outline looks like:
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   <template>
     <fieldset>
       <label>What code did you receive?</label>
@@ -140,12 +145,13 @@ While there is no fixed structure for the Vue components, a typical outline look
   </template>
 </AposCodeBlock>
 
-## Implementing `beforeSubmit` requirements
+## Implementing `beforeSubmit` or `uponSubmit` requirements
 
 Here is complete server-side code for a simple requirement to solve a math problem when logging in. The UI appears at the bottom of the login form because the password has not been verified yet.
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   module.exports = {
     requirements(self) {
       return {
@@ -193,7 +199,8 @@ This simple example uses `req.session`, however be aware that if your site uses 
 To complete the requirement we also need a Vue component on the browser side. As explained in the [custom UI guide](custom-ui.md), Vue components intended for the admin UI (including login requirements) must be placed in the `ui/apos/components` subdirectory of a module in the project, like this:
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   <template>
     <fieldset>
       <label>Math Problem: what is {{ mathProblem }}?</label>
@@ -230,12 +237,12 @@ To complete the requirement we also need a Vue component on the browser side. As
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 Don't forget to set the `APOS_DEV` environment variable to `1` when developing admin UI code. Otherwise Apostrophe will not rebuild the admin UI automatically when you make changes to admin UI code, such as login requirement components.
 
 If your project is derived from `starter-kit-essentials` you can type:
 
-```bash
+``` bash
 APOS_DEV=1 npm run dev
 ```
 
@@ -246,7 +253,7 @@ If this is unfamiliar to you we recommend reading [Customizing the user interfac
 
 This Vue component has only one job: take the props returned by the server-side `props` function, display an appropriate interface, and emit a `done` Vue event with the user's response to the challenge. Everything else is handled for us by Apostrophe.
 
-::: note
+::: info
 Apostrophe looks for a Vue component with the same name as the requirement.
 :::
 
@@ -257,7 +264,8 @@ Unlike the other phase, requirements displayed in the `afterPasswordVerified` ph
 Below is a simple example of a requirement to solve a weak form of 2FA challenge: entering a code that is assigned the first time the user logs in successfully.
 
 <AposCodeBlock>
-  ```javascript
+
+  ``` javascript
   module.exports = {
     requirements(self) {
       return {
@@ -303,7 +311,7 @@ This code isn't too different from the `MathProblem` requirement. The most impor
 
 * `props()` and `verify()` both receive `(req, user)`. While the user is not completely logged in yet, we have access to the `user` piece in these functions. This allows us to use a MongoDB `updateOne` operation to `$set` a random 2FA challenge code on the first call to `props()`. Note that we only return the code the first time, as otherwise any script can "sniff" the right answer and defeat the requirement. In this simple example, the user is expected to remember it.
 
-::: note
+::: info
 In a real 2FA system, a new challenge might be texted to the user's device each time — or a stored code much like this one, but longer and more secure, might be used to generate a time-based one-time password (TOTP) as with Google Authenticator.
 
 A real 2FA system requiring a "setup code" like this one would also continue to display it until the user successfully verifies it for the first time, marking the code as confirmed, in case the user doesn't succeed in setting it up on the first try.
@@ -312,6 +320,7 @@ A real 2FA system requiring a "setup code" like this one would also continue to 
 Here is the front-end Vue component code for this requirement:
 
 <AposCodeBlock>
+
   ```javascript
   <template>
     <fieldset>

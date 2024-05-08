@@ -15,6 +15,7 @@ Every event includes particular arguments, so event handlers need to be written 
 The examples below show two examples of how a custom `product` module registers event handlers for that event.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -50,6 +51,7 @@ The second event handler object is set to the key `'@apostrophecms/piece-type:be
 Event handlers can be spread *across multiple modules* in a project even if they respond to the same event. This allows us to keep each handler in the module that is most related to their purpose. When a product is updated by an editor, one module may send emails to notify the sales team and another module may apply sales tax to the product's price.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -71,6 +73,7 @@ Event handlers can be spread *across multiple modules* in a project even if they
 </AposCodeBlock>
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -94,6 +97,7 @@ Event handlers can be spread *across multiple modules* in a project even if they
 At the same time, *multiple event handlers for a single event can be included in a single module*. Each handler should be added as a separate property of the event object. This allows us to avoid having only one large handler that might get hard to maintain.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...
@@ -117,6 +121,6 @@ At the same time, *multiple event handlers for a single event can be included in
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 **Event handler names are important** (e.g., `applyTax` and `emailSales` in the example above). They are used in log messages to help us find the source of problems, for one reason. They also allow us to override or [extend an event handler](/reference/module-api/module-overview.html#extendhandlers-self) when inherited by another module. Name them well and use multiple handlers to make the code easier to maintain.
 :::

@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 This module establishes `apos.db`, the MongoDB driver database object.
 
-::: note
+::: info
 `apos.db` is the MongoDB database object, not an alias to this module. You shouldn't need to talk to this module after startup, but you can access it as `apos.modules['@apostrophecms/db']` if needed. You can also access `apos.dbClient` if you need the MongoClient object.
 :::
 
@@ -26,7 +26,7 @@ This module establishes `apos.db`, the MongoDB driver database object.
 |`client` | String |An existing MongoDB connection (MongoClient) object. If present, it is used and `uri`, `host`, `connect`, etc. are ignored. |
 |`versionCheck` | Boolean | If `true`, Apostrophe checks the database and exits if it belongs to an older, incompatible major version of Apostrophe. Defaults to `true`. Set to `false` to avoid an extra query at startup. |
 
-::: note
+::: info
 In addition to the `uri` option and the `host`, `port`, and other options that build a MongoDB connection URI, we can pass a connection URI using the `APOS_MONGODB_URI` environment variable.
 
 ```bash

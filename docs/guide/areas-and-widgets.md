@@ -8,7 +8,7 @@ Like other fields, area fields are configured as part of the [field schema](/gui
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
@@ -141,7 +141,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-![Editing an area with the expanded widget preview open.](../.vuepress/public/images/widget-preview-menu.png)
+![Editing an area with the expanded widget preview open.](../images/widget-preview-menu.png)
 
  For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
@@ -151,21 +151,53 @@ module.exports = {
 
 An `area` configured in this way can still take a `max` option to limit the number of widgets to be added.
 
- ### Widget preview options
+### Widget preview options
 
- If a widget is being used within an expanded widget preview area, it can take additional options that determine how it will be displayed in the menu. These options are added directly into the options of the individual widget modules. The menu will show the widget `label`, but the optional `description` option can be used to provide additional descriptive text for display below the widget.
- 
- By default, the widget will be displayed as a placeholder rectangle. However, there are two options for adding a different preview.
+#### `previewImage`: the simplest way to use an image
 
 The `previewImage` option takes the extension, without prefixing, of the image to be used. For example, `'png'` or `'gif'`. The actual image should be added into the `/public` folder of the widget and named `preview.<extension>`, where `extension` matches the string passed to the option. If a file by this name exists in the `public/` subdirectory of the module's project-level configuration, that will automatically be used in preference to a version found in the core module, but still we recommend setting `previewImage` to match your file extension in case the extension of the original ever changes.
 
 The displayed dimensions of the `previewImage` depend on the number of columns being used for the row in which it will be displayed. For two columns, the displayed dimensions are about 240 x 120, or 2:1. For three columns, the dimensions are about 160 x 90, or 16:9. For four columns, the dimensions are approximately 120 x 66, or approximately 16:9. Choosing an image with a ratio of 16:9, with the center of the image well placed should work with all column sizes.
 
-::: note
+::: info
 The extension should always be lower case.
 :::
 
-The second option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+#### `previewUrl`: when you need a custom image URL
+
+The `previewUrl` option accepts a complete URL to the image being used. This option supports Apostrophe asset paths, making it easier to serve
+images kept in a particular module. If you do not wish to use the default filename, or wish to serve the image from a different location, this option gives you the flexibility to achieve that.
+
+**For example:** if you wish to serve the file `special-preview.jpg` from
+your project-level `modules/@apostrophecms/image-widget/public` folder,
+you can do that with the following configuration:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    // The "my-" prefix tells Apostrophe to use the project-level
+    // folder, not the one in the core apostrophe module
+    previewUrl: '/modules/@apostrophecms/my-image-widget/special-preview.jpg',
+  }
+}
+```
+<template v-slot:caption>
+  modules/@apostrophecms/image-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+::: info
+Note the `my-` prefix in `@apostrophecms/my-image-widget`. Without this
+prefix, Apostrophe would look for the file in the core Apostrophe npm
+module, and would not find it.
+:::
+
+#### `previewIcon`: when you prefer an icon to an image
+
+The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
 ## Adding placeholder content to widgets
 
@@ -175,9 +207,11 @@ Custom placeholder content can be added to the image and video widgets through t
 
 For the image widget, the `placeholderImage` option takes **just the file extension,** like `jpg` (note no `.`). You must also copy a matching file in the `public` folder of the module, e.g. copy that image to `/modules/@apostrophecms/image-widget/public/placeholder.jpg` (the name must be `placeholder` and the extension must match `placeholderImage`).
 
+`placeholderImage` is the easiest way, but for those who prefer to change the filename or specify a complete URL to the placeholder image, see also the [placeholderUrl option](core-widgets.md#specifying-a-custom-url-to-a-placeholder-image).
+
 For the video widget, the `placeholderUrl` option takes the URL of a video on a site that the video widget already supports, like YouTube.
 
-::: note
+::: info
 For legacy reasons, `placeholderUrl` is also supported for image widgets, however we do not recommend its use because it is challenging to determine the correct asset URL. Use `placeholderImage` and let Apostrophe figure it out for you.
 :::
 
@@ -189,13 +223,13 @@ Both the image and video widgets have a `placeholderClass` option that takes a s
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
 
-```django
+``` nunjucks
 {% area context, 'name' %}
 ```
 
 The **context** refers to the data object that the area field belongs to. This could be a page, a piece, or a widget. In the landing page example above, the `main` area belongs to a landing page. In that case, the context would be that page's data object in the template: `data.page`.
 
-```django
+``` nunjucks
 {% area data.page, 'main' %}
 ```
 
@@ -223,7 +257,7 @@ main: {
 }
 ```
 
-::: note
+::: info
 Learn more about rich text options in [the section on core widgets](/guide/core-widgets.md).
 :::
 
@@ -233,7 +267,7 @@ These can be added in an object after the area tag arguments using the `with` ke
 
 <AposCodeBlock>
 
-```django
+``` nunjucks
 {% area data.page, 'main' with {
   '@apostrophecms/image': {
     sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
@@ -249,7 +283,7 @@ These can be added in an object after the area tag arguments using the `with` ke
 
 The object following `with` should include keys matching widget type names, without the `-widget` suffix (e.g., the `@apostrophecms/image`). The context template will pass those options into the proper widget template as `data.contextOptions`. In the example above, the core image widget template, *and only that template*, would be able to use the data as:
 
-```django
+``` nunjucks
 {{ data.contextOptions.sizes }}
 ```
 

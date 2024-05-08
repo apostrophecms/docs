@@ -2,7 +2,7 @@
 
 We will often find that template code is reused across multiple files or that it simply gets overly complicated for a single file. **Template fragments** help solve this by splitting template code into smaller, managable pieces that can be used in other templates.
 
-::: note
+::: info
 If you are already familiar with the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature, fragments are very similar. Fragments are a new feature specific to Apostrophe to support asynchronous template tags, such as the [area](/guide/areas-and-widgets.md#adding-areas-to-templates) tag and [async components](/guide/async-components.md). If the code does *not* use either async components or areas, macros are also fine to use.
 
 The only macros feature currently unavailable or unreplaced for fragments is passing the template context using `with context`. This is planned for fragments as well.
@@ -12,7 +12,7 @@ The only macros feature currently unavailable or unreplaced for fragments is pas
 
 We define fragments by putting template markup between `{% fragment %}` and `{% endfragment %}` tags. The opening tag should also include a name for the fragment.
 
-```django
+``` nunjucks
 {% fragment heading() %}
   <h2>This is a heading fragment</h2>
 {% endfragment %}
@@ -20,14 +20,14 @@ We define fragments by putting template markup between `{% fragment %}` and `{% 
 
 To use the fragment in a template, reference it by name using the `{% render %}` tag:
 
-```django
+``` nunjucks
 {% render heading() %}
 {# Renders: `<h2>This is a heading fragment</h2>` #}
 ```
 
 We can also pass arguments to fragments, allowing us to reuse them across templates with different data.
 
-```django
+``` nunjucks
 {% fragment heading(adjective) %}
   <h2>This is a {{ adjective }} fragment</h2>
 {% endfragment %}
@@ -38,7 +38,7 @@ We can also pass arguments to fragments, allowing us to reuse them across templa
 
 Fragment arguments can be any data or template variables understood by Apostrophe templates (e.g., strings, objects, arrays, etc.). It can often be useful to pass a [doc object](/reference/glossary.md#doc) to a macro to render its areas, especially when docs are referenced in [relationships](/guide/relationships.md).
 
-```django
+``` nunjucks
 {% fragment authorCredit(author) %}
   <div>
     <p>By {{ author.title }}</p>
@@ -53,7 +53,7 @@ Fragment arguments can be any data or template variables understood by Apostroph
 <!-- ::: tip
 Fragments also support keyword arguments, another [feature of Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#keyword-arguments). They can be used to establish default argument values as well as to skip positional arguments.
 
-```django
+``` nunjucks
 {% fragment listNumbers(first, second, third=3, fourth=4) %}
   <p>{{ first }} {{ second }} {{ third }} {{ fourth }}</p>
 {% endfragment %}
@@ -80,7 +80,7 @@ As when we `include` or `extend` another template file, when that file is in the
 
 For example, you might have an article [index page](/guide/piece-pages.md) that lists a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each article in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
 
-```django
+``` nunjucks
 {# modules/article-page/views/item-fragment.html #}
 {# 👇 Accepting an argument with the article data object #}
 {% fragment teaser(article) %}
@@ -94,7 +94,7 @@ For example, you might have an article [index page](/guide/piece-pages.md) that 
 
 Since the fragment and page template are both in the `article-page` module, we can import it with only the file name using the `{% import %}` template tag.
 
-```django
+``` nunjucks
 {# modules/article-page/views/index.html #}
 {% import 'item-fragment.html' as articleFragment %}
 
@@ -104,10 +104,10 @@ Since the fragment and page template are both in the `article-page` module, we c
 {% endfor %}
 ```
 
-::: note
+::: info
 Unlike importing and extending templates, when importing, the fragment is a property of the imported file, e.g, `articleFragment.teaser()`. This allow us to define multiple fragments in a single file, then import the one file and use any inside it.
 
-```django
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% import 'fragments.html' as articleFragments %}
 
@@ -123,7 +123,7 @@ Similarly, **when fragment files are in the root-level `views` directory** or a 
 
 The global fragment file:
 
-```django
+``` nunjucks
 {# views/fragments/utilities.html #}
 {% fragment heading(title) %}
   <h2 class="fancy">{{ title }}</h2>
@@ -132,7 +132,7 @@ The global fragment file:
 
 Importing the fragment into any page or widget template would look exactly as if the fragment was in the same module.
 
-```django
+``` nunjucks
 {# In any page or widget template file #}
 {% import 'fragments/utilities.html' as utilities %}
 
@@ -144,7 +144,7 @@ Importing the fragment into any page or widget template would look exactly as if
 
 To import template fragments from one module into templates of another module, include the fragment file's module name in the `import` tag. This is what it might look like to import the article teaser fragment from above into a `press-page` index page template:
 
-```django
+``` nunjucks
 {# modules/press-page/views/index.html #}
 {# 👇 Importing our fragment from the `article-page` module #}
 {% import 'article-page:item-fragment.html' as importedFragment %}
@@ -160,7 +160,7 @@ In this case, the file name is prefixed with `article-page:`, indicating the sou
 
 In addition to passing arguments, it is possible to pass markup directly from a template into a fragment it is using. The fragment must first include `rendercaller()`. This will be the location where the calling template will insert markup.
 
-```django
+``` nunjucks
 {# /views/fragments/utilities.html #}
 {% fragment highlighter %}
   <aside class="highlight">
@@ -172,7 +172,7 @@ In addition to passing arguments, it is possible to pass markup directly from a 
 
 When using the fragment, a template would use `{% rendercall %}` instead of `{% render %}`.
 
-```django
+``` nunjucks
 {# modules/default-page/views/page.html #}
 {% import 'fragments/utilities.html' as utilities %}
 

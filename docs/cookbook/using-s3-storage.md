@@ -27,16 +27,16 @@ Setting these variables will allow for upload into your bucket, but until you ch
 ### Example Amazon S3 permissions
 
 1) First, select the bucket from the S3 management console and then click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
-![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
+![S3 console permissions tab](../images/s3-permissions-tab.png)
 
 2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
-![S3 console showing all public access blocks for S3 bucket turned off](../.vuepress/public/images/s3-public-permissions.png)
+![S3 console showing all public access blocks for S3 bucket turned off](../images/s3-public-permissions.png)
 
 3) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
-![The S3 console Object Ownership section](../.vuepress/public/images/s3-object-ownership.png)
+![The S3 console Object Ownership section](../images/s3-object-ownership.png)
 
 4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
-![S3 console object ownership edit screen](../.vuepress/public/images/s3-object-permission.png)
+![S3 console object ownership edit screen](../images/s3-object-permission.png)
 
 ## Using FileBase for storage
 

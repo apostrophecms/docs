@@ -75,7 +75,7 @@ module.exports = {
 
 The first default object's `name` property is set to `images` and an `extensions` key with an array of strings containing the non-prefixed extensions of file types that can be uploaded and attached to `@apostrophecms/image` pieces. In order to allow different spelling, e.g. 'jpg' or 'jpeg', the `extensionMaps` option takes an object with the alternative spelling as key and the extension it should map to as value.
 
-::: note
+::: info
 Passing a new image extension type through replacement of the `@apostrophecms/attachment` default `fileGroups` option will not automatically cause the new image type to be re-sized or cropped, only added to the database and written to the designated uploadfs folder.
 :::
 
@@ -150,7 +150,7 @@ module.exports = {
 
 This example will make a new group, `logfiles`, but leave the `images` and `office` groups unaltered. This new group will be available to use in the `attachment` field `fileGroup` setting.
 
-::: note
+::: info
 A single `addFileGroups` option can be used to both alter existing groups and add new groups by passing multiple objects in the array.
 :::
 
@@ -195,7 +195,7 @@ This configuration setting should be passed to the `@apostrophecms/attachment` m
   
 Additional sizes can be added through an object composed of size objects containing `name`, `width`, and `height` properties. This object is passed as value to the `add` key of `imageSizes`. Default sizes can be removed by passing an array containing their names to the `remove` key of `imageSizes`.
 
-::: note
+::: info
 The Apostrophe admin UI may display various sizes to help you manage your images, so remove sizes with care.
 :::
 
@@ -264,7 +264,8 @@ The `options` parameter is optional and takes an object with several potential p
 `options.annotate` takes a boolean value. If set to true, it will add a `_urls` property to any image attachment objects in the returned array. The image `_urls` property contains sub-properties named for each image name size with the URL as a string value. The `_urls` will also contain an `uncropped` property with sub-properties named for each image name size and the URL as value. For non-image files, `annotate: true` will add a `_url` property to the object in the returned array with the URL of the attachment as value.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set images = apos.attachment.all(data.page._people, { group: 'images' }) %}
   {% for selfie in images %}
@@ -294,7 +295,8 @@ The `options` parameter is optional and takes an object with several potential p
 `options.annotate` takes a boolean value. If set to true, it will add a `_urls` property to any image attachment objects in the returned array. The image `_urls` property contains sub-properties named for each image name size with the URL as a string value. The `_urls` will also contain an `uncropped` property with sub-properties named for each image name size and the URL as value. For non-image files, `annotate: true` will add a `_url` property to the object in the returned array with the URL of the attachment as value.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
    <img src="{{ image._urls['one-third'] }}">
@@ -310,7 +312,8 @@ The `options` parameter is optional and takes an object with several potential p
 If the attachment has a focal point defined, this helper will return the focal point position converted to CSS syntax for `object-position` as a string with coordinates as percentages. This string does not have an `;` appended, so it must be added. If no focal point is set for the attachment it returns `center center`.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set focalPoint = apos.attachment.focalPointToObjectPosition(image) %}
@@ -327,7 +330,8 @@ If the attachment has a focal point defined, this helper will return the focal p
 If the attachment has a focal point defined, this helper will return an object containing an `x` property with the x-postition, and `y` property with the y-position, as percentages. The numbers are supplied unitless. If there is no focal point defined it returns null.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set focalPoint = apos.attachment.getFocalPoint(image) %}
@@ -344,7 +348,8 @@ If the attachment has a focal point defined, this helper will return an object c
 Returns either the original size attachment height, or the cropped height if the image has been cropped in the document.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set imageHeight = apos.attachment.getHeight(image) %}  <img src="{{ image._urls['one-third'] }}" height="{{ imageHeight }}" >
@@ -359,7 +364,8 @@ Returns either the original size attachment height, or the cropped height if the
 Returns either the original size attachment width or the cropped width if the image has been cropped in the document.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% set imageWidth = apos.attachment.getWidth(image) %}
@@ -375,7 +381,8 @@ Returns either the original size attachment width or the cropped width if the im
 Returns `true` if the image attachment associated with the document has a focal point set.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% if data.page._people %}
   {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
   {% if hasFocalPoint(image) %}
@@ -481,7 +488,7 @@ uploadfs({
 
 ## Related documentation
 
-- [Attachment schema field](https://v3.docs.apostrophecms.org/reference/field-types/attachment.html#attachment)
-- [API attachment response](https://v3.docs.apostrophecms.org/reference/api/field-formats.html#attachment)
-- [API crop endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-crop)
-- [API upload endpoint](https://v3.docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-upload)
+- [Attachment schema field](https://docs.apostrophecms.org/reference/field-types/attachment.html#attachment)
+- [API attachment response](https://docs.apostrophecms.org/reference/api/field-formats.html#attachment)
+- [API crop endpoint](https://docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-crop)
+- [API upload endpoint](https://docs.apostrophecms.org/reference/api/media.html#post-api-v1-apostrophecms-attachment-upload)

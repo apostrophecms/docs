@@ -47,7 +47,8 @@ contactInfo: {
 |`def` | Object | n/a | The default value for the field. It must comply with the fields schema. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
 
@@ -64,7 +65,7 @@ Object schema configuration differs from module schema configuration in that _ob
 
 You can access the fields of the object as sub-properties.
 
-```django
+```nunjucks
 <p>
 {% set address = data.piece.address %}
 {{ address.street }}<br />

@@ -140,16 +140,16 @@ Choose a bucket name (the same as your app is nice but not mandatory) and a regi
 You can set your permissions right away.
 
 1) Click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
-![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
+![S3 console permissions tab](../images/s3-permissions-tab.png)
 
-2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
-![S3 console showing all public access blocks for S3 bucket turned off](../.vuepress/public/images/s3-public-permissions.png)
+1) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
+![S3 console showing all public access blocks for S3 bucket turned off](../images/s3-public-permissions.png)
 
-3) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
-![The S3 console Object Ownership section](../.vuepress/public/images/s3-object-ownership.png)
+1) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
+![The S3 console Object Ownership section](../images/s3-object-ownership.png)
 
-4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
-![S3 console object ownership edit screen](../.vuepress/public/images/s3-object-permission.png)
+1) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
+![S3 console object ownership edit screen](../images/s3-object-permission.png)
 
 You can test it *without* Heroku, on your local machine, by setting the environment variables just for one run of your site (the trailing `\` characters are there to allow us to break one command line over multiple lines for readability in the `bash` shell):
 
@@ -210,7 +210,7 @@ node app @apostrophecms/asset:build || exit 1
 
 Next, the `"build"` script within the `package.json` file needs to be altered to run the new script. If you are building your project from scratch, you can simply replace the command that the `"build"` script runs with:
 
-```json
+``` json
 "build": "bash ./scripts/heroku-release-tasks"
 ```
 
@@ -219,7 +219,7 @@ Commit all your new files to your git repo and then type:
 ```bash
 $ git push heroku main
 ```
-::: note
+::: info
 My repo branch is named `main`, while yours might be named `master`.
 :::
 

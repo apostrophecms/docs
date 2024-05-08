@@ -1,3 +1,8 @@
+---
+next:
+  text: 'Code Organization - Modules'
+  link: '/guide/modules.html'
+---
 # Windows development environment
 
 ## Installing Windows Subsystem for Linux
@@ -14,7 +19,11 @@ First, you must [install WSL according to the documentation](https://docs.micros
 
 Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl`.
 
+<<<<<<< HEAD
 ::: note
+=======
+::: info
+>>>>>>> a3-vitepress-docs/main
 From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
 :::
 
@@ -95,7 +104,11 @@ You should only have to do this once to clean up the mess. In the future, **just
 Another possibility is that you tried to write `--dbpath=~/mongodb-data/6.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
 :::
 
+<<<<<<< HEAD
 ::: note
+=======
+::: info
+>>>>>>> a3-vitepress-docs/main
 If typing this every time seems like a pain, try adding this line to your `.bashrc` file:
 
 ```bash
@@ -119,7 +132,11 @@ nvm use 18
 
 Now you're ready to use the current stable version of Node.js in this shell.
 
+<<<<<<< HEAD
 And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](https://v3.docs.apostrophecms.org/guide/setting-up.html). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
+=======
+And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](https://docs.apostrophecms.org/guide/setting-up.html). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
+>>>>>>> a3-vitepress-docs/main
 
 ::: warning
 One more quick reminder: be sure to **leave `mongod` running in a separate Ubuntu window** while you work with Apostrophe.

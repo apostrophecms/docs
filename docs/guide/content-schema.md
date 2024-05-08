@@ -41,7 +41,7 @@ Content schemas are configured in the `fields` setting. In this case, `fields` h
 
 Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section.
 
-See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/) for more information.
+See the reference documentation on [the `fields` setting](/reference/module-api/module-overview.md#fields) and [individual field types](/reference/field-types/index.md) for more information.
 
 ## Using existing field groups
 
@@ -69,7 +69,7 @@ module.exports = {
 
 The `init` function runs once on start up and has access to the module as an argument. By the time it runs, the field groups have been compiled into an object named `fieldsGroups`. If you haven't added any fields yet you can log this to see what you are working with.
 
-::: note
+::: info
 You would see an `archived` field in the log output with this addition. The interface does not show that as a normal field, but it is registered as one to support editing via the REST API.
 :::
 
@@ -79,7 +79,7 @@ For example, `title` is in the default "Basics" group. If you add a `basics` gro
 
 As in the example above, you could include `title` with the "Basics" group along with new fields.
 
-```js
+``` js
 // modules/product/index.js
 module.exports = {
   // ...

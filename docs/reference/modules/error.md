@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 This module establishes an error method used throughout Apostrophe code to help format code errors consistently.
 
-::: note
+::: info
 `apos.error` is the error construction method, not an alias to this module.
 :::
 
@@ -27,7 +27,7 @@ be applied to the Error object. Certain values of `name` match to certain HTTP s
 
 If the error is caught by Apostrophe's [`apiRoutes`](/reference/module-api/module-overview.md#apiroutes-self), [`restApiRoutes`](/reference/module-api/module-overview.md#restapiroutes-self), and [`renderRoutes`](/reference/module-api/module-overview.md#renderroutes-self) mechanisms, and `name` matches to a status code, an appropriate HTTP error is sent. The HTTP response to the client will consist of a JSON object with `name`, `data`, and `message` properties (the latter two only if present). If the `name` argument does not match a code, a general 500 error is sent to avoid disclosing inappropriate information and the error is only logged by Apostrophe server-side.
 
-```json
+``` json
 {
   "name": "invalid",
   "data": {},
@@ -38,6 +38,7 @@ If the error is caught by Apostrophe's [`apiRoutes`](/reference/module-api/modul
 For brevity, this method is aliased as `apos.error`.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     // ...

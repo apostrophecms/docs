@@ -20,7 +20,7 @@ apos add widget two-column
 ```
 :::
 
-```js
+``` js
 // modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
@@ -62,7 +62,7 @@ You may notice there is no `group` property to the field schema. The widget edit
 
 You can then add this module to the `app.js` file to instantiate it.
 
-```js
+``` js
 // app.js
 require('apostrophe')({
   shortName: 'my-website',
@@ -78,7 +78,7 @@ Much like the core widgets, you can add placeholder content for many of the fiel
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -122,7 +122,7 @@ module.exports = {
 
 This placeholder content will be present on the page when the widget is added. This content will never appear in the page preview. It will *only* appear on-page until you click Edit for that widget and save some real content. This data will also show up in the fields within the editor modal. The `placeholder` option can also be used to fill the editor modal fields with suggested content without also adding it to the page by setting it to `false`, but still adding placeholder content to each field.
 
-::: note
+::: info
 If you set `placeholder: true` in the options and have either a `date` or `time` schema field, it will be populated with the current date/time on the page - not in the editor modal. Like the other fields, this content will not appear on the live page or in preview until you edit the widget and add actual content. It isn't possible to pass placeholder content into either of these fields.
 :::
 
@@ -131,7 +131,7 @@ The `placeholderClass` option can be used to add a class to the wrapper around t
 ### Disabling the initial editor modal
 Even when placeholder content is not needed, for some types of custom widgets, it may be useful to disable the automatic opening of the editor modal when it is first added to the page. This is similar to the behavior when adding placeholder content. The content is added to the page, but the Editor has to open the modal manually. For example, a widget to display a variable number of products set by default to five items. The Editor would only open the modal if they wanted to change this amount. The `initialModal` option is set to `true` by default, so to prevent initial modal opening, set the value to `false`.
 
-::: note
+::: info
 Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be overridden by passing a `true` value.
 :::
 
@@ -139,7 +139,7 @@ Adding `placeholder: true` in the options for a widget automatically sets `initi
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
 
-```django
+``` nunjucks
 {# modules/two-column-widget/views/widget.html #}
 <section class="two-col">
   <div class="two-col__column">
@@ -153,7 +153,7 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
 
 **Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available on `data.contextOptions`.
 
-::: note
+::: info
 Here are some two-column styles for people following along.
 
 ```css
@@ -213,7 +213,7 @@ module.exports = {
 
 **Module template**
 
-```django
+``` nunjucks
 {# modules/collapse-widget/views/widget.html #}
 <section data-collapser class="collapser">
   <h2>
@@ -296,7 +296,7 @@ Template files on the other hand, *do* have access to widget data (they are rend
 
 For example, we could change our collapse widget to include a `color` field value:
 
-```django
+``` nunjucks
 {# modules/collapse-widget/views/widget.html #}
 <section data-collapser data-color="{{ data.widget.color }}" class="collapser">
   {# The rest of the code is the same... #}
@@ -322,7 +322,7 @@ The player *does* have access to the widget's wrapping element, so we use `el.da
 ::: tip
 We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a properly escaped string first. Use the `jsonAttribute` template filter to do this.
 
-```django
+``` nunjucks
 <div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
 ```
 

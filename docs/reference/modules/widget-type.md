@@ -12,7 +12,7 @@ The only reason to configure this module directly would be to apply the changes 
 
 ## Options
 
-::: note
+::: info
 These are options to *the module itself*, so they apply to *every* instance of the widget. They are separate from the options that can be passed when adding the widget to an area field, and from the template options that be passed via the `with` keyword when inserting an area in a template.
 :::
 
@@ -30,6 +30,8 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The Nunjucks template name to render. |
+| [`width`](#width) | String | Define the size of the widget modal. |
+| [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 
 ### `className`
 
@@ -37,7 +39,7 @@ All of the core widget type modules of Apostrophe, such as `@apostrophecms/image
 
 Custom widgets have no default template, but may choose to support the same pattern:
 
-```django
+``` nunjucks
 {# in a custom widget.html file #}
 
 {% if data.options.className %}
@@ -98,6 +100,23 @@ If this option is set to `true`, and the widget has relationships with documents
 
 The name of the template in the `views` folder of the module that should be rendered to display the widget. This option defaults to `widget`, and it is generally not necessary to change it.
 
+### `width`
+
+The size of the widget modal can be configured via this option:
+- `undefined` (default): the widget modal width is set to 540px.
+- `"half"`: the widget modal takes 50% of the screen.
+- `"two-thirds"`: the widget modal takes 66% of the screen.
+- `"full"`: the widget modal takes 100% of the screen.
+
+Any other value will not impact the width of the modal, resulting in keeping the default width.
+
+No matter what, the widget modal width will take 100% of the screen for screens with a width below 800px.
+
+### `origin`
+
+Choose the side from where the widget modal will open:
+`left` or `right` (default).
+
 ## Related documentation
 
 - [Core widgets](/guide/core-widgets.md)
@@ -111,7 +130,7 @@ This method returns an object of properties to be exposed on the browser side. I
 
 Since the default implementation exposes essential information, always use `extendMethods` to extend it, like this:
 
-```js
+``` js
 extendMethods(self) {
   return {
     getBrowserData(_super, req) {
@@ -128,7 +147,7 @@ extendMethods(self) {
 
 Apostrophe invokes this method to render the widget. In most cases it is best to provide a `widget.html` template and rely on the default implementation of this method. However it is possible to override this method to render a widget in an entirely different way. The method must return a string of markup already marked as safe. If a custom implementation does not use Nunjucks then it may be returned as safe with the following code:
 
-```js
+``` js
 return self.apos.template.safe(string);
 ```
 
@@ -138,7 +157,7 @@ The `widget` argument contains the widget object with its schema fields, the `op
 
 This method is called to make the text of the widget available to Apostrophe's built-in search features. If the widget relies on schema fields for its content then it should not be necessary to override this method. However widget type modules like `@apostrophecms/rich-text-widget` that do not use fields will need to provide their own implementation, like this:
 
-```js
+``` js
 methods(self) {
   return {
     addSearchTexts(item, texts) {
@@ -168,7 +187,7 @@ Custom reimplementations that do not have any special optimizations for more tha
 
 There is no return value. The related documents are attached to the widget objects via temporary properties (properties whose names start with `_`, which tells Apostrophe that they should not be stored back to the database at save time).
 
-As an alternative, consider invoking [async components](async-components.md) from `widget.html`. Async components are easier to understand and will run only if the template elects to call them in a particular case, which can sometimes be more efficient.
+As an alternative, consider invoking [async components](../../guide/async-components.md) from `widget.html`. Async components are easier to understand and will run only if the template elects to call them in a particular case, which can sometimes be more efficient.
 
 ## Module tasks
 

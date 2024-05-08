@@ -57,6 +57,7 @@ main: {
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
@@ -204,7 +205,7 @@ add: {
 }
 ```
 
-::: note
+::: info
 If you configure an area to use the expanded preview menu you can further customize how the widget is displayed through options in the individual [widget's configuration](/guide/areas-and-widgets.html). 
 :::
 
@@ -219,7 +220,7 @@ Use the `area` template tag with arguments for the context and the name of the a
 
 The "context" may be a page, piece, widget, or [array field](/reference/field-types/array.md) item, as referenced in the template. All configuration from the field definition is applied automatically from the relevant schema configuration.
 
-```django
+```nunjucks
 <!-- Inserting the `main` area field for a page. -->
 <section>
   {% area data.page, 'main' %}
@@ -232,6 +233,6 @@ The "context" may be a page, piece, widget, or [array field](/reference/field-ty
 </div>
 ```
 
-::: note
-For more information on how areas changed from Apostrophe 2, see the [Coming from 2.x](/guide/upgrading.md#areas-and-pages) guide section on areas.
+::: info
+For more information on how areas changed from Apostrophe 2, see the [Coming from 2.x](/guide/migration/upgrading.md#areas-and-pages) guide section on areas.
 :::
