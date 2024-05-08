@@ -250,6 +250,67 @@ Do not use core actions as your `action` property value - this would lead to unp
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
+## Adding custom modal controls
+
+Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled.
+
+While this method enables the editing and management modals to open for any user, it does not bypass Apostrophe's permission checks. A user without permission to perform an operation on a particular page or piece will still be blocked. Best practice is to toggle any custom controls so that are only visible or active for a user with correct permissions. This can be done by checking that the value of the `canCreate` and `canEdit` properties for the piece type or `@apostrophecms/page` is true. The `canCreate` property applies to both creating and duplicating a document, since both add a document to the database. The `canEdit` property should be checked before adding a method call for editing a document.
+
+### Creating a new document
+
+In order to create a new document, whether page or piece, you pass the required `type` property set to either the piece type or `@apostrophecms/page` for creating a new page. For example, to trigger the creation of a new `blog` piece type from a button with an id of `create-new-piece` you could use the following code:
+
+<AposCodeBlock>
+
+```js
+export default () => {
+  apos.util.onReady(() => {
+    const button = document.getElementById('create-new-piece');
+    if (button && apos.module?.blog?.canCreate) {
+      button.addEventListener('click', async function () {
+        try {
+          const createdDocument = await apos.doc.edit({
+            type: 'blog'
+          });
+          if (createdDocument) {
+            console.log('Document was created:', createdDocument);
+          }
+        } catch (error) {
+          console.error('Error creating document:', error);
+        }
+      });
+    }
+  });
+};
+```
+  <template v-slot:caption>
+    modules/blog/ui/src/index.js
+  </template>
+</AposCodeBlock>
+
+
+### Editing an existing document
+
+To trigger editing of an existing piece or page you need to pass the computed `_id` of the document through the `_id` property along with the required `type`. Note that you will want to use the `_id` of the draft version of the document, not the published version.
+
+```js
+apos.doc.edit({
+  type: '@apostrophecms/page',
+  _id: 'clkie2enx00033xlsgus4a4nj:en:draft'
+})
+```
+
+### Duplicating an existing document
+
+The `apos.doc.edit()` method also gives you the option to create a new document of the designated type, but pre-filled with fields from an existing document of the same type. This is very similar to editing an existing document except that the `_id` of the existing document to be copied should be passed through the `copyOfId` property. In this case, you can pass the `_id` of either the draft or published document if they both exist.
+
+```js
+apos.doc.edit({
+  type: '@apostrophecms/page',
+  copyOfId: 'clkie2enx00033xlsgus4a4nj:fr:published'
+})
+```
+
 ## Adding custom login requirements
 
 In some cases, we might wish to enhance Apostrophe's login form with additional, custom steps.
