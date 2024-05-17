@@ -1,6 +1,6 @@
 # Editing custom widgets in context
 
-::: note
+::: info
 Be sure to read [customizing the user interface](custom-ui.md) first before proceeding with this guide. In this guide we will assume you are already familiar with `APOS_DEV=1`, `ui/apos/components` and other concepts covered there.
 :::
 
@@ -51,7 +51,8 @@ If no `fields` section is configured, no data will be saved at all unless the `s
 Here is a simple "hero" heading widget. Both the heading and the width of the heading can be adjusted directly on the page. This gives the user immediate visual feedback.
 
 <AposCodeBlock>
-```js
+
+``` js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -96,7 +97,8 @@ Don't forget to also enable the module in `app.js`, like any other module.
 :::
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 <h1 class="contextual-heading" style="width: {{ data.widget.width }}%">
   {{ data.widget.heading }}
 </h1>
@@ -111,7 +113,8 @@ Don't forget to also enable the module in `app.js`, like any other module.
 This is a straightforward `widget.html` template, as might be found in any custom widget. The presentation is intentionally similar to that used in the widget editor component, below.
 
 <AposCodeBlock>
-```js
+
+``` js
 <template>
   <div :class="{ focused }">
     <input
@@ -263,6 +266,7 @@ When emitting an update, be sure to include any properties of `value` that your 
 :::
 
 <AposCodeBlock>
+
 ```css
 .contextual-heading {
   display: block;

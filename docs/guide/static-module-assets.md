@@ -6,7 +6,7 @@ Another issue is that those who configure Apostrophe to copy CSS and JS assets t
 
 Apostrophe offers a solution to this problem: each module folder can have its own `public` subdirectory (e.g., `/modules/article/public`). Any static assets in a module's public subdirectory are *copied to the same release location* where the CSS and JS bundles are deployed, regardless of whether that is on the server's hard drive, in S3, or some third location.
 
-::: note
+::: info
 The `public` folder of each module solves a different problem from [`ui/public`](/guide/front-end-assets.md#the-ui-public-folder). While `ui/public` is for JavaScript and CSS files that should be appended as-is to Apostrophe's JavaScript and CSS bundles, usually to accommodate a custom webpack build, `public` is for files that should be **available separately.** A common example is a `.png` file to be used as a background image in CSS.
 :::
 
@@ -32,7 +32,7 @@ It's usually simpler to just put your public assets in a module specific to your
 
 In Nunjucks templates we can convert asset paths to URs by calling the `apos.asset.url` helper function. Again, the rendered template will include the complete asset URL:
 
-```django
+``` nunjucks
 {{ apos.asset.url('/modules/custom-module/images/bg.png') }}
 ```
 

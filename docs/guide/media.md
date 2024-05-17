@@ -13,6 +13,7 @@ In addition to covering the main ways to allow editors to choose files for their
 The core [image widget](/guide/core-widgets.md#image-widget) is a good way to allow editors to select an image. If we want to use the provided image widget template to render it as HTML, it's definitely the right choice. Once the editor selects an image, the full image is displayed in the editor interface.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // ...
@@ -44,7 +45,8 @@ module.exports = {
 If presenting an image using the image widget and its template, the process is not different from rendering any other area in a template. Use the `area` template tag, including the context reference and the area field name.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% area data.piece, 'photo' %}
 ```
   <template v-slot:caption>
@@ -61,6 +63,7 @@ The [attachment field](/reference/field-types/attachment.md) is the direct route
 Importantly, a file uploaded through an attachment field *will not appear in either the media library* or the non-image files library. If the image or file is meant to be reused, this will not be best. However if the file should only be associated with one particular page or piece it can work well. Uploading resumes associated with job applicants is one such example.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // ...
@@ -91,7 +94,8 @@ Apostrophe generates multiple sizes of each uploaded image as discussed [regardi
 For non-image attachments, simply pass the attachment object into the method.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set fileUrl = apos.attachment.url(data.piece.fileUpload) %}
 
 <a href="{{ fileUrl }}">Download</a>
@@ -105,7 +109,8 @@ For non-image attachments, simply pass the attachment object into the method.
 For image attachments, doing the same thing will return the URL for the `full` image size by default (1140px × 1140px maximum size). You can pass an options object as a second argument with its `size` property set to another image size to get a different URL back.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set imgUrl = apos.attachment.url(data.piece.photoUpload, {
   size: 'one-third'
 }) %}
@@ -121,7 +126,8 @@ For image attachments, doing the same thing will return the URL for the `full` i
 [Responsive images](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) are very important for cross-device support these days. Getting each image size to populate the `srcset` attribute for an image would get repetitive very quickly even using the `apos.attachment.url()` method. For that, there is a dedicated `apos.image.srcset()` method. Pass in the attachment object as an argument and it will return a `srcset` value with all sizes included.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set srcset = apos.image.srcset(data.piece.photoUpload) %}
 
 <img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
@@ -138,6 +144,7 @@ Notice that in the examples above **the alt text is not included when using an a
 If the image or file should be reusable and in the image or file library, but we *aren't using the image widget template* and don't care about showing the full image in the editor interface, choosing a file with the relationship field is a great option. It uses less code abstraction than an area with an image widget and subsequently has a clearer data structure when retrieved from the database.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // ...
@@ -166,7 +173,8 @@ Much of the same steps from [using attachment field values](#the-attachment-fiel
 Since relationship fields can accept multiple values (e.g., connecting multiple files to a single piece), the `apos.attachment.all()` and `apos.image.all()` methods will return an array of all attachments or all *image* attachments, respectively. This is helpful for looping over several files.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set filesObject = apos.attachment.all(data.piece._files) %}
 
 {% for file in filesObject %}
@@ -182,7 +190,8 @@ Since relationship fields can accept multiple values (e.g., connecting multiple 
 When the relationship field has the `max: 1` limit, or when we only want the first connected file, we instead use `apos.attachment.first()` or `apos.image.first()`. These return the first (or only) attachment object from the field passed in.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set imageObject = apos.attachment.first(data.piece._image) %}
 
 <img src="{{ apos.attachment.url(imageObject) }}" alt="{{ imageObject._alt }}" />
@@ -197,7 +206,8 @@ As mentioned above, once we have the attachment object, all of the helper method
 When working with images, additional helpers are available. As an example, see the markup below, taken from the built-in `@apostrophecms/image-widget` module. You can use this markup in your own widgets and templates:
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 {% set attachment = apos.image.first(data.widget._image) %}
 
 {% if attachment %}

@@ -6,8 +6,9 @@ API keys are great for server-to-server communication because they don't expire.
 
 Configure API keys as an option in the `@apostrophecms/express` module in `app.js`. Alternately, all `@apostrophecms/express` configuration may be added in a separate `modules/@apostrophecms/express/index.js` file.
 
-```javascript
-// app.js
+<AposCodeBlock>
+
+``` javascript
 require('apostrophe')({
   modules: {
     '@apostrophecms/express': {
@@ -24,6 +25,10 @@ require('apostrophe')({
     },
     // ...
 ```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
 
 ### Usage
 
@@ -63,7 +68,7 @@ const data = await response.json();
 
 A successful response will return a JSON object with a `token` property.
 
-```javascript
+``` json
 {
   token: 'random123Token456xyz'
 }
@@ -90,7 +95,7 @@ To log out and destroy the token, send a `POST` request to `/api/v1/login/logout
 
 As an alternative to a bearer token, you may request a session cookie. This is the mechanism Apostrophe's admin user interface uses to log in. Session cookies will automatically persist across tabs, but there is slightly more overhead to each request. To use this method, include `session: true` in the `POST` request to `/api/v1/@apostrophecms/login/login`.
 
-```javascript
+``` javascript
 // Request inside an async function.
 const response = await fetch('http://example.net/api/v1/@apostrophecms/login/login', {
   method: 'POST',
@@ -108,13 +113,13 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](https://v3.docs.apostrophecms.org/guide/custom-login-requirements.html) in our guide.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](https://docs.apostrophecms.org/guide/custom-login-requirements.html) in our guide.
 
 ### End session
 
 Using the session cookie, send a `POST` request to `/api/v1/@apostrophecms/login/logout` to end the user session.
 
-```javascript
+``` javascript
 // Request inside an async function.
 const response = await fetch('http://example.net/api/v1/@apostrophecms/login/logout', {
   method: 'POST',
@@ -134,8 +139,9 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 All piece types in Apostrophe have a corresponding REST API. By default, this API is only available to authenticated users for security reasons. However, you can enable it for public use via the `publicApiProjection` option, which must be a MongoDB-style projection indicating the fields to include in the response:
 
-```javascript
-// modules/product/index.js
+<AposCodeBlock>
+
+``` javascript
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -149,6 +155,11 @@ module.exports = {
 };
 ```
 
+<template v-slot:caption>
+  modules/product/index.js
+</template>
+</AposCodeBlock>
+
 ## Allowing full `GET` access for guest users
 
 By default, even a logged-in user can only see content exposed by the `publicApiProjection`,
@@ -158,8 +169,9 @@ If your project involves "guest" users who have no editing privileges, or at lea
 that are exposed via Apostrophe permissions and roles, but should have full read access
 to the REST APIs you can enable this for each relevant piece type:
 
-```javascript
-// modules/product/index.js
+<AposCodeBlock>
+
+``` javascript
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -168,16 +180,27 @@ module.exports = {
 };
 ```
 
+<template v-slot:caption>
+  modules/product/index.js
+</template>
+</AposCodeBlock>
+
 You can also enable it for pages:
 
-```javascript
-// modules/@apostrophecms/page/index.js
+<AposCodeBlock>
+
+``` javascript
 module.exports = {
   options: {
     guestApiAccess: true
   }
 };
 ```
+
+<template v-slot:caption>
+  modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 This does not grant guest users access to anything the public could not see if it
 was being accessed as part of an ordinary website page. For instance, this does not

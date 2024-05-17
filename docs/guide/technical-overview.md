@@ -1,5 +1,7 @@
 # Technical overview
 
+<iframe src="https://www.youtube.com/embed/DoOSBfOy6NY?si=ZziVXYUqaSyEVZn2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## The core tech
 
 In brief, the main technologies behind Apostrophe are:

@@ -10,7 +10,7 @@ extends: '@apostrophecms/piece-type'
 
 This module populates the `req.data.global` object with content or settings that are utilized site-wide. Like any core module, it comes with some built-in features, and we can add additional configuration by creating a `modules/@apostrophecms/global/index.js` file in our project. Our project-specific configuration will merge gracefully with the defaults that come with the module. New fields are added and grouped identically to any widget or pieces module. The data from these fields is available to templates as `data.global`.
 
-::: note
+::: info
 `@apostrophe/global` is a piece type that only ever has one piece.
 :::
 

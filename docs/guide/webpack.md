@@ -4,7 +4,7 @@ Apostrophe automatically provides a [webpack](https://webpack.js.org/)-powered b
 
 However, sometimes we want to extend the way webpack processes our frontend code, specifically in two ways:
 
-* By changing webpack's rules (the webpack configuration) via "extensions," or
+* By changing the webpack rules (the webpack configuration) via "extensions," or
 * By breaking up the bundle into two or more files, to be loaded only on pages that really require them ("extra bundles").
 
 This guide covers how to address both situations.
@@ -18,6 +18,7 @@ Why might you want to do this? perhaps you want to add a new loader for a specif
 It's possible to extend the webpack config from any module. To do so add a `webpack` property at module root, like so:
 
 <AposCodeBlock>
+
   ```javascript
     module.exports = {
       // ...
@@ -41,7 +42,7 @@ It's possible to extend the webpack config from any module. To do so add a `webp
 
 Note that `extensions` is an object with named sub-properties. Each one is separately merged with the webpack configuration.
 
-::: note
+::: info
 Everything inside `utilsAlias` in the above example is merged with the webpack configuration. It is not specific to Apostrophe. If you are not familiar with webpack configuration, see the [webpack configuration documentation](https://webpack.js.org/configuration/).
 :::
 
@@ -60,6 +61,7 @@ Imagine your project contains a module you cannot modify which extends webpack i
 Example:
 
 <AposCodeBlock>
+
   ```javascript
   {
     modules: {
@@ -75,6 +77,7 @@ Example:
 </AposCodeBlock>
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     webpack: {
@@ -96,6 +99,7 @@ Example:
 </AposCodeBlock>
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     webpack: {
@@ -129,6 +133,7 @@ For each webpack extension found in the project, it will look for all `extension
 Example:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     webpack: {
@@ -136,7 +141,7 @@ Example:
         // Extension can be a function and return the final config
         addAlias (options) {
           return {
-            mode: options.mode,
+            stats: options.stats,
             resolve: {
               alias: options.alias || {}
             }
@@ -163,6 +168,7 @@ Example:
 </AposCodeBlock>
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     webpack: {
@@ -185,6 +191,7 @@ Example:
 </AposCodeBlock>
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     webpack: {
@@ -192,7 +199,7 @@ Example:
         // It also can be a simple object if nothing has to be merged
         // We take care of merging first level properties
         addAlias: {
-          mode: 'production'
+          stats: 'normal'
         }
       }
     }
@@ -210,7 +217,7 @@ Following this example, the options object passed to the `addAlias` extension wi
     Special: path.join(process.cwd(), 'lib/different/'),
     New: path.join(process.cwd(), 'lib/new/')
   },
-  mode: 'production'
+  stats: 'normal'
 }
 ```
 
@@ -235,6 +242,7 @@ Extra bundles should **only be used if the user probably won't need them on most
 We can contribute code to a new, named bundle by adding a `bundles` sub-section to `webpack` in any module. In this case we'll look at a module that implements a widget type called `test`:
 
 <AposCodeBlock>
+
 ```javascript
   module.exports = {
     extend: '@apostrophecms/widget-type',
@@ -257,6 +265,7 @@ Because we did this in a module that extends `@apostrophecms/widget-type`, Apost
 Just like the main bundle, code for extra bundles lives in the `ui/src` subdirectory of your module. However rather than placing it in `ui/src/index.js` you will place it in `ui/src/bundlename.js`, where `bundlename` matches the name of your bundle. In the example above, it would be `ui/src/test.js`. That file might look like:
 
 <AposCodeBlock>
+
 ```javascript
 import { bigThing } from 'big-package';
 
@@ -276,7 +285,7 @@ export default () => {
 
 For completeness, we can also deliver stylesheets specific to this bundle in a `ui/src/test.scss` file. However it is usually more efficient to combine all styles in the main bundle.
 
-::: note
+::: info
 Just like `ui/src/index.js`, `ui/src/test.js` must export a function. The exported functions are called in the order the modules that contribute to that bundle are configured in the project.
 :::
 
@@ -285,6 +294,7 @@ Just like `ui/src/index.js`, `ui/src/test.js` must export a function. The export
 Let's say we have another bundle, `about-page`, and we want to load an extra bundle just on that particular page type. We can do it like this:
 
 <AposCodeBlock>
+
   ```javascript
     module.exports = {
       extend: '@apostrophecms/page-type',
@@ -309,6 +319,7 @@ Now let's say we have a piece page type, `product-page`. this module extends `@a
 We can accomplish that with the `templates` sub-property:
 
 <AposCodeBlock>
+
   ```javascript
     module.exports = {
       extend: '@apostrophecms/piece-page-type',
@@ -348,7 +359,7 @@ This option takes an object with module names, optionally combined with a `:` an
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     rebundleModules: {
@@ -374,7 +385,7 @@ If the module name is given, without specifying a bundle name, all of the JavaSc
 
 To avoid ambiguity, when using `rebundleModules` to move assets provided as part of the project-level configuration of an apostrophe module originally loaded from npm, such as code found in `modules/@apostrophecms/home-page/ui/src/index.js`, use the module name `@apostrophecms/my-home-page`. Without the `my-` prefix the code from the original npm module would be moved.
 
-::: note
+::: info
 Sending all of the module assets to one bundle and then designating an entry point in that same folder to go to a different bundle is considered invalid. Instead, each individual entry point should be rebundled to achieve this goal.
 :::
 
@@ -400,6 +411,6 @@ In development, this usually doesn't require any change. However some attention 
 
 If the `data` folder is ephemeral (if it is erased with each new deployment), the speed improvement of caching is lost. If containers are being used, one solution to this is to make `data` a persistent volume via Docker. However if another location is desired, the `APOS_ASSET_CACHE` environment variable can be set to control this.
 
-::: note
+::: info
 If the cache folder is not a persistent volume, nothing bad will happen. The asset build task will still succeed. Later deployments just won't be faster than the first one.
 :::

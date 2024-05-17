@@ -4,7 +4,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## area
 
-```json
+``` json
 // An area with a single rich text widget
 {
   "main": {
@@ -25,7 +25,7 @@ Simple examples of how each field type might be returned in a document from the 
 ```
 ## array
 
-```json
+``` json
 {
   "arrayField": [
     // Inner object properties and value types depend on the array's fields
@@ -47,7 +47,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## attachment
 
-```json
+``` json
 {
   "attachment": {
     "_id": "ckhdsopzr0005rt9kn49eyzb5",
@@ -87,7 +87,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## boolean
 
-```json
+``` json
 {
   "booleanField": true
 }
@@ -95,7 +95,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## checkboxes
 
-```json
+``` json
 {
   "checkFields" : [
     "med",
@@ -105,7 +105,7 @@ Simple examples of how each field type might be returned in a document from the 
 ```
 ## color
 
-```json
+``` json
 {
   "colorField": "#9013feff"
 }
@@ -113,7 +113,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## date
 
-```json
+``` json
 {
   "dateField": "2012-12-21"
 }
@@ -121,7 +121,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## email
 
-```json
+``` json
 {
   "emailField": "jon@bonjovi.rocks"
 }
@@ -129,7 +129,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## float
 
-```json
+``` json
 {
   "floatField": 8675.309
 }
@@ -137,7 +137,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## integer
 
-```json
+``` json
 {
   "integerField": 42
 }
@@ -145,7 +145,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## password
 
-```json
+``` json
 {
   "pwField": "don't use this for sensitive passwords"
 }
@@ -153,7 +153,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## range
 
-```json
+``` json
 {
   "rangeField": 21
 }
@@ -161,7 +161,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## relationship
 
-```json
+``` json
 {
   "_relation": [
     {
@@ -200,7 +200,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## select
 
-```json
+``` json
 {
   "selectField": "selected value"
 }
@@ -208,7 +208,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## slug
 
-```json
+``` json
 {
   "slugField": "slugified-string"
 }
@@ -216,7 +216,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## string
 
-```json
+``` json
 {
   "stringField": "String value"
 }
@@ -224,7 +224,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## time
 
-```json
+``` json
 {
   "timeField": "00:13:22"
 }
@@ -232,7 +232,7 @@ Simple examples of how each field type might be returned in a document from the 
 
 ## url
 
-```json
+``` json
 {
   "urlField": "http://apostrophecms.com"
 }

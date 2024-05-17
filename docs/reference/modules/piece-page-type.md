@@ -6,13 +6,34 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module cooperates with the 'piece-type' module to expose two specialized views. The [index page](https://v3.docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the  ['@apostrophecms/page'](/reference/modules/page.md) module.
+This module adds two specialized views to those exposed by the `page-type` module, which `piece-page-type` extends. The [index page](https://docs.apostrophecms.org/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://docs.apostrophecms.org/reference/glossary.html#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
 
-Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL, and to view individual pieces of the relevant type by adding the slug of any piece to the page's URL, like this: `/slug/of/page/slug-of-piece`
+Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL. Individual pieces of the relevant type can be viewed by adding the piece slug to the page's URL, like this: `/slug-of-index-page/slug-of-piece`.
 
-This default behavior can be customized as described below.
+It is possible to add more than one index page for a particular piece-type and add custom logic to decide which pieces should be associated with each. For example, you could have an `article` piece type with index pages for different topics, like sports, finance, and tech. This can be accomplished by overriding the [`filterByIndexPage()`](#filterbyindexpage-query-page) method to fetch the pieces you think most appropriate given the settings of each index page. Conversely, override [`chooseParentPage()`](#chooseparentpage-pages-piece) to associate the individual review show pages with the correct index.
 
-It is possible to add more than one such page to the site for the same type, and to add custom logic to decide which pieces should be associated with each such page.
+Any index page is searchable using the `search` query parameter. This parameter takes advantage of MongoDB indexes automatically created by the `@apostrophecms/doc` module. This query is limited to the piece data being delivered to the page, so any [`piecesFilters`](#piecesfilters) will limit the results that are returned.
+
+<AposCodeBlock>
+
+```nunjucks
+<form action="" method="GET">
+  <input type="text" name="search" placeholder="Search here..." value="{{ data.query.search | safe }}" />
+  <button type="submit">Search</button>
+  {% if data.query.search %}
+    <button type="button" onclick="window.location.href='{{ data.url | build({search: null}) }}'">Clear Search</button>
+  {% endif %}
+</form>
+```
+  <template v-slot:caption>
+    modules/article-page/views/index.html
+  </template>
+
+</AposCodeBlock>
+
+This example implements a search box that can be integrated into an `index.html` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `data.query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the Apostrophe-supplied Nunjucks [`build()` filter](https://docs.apostrophecms.org/guide/template-filters.html#build-url-path-data) to manipulate the query parameters.
+
+Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `_author` relationship schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.html` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
 
 ## Options
 
@@ -25,9 +46,9 @@ It is possible to add more than one such page to the site for the same type, and
 | [`previous`](#previous) | Boolean \|\| Object | If set to `true`, `data.previous` is the previous piece based on the sort. |
 
 ### `next`
-If this option is set to true, it exposes the next piece in the current [sort order](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#sort) as `req.data.next` (`data.next` in the template) when serving a [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the next item in a series (e.g., the next oldest blog post).
+If this option is set to true, it exposes the next piece in the current [sort order](https://docs.apostrophecms.org/reference/module-api/module-options.html#sort) as `req.data.next` (`data.next` in the template) when serving a [show page](https://docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the next item in a series (e.g., the next oldest blog post).
 
-This option can also be set to an object whose keys are [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
+This option can also be set to an object whose keys are [query builders](https://docs.apostrophecms.org/reference/query-builders.html#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
 
 <AposCodeBlock>
 
@@ -83,7 +104,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `piecesFilters`
-The `piecesFilters` takes an array of objects to assist in filtering on the index page. Each object must have a `name` property associated with a valid [query builder](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#queries-self-query).
+The `piecesFilters` takes an array of objects to assist in filtering on the index page. Each object must have a `name` property associated with a valid [query builder](https://docs.apostrophecms.org/reference/module-api/module-overview.html#queries-self-query).
 
 These include:
 * Custom query builders configured in an app that include a `launder` method
@@ -101,6 +122,7 @@ These include:
 
 When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
+A simplified schema for a 'book' `piece-type`:
 <AposCodeBlock>
 
 ```javascript
@@ -116,8 +138,8 @@ module.exports = {
         label: 'Author',
         type: 'relationship'
       },
-      category: {
-        label: 'Category',
+      genre: {
+        label: 'Genre',
         type: 'select',
         choices: [
           // category choices here
@@ -133,6 +155,7 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
+A partial schema, including a `piecesFilters` option, for the 'book-page' `piece-page-type`:
 <AposCodeBlock>
 
 ```javascript
@@ -140,13 +163,14 @@ module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
     piecesFilters: [
-      { name: '_author' },
+      { name: 'author' },
       {
-        name: 'category',
+        name: 'genre',
         counts: true
       }
     ]
   }
+  // ...
 };
 ```
   <template v-slot:caption>
@@ -154,43 +178,92 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
+An example of the `data.piecesFilters` object delivered to the 'book-page' `index.html` template:
 <AposCodeBlock>
 
 ```
 {
-  _author: [
+  author: [
     {
-      slug: 'gibson',
+      _id: 'cloqajh0v0007selseq2c2np6:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Gibson',
-      value: 'cl64zrra8000fgels5v1k8ums:en:draft'
+      value: 'gibson'
     },
     {
-      slug: 'herbert',
+      _id: 'cloqak2rl000jsels2a20anjt:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Herbert',
-      value: 'cl64zsgi1000vgels1xoi2b9o:en:draft'
+      value: 'herbert'
     },
     {
-      slug: 'le-guin',
+      _id: 'cloqajsju000dsels8o2e3dgb:en:published',
+      type: 'author',
+      metaType: 'doc',
       _edit: true,
       _publish: true,
       label: 'Le Guin',
-      value: 'cl64zs5h0000ngelsbhzvgdpc:en:draft'
+      value: 'le-guin'
     }
   ],
-  category: [
-    { value: 'cyberpunk', label: 'cyberpunk', count: 4 },
-    { value: 'dystopian', label: 'dystopian', count: 9 },
-    { value: 'fantasy', label: 'fantasy', count: 7 }
+  genre: [
+    { value: 'cyberpunk', label: 'Cyberpunk', count: 6 },
+    { value: 'dystopian', label: 'Dystopian', count: 3 },
+    { value: 'fantasy', label: 'Fantasy', count: 9 }
   ]
 }
 ```
 <template v-slot:caption>
 data.piecesFilters
 </template>
+
+</AposCodeBlock>
+
+Example usage of the `data.piecesFilter`:
+
+<AposCodeBlock>
+
+```nunjucks
+{% extends "layout.html" %}
+
+{%- macro here(url, changes) -%}
+  {{ url | build({
+    author: data.query.author,
+    genre: data.query.genre
+  }, changes) }}
+{%- endmacro -%}
+
+{% set authors = data.piecesFilters.author %}
+{% set genres = data.piecesFilters.genre %}
+
+{% block main%}
+<h3>Authors</h3>
+<ul>
+  {% for author in authors %}
+    <li><a style="{{ 'font-style: italic' if data.query.author == author.value }}" href="{{ here(data.url, {author: author.value}) }}">{{ author.label }}</a></li>
+  {% endfor %}
+</ul>
+<h3>Genres</h3>
+<ul>
+  {% for genre in genres %}
+    <li><a style="{{ 'font-style: italic' if data.query.genre == genre.value }}" href="{{ here(data.url, {genre: genre.value}) }}">{{ genre.label }} has {{ genre.count }} entries</a></li>
+  {% endfor %}
+</ul>
+{% for piece in data.pieces %}
+  <p><strong>{{ piece.title }}</strong> ({{ piece.genre }}) by {{ piece._author[0].name }} </p>
+{% endfor %}
+{% endblock %}
+```
+  <template v-slot:caption>
+    modules/book-page/views/index.html
+  </template>
+
 </AposCodeBlock>
 
 ### `pieceModuleName`
@@ -216,9 +289,9 @@ modules/fiction-page/index.js
 </AposCodeBlock>
 
 ### `previous`
-If this option is set to true, it exposes the previous piece in the current [sort order](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#localized) as `req.data.previous` (`data.previous` in the template) when serving a [show page](https://v3.docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the previous item in a series (e.g., the next newest blog post).
+If this option is set to true, it exposes the previous piece in the current [sort order](https://docs.apostrophecms.org/reference/module-api/module-options.html#localized) as `req.data.previous` (`data.previous` in the template) when serving a [show page](https://docs.apostrophecms.org/reference/glossary.html#general-terms). This can be used to provide a link to the previous item in a series (e.g., the next newest blog post).
 
-This option can also be set to an object whose keys are [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
+This option can also be set to an object whose keys are [query builders](https://docs.apostrophecms.org/reference/query-builders.html#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
 
 <AposCodeBlock>
 
@@ -256,17 +329,17 @@ module.exports = {
 
 ## Related Documentation
 
-* [Piece index and show pages](https://v3.docs.apostrophecms.org/guide/piece-pages.html)
-* [Piece page type options](https://v3.docs.apostrophecms.org/reference/module-api/module-options.html#options-for-piece-page-types)
+* [Piece index and show pages](https://docs.apostrophecms.org/guide/piece-pages.html)
+* [Piece page type options](https://docs.apostrophecms.org/reference/module-api/module-options.html#options-for-piece-page-types)
 
 ## Featured methods
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-page-type/index.js) for all the modules that belong to this module.
 
 ### `indexQuery(req)`
-This method should be overridden for a piece-type to call additional [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the index page.
+This method should be overridden for a piece-type to call additional [query builders](https://docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the index page.
 
 ### `showQuery(req)`
-This method should be overridden for a piece-type to call additional [query builders](https://v3.docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the show page.
+This method should be overridden for a piece-type to call additional [query builders](https://docs.apostrophecms.org/reference/query-builders.html#query-builders) when generating the show page.
 
 ### `async beforeIndex(req)`
 This method is called before `indexPage`. Within the core module it does nothing, so it can be easily overridden by supplying a new method in the `methods` section of the custom module. It is a convenient method for manipulating the `req` being supplied to that page.

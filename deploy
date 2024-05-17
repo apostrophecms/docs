@@ -19,5 +19,5 @@ else
   exit 1
 fi
 
-rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./ nodeapps@$ipAddress:/opt/static/a3-docs &&
+rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist nodeapps@$ipAddress:/opt/static/a3-docs &&
 echo "Synced up to $ENV"

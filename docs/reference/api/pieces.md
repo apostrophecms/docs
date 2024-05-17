@@ -8,7 +8,7 @@ Apostrophe provides built-in REST end points for all [piece types](/reference/gl
 
 ### REST endpoints
 
-[Authentication](/reference/api/authentication.md) is required for all requests other than `GET` requests for pieces with defined [`publicApiProjection`](/reference/module-options.md#publicapiprojection).
+[Authentication](/reference/api/authentication.md) is required for all requests other than `GET` requests for pieces with defined [`publicApiProjection`](/reference/module-api/module-options.md#publicapiprojection).
 
 | Method | Path | Description |
 |---------|---------|---------|
@@ -69,7 +69,7 @@ By default, `GET` requests return the published and default locale version of ea
 |`results` | Array | An array of individual piece objects. See the [getOne](#get-api-v1-piece-name-id) response for the document structure.|
 
 
-```json
+``` json
   {
     // Total number of pages of results (10 per page by default)
     "pages": 4,
@@ -105,7 +105,7 @@ In case of an error an appropriate HTTP status code is returned.
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
-::: note
+::: info
 Query parameters will override the locale and mode present in the `_id`. So, if the `aposLocale=es` parameter is supplied, a `GET` request to the `_id` `###:en:published` will return the Spanish, not English, locale.
 You can also elect to use the `aposDocId` instead of the `_id` and use the query parameters to pass in the locale and mode parameters found in the `_id`.
 :::
@@ -153,6 +153,18 @@ const document = await response.json();
 ### Response
 
 The successful `POST` request returns the newly created document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
+
+### Duplicating existing pieces
+
+The optional `_copyingId` property may be added to the **body** of the
+request, e.g. included in the `data` object passed to `JSON.stringify`
+above. If this property contains the `_id` of an existing piece of the
+same type, the properties of that piece will be applied first as
+defaults, and then overridden by any properties present in the body.
+
+In addition, this value becomes the `copyOfId` property of the new piece.
+[`beforeInsert` handlers](/reference/server-events.md#beforeinsert) of individual piece types can access this property
+to duplicate additional application-specific resources as needed.
 
 ## `PUT /api/v1/:piece-name/:_id`
 
@@ -324,7 +336,7 @@ The successful `POST` request returns the newly published piece. See the [piece 
 
 ### Example
 
-```json
+``` json
 {
   "_id": "ckitdo5oq004pu69kr6oxo6fr",
   "archive": false,

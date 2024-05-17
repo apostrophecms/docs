@@ -7,7 +7,7 @@
 
 Since Apostrophe features in-context editing, the main content area that editors manage **frequently refreshes following changes**. That is necessary to make sure editors are working with the most accurate state of the page. It also means that we need to reapply any event listeners we attach to that part of the DOM after it refreshes.
 
-::: note
+::: info
 **What section are we talking about?** If you inspect an Apostrophe page's markup you will see a `div` tag with the `data-apos-refreshable` data attribute. That's the short answer. Anything inside that `div` will refresh following in-context changes, editor modal submissions, and other data changes. There is not much outside of this section: mostly Apostrophe UI, the `head` tag, and generated `script` tags. So any event listeners (or other DOM interactions) on the `body` tag or in the `head` probably only need to be done once. Any others need to be reapplied.
 :::
 

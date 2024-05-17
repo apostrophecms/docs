@@ -14,6 +14,7 @@ We can add additional custom batch operations using [the provided module API](/r
 Batch operations are a ["cascading" configuration](/reference/module-api/module-overview.md#cascading-settings), so they use `add` and, optionally, `group` sub-properties to inherit existing batch operations properly. Here is an example of what the "Reset" batch operation configuration might look like. We'll then walk through each piece of this.
 
 <AposCodeBlock>
+
   ```javascript
   module.export = {
     batchOperations: {
@@ -100,6 +101,7 @@ Right now if we clicked that new button and confirmed to continue nothing would 
 Batch operation route handlers will usually have a few steps in common, so we can look at those elements in the example below.
 
 <AposCodeBlock>
+
   ```javascript
   module.export = {
     // `batchOperations` and other module settings...

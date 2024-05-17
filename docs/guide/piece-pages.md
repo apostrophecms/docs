@@ -117,7 +117,7 @@ You've reviewed the [page type guide](/guide/pages.md), right? The sections belo
 
 Index page templates look very similar to other page templates.
 
-```django
+``` nunjucks
 {# modules/article-page/views/index.html #}
 
 {% extends "layout.html" %}
@@ -146,7 +146,7 @@ Index page templates look very similar to other page templates.
 
 The first new thing here is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
 
-```django
+``` nunjucks
 {% for article in data.pieces %}
   <article>
     <h2>
@@ -169,7 +169,7 @@ The `data` object properties unique to index pages are:
 
 ### Pagination
 
-```django
+``` nunjucks
 {% import '@apostrophecms/pager:macros.html' as pager with context %}
 
 {{ pager.render({
@@ -231,7 +231,7 @@ module.exports = {
 }
 ```
 
-```django
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
 
@@ -264,7 +264,7 @@ Consider an article "How to write JavaScript." Apostrophe would generate the slu
 
 The structure of index and show page URLs is one of the most clear ways to understand how show pages depend on index pages. Even if this does not seem terribly complex, it is important to understand that relationship.
 
-::: note
+::: info
 You may create multiple index pages of a particular type. If you do, the related piece show pages can be accessed at URLs based on any of the index pages. For example, if you create one articles index page with the slug `/articles` and another with `/news`, both of these URLs will go to the same article:
 
 - `https://example.rocks/articles/how-to-write-javascript`

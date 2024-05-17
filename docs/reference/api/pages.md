@@ -21,7 +21,7 @@ All [page types](/reference/glossary.md#page) use a single set of API endpoints,
 ### Additional page endpoints
 
 | Method | Path | Description |
-|---------|---------|---------|---------|
+|---------|---------|---------|
 |`GET` | [`/:_url?aposRefresh=1`](#get-url-aposrefresh-1) | Get a page's rendered content |
 |`POST` | [`/api/v1/@apostrophecms/page/:_id/publish`](#post-api-v1-apostrophecms-page-id-publish) | Publish the draft version of a page |
 
@@ -60,7 +60,7 @@ const document = await response.json();
 
 Pages' relationship to one another is a critical feature. For that reason, by default the `GET` request for multiple pages returns the home page as a JSON object, including a `_children` array property. That array contains the "top level" pages.
 
-```json
+``` json
 {
     "_id": "ckhdscx5900054z9k88uqs16w",
     "orphan": false,
@@ -110,7 +110,7 @@ Pages' relationship to one another is a critical feature. For that reason, by de
 
 Individual page objects will include `_children` and `_ancestor` arrays, as well as the `rank` and `level` properties to indicate position in the page tree.
 
-```json
+``` json
 {
   "results": [
     {
@@ -215,7 +215,7 @@ Individual page objects will include `_children` and `_ancestor` arrays, as well
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
-::: note
+::: info
 Query parameters will override the locale and mode present in the `_id`. So, if the `aposLocale=es` parameter is supplied, a `GET` request to the `_id` `###:en:published` will return the Spanish, not English, locale.
 You can also elect to use the `aposDocId` instead of the `_id` and use the query parameters to pass in the locale and mode parameters found in the `_id`.
 :::
@@ -276,6 +276,19 @@ const document = await response.json();
 ### Response
 
 The successful `POST` request returns the newly created document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
+
+### Duplicating existing pages
+
+The optional `_copyingId` property may be added to the **body** of the
+request, e.g. included in the `data` object shown above.
+If this property contains the `_id` of an existing page,
+the properties of that page will be applied first as
+defaults, and then overridden by any properties present in the body.
+
+In addition, this value becomes the `copyOfId` property of the new page.
+[`beforeInsert` handlers](/reference/server-events.md#beforeinsert)
+at the application level can access this property
+to duplicate additional application-specific resources as needed.
 
 ## `PUT /api/v1/@apostrophecms/page/:_id`
 
@@ -363,7 +376,7 @@ const document = await response.json();
 
 The `PATCH` request body may use MongoDB-style operators. For example, you may use dot or "at" notation to update a nested property:
 
-```json
+``` json
 {
   // Via "dot notation"
   "description.items.0.content": "<p>Update only the rich text.</p>",
@@ -521,7 +534,7 @@ The successful `POST` request returns the newly published document. See the [pag
 
 ### Example
 
-```json
+``` json
 {
     "_id": "ckhurshqd00088v9k6pfnqpjz",
     "visibility": "public",

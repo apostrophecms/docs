@@ -5,14 +5,15 @@
 The Nunjucks templating language comes with several [built-in filters](https://mozilla.github.io/nunjucks/templating.html#filters). These filters apply functions to template data before outputting content to the page. They are called with a pipe operator `|` and can take arguments.
 
 <AposCodeBlock>
-```django
+
+``` nunjucks
 <h1>{{ data.page.headline | replace("foo", "bar" ) | upper }}</h1>
 ```
 </AposCodeBlock>
 
 In this example, a hypothetical page headline will be retrieved from the page data and then piped to the 'replace' filter, along with two arguments. This filter will scan the incoming data and replace any instances of ‘foo’ with 'bar'. The output of this filter will then pass the result to the upper function, which will return the input as an uppercase string before being output to the page.
 
-::: note
+::: info
 
 The order of filters can be significant, as they are applied sequentially to the input data.
 
@@ -29,6 +30,7 @@ If you have special template needs you can also construct custom filters for use
 By way of example, we'll create a link where the URL is included as part of the label, but without the protocol.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   extend: '@apostrophecms/widget-type',
@@ -81,7 +83,8 @@ In `init()`, we pass our function to the template module using `self.apos.templa
 To use this new filter you would simply pipe your data to the filter from within the template.
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
   <section data-link-widget>
     <a href="{{ data.widget.url }}">{{ data.widget.label }}: {{ data.widget.url | stripHttp }}</a>
   </section>

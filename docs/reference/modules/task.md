@@ -59,7 +59,7 @@ await self.apos.task.invoke('product:generate', { total: 20 })
 
 The `args` and `options` arguments may be completely omitted, though individual tasks should indicate whether arguments are required when they are run.
 
-::: note
+::: info
 It is better to call a module's method *directly* rather than invoking a task when possible. This method is for cases where that option is not readily available.
 
 During the execution of the task, `self.apos.argv` will have a new, temporary value to accommodate tasks that inspect this property directly rather than examining their `argv` argument. `self.apos.argv` will be restored at the end of task execution.

@@ -42,7 +42,7 @@ Each property takes a string value, indicating the name of the new bundle for th
 
 <AposCodeBlock>
 
-```js
+``` js
 module.exports = {
   options: {
     rebundleModules: {
@@ -76,7 +76,7 @@ Assets within the `ui/apos` folder modify the admin UI. Code to be passed to the
 
 During the build process, code located in the `ui/apos` subdirectory of any module is automatically detected and incorporated. Assets in the `components` folder are registered automatically by name as Vue components and do not need to be imported.
 
-Unlike assets in the `ui/src` folder where only the `index.js` file is an entry point, all files in the `ui/apos/apps` folder are entry points. If this behavior is undesirable any files that should not be entry points can be placed into a sub-directory and imported into the main entry point file. See the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/login) for an example, including import of the Vue library within the [`AposLogin.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js). Customizing the admin UI is covered in-depth in the [guide documentation](https://v3.docs.apostrophecms.org/guide/custom-ui.html#customizing-the-user-interface).
+Unlike assets in the `ui/src` folder where only the `index.js` file is an entry point, all files in the `ui/apos/apps` folder are entry points. If this behavior is undesirable any files that should not be entry points can be placed into a sub-directory and imported into the main entry point file. See the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/login) for an example, including import of the Vue library within the [`AposLogin.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js). Customizing the admin UI is covered in-depth in the [guide documentation](https://docs.apostrophecms.org/guide/custom-ui.html#customizing-the-user-interface).
 
 Every file in the tiptap-extensions folder must be a [tiptap](https://tiptap.dev/) WYSIWYG rich text editor [extension](https://tiptap.dev/extensions), written in that format. Every such extension will be loaded and made available for potential activation by the developer in the rich text widget's editing toolbar.
 

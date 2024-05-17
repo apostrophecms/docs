@@ -67,7 +67,7 @@ Each page type requires a template. The only exception to that rule is if a page
 Page templates are added in a `views` directory for the page type as `page.html`. The template for the previous example's default page would be `modules/default-page/views/page.html`. A very simple page template for the Default page might look like this:
 <!-- TODO: Consider adding a file tree component when available. -->
 
-```django
+``` nunjucks
 {# modules/default-page/views/page.html #}
 {% extends "layout.html" %}
 
@@ -86,7 +86,7 @@ There are a number of things at work here.
 
 ### The template is extending a `layout.html` template
 
-```django
+``` nunjucks
 {% extends "layout.html" %}
 ```
 
@@ -94,7 +94,7 @@ There are a number of things at work here.
 
 The layout template might look something like this:
 
-```django
+``` nunjucks
 {% extends data.outerLayout %}
 
 {% block beforeMain %}
@@ -120,7 +120,7 @@ The layout template might look something like this:
 
 ### We are inserting page template markup in a template block
 
-```django
+``` nunjucks
 {% block main %}
 {% endblock %}
 ```
@@ -129,7 +129,7 @@ Apostrophe uses the Nunjucks template language, which has a [block system](https
 
 ### Page data is on `data.page`
 
-```django
+``` nunjucks
 {{ data.page.title }}
 ```
 
@@ -137,7 +137,7 @@ Templates have access to a `data` object containing information about the Apostr
 
 Naming specific properties in the double brackets syntax, `{{}}`, prints them in the template.
 
-```django
+``` nunjucks
 {% if data.page.subtitle %}
   <p>{{ data.page.subtitle }}</p>
 {% endif %}
@@ -148,14 +148,14 @@ Nunjucks offers additional tags, including the [`{% if %}` conditional tag](http
 ::: tip
 If you want to know what is available in a template object, you can log it in your terminal using the template method `apos.log()`. This looks like:
 
-```django
+``` nunjucks
 {{ apos.log(data.page) }}
 ```
 :::
 
 ### The widget area is added using the `area` tag
 
-```django
+``` nunjucks
 {% area data.page, 'main' %}
 ```
 
@@ -222,7 +222,7 @@ By default, one level of children are available on each ancestor, as well as on 
 
 With that available data, we could construct navigation for the website header using the Nunjucks `{% for %}` loop tag. The `layout.html` `beforeMain` block could look like:
 
-```django
+``` nunjucks
 {# views/layout.html #}
 {% block beforeMain %}
 <div>

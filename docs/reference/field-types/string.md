@@ -33,16 +33,19 @@ biography: {
 
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
+|[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
 |[`following`](#following) | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.|
 |`help` | String | n/a | Help text for the content editor |
+|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
-|`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
-|`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`pattern` | String | n/a | Accepts a regular expression string to validate the input. Only values matching the pattern are allowed. |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
+|`required` | Boolean | `false` | If `true`, the field is mandatory |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`sortify` |	Boolean |	`false` |	If true, creates "sortified" fields. See below. |
 |`textarea` | Boolean | `false` | If `true`, use a textarea interface with multiple lines, which allows line breaks |
 
@@ -51,6 +54,9 @@ biography: {
 <!-- |pattern | String | | Regular expression to validate entries |
 |patternErrorMessage | String | | Error message to display if `pattern` does not match | -->
 <!-- |searchable | Boolean | true | If false, content from the area will not appear in search results. | -->
+
+### autocomplete
+The string supplied to the `autocomplete` option is used as the value of the `autocomplete` attribute for the field, as specified in the HTML standards. This feature suggests possible values based on user inputs and previously entered data, streamlining data entry and improving form usability. This also takes a string of `off` to disable autocomplete for sensitive fields. For detailed information on how the `autocomplete` attribute works and the values it accepts, refer to the [MDN documentation on autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete).
 
 ### following
 This option should be set to the name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.
@@ -78,7 +84,7 @@ Migrations like this only need to be run once because on future updates or inser
 
 The Nunjucks [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) tag can help print textarea strings with line breaks.
 
-```django
+```nunjucks
 <h2>{{ data.piece.dogName }}</h2>
 <p>
   {{ data.piece.biography | striptags(true) | escape | nl2br }}

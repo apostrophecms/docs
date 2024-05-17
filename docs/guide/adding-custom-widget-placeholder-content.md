@@ -37,7 +37,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-::: note
+::: info
 You can bypass the call to `determineBestAsetUrl()` for your images or videos stored in the `public` folder and instead pass the path to the asset using `placeholderUrl` in place of `placeholderImage`. This is discouraged because errors can be made in this path. It is better to let Apostrophe figure this out for you.
 :::
 
@@ -53,7 +53,7 @@ This example demonstrates adding an image.
 
 <AposCodeBlock>
 
-```twig
+``` nunjucks
 <section data-custom-widget>
   <h1>Custom Widget</h1>
   {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
@@ -77,7 +77,7 @@ This example demonstrates adding a self-hosted video.
 
 <AposCodeBlock>
 
-```twig
+``` nunjucks
 <section data-custom-widget>
   <!-- For videos uploaded to the `public` folder -->
   {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}

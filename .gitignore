@@ -1,7 +1,4 @@
-# ignore vim swapfiles
-*.swp
-*.DS_Store
-dist
-npm-debug.log
 node_modules
-.vscode
+.DS_Store
+docs/.vitepress/cache
+docs/.vitepress/dist

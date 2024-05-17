@@ -1,3 +1,8 @@
+---
+next:
+  text: 'Localization - Overview'
+  link: 'guide/localization/overview.md'
+---
 # Global settings
 
 Editable content or settings used across your app can be managed through the **global doc**. You can use this for many things, including configuring:
@@ -34,7 +39,7 @@ Once the global doc is configured with fields, it will be added to the admin bar
 
 **Templates always have direct access to the global doc as `data.global`.** The Github URL field could be used in a template as a property of that doc:
 
-```django
+``` nunjucks
 {% extends data.outerLayout %}
 
 {% block afterMain %}

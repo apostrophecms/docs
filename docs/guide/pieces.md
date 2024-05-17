@@ -21,14 +21,14 @@ apos add piece product
 ```
 :::
 
-```js
+``` js
 // modules/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
 };
 ```
 
-```js
+``` js
 // app.js
 require('apostrophe')({
   shortName: 'my-store',
@@ -38,9 +38,9 @@ require('apostrophe')({
 });
 ```
 
-A more realistic product piece might also include [fields](/reference/field-types/) for the product price, description, and photo, as well as explicit labels for the UI.
+A more realistic product piece might also include [fields](/reference/field-types/index.md) for the product price, description, and photo, as well as explicit labels for the UI.
 
-```js
+``` js
 // modules/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',

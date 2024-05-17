@@ -10,11 +10,12 @@ Regardless of the reason or the layers involved there are some common concepts t
 
 ## Accessing data using the REST APIs
 
-Before going further, keep in mind that there is an [API route reference section](/reference/api/) that will include much of the following information in a more direct format. One section there that will not be fully covered in this guide will be the [authentication APIs](/reference/api/authentication.md). There are a few options for authentication discussed there.
+Before going further, keep in mind that there is an [API route reference section](/reference/api/README) that will include much of the following information in a more direct format. One section there that will not be fully covered in this guide will be the [authentication APIs](/reference/api/authentication.md). There are a few options for authentication discussed there.
 
 One of the more common use cases for a headless CMS is to simply get data from the CMS for a public website built with React, Vue.js or some other framework. Since the certain data is publicly available in the front-end application, we can simply make that data publicly available directly through the REST API using [a `publicApiProjection` option](/reference/api/authentication.md#allowing-public-access) on the doc type. This will only apply to `GET` requests.
 
 <AposCodeBlock>
+
 ```javascript
 module.exports = {
   // ...
@@ -104,7 +105,7 @@ The module name used for these requests is always `@apostrophecms/page`, the mod
 
 The response for page "get all" requests work differently by default. This is because it reflects that pages have a hierarchical structure. The home page is the "parent" of the top-level pages, which then have additional "child" pages, and so on. As such, the response to a "get all" route as written above looks something like this:
 
-```json
+``` json
 {
     "_id": "ckhdscx5900054z9k88uqs16w",
     "title": "Home Page",
@@ -180,6 +181,6 @@ As official platform-specific plugins are made available they will be added here
 
 [Gatsby](https://gatsbyjs.com/) is a very popular static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
 
-::: note
+::: info
 Direct GraphQL support is on the product roadmap for Apostrophe. If you are interested in that feature, [please indicate that on the product roadmap card](https://portal.productboard.com/apostrophecms/1-product-roadmap/c/44-graphql-api) so we can properly prioritize it.
 :::

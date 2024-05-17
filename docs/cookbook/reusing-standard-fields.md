@@ -1,8 +1,12 @@
+---
+prev: false
+next: false
+---
 # Composing custom schema fields from standard fields
 
-![A composite screenshot of the two custom schema fields being built in this recipe.](../.vuepress/public/images/recipes/composite-schema.png)
+![A composite screenshot of the two custom schema fields being built in this recipe.](../images/recipes/composite-schema.png)
 ## Introduction
-Apostrophe comes with a large number of [schema field types](/reference/field-types/). If these field types aren't sufficient for your project, Apostrophe makes adding a new custom schema field relatively easy and you can read more about it in the [documentation](/guide/custom-schema-field-types.html). However, many times when we need a custom field type, it is simply a combination of existing field types working together for a new outcome. Luckily, Apostrophe was designed to allow you to reuse existing field types to create new fields with a custom look.
+Apostrophe comes with a large number of [schema field types](/reference/field-types/index.md). If these field types aren't sufficient for your project, Apostrophe makes adding a new custom schema field relatively easy and you can read more about it in the [documentation](/guide/custom-schema-field-types.html). However, many times when we need a custom field type, it is simply a combination of existing field types working together for a new outcome. Luckily, Apostrophe was designed to allow you to reuse existing field types to create new fields with a custom look.
 
 In this recipe, we are going to build two different customized schema fields. The first will be a simple set of `integer` fields to collect grade information. The second will be a gradient background creator with `integer` and `color` fields, within an `array`. Overall, the steps to building both will be almost identical. However, we are going to build the grade field as part of a piece and the gradient as a stand-alone module. This will demonstrate the changes you need to make when building your custom schema field in a module that doesn't extend another core module and changes that need to be made to `object` and `array` schema input fields when you use them this way.
 
@@ -15,7 +19,7 @@ The server-side code handles registering the schema field type, plus sanitizing 
 The browser-side code provides the admin UI and is where we will take advantage of the built-in fields to lighten the programming load. Apostrophe has two Vue components and a mixin file to assist with schema creation. The first component is the `AposInputWrapper`. This component helps with field validation and appearance. The other is the `AposSchema` component. This Vue component parses through a supplied schema of fields and implements the v-model that allows two-way data binding between a value in our template and a value in our data properties. Apostrophe provides the `AposInputMixin` mixin to facilitate passing props, display modifications, and event listeners.
 
 ## Building the custom grade field type
-![Bo Donkey's grades recorded in the new custom field](../.vuepress/public/images/recipes/student-grades-field.png)
+![Bo Donkey's grades recorded in the new custom field](../images/recipes/student-grades-field.png)
 This custom field makes it easier for our CMS user, a teacher, to enter the grades for a student. Each set of grades is stored as a piece with the student's name as the `Title` field. Our custom schema makes it easy for the teacher to keep the mid-term and final grades organized for each class. In addition, the field will calculate the letter grade based on the student's scores. Obviously, this example is overly simplistic. We could just as easily have added a `string` and two `integer` fields into an `array` field to achieve almost the same thing, but that poor teacher would have had to average the grades and convert it to a letter themselves!
 
 ### Implementing the server-side code
@@ -555,7 +559,7 @@ The remainder of this file is styling and will be highly variable between custom
 
 ## Building the custom color gradient field type
 
-![Screenshot of the custom color gradient picker schema field in the editor](../.vuepress/public/images/recipes/custom-schema-color-gradient.png)
+![Screenshot of the custom color gradient picker schema field in the editor](../images/recipes/custom-schema-color-gradient.png)
 This custom schema field lets the editor create linear color gradients using any number of colors by taking advantage of an inline array schema field. The output from this could be used for the background of a hero or text with a gradient of color.
 
 Just like with our first example, we need to create server-side code to handle registering the schema field type, plus sanitizing and storing the data in the database. We also need to create the browser-side Vue component to display our fields to the editor.

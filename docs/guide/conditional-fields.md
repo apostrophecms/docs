@@ -1,13 +1,18 @@
 ---
-permalink: '/guide/conditional-fields'
+prev:
+  text: 'Content fields'
+  link: 'guide/content-schema.md'
+next:
+  text: 'Connecting content with relationships'
+  link: 'guide/relationships.md'
 ---
 
-# Conditional fields
+# Displaying conditional fields
 
-When defining a field schema, you may make fields conditional on other field values using the `if` setting. Until the `if` setting conditions are met, the field will be hidden. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass.
+When defining a field schema, fields can be made conditional based on the values of other fields using the `if` setting. These conditional fields remain hidden until the specified `if` conditions are satisfied. Simple conditions are passed as an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass. When matching values from a `checkboxes` field, the condition is considered met if *any* of the checkbox values selected by the user match any of the values specified in the `if` condition. This can allow for the conditional display of many fields.
 
-::: note
-Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans.
+::: info
+Because strict equivalence is required for conditions, fields used in conditions must have values that are strings, numbers, or booleans. This can include simple `string`, `boolean`, or `integer` fields, but also `checkboxes`, `select`, or even `date` or `time` since they are returned as strings.
 :::
 
 In the following case, if the `seenMovie` field is set to `true`, the rating field will be displayed.
@@ -32,6 +37,9 @@ add: {
   }
 }
 ```
+## Nested Conditional Fields
+
+You can also create a hierarchy of conditional fields where child field visibility depends on a parent field. While the display of this parent field, in turn, is influenced by the value of another field in the schema. The child fields will remain hidden until both the parent field conditional display criteria is satisfied and the value of the parent field fulfills the child field conditional.
 
 ## Complex conditions
 
@@ -39,7 +47,7 @@ In addition to simple field names, the conditional object can take the name of a
 
 This conditional method can either be defined in the `methods` section of the same module as the conditional field, or another module by prefixing the method with the name of defining module followed by a colon. In either case, the method name must have parentheses appended to the end.
 
-::: note
+::: info
 The property here is a string, not the actual method, so you can't pass arguments back to the method within the parentheses.
 :::
 
@@ -99,7 +107,7 @@ modules/article/index.js
 
 ## Multiple required conditions
 
-**The `if` setting may contain more than one condition.** When there is more than one, all conditions must be met before the field will be active. These conditions can be a mix of comparisions to other schema fields within the same modal, and calls to a method.
+**The `if` setting may contain more than one condition.** When there is more than one, all conditions must be met before the field will be active. These conditions can be a mix of comparisons to other schema fields within the same modal, and calls to a method.
 
 In the next example, `seenMovie` must be `true` *and* `votingOpen()` must be `true` for the rating field to appear.
 
@@ -123,6 +131,13 @@ add: {
   }
 }
 ```
+## Conditional field requirement
+
+In addition to conditionally displaying a field, you can also conditionally mark a field as `required: true` based on the value of another field using the `requiredIf` setting. Like `if`, this property takes an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass.
+
+Also like the `if` setting, the `requiredIf` can take complex conditionals with a mix of comparisons to other schema fields within the same modal, and calls to a method. All conditions must be met before the field will be active.
+
+You can have both an `if` and `requiredIf` with different conditions on the same field. If the conditions for the `if` are not met, the `requiredIf` will be ignored.
 
 ## Special conditional operators
 
@@ -187,5 +202,6 @@ add: {
   }
 }
 ```
+The exact same structure can be used to regulate whether a field is required, substituting `requiredIf` in place of `if` in the code above.
 
 Additional conditional options will be added in the future.

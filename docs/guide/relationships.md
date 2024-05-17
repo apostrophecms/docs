@@ -2,7 +2,7 @@
 
 Creating and displaying content is great, but the power of a CMS really shines when you start connecting pieces of content to one another. In Apostrophe we do that with **relationship fields**.
 
-::: note
+::: info
 If you have experience with Apostrophe 2, this may already sound familiar. It is an updated version of the A2 "join" field types.
 :::
 
@@ -12,7 +12,7 @@ There are many use cases for relationships, but one common use is categorization
 
 We will start with a basic blog article piece type with only an area field for the article text.
 
-```js
+``` js
 // modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -39,7 +39,7 @@ module.exports = {
 };
 ```
 
-```django
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% extends "layout.html" %}
 
@@ -51,13 +51,13 @@ module.exports = {
 {% endblock %}
 ```
 
-::: note
+::: info
 Refer to the [pieces guide](/guide/pieces.md) for more information on adding piece types.
 :::
 
 Then we can add a "Topics" piece type. Since it is only used for categorization, it doesn't need any special fields.
 
-```js
+``` js
 // modules/topic/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type'
@@ -70,7 +70,7 @@ Relationships establish **directional connections**. That means that the connect
 
 The article piece type's relationship field would look like:
 
-```js
+``` js
 // modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -105,7 +105,7 @@ Like with all fields, we identify the field type, `type: 'relationship'`, and gi
 | **`withType`** | This identifies the Apostrophe doc type that can connect on the field. If connecting to pages, use `@apostrophecms/any-page-type`. |
 | **`builders`** | Field query builders, specifically using the `project` filter. This limits the data that is fetched from the connected doc. It is optional, but recommended for improved performance. [See the relationship field reference for detail.](/reference/field-types/relationship.md#filtering-related-document-properties) |
 
-::: note
+::: info
 **Why does the field name start with an underscore?** You may have noticed that the field name is `_topics`, *not* simply `topics`. Field names that begin with an underscore indicate that a *reference* will be saved to the database document instead of the actual data being referenced.
 
 In the case of a relationship field, the `_id` of the connected doc is saved. Since that connected doc may change, the actual data will be fetched when the relationship is used so it is always up to date.
@@ -168,7 +168,7 @@ Relationship fields can be referenced in templates like any other field as a pro
 
 A blog article show page template may include this code snippet:
 
-```django
+``` nunjucks
 {# modules/article-page/views/show.html #}
 <p>Topics:</p>
 <ul>
@@ -180,7 +180,7 @@ A blog article show page template may include this code snippet:
 
 Since the data is fetched in an array, we use the `{% for %}` tag to loop it. **If there is a maximum of one connected doc**, you could reference it directly using the array index:
 
-```django
+``` nunjucks
 {# modules/article-page/views/show.html #}
 {% if data.piece._topics.length > 0 %}
   <p>Topic: {{ data.piece._topics[0] }}</p>
@@ -221,7 +221,7 @@ This field is identifying the connected doc type with the `withType` setting, th
 
 With this field in place, you could display connected articles in a topics show page the same way you displayed article topics above.
 
-```django
+``` nunjucks
 {# modules/topic-page/views/show.html #}
 <p>Articles:</p>
 <ul>
@@ -240,7 +240,7 @@ For example, we might be working on a website that displays teams within a compa
 
 If people have *unique job titles within different teams* we could store the job title directly on the relationship itself. Someone might be a "Support engineer" on the Support Team and a "QA engineer" within the Product Team. To do this, we add a standard field schema to the relationship field.
 
-```js
+``` js
 // modules/team/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -289,3 +289,18 @@ Once this is added, editors can select an "Edit Relationship" option from the co
 ![The relationship field now with a menu button and "edit relationship" option](/images/relationship-fields.png)
 
 ![The editor interface for the relationship's "team role" field](/images/relationship-editor.png)
+
+### Accessing the fields of a relationship
+
+Once a relationship with fields has been populated, we can access it, for instance from a template, using the `_fields` property of each related document:
+
+```nunjucks
+<h3>Members of Team {{ data.piece.title }}</h3>
+<ul>
+{% for person in data.piece._people %}
+  <li><a href="{{ person._url }}">{{ person.title }} ({{ person._fields.teamRole }})</a></li>
+{% endfor %}
+```
+
+Notice that within each element of the `data.piece._people` array, we can access `person._fields.teamRole`.
+This information is not about the person or the team in general — it is specific to the relationship between the two.

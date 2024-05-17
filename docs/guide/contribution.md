@@ -18,7 +18,7 @@ If you're new to Apostrophe, this would be the biggest help of all. Does the doc
 
 ### Suggest new guides, tutorials, and code recipes
 
-As the Apostrophe 3 documentation fills out the core team will be adding sections with short tutorials and "recipes" to accomplish common tasks that are more specific than the feature guides. These will include things like creating widgets that list pieces and configuring services to send emails from the app. [Let us know what you would like to see](https://github.com/apostrophecms/a3-docs/issues).
+As the ApostropheCMS documentation fills out the core team will be adding sections with short tutorials to accomplish common tasks that are more specific than the feature guides. These will include things like creating widgets that list pieces and configuring services to send emails from the app. [Let us know what you would like to see](https://github.com/apostrophecms/a3-docs/issues).
 
 The core team will get to as many as possible. Some may be better as blog posts or videos, but regardless your ideas will help guide the topics and priorities for documentation.
 
@@ -30,7 +30,7 @@ For now, the Apostrophe documentation is only in English. Beginning translation 
 
 This writing guide is meant to help maintain consistency in style and structure in the docs. If you are drafting a section of documentation please review this to help make review easier for everyone.
 
-::: note
+::: info
 Some grammar style notes here apply primarily to American English, but can be applied to other languages as well depending on the case.
 :::
 
@@ -77,7 +77,7 @@ When adding code blocks that represent parts of a file, include the location of 
 
 Nunjucks template example:
 
-```django
+``` nunjucks
 {# views/layout.html #}
 ```
 

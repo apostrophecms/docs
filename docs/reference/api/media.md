@@ -66,7 +66,7 @@ The successful `POST` request returns the newly created attachment. In case of a
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the attachment's last update date and time|
 |`width` | Number | Width of the image file, if an image |
 
-```json
+``` json
 // This is a PNG upload with filename `blue-box.png`
 {
   "_id": "ckj0akbxa003vp39kfbxgb8zg",

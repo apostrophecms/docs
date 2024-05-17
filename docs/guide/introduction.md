@@ -1,3 +1,8 @@
+---
+next:
+  text: 'Technical Overview'
+  link: 'guide/technical-overview.md'
+---
 # What is ApostropheCMS?
 
 ApostropheCMS is a modern, open source, content management system. It's JavaScript from front to back, with a Vue.js user interface and Node.js on the server. Importantly, it has everything you might want from a modern CMS, including:

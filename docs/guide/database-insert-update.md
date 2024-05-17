@@ -2,7 +2,7 @@
 
 Apostrophe provides module methods for inserting and updating content documents in the database. These methods should be the primary tools for developers doing server-side data operations since they [emit events](/guide/server-events.md) that the CMS uses to keep all database collections updated and in sync. We will look at methods for both pieces and pages, which are similar but have some important differences.
 
-::: note
+::: info
 Remember that the Apostrophe REST APIs for [pieces](/reference/api/pieces.md) and [pages](/reference/api/pages.md) are usually the best option when triggering content updates from the browser. Those API endpoints take advantage of the methods below while adding logic important to use in browsers.
 :::
 
@@ -19,6 +19,7 @@ When we have an existing piece document that to update, we use the `update()` me
 For example, if we had a dog adoption website that used an external API, we may want to update `dog` pieces periodically with adoption status. This may be using a command line task that is run regularly by a cron job.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     extend: '@apostrophecms/piece-type',
@@ -87,7 +88,7 @@ We update the document property that tracks the dog's adoption status on the dat
 
 Note that using the provided `req` object like this works only if the `req` object is from a user with *at least* "contributor" permissions for the `dog` piece type. **If we wanted to bypass that permission check**, or if we ever wanted to allow anonymous site visitors to insert or update content, we would pass `{ permissions: false }` as a third options argument to `self.update()`. That obviously raises security issues we would need to consider carefully.
 
-::: note
+::: info
 All content documents have multiple versions, including "draft" and "published" versions. The `update()` methods only updates the "draft" copy, allowing editors to still review before publishing. If we *did* want to publish here as well, we would want to run the publishing method:
 
 ```javascript
@@ -114,6 +115,7 @@ Inserting a new piece works very similarly to updating an existing one. The `sel
 Instead, use the `self.newInstance()` method to get a fresh document object of the proper document type. That method uses the doc type's [field schema](/guide/content-schema.md) to generate the essential document properties with any default values. We can then add any initial data to that essentially blank document object.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     extend: '@apostrophecms/piece-type',
@@ -158,6 +160,7 @@ As with pieces, this process will normally begin by generating an empty page doc
 
 
 <AposCodeBlock>
+
   ```javascript
   let newPage = self.newInstance();
 
@@ -173,6 +176,46 @@ As with pieces, this process will normally begin by generating an empty page doc
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 With very few exceptions, the `_id` property is an automatically generated, randomized, and (always) unique property. It is also special in that it can never change for a given document.
 :::
+
+## Inserting and updating relationships
+
+As we have seen, [relationships](/guide/relationships.html) can be accessed as array properties after we locate
+documents with the `find` method.
+
+By the same principle, relationships can be inserted or updated as array properties. If our
+`dog` piece type seen above has an `_owner` relationship with `person` pieces, we can prepopulate it like this:
+
+```javascript
+  // assumes the alias: 'person' option has been set for the person piece type
+  const owner = await self.apos.person.find(req, { title: 'Frank' });
+  // Before calling insert() in the example above
+  newDog._owner = [ owner ];
+  const insertResult = await self.insert(req, newDog);
+```
+
+We can do the same thing with `self.update`.
+
+Note that inserting or updating a relationship in this way cannot insert or update related pieces
+that do not already exist. This technique only updates the relationship.
+
+## Inserting and updating relationship subfields
+
+Some relationships have [subfields of their own](/guide/relationships.html#accessing-the-fields-of-a-relationship)
+describing the relationship itself. These subfields can be set in the same way they are accessed:
+by populating the `_fields` property of each related document. Here is an example:
+
+```javascript
+  // For this example to work, the _owner relationship field of the "dog" piece type
+  // must have a "favorite" subfield of type boolean
+  const owner = await self.apos.person.find(req, { title: 'Frank' });
+  owner._fields = {
+    favorite: true
+  };
+  newDog._owner = [ owner ];
+  const insertResult = await self.insert(req, newDog);
+```
+
+This works the same way whether we are inserting or updating.

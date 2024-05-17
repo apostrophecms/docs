@@ -11,7 +11,7 @@ Docker can be installed on Mac, Windows, and Linux machines with either a CLI in
 
 ### Apostrophe project setup
 
-For this tutorial, we will be using the [a3-demo](https://github.com/apostrophecms/a3-demo) template. However, you can also use an existing project or create a new one by following our getting started [tutorial](https://v3.docs.apostrophecms.org/guide/setting-up.html). If using the a3-demo, follow the link and click on the "Use this template" button to fork the template into your own repo. Next, clone the repo to your local machine and open it in your favorite code editor.
+For this tutorial, we will be using the [a3-demo](https://github.com/apostrophecms/a3-demo) template. However, you can also use an existing project or create a new one by following our getting started [tutorial](https://docs.apostrophecms.org/guide/setting-up.html). If using the a3-demo, follow the link and click on the "Use this template" button to fork the template into your own repo. Next, clone the repo to your local machine and open it in your favorite code editor.
 
 ### Creating the dockerfile
 
@@ -29,7 +29,7 @@ USER node
 
 COPY --chown=node package*.json /srv/www/apostrophe/
 
-NODE_ENV=production
+ENV NODE_ENV=production
 RUN npm ci
 
 COPY --chown=node . /srv/www/apostrophe/
@@ -52,7 +52,7 @@ By default, when we issue commands within the `Dockerfile` they are run within t
 
 We are now going to install all of our dependencies inside of the working directory. First, we copy the `package.json` and `package-lock.json` into our project. Next, we pass our `NODE_ENV=production` environment variable into the build and then add those dependencies using `RUN npm ci`.
 
-::: note
+::: info
 This means that you **must** commit the project `package-lock.json` and you must not list anything required to build the project assets as a "dev" dependency.  Your project doesn't need any of those in production, right? 
 :::
 
@@ -64,7 +64,7 @@ Everything until this point helped build the container image. Those commands onl
 
 ### Creating the install script
 
-The alpine linux distribution is slim and doesn't include bash, but we can access a the "busybox" shell, which is compatible with the basics, at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
+The alpine linux distribution is slim and doesn't include bash, but we can access the "busybox" shell, which is compatible with the basics, at `/bin/sh`. Into the `scripts` folder at the root of your project create the following file:
 
 <AposCodeBlock>
 
@@ -79,7 +79,7 @@ node app @apostrophecms/asset:build
 ```
 
 <template v-slot:caption>
-  scripts/build-asset.sh
+  scripts/build-assets.sh
 </template>
 
 </AposCodeBlock>
@@ -234,7 +234,7 @@ While in this example, our project is still being hosted locally, any of these c
 Right now, our Dockerized container is limited to a single server. For simple, low-traffic sites this could be fine. However, if we want to scale our site over several servers and add a load balancer like Nginix, we need to add support for cloud storage and a cloud database. Fortunately, Apostrophe makes this relatively easy.
 
 ## Using AWS S3 services
-If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://v3.docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
+If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
 
 ### Changing the `docker-compose.yaml` file
 In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For AWS, your `environment:` section should now look like this:
@@ -284,20 +284,20 @@ APOS_S3_SECRET=<account secret>
 While our Docker container is now configured for storing items on AWS S3, it won't fully work if we were to spin it up now. First, we have to configure our S3 bucket to allow the public to access it. This is easily done through the AWS control panel.
 
 1) First, select the bucket from the S3 management console and then click on the "Permissions" tab. Click on the "Edit" button to edit your permissions.
-![S3 console permissions tab](../.vuepress/public/images/s3-permissions-tab.png)
+![S3 console permissions tab](../images/s3-permissions-tab.png)
 
 2) Uncheck the "Block all public access" box and save the changes. You will have to confirm that you want to do this.
-![S3 console showing all public access blocks for S3 bucket turned off](../.vuepress/public/images/s3-public-permissions.png)
+![S3 console showing all public access blocks for S3 bucket turned off](../images/s3-public-permissions.png)
 
 3) Scroll down the page to the "Object Ownership" section and click the "Edit" button.
-![The S3 console Object Ownership section](../.vuepress/public/images/s3-object-ownership.png)
+![The S3 console Object Ownership section](../images/s3-object-ownership.png)
 
 4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
-![S3 console object ownership edit screen](../.vuepress/public/images/s3-object-permission.png)
+![S3 console object ownership edit screen](../images/s3-object-permission.png)
 
 Just like with the Docker container previously, you can now bring the site up with:
 
-```cli
+```sh
 docker compose up
 ```
 Any assets uploaded through the site will now be stored in your S3 bucket rather than on the server directly.
@@ -311,7 +311,7 @@ Since we no longer have to use the database container, we can simply delete that
 ### Changing the `.env` file
 First, start by getting an account and setting up a project and cluster according to the [instructions](https://www.mongodb.com/docs/atlas/?_ga=2.115258319.959071482.1662986164-305956368.1655805952&_gac=1.50376795.1662898658.Cj0KCQjwjvaYBhDlARIsAO8PkE2KG3UP3yszcTYrzDpB8BRxDZ7vM2vLMafvX59emZZKkDExo_ZPZRIaAneGEALw_wcB) at the Atlas site. Once you do this, you can get the connect string for your database. The `APOS_MONGODB_URI` was already being set within the `.env` file. You simply need to substitute your connect string for the value.
 
-::: note
+::: info
 Any special characters in your user name or password within the connection string need to be converted to %-encoding.
 :::
 
@@ -319,7 +319,7 @@ Any special characters in your user name or password within the connection strin
 Since this will create a new database, once you bring your site up you should add an admin user as was [detailed](#spinning-our-project-up) when we used the containerized version.
 
 Then, to bring the site up use :
-```cli
+```sh
 docker compose up
 ```
 

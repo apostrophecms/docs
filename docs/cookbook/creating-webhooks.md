@@ -15,7 +15,7 @@ handlers(self) {
       async sendWebhook(req, data) {
         // data sent by the afterPublish event includes the document data 
         // and whether it is being published for the first time
-        // https://v3.docs.apostrophecms.org/reference/server-events.html#afterpublish
+        // https://docs.apostrophecms.org/reference/server-events.html#afterpublish
         if (!data.firstTime) {
           return;
         }
@@ -40,11 +40,11 @@ handlers(self) {
 
 In this block of code, we are using the `handlers(self)` module configuration function. We could use any server event, but in this case, we are using the `afterPublication` event that is emitted by our custom article piece-type module. This server event delivers two parameters, `req` and `data`. The `data` parameter contains information about the document being published including the content and whether this is the first time it is being published. In this case, we are adding an early return if this isn't the first time the document is being published.
 
-The next section of code is involved in setting up the HTTP `POST` request using the `post` method of the [`@apostrophecms/http` module](https://v3.docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. You can wrap your `POST` in a try-catch block to catch any exceptions. You can then decide whether to throw an error or notify the user of a problem with `self.apos.notify(req, 'We were unable to send a notification to Slack.');`
+The next section of code is involved in setting up the HTTP `POST` request using the `post` method of the [`@apostrophecms/http` module](https://docs.apostrophecms.org/reference/modules/http.html#async-post-url-options) to send our data to the endpoint. Depending on the endpoint, the returned response might be as simple as a `200` success or a `400` failed response, or might contain additional data. You can wrap your `POST` in a try-catch block to catch any exceptions. You can then decide whether to throw an error or notify the user of a problem with `self.apos.notify(req, 'We were unable to send a notification to Slack.');`
 
 ## Incoming webhooks
 
-Your project may require a webhook endpoint to receive incoming notices from services, like a payment portal or subscription manager. Much like Slack can add a message to a channel when it receives data from your site on the correct endpoint, your site can be set up to make changes to the database or perform other tasks when data is received at a specific endpoint. This can be accomplished by using the Apostrophe [`apiRoutes(self)` module configuration](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#apiroutes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
+Your project may require a webhook endpoint to receive incoming notices from services, like a payment portal or subscription manager. Much like Slack can add a message to a channel when it receives data from your site on the correct endpoint, your site can be set up to make changes to the database or perform other tasks when data is received at a specific endpoint. This can be accomplished by using the Apostrophe [`apiRoutes(self)` module configuration](https://docs.apostrophecms.org/reference/module-api/module-overview.html#apiroutes-self) function. This allows you to easily set up an endpoint for any HTTP request method.
 
 <AposCodeBlock>
 
@@ -88,7 +88,7 @@ apiRoutes(self) {
 
 In this code example, the webhook is being implemented using the `apiRoutes(self)` module configuration function. We are exposing a `POST` route, the one that is most typically used by webhook providers, by passing an object with our function to the `post` property. The function is named for the route it is exposing. In this case, it starts with a forward slash (`/`), indicating that this is relative to the project site itself, e.g. `https://www.my-project.com/webhooks`.
 
-Within the function, we first are checking for the presence of an authorization header. If it isn't found we throw an error with the string 'forbidden'. This is mapped to a `403` error and returns it to the webhook originator. There are a number of other error strings detailed in the reference documentation for [`apiRoutes`](https://v3.docs.apostrophecms.org/reference/module-api/module-overview.html#returning-error-codes). Once authentication is complete you can pass the data off for sanitization and use.
+Within the function, we first are checking for the presence of an authorization header. If it isn't found we throw an error with the string 'forbidden'. This is mapped to a `403` error and returns it to the webhook originator. There are a number of other error strings detailed in the reference documentation for [`apiRoutes`](https://docs.apostrophecms.org/reference/module-api/module-overview.html#returning-error-codes). Once authentication is complete you can pass the data off for sanitization and use.
 
 Finally, most providers require the return of some type of success message, otherwise, they will attempt to resend the webhook. If no information needs to be supplied you can simply return an empty object. Alternatively, you can return an object that contains information to include in the body of the response. The header will still indicate a response of `200/OK`.
 

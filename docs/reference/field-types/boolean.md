@@ -28,7 +28,8 @@ isSpecial: {
 |`def` | Boolean | n/a | The default value for the field |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
-|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) | universal |
+|`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
+|`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
@@ -55,7 +56,7 @@ showRelatedArticles: {
 
 ## Use in templates
 
-```django
+```nunjucks
 <!-- To print the value: -->
 {{ data.piece.isSpecial }}
 <!-- or use it in a conditional: -->

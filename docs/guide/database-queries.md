@@ -6,7 +6,7 @@ One goal of the Apostrophe content query API is to facilitate common and advance
 
 This API also provides a layer of security. Queries made through Apostrophe (that maintain the original `req` request), will only return content the active website user is allowed to see.
 
-::: note
+::: info
 We use the terms "query" and "query builders" here. For developers with advanced Apostrophe 2 experience, these are generally the same as the A2 concepts of "cursors" and "cursor filters."
 :::
 
@@ -25,6 +25,7 @@ The `find` method takes up to three arguments:
 In the following example, we are writing the function that powers an [async template component](/guide/async-components.md). This hypothetical component would be passed the product `_id` property where it is shown as `productId`.
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     extend: '@apostrophecms/piece-type',
@@ -55,11 +56,12 @@ In the following example, we are writing the function that powers an [async temp
   </template>
 </AposCodeBlock>
 
-::: note
+::: info
 For context, this is what it would look like to invoke this async component in a product show page template:
 
 <AposCodeBlock>
-  ```django
+
+  ``` nunjucks
   {% component 'product:latest' with { productId: data.piece._id } %}
   ```
   <template v-slot:caption>
@@ -95,7 +97,7 @@ We are in the `product` module, so by calling the `find` method from `self` (whi
 
 We pass in the `req` object we received from the component function parameters and the criteria object. In this case we are not including a third object for `options`.
 
-::: note
+::: info
 It's important to understand that the `find` method is not the end of the process. It is only the beginning, setting up a query that may be refined and then needs to be executed by a separate method. There is more on that below, but for now make sure to understand that simply running `self.find()` by itself will not return any documents.
 :::
 
@@ -129,7 +131,7 @@ self.find(req, criteria)
 
 This example is using two query builders, `sort` and `limit`. As described above, `sort({ createdAt: -1})` sorts the queried documents in descending order on their `createdAt` properties (most recent first). `limit(5)` then ensures the request will return no more than five documents.
 
-::: note
+::: info
 Many aspects of querying the database are the same for both page and piece queries. One thing that is different are certain query builders that only apply to requests by the page module. These builders do things like update how results should include "child" or "ancestor" pages from the page hierarchy.
 
 There is [a section for these builders](/reference/query-builders.md#page-document-query-builders) in the reference page. There is a similar section with a builder that only works on *image* piece queries as well.
@@ -153,7 +155,7 @@ The `project` builder is one that uses a MongoDB syntax. The object passed as an
 
 The `_id` property is always included no matter what projection is used.
 
-::: note
+::: info
 In Apostrophe 2 this builder was named `projection`.
 :::
 
@@ -176,6 +178,7 @@ Apostrophe automatically creates query builders for most [schema fields](/guide/
 For example, we might have a select field on a `product` piece type to identify a particular category:
 
 <AposCodeBlock>
+
   ```javascript
   module.exports = {
     fields: {
@@ -252,7 +255,7 @@ const products = await self.find(req, criteria)
 
 As we've covered already, this code sets up the initial query with criteria (`self.find`) and adds builders with additional instructions (`sort` and `limit`). The final thing it does is run `toArray()` on the query. This is telling the database, "take all the instructions we provided and give us back an array of results based on those instructions. Please." So, at the end of this, `products` will be an array of up to five document objects.
 
-::: note
+::: info
 See that in our example we use `await` before `self.find`, indicating that this is running an asynchronous operation. It is worth noting that `toArray()` is the only asynchronous part of the code since that's the part that actually talks to the database.
 
 It is totally fine to set up queries synchronously (without `await`) and then execute the query in a separate step later.
