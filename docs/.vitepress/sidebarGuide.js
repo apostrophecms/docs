@@ -12,7 +12,15 @@ const sidebarGuide = [
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
       { text: 'Development Setup', link: 'guide/development-setup.md' },
       { text: 'Windows Development', link: 'cookbook/windows-development.md' },
-      { text: 'Upgrade From Apostrophe 2', link: 'guide/migration/upgrading.md'}
+      {
+        text: 'Migrating',
+        collapsed: true,
+        items: [
+          { text: 'Overview', link: 'guide/migration/overview.md' },
+          {text: 'Upgrade From Apostrophe 2', link: 'guide/migration/upgrading.md'},
+          { text: 'Upgrade From Apostrophe 3', link: 'guide/migration/upgrading-3-to-4.md' }
+        ]
+      }
     ]
   },
   {
