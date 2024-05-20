@@ -251,6 +251,7 @@ export default defineConfig({
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
+    defaultHighlightLang: 'sh',
     languages: [
       {
         id: 'njk-html',
@@ -265,7 +266,7 @@ export default defineConfig({
   themeConfig: {
     logo: '/apostrophe-primary-mark.svg',
     lastUpdated: true,
-    docsRepo: 'https://github.com/apostrophecms/a3-vitepress-docs',
+    docsRepo: 'https://github.com/apostrophecms/docs',
     docsBranch: 'main',
     docsDir: 'docs',
     lastUpdatedText: 'Last updated',
