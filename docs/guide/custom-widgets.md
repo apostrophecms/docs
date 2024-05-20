@@ -58,8 +58,6 @@ module.exports = {
 
 ```
 
-You may notice there is no `group` property to the field schema. The widget editing interface does not have field groups, so it is not necessary here.
-
 You can then add this module to the `app.js` file to instantiate it.
 
 ``` js
@@ -71,6 +69,46 @@ require('apostrophe')({
   }
 });
 ```
+
+In this example, we only have a limited number of schema fields, so we haven't added a `group` property. Much like with pieces or pages, the `group` property will allow you to organize your schema fields into groups. Like the other document types, the widget `group` property takes a named object for each tab, consisting of a label for the tab and `fields` property with an array of schema field names.
+
+```js
+fields: {
+  add: {
+    subtitle: {
+      label: 'Subtitle',
+      type: 'string'
+    },
+    author: {
+    label: 'Author',
+      type: 'string'
+    },
+    _article: {
+      label: 'Article',
+      type: 'relationship',
+      withType: 'Article',
+      builders: {
+        project: {
+          title: 1,
+          _url: 1
+        }
+      }
+    }
+  },
+  group: {
+    content: {
+      lable: 'Content',
+      fields: [ '_article' ]
+    },
+    metadata: {
+      label: 'Metadata',
+      fields: [ 'subtitle', 'author' ]
+    }
+  }
+}
+```
+
+Unlike the other document types, not adding a `group` property will not add an `ungrouped` tab. Instead, no tabs will be displayed. However, if you only add part of the fields to a group object, the ungrouped fields will be displayed on an `ungrouped` tab. If the number of tabs exceeds the width of the widget edit modal, additional tabs will be found in a context menu to the right of the displayed tabs and can be selected from there.
 
 ### Adding schema field placeholder content
 
