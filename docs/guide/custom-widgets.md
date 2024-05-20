@@ -110,7 +110,6 @@ fields: {
 
 Unlike the other document types, not adding a `group` property will not add an `ungrouped` tab. Instead, no tabs will be displayed. However, if you only add part of the fields to a group object, the ungrouped fields will be displayed on an `ungrouped` tab. If the number of tabs exceeds the width of the widget edit modal, additional tabs will be found in a context menu to the right of the displayed tabs and can be selected from there.
 
-
 ### Adding schema field placeholder content
 
 Much like the core widgets, you can add placeholder content for many of the fields in your custom widgets. Within the widget options add `placeholder: true`. Then within individual fields add a `placeholder` property with a value appropriate to the type of schema field.
