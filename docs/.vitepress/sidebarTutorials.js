@@ -52,12 +52,22 @@ const sidebarTutorials = [
           {
             text: 'Toolbar and Insert Menu Extensions',
             link: 'tutorials/rich-text-extension-deep-dive.md'
+          },
+          {
+            text: "Harnessing Dynamic Routing in ApostropheCMS",
+            link: "tutorials/dynamic-routing.md"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    text: 'Pro topics',
+    collapsed: false,
+    items: [
       {
-        text: "Harnessing Dynamic Routing in ApostropheCMS",
-        link: "tutorials/dynamic-routing.md"
+        text: 'Setting up Advanced Permissions',
+        link: 'tutorials/setting-up-the-advanced-permission-pro-extension.md'
       }
     ]
   },
