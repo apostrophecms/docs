@@ -58,6 +58,10 @@ const sidebarTutorials = [
       {
         text: "Harnessing Dynamic Routing in ApostropheCMS",
         link: "tutorials/dynamic-routing.md"
+      },
+      {
+        text: "Using JSX to Build a Weather Widget in ApostropheCMS",
+        link: "tutorials/using-jsx-in-apostrophe.md"
       }
     ]
   },

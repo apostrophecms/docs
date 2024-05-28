@@ -60,3 +60,13 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
     />
   </template>
 </AposTwoColumns>
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Using JSX in Apostrophe"
+      content="The Apostrophe Webpack build can easily be extended to include additional files. In this tutorial, we will add a weather widget powered by JSX and React to our ApostropheCMS project."
+      url="/tutorials/using-jsx-in-apostrophe.html"
+    />
+  </template>
+</AposTwoColumns>
