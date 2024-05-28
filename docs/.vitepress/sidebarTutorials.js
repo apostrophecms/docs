@@ -52,16 +52,31 @@ const sidebarTutorials = [
           {
             text: 'Toolbar and Insert Menu Extensions',
             link: 'tutorials/rich-text-extension-deep-dive.md'
+          },
+          {
+            text: "Harnessing Dynamic Routing in ApostropheCMS",
+            link: "tutorials/dynamic-routing.md"
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    text: 'Pro topics',
+    collapsed: false,
+    items: [
       {
+<<<<<<< HEAD
         text: "Harnessing Dynamic Routing in ApostropheCMS",
         link: "tutorials/dynamic-routing.md"
       },
       {
         text: "Using JSX to Build a Weather Widget in ApostropheCMS",
         link: "tutorials/using-jsx-in-apostrophe.md"
+=======
+        text: 'Setting up Advanced Permissions',
+        link: 'tutorials/setting-up-the-advanced-permission-pro-extension.md'
+>>>>>>> origin/main
       }
     ]
   },

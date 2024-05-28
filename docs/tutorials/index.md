@@ -70,3 +70,15 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
     />
   </template>
 </AposTwoColumns>
+
+## Pro topics
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="Pro"
+      title="Setting up the Advanced Permission Pro extension"
+      content="The Advanced Permission extension gives you more granular control over permissions. This tutorial will walk you through adding the extension to your project and customizing it for your needs."
+      url="/tutorials/setting-up-the-advanced-permission-pro-extension.html"
+    />
+  </template>
+</AposTwoColumns>
