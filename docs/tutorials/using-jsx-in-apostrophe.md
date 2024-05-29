@@ -297,7 +297,7 @@ function App({ defaultCity }) {
 
   const fetchWeather = async (cityName) => {
     try {
-      const response = await fetch(`/fetch-weather?city=${cityName}`);
+      const response = await fetch(`/api/v1/react-weather-widget/fetch-weather?city=${cityName}`);
       const weather = await response.json();
       updateWeather(weather);
     } catch (error) {
@@ -329,7 +329,7 @@ export default App;
 It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/index.js` file. The Webpack build is clever enough to import all the files without having to import them to the base, as long as they are imported into a file that is imported into the base. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
 
 ```javascript
-const response = await fetch(`/fetch-weather?city=${cityName}`);
+const response = await fetch(`/api/v1/react-weather-widget/fetch-weather?city=${cityName}`);
 ```
 This line in that function performs a fetch on the `/fetch-weather` endpoint, passing in the city name as a parameter.
 
@@ -352,7 +352,7 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        '/fetch-weather': async function (req, res) {
+        fetchWeather: async function (req, res) {
           const { city } = req.query;
           const apiKey = process.env.OPENWEATHERMAP_API_KEY;
           try {
@@ -376,7 +376,9 @@ module.exports = {
 
 </AposCodeBlock>
 
-There are several ways we can add endpoints to an ApostropheCMS project. In this case we are using the [`apiRoutes(self)` customization function](/reference/module-api/module-overview.html#customization-functions). This code creates a single `GET` route. Because the property used to name the route starts with a slash, we can use that directly when we are calling it from our components. Otherwise, we would have to use a URL like `api/v1/react-weather-widget/fetch-weather`. The remainder of this code should be fairly self-explanatory. We are getting the `city` value from the request object and the API key from an `.env` file in our project. Note that at the top of the file we are using `require('dotenv').config();` to expose this. From Node.js version `20.0.0` and up, this is supported by passing the `--env-file` flag specifying a file when starting your app and doesn't require the `dotenv` dependency. You can also do away with this line if you are passing your API key directly on the command line when starting your project => `OPENWEATERMAP_API_KEY=XXXXXX npm run dev`.
+There are several ways we can add endpoints to an ApostropheCMS project. In this case we are using the [`apiRoutes(self)` customization function](/reference/module-api/module-overview.html#customization-functions). This code creates a single `GET` route that can be accessed at the URL `/api/v1/react-weather-widget/fetch-weather`. Note that the property name automatically gets converted to kebab case, so `fetchWeather` becomes `fetch-weather`. If the function name for the route starts with a slash, we would use that directly when we are calling it from our components. This is useful when you need a public facing URL.
+
+The remainder of this code should be fairly self-explanatory. We are getting the `city` value from the request object and the API key from an `.env` file in our project. Note that at the top of the file we are using `require('dotenv').config();` to expose this. From Node.js version `20.0.0` and up, this is supported by passing the `--env-file` flag specifying a file when starting your app and doesn't require the `dotenv` dependency. You can also do away with this line if you are passing your API key directly on the command line when starting your project => `OPENWEATERMAP_API_KEY=XXXXXX npm run dev`.
 
 Next the function passes this information to the Open Weather Map API and gets back data that is returned to the component.
 
