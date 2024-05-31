@@ -38,7 +38,7 @@ const sidebarTutorials = [
       },
       {
         text: 'Creating Custom Rich Text Extensions',
-        collapsed: true,
+        collapsed: false,
         link: 'tutorials/introduction-to-rich-text-extensions.md',
         items: [
           {
