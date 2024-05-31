@@ -177,7 +177,7 @@ import App from './jsx-components/App.jsx';
 export default () => {
   apos.util.widgetPlayers.reactWeather = {
     selector: '[data-react-weather-widget]',
-    player: function (el) {
+    player(el) {
       const rootElement = el.querySelector('#react-weather-root');
       if (rootElement) {
         const defaultCity = rootElement.getAttribute('data-default-city');
@@ -197,7 +197,7 @@ export default () => {
 
 At the top of this file we are importing both `react` and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. In this case I'm electing to add that file and the other component files inside the `ui/src` folder, but you can elect to place them anywhere inside your project, as long as you import them through the `ui/src/index.js` file. To use these two packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Webpack build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command: `npm install react react-dom/client`.
 
-The remainder of this file is a standard widget player. This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to add this root element and the data into the data attribute that we will be getting from a schema field.
+The remainder of this file is a [standard widget player](https://docs.apostrophecms.org/guide/custom-widgets.html#client-side-javascript-for-widgets). This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to set the value of this attribute using the data passed to the template from the widget schema.
 
 ### Adding the widget Nunjucks template
 
@@ -217,7 +217,7 @@ The markup for this widget on the Nunjucks side is going to be simple. We requir
 
 </AposCodeBlock>
 
-Briefly, the attribute on the `section` tag is what we are passing into the `selector` property of the player. This section contains a single `div` element that will be used as the root. Finally on that same element we are setting the `data-default-city` attribute value to data passed from the widget `defaultCity` schema field, or an empty string if the content manager hasn't added a string to that field.
+Briefly, the attribute on the `section` tag is what we are passing into the `selector` property of the player. This section contains a single `div` element that will be used as the root. Finally, on that same element we are setting the `data-default-city` attribute value to data passed from the widget `defaultCity` schema field, or an empty string if the content manager hasn't added a string to that field.
 
 ### Modifying the widget schema fields
 
@@ -469,7 +469,7 @@ const CityComponent = (props) => {
           onChange={(e) => updateCity(e.target.value)}
           placeholder='City'
         />
-        <button type={'submit'}>Search</button>
+        <button type='submit'>Search</button>
       </SearchBox>
     </>
   );
