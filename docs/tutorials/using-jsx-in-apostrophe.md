@@ -1,3 +1,7 @@
+---
+next: false
+prev: false
+---
 # Using JSX in Apostrophe
 
 In modern web development, tools and technologies evolve rapidly, and so do the demands of web applications. ApostropheCMS offers a robust and flexible platform for building content-rich websites, it comes with a powerful built-in Webpack build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Webpack to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
@@ -80,15 +84,13 @@ module.exports = {
     group: {
       basics: {
         label: 'Basics',
-        fields: [
-          'title',
-          'main'
-        ]
+        fields: ['title', 'main']
       }
     }
   }
 };
 ```
+
   <template v-slot:caption>
     modules/default-page/index.js
   </template>
@@ -124,20 +126,21 @@ module.exports = {
               use: {
                 loader: 'babel-loader',
                 options: {
-                  presets: [ '@babel/preset-react' ] // Presets for ES6+ and React
+                  presets: ['@babel/preset-react'] // Presets for ES6+ and React
                 }
               }
             }
           ]
         },
         resolve: {
-          extensions: [ '.jsx' ]
+          extensions: ['.jsx']
         }
       }
     }
   }
 };
 ```
+
 <template v-slot:caption>
   modules/react-weather-widget/index.js
 </template>
@@ -161,6 +164,7 @@ npm install babel-loader @babel/preset-react --save-dev
 ```
 
 ## Creating the Weather App Component
+
 Now that we are able to use JSX in our project, we need to create a component that utilizes it. At the moment, we have only modified our project to be able to transpile JSX files. We haven't changed the build entry point. That means that all of our app component files should be placed into the custom module `ui/src` folder and be imported through the `index.js` file located in that folder. That file is also going to act to bootstrap our app.
 
 <AposCodeBlock>
@@ -173,17 +177,18 @@ import App from './jsx-components/App.jsx';
 export default () => {
   apos.util.widgetPlayers.reactWeather = {
     selector: '[data-react-weather-widget]',
-    player: function(el) {
+    player: function (el) {
       const rootElement = el.querySelector('#react-weather-root');
       if (rootElement) {
         const defaultCity = rootElement.getAttribute('data-default-city');
         const root = createRoot(rootElement);
-        root.render(<App defaultCity={defaultCity}/>);
+        root.render(<App defaultCity={defaultCity} />);
       }
     }
   };
 };
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/ui/src/index.js
   </template>
@@ -195,6 +200,7 @@ At the top of this file we are importing both `react` and the `createRoot` funct
 The remainder of this file is a standard widget player. This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to add this root element and the data into the data attribute that we will be getting from a schema field.
 
 ### Adding the widget Nunjucks template
+
 The markup for this widget on the Nunjucks side is going to be simple. We require an attribute for the player to identify the code our client-side JavaScript player should target, a target where React will render our component root, and another attribute for passing data between the widget schema fields and the react app.
 
 <AposCodeBlock>
@@ -204,6 +210,7 @@ The markup for this widget on the Nunjucks side is going to be simple. We requir
   <div id="react-weather-root" data-default-city="{{ data.widget.defaultCity or '' }}"></div>
 </section>
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/views/widget.html
   </template>
@@ -213,6 +220,7 @@ The markup for this widget on the Nunjucks side is going to be simple. We requir
 Briefly, the attribute on the `section` tag is what we are passing into the `selector` property of the player. This section contains a single `div` element that will be used as the root. Finally on that same element we are setting the `data-default-city` attribute value to data passed from the widget `defaultCity` schema field, or an empty string if the content manager hasn't added a string to that field.
 
 ### Modifying the widget schema fields
+
 We have already added our Webpack configuration changes to the `modules/react-weather-widget/index.js` file, but now we also want to add the `defaultCity` schema field.
 
 <AposCodeBlock>
@@ -235,7 +243,7 @@ module.exports = {
     group: {
       basics: {
         label: 'Basics',
-        fields: [ 'defaultCity' ]
+        fields: ['defaultCity']
       }
     }
   },
@@ -243,8 +251,8 @@ module.exports = {
     // configuration code
   }
 };
-
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/index.js
   </template>
@@ -260,10 +268,10 @@ Since this tutorial is mainly focused on how you use React in an ApostropheCMS p
 <AposCodeBlock>
 
 ```jsx
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import CityComponent from "./CityComponent";
-import WeatherComponent from "./WeatherComponent";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import CityComponent from './CityComponent';
+import WeatherComponent from './WeatherComponent';
 
 const Container = styled.div`
   display: flex;
@@ -286,7 +294,7 @@ const AppLabel = styled.span`
 `;
 
 function App({ defaultCity }) {
-  const [city, updateCity] = useState(defaultCity || "");
+  const [city, updateCity] = useState(defaultCity || '');
   const [weather, updateWeather] = useState(null);
 
   useEffect(() => {
@@ -297,11 +305,16 @@ function App({ defaultCity }) {
 
   const fetchWeather = async (cityName) => {
     try {
-      const response = await fetch(`/api/v1/react-weather-widget/fetch-weather?city=${cityName}`);
+      const response = await fetch(
+        '/api/v1/react-weather-widget/fetch-weather?' +
+          new URLSearchParams({
+            city: cityName
+          })
+      );
       const weather = await response.json();
       updateWeather(weather);
     } catch (error) {
-      console.error("Error fetching weather data:", error);
+      console.error('Error fetching weather data:', error);
     }
   };
 
@@ -312,7 +325,10 @@ function App({ defaultCity }) {
   return (
     <Container>
       <AppLabel>React Weather App</AppLabel>
-      <CityComponent updateCity={updateCity} fetchWeather={handleFetchWeather} />
+      <CityComponent
+        updateCity={updateCity}
+        fetchWeather={handleFetchWeather}
+      />
       {weather && <WeatherComponent weather={weather} city={city} />}
     </Container>
   );
@@ -320,6 +336,7 @@ function App({ defaultCity }) {
 
 export default App;
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/ui/src/jsx-components/App.jsx
   </template>
@@ -329,15 +346,19 @@ export default App;
 It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/index.js` file. The Webpack build is clever enough to import all the files without having to import them to the base, as long as they are imported into a file that is imported into the base. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
 
 ```javascript
-const response = await fetch(`/api/v1/react-weather-widget/fetch-weather?city=${cityName}`);
+const response = await fetch(
+  '/api/v1/react-weather-widget/fetch-weather?' +
+    new URLSearchParams({
+      city: cityName
+  })
+);
 ```
+
 This line in that function performs a fetch on the `/fetch-weather` endpoint, passing in the city name as a parameter.
 
 <AposCodeBlock>
 
 ```javascript
-require('dotenv').config();
-
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -352,12 +373,16 @@ module.exports = {
   apiRoutes(self) {
     return {
       get: {
-        fetchWeather: async function (req, res) {
+        async fetchWeather(req, res) {
           const { city } = req.query;
           const apiKey = process.env.OPENWEATHERMAP_API_KEY;
           try {
             const response = await fetch(
-              `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`,
+              'https://api.openweathermap.org/data/2.5/weather?' +
+                new URLSearchParams({
+                  q: city,
+                  appid: apiKey
+                })
             );
             const weather = await response.json();
             return weather;
@@ -370,15 +395,16 @@ module.exports = {
   }
 };
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/index.js
   </template>
 
 </AposCodeBlock>
 
-There are several ways we can add endpoints to an ApostropheCMS project. In this case we are using the [`apiRoutes(self)` customization function](/reference/module-api/module-overview.html#customization-functions). This code creates a single `GET` route that can be accessed at the URL `/api/v1/react-weather-widget/fetch-weather`. Note that the property name automatically gets converted to kebab case, so `fetchWeather` becomes `fetch-weather`. If the function name for the route starts with a slash, we would use that directly when we are calling it from our components. This is useful when you need a public facing URL.
+There are several ways we can add endpoints to an ApostropheCMS project. In this case we are using the [`apiRoutes(self)` customization function](/reference/module-api/module-overview.html#customization-functions). This code creates a single `GET` route that can be accessed at the URL `/api/v1/react-weather-widget/fetch-weather`. Note that the function name automatically gets converted to kebab case, so `fetchWeather` becomes `fetch-weather`. If the function name for the route starts with a slash, we would use that directly when we are calling it from our components. This is useful when you need a public facing URL.
 
-The remainder of this code should be fairly self-explanatory. We are getting the `city` value from the request object and the API key from an `.env` file in our project. Note that at the top of the file we are using `require('dotenv').config();` to expose this. From Node.js version `20.0.0` and up, this is supported by passing the `--env-file` flag specifying a file when starting your app and doesn't require the `dotenv` dependency. You can also do away with this line if you are passing your API key directly on the command line when starting your project => `OPENWEATERMAP_API_KEY=XXXXXX npm run dev`.
+The remainder of this code should be fairly self-explanatory. We are getting the `city` value from the request object and the API key from the environment variable that should be passed when starting our project, `OPENWEATHERMAP_API_KEY=XXXXXX npm run dev`.
 
 Next the function passes this information to the Open Weather Map API and gets back data that is returned to the component.
 
@@ -389,8 +415,8 @@ Again, we aren't going to focus on most of the JSX component code.
 <AposCodeBlock>
 
 ```jsx
-import styled from "styled-components";
-import React from "react";
+import styled from 'styled-components';
+import React from 'react';
 import PerfectDay from '../icons/perfect-day.svg';
 
 const SearchBox = styled.form`
@@ -441,15 +467,16 @@ const CityComponent = (props) => {
       <SearchBox onSubmit={fetchWeather}>
         <input
           onChange={(e) => updateCity(e.target.value)}
-          placeholder="City"
+          placeholder='City'
         />
-        <button type={"submit"}>Search</button>
+        <button type={'submit'}>Search</button>
       </SearchBox>
     </>
   );
 };
 export default CityComponent;
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/ui/src/jsx-components/CityComponent.jsx
   </template>
@@ -465,8 +492,6 @@ To import the files into our Webpack build, we also have to make a modification 
 <AposCodeBlock>
 
 ```javascript
-require('dotenv').config();
-
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -486,7 +511,7 @@ module.exports = {
               use: {
                 loader: 'babel-loader',
                 options: {
-                  presets: [ '@babel/preset-react' ] //  presets for ES6+ and React
+                  presets: ['@babel/preset-react'] //  presets for ES6+ and React
                 }
               }
             },
@@ -501,7 +526,7 @@ module.exports = {
           ]
         },
         resolve: {
-          extensions: [ '.jsx', '.svg' ]
+          extensions: ['.jsx', '.svg']
         }
       }
     }
@@ -511,6 +536,7 @@ module.exports = {
   }
 };
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/index.js
   </template>
@@ -632,7 +658,9 @@ const WeatherComponent = (props) => {
   const { weather } = props;
   const isDay = weather?.weather[0].icon?.includes('d');
   const getTime = (timeStamp) => {
-    return `${new Date(timeStamp * 1000).getHours()} : ${new Date(timeStamp * 1000).getMinutes()}`;
+    return `${new Date(timeStamp * 1000).getHours()} : ${new Date(
+      timeStamp * 1000
+    ).getMinutes()}`;
   };
   return (
     <>
@@ -642,7 +670,9 @@ const WeatherComponent = (props) => {
           <span>{`${Math.floor(weather?.main?.temp - 273)}°C`}</span>
           {`  |  ${weather?.weather[0].description}`}
         </Condition>
-        <WeatherIcon src={`https://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`} />
+        <WeatherIcon
+          src={`https://openweathermap.org/img/wn/${weather?.weather[0].icon}@2x.png`}
+        />
       </WeatherContainer>
 
       <WeatherInfoLabel>Weather Info</WeatherInfoLabel>
@@ -651,9 +681,15 @@ const WeatherComponent = (props) => {
           name={isDay ? 'sunset' : 'sunrise'}
           value={`${getTime(weather?.sys[isDay ? 'sunset' : 'sunrise'])}`}
         />
-        <WeatherInfoComponent name={'humidity'} value={weather?.main?.humidity} />
+        <WeatherInfoComponent
+          name={'humidity'}
+          value={weather?.main?.humidity}
+        />
         <WeatherInfoComponent name={'wind'} value={weather?.wind?.speed} />
-        <WeatherInfoComponent name={'pressure'} value={weather?.main?.pressure} />
+        <WeatherInfoComponent
+          name={'pressure'}
+          value={weather?.main?.pressure}
+        />
       </WeatherInfoContainer>
     </>
   );
@@ -661,6 +697,7 @@ const WeatherComponent = (props) => {
 
 export default WeatherComponent;
 ```
+
   <template v-slot:caption>
     modules/react-weather-widget/ui/src/jsx-components/WeatherComponent.jsx
   </template>
@@ -670,6 +707,7 @@ export default WeatherComponent;
 As with the `CityComponent.jsx` file, we are importing `react` and `styled-components` packages. We are also importing five SVG weather info icons from the `modules/react-weather-widget/ui/src/icons` folder. The OpenWeatherMap site makes the remainder of the images we need available on their site.
 
 ## Conclusions
+
 In this tutorial, we covered the basics of how to create a widget powered by React and JSX components. Similar steps can be used to allow you to use Vue, Svelte, or Angular components in your project. You need to identify the correct loader(s) for the file types you want to use, add any presets to transpile the files, and make sure that the Webpack build is screening files with the expected extensions.
 
 For this widget, we only added a single render root. But to add additional components, we simply need to make sure that each element passed from the DOM to the `createRoot()` function is unique. Whether it is passed through a widget player, added as a fragment, or directly into the Nunjucks template. Note that if you are adding front-end JavaScript to create and render your root element outside a widget player, make sure to wrap your script in an [`apos.util.onReady()`](https://docs.apostrophecms.org/guide/front-end-helpers.html#onready-fn) listener so that it triggers a rerender when the page content is updated during editing.
