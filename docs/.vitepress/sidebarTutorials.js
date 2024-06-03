@@ -38,7 +38,7 @@ const sidebarTutorials = [
       },
       {
         text: 'Creating Custom Rich Text Extensions',
-        collapsed: true,
+        collapsed: false,
         link: 'tutorials/introduction-to-rich-text-extensions.md',
         items: [
           {
@@ -52,16 +52,16 @@ const sidebarTutorials = [
           {
             text: 'Toolbar and Insert Menu Extensions',
             link: 'tutorials/rich-text-extension-deep-dive.md'
-          },
-          {
-            text: 'Harnessing Dynamic Routing in ApostropheCMS',
-            link: 'tutorials/dynamic-routing.md'
-          },
-          {
-            text: 'Using JSX to Build a Weather Widget in ApostropheCMS',
-            link: 'tutorials/using-jsx-in-apostrophe.md'
           }
         ]
+      },
+      {
+        text: 'Harnessing Dynamic Routing in ApostropheCMS',
+        link: 'tutorials/dynamic-routing.md'
+      },
+      {
+        text: 'Using JSX to Build a Weather Widget in ApostropheCMS',
+        link: 'tutorials/using-jsx-in-apostrophe.md'
       }
     ]
   },
