@@ -269,17 +269,18 @@ The custom field browser-side code should be added to your module's `ui/apos/com
 </template>
 
 <script>
+import { ref, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
 
 export default {
   name: 'InputGradeField',
-  mixins: [AposInputMixin],
   components: {
     AposInputWrapper,
     AposSchema
   },
+  mixins: [AposInputMixin],
   props: {
     generation: {
       type: Number,
@@ -287,50 +288,48 @@ export default {
       default() {
         return null;
       }
+    },
+    modelValue: {
+      type: Object,
+      required: true
     }
   },
-  data() {
-    const next = this.getNext();
-    const gradeSchema = apos.modules['grade'].gradeSchema;
-    return {
-      next,
-      gradeSchemaInput: {
-        data: next
-      },
-      gradeSchema: gradeSchema
+  setup(props, { emit }) {
+
+    const getNext = () => {
+      return props.modelValue && props.modelValue.data ? props.modelValue.data : (props.field.def || {});
     };
-  },
-  watch: {
-    generation() {
-      this.next = this.getNext();
-      this.gradeSchemaInput = {
-        data: this.next.value
+
+    const next = ref(getNext());
+    const gradeSchema = apos.modules['grade'].gradeSchema;
+    const gradeSchemaInput = ref({ data: next.value });
+
+    watch(() => props.generation, () => {
+      next.value = getNext();
+      gradeSchemaInput.value = {
+        data: next.value
       };
-    },
-    gradeSchemaInput: {
-      deep: true,
-      handler() {
-        if (!this.gradeSchemaInput.hasErrors) {
-          this.next = this.gradeSchemaInput.data;
-        };
+    });
+
+    watch(gradeSchemaInput, (newValue) => {
+      if (!newValue.hasErrors) {
+        next.value = newValue.data;
+        emit('update:modelValue', { data: next.value });
       }
-    }
-  },
-  methods: {
-    getNext() {
-      return this.value.data ? this.value.data : (this.field.def || {});
-    },
-    validate(value) {
+    }, { deep: true });
+
+    function validate(value) {
       if (this.gradeSchemaInput.hasErrors) {
         return 'invalid';
       }
       return false;
-    },
-    letterGrade() {
-      if (this.next.midterm || this.next.final) {
-        const midterm = this.next.midterm;
-        const final = this.next.final;
-        const average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
+    }
+
+    function letterGrade() {
+      if (next.value.midterm || next.value.final) {
+        const midterm = next.value.midterm;
+        const final = next.value.final;
+        let average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
         const gradeRanges = [
           { min: 90, max: 100, letterGrade: 'A' },
           { min: 80, max: 89, letterGrade: 'B' },
@@ -339,12 +338,23 @@ export default {
           { min: 0, max: 59, letterGrade: 'F' },
         ];
 
+        average = average > 100 ? 100: average;
+
         const { letterGrade } = gradeRanges.find(({ min, max }) => average >= min && average <= max);
 
         return letterGrade;
       }
       return '';
     }
+
+    return {
+      next,
+      gradeSchemaInput,
+      gradeSchema,
+      getNext,
+      validate,
+      letterGrade
+    };
   }
 };
 </script>
@@ -424,15 +434,16 @@ In this case, we are wrapping it in some additional markup to allow for customiz
 
 The `AposSchema` component typically takes the `:trigger-validation`, and `:generation` props. These are used by Apostrophe for field validation, display, and updating.
 
-To keep track of state within our component, we are passing `gradeSchemaInput` that comes from our `data()` method to `v-model`.
+To keep track of state within our component, we are using the `ref` function to create a reactive `gradeSchemaInput` object and binding it to `v-model`.
 
 The `AposSchema` component takes the array of schema fields passed to `:schema`, renders their inputs and emits a new object with `value` and `hasErrors` sub-properties when changes occur.
 
 **The schema field JavaScript**
 
-At the top of our script, we import all of the mixins and component files that we will be using in our custom component.
+At the top of our script, we import all the mixins and component files that we will be using in our custom component. We are also importing the Vue `ref` and `watch` functions to be used in our component.
 
 ```javascript
+import { ref, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
@@ -463,24 +474,36 @@ props: {
       return null;
     }
   }
+  modelValue: {
+      type: Object,
+      required: true
+    }
+  }
   ```
 
-Next, we declare the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type.
+Next, we declare two props. First is the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type. The second is the `modelValue` prop, which is used for two-way binding between the parent and child components, allowing the component to receive and update the value from the parent.
 
 ```javascript
-data() {
-  const next = this.getNext();
-  const gradeSchema = apos.modules['grade'].gradeSchema;
-  return {
-    next,
-    gradeSchemaInput: {
-      data: next
-    },
-    gradeSchema: gradeSchema
-  };
-},
+setup(props, { emit }){
+  ...
+}
 ```
 
+The setup function is the entry point for using the Composition API in Vue 3. It replaces the data, methods, computed, and watch options in the Options API, providing a more concise and flexible way to manage component logic. In this function, props provides access to the component's props, allowing us to use and manipulate the data passed from the parent component. The { emit } object allows us to emit events from the component, enabling communication with the parent component by sending updates or triggering actions.
+
+```javascript
+const getNext = () => {
+  return props.modelValue && props.modelValue.data ? props.modelValue.data : (props.field.def || {});
+};
+```
+
+The `getNext()` function returns either the stored input field values, the individual field defaults set in the schema if there are no stored values, or an empty object in the absence of a stored value or field default value. As we will see for the color gradient custom field section, you can pre-populate your schema with input using this function.
+
+```javascript
+const next = ref(getNext());
+    const gradeSchema = apos.modules['grade'].gradeSchema;
+    const gradeSchemaInput = ref({ data: next.value });
+```
 In this code, we are defining the initial state of our `AposSchema` Vue component using the data option. The data option is a function that returns an object with properties that represent the component's initial state.
 
 First, we call a self-defined method called `getNext()` to retrieve the current values for our schema fields and assign them to `next`.
@@ -547,7 +570,7 @@ methods: {
   }
 }
 ```
-The `getNext()` function of the `methods` section returns either the stored input field values, the individual field defaults set in the schema if there are no stored values, or an empty object in the absence of a stored value or field default value. As we will see for the color gradient custom field section, you can pre-populate your schema with input using this function.
+
 
 Every input field requires a `validate()` function. In this case, the code checks whether the `hasErrors` sub-property of the `gradeSchemaInput` object is true. If so, it returns the `invalid` error string. Otherwise, it returns `false`.
 
