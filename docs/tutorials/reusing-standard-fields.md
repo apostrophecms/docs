@@ -253,7 +253,7 @@ The custom field browser-side code should be added to your module's `ui/apos/com
 
 <AposCodeBlock>
 
-```javascript
+```vue
 <template>
   <AposInputWrapper :field="field" :error="effectiveError" :uid="uid" :modifiers="modifiers">
     <template #body>
@@ -269,17 +269,18 @@ The custom field browser-side code should be added to your module's `ui/apos/com
 </template>
 
 <script>
+import { ref, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
 
 export default {
   name: 'InputGradeField',
-  mixins: [AposInputMixin],
   components: {
     AposInputWrapper,
     AposSchema
   },
+  mixins: [AposInputMixin],
   props: {
     generation: {
       type: Number,
@@ -287,50 +288,48 @@ export default {
       default() {
         return null;
       }
+    },
+    modelValue: {
+      type: Object,
+      required: true
     }
   },
-  data() {
-    const next = this.getNext();
-    const gradeSchema = apos.modules['grade'].gradeSchema;
-    return {
-      next,
-      gradeSchemaInput: {
-        data: next
-      },
-      gradeSchema: gradeSchema
+  setup(props, { emit }) {
+
+    const getNext = () => {
+      return props.modelValue && props.modelValue.data ? props.modelValue.data : (props.field.def || {});
     };
-  },
-  watch: {
-    generation() {
-      this.next = this.getNext();
-      this.gradeSchemaInput = {
-        data: this.next.value
+
+    const next = ref(getNext());
+    const gradeSchema = apos.modules['grade'].gradeSchema;
+    const gradeSchemaInput = ref({ data: next.value });
+
+    watch(() => props.generation, () => {
+      next.value = getNext();
+      gradeSchemaInput.value = {
+        data: next.value
       };
-    },
-    gradeSchemaInput: {
-      deep: true,
-      handler() {
-        if (!this.gradeSchemaInput.hasErrors) {
-          this.next = this.gradeSchemaInput.data;
-        };
+    });
+
+    watch(gradeSchemaInput, (newValue) => {
+      if (!newValue.hasErrors) {
+        next.value = newValue.data;
+        emit('update:modelValue', { data: next.value });
       }
-    }
-  },
-  methods: {
-    getNext() {
-      return this.value.data ? this.value.data : (this.field.def || {});
-    },
-    validate(value) {
-      if (this.gradeSchemaInput.hasErrors) {
+    }, { deep: true });
+
+    function validate(value) {
+      if (gradeSchemaInput.value.hasErrors) {
         return 'invalid';
       }
       return false;
-    },
-    letterGrade() {
-      if (this.next.midterm || this.next.final) {
-        const midterm = this.next.midterm;
-        const final = this.next.final;
-        const average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
+    }
+
+    function letterGrade() {
+      if (next.value.midterm || next.value.final) {
+        const midterm = next.value.midterm;
+        const final = next.value.final;
+        let average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
         const gradeRanges = [
           { min: 90, max: 100, letterGrade: 'A' },
           { min: 80, max: 89, letterGrade: 'B' },
@@ -339,12 +338,23 @@ export default {
           { min: 0, max: 59, letterGrade: 'F' },
         ];
 
+        average = average > 100 ? 100: average;
+
         const { letterGrade } = gradeRanges.find(({ min, max }) => average >= min && average <= max);
 
         return letterGrade;
       }
       return '';
     }
+
+    return {
+      next,
+      gradeSchemaInput,
+      gradeSchema,
+      getNext,
+      validate,
+      letterGrade
+    };
   }
 };
 </script>
@@ -392,7 +402,7 @@ export default {
 
 **The schema field markup**
 
-```javascript
+```vue
 <AposInputWrapper :field="field" :error="null" :uid="uid" :modifiers="modifiers">
 ...
 </AposInputWrapper>
@@ -406,7 +416,7 @@ The only one that we might want to change the value of is `:error`. It can take 
 As a guide for selecting error type, the Apostrophe `array` and `object` fields use `:error="null"`. This provides clear guidance on which field is in error, without a second error message being displayed for the entire component. You may want to change this if your custom field has a requirement such as `min: 1`.
 :::
 
-```javascript
+```vue
 <template #body>
   <div class="custom-input-object">
     <div class="custom-input-wrapper">
@@ -424,15 +434,16 @@ In this case, we are wrapping it in some additional markup to allow for customiz
 
 The `AposSchema` component typically takes the `:trigger-validation`, and `:generation` props. These are used by Apostrophe for field validation, display, and updating.
 
-To keep track of state within our component, we are passing `gradeSchemaInput` that comes from our `data()` method to `v-model`.
+To keep track of state within our component, we are using the `ref` function to create a reactive `gradeSchemaInput` object and binding it to `v-model`.
 
 The `AposSchema` component takes the array of schema fields passed to `:schema`, renders their inputs and emits a new object with `value` and `hasErrors` sub-properties when changes occur.
 
 **The schema field JavaScript**
 
-At the top of our script, we import all of the mixins and component files that we will be using in our custom component.
+At the top of our script, we import all the mixins and component files that we will be using in our custom component. We are also importing the Vue `ref` and `watch` functions to be used in our component.
 
-```javascript
+```vue
+import { ref, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
@@ -442,7 +453,7 @@ In this case, we are bringing the `AposInputMixin` mixin into our script. This p
 
 We are also importing the files for the actual components. While not shown here, button controls can be added by bringing in the `<AposButton>` component from `apostrophe/modules/@apostrophecms/ui/ui/apos/components/AposButton.vue`.
 
-```javascript
+```vue
 export default {
   name: 'InputGradeField',
   components: {
@@ -454,7 +465,7 @@ export default {
 
 The main script starts with the `name` property, which is set by convention to the same value as the name of the file. This is followed by the `components` property, with an object of the components that we just loaded. If your component uses the button component, you would add `AposButton` to this object. Similarly, the `mixins` property takes an array of the mixins we just imported.
 
-```javascript
+```vue
 props: {
   generation: {
     type: Number,
@@ -463,97 +474,110 @@ props: {
       return null;
     }
   }
-  ```
-
-Next, we declare the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type.
-
-```javascript
-data() {
-  const next = this.getNext();
-  const gradeSchema = apos.modules['grade'].gradeSchema;
-  return {
-    next,
-    gradeSchemaInput: {
-      data: next
-    },
-    gradeSchema: gradeSchema
-  };
-},
-```
-
-In this code, we are defining the initial state of our `AposSchema` Vue component using the data option. The data option is a function that returns an object with properties that represent the component's initial state.
-
-First, we call a self-defined method called `getNext()` to retrieve the current values for our schema fields and assign them to `next`.
-
-We access the schema we used in our `grade` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to make the schema available as `gradeSchema`.
-
-Finally, we return an object with three properties:
-* `next`: the initial value of next
-* `gradeSchemaInput`: an object with a property called data that contains the value of `next`. This is used to set the `v-model` of the `AposSchema` component
-* `gradeSchema`: the schema of our custom field as an array. This is used to set the `:schema` of the `AposSchema` component
-  
-The next block of code sets up watchers to monitor and trigger an update if the input fields are changed.
-
-```javascript
-watch: {
-  generation() {
-    this.next = this.getNext();
-    this.gradeSchemaInput = {
-      data: this.next.value
-    };
-  },
-  gradeSchemaInput: {
-    deep: true,
-    handler() {
-      if (!this.gradeSchemaInput.hasErrors) {
-        this.next = this.gradeSchemaInput.data;
-      };
+  modelValue: {
+      type: Object,
+      required: true
     }
   }
-},
+  ```
+
+Next, we declare two props. First is the `generation` prop that Apostrophe uses for triggering the re-render of the component, such as when the user changes page-type. The second is the `modelValue` prop, which is used for two-way binding between the parent and child components, allowing the component to receive and update the value from the parent.
+
+```vue
+setup(props, { emit }){
+  ...
+}
 ```
 
-The first watcher is `generation()`. This method will fire if the `generation` prop is either updated within the component or by Apostrophe. This causes the component and all of its sub-fields to re-render, which is needed if a parent component needs to change the schema itself, e.g. when a field type is used in a page and the page type changes. Note that you can utilize this watcher to trigger an update of the component. But, you should avoid mutating the passed prop by setting ``:generation="`${generation}:${innerGeneration}`"``, and then triggering the update by incrementing the `innerGeneration` value.
+The setup function is the entry point for using the Composition API in Vue 3. It replaces the data, methods, computed, and watch options in the Options API, providing a more concise and flexible way to manage component logic. In this function, `props` provides access to the component's props, allowing us to use and manipulate the data passed from the parent component. The `{ emit }` object allows us to emit events from the component, enabling communication with the parent component by sending updates or triggering actions.
+
+```vue
+const getNext = () => {
+  return props.modelValue && props.modelValue.data ? props.modelValue.data : (props.field.def || {});
+};
+```
+
+The `getNext()` function returns either the stored input field values, the individual field defaults set in the schema if there are no stored values, or an empty object in the absence of a stored value or field default value. As we will see for the color gradient custom field section, you can pre-populate your schema with input using this function.
+
+```vue
+const next = ref(getNext());
+const gradeSchema = apos.modules['grade'].gradeSchema;
+const gradeSchemaInput = ref({ data: next.value });
+```
+In this code, we are creating a reactive reference called `next` and initializing it using the `getNext()` method we just created. Again, this will bring in any saved values or default values if they exist, to populate the schema fields.
+
+Next, we access the schema we used in our `grade` piece through the `apos.modules` object. Remember that we extended the `getBrowserData()` method to make the schema available as `gradeSchema`.
+
+Finally, we create another reactive reference called `gradeSchemaInput`, initialized with an object containing the `next.value`. This object will be used to bind the data to the `AposSchema` component via `v-model`, ensuring that the form inputs are reactive and synchronized with the component's state.
+  
+The next two blocks of code sets up watchers to monitor and trigger an update if either the `generation` prop or the input fields are changed.
+
+```vue
+watch(() => props.generation, () => {
+  next.value = getNext();
+  gradeSchemaInput.value = {
+    data: next.value
+  };
+});
+
+watch(gradeSchemaInput, (newValue) => {
+  if (!newValue.hasErrors) {
+    next.value = newValue.data;
+    emit('update:modelValue', { data: next.value });
+  }
+}, { deep: true });
+
+```
+
+The first watcher is on the `generation` prop. This method will fire if the `generation` prop is either updated within the component or by Apostrophe. This causes the component and all of its sub-fields to re-render, which is needed if a parent component needs to change the schema itself, e.g. when a field type is used in a page and the page type changes. Note that you can utilize this watcher to trigger an update of the component. But, you should avoid mutating the passed prop by setting ``:generation="`${generation}:${innerGeneration}`"``, and then triggering the update by incrementing the `innerGeneration` value.
 
 The `gradeSchemaInput` handler will be called any time there is a change to one of our schema input fields. As long as there aren't errors in any of the schema fields, this will update the state values for our input fields.
 
-```javascript
-methods: {
-  getNext() {
-    return this.value.data ? this.value.data : (this.field.def || {});
-  },
-  validate(value) {
-    if (this.gradeSchemaInput.hasErrors) {
-      return 'invalid';
-    }
-    return false;
-  },
-  letterGrade() {
-    if (this.next.midterm || this.next.final) {
-      const midterm = this.next.midterm;
-      const final = this.next.final;
-      const average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
-      const gradeRanges = [
-        { min: 90, max: 100, letterGrade: 'A' },
-        { min: 80, max: 89, letterGrade: 'B' },
-        { min: 70, max: 79, letterGrade: 'C' },
-        { min: 60, max: 69, letterGrade: 'D' },
-        { min: 0, max: 59, letterGrade: 'F' },
-      ];
-      const { letterGrade } = gradeRanges.find(({ min, max }) => average >= min && average <= max);
-      return letterGrade;
-    }
-    return '';
+```vue
+function validate(value) {
+  if (this.gradeSchemaInput.hasErrors) {
+    return 'invalid';
   }
+  return false;
+}
+
+function letterGrade() {
+  if (next.value.midterm || next.value.final) {
+    const midterm = next.value.midterm;
+    const final = next.value.final;
+    let average = (midterm !== undefined && final !== undefined) ? (midterm + final) / 2 : (midterm !== undefined ? midterm : final);
+    const gradeRanges = [
+      { min: 90, max: 100, letterGrade: 'A' },
+      { min: 80, max: 89, letterGrade: 'B' },
+      { min: 70, max: 79, letterGrade: 'C' },
+      { min: 60, max: 69, letterGrade: 'D' },
+      { min: 0, max: 59, letterGrade: 'F' },
+    ];
+    average = average > 100 ? 100: average;
+    const { letterGrade } = gradeRanges.find(({ min, max }) => average >= min && average <= max);
+    return letterGrade;
+  }
+  return '';
 }
 ```
-The `getNext()` function of the `methods` section returns either the stored input field values, the individual field defaults set in the schema if there are no stored values, or an empty object in the absence of a stored value or field default value. As we will see for the color gradient custom field section, you can pre-populate your schema with input using this function.
 
 Every input field requires a `validate()` function. In this case, the code checks whether the `hasErrors` sub-property of the `gradeSchemaInput` object is true. If so, it returns the `invalid` error string. Otherwise, it returns `false`.
 
-You can also choose to add further custom field validation that doesn't exist in the normal field schema to this method. For example, you might require that the `class` string always have a prefix that is added from a `following` field. You could access and value of the field using `value.class` and check it using `.startsWith()`. You could then return a custom error string like, `needs prefix` to the user.
+You can also choose to add further custom field validation that doesn't exist in the normal field schema to this method. For example, you might require that the `class` string always have a prefix that is added from a `following` field. You could access the value of the field using `value.class` and check it using `.startsWith()`. You could then return a custom error string like, `needs prefix` to the user.
 
 The final method, `letterGrade()`, takes the value from the two inputs and returns a letter grade for our imaginary teacher. You can't do that with a standard Apostrophe schema!
+
+```vue
+return {
+  next,
+  gradeSchemaInput,
+  gradeSchema,
+  getNext,
+  validate,
+  letterGrade
+};
+```
+Lastly, we have a final `return` statement from the `setup` function that exposes all the variables and methods for use in the template.
 
 The remainder of this file is styling and will be highly variable between custom schema fields. You can use styling from the `@apostrophecms/schema/ui/apos/components/` files as a good starting point.
 
@@ -669,7 +693,7 @@ init(self) {
 
 Rather than adding this custom schema field for a specific piece, we are adding this field through a stand-alone module that doesn't extend any other module. This is a useful case for providing a schema field that may be used in several projects that don't have overlapping piece, widget, or page types.
 
-Because it is a standalone module, within the `init(self)` method, we have to call the `self.enableBrowserData()` method to give access to the browser data. In addition, we are calling the function to add our custom field type, just like we did in the first example.
+Because it is a stand-alone module, within the `init(self)` method, we have to call the `self.enableBrowserData()` method to give access to the browser data. In addition, we are calling the function to add our custom field type, just like we did in the first example.
 
 ```javascript
 methods(self) {
@@ -764,23 +788,14 @@ The remainder of the `methods(self)` method is nearly identical to the first exa
 
 <AposCodeBlock>
 
-```javascript
+```vue
 <template>
-  <AposInputWrapper
-  :field="field"
-  :error="null"
-  :uid="uid"
-  :modifiers="modifiers"
-  >
+  <AposInputWrapper :field="field" :error="effectiveError" :uid="uid" :display-options="displayOptions" :modifiers="modifiers">
     <template #body>
       <div class="apos-input-object">
         <div class="apos-input-wrapper">
-          <div id="color-square" :style="{ background: gradient }" />
-          <AposSchema
-          :schema="gradientSchema"
-          :trigger-validation="triggerValidation"
-          :generation="generation"
-          v-model="gradientSchemaInput">
+          <div id="color-square" :style="{ background: gradient }"/>
+          <AposSchema :schema="gradientSchema" :trigger-validation="triggerValidation" :generation="generation" v-model="gradientSchemaInput">
           </AposSchema>
         </div>
       </div>
@@ -789,6 +804,7 @@ The remainder of the `methods(self)` method is nearly identical to the first exa
 </template>
 
 <script>
+import { ref, computed, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
@@ -799,7 +815,7 @@ export default {
     AposInputWrapper,
     AposSchema
   },
-  mixins: [ AposInputMixin ],
+  mixins: [AposInputMixin],
   props: {
     generation: {
       type: Number,
@@ -807,23 +823,50 @@ export default {
       default() {
         return null;
       }
+    },
+    modelValue: {
+      type: Object,
+      required: true
     }
   },
-  data() {
-    const next = this.getNext();
-    const gradientSchema = apos.modules['color-gradient'].schema;
-    return {
-      next,
-      gradientSchemaInput: {
-        data: next
-      },
-      gradientSchema: gradientSchema
+  setup(props, { emit }){
+
+    const getNext = () => {
+      return props.modelValue.data ?? (props.field.def || {
+        angle: 90,
+        colors: [
+          { color: '#d0021bff', stop: 0 },
+          { color: '#4a11ffff', stop: 100 }
+        ]
+      });
     }
-  },
-  computed: {
-    gradient() {
-      if (this.next.colors && this.next.angle) {
-        const gradientString = this.next.colors.reduce((acc, curr, i, colors) => {
+
+    const next= ref(getNext());
+    const gradientSchema = apos.modules['color-gradient'].gradientSchema;
+    const gradientSchemaInput = ref({ data: next.value });
+
+    watch(() => props.generation, () => {
+      next.value = getNext();
+      gradientSchemaInput.value = { data: next.value };
+    });
+
+    watch(gradientSchemaInput, (newValue) => {
+      if (!newValue.hasErrors) {
+        next.value = newValue.data;
+        emit('update:modelValue', { data: next.value });
+      }
+    }, { deep: true });
+
+    function validate(value) {
+      if (gradientSchemaInput.value.hasErrors) {
+        return 'invalid';
+      }
+      return false;
+    }
+
+    const gradient = computed(() => {
+      if (next.value.colors && next.value.angle) {
+        const gradientString = next.value.colors.reduce((acc, curr, i, colors) => {
           acc += `${curr.color} ${curr.stop}%`;
           if (i !== colors.length - 1) {
             acc += ', ';
@@ -831,51 +874,19 @@ export default {
             acc += ')';
           }
           return acc;
-        }, `linear-gradient(${this.next.angle}deg, `);
+        }, `linear-gradient(${next.value.angle}deg, `);
         return gradientString;
       }
-    }
-  },
-  watch: {
-    generation() {
-      this.next = this.getNext();
-      this.gradientSchemaInput = {
-        data: this.next.value
-      };
-    },
-    gradientSchemaInput: {
-      deep: true,
-      handler() {
-        if (!this.gradientSchemaInput.hasErrors) {
-          this.next = this.gradientSchemaInput.data;
-        }
-      }
-    }
-  },
-  methods: {
-    validate(value) {
-      if (value == null) {
-        value = '';
-      }
-      if (this.gradientSchemaInput.hasErrors) {
-        return 'invalid';
-      }
-      return false;
-    },
-    getNext() {
-      return this.value.data ? this.value.data : (this.field.def || {
-        angle: 90,
-        colors: [
-          {
-            color: '#d0021bff',
-            stop: 0
-          },
-          {
-            color: '#4a11ffff',
-            stop: 100
-          }
-        ]
-      });
+      return '';
+    });
+
+    return {
+      next,
+      gradientSchema,
+      gradientSchemaInput,
+      getNext,
+      gradient,
+      validate
     }
   }
 };
@@ -899,7 +910,7 @@ li {
   margin: 20px 0 0 19px;
 }
 
-.apos-input-object ::v-deep .apos-schema .apos-field {
+.apos-input-object ::deep .apos-schema .apos-field {
   margin-bottom: 30px;
 }
 
@@ -916,15 +927,14 @@ li {
 
 For this example, we aren't going to explain every single line of the code. We are only going to point out major differences from the first example.
 
-```javascript
+```vue
 <template>
-  <AposInputWrapper :field="field" :error="null" :uid="uid" :modifiers="modifiers">
+  <AposInputWrapper :field="field" :error="effectiveError" :uid="uid" :display-options="displayOptions" :modifiers="modifiers">
     <template #body>
       <div class="apos-input-object">
         <div class="apos-input-wrapper">
-          <div id="color-square" :style="{ background: gradient }" />
-          <AposSchema :schema="gradientSchema" :trigger-validation="triggerValidation"
-            :generation="generation" v-model="gradientSchemaInput">
+          <div id="color-square" :style="{ background: gradient }"/>
+          <AposSchema :schema="gradientSchema" :trigger-validation="triggerValidation" :generation="generation" v-model="gradientSchemaInput">
           </AposSchema>
         </div>
       </div>
@@ -934,56 +944,50 @@ For this example, we aren't going to explain every single line of the code. We a
 ```
 For the template section of our custom schema field, the only notable difference is `<div id="color-square" :style="{ background: gradient }" />`. This line of markup adds the output of our selections above the input fields. It binds the style of that `div` to the computed `gradient` value.
 
-The `AposInputWrapper` is taking the same props as were passed in the first example. The `AposSchema` is also receiving the same props, but custom field-specific `:schema` and `v-model` values supplied by the `data()` option.
+The `AposInputWrapper` is taking the same props as were passed in the first example. The `AposSchema` is also receiving the same props, but with color gradient-specific `:schema` and `v-model` values supplied by the `setup` method.
 
-```javascript
+```vue
+import { ref, computed, watch } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
 ```
 
-The identical files for mixins and components are being imported. Again, if you are adding buttons, you can also elect to import that file from the `@apostrophecms/ui` module.
+The identical files for mixins and components are being imported. Again, if you are adding buttons, you can also elect to import that file from the `@apostrophecms/ui` module. From the `vue` package we are importing the `ref` and `watch` functions, as before, but also the `computed` method for calculating our gradient string.
 
-```javascript
-computed: {
-  gradient() {
-    if (this.next.colors && this.next.angle) {
-      const gradientString = this.next.colors.reduce((acc, curr, i, colors) => {
-        acc += `${curr.color} ${curr.stop}%`;
-        if (i !== colors.length - 1) {
-          acc += ', ';
-        } else {
-          acc += ')';
-        }
-        return acc;
-      }, `linear-gradient(${this.next.angle}deg, `);
-      return gradientString;
+```vue
+const getNext = () => {
+      return props.modelValue.data ?? (props.field.def || {
+        angle: 90,
+        colors: [
+          { color: '#d0021bff', stop: 0 },
+          { color: '#4a11ffff', stop: 100 }
+        ]
+      });
     }
-  }
-}
-```
-
-The `gradient()` method in the `computed` section gets the data for the `colors` array and `angle` field from `this.next` in order to construct a linear-gradient CSS field. This then populates the gradient display div in the template. Note that this method can easily be modified and added to the `async components(self)` method of any module to deliver this same string to a template.
-
-```javascript
-getNext() {
-  return this.value.data ? this.value.data : (this.field.def || {
-    angle: 90,
-    colors: [
-      {
-        color: '#d0021bff',
-        stop: 0
-      },
-      {
-        color: '#4a11ffff',
-        stop: 100
-      }
-    ]
-  });
-}
 ```
 
 As compared with the first example, the `getNext()` method has been slightly expanded. Instead of returning an empty array or the field default if the field hasn't been saved yet, it returns data with the `angle` field set to `90` and two colors with the color and stop values already set. This way, as soon as the editing modal is opened there is already a gradient displayed.
+
+```vue
+const gradient = computed(() => {
+  if (next.value.colors && next.value.angle) {
+    const gradientString = next.value.colors.reduce((acc, curr, i, colors) => {
+      acc += `${curr.color} ${curr.stop}%`;
+      if (i !== colors.length - 1) {
+        acc += ', ';
+      } else {
+        acc += ')';
+      }
+      return acc;
+    }, `linear-gradient(${next.value.angle}deg, `);
+    return gradientString;
+  }
+  return '';
+});
+```
+
+The `gradient` computed property dynamically constructs a CSS linear gradient string based on the `colors` and `angle` values in `next`. It iterates through the colors array, appending each color and its stop position to the gradient string. If the colors and angle are defined, it returns the complete gradient string; otherwise, it returns an empty string. Note that this method can easily be modified and added to the `async components(self)` method of any module to deliver this same string to a template.
 
 ## Summary
 
