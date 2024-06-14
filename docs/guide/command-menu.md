@@ -3,7 +3,7 @@
 The `@apostrophecms/command-menu` module adds keyboard shortcuts and additional pop-up menus to the Admin UI. The list of shortcuts can be accessed from any page or piece-type manager using the '?' key. There are several pre-programmed common shortcuts, with additional page-level shortcuts added automatically for each custom piece-type created. 
 
 ## Reassigning automatic shortcuts
-Apostrophe assigns shortcuts for custom piece-types based on the first letter of the piece-type name. So, a piece-type of 'article' would get assigned a shortcut cord of `g` then `a`. However, you might have more than one module that starts with a particular letter, or starts with the same letter as a core piece-type. The automatically assigned shortcut can be changed by adding an array of the desired shortcut key combination(s) to the `shortcut` option in the module. You can disable a shortcut by setting the option to `shortcut: null`.
+Apostrophe assigns shortcuts for custom piece-types based on the first letter of the piece-type name. So, a piece-type of 'article' would get assigned a shortcut cord of `g` then `a`. However, you might have more than one module that starts with a particular letter, or starts with the same letter as a core piece-type. The automatically assigned shortcut can be changed by adding an array of the desired shortcut key combination(s) to the `shortcut` option in the module. You can disable a shortcut by setting the option `shortcut: false`.
 
 <AposCodeBlock>
 
