@@ -1,14 +1,15 @@
 <template>
   <div class="ai-responses">
-    <div v-if="!hasAsked">
+    <div v-if="!hasAsked" class="ai-empty-state">
       <div class="ai-mode">
         <div class="ai-content">
           <div class="ai-icon-group">
             <img src="../theme/images/ai-web.svg" alt="AI Icon" class="ai-icon" />
           </div>
-          <p class="lighter">More than just a list of links</p>
+          <p class="detail">More than just a list of links</p>
           <h2>Answers with context</h2>
-          <p>Documentation, code samples, community Q&A, and more goes into our AI-powered assistant. Fire away!</p>
+          <p class="explainer">Documentation, code samples, community Q&A, and more goes into our AI-powered assistant.
+            Fire away!</p>
         </div>
       </div>
     </div>
@@ -16,14 +17,7 @@
       <div class="anchor-links-container">
         <div class="anchor-links">
           <button v-for="(result, index) in reversedAiResults" :key="index" @click="scrollToChatItem(index, true)">
-            <!-- Corrected SVG Icon for Chat Bubble with '?' -->
-            <svg viewBox="0 0 30 24" class="icon-svg chat-bubble-icon" aria-hidden="true">
-              <svg viewBox="0 0 30 24" class="icon-svg chat-bubble-icon" aria-hidden="true">
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12c0 4.41 2.89 8.18 7 9.74V22l2.29-2.29C13.91 19.53 15.95 20 18 20c5.52 0 10-4.48 10-10S23.52 2 18 2h-6z" />
-                <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="10" fill="white">?</text>
-              </svg>
-            </svg>
+            <InlineSvg src="/images/icons/question.svg" height="16" stroke="#6236ff" />
             {{ result.question }}
           </button>
         </div>
@@ -34,7 +28,7 @@
           <li v-for="(result, index) in aiResults" :key="index" class="result" :id="'result-' + index">
             <div class="question">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="icon-svg">
-                <circle cx="12" cy="12" r="11" stroke="#54636D" stroke-width="1" fill="none" />
+                <circle cx="12" cy="12" r="11" stroke="#54636D" stroke-width="0.4px" fill="none" />
                 <path fill="#b2adad"
                   d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
               </svg>
@@ -84,9 +78,10 @@
         </ul>
       </div>
       <div class="discord-link">
-        <span class="bold">More questions? Have something to show off? Join us in Discord!</span>
-        <a href="https://discord.com/invite/HwntQpADJr" target="_blank"><span v-html="discordSvg" </span>Join the
-            ApostropheCMS Discord ➜</a>
+        <a href="https://discord.com/invite/HwntQpADJr" target="_blank">
+          <span v-html="discordSvg" </span>
+            More questions? Have something to show off? Join the ApostropheCMS Discord
+        </a>
       </div>
     </div>
   </div>
@@ -101,6 +96,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/devibeans.css'
 import { v4 as uuidv4 } from 'uuid'
 import AposOGLink from './AposOGLink.vue'
+import InlineSvg from 'vue-inline-svg';
 
 const props = defineProps({
   filterText: String,
@@ -348,21 +344,42 @@ onBeforeUnmount(() => {
   font-weight: bold;
 }
 
+.answer-container .content :deep(p) {
+  margin-bottom: 15px;
+}
+
 .answer-container .content :deep(h3) {
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 8px 0 5px;
 }
+
 .answer-container .content :deep(h4) {
-  text-decoration: underline;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 8px 0 5px;
 }
+
+.answer-container .content :deep(pre) {
+  font-size: 14px;
+  margin: 20px 0 40px;
+}
+
 .answer-container .content :deep(code:not(pre code)) {
-  background-color: #f8f9fa;
-  color: red;
+  background-color: #F6F6F6;
+  border: 1px solid #DADADA;
+  color: #C01443;
+  padding: 2px 4px;
+  border-radius: 5px;
+  font-size: 90%;
+  font-weight: 400;
 }
 
 /* Question container styles */
 .answer-container {
   display: flex;
   align-items: flex-start;
+  gap: 5px;
 }
 
 .content {
@@ -382,6 +399,7 @@ onBeforeUnmount(() => {
 .question {
   display: flex;
   align-items: center;
+  gap: 5px;
 }
 
 /* loading animation styles */
@@ -422,7 +440,7 @@ onBeforeUnmount(() => {
 .ai-responses {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 100vh;
   overflow-y: auto;
 }
 
@@ -436,61 +454,68 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 20vh;
 }
 
-.ai-content .lighter {
+.ai-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.detail {
   font-size: 14px;
   color: #666;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .ai-icon-group {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  max-width: 170px;
 }
 
 h2 {
   font-size: 24px;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 
-p {
+.explainer {
   font-size: 16px;
-  color: #666;
+  line-height: 1.3;
+  max-width: 440px;
 }
 
 .anchor-links-container {
   position: sticky;
   top: 0;
-  background-color: #f3f4f6;
   padding: 10px 0;
   z-index: 10; /* High z-index to keep it above other content */
   display: flex;
   align-items: stretch;
-  overflow: hidden;
 }
 
 .results-container {
   overflow-y: auto;
-  height: calc(100% - 50px); /* Adjust height based on the anchor links container height */
+  height: calc(100% - 50px);
+  padding: 0px 50px 20px;
 }
 
 .anchor-links {
-  flex: 1;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  padding: 10px;
-  background-color: #f3f4f6;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
   z-index: 10;
   position: relative;
+  display: flex;
+  top: 0;
+  flex: 1;
+  justify-content: start;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 2px 100px 10px 0;
   white-space: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
-  white-space: nowrap; /* Ensures the buttons are in a single line */
-  padding-right: 100px;
 }
 
 .anchor-mask {
@@ -505,13 +530,26 @@ p {
 }
 
 .anchor-links button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   margin: 0 5px;
-  padding: 10px 15px;
-  border: none;
-  background-color: #6236ff;
-  color: white;
+  height: 30px; 
   cursor: pointer;
-  border-radius: 15px;
+  border-radius: 40px;
+  padding: 0 10px 0 8px;
+  border: 1px solid #6236ff;
+  color: black;
+  font-weight: 500;
+  line-height: 0.8;
+  font-size: 12px;
+  outline: 2px solid #6236ff31;
+  transition: all 0.3s ease-in-out;
+}
+
+.anchor-links button:hover {
+  background-color: #e2d9ff4d;
 }
 
 .icon-svg.chat-bubble-icon {
@@ -550,13 +588,19 @@ p {
 }
 
 .result {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  margin-top: 50px;
+  padding: 20px 10px 10px;
+  border-top: 1px solid #ddd;
+}
+
+.result:first-child {
+  margin-top: 10px;
+  border-top: none;
 }
 
 .result .question {
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-weight: 500;
+  margin-bottom: 30px;
 }
 
 .loading-animation {
@@ -574,31 +618,32 @@ p {
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-top: 20px;
+  margin-top: 10px;
   /* Adjust margin as needed */
 }
 
 .discord-link a {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   padding: 10px;
-  border: 1px solid black;
   /* Adjust the color to match your theme */
-  border-radius: 5px;
-  background-color: #fff;
+  border-radius: 30px;
   /* Optional: set a background color */
   color: black;
   /* Adjust the text color to match your theme */
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
-  /* Smooth transition for hover effects */
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #e2d9ff66;
+  margin: 10px 0;
 }
 
 .discord-link a:hover {
-  background-color: #7289da;
-  /* Change background on hover */
-  color: #fff;
-  /* Change text color on hover */
+  background-color: #d2c7f5;
 }
 
 .discord-link span {
