@@ -341,6 +341,7 @@ function formMarkRegex(terms) {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  margin: 20px 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
