@@ -167,7 +167,6 @@ function handleClose() {
   margin: 64px auto;
   display: flex;
   flex-direction: column;
-  /* gap: 16px; */
   background: var(--vp-local-search-bg);
   width: min(100vw - 60px, 900px);
   height: min-content;

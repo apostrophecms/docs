@@ -454,7 +454,6 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* padding-top: 20vh; */
 }
 
 .ai-empty-state {
@@ -542,7 +541,6 @@ h2 {
   padding: 0 10px 0 8px;
   border: 1px solid #6236ff;
   color: black;
-  /* box-shadow: 0px 0px 0px #6236ff99; */
   font-weight: 500;
   line-height: 0.8;
   font-size: 12px;
@@ -552,7 +550,6 @@ h2 {
 
 .anchor-links button:hover {
   background-color: #e2d9ff4d;
-  /* color: white; */
 }
 
 .icon-svg.chat-bubble-icon {
