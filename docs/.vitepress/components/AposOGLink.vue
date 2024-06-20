@@ -48,6 +48,10 @@ onMounted(() => {
   margin-bottom: 30px;
 }
 
+.dark .og-card-wrapper {
+  border-color: #333;
+}
+
 .og-card__link {
   display: flex;
   margin: 0 auto;
@@ -68,6 +72,10 @@ onMounted(() => {
   background-color: #f9f9f9;
 }
 
+.dark .og-card__link:hover {
+  background-color: #333;
+}
+
 .og-card__content {
   flex: 3;
   padding-right: 16px;
@@ -86,6 +94,10 @@ onMounted(() => {
   font-size: 13px;
   line-height: 1.3;
   font-weight: 500;
+}
+
+.dark .og-card__description {
+  color: #ccc;
 }
 
 .og-card__image-container {

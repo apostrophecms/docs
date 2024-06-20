@@ -375,6 +375,12 @@ onBeforeUnmount(() => {
   font-weight: 400;
 }
 
+.dark .answer-container .content :deep(code:not(pre code)) {
+  background-color: #414141;
+  border-color: #616161;
+  color: #ff5180;
+}
+
 /* Question container styles */
 .answer-container {
   display: flex;
@@ -416,6 +422,10 @@ onBeforeUnmount(() => {
 
 .dot:nth-child(3) {
   animation-delay: 0.4s !important;
+}
+
+.dark .dot {
+  fill: #e7eff4;
 }
 
 @keyframes ball-beat {
@@ -518,6 +528,11 @@ h2 {
   overflow-y: hidden;
 }
 
+.dark .anchor-links {
+  border-color: #333;
+
+}
+
 .anchor-mask {
   position: absolute;
   top: 0;
@@ -527,6 +542,10 @@ h2 {
   background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
   pointer-events: none;
   z-index: 20;
+}
+
+.dark .anchor-mask {
+  background: linear-gradient(to right, rgb(0 0 0 / 0%), rgb(26 28 30));
 }
 
 .anchor-links button {
@@ -546,6 +565,19 @@ h2 {
   font-size: 12px;
   outline: 2px solid #6236ff31;
   transition: all 0.3s ease-in-out;
+}
+
+.dark .anchor-links button {
+  color: white;
+  background-color: #6236ff;
+}
+
+.dark .anchor-links button:hover {
+  background-color: #481fd7;
+}
+
+.dark .anchor-links button svg {
+  stroke: white;
 }
 
 .anchor-links button:hover {
@@ -608,6 +640,11 @@ h2 {
   font-style: italic;
 }
 
+.dark #Typing-indicator {
+  fill: #3a3d40;
+  stroke: #5e5e5e;
+}
+
 .no-results {
   padding: 10px;
   text-align: center;
@@ -650,6 +687,10 @@ h2 {
   vertical-align: middle;
   margin-right: 8px;
   /* Space between icon and text */
+}
+
+.dark .discord-link a {
+  background-color: #ded4fff0;
 }
 
 .bold {
