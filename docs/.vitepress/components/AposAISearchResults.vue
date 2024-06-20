@@ -1,5 +1,8 @@
 <template>
   <div class="ai-responses">
+    <div v-if="isConnecting && !hasAsked" class="connecting-message-container">
+      <p class="connecting-message">Connecting...</p>
+    </div>
     <div v-if="!hasAsked" class="ai-empty-state">
       <div class="ai-mode">
         <div class="ai-content">
@@ -13,76 +16,74 @@
         </div>
       </div>
     </div>
-    <div v-else class="ai-responses">
-      <div class="anchor-links-container">
-        <div class="anchor-links">
-          <button v-for="(result, index) in reversedAiResults" :key="index" @click="scrollToChatItem(index, true)">
-            <InlineSvg src="/images/icons/question.svg" height="16" stroke="#6236ff" />
-            {{ result.question }}
-          </button>
-        </div>
-        <div class="anchor-mask"></div>
+    <div v-else class="anchor - links - container">
+      <div class="anchor-links">
+        <button v-for="(result, index) in reversedAiResults" :key="index" @click="scrollToChatItem(index, true)">
+          <InlineSvg src="/images/icons/question.svg" height="16" stroke="#6236ff" />
+          {{ result.question }}
+        </button>
       </div>
-      <div class="results-container">
-        <ul class="results">
-          <li v-for="(result, index) in aiResults" :key="index" class="result" :id="'result-' + index">
-            <div class="question">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="icon-svg">
-                <circle cx="12" cy="12" r="11" stroke="#54636D" stroke-width="0.4px" fill="none" />
-                <path fill="#b2adad"
-                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
-              {{ result.question }}
-            </div>
-            <div class="answer-container">
-              <div v-html="apostropheSvg" class="icon-svg"></div>
-              <div class="content">
-                <div v-if="result.loading" class="loading-animation">
-                  <svg width="60px" height="33px" viewBox="0 0 60 33" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <defs>
-                      <path
-                        d="M12.2162652,30.8264704 C14.4835771,32.2056926 17.1454299,33 19.9926547,33 L45.0073453,33 C53.2834356,33 60,26.2827956 60,17.996704 L60,15.003296 C60,6.71781857 53.2875598,0 45.0073453,0 L19.9926547,0 C11.7165644,0 5,6.71720443 5,15.003296 L5,17.996704 C5,19.7846283 5.31256736,21.499554 5.88600667,23.0897305 C4.73745897,24.0058789 4,25.4170337 4,27 C4,29.7558048 6.23857625,32 9,32 C10.2234619,32 11.3460861,31.5587793 12.2162652,30.8264704 Z M0,31 C0,29.8954305 0.887729645,29 2,29 C3.1045695,29 4,29.8877296 4,31 C4,32.1045695 3.11227036,33 2,33 C0.8954305,33 0,32.1122704 0,31 Z"
-                        id="path-1"></path>
-                      <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0"
-                        width="60" height="33" fill="white">
-                        <use xlink:href="#path-1"></use>
-                      </mask>
-                    </defs>
-                    <g id="iOS" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                      <g id="Newsbot---Asking-for-News" transform="translate(-10.000000, -312.000000)">
-                        <g id="Chat" transform="translate(10.000000, -214.000000)">
-                          <g id="Chat/Typing-Indicator" transform="translate(0.000000, 526.000000)">
-                            <g id="Typing-Indicator">
-                              <use id="Typing-indicator" stroke="#E4E9EC" mask="url(#mask-2)" stroke-width="2"
-                                fill="#FFFFFF" xlink:href="#path-1"></use>
-                              <g id="Dots" transform="translate(18.000000, 13.000000)" fill="#54636D">
-                                <circle class="dot" cx="3.5" cy="3.5" r="3.5"></circle>
-                                <circle class="dot" cx="14.5" cy="3.5" r="3.5"></circle>
-                                <circle class="dot" cx="25.5" cy="3.5" r="3.5"></circle>
-                              </g>
+      <div class="anchor-mask"></div>
+    </div>
+    <div class="results-container">
+      <ul class="results">
+        <li v-for="(result, index) in aiResults" :key="index" class="result" :id="'result-' + index">
+          <div class="question">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="icon-svg">
+              <circle cx="12" cy="12" r="11" stroke="#54636D" stroke-width="0.4px" fill="none" />
+              <path fill="#b2adad"
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+            {{ result.question }}
+          </div>
+          <div class="answer-container">
+            <div v-html="apostropheSvg" class="icon-svg"></div>
+            <div class="content">
+              <div v-if="result.loading" class="loading-animation">
+                <svg width="60px" height="33px" viewBox="0 0 60 33" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <defs>
+                    <path
+                      d="M12.2162652,30.8264704 C14.4835771,32.2056926 17.1454299,33 19.9926547,33 L45.0073453,33 C53.2834356,33 60,26.2827956 60,17.996704 L60,15.003296 C60,6.71781857 53.2875598,0 45.0073453,0 L19.9926547,0 C11.7165644,0 5,6.71720443 5,15.003296 L5,17.996704 C5,19.7846283 5.31256736,21.499554 5.88600667,23.0897305 C4.73745897,24.0058789 4,25.4170337 4,27 C4,29.7558048 6.23857625,32 9,32 C10.2234619,32 11.3460861,31.5587793 12.2162652,30.8264704 Z M0,31 C0,29.8954305 0.887729645,29 2,29 C3.1045695,29 4,29.8877296 4,31 C4,32.1045695 3.11227036,33 2,33 C0.8954305,33 0,32.1122704 0,31 Z"
+                      id="path-1"></path>
+                    <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0"
+                      width="60" height="33" fill="white">
+                      <use xlink:href="#path-1"></use>
+                    </mask>
+                  </defs>
+                  <g id="iOS" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="Newsbot---Asking-for-News" transform="translate(-10.000000, -312.000000)">
+                      <g id="Chat" transform="translate(10.000000, -214.000000)">
+                        <g id="Chat/Typing-Indicator" transform="translate(0.000000, 526.000000)">
+                          <g id="Typing-Indicator">
+                            <use id="Typing-indicator" stroke="#E4E9EC" mask="url(#mask-2)" stroke-width="2"
+                              fill="#FFFFFF" xlink:href="#path-1"></use>
+                            <g id="Dots" transform="translate(18.000000, 13.000000)" fill="#54636D">
+                              <circle class="dot" cx="3.5" cy="3.5" r="3.5"></circle>
+                              <circle class="dot" cx="14.5" cy="3.5" r="3.5"></circle>
+                              <circle class="dot" cx="25.5" cy="3.5" r="3.5"></circle>
                             </g>
                           </g>
                         </g>
                       </g>
                     </g>
-                  </svg>
-                </div>
-                <div v-else v-html="result.answer"></div>
+                  </g>
+                </svg>
               </div>
+              <div v-else v-html="result.answer"></div>
             </div>
-          </li>
-          <li v-if="filterText && !aiResults.length && enableNoResults" class="no-results">
-            {{ translate('modal.noResultsText') }} "<strong>{{ filterText }}</strong>"
-          </li>
-        </ul>
-      </div>
-      <div class="discord-link">
-        <a href="https://discord.com/invite/HwntQpADJr" target="_blank">
-          <span v-html="discordSvg" </span>
-            More questions? Have something to show off? Join the ApostropheCMS Discord
-        </a>
-      </div>
+          </div>
+        </li>
+        <li v-if="filterText && !aiResults.length && enableNoResults" class="no-results">
+          {{ translate('modal.noResultsText') }} "<strong>{{ filterText }}</strong>"
+        </li>
+      </ul>
+    </div>
+    <div class="discord-link">
+      <a href="https://discord.com/invite/HwntQpADJr" target="_blank">
+        <span v-html="discordSvg" </span>
+          More questions? Have something to show off? Join the ApostropheCMS Discord
+      </a>
     </div>
   </div>
 </template>
@@ -105,7 +106,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
-const hasAsked = ref(false);
+const hasAsked = ref(false)
+const isConnecting = ref(true)
+const initialQuery = ref('')
 
 const aiResults = reactive([])
 
@@ -239,14 +242,6 @@ watch(aiResults, (newResults) => {
   sessionStorage.setItem('aiResults', JSON.stringify(newResults))
 }, { deep: true })
 
-// Function to clear results
-const clearResults = () => {
-  aiResults.length = 0
-  sessionStorage.removeItem('aiResults')
-  hasAsked.value = false
-  state.socket.emit('clear_session');  // Emitting an event to clear the session on the server
-}
-
 // Function to scroll to the specific answer
 const scrollToChatItem = (index, reversed = false) => {
   const elementId = getElementId(index, reversed)
@@ -321,7 +316,19 @@ onMounted(() => {
 
   state.socket.on('connect', () => {
     console.log('User connected with session: ', sessionId)
+    isConnecting.value = false; // Update the connection status
+    if (initialQuery.value && !hasAsked.value) {
+      sendQuery(initialQuery.value)
+      initialQuery.value = '';
+    }
   });
+
+  // Check if there's a filter text to send as an initial query
+  if (props.filterText && !hasAsked.value) {
+    isConnecting.value = true; // Show the connecting message
+    initialQuery.value = props.filterText;
+    props.filterText = ''; // Clear the filter text to avoid submitting "Connecting..."
+  }
 
   state.socket.on('answer', (answer) => {
     appendAnswer(answer.text, answer.index)
@@ -333,6 +340,21 @@ onMounted(() => {
   }
 });
 
+// Function to clear results
+const clearResults = () => {
+  aiResults.length = 0
+  sessionStorage.removeItem('user_session_id')
+  sessionStorage.removeItem('aiResults')
+  sessionStorage.removeItem('vitepress:search-type')
+  
+  hasAsked.value = false
+  // Emitting an event to clear the session on the server
+  state.socket.emit('clear_session');
+}
+
+window.addEventListener('beforeunload', () => {
+    clearResults()
+  })
 
 onBeforeUnmount(() => {
   console.log('Socket disconnected on component unmount');
@@ -502,9 +524,32 @@ h2 {
   position: sticky;
   top: 0;
   padding: 10px 0;
-  z-index: 10; /* High z-index to keep it above other content */
+  z-index: 10;
+  /* High z-index to keep it above other content */
   display: flex;
   align-items: stretch;
+}
+
+.connecting-message-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.connecting-message {
+  font-size: 18px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    color: #000;
+  }
+  50% {
+    color: #6236ff;
+  }
+  100% {
+    color: #000;
+  }
 }
 
 .results-container {
@@ -554,7 +599,7 @@ h2 {
   justify-content: center;
   gap: 4px;
   margin: 0 5px;
-  height: 30px; 
+  height: 30px;
   cursor: pointer;
   border-radius: 40px;
   padding: 0 10px 0 8px;
