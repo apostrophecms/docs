@@ -10,14 +10,18 @@ fi
 
 if [ $ENV == "staging" ]
 then
-  ipAddress=34.207.22.194
+  FOLDER=docs-staging
 elif [ $ENV == "production" ]
 then
-  ipAddress=100.24.96.198
+  FOLDER=docs
+# Support our typical syntax
+elif [ $ENV == "prod" ]
+then
+  FOLDER=docs
 else
   echo "🤷‍♀️ Target unknown"
   exit 1
 fi
 
-rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist nodeapps@$ipAddress:/opt/static/a3-docs &&
+rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist static@static.apostrophecms.com:/opt/static/$FOLDER &&
 echo "Synced up to $ENV"
