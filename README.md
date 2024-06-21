@@ -14,8 +14,8 @@ is about *contributing to* the documentation.
 Clone the repo.
 
 ```bash
-$ git clone https://github.com/apostrophecms/a3-vitepress-docs.git
-$ cd a3-vitepress-docs
+$ git clone https://github.com/apostrophecms/docs.git
+$ cd docs
 ```
 
 Next, install the dependencies for the main Vitepress documentation build.
@@ -78,6 +78,6 @@ directory. So you would link to `docs/devops/email.md` with
 
 First, make sure you've built and reviewed your documentation locally using build and preview (`npm run build && npm run preview`) and
 confirmed that your links work properly. Submit your changes as a pull request
-on the [a3-vitepress-docs](https://github.com/apostrophecms/a3-vitepress-docs/)
+on the [docs](https://github.com/apostrophecms/docs/)
 repository. Please include as much context for the change as is reasonable in
 the PR description.
