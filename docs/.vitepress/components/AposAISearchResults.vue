@@ -1,5 +1,5 @@
 <template>
-  <div class="ai-responses">
+  <div :class="['ai-responses', { 'has-asked': hasAsked }]">
     <div v-if="isConnecting && !hasAsked" class="connecting-message-container">
       <p class="connecting-message">Connecting...</p>
     </div>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="anchor - links - container">
+    <div v-else class="anchor-links-container">
       <div class="anchor-links">
         <button v-for="(result, index) in reversedAiResults" :key="index" @click="scrollToChatItem(index, true)">
           <InlineSvg src="/images/icons/question.svg" height="16" stroke="#6236ff" />
@@ -81,7 +81,7 @@
     </div>
     <div class="discord-link">
       <a href="https://discord.com/invite/HwntQpADJr" target="_blank">
-        <span v-html="discordSvg" </span>
+        <span v-html="discordSvg"></span>
           More questions? Have something to show off? Join the ApostropheCMS Discord
       </a>
     </div>
@@ -94,7 +94,7 @@ import { onKeyStroke } from '@vueuse/core'
 import io from 'socket.io-client'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/devibeans.css'
+import 'highlight.js/styles/base16/framer.css'
 import { v4 as uuidv4 } from 'uuid'
 import AposOGLink from './AposOGLink.vue'
 import InlineSvg from 'vue-inline-svg';
@@ -126,6 +126,7 @@ const isAISearchActive = inject('isAISearchActive')
 
 // Function to handle Enter key press
 const handleKeyPress = (event) => {
+  console.log('isAISearchActive', isAISearchActive.value)
   if (event.key === 'Enter' && isAISearchActive.value) {
     sendQuery(event.target.value)
     event.target.value = ''
@@ -303,8 +304,19 @@ onMounted(() => {
     })
   }
 
+  const websocketURLs = {
+    'docs-staging.apos.dev': 'https://chatbot-staging.apos.dev',
+    'docs.apostrophecms.org': 'https://chatbot-production.apos.dev'
+  };
+
+  // Get the current hostname
+  const currentHostname = window.location.hostname;
+
+  // Determine the WebSocket server URL based on the current hostname
+  const socketURL = websocketURLs[currentHostname] || 'http://localhost:3000';
+
   // Connect to the socket.io server
-  state.socket = io.connect(window.location.protocol + '//' + window.location.hostname + ':5000', {
+  state.socket = io.connect(socketURL , {
     query: {
       user_session_id: sessionId
     }
@@ -494,6 +506,8 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
+  flex: 1;
 }
 
 .detail {
@@ -554,8 +568,18 @@ h2 {
 
 .results-container {
   overflow-y: auto;
+  flex-grow: 1;
   height: calc(100% - 50px);
   padding: 0px 50px 20px;
+  display: none;
+}
+
+.has-asked .results-container {
+  display: block;
+}
+
+.has-asked .ai-empty-state {
+  display: none;
 }
 
 .anchor-links {
