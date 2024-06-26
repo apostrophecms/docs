@@ -346,6 +346,10 @@ onMounted(() => {
     appendAnswer(answer.text, answer.index)
   });
 
+  state.socket.on('error', (error) => {
+    console.error('Error:', error)
+  });
+
   const searchBar = document.getElementById('query-input');
   if (searchBar) {
     searchBar.addEventListener('keypress', handleKeyPress);
