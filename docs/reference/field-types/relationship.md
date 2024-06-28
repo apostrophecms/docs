@@ -41,9 +41,8 @@ _toppings: {
 |`type` | String | n/a | Specifies the field type (`relationship` for this type) |
 
 ### Optional
-<div id="custom-table">
 
-|  Property | Type   | Default | Description |
+| Property | Type | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`builders` | Object | n/a | Query builders to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
 |`fields` | Object | n/a | A field schema object, allowing editors to [add additional information to most relationships](/guide/relationships.md#providing-context-with-fields). |
@@ -61,14 +60,12 @@ _toppings: {
 |`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationship) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 |`browse` | Boolean | `true` | If `false`, hide the browse button. |
-|`suggestionLabel` | String | `apostrophe:relationshipSuggestionLabel` | The label at the top of the autocomplete suggestions |
-|`suggestionHelp` | String | `apostrophe:relationshipSuggestionHelp` | The text to display next to the autocomplete suggestion label |
+| `suggestionLabel` | String | <div style="word-wrap:break-word;">`apostrophe:`&#8203;`relationshipSuggestionLabel`</div> | The label at the top of the autocomplete suggestions |
+|`suggestionHelp` | String | <div style="word-wrap:break-word;">`apostrophe:`&#8203;`relationshipSuggestionHelp`</div> | The text to display next to the autocomplete suggestion label |
 |`suggestionLimit` | Number | 25 | How many suggestions should be displayed when you focus the search field |
 |`suggestionSort` | Object | `{ updatedAt: -1 }` | How to sort the autocomplete results |
 |`suggestionIcon` | String | `text-box-icon` | The icon to display before the autocomplete item. Please refer to the [`icons` module setting](/reference/module-api/module-overview.md#icons) |
 |`suggestionFields` | Array | `[ 'slug' ]` | The document properties to display next to the autocomplete label |
-
-</div>
 
 ::: tip
 To create relationships with pages, use `withType: '@apostrophecms/any-page-type'`.
@@ -142,46 +139,3 @@ _players: {
   withRelationships: [ '_specialties._photo' ]
 }
 ```
-
-<style>
-#custom-table table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed; /* Forces the table to respect specified widths */
-}
-#custom-table tr {
-  width: 100%;
-}
-#custom-table th, #custom-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  white-space: pre-wrap; 
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
-
-#custom-table th {
-  background-color: #f2f2f2;
-  text-align: left;
-}
-
-#custom-table td:nth-child(1), #custom-table td:nth-child(2) {
-  width: 20%;
-}
-
-#custom-table td:nth-child(3) {
-  width: 30%;
-}
-
-#custom-table td:nth-child(4) {
-  width: 30%;
-}
-
-@media (max-width: 768px) {
-  #custom-table td:nth-child(1), #custom-table td:nth-child(2),
-  #custom-table td:nth-child(3), #custom-table td:nth-child(4) {
-    width: 100%;
-  }
-}
-
-</style>

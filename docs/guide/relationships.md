@@ -236,6 +236,10 @@ With this field in place, you could display connected articles in a topics show 
 
 In some cases, it is useful to add additional information to individual relationships. This would be information that is only relevant to the relationship and not to each individual part.
 
+::: info
+This will work for the majority of relationships. However, for relationships with `@apostrophecms/image` pieces you can not add additional fields.
+:::
+
 For example, we might be working on a website that displays teams within a company and the people on each team. We would use a relationship field on each `team` piece to connect to multiple `person` pieces. With that we should list all the team members on each `team` show page.
 
 If people have *unique job titles within different teams* we could store the job title directly on the relationship itself. Someone might be a "Support engineer" on the Support Team and a "QA engineer" within the Product Team. To do this, we add a standard field schema to the relationship field.
