@@ -41,6 +41,12 @@ export default defineConfig({
           replacement: fileURLToPath(
             new URL('./components/AposDocFooter.vue', import.meta.url)
           )
+        },
+        {
+          find: /^.*\/VPLocalSearchBox\.vue$/,
+          replacement: fileURLToPath(
+            new URL('./components/AposLocalSearchBox.vue', import.meta.url)
+          )
         }
       ]
     }

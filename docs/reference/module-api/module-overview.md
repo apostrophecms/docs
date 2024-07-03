@@ -1186,7 +1186,7 @@ Each extended query builder or method should accept the original function as `_s
 
 Add standard Express middleware to be called on *every* request. The `middleware` function takes the module as an argument and must return an object of [middleware functions](https://expressjs.com/en/guide/using-middleware.html). This is a good place to import third-party middleware if it should be called on every request.
 
-Note that if you are considering authoring your own middleware, it is often better to add an event handler or `await` a method in the appropriate API route instead.
+Note that `middleware(self)` is global and runs for every request, not just for requests involving the module containing the middleware. If you are considering authoring your own middleware, it is often better to add an event handler or `await` a method in the appropriate API route instead.
 
 ```javascript
 // modules/limiter/index.js
