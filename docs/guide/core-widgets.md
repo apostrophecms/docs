@@ -45,6 +45,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | --------- | ----------- |
 | `'styles'` | A list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
 | `'bold'` | Bold text |
+| `'color'` | Text color selector |
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
 | `'superscript'` | Superscript text |
@@ -64,7 +65,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
-| `'|'` | Add a visual separator to the toolbar (not a formatting action) |
+| `'\|'` | Add a visual separator to the toolbar (not a formatting action) |
 
 <!-- TODO: Add a link to the how-to on adding your own tools when available. -->
 

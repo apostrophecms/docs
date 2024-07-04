@@ -1016,6 +1016,7 @@ Option settings in this section apply to the core rich text widget module (`@apo
 | [`defaultData`](#defaultdata) | Object | Define initial default data for rich text content. |
 | [`defaultOptions`](#defaultoptions) | Object | Configure the rich text toolbar and styles for rich text widgets. |
 | [`editorTools`](#editortools) | Object | Configure rich text tools and their Vue components. |
+| [`colorPicker`](#colorpicker) |
 
 ### `defaultData`
 
