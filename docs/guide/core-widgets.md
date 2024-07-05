@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
-There are many text formatting features that you can configure for rich text widgets. These editor options are configured in two widget options: [`toolbar`](#configuring-the-toolbar) and [`styles`](#configuring-text-styles). Add these to the widget configuration object when adding an area field. 
+There are many text formatting features that you can configure for rich text widgets. These editor options are configured in four widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), [`pickerOptions`](#configuring-the-color-picker), and [`format`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field. 
 
 ``` js
 // modules/@apostrophecms/home-page/index.js
@@ -21,7 +21,7 @@ There are many text formatting features that you can configure for rich text wid
 widgets: {
   '@apostrophecms/rich-text': {
     // 👇 Toolbar configuration
-    toolbar: ['styles', 'bold', 'italic'],
+    toolbar: ['styles', 'bold', 'italic', 'color'],
     // 👇 Styles configuration
     styles: [
       {
@@ -32,7 +32,11 @@ widgets: {
         tag: 'h2',
         label: 'Heading 2 (H2)'
       }
-    ]
+    ],
+    pickerOptions: {
+      presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff'],
+    },
+    format: 'hex'
   }
 }
 ```
@@ -44,6 +48,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | Tool name | What is it? |
 | --------- | ----------- |
 | `'styles'` | A list of text styles, allowing different HTML tags and CSS classes (see ["Configuring text styles"](#configuring-text-styles) below) |
+| `'color'` | Change text color (see ["Configuring the color picker"](#configuring-the-color-picker) below) |
 | `'bold'` | Bold text |
 | `'italic'` | Italicize text |
 | `'strike'` | Strikethrough text |
@@ -140,6 +145,45 @@ Adding to the stylesheet:
 
 The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
+### Configuring the color picker
+If you choose to add the `color` button to the toolbar you can optionally pass in a `format` option and a `pickerOptions` configuration object. These are the same options that are passed to the [`color` schema field](/reference/field-types/color.html).
+
+#### `format`
+The `format` option takes a string that indicates the format that should be saved to the database. The default value is `hex8`.
+The possible values are:
+* `rgb`
+* `prgb`
+* `hex6`
+* `hex3`
+* `hsl`
+* `hsv`
+
+#### `pickerOptions`
+The `pickerOptions` option takes an object with three possible properties. The `presetColors` property takes an array of colors that will populate the swatches below the spectrum color picker.
+
+
+- **Default Value:**
+
+```javascript
+[
+  '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321',
+  '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2',
+  '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
+]
+```
+
+- **Usage**
+
+```javascript
+pickerOptions: {
+  presetColors: ['#ea433a', '#cc9300', '#b327bf', '#66f', '#00bf9a']
+}
+```
+
+The `disableAlpha` property is `false` by default. Setting it to `true` removes the alpha transparency range input from the picker.
+
+The `disableFields` property is `false` by default. Setting it to `true` removes the string inputs for hex and rgba from the picker.
+
 ### Default rich text configuration
 
 ```javascript
@@ -189,7 +233,12 @@ module.exports = {
       ],
       styles: [
         // Your own default styles
-      ]
+      ],
+      pickerOptions: {
+        // Your own default picker options
+      },
+      // your desired format
+      format: 'rgb'
     }
   }
 }
