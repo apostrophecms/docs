@@ -85,6 +85,7 @@
           More questions? Have something to show off? Join the ApostropheCMS Discord
       </a>
     </div>
+    <div class="disclaimer">This feature is experimental and can make errors.</div>
   </div>
 </template>
 
@@ -772,5 +773,12 @@ h2 {
   /* Makes the span take the full width as a block element */
   margin-bottom: 10px;
   /* Space between the text and the link */
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: #a9a7a7;
+  text-align: center;
+  margin-top: 10px;
 }
 </style>
