@@ -252,7 +252,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 
 ## Toggling the admin-bar visibility
 
-There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
+There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. For example, the visibility of a page or a piece document can be set to `login required`, so only those with an account can view it. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
 
 <AposCodeBlock>
 
@@ -321,7 +321,7 @@ export default () => {
 
 </AposCodeBlock>
 
-In this script, the `apos.login?.user` is checked to determine if the user is logged in and the value of `apos.adminBar?.showAdminBar` is checked to determine if the particular user has the admin-bar as an option for logging out. Upon click, the button emits an event named `admin-menu-click` with an argument of `@apostrophecms/login-logout` to trigger user logout. You could also elect to add a logout button in your template where the visibility is toggled by these same checks.
+In this script, the `apos.login?.user` is checked to determine if the user is logged in and the value of `apos.adminBar?.showAdminBar` is checked to determine if the particular user has the admin-bar as an option for logging out. Upon click, the button emits an event named `admin-menu-click` with an argument of `@apostrophecms/login-logout` to trigger user logout. You could also elect to add a logout button in your template where the visibility is toggled by these same checks. You can use a similar method to implement other controls, like page navigation when the admin bar is hidden.
 
 ## Adding custom modal controls
 
