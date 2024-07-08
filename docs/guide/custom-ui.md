@@ -250,6 +250,79 @@ Do not use core actions as your `action` property value - this would lead to unp
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
+## Toggling the visibility of the admin-bar
+
+There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. For example, the visibility of a page or a piece document can be set to `login required`, so only those with an account can view it. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
+
+<AposCodeBlock>
+
+``` js
+module.exports = {
+  extendMethods(self) {
+    return {
+      getShowAdminBar(_super, req) {
+        if (req.user?.role === 'guest') {
+          return false;
+        }
+
+        return _super(req);
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/admin-bar/index.js
+  </template>
+</AposCodeBlock>
+
+::: info
+Note that if you are using the [`@apostrophecms-pro/advanced-permission` module](https://apostrophecms.com/extensions/advanced-permission) it doesn't use roles, so you will need to implement a different check for determining if the admin bar should be hidden.
+:::
+
+When electing to not display the admin-bar, you need to implement an alternative way for the user to log out.
+
+<AposCodeBlock>
+
+```js
+export default () => {
+  const insertLogoutButton = () => {
+    // Function to insert the logout button
+    function addLogoutButton() {
+      // selects the end of the hidden admin-bar wrapper
+      const navElement = document.querySelector('.bp-nav');
+      // Check the nav element exists, the user is logged in, and the admin bar is hidden
+      if (navElement && apos.login?.user && apos.adminBar?.showAdminBar === false) {
+        // Create the logout button
+        const logoutButton = document.createElement('button');
+        logoutButton.id = 'logoutButton';
+        logoutButton.textContent = 'Log Out';
+        logoutButton.style.display = 'block';
+        logoutButton.addEventListener('click', () => {
+          // trigger logout from the @apostrophecms/login module
+          apos.bus.$emit('admin-menu-click', '@apostrophecms/login-logout');
+        });
+
+        // Insert the button after the nav element
+        navElement.insertAdjacentElement('afterend', logoutButton);
+      }
+    }
+    addLogoutButton();
+  };
+
+  // Wrap the script in apos.util.onReady to refire when the editing
+  // state changes
+  apos.util.onReady(insertLogoutButton);
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/admin-bar/ui/src/index.js
+  </template>
+
+</AposCodeBlock>
+
+In this script, the `apos.login?.user` is checked to determine if the user is logged in and the value of `apos.adminBar?.showAdminBar` is checked to determine if the particular user has the admin-bar as an option for logging out. Upon click, the button emits an event named `admin-menu-click` with an argument of `@apostrophecms/login-logout` to trigger user logout. You could also elect to add a logout button in your template where the visibility is toggled by these same checks. You can use a similar method to implement other controls, like page navigation when the admin bar is hidden.
+
 ## Adding custom modal controls
 
 Most times the controls on the admin-bar and located within the context menu are sufficient. However, in some cases you might want to add additional controls to facilitate the creation or editing of pages and pieces. For example, you could add a button for creating a new post on a blog index page. The `apos.doc.edit()` method takes an object with one required and two optional properties. It triggers the opening of the editing modal for the corresponding document type and allows you to create, edit, and duplicate both pieces and pages. When awaited, the method returns either the edited document object, including the computed `_id` for the document, or 'undefined' if the modal is cancelled.

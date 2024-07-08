@@ -107,21 +107,24 @@ The `label` will be the name displayed for the button on the menu bar.
 | `tooltip` | Object \|\| String | Depending on the `toggle` value, a tooltip string or an object with `activated` and `deactivated` strings. |
 | `user` | Boolean | Adds the button alongside the "Log Out" button on the personal dropdown at the upper right. Should be reserved for items that manage personal settings. |
 
-### `last`
+#### `last`
 
 If the `last` property is set to ‘true’, the button will be displayed as the last item in the left list of buttons. Note: If more than one button has this property, the last one loaded will win.
 
-### `contextUtility`
+#### `contextUtility`
 
 If the `contextUtility` property is set to `true`, the button will be displayed as an icon in the tray of icons to the left of the page settings gear.
 
-### `icon`
+#### `icon`
 
  For proper display when setting `contextUtility` to true, a property of `icon` set to the value of an existing icon must also be passed. More can be read about icons [here](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons). A list of the icons imported automatically by Apostrophe can be found in the [‘asset’ module in the ‘globalIcos.js’ file’ within the ‘lib’ folder](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js).
 
-### `toggle`
+#### `toggle`
 
 The `toggle` property is used in conjunction with `contextUtility`. If it set to `true` then the button will toggle between active and inactive states. This allows the addition of different tooltip text depending on state.
 
-### `tooltip`
+#### `tooltip`
 The `tooltip` property can take either a string or an object. If `toggle` is falsy, then the value of `tooltip` is a string to display on hover. If `toggle` is truthy, then `tooltip` takes an object with two arguments, `activate` and `deactivate`. Both properties accept string values with the former being displayed for the activated state and the later the deactivated state.
+
+### `getShowAdminBar(req)`
+This method determines whether the admin-bar should be displayed. At project level, this method should be extended in the `modules/@apostrophecms/admin-bar/index.js` file `extendMethods(self)` customization function and should return a boolean value. By default, it returns the value of `!!req.user`, which is true if a user is logged in. An example of how to use this method is shown in the [custom admin ui](/guide/custom-ui.html#toggling-the-admin-bar-visibility) section of the documentation.
