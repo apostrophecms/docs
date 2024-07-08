@@ -3,7 +3,7 @@
 Deploying Apostrophe to production requires that you specify hosting for the code base, the MongoDB instance, and storage for any uploaded content. Many hosting services can provide all three, but it is also possible and sometimes desirable to split these between different services. This tutorial looks at file storage solutions using the S3 API.
 
 ## What is the S3 API?
-The S3 API  is a REST API developed by Amazon as a means of communicating with their Simple Storage Service (S3). Versions of this API have since been adopted by many other providers. These alternative providers can sometimes provide lower cost points or desirable features, like IPFS. The `@apostrophecms/uploadfs` module provides an easy way to connect to most S3 API-powered services through environmental variables.
+The S3 API is a REST API developed by Amazon as a means of communicating with their Simple Storage Service (S3). Versions of this API have since been adopted by many other providers. These alternative providers can sometimes provide lower cost points or desirable features, like IPFS. The `@apostrophecms/uploadfs` module provides an easy way to connect to most S3 API-powered services through environmental variables.
 
  Depending on the service used for hosting your code base, there are different ways to set these variables. For example, Heroku as we show in our [hosting tutorial](./deploying-to-heroku.md), allows you to configure your app either through their CLI or dashboard. For other hosting environments, you may need to set these variables through a `.env` or `.bashrc` file.
 
@@ -38,9 +38,11 @@ Setting these variables will allow for upload into your bucket, but until you ch
 4) Select "ACLs enabled" and "Object writer" then acknowledge the warning and save the changes.
 ![S3 console object ownership edit screen](../images/s3-object-permission.png)
 
+If you are using a CDN or want to make uploaded objects private for another reason, you can set the `bucketObjectsACL` to `private`. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
+
 ## Using FileBase for storage
 
-The FileBase storage service uses a truncated version of the S3 API. However, we can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
+The FileBase storage service uses a truncated version of the S3 API. However, we can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
 
 1) Create a [FileBase account](https://filebase.com/). While the service does have a free tier, it doesn't allow public access. This means our site won't be able to load resources, so you need to select one of their paid plans.
 2) From the console switch to the "Buckets" tab and click on "Create Bucket".
@@ -52,11 +54,11 @@ The FileBase storage service uses a truncated version of the S3 API. However, we
 8) On this screen we can also get the value for the `APOS_S3_ENDPOINT` environment variable from the URL listed under 'S3 API Endpoint'. Note: you should **not** set the `APOS_S3_REGION` key.
 
 ### FileBase Security
-While FileBase can accept the same type of CORS (cross-origin resource sharing) and ACL (access control list) rules as AWS S3, simply setting the security toggle to "public" on the "Buckets" screen should be enough for most sites.
+While FileBase can accept many of the same type of CORS (cross-origin resource sharing) and ACL (access control list) rules as AWS S3, simply setting the security toggle to "public" on the "Buckets" screen should be enough for most sites. FileBase does not allow for object-level ACLs. The permissions for your uploads is based on the bucket the object is uploaded into, so the `bucketObjectsACL` option will not apply.
 
 ## Using Vultr for storage
 
-The Vultr storage service uses a truncated version of the S3 API. However, we can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
+The Vultr storage service uses a truncated version of the S3 API. However, we can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
 
 1) Create a [Vultr account](https://www.vultr.com/). While the service doesn't have a free tier, you should be able to find a free credit offer if you are a new customer.
 2) Log in to your account and navigate to "Products".
@@ -74,7 +76,7 @@ While files uploaded to Vultr are private by default, the `@apostrophecms/upload
 
 ## Using Wasabi for storage
 
-The Wasabi storage service has an expanded API that supports some features not found in the AWS S3 REST API, but is compatible with the core S3 API that Apostrophe uses. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
+The Wasabi storage service has an expanded API that supports some features not found in the AWS S3 REST API, but is compatible with the core S3 API that Apostrophe uses. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
 
 1) Create a [Wasabi account](https://www.wasabi.com/).  While the service does have a free tier, it doesn't allow public access. This means our site won't be able to load resources, so you need to select one of their paid plans. You may be able to find a credit offer if you are a new customer.
 2) Once logged in, click on "Create Bucket".
@@ -89,11 +91,11 @@ The Wasabi storage service has an expanded API that supports some features not f
 If you didn't note the endpoint URL you can get it based on the region code (e.g. 'us-east-1') from this [page](https://wasabi-support.zendesk.com/hc/en-us/articles/360015106031-What-are-the-service-URLs-for-Wasabi-s-different-storage-regions-).
 
 ### Wasabi security
-The files uploaded to the Wasabi bucket are publicly available right away without the need for any changes. However, if you click the menu to the right of the bucket name and select "Setting", it will bring up a page that allows you to alter permissions easily.
+The files uploaded to the Wasabi bucket are publicly available right away without the need for any changes. However, if you click the menu to the right of the bucket name and select "Setting", it will bring up a page that allows you to alter permissions easily. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
 
 ## Using DigitalOcean Spaces for storage
 
-The DigitalOcean Spaces API is a truncated version of the AWS S3 API that supports all the features we need for using it for storage with Apostrophe. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable.
+The DigitalOcean Spaces API is a truncated version of the AWS S3 API that supports all the features we need for using it for storage with Apostrophe. We can use this service in almost the same manner as the AWS S3 service. In this case, we must pass in one additional environment variable, `APOS_S3_ENDPOINT`, and **not** set the `APOS_S3_REGION` variable. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.
 
 1) Create a [DigitalOcean account](https://www.digitalocean.com/). They don't have a free tier, but do offer a credit to new customers.
 2) Once logged in, you'll be brought to a project page. Click on "Store static objects". In some cases, you might instead have to click "Start using Spaces".
