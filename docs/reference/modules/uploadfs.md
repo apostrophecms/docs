@@ -124,6 +124,7 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 | [`secret`](#secret) | String | Provides the account `secretAccessKey`. |
 | [`key`](#key) | String | Provides the account `accessKeyId`. |
 | [`token`](#token) | String  | Provides an optional `sessionToken`. |
+| [`bucketObjectsACL`](#bucketobjectsacl) | `private` or `read-only` | Can be optionally set to `private` to prevent public download of the asset. |
 
 Also see the (environment variables)[#environmentvariables], which are often sufficient to select and configure S3 without any options in the code.
 
@@ -180,6 +181,9 @@ The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Cred
 
 ### `token`
 The `token` option is used to pass the value of the optional `sessionToken` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
+
+### `bucketObjectsACL`
+The `bucketObjectsACL` option sets the access control level for files uploaded to AWS S3, with a default of `public-read`. Setting this option to `private` ensures that only authorized users can access the files, enhancing security for sensitive content. This is useful when integrating with a CDN, where you can use signed URLs to securely serve private content to users.
 
 ---
 
