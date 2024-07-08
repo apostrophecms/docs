@@ -250,7 +250,7 @@ Do not use core actions as your `action` property value - this would lead to unp
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
-## Toggling the admin-bar visibility
+## Toggling the visibility of the admin-bar
 
 There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. For example, the visibility of a page or a piece document can be set to `login required`, so only those with an account can view it. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
 
