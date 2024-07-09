@@ -124,6 +124,7 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 | [`secret`](#secret) | String | Provides the account `secretAccessKey`. |
 | [`key`](#key) | String | Provides the account `accessKeyId`. |
 | [`token`](#token) | String  | Provides an optional `sessionToken`. |
+| [`bucketObjectsACL`](#bucketobjectsacl) | `private` or `read-only` | Can be optionally set to `private` to prevent public download of the asset. |
 
 Also see the (environment variables)[#environmentvariables], which are often sufficient to select and configure S3 without any options in the code.
 
@@ -180,6 +181,9 @@ The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Cred
 
 ### `token`
 The `token` option is used to pass the value of the optional `sessionToken` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
+
+### `bucketObjectsACL`
+The `bucketObjectsACL` option sets the access control level (ACL) for files uploaded to AWS S3, with a default of `public-read`. If you want to make your S3 bucket private and serve content through the Amazon CloudFront service, you need to set `bucketObjectsACL: 'private'` to block public access. Additionally, follow the [documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html) to ensure your bucket is set up with an Origin Access Control correctly, otherwise, CloudFront will not be able to access it.
 
 ---
 
