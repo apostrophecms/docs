@@ -183,7 +183,7 @@ The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Cred
 The `token` option is used to pass the value of the optional `sessionToken` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
 
 ### `bucketObjectsACL`
-The `bucketObjectsACL` option sets the access control level (ACL) for files uploaded to AWS S3, with a default of `public-read`. If you want to make your S3 bucket private and serve content through the Amazon CloudFront service, you need to set `bucketObjectsACL: 'private'` to allow CloudFront access. Additionally, follow the [documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html) to ensure your bucket is set up with an Origin Access Control correctly, otherwise, CloudFront will not be able to access it.
+The `bucketObjectsACL` option sets the access control level (ACL) for files uploaded to AWS S3, with a default of `public-read`. If you want to make your S3 bucket private and serve content through the Amazon CloudFront service, you need to set `bucketObjectsACL: 'private'` to block public access. Additionally, follow the [documentation](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html) to ensure your bucket is set up with an Origin Access Control correctly, otherwise, CloudFront will not be able to access it.
 
 ---
 
