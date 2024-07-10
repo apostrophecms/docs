@@ -34,8 +34,7 @@ widgets: {
       }
     ],
     color: {
-      presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff'],
-      format: 'rgb'
+      presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff']
     }
   }
 }
@@ -146,22 +145,12 @@ Adding to the stylesheet:
 The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
 ### Configuring the color picker
-If you choose to add the `color` button to the toolbar you can optionally pass in a `format` option and a `pickerOptions` configuration object. These are the same options that are passed to the [`color` schema field](/reference/field-types/color.html).
+If you choose to add the `color` button to the toolbar you can optionally pass in a `color` configuration object. These are a subset of the options that are passed to the [`color` schema field](/reference/field-types/color.html).
 
 #### **color**
-The `color` option takes an object with four possible properties.
+The `color` option takes an object with three possible properties.
 
-#### `format`
-The `format` option takes a string that indicates the format that should be saved to the database. The default value is `hex8`.
-The possible values are:
-* `rgb`
-* `prgb`
-* `hex6`
-* `hex3`
-* `hsl`
-* `hsv`
-
-#### `pickerOptions`
+#### `presetColors`
 The `presetColors` property takes an array of colors that will populate the swatches below the spectrum color picker.
 
 - **Default Value:**
