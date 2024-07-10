@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
-There are many text formatting features that you can configure for rich text widgets. These editor options are configured in four widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), [`pickerOptions`](#configuring-the-color-picker), and [`format`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field. 
+There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`color`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field.
 
 ``` js
 // modules/@apostrophecms/home-page/index.js
@@ -33,10 +33,10 @@ widgets: {
         label: 'Heading 2 (H2)'
       }
     ],
-    pickerOptions: {
+    color: {
       presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff'],
-    },
-    format: 'hex'
+      format: 'rgb'
+    }
   }
 }
 ```
@@ -148,6 +148,9 @@ The other tags that wrap the selected text instead of converting the entire sect
 ### Configuring the color picker
 If you choose to add the `color` button to the toolbar you can optionally pass in a `format` option and a `pickerOptions` configuration object. These are the same options that are passed to the [`color` schema field](/reference/field-types/color.html).
 
+#### **color**
+The `color` option takes an object with four possible properties.
+
 #### `format`
 The `format` option takes a string that indicates the format that should be saved to the database. The default value is `hex8`.
 The possible values are:
@@ -159,8 +162,7 @@ The possible values are:
 * `hsv`
 
 #### `pickerOptions`
-The `pickerOptions` option takes an object with three possible properties. The `presetColors` property takes an array of colors that will populate the swatches below the spectrum color picker.
-
+The `presetColors` property takes an array of colors that will populate the swatches below the spectrum color picker.
 
 - **Default Value:**
 
@@ -175,13 +177,14 @@ The `pickerOptions` option takes an object with three possible properties. The `
 - **Usage**
 
 ```javascript
-pickerOptions: {
+color: {
   presetColors: ['#ea433a', '#cc9300', '#b327bf', '#66f', '#00bf9a']
 }
 ```
-
+#### `disableAlpha`
 The `disableAlpha` property is `false` by default. Setting it to `true` removes the alpha transparency range input from the picker.
 
+#### `disableFields`
 The `disableFields` property is `false` by default. Setting it to `true` removes the string inputs for hex and rgba from the picker.
 
 ### Default rich text configuration
@@ -234,11 +237,9 @@ module.exports = {
       styles: [
         // Your own default styles
       ],
-      pickerOptions: {
-        // Your own default picker options
+      color: {
+        // Your own default color picker options
       },
-      // your desired format
-      format: 'rgb'
     }
   }
 }
