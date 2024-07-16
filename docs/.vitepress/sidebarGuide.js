@@ -222,6 +222,20 @@ const sidebarGuide = [
     ]
   },
   {
+    text: 'Pro Starter Kits',
+    collapsed: false,
+    items: [
+      {
+        text: 'Pro Essentials Starter Kit',
+        link: 'starters/essentials.md'
+      },
+      {
+        text: ' Pro Assembly Starter Kit',
+        link: 'starters/assembly.md'
+      }
+    ]
+  },
+  {
     text: 'Pro Extensions',
     collapsed: false,
     items: [
@@ -234,7 +248,8 @@ const sidebarGuide = [
       { text: 'Data Set', link: 'https://apostrophecms.com/extensions/data-set' },
       { text: 'Account Signup', link: 'https://apostrophecms.com/extensions/account-signup' },
       { text: 'Automated Testing Tools', link: 'https://apostrophecms.com/extensions/automated-testing-tools' },
-      { text: 'Apostrophe Pro Starter', link: 'https://apostrophecms.com/extensions/apostrophe-pro-starter' }
+      { text: 'Automatic Translation', link: 'https://apostrophecms.com/extensions/automatic-translation' },
+      { text: 'SEO Assistant', link: 'https://apostrophecms.com/extensions/seo-assistant'}
     ]
   }
 ];
