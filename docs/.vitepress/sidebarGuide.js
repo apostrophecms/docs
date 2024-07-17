@@ -222,12 +222,16 @@ const sidebarGuide = [
     ]
   },
   {
-    text: 'Pro Starter Kits',
+    text: 'Starter Kits',
     collapsed: false,
     items: [
       {
-        text: 'Pro Essentials Starter Kit',
+        text: 'Essentials Starter Kit',
         link: 'starters/essentials.md'
+      },
+      {
+        text: 'Pro Essentials Starter Kit',
+        link: 'starters/pro-essentials.md'
       },
       {
         text: ' Pro Assembly Starter Kit',
