@@ -27,6 +27,7 @@
     </div>
     <div class="results-container">
       <ul class="results">
+        <AposAINote v-if="hasAsked && aiResults.length === 1" />
         <li v-for="(result, index) in aiResults" :key="index" class="result" :id="'result-' + index">
           <div class="question">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" class="icon-svg">
@@ -99,6 +100,7 @@ import 'highlight.js/styles/base16/framer.css'
 import { v4 as uuidv4 } from 'uuid'
 import AposOGLink from './AposOGLink.vue'
 import InlineSvg from 'vue-inline-svg';
+import AposAINote from './AposAINote.vue'
 
 const props = defineProps({
   filterText: String,
@@ -127,9 +129,9 @@ const isAISearchActive = inject('isAISearchActive')
 
 // Function to handle Enter key press
 const handleKeyPress = (event) => {
-  console.log('isAISearchActive', isAISearchActive.value)
   if (event.key === 'Enter' && isAISearchActive.value) {
-    sendQuery(event.target.value)
+    const query = event.target.value
+    sendQuery(query)
     event.target.value = ''
     event.preventDefault() // Prevent default action to avoid normal search result selection
   }
