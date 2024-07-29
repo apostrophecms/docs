@@ -290,7 +290,6 @@ onKeyStroke('Escape', () => {
 
 onMounted(() => {
   let sessionId = sessionStorage.getItem('user_session_id')
-  console.log('Session ID:', sessionId)
   if (!sessionId) {
     sessionId = uuidv4();
     sessionStorage.setItem('user_session_id', sessionId)
