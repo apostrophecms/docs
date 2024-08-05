@@ -15,13 +15,17 @@ Localizing content is only possible if the Apostrophe app has configured locales
 
 ## Localizing editable content
 
-Before going into specifics of user interface, it is worth establishing some of the important concepts and patterns used in Apostrophe's content localization.
+Before going into specifics of the user interface, it is worth establishing some of the important concepts and patterns used in Apostrophe's content localization.
 
-Localizing means that **we make a clone of the content for a new locale, then make changes specific to the new locale.** As mentioned earlier, this will often involve translation, switching out photos, adding information, and other content changes. Once the page or piece has a new locale version, website visitors using the new locale will be able to see that thing.
+Localizing means that **we make a clone of the content for a new locale, then make changes specific to the new locale.** As mentioned earlier, this will often involve translation, switching out photos, adding information, and other content changes. Once the page or piece has a new locale version, website visitors using the new locale will be able to see that document.
 
 **Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Mandarin, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
 
-Let's take a look at this process using a new page in the Apostrophe demo as an example. In this example we will have three locales configured:
+There are multiple ways to localize a page or piece document depending on your needs. The primary workflow is to use the context menu to re-localize the document. This will allow you to localize documents that are associated through relationships with the page at the same time. This also allows for the use of the automatic translation of existing content using the [`@apostrophecms-pro/automatic-translation` extension](https://apostrophecms.com/extensions/automatic-translation).
+
+As covered below, from within the editor manager you also have the option to use the inline locale switcher located to the left of the user preferences menu. This will create a new document in the selected locale that is linked to the original document, but will not migrate any content.
+
+Let's take a look at the context menu localization using a new page in the Apostrophe demo as an example. In this example we will have three locales configured:
 
 <AposCodeBlock>
 
@@ -50,43 +54,45 @@ Let's take a look at this process using a new page in the Apostrophe demo as an 
   </template>
 </AposCodeBlock>
 
-### Creating the page in the active locale
+### Creating localized content using the context menu
 
-We'll start in the default locale, `'en'`. If the hostname of this site was `example.com`, we'd be on the home page, `https://example.com`. When we create a page through the UI, there is now an indicator in the editor modal telling us what the active locale is.
+![The edit menu for this page opened and including a localize option](../../images/l10n/edit-mode-menu.png)
 
-![The page editor modal with a new "Locale: en" indicator at the top](/images/l10n/locale-in-editor-modal.png)
+After creating a new page, we want to add any content and widgets that will also be used in other locales. For example, we might want to add a hero widget to the page since all pages would need that content. Once the page is localized you can then edit the content to fit the new locale. For example, the hero image in the English and French locales might differ. But, adding the content to your original page before localizing means that the pages in other locales will share a more unified look. Plus, it reduces the effort of building the page multiple times, once for each locale. Any content addition following the original localization action will not be included across locales automatically. The page can be re-localized, but this will overwrite any edits that have been made in the new locale for that document.
 
-Now on the new page, we can note the new locale chooser on the right side of the admin bar, next to the user avatar. It is added to the interface when more than one locale is configured for the app. Here we can see that there are three locales on the website: English, French, and Spanish.
+Once we have a page that is ready for localization, we can select "Localize..." from the context menu. For pages, this context menu is present when editing pages and in the page tree. For pieces, this context menu is present both when editing a piece and within the piece manager.
 
-We haven't switched locales, so the "English" option is selected. There is also a green, filled dot next to the label, indicating that the page exists in that locale.
-
-![The Apostrophe locale chooser with "English" selected"](/images/l10n/locale-chooser-ui.png)
-
-If we switched over to French or Spanish now, we would be prompted to either localize it immediately or redirect to the home page.
-
-In Edit mode the context bar menu includes a "Localize" option to start cloning this page into other locales.
-
-![The edit menu for this page opened and including a localize option](/images/l10n/edit-mode-menu.png)
-
-We are now led through a few steps in the "wizard modal" to localize the page.
+Once the localization item is selected we will be led through a few steps in the "wizard modal" to localize the page.
 
 1. **Choose whether to only localize this page, this page and any related documents, or only related documents.** "Related documents" may include new images you uploaded for this page, pieces that you connected to this page through a widget, or other such [relationships](/guide/relationships.md).
 2. **Select the locales that should get clones of this page.**
 3. **Confirm whether to localize only new related docs or all related docs** (overriding existing versions) with checkboxes to fine tune this selection.
 
-![The localization wizard modal with options for what docs to localize](/images/l10n/step1.png)
+![The localization wizard modal with options for what docs to localize](../../images/l10n/step1.png)
 
-![The localization wizard modal letting us choose locales](/images/l10n/step2.png)
+![The localization wizard modal letting us choose locales](../../images/l10n/step2.png)
 
-![The localization wizard modal confirming settings](/images/l10n/step3.png)
+![The localization wizard modal confirming settings](../../images/l10n/step3.png)
 
-Once confirmed, the page now exists in all three locales. We can see this by the updated indicators in the locale chooser.
+If you have the automatic-translations extension installed, this screen will also have a checkbox indicating that you want the content translated as it is added to the new locale. Once confirmed, the page now exists in all three locales. We can see this by the updated indicators in the locale chooser. These pages will exist in these new locales as drafts and need to be published to become visible.
 
-![The Apostrophe locale chooser showing the page in all locales](/images/l10n/locale-chooser-updated.png)
+![The Apostrophe locale chooser showing the page in all locales](../../images/l10n/locale-chooser-updated.png)
 
 We can then switch to another locale, make edits specific to that locale, and publish.
 
-![The original page in the French locale, translated](/images/l10n/fr-localized-page.png)
+![The original page in the French locale, translated](../../images/l10n/fr-localized-page.png)
+
+### Using the inline locale switcher
+![The page editor modal with a new "Locale: english" indicator at the top](../../images/l10n/locale-picker.gif)
+
+The inline locale switcher located to the left of the user preferences menu can allow you to easily edit the version of the document that has been localized to another locale without having to switch to that locale. It can also create a new, blank version of the document in another locale. If we haven't localized a document to another locale, selecting that locale from the inline switcher will create a new document of that type without **any** added content. However, if you were to examine the database, you would see that your original document and the newly created one share the same ID, minus the locale. In some cases, this may be the preferred workflow to create a set of pages across multiple locales that are going to differ greatly in content or be populated programmatically.
+
+![The confirmation dialog for switching locales with unsaved changes](../../images/l10n/inline-confirmation.png) If a document has any changes that are unsaved when we try to switch locales using the inline switcher, we will be prompted to either discard any unsaved changes and switch locales immediately or save changes as a draft document and localize. Clicking on the close button in the upper right will completely cancel the operation and return you to the editing modal of the page in the current locale.
+
+Once in the document in the new locale, you can edit it as you normally would. When you are finished with editing there will be the usual choices. If you elect to not preview the document and just save as a draft or publish, you will be returned to the original locale where you started the editing operation. So if you are editing a page in the Spanish locale, switch to the French locale using the inline switcher, and then choose to publish any edits made to that document without previewing, you will be returned to the Spanish locale. If you elect to preview the document, you will be switched to the new locale.
+
+#### Nested content
+As outlined, localizing a document that has relationships from the context menu allows for the localization of those related documents to the new locale. After that, if you switch to editing in another locale using the inline switcher and then edit one of the documents connected through the relationship field, you will still see the inline switcher indicating the new locale you are editing in. However, the inline switcher will be disabled. If you want to edit these documents in a different locale you will have to edit the original document, not through the relationship.
 
 ## Template data for l10n
 
