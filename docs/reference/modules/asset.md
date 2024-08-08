@@ -47,6 +47,8 @@ In our experience, settings other than `eval-source-map` result in associating e
 
 A source map is not produced at all in a production or production-like environment.
 
+This option currently applies only to the admin UI build, not the `ui/src` build.
+
 #### Example
 
 <AposCodeBlock>
