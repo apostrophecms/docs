@@ -19,6 +19,7 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
 | [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
 | [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
+| [`devSourceMap`](#devsourcemap) | String or `false` | Overrides the `devtool` setting of `webpack` for the admin UI build.
 
 ### `refreshOnRestart`
 
@@ -37,6 +38,16 @@ When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional p
 The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
 
 Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
+
+### `devSourceMap`
+
+For those who are familiar with webpack's `devtool` setting. This option can be used to override that setting when in a development environment. The default is to use `eval-source-map`, unless `@apostrophecms/security-headers` is active, in which case `false` is used to avoid a Content Security Policy error.
+
+In our experience, settings other than `eval-source-map` result in associating errors with the wrong source file, but webpack experts are welcome to experiment.
+
+A source map is not produced at all in a production or production-like environment.
+
+This option currently applies only to the admin UI build, not the `ui/src` build.
 
 #### Example
 
