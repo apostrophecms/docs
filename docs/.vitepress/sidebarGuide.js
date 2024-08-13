@@ -12,6 +12,7 @@ const sidebarGuide = [
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
       { text: 'Development Setup', link: 'guide/development-setup.md' },
       { text: 'Windows Development', link: 'cookbook/windows-development.md' },
+      { text: 'Dockerized MongoDB', link: 'guide/dockerized-mongodb.md' },
       {
         text: 'Migrating',
         collapsed: true,
