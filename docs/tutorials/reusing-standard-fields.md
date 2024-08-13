@@ -754,7 +754,7 @@ addColorGradientFieldType() {
   self.apos.schema.addFieldType({
     name: 'colorGradient',
     convert: self.convertInput,
-    vueComponent: 'InputColorGradient'
+    vueComponent: 'InputColorGradientField'
   });
 },
 async convertInput(req, field, data, object) {
@@ -810,7 +810,7 @@ import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/c
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
 
 export default {
-  name: 'InputColorGradient',
+  name: 'InputColorGradientField',
   components: {
     AposInputWrapper,
     AposSchema
