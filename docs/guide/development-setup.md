@@ -18,7 +18,7 @@ This documentation is available in textual and video forms. Watch the video for 
 <iframe src="https://www.youtube.com/embed/Ep_FvRt8thI?si=XEThrEvtaNyTdKo7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Overview
-This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. While these steps will work directly for Mac OS and many Linux distributions, Windows OS users will need to [install WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) first. **Importantly**, for both WSL2 and other Linux users we recommend checking to make sure that the Linux distribution you are installing or using is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/), which is OS agnostic.
+This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. While these steps will work directly for Mac OS and many Linux distributions, Windows OS users will need to [install WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) first. **Importantly**, for both WSL2 and other Linux users we recommend checking to make sure that the Linux distribution you are installing or using is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](/guide/dockerized-mongodb.md), which is OS agnostic.
 
 ## Requirements
 
@@ -45,7 +45,7 @@ See the `nvm` page for more options.
 
 ### 2. MongoDB 6.0+<br>
 
-You can make a MongoDB instance available to your project in two main ways:
+You can make a MongoDB instance available to your project in three ways:
 
 MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
 
@@ -54,7 +54,9 @@ For example:
 export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
-For offline local development, you can install the MongoDB community edition server. By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The community edition server uses this port, so no changes are needed.
+For offline local development, is to use Docker to host the server. You can follow our instructions [here](/guide/dockerized-mongodb.md) and then skip to the next [section](/guide/development-setup.md#installing-the-apostrophe-cli). By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The Docker tutorial sets the MongoDB container up to use this port, so no changes are needed.
+
+The final option, also for local development, is to install the MongoDB community edition server. As with the Docker container, the community edition server uses port 27017 and Apostrophe will connect to the MongoDB instance without any additional changes.
 
 **The following steps are only required if you intend to develop on a locally hosted MongoDB instance.**
 
