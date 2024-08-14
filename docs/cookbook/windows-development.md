@@ -45,7 +45,13 @@ nvm use 18
 If this produces a "command not found" error, you most likely did not install `nvm` yet, or you did not restart your Ubuntu 22.04 window after installing `nvm`.
 :::
 
-Now we'll need to install the MongoDB database. While MongoDB is not officially supported on WSL,
+Now we'll need to provide a connection to a MongoDB instance. We can either use Atlas, create a Docker container to serve our database by following these [instructions](/guide/dockerized-mongodb.md), or install the MongoDB community server.
+
+::: info
+Follow these instructions to install the community server locally. If using Atlas or Docker, skip to the next [section](/cookbook/windows-development.md#installing-apostrophecms).
+:::
+
+While MongoDB is not officially supported on WSL,
 the regular Linux install commands work fine for development purposes.
 
 Because we'll be running several commands as root, we'll use `sudo bash` to switch to the root user first:
