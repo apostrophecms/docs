@@ -11,9 +11,9 @@ In this guide we will assume that you have some basic knowledge of Docker and Do
 
 Docker Compose is a powerful tool that simplifies the management of containerized applications by allowing you to define services, networks, and volumes in a single YAML file. Even when bringing up a single MongoDB container, as we are doing in this guide, Docker Compose offers significant benefits. It ensures consistency and reusability across different environments, streamlines the container lifecycle with easy-to-use commands, and sets the stage for future scalability.
 
-For most ApostropheCMS projects, it is easiest to place the `docker-compose.yml` file in the root of the project folder. This approach simplifies management by keeping all project-related configurations in one place, making it easier for developers to set up their environment quickly and consistently. By including the `docker-compose.yml` file in the project’s version control, you ensure that anyone working on the project has access to the exact same Docker configuration, reducing the risk of environment-related issues. While placing the file in a separate folder or repository offers some organizational benefits, especially in larger teams or projects, keeping it in the root directory strikes the right balance between simplicity and maintainability for most use cases.
+If you are going to be developing multiple ApostropheCMS projects, it makes sense to place the `docker-compose.yml` file in a standalone folder on your development partition. This approach also ensures that you won't later confuse it with any Docker Compose file needed for production deployment
 
-Create a `docker-compose.yml` file in your project root folder and add the following code:
+Create a `docker-compose.yml` file in an appropriately located folder and add the following code:
 
 <AposCodeBlock>
 
@@ -33,7 +33,7 @@ volumes:
 
 ```
   <template v-slot:caption>
-    ./docker-compose.yml
+    /Development/mongodb/docker-compose.yml
   </template>
 </AposCodeBlock>
 
@@ -66,7 +66,7 @@ Once this `docker-compose.yml` file is created, all you have to do is create and
 
 Using the `-d` flag will run the container in detached mode in the background. You can leave the container running if your development computer has enough resources, but you will have to restart the container with this command or by clicking on the play icon in the Desktop GUI whenever you restart your computer.
 
-If you prefer, when not actively developing your Apostrophe project, or when switching between projects, you can bring the container down from either the Desktop GUI by clicking on the stop icon or by using:
+If you prefer, when not actively developing your Apostrophe project you can bring the container down from either the Desktop GUI by clicking on the stop icon or by using:
 
 `docker-compose down`
 
