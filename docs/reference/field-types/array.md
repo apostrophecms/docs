@@ -50,6 +50,7 @@ contactInfo: {
 |`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 | [`inline`](#inline) | Boolean | false | If `true`, array fields are edited inline with others, not in a separate dialog box. |
+|`duplicate` | Boolean |  `true` | Only applied to inline arrays. If `true`, array element's context menu has a Duplicate action |
 |`style` | String |  n/a | Only if `inline` is true. If set to `table`, the schema will be displayed as an HTML table |
 |`min` | Integer |  n/a | The minimum number of entries required in the array |
 |`max` | Integer |  n/a | The maximum number of entries allowed in the array |
@@ -57,7 +58,7 @@ contactInfo: {
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
 |`titleField` | String |  n/a | The name of one of the array schema fields. If provided, the user interface will use the value of that field as a label for the array tabs. |
 |`draggable` | Boolean | true | If `false`, array items cannot be reordered using drag and drop feature. |
-|[`whenEmpty`](#whenempty) | Object | n/a | Displays a `label` and `icon` if no array items have been added |
+|[`whenEmpty`](#whenempty) | Object | Yes | Provide a custom `label` and `icon` to be displayed if an array is empty. |
 
 ::: tip NOTE
 - If there is no `titleField` value, the items are numbered.
@@ -71,10 +72,6 @@ contactInfo: {
 ### `inline`
 
 Set `inline: true` on an array field to edit the array inline with the rest of the fields, rather than in a separate dialog box. This works best with a small number of fields in the array.
-
-You can also control whether each item has a toggle to expand it, or is always displayed in fully expanded form.
-
-By default, if `inline: true` is set and there are fewer than three fields, each item is fully expanded. You can change this by explicitly setting the inline option to `inline: { alwaysExpand: false }` or `inline: { alwaysExpand: true }`.
 
 Care should be taken when using `style: table` along with conditional fields. In general, conditional fields should "switch" between two fields that have the same label in order to maintain the table structure. For example:
 
