@@ -32,21 +32,69 @@ Apostrophe provides built-in REST end points for all [piece types](/reference/gl
 
 ## `GET /api/v1/:piece-name`
 
-### Query parameters
+### Basic query parameters
 
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`page` | `?page=2` | The page of results to return |
+|`perPage` | `?perPage=20` | Number of pieces to return on each page |
 |`search` | `?search=shoes` | A search query to filter the response |
+|`autocomplete` | `?autocomplete=sho` | A partial word to filter the response |
 |`aposMode` | `?aposMode=draft` | Set to `draft` to request the draft version of piece documents instead of the current published versions. Set to `published` or leave it off to get the published version. Authentication is required to get drafts. |
 |`aposLocale` | `?aposLocale=fr` | Set to a valid locale to request piece document versions for that locale. Defaults to the default locale. |
 |`render-areas` | `?render-areas=true` | Replaces area `items` data with a `_rendered` property set to a string of HTML based on widget templates. |
 <!-- TODO: link to docs about locales when available. -->
 
-#### Custom filters
+#### More about pagination
 
-You may configure custom filters for a piece type as well. See [the guide on custom filters for more information](/guide/pieces.md#filters-are-also-configured-like-fields).
-<!-- TODO: Update the filters link when the new guide is written. -->
+Apostrophe REST APIs are paginated. Use `page` and `perPage`, not `skip` and `limit`. For best performance, load content when you need it and avoid large values for `perPage`.
+
+#### More about search
+
+`search` produces the most complete search results, while `autocomplete` supports an incomplete final word in the query, so it is better suited to "search as you type" interfaces. Since the results are more complete with `search` (as long as the user has finished typing the last word), providing a way to trigger a full `search` is still recommended when using `autocomplete`.
+
+#### Querying on individual fields
+
+You can also query based on the value of most top level [schema fields](/reference/field-types/index.md) present in the document, including fields you add yourself. For example, you can query on slugs, string fields, and relationships:
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`slug` | `?slug=friday-gathering` | The value of the slug field |
+|`title` | `?title=Friday%20Gathering` | The value of the title field |
+|`_topic` | `?_topic=idOfTopicGoesHere` | The `_id` property of a related piece |
+|`topic` | `?topic=cheese` | The `slug` property of a related piece |
+|`_topic[]` | `?_topic[]=cheese&_topic[]=bread` | An "OR" search on multiple related pieces |
+|`_topicAnd[]` | `?_topicAnd[]=cheese&_topicAnd[]=bread` | An "AND" search on multiple related pieces |
+
+`slug` and `title` exist in all piece types. For the `_topic` and `topic` examples, your piece type must have a [relationship field](../field-types/relationship.md) by that name permitting the user to select related topics, for instance:
+
+```javascript
+fields: {
+  add: {
+    _topic: {
+      relationship: {
+        withType: 'topic'
+      }
+    }
+  }
+}
+```
+
+Note that `title` is not intended as a general-purpose search and titles might not be unique.
+
+#### Relationship searches on `_id` versus `slug`
+
+Leaving the `_` off the query parameter for a relationship field causes it to match on the slug rather than the `_id` of the related document. This is useful for public-facing URLs.
+
+#### Relationship searches for multiple related documents
+
+Multiple values can be passed for the same relationship field using the `[]` suffix on each one. This creates an "OR" search. In the example above, you'll receive all pieces that have a relationship to cheese OR bread.
+
+To perform an "AND" search, add `And` to the end of the query parameter name as shown in the last example above.
+
+#### Querying on custom query builders
+
+It is possible to create your own custom query builders that receive query parameters and customize the search results. For discussion and an example, see the [queries](../module-api/module-overview.md#queries-self-query) module configuration function.
 
 ### Request example
 
