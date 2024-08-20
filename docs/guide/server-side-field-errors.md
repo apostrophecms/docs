@@ -62,7 +62,9 @@ If you prefer, you can add the handler code to a different module, as long as yo
 handlers(self) {
   return {
     '@apostrophecms/doc-type:beforeSave': {
-      checkForbiddenSlugs...
+      checkForbiddenSlugs(req, doc) {
+        // See above
+      }
     }
   };
 }
