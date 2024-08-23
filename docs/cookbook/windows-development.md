@@ -17,7 +17,7 @@ If you have never installed WSL before, WSL2 will be the default. The rest of th
 
 First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular we strongly recommend that you [install Ubuntu 22.04 LTS, which can also be done from the Windows app store](https://apps.microsoft.com/store/detail/ubuntu-2004/9N6SVWS3RX71?hl=en-us&gl=US). This method was tested for this article. Newer versions of Ubuntu might not support everything covered here, and 22.04 is supported without charge until 2027.
 
-Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl`.
+Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl ~`.
 
 ::: info
 From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
@@ -119,6 +119,11 @@ Save and close the file, restart your shell, and you can just type:
 start-mongo
 ```
 :::
+
+#### Working in WSL
+When creating projects in WSL, ensure that you create your project folders inside your home directory. Avoid working on projects in the `/mnt/` directory, as it significantly slows down actions like npm install and rebuilding assets. Start by running `cd ~` to navigate to your home directory within the Linux filesystem.
+
+If you're using VSCode, simply cd into your project folder and type `code .`, VSCode will handle the rest. You can still access files in your Windows filesystem at `/mnt/c/`, for example.
 
 ## Installing ApostropheCMS
 
