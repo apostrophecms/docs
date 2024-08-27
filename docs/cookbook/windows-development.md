@@ -121,9 +121,28 @@ start-mongo
 :::
 
 #### Working in WSL
-When creating projects in WSL, ensure that you create your project folders inside your home directory. Avoid working on projects in the `/mnt/` directory, as it significantly slows down actions like npm install and rebuilding assets. Start by running `cd ~` to navigate to your home directory within the Linux filesystem.
 
-If you're using VSCode, simply cd into your project folder and type `code .`, VSCode will handle the rest. You can still access files in your Windows filesystem at `/mnt/c/`, for example.
+When developing ApostropheCMS and Node.js projects in WSL, it's crucial to choose the right location for your project files. Follow these best practices:
+
+1. **Use the Linux filesystem**: Create and work on your projects within your WSL home directory (e.g., `/home/yourusername/`). This approach offers several benefits:
+   - Optimal performance for operations like `npm install`, `git` operations, and asset rebuilding
+   - Consistent line-ending format (LF), avoiding potential issues with mixed line endings
+   - Proper case-sensitivity, matching the behavior of most production environments
+   - Correct file permissions, preventing potential problems with script execution and file access
+
+2. **Avoid Windows-mounted drives**: While it's possible to access Windows drives (e.g., `C:` or `D:`) through `/mnt/c` or `/mnt/d` in WSL, working directly from these locations can significantly slow down development tasks.
+
+3. **Starting in the right place**: When beginning a new project or working on an existing one:
+   - Open your WSL terminal
+   - Navigate to your home directory: `cd ~`
+   - Create or access your project folder from here
+
+4. **Using Visual Studio Code**: If you're using VS Code:
+   - Navigate to your project folder in the WSL terminal
+   - Type `code .` to open VS Code with the correct WSL context
+   - VS Code will handle the integration between Windows and WSL
+
+5. **Accessing Windows files when needed**: You can still access your Windows files at `/mnt/c/`, `/mnt/d/`, etc., but use this for referencing files, not as your primary development location.
 
 ## Installing ApostropheCMS
 
