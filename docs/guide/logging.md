@@ -197,7 +197,7 @@ This is a simple set-up for [`Winston`](https://github.com/winstonjs/winston), p
 Installing:
 
 ```sh
-npm install winton
+npm install winston
 ```
 
 <AposCodeBlock>
