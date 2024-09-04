@@ -73,7 +73,7 @@ module.exports = {
         severity: [ 'warn', 'error' ]
       },
       '@apostrophecms/login': {
-        events: [ 'incorrect-user', 'incorrect-password' 'complete' ]
+        events: [ 'incorrect-user', 'incorrect-password', 'complete' ]
       }
     }
   }
