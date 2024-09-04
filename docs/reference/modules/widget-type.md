@@ -179,9 +179,49 @@ When the user edits a widget and the browser attempts to save that change, Apost
 
 ### `load(req, widgets)`
 
-Apostrophe invokes this method to load any relationships defined in the schema fields of the widget. To create an opportunity for optimizations, the method is passed an array which may contain any number of widgets of this module's type.
+::: tip
+**The standard version of this method always automatically loads any `relationship` fields defined in your widget's schema.** You **do not** need to implement a custom `load` method to load relationship fields. Overriding this method is to be considered only when you want something unusual to happen, beyond loading ordinary relationships. If you don't see the data you are expecting for nested relationships, you may need to configure the [`withRelationships`](../field-types/relationship.md#populating-nested-relationships-using-withrelationships) property of your widget's `relationship` fields.
+:::
 
-Those choosing to override the method to perform additional loading of another kind should consider using `extendMethods` to invoke the original as well, unless `relationship` and `relationshipReverse` schema fields are guaranteed not to be present.
+Apostrophe invokes the `load` method to load or compute any additional, dynamic properties of the widget on the fly. To create an opportunity for optimizations, the method is passed an array which may contain any number of widgets of this module's type.
+
+Those choosing to override the method to perform additional loading of another kind should use `extendMethods` to invoke the original version as well, unless `relationship` and `reverseRelationship` fields are guaranteed to be absent.
+
+A useful extension of the `load` method might look like:
+
+```javascript
+fields: {
+  add: {
+    zip: {
+      type: 'string',
+      label: 'Zip Code',
+      required: true
+    },
+    // Other fields may appear here, including relationship fields
+  }
+},
+extendMethods(self) {
+  return {
+    load(_super, req, widgets) {
+      // Call the original, otherwise we get no relationship fields
+      await _super(req, widgets);
+      for (const widget of widgets) {
+        widget._weather = await self.fetchWeather(req, widget);
+      }
+    }
+  }
+},
+methods(self) {
+  return {
+    async fetchWeather(req, widget) {
+      const result = await fetch('https://query-a-weather-api-somewhere.com?' + new URLSearchParams({
+        zip: widget.zip
+      });
+      return result.json();
+    }
+  }
+}
+```
 
 Custom reimplementations that do not have any special optimizations for more than one widget in the array must still take care to loop over `widgets` and load appropriate data for all of them.
 

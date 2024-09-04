@@ -57,7 +57,7 @@ _toppings: {
 |`max` | Integer |  n/a | The maximum number of related docs allowed |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
-|`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationship) for more. |
+|`withRelationships` | Array |  n/a | An array of field names representing `relationship` fields you wish to populate with the connected docs. [See below](#populating-nested-relationships-using-withrelationships) for more. |
 |`withType` | String | Uses the field name, minus its leading `_` and possible trailing `s` | The name of the related type. |
 |`browse` | Boolean | `true` | If `false`, hide the browse button. |
 | `suggestionLabel` | String | <div style="word-wrap:break-word;">`apostrophe:`&#8203;`relationshipSuggestionLabel`</div> | The label at the top of the autocomplete suggestions |
