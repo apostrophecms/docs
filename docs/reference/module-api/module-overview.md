@@ -142,7 +142,7 @@ At the present time, the same icon cannot be registered under two names (that is
 | [`fields`](#fields) | Object/Function | Configure doc type fields | Doc, Widget |
 | [`filters`](#filters) | Object/Function | Configure piece type filters | Piece |
 | [`columns`](#columns) | Object/Function | Configure piece type manager columns | Piece |
-| [`batchOperations`](#batchoperations) | Object/Function | Configure manager batch operations | Piece |
+| [`batchOperations`](#batchoperations) | Object/Function | Configure manager batch operations | Doc |
 
 ### "Cascading" settings
 These settings can either be configured as a static object or through a function that takes `self` and `options` and returns a configuration object.
@@ -475,11 +475,11 @@ module.exports = {
 
 ### `batchOperations`
 
-Piece types can offer batch operations (actions editors can take on many selected pieces at once) via the `batchOperations` cascade object property. Apostrophe has `archive` and `restore` (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the piece type manager modal.
+Page and piece types can offer batch operations (actions editors can take on many selected documents at once) via the `batchOperations` cascade object property. Apostrophe has `archive` and `restore` (from the archive) batch operations by default, for example. New batch operations are added to a series of buttons in the respective manager modal. The `batchOperations` configuration object contains properties of `add` and `order`, which is either provided directly, or via a function that takes `self` and `options` and returns the object.
 
 #### `add`
 
-The `add` property is an object or function returning an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core `archive` batch operation uses the piece type module's `archive` API route.
+The `add` property is an object or function returning an object containing batch operation configurations. Each operation is a configuration object. **The operation's key must match an API route defined in `apiRoutes`.** For example, the core piece `archive` batch operation uses the piece type module's `archive` API route.
 
 Each batch operation configuration should include the following properties:
 
@@ -490,6 +490,7 @@ Each batch operation configuration should include the following properties:
 | `icon` | The [name of an icon](#icons) to use for the operation button. |
 | `if` | Optionally include a conditional object, similar to [conditional fields](/guide/conditional-fields.md), to hide the operation button based on active [filter values](#filters). |
 | `modalOptions` | Options for the confirmation modal. [See below.](#modal-options)  |
+| `permission` | Type of user permission needed for the operation. [See below.](#permission) |
 
 The following example uses a hypothetical batch operation that might reset piece fields to default values.
 
@@ -515,7 +516,8 @@ module.exports = {
           title: 'Reset {{ type }}',
           description: 'Are you sure you want to reset {{ count }} {{ type }}?',
           confirmationButton: 'Yes, reset the selected content'
-        }
+        },
+        permission: 'edit'
       },
     }
   }
@@ -531,6 +533,14 @@ Batch operation modal options include:
 | `title` | The modal heading. |
 | `description` | Descriptive text for the confirmation modal. |
 | `confirmationButton` | The affirmative confirmation button label (to continue the operation). |
+
+##### `permission`
+The `permission` property is used to determine if a particular user is able to perform the batch operation.
+
+Valid values are:
+* `edit` : The user has permission to edit the document type.
+* `publish` : The user has permission to publish the document type.
+* `delete` : The user has permission to delete the document type.
 
 #### `order`
 
@@ -556,6 +566,7 @@ module.exports = {
   }
 };
 ```
+
 
 ## Initialization function
 

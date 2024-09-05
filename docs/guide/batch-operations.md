@@ -1,10 +1,10 @@
 # Custom batch operations
 
-Apostrophe piece type modules have access to a batch operation system in the user interface. This allows editors to take an action, such as archiving, on many pieces at once. By default, all piece types have batch operation UI for archiving pieces and restoring pieces from the archive, for example.
+Apostrophe page and piece type modules both have access to a batch operation system in the user interface. This allows editors to take an action, such as archiving, on many documents at once. By default, all page and piece types have batch operation UI for archiving pieces and restoring pieces from the archive, for example.
 
 ![An article piece manager modal with arrow pointing at the archive button at top left](/images/archive-button.png)
 
-We can add additional custom batch operations using [the provided module API](/reference/module-api/module-overview.md#batchoperations). Let's look at how we would add a batch operation that resets piece field values to the configured defaults. This involves two major steps:
+We can add additional custom batch operations using [the provided module API](/reference/module-api/module-overview.md#batchoperations). Let's first look at how we would add a batch operation that resets piece field values to the configured defaults. This involves two major steps:
 
 1. Configuring the batch operation itself
 2. Adding the API route that powers the batch operation
@@ -33,7 +33,8 @@ Batch operations are a ["cascading" configuration](/reference/module-api/module-
             title: 'Reset {{ type }}',
             description: 'Are you sure you want to reset {{ count }} {{ type }}?',
             confirmationButton: 'Yes, reset the selected content'
-          }
+          },
+          permission: 'edit'
         },
       }
     },
@@ -90,7 +91,13 @@ modalOptions: {
 
 The `modalOptions` object configures the confirmation modal that appears when an editor initiates a batch operation. This confirmation step helps to prevent accidental changes to possibly hundreds of pieces. If this is not included, the batch operation's `label` is used for the title, there is no description, and the standard confirmation button label is used (e.g., "Yes, continue.").
 
-With these configuration, we should immediately see a button for the "Reset" operation in the article piece manager.
+```javascript
+permission: 'edit'
+```
+
+The `permission` setting takes a value that determines whether the editor has permission for the operation. Valid values are `edit`, `publish`, and `delete`/
+
+With this configuration, we should immediately see a button for the "Reset" operation in the article piece manager.
 
 ![The article piece manager, now with a button using the recycle symbol](/images/batch-operation-recycle-button.png)
 
@@ -176,7 +183,7 @@ if (!Array.isArray(req.body._ids)) {
 }
 ```
 
-The Apostrophe user interface should take care of this for you, but it is always a good idea to include a check to make sure that the body of the reqest includes an `_ids` array.
+The Apostrophe user interface should take care of this for you, but it is always a good idea to include a check to make sure that the body of the request includes an `_ids` array.
 
 ```javascript
 req.body._ids = req.body._ids.map(_id => {
@@ -222,3 +229,11 @@ Finally, the iterator, `resetter` in this example, will receive the request obje
 With that API route added, when we restart the website and run the batch operation again we should see our notifications indicating that it completed successfully.
 
 ![The articles manager modal with two notifications indicating that the batch operation completed successfully](/images/batch-operation-complete.png)
+
+## Batch operations for pages
+In this example, we added a `batchOperation` to a piece type, but a similar example could be used for a page. One thing to keep in mind is that batch operations are added to the `@apostrophecms/page` module at project-level and are applied to *any* selected page, regardless of page-type.
+
+The process for adding a batch operation for a page is the same as for a piece.
+
+1. Add and configure the batch operation itself
+2. Add the API route that powers the batch operation
