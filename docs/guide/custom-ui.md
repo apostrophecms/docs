@@ -137,6 +137,10 @@ This component uses `AposCellMixin` to do two important things:
 
 Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
 
+::: warning
+When you override a component in this way, you take responsibility for keeping up to date with changes made upstream in that component in new releases of Apostrophe. Common sense applies here: while we are unlikely to break your code that overrides the logo with a new Apostrophe update, overriding the entire document manager UI might involve a serious commitment on your part.
+:::
+
 Apostrophe will use only the last version of a component that it finds during startup. The general startup order is:
 
 1. Core Apostrophe modules
@@ -146,6 +150,197 @@ For instance, if the last module in our project's `app.js` modules list contains
 
 ::: info
 For more information about the patterns used, props provided and APIs needed to override an existing core component, it's necessary to study the source code of the original.
+:::
+
+### Example: overriding the Apostrophe logo
+
+One of the easiest component overrides is the Apostrophe logo, seen in the admin bar by customers while they edit the site.
+
+To do this, copy `AposLogoPadless.vue` and `AposLogo.vue` from the `apostrophe` module to the `ui/apos/components` subdirectory of a new `admin-ui-overrides` Apostrophe module in your own project, like this:
+
+```bash
+mkdir -p modules/admin-ui-overrides/ui/apos/components
+# Copy both versions of the logo
+cp node_modules/apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposLogo*.vue modules/admin-ui-overrides/ui/apos/components
+```
+
+Now, open `modules/admin-ui-overrides/ui/apos/components/AposLogo.vue`. The file looks like this:
+
+<AposCodeBlock>
+
+```js
+<template>
+  <svg viewBox="0 0 141.5 144.5">
+    <!-- Lots of svg subelements here -->
+  </svg>
+</template>
+```
+  <template v-slot:caption>
+    modules/admin-ui-overrides/ui/apos/components/AposLogo.vue
+  </template>
+</AposCodeBlock>
+
+As you can see, it is **just an SVG file wrapped in a Vue `template` element,** nothing more.
+
+So, you can replace its contents with those of your own logo in SVG format. SVG is a great choice, but if you
+really wanted to, you could also use an `img` element or similar, pointing to a static asset. If you choose to
+do that, make sure you follow our [static module assets](../static-module-assets.md) guide.
+
+Next, make similar changes to **your copy** of `AposLogoPadless.vue`.
+
+Now **make sure you enable the `admin-ui-overrides` module in `app.js`, otherwise it will not be honored:**
+
+<AposCodeBlock>
+
+```js
+const apostrophe = require({
+  modules: {
+    // ... Plenty of other modules should be here, this is just an example
+    // that demonstrates enabling one more
+    'admin-ui-overrides': {}
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+::: tip
+The name `admin-ui-overrides` was chosen for convenience. You can override **any** admin UI Vue component
+in **any** module of your project. The name of the component is what matters, so **do not change
+the component name** if your intent is to override.
+:::
+
+::: warning
+Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
+:::
+
+### Components with a "logic mixin" are safer and easier to override
+
+Certain components have been refactored to make them safer and easier to override in this way. Specifically, these components import a Vue "mixin" from a `logic` subdirectory. Such components are safer to override because the `.vue` file you are copying will only contain markup and styles, not business logic.
+
+Understand however that when you override such a component, you are still taking responsibility for staying up to date with upstream changes that do impact the template, such as new UI elements, props, click handlers in the template, etc.
+
+Here is a partial list to give you an idea of what is easiest to override, keeping in mind that this list is ever-growing. To find and copy these files, open `node_modules/apostrophe` with your editor, keeping in mind you should **copy them to your project as seen in the example below,**. *Never* modify them inside `node_modules/apostrophe`.
+
+```
+AposSettingsManager.vue
+AposPagesManager.vue
+AposInputObject.vue
+AposInputBoolean.vue
+AposSchema.vue
+AposInputArray.vue
+AposInputWrapper.vue
+AposInputRadio.vue
+AposArrayEditor.vue
+AposInputRelationship.vue
+AposInputCheckboxes.vue
+AposInputPassword.vue
+AposSearchList.vue
+AposInputRange.vue
+AposInputDateAndTime.vue
+AposInputColor.vue
+AposInputAttachment.vue
+AposInputArea.vue
+AposSubform.vue
+AposInputSlug.vue
+AposInputSelect.vue
+AposInputString.vue
+AposDocContextMenu.vue
+AposForgotPasswordForm.vue
+AposLoginForm.vue
+TheAposLogin.vue
+AposResetPasswordForm.vue
+```
+
+### Example: overriding the look and feel of the login page
+
+::: tip
+This example assumes you have already followed the previous example. In particular, make sure you have an `admin-ui-overrides` module set up at this point.
+:::
+
+Apostrophe's login page is a good example of an experience that makes use of components with logic mixins, components that are therefore safer to override than most.
+
+In the previous example, we already saw how to change the Apostrophe logo, which also changes it on the login page. So for this example we'll focus on a different, but equally simple task: removing the Apostrophe version number from the login form. This makes sense if you are not interested in making this information visible, or perhaps wish to display your own project's version number, etc.
+
+First, let's copy `TheAposLogin.vue` from the `apostrophe` npm module to the project-level `admin-ui-overrides` module we created and enabled in the last example:
+
+```bash
+cp node_modules/apostrophe/modules/@apostrophecms/login/ui/apos/components/TheAposLogin.vue modules/admin-ui-overrides/ui/apos/components
+```
+
+Now, let's take a look at that file. Parts not relevant to what we're changing have been left out for brevity, so **don't copy and paste from here,** edit the file you copied:
+
+<AposCodeBlock>
+
+```js
+<template>
+  <transition name="fade-stage">
+    <div
+      v-show="loaded"
+      class="apos-login apos-theme-dark"
+      data-apos-test="loginForm"
+      :class="themeClass"
+    >
+      <!-- Code omitted for brevity -->
+      <transition name="fade-outer">
+        <div v-show="loaded" class="apos-login__footer">
+          <AposLogo class="apos-login__logo" />
+          <label class="apos-login__project-version">
+            Version {{ context.version }}
+          </label>
+        </div>
+      </transition>
+    </div>
+  </transition>
+</template>
+
+<script>
+import TheAposLoginLogic from 'Modules/@apostrophecms/login/logic/TheAposLogin';
+
+export default {
+  name: 'TheAposLogin',
+  mixins: [ TheAposLoginLogic ]
+};
+</script>
+
+<style lang="scss">
+  // styles here
+</style>
+
+<style lang="scss" scoped>
+  // more styles here
+</style>
+```
+  <template v-slot:caption>
+    modules/admin-ui-overrides/ui/apos/components/TheAposLogin.vue
+  </template>
+</AposCodeBlock>
+
+Here you can see several things:
+
+* The code we want to remove is just one small part of the `template` element. We should leave the rest as-is.
+* There is no business logic, instead we have a "logic mix-in" that we are **not copying**, so we do not have to take responsibility for maintaining a "fork" of it.
+* The styles are also present in `style` elements. We can leave them as-is or change them as we see fit.
+
+To remove the version number, change the contents of that final `transition` element and leave the rest the same:
+
+```js
+<transition name="fade-outer">
+  <div v-show="loaded" class="apos-login__footer">
+    <AposLogo class="apos-login__logo" />
+    <!-- Goodbye version number! (You can remove this part entirely)
+      <label class="apos-login__project-version">
+        Version {{ context.version }}
+      </label>
+    -->
+  </div>
+</transition>
+```
+
+::: warning
+Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
 :::
 
 ## Overriding standard Vue.js components through configuration
