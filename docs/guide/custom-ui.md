@@ -184,7 +184,7 @@ As you can see, it is **just an SVG file wrapped in a Vue `template` element,** 
 
 So, you can replace its contents with those of your own logo in SVG format. SVG is a great choice, but if you
 really wanted to, you could also use an `img` element or similar, pointing to a static asset. If you choose to
-do that, make sure you follow our [static module assets](../static-module-assets.md) guide.
+do that, make sure you follow our [static module assets](static-module-assets.md) guide.
 
 Next, make similar changes to **your copy** of `AposLogoPadless.vue`.
 
