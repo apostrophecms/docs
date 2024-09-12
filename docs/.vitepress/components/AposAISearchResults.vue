@@ -86,7 +86,7 @@
           More questions? Have something to show off? Join the ApostropheCMS Discord
       </a>
     </div>
-    <div class="disclaimer">This feature is experimental and can make errors. The Apostrophe team monitors questions so that we may improve results, do not submit sensitive information, api keys, credentials, etc...</div>
+    <div class="disclaimer">This feature is experimental and can make errors. To improve our service, the Apostrophe team reviews questions regularly. We kindly ask that you avoid sharing any sensitive information, such as API keys, credentials, or personal data.</div>
   </div>
 </template>
 
