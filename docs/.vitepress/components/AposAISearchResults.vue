@@ -86,7 +86,7 @@
           More questions? Have something to show off? Join the ApostropheCMS Discord
       </a>
     </div>
-    <div class="disclaimer">This feature is experimental and can make errors.</div>
+    <div class="disclaimer">This feature is experimental and can make errors. The Apostrophe team monitors questions so that we may improve results, do not submit sensitive information, api keys, credentials, etc...</div>
   </div>
 </template>
 
@@ -779,8 +779,11 @@ h2 {
 
 .disclaimer {
   font-size: 12px;
-  color: #a9a7a7;
+  color: #595858;
   text-align: center;
   margin-top: 10px;
+  max-width: 550px;
+  margin: 10px auto 0;
+  line-height: 1.2;
 }
 </style>
