@@ -782,7 +782,7 @@ h2 {
   color: #595858;
   text-align: center;
   margin-top: 10px;
-  max-width: 550px;
+  max-width: 570px;
   margin: 10px auto 0;
   line-height: 1.2;
 }
