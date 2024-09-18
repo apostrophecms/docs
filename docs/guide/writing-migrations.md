@@ -4,7 +4,7 @@ Migrations in ApostropheCMS allow you to make targeted changes to your database,
 
 ## Adding migrations
 
-In ApostropheCMS, migrations are added using the `add(name, fn)` method of the `@apostrophecms/migration` module. One common place to add these are within the `init(self)` initialization function of your module. Each migration requires a unique name and is only run **once**. ApostropheCMS tracks which migrations have already been executed, ensuring they won’t run again across restarts or deployments.
+In ApostropheCMS, migrations are added using the [`add(name, fn)` method](/reference/modules/migration.md#add-name-fn) of the `@apostrophecms/migration` module. One common place to add these are within the `init(self)` initialization function of your module. Each migration requires a unique name and is only run **once**. ApostropheCMS tracks which migrations have already been executed, ensuring they won’t run again across restarts or deployments.
 
 While the migration function can be added as an anonymous function as the second argument to the `add()`method, they can also be defined in the `methods(self)` customization function of the module. This can provide for a cleaner `init(self)` function, but is a matter of preference.
 
@@ -74,7 +74,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-For both of these examples we are looping through all documents to find the `product` piece types. Then we are using the document `_id` and the Apostrophe database helper method `updateOne` to run the MongoDB operation `$set` that will either create or update the value of the `description` field for that piece.
+For both of these examples we are looping through all documents to find the `product` piece types. Then we are using the document `_id` and the Apostrophe database helper method `updateOne` to run the MongoDB operation `$set` that will either create or update the value of the `description` field for that piece. We will go through additional examples in detail below.
 
 ### Running Migrations in Production
 
@@ -90,7 +90,13 @@ This ensures that any new migrations are executed in a controlled manner, which 
 
 ## Adding or Modifying a Property in Existing Documents
 
-When a new property needs to be added to all instances of a document type, you can use the `eachDoc` helper provided by the migration module. This method efficiently queries documents in your collection and allows you to update them with only the necessary changes.
+When a new property needs to be added to all instances of a document type, you can use the [`eachDoc`](/reference/modules/migration.md#async-eachdoc-criteria-limit-iterator) helper provided by the migration module. This method efficiently queries documents in your collection and allows you to update them with only the necessary changes. The `eachDoc` helper takes three parameters.
+
+The first is the `criteria` object. This object is in the same format as a [MongoDB `find` operation query](https://www.mongodb.com/docs/v4.4/reference/method/db.collection.find/). It takes any properties that will be in your document, for example `type`, which will find documents of that type. You need to pass at least one `criteria` property.
+
+The second is `limit` and is optional. It allows you to pass an integer that specifies how many documents to process in parallel. If no integer is passed as the second argument it is 1 by default.
+
+The third criteria is the `iterator` function that should be performed on every document found. It receives the document as an argument. You can use most MongoDB methods here, but typically it uses the [`updateOne` method](https://www.mongodb.com/docs/drivers/csharp/current/usage-examples/updateOne/) to modify the document being passed to the iterator.
 
 Here is an example migration that adds a `featured` boolean property to all `article` pieces, defaulting to `false`:
 
@@ -133,13 +139,13 @@ In this example:
 - For each found document, we check if the `featured` property is missing.
 - We use the shorthand `self.apos.doc.db` to access the `aposDocs` collection of our database.
 - The [`updateOne`](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/write-operations/modify/) helper operation allows us to modify the document by passing in the document `_id`.
-- Finally, we use []`$set` operator](https://www.mongodb.com/docs/manual/reference/operator/update/set/) to add the `featured` property without modifying any other fields.
+- Finally, we use the [`$set` operator](https://www.mongodb.com/docs/manual/reference/operator/update/set/) to add the `featured` property without modifying any other fields.
 
 ::: info
-Note: In this example we are checking if the `featured` property is missing before using `$set`. This will prevent overwriting any existing values in the database. This might not be the behavior you intend. You might want all `featured` schema fields set to false. In this case, just skip the check and the `$set` operation will either create the featured field or change the value to `false` if it already exists.
+Note: In this example we are checking if the `featured` property is missing before using `$set`. This will prevent overwriting any existing values in the database. This might not be the behavior you intend. You might want all `featured` schema fields to have a value of false as a default. In this case, just skip the check and the `$set` operation will either create the featured field or change the value to `false` if it already exists.
 :::
 
-### Removing a Property from Existing Documents
+## Removing a Property from Existing Documents
 
 If you need to remove a property, you can use `$unset`. Here’s an example that removes a `temporaryNote` property from all `default` page types:
 
@@ -176,7 +182,8 @@ module.exports = {
 
 </AposCodeBlock>
 
-- In this example, `$unset` is used to remove the `temporaryNote` property from the document. Note that the value of the property in `$unset` doesn't matter, you could also elect to pass `null`.
+- In this example, [`$unset`](https://www.mongodb.com/docs/manual/reference/operator/update/unset/) is used to remove the `temporaryNote` property from the document. Note that the value of the property in `$unset` doesn't matter, you could also elect to pass `null`.
+- The rest of this example is essentially like the `$set` example above.
 
 ## Adding a Missing Property to Existing Widgets
 
@@ -195,13 +202,14 @@ module.exports = {
       async alignImages(self) {
         return self.apos.migration.eachWidget({
           type: 'image'
-        }, async (widget, doc, fieldName) => {
+        }, async (doc, widget, dotPath) => {
           if (widget.alignment === undefined) {
             await self.apos.doc.db.updateOne({
               _id: doc._id,
-              [fieldName + '._id']: widget._id
             }, {
-              $set: { [fieldName + '.$.alignment']: 'center' }
+              $set: {
+                [`${dotPath}.alignment`]: 'center'
+              }
             });
           }
         });
@@ -211,29 +219,38 @@ module.exports = {
 };
 ```
 
-- The `eachWidget` method iterates over every widget in every area in every document.
-- In our first `criteria` argument we pass a type of `image` to return all instances of `image` widgets.
-- We check if the `alignment` property exists, and if not, we use `$set` to add it.
+- The `eachWidget` method iterates over **every** widget in **every** area in **every** document. For this reason, you should carefully ensure that the criteria for passing the widget to the iterator is specific to only the widgets that need to be altered.
+- In our `criteria` argument we pass a type of `image` to return all instances of `image` widgets that are found.
+- In the iterator we check if the `alignment` property exists, and if not, we use `$set` to add it.
 
-### Removing a Property from Existing Widgets
+The `iterator` in an `eachWidget` method gets three arguments. In addition to the document, `doc`, where the widget is found, it also receives the `widget` object that will be modified and the `dotPath`. The `dotPath` argument represents the location of the current widget within the document's structure, using a "dot notation" format. It allows you to trace exactly where the widget is nested within its parent area, such as `main.content[0]`, where `main` is the area, `content` is the widget array, and `[0]` is the first widget in that array. This simplifies the process of pointing the MongoDB operation at the correct widget within a document.
+
+## Removing a Property from Existing Widgets
 
 Here’s how you can remove a property from widgets using `$unset`. In this case, we are removing the `border` property from all `video` widgets:
 
 ```js
 module.exports = {
-  async migrate(self) {
-    return self.apos.migration.eachWidget({
-      type: 'video'
-    }, async (widget, doc, fieldName) => {
-      if (widget.border !== undefined) {
-        await self.apos.doc.db.updateOne({
-          _id: doc._id,
-          [fieldName + '._id']: widget._id
-        }, {
-          $unset: { [fieldName + '.$.border']: '' }
+  extend: '@apostrophe/widget-type',
+  init(self) {
+    self.apos.migration.add('remove-vid-border', self.removeVidBorder);
+  }
+  methods(self) {
+    return {
+      async migrate(self) {
+        return self.apos.migration.eachWidget({
+          type: 'video'
+        }, async (doc, widget, dotpath) => {
+          if (widget.border !== undefined) {
+            await self.apos.doc.db.updateOne({
+              _id: doc._id
+            }, {
+              $unset: { `${dotPath.border}`: '' }
+            });
+          }
         });
       }
-    });
+    }
   }
 };
 ```
@@ -241,8 +258,5 @@ module.exports = {
 - The `eachWidget` method iterates over all instances of `video` widgets.
 - We use `$unset` to remove the `border` property from the widget.
 
-## Summary
-
-Migrations in ApostropheCMS allow you to make precise changes to your content without touching unnecessary fields, minimizing the risk of conflicts or race conditions. By using MongoDB's `$set` and `$unset` operations alongside `migration.eachDoc` and `migration.eachWidget`, you can add or remove properties from both pieces and widgets in a safe and efficient manner.
-
-For more information, refer to the [migration module reference](https://docs.apostrophecms.org/reference/modules/migration.html).
+## Additional Migrations
+While the examples above use `eachDoc` and `eachWidget` to iterate over and modify documents, you're welcome to use any MongoDB APIs you're familiar with to perform migrations. For instance, if your migration needs are simple and easily expressed through MongoDB's query capabilities, methods like `updateMany` can be more efficient than iterating over every document individually.
