@@ -8,7 +8,7 @@ In ApostropheCMS, migrations are added using the [`add(name, fn)` method](/refer
 
 While the migration function can be added as an anonymous function as the second argument to the `add()`method, they can also be defined in the `methods(self)` customization function of the module. This can provide for a cleaner `init(self)` function, but is a matter of preference.
 
-Example adding the migration to `init(self)`
+Example adding the migration to `init(self)`:
 
 <AposCodeBlock>
 
@@ -111,7 +111,7 @@ module.exports = {
   methods(self) {
     return {
       async changeFeaturedFlag(self) {
-        return self.apos.migration.eachDoc({
+        await self.apos.migration.eachDoc({
           type: 'article'
         }, async (doc) => {
           if (doc.featured === undefined) {
@@ -147,7 +147,7 @@ Note: In this example we are checking if the `featured` property is missing befo
 
 ## Removing a Property from Existing Documents
 
-If you need to remove a property, you can use `$unset`. Here’s an example that removes a `temporaryNote` property from all `default` page types:
+If you need to remove a property, you can use `$unset`. Note that this is going to remove that data from the database and it can't be recovered. You can opt to simply remove the field from the document schema until you are certain the information it contains can be deleted. Here’s an example that removes a `temporaryNote` property from all `default` page types:
 
 <AposCodeBlock>
 
@@ -160,7 +160,7 @@ module.exports = {
   methods(self) {
     return {
       async removeNote(self) {
-        return self.apos.migration.eachDoc({
+        await self.apos.migration.eachDoc({
           type: 'default-page'
         }, async (doc) => {
           if (doc.temporaryNote !== undefined) {
@@ -187,7 +187,7 @@ module.exports = {
 
 ## Adding a Missing Property to Existing Widgets
 
-Similar to updating pieces and pages, you can use the `eachWidget` helper to add or remove properties from widgets of a specific type. This is useful when updating the schema of a widget across all pages or pieces.
+Similar to updating pieces and pages, you can use the `eachWidget` helper to add or remove properties from any widget. This is useful when updating the schema of a widget across all pages or pieces. This works whether the widget is within a top-level `area` or has been nested in an `object` field, `array` field, or even in an `area` of another widget.
 
 Here is an example migration that adds an `alignment` property to all `image` widgets, defaulting to `center`:
 
@@ -200,9 +200,11 @@ module.exports = {
   methods(self) {
     return {
       async alignImages(self) {
-        return self.apos.migration.eachWidget({
-          type: 'image'
-        }, async (doc, widget, dotPath) => {
+        await self.apos.migration.eachWidget({},
+          async (doc, widget, dotPath) => {
+          if (widget.type !== '@apostrophecms/image') {
+            return;
+          }
           if (widget.alignment === undefined) {
             await self.apos.doc.db.updateOne({
               _id: doc._id,
@@ -219,15 +221,15 @@ module.exports = {
 };
 ```
 
-- The `eachWidget` method iterates over **every** widget in **every** area in **every** document. For this reason, you should carefully ensure that the criteria for passing the widget to the iterator is specific to only the widgets that need to be altered.
-- In our `criteria` argument we pass a type of `image` to return all instances of `image` widgets that are found.
-- In the iterator we check if the `alignment` property exists, and if not, we use `$set` to add it.
+- The `eachWidget` method iterates over **every** widget in **every** area in **every** document. For this reason, you should check the `widget.type` to make sure you are only altering the desired widgets.
+- In our `criteria` argument we are passing an empty object, indicating that every document should be checked. You can narrow this focus if you only want the widgets on a certain document type changed. For example, passing `type: 'product'` would only change widgets that are in a product piece-type.
+- In the iterator, we first confirm that the widget is an image widget by checking the `widget.type`. If it is an image, we then check if the `alignment` property is present. If the `alignment` property is missing, we use `$set` to add it.
 
-The `iterator` in an `eachWidget` method gets three arguments. In addition to the document, `doc`, where the widget is found, it also receives the `widget` object that will be modified and the `dotPath`. The `dotPath` argument represents the location of the current widget within the document's structure, using a "dot notation" format. It allows you to trace exactly where the widget is nested within its parent area, such as `main.content[0]`, where `main` is the area, `content` is the widget array, and `[0]` is the first widget in that array. This simplifies the process of pointing the MongoDB operation at the correct widget within a document.
+The `iterator` in an `eachWidget` method gets three arguments. In addition to the document, `doc`, where the widget is found, it also receives the `widget` object that will be modified and the `dotPath`. The `dotPath` argument represents the location of the current widget within the document's structure, using a "dot notation" format. It allows you to trace exactly where the widget is nested within its parent area, such as `main.content.0`, where `main` is the area, `content` is the widget array, and `0` is the first widget in that array. This simplifies the process of pointing the MongoDB operation at the correct widget within a document.
 
 ## Removing a Property from Existing Widgets
 
-Here’s how you can remove a property from widgets using `$unset`. In this case, we are removing the `border` property from all `video` widgets:
+Here’s how you can remove a property from widgets using `$unset`. Again, this is an irreversible operation, so you may want to simply remove a schema field. In this case, we are removing the `border` property from all `video` widgets:
 
 ```js
 module.exports = {
@@ -237,17 +239,19 @@ module.exports = {
   }
   methods(self) {
     return {
-      async migrate(self) {
-        return self.apos.migration.eachWidget({
-          type: 'video'
-        }, async (doc, widget, dotpath) => {
-          if (widget.border !== undefined) {
-            await self.apos.doc.db.updateOne({
-              _id: doc._id
-            }, {
-              $unset: { `${dotPath.border}`: '' }
-            });
-          }
+      async removeVidBorder(self) {
+        await self.apos.migration.eachWidget({},
+          async (doc, widget, dotpath) => {
+            if (widget.type !== '@apostrophecms/video') {
+              return;
+            }
+            if (widget.border !== undefined) {
+              await self.apos.doc.db.updateOne({
+                _id: doc._id
+              }, {
+                $unset: { `${dotPath.border}`: '' }
+              });
+            }
         });
       }
     }
@@ -255,8 +259,44 @@ module.exports = {
 };
 ```
 
-- The `eachWidget` method iterates over all instances of `video` widgets.
-- We use `$unset` to remove the `border` property from the widget.
+- The `eachWidget` method iterates over all document returning each widget found.
+- We check that the widget is the type we want to alter, else we return early.
+- We use `$unset` to remove the `border` property from the widget if it exists.
 
 ## Additional Migrations
 While the examples above use `eachDoc` and `eachWidget` to iterate over and modify documents, you're welcome to use any MongoDB APIs you're familiar with to perform migrations. For instance, if your migration needs are simple and easily expressed through MongoDB's query capabilities, methods like `updateMany` can be more efficient than iterating over every document individually.
+
+For example, the first migration using `eachDoc` could easily be performed by an `updateMany`:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+   async init(self) {
+    self.apos.migration.add('change-featured-flag', self.changeFeaturedFlag);
+  }
+  methods(self) {
+    return {
+      async changeFeaturedFlag(req) {
+        await self.apos.doc.db.updateMany(
+          {
+            type: 'article',
+            featured: { $exists: false }
+          },
+          {
+            $set: { featured: false }
+          }
+        );
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  /modules/product/index.js
+</template>
+
+</AposCodeBlock>
+
+In this case we are finding all the article piece-type documents that don't currently have a `featured` field. It then uses `$set` to create the field.
