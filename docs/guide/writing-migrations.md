@@ -1,10 +1,10 @@
 # Writing Migrations
 
-Migrations in ApostropheCMS allow you to make targeted changes to your database, ensuring that your data stays in sync with the evolving structure of your code. They are particularly useful when new code deployments introduce changes to the underlying data model or schema, such as adding new fields, removing deprecated properties, or correcting inconsistencies in existing content. In this guide, we will walk through how to write migrations to add or remove properties from existing pieces and widgets.
+Migrations in ApostropheCMS allow you to make targeted changes to your database, ensuring that your data stays in sync with the evolving structure of your code. If your goal is to ensure a newly-added field in the schema will be present in the database for existing documents with its default value (as specified by def, or the fallback def of the field type such as the empty string for string fields), then you do not need to write a migration. As of version 4.x, this is automatic. However, if you need to transform the existing content of the database in another way, such as renaming or removing a property or transforming a number to a string, then migrations are the right tool for you. In this guide, we will walk through how to write migrations to add or remove properties from existing pieces and widgets.
 
 ## Adding migrations
 
-In ApostropheCMS, migrations are added using the [`add(name, fn)` method](/reference/modules/migration.md#add-name-fn) of the `@apostrophecms/migration` module. One common place to add these are within the `init(self)` initialization function of your module. Each migration requires a unique name and is only run **once**. ApostropheCMS tracks which migrations have already been executed, ensuring they won’t run again across restarts or deployments.
+In ApostropheCMS, migrations are added using the [`add(name, fn)` method](/reference/modules/migration.md#add-name-fn) of the `@apostrophecms/migration` module. One common place to add these is within the `init(self)` initialization function of your module. Each migration requires a unique name and is only run **once**. ApostropheCMS tracks which migrations have already been executed, ensuring they won’t run again across restarts or deployments.
 
 While the migration function can be added as an anonymous function as the second argument to the `add()`method, they can also be defined in the `methods(self)` customization function of the module. This can provide for a cleaner `init(self)` function, but is a matter of preference.
 
@@ -16,16 +16,15 @@ Example adding the migration to `init(self)`:
 module.exports = {
   extend: '@apostrophecms/piece-type',
   async init(self) {
-    // Adding a migration named 'add-featured-to-articles'
-    self.migration.add('add-featured-to-articles', async () => {
+    self.migration.add('add-copyright-notice', async () => {
       return self.apos.migration.eachDoc({
         type: 'article'
       }, async (doc) => {
-        if (doc.featured === undefined) {
+        if (doc.copyright === undefined) {
           await self.apos.doc.db.updateOne({
             _id: doc._id
           }, {
-            $set: { featured: false }
+            $set: { copyright: '©2024 ApostropheCMS. All rights reserved.' }
           });
         }
       });
@@ -47,19 +46,19 @@ Example using `methods(self)`:
 module.exports = {
   extend: '@apostrophecms/piece-type',
   async init(self) {
-    self.apos.migration.add('add-product-description', self.addProductDescription);
+    self.apos.migration.add('add-copyright-notice', self.addCopyrightNotice);
   }
   methods(self) {
     return {
-      async addProductDescription() {
+      async addCopyrightNotice() {
         await self.apos.migration.eachDoc({
-          type: 'product'
+          type: 'article'
         }, async (doc) => {
-          if (doc.description === undefined) {
+          if (doc.copyright === undefined) {
             await self.apos.doc.db.updateOne({
               _id: doc._id
             }, {
-              $set: { description: 'No description available' }
+              $set: { copyright: '©2024 ApostropheCMS. All rights reserved.' }
             });
           }
         });
@@ -74,23 +73,19 @@ module.exports = {
 
 </AposCodeBlock>
 
-For both of these examples we are looping through all documents to find the `product` piece types. Then we are using the document `_id` and the Apostrophe database helper method `updateOne` to run the MongoDB operation `$set` that will either create or update the value of the `description` field for that piece. We will go through additional examples in detail below.
+For both of these examples we are looping through all documents to find the `article` piece types. Then we are using the document `_id` and the Apostrophe database helper method `updateOne` to run the MongoDB operation `$set` that will either create or update the value of the `copyright` field for that piece. We will go through additional examples in detail below.
 
 ### Running Migrations in Production
 
-In production environments, migrations are **not** automatically executed on every startup. This prevents accidental re-running of migrations in stable environments. Instead, migrations must be triggered manually by running a task.
-
-To apply pending migrations in a production environment, run:
+Although migrations currently do run automatically in both development and production, it is best practice to run the `@apostrophecms/migration:migrate` task in production before launching the newest version of the application to serve requests. At a future time, an option to disable Apostrophe's check for needed migrations on ordinary invocations in production may be offered as an optimization.
 
 ```bash
-node app @apostrophecms/migration:run
+node app @apostrophecms/migration:migrate
 ```
-
-This ensures that any new migrations are executed in a controlled manner, which is particularly useful in environments where uptime and stability are critical.
 
 ## Adding or Modifying a Property in Existing Documents
 
-When a new property needs to be added to all instances of a document type, you can use the [`eachDoc`](/reference/modules/migration.md#async-eachdoc-criteria-limit-iterator) helper provided by the migration module. This method efficiently queries documents in your collection and allows you to update them with only the necessary changes. The `eachDoc` helper takes three parameters.
+When a property of all instances of a document type needs to be changed, transformed or added in a way more complicated than setting `def` at the time it is first added to the code, you can use the [`eachDoc`](/reference/modules/migration.md#async-eachdoc-criteria-limit-iterator) helper provided by the migration module. This method efficiently queries documents in your collection and allows you to update them with only the necessary changes. The `eachDoc` helper takes three parameters.
 
 The first is the `criteria` object. This object is in the same format as a [MongoDB `find` operation query](https://www.mongodb.com/docs/v4.4/reference/method/db.collection.find/). It takes any properties that will be in your document, for example `type`, which will find documents of that type. You need to pass at least one `criteria` property.
 
@@ -249,7 +244,7 @@ module.exports = {
               await self.apos.doc.db.updateOne({
                 _id: doc._id
               }, {
-                $unset: { `${dotPath.border}`: '' }
+                $unset: { `${dotPath}.border`: '' }
               });
             }
         });
