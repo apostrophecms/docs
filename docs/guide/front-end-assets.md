@@ -41,7 +41,7 @@ The `sing-widget` sings:
 
 ```javascript
 export default () => {
-  // `modules/sing-widget/ui/public/singing.js
+  // `modules/sing-widget/ui/src/index.js
   console.log('🧑‍🎤🎶');
 }
 ```
@@ -50,7 +50,7 @@ And the `dance-widget` dances:
 
 ```javascript
 export default () => {
-  // `modules/dance-widget/ui/public/dancing.js
+  // `modules/dance-widget/ui/src/index.js
   console.log('🕺🏻💃🏽');
 }
 ```
