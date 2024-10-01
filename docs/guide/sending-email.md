@@ -87,7 +87,7 @@ const auth = {
 
 module.exports = {
   options: {
-    nodemailer: mg(auth);
+    nodemailer: mg(auth)
   }
 };
 
