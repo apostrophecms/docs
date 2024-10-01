@@ -244,3 +244,53 @@ With that available data, we could construct navigation for the website header u
 ```
 
 This is looping over the home page's child pages, printing their URLs and titles into links. This is simply one way to add navigation using the page data in templates.
+
+## Device breakpoint previews
+
+Pages can be enabled to emulate devices, like phones and tablets, making it easy to see how your content will look at different screen sizes.
+
+![Screen shot of mobile preview with ecommerce](../images/mobile-preview.png)
+When device preview mode is enabled, you’ll see icons in the admin bar for each of the breakpoints (sizes) that have been set through the `devicePreviewMode` of the `@apostrophecms/asset` module. Clicking on an icon will cause your page content to display in a container that matches the specific device size, so you can quickly check how the layout and styles respond. The displayed content will be fully editable, so that you can see how any new content is impacted by the current media queries. You can go back to editing in the full browser screen by clicking on the currently selected preview icon.
+
+Custom styles you’ve added with CSS media queries are converted by the `asset` module to container queries. Note that this only works with styles added to stylesheets, it doesn't work with styles outside the build path, like styles added directly to the template. Keep in mind that while most media queries will translate well, there are some differences when using container queries that might not be fully reflected in the preview. For example, you can not add `min-height` or `rotation` query parameters to containers.
+
+To enable preview, you can pass options to the `@apostrophecms/asset` module at project level.
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    devicePreviewMode: {
+      enable: true,
+      screens: {
+        desktop: {
+          label: 'Desktop',
+          width: '1500px',
+          height: '900px',
+          icon: 'monitor-icon'
+        },
+        tablet: {
+          label: 'Tablet',
+          width: '1024px',
+          height: '768px',
+          icon: 'tablet-icon'
+        },
+        mobile: {
+          label: 'Mobile',
+          width: '480px',
+          height: '1000px',
+          icon: 'cellphone-icon'
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+modules/@apostrophecms/asset/index.js
+</template>
+</AposCodeBlock>
+
+You can learn about all the properties that can be passed to the `devicePreviewMode` option on the [`@apostrophecms/asset` reference page](/reference/modules/asset.md#devicepreviewmode). The two most critical are `enable` and `screens`. If you pass `enable: true` it will add the icons to toggle preview to the admin-bar. The `screen` property takes an object where each property is a different breakpoint.
+
+Each of the individual breakpoint properties in the `screen` object take a `label` that will be displayed to the user when they hover over the icon. The `icon` property supplies the icon that will be displayed. This icon name should be either an icon you can [register in this module](reference/module-api/module-options.md#icon) or an icon that is [already registered](reference/module-api/module-overview.md#icons). Finally, each breakpoint needs the `width` and `height` of the container that corresponds to the device being emulated.
