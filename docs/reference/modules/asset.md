@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-The `asset` module serves to organize, process, and output all project JavaScript and CSS assets during the build process. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are passed through the creation of a `modules/@apostrophecms/asset/index.js` file.
+The `asset` module serves to organize, process, and output all project JavaScript and CSS assets during the build process. It also passes options for display of different breakpoints during development, accomplished by converting CSS assets to container queries. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are passed through the creation of a `modules/@apostrophecms/asset/index.js` file.
 
 ## Options
 
@@ -19,7 +19,8 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
 | [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
 | [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
-| [`devSourceMap`](#devsourcemap) | String or `false` | Overrides the `devtool` setting of `webpack` for the admin UI build.
+| [`devSourceMap`](#devsourcemap) | String or `false` | Overrides the `devtool` setting of `webpack` for the admin UI build. |
+| [`devicePreviewMode`](#devicepreviewmode) | object | Enables and sets screen sizes for mobile preview. |
 
 ### `refreshOnRestart`
 
@@ -77,6 +78,105 @@ modules/@apostrophecms/asset/index.js
 
 To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
 
+### `devicePreviewMode`
+The `devicePreviewMode` is disabled by default and when activated adds icons to the admin-bar for each of the breakpoints specified in the `screens` object. Clicking on these icons will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process will be applied as container queries in this display. This means that CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`.
+
+#### `devicePreviewMode` properties
+
+| Property | Type | Description |
+|---|---|---|
+| `enabled` | boolean | Set to `false` by default, set to `true` to add breakpoints to the admin-bar |
+| `debug` | boolean | Set to `false` by default, set to `true` to get notifications about CSS declarations that can't be converted to container queries. |
+| `resizeable` | boolean | Set to `false` by default, set to true to allow breakpoint displays to be resized by dragging the lower right corner. |
+| [`screens`](#screens) | object | Takes an object with properties for eaqch breakpoint to be enabled. |
+| [`transform`](#transform) | null \|\| function | Alters the default conversion of CSS queries to container queries for compatibility. |
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    devicePreviewMode: {
+      enable: true,
+      debug: true,
+      resizable: false,
+      screens: {
+        desktop: {
+          label: 'apostrophe:devicePreviewDesktop',
+          width: '1500px',
+          height: '900px',
+          icon: 'monitor-icon'
+        },
+        tablet: {
+          label: 'apostrophe:devicePreviewTablet',
+          width: '1024px',
+          height: '768px',
+          icon: 'tablet-icon'
+        },
+        mobile: {
+          label: 'apostrophe:devicePreviewMobile',
+          width: '480px',
+          height: '1000px',
+          icon: 'cellphone-icon'
+        }
+      },
+      transform: null
+    }
+  }
+};
+```
+<template v-slot:caption>
+modules/@apostrophecms/asset/index.js
+</template>
+</AposCodeBlock>
+
+##### `screens`
+The `screens` object takes a property for each desired breakpoint. Those properties take an object composed of four properties. The `label` property is optional and takes a string that is displayed to the user when they hover over the icon for the breakpoint. The `icon` property takes the name of a [registered icon](/reference/module-api/module-overview.md#icons) that is displayed in the admin-bar for toggling the breakpoint display. The final two properties are `width` and `height`. These should be set to the `px` dimensions of the emulated device. Note that the mobile preview feature doesn't support device pixel-ratios or resolution.
+
+##### `transform`
+By default, the `transform` property will be set to `null` and accept the built-in transpiling of standard CSS queries into container queries. However, in cases where the standard queries can't be transpiled or the standard method needs adjustment you can pass the existing standard query to a function to provide a customized return.
+
+For example, your media query might use widths based on `em` and the final layout is better reflected by converting those to `px` values:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  options: {
+    devicePreviewMode: {
+      enable: true,
+      screens: {
+        ...
+      },
+      transform: (mediaFeature) => {
+        // Convert `min-width` and `max-width` from `em` to `px`, assuming 1em = 16px
+        return mediaFeature.replace(/(\d+)em/g, (match, emValue) => {
+          const pxValue = parseInt(emValue) * 16; // Convert em to px assuming a 16px base font size
+          return `${pxValue}px`;
+        });
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+modules/@apostrophecms/asset/index.js
+</template>
+
+</AposCodeBlock>
+
+This will take a media query like:
+```css
+@media (min-width: 30em) and (max-width: 50em) {
+  /*...*/
+}
+```
+and convert it to:
+```css
+@media (min-width: 480px) and (max-width: 800px) {
+  /*...*/
+}
+```
 
 ## Command Line Tasks
 
