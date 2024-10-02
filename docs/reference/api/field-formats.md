@@ -23,6 +23,9 @@ Simple examples of how each field type might be returned in a document from the 
   }
 }
 ```
+
+Each widget is represented by an entry in the `items` array. The `type` property indicates the widget type. The remaining properties depend on the `fields` of that widget, except for the rich text widget which simply has a `content` property containing HTML in a specific format. For more information about how to work with rich text in the API, see [rich-text.md](rich text widgets and the REST APIs).
+
 ## array
 
 ``` json
