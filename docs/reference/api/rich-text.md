@@ -4,7 +4,7 @@
 
 In the REST APIs of piece types and pages, and also in the database, an area containing a simple rich text widget looks like this:
 
-``` json
+```json
 {
   "main": {
     "_id": "ckj0k0dy7000i2a68s1z8v4ky",
@@ -41,7 +41,7 @@ When using the `content` property, inline images are only permitted via a specif
 
 Just use the following format when making a `POST`, `PUT` or `PATCH` REST API call for a page or piece type:
 
-```json
+```javascript
 {
   // Other properties of the page
   "slug": "/about",
