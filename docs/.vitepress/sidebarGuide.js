@@ -114,6 +114,7 @@ const sidebarGuide = [
       { text: 'Logging', link: 'guide/logging.md' },
       { text: 'Profiling', link: 'cookbook/opentelemetry.md' },
       { text: 'Sending Email', link: 'guide/sending-email.md' },
+      { text: 'Writing Migrations', link: 'guide/writing-migrations.md' }
     ]
   },
   {
