@@ -20,7 +20,7 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
 | [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
 | [`devSourceMap`](#devsourcemap) | String or `false` | Overrides the `devtool` setting of `webpack` for the admin UI build. |
-| [`devicePreviewMode`](#devicepreviewmode) | object | Enables and sets screen sizes for mobile preview. |
+| [`breakpointPreviewMode`](#breakpointPreviewMode) | object | Enables and sets screen sizes for mobile preview. |
 
 ### `refreshOnRestart`
 
@@ -78,32 +78,34 @@ modules/@apostrophecms/asset/index.js
 
 To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
 
-### `devicePreviewMode`
-The `devicePreviewMode` is disabled by default and when activated adds icons to the admin-bar for each of the breakpoints specified in the `screens` object. Clicking on these icons will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process will be applied as container queries in this display. This means that CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`.
+### `breakpointPreviewMode`
+The `breakpointPreviewMode` is enabled by default and  adds icons to the admin-bar for each of the breakpoints specified in the `screens` object. Clicking on these icons will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process added through a [`ui/src/index.scss` file of any module](guide/front-end-assets.html#placing-client-side-code) will be transpiled and applied as container queries in this display. This is for preview purposes only, the project styling assets will not be directly altered. Any CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`. These exceptions can potentially be handled using the [`transform` property](#tranform) as detailed.
 
-#### `devicePreviewMode` properties
+#### `breakpointPreviewMode` properties
 
 | Property | Type | Description |
 |---|---|---|
-| `enabled` | boolean | Set to `false` by default, set to `true` to add breakpoints to the admin-bar |
+| `enabled` | boolean | Set to `true` by default, set to `false` to remove breakpoints to the admin-bar |
 | `debug` | boolean | Set to `false` by default, set to `true` to get notifications about CSS declarations that can't be converted to container queries. |
 | `resizeable` | boolean | Set to `false` by default, set to true to allow breakpoint displays to be resized by dragging the lower right corner. |
-| [`screens`](#screens) | object | Takes an object with properties for eaqch breakpoint to be enabled. |
+| [`screens`](#screens) | object | Takes an object with properties for each breakpoint to be enabled. |
 | [`transform`](#transform) | null \|\| function | Alters the default conversion of CSS queries to container queries for compatibility. |
+
+Below are the default settings for the `breakpointPreviewMode` option:
 
 <AposCodeBlock>
 
 ```javascript
 module.exports = {
   options: {
-    devicePreviewMode: {
+    breakpointPreviewMode: {
       enable: true,
-      debug: true,
+      debug: false,
       resizable: false,
       screens: {
         desktop: {
           label: 'apostrophe:devicePreviewDesktop',
-          width: '1500px',
+          width: '1440px',
           height: '900px',
           icon: 'monitor-icon'
         },
@@ -115,8 +117,8 @@ module.exports = {
         },
         mobile: {
           label: 'apostrophe:devicePreviewMobile',
-          width: '480px',
-          height: '1000px',
+          width: '414px',
+          height: '896px',
           icon: 'cellphone-icon'
         }
       },
@@ -131,7 +133,7 @@ modules/@apostrophecms/asset/index.js
 </AposCodeBlock>
 
 ##### `screens`
-The `screens` object takes a property for each desired breakpoint. Those properties take an object composed of four properties. The `label` property is optional and takes a string that is displayed to the user when they hover over the icon for the breakpoint. The `icon` property takes the name of a [registered icon](/reference/module-api/module-overview.md#icons) that is displayed in the admin-bar for toggling the breakpoint display. The final two properties are `width` and `height`. These should be set to the `px` dimensions of the emulated device. Note that the mobile preview feature doesn't support device pixel-ratios or resolution.
+The `screens` object takes a property for each desired breakpoint. Those properties take an object composed of four properties. Adding this property at project-level will override the default `screens` object. The `label` property is optional and takes a string that is displayed to the user when they hover over the icon for the breakpoint. The `icon` property takes the name of a [registered icon](/reference/module-api/module-overview.md#icons) that is displayed in the admin-bar for toggling the breakpoint display. The final two properties are `width` and `height`. These should be set to the `px` dimensions of the emulated device. Note that the mobile preview feature doesn't support device pixel-ratios or resolution.
 
 ##### `transform`
 By default, the `transform` property will be set to `null` and accept the built-in transpiling of standard CSS queries into container queries. However, in cases where the standard queries can't be transpiled or the standard method needs adjustment you can pass the existing standard query to a function to provide a customized return.
@@ -143,7 +145,7 @@ For example, your media query might use widths based on `em` and the final layou
 ```javascript
 module.exports = {
   options: {
-    devicePreviewMode: {
+    breakpointPreviewMode: {
       enable: true,
       screens: {
         ...
