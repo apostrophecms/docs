@@ -1038,7 +1038,7 @@ Triggered just before the search index page is served, after the page's results 
   ```javascript
   handlers(self, options) {
     return {
-      'determineTypes': {
+      'beforeIndex': {
         async handlerName(req) { ... }
       }
     };
