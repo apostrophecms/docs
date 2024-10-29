@@ -1,6 +1,6 @@
 # Vite
 
-[Vite](https://vite.dev/) is a modern build tool that significantly improves the development experience. Unlike traditional bundlers like webpack, Vite leverages native ES modules in the browser to enable lightning-fast hot module reloading (HMR) and on-demand compilation. During development, this means your changes appear instantly in the browser without rebuilding the entire bundle. When building for production, Vite uses Rollup to create highly optimized assets.
+[Vite](https://vite.dev/) is a modern build tool that significantly improves the development experience. Unlike traditional bundlers like webpack, Vite leverages native ES modules in the browser to enable lightning-fast hot module replacement (HMR) and on-demand compilation. During development, this means your changes appear instantly in the browser without rebuilding the entire bundle. When building for production, Vite uses Rollup to create highly optimized assets.
 
 For ApostropheCMS projects, this translates to faster development cycles, improved debugging with better source maps, and a more streamlined build process that requires less configuration. The dev server starts up instantly regardless of your application size, and HMR updates happen in milliseconds rather than seconds.
 
@@ -33,9 +33,9 @@ require('apostrophe')({
 
 ## Core Features and Configuration
 
-The Vite bundler for ApostropheCMS comes with sensible defaults while remaining highly configurable. Hot Module Reloading (HMR) is enabled out of the box for project UI code, allowing you to see your changes instantly without a full page refresh.
+The Vite bundler for ApostropheCMS comes with sensible defaults while remaining highly configurable. Hot Module Replacement (HMR) is enabled out of the box for project UI code, allowing you to see your changes instantly without a full page refresh.
 
-### Hot Module Reloading
+### Hot Module Replacement
 
 HMR can be configured in three modes using the `@apostrophecms/asset` options:
 
