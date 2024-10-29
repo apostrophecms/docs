@@ -79,7 +79,7 @@ modules/@apostrophecms/asset/index.js
 To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
 
 ### `breakpointPreviewMode`
-The `breakpointPreviewMode` is enabled by default and  adds icons to the admin-bar for each of the breakpoints specified in the `screens` object. Clicking on these icons will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process added through a [`ui/src/index.scss` file of any module](/guide/front-end-assets.html#placing-client-side-code) will be transpiled and applied as container queries in this display. This is for preview purposes only, the project styling assets will not be directly altered. Any CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`. These exceptions can potentially be handled using the [`transform` property](#tranform) as detailed.
+The `breakpointPreviewMode` is enabled by default and adds shortcut icons plus a dropdown menu to the admin-bar for each of the breakpoints specified in the `screens` object. If only breakpoints with `shortcut: true` are present then the dropdown menu will not be added, only the icons. Clicking on an icon or making a selection from the dropdown menu will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process added through a [`ui/src/index.scss` file of any module](/guide/front-end-assets.html#placing-client-side-code) will be transpiled and applied as container queries in this display. This is for preview purposes only, the project styling assets will not be directly altered. Any CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`. These exceptions can potentially be handled using the [`transform` property](#transform) as detailed.
 
 #### `breakpointPreviewMode` properties
 
@@ -99,29 +99,40 @@ Below are the default settings for the `breakpointPreviewMode` option:
 module.exports = {
   options: {
     breakpointPreviewMode: {
+      // Enable breakpoint preview mode
       enable: true,
+      // Warn during build about unsupported media queries.
       debug: false,
-      resizable: false,
+      // Screens with icons
+      // For adding icons, please refer to the icons documentation
+      // https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons
       screens: {
         desktop: {
-          label: 'apostrophe:devicePreviewDesktop',
+          label: 'apostrophe:breakpointPreviewDesktop',
           width: '1440px',
           height: '900px',
-          icon: 'monitor-icon'
+          icon: 'monitor-icon',
+          shortcut: true
         },
         tablet: {
-          label: 'apostrophe:devicePreviewTablet',
+          label: 'apostrophe:breakpointPreviewTablet',
           width: '1024px',
           height: '768px',
-          icon: 'tablet-icon'
+          icon: 'tablet-icon',
+          shortcut: true
         },
         mobile: {
-          label: 'apostrophe:devicePreviewMobile',
+          label: 'apostrophe:breakpointPreviewMobile',
           width: '414px',
           height: '896px',
-          icon: 'cellphone-icon'
+          icon: 'cellphone-icon',
+          shortcut: true
         }
       },
+      // Transform method used on media feature
+      // Can be either:
+      // - (mediaFeature) => { return mediaFeature.replaceAll('xx', 'yy'); }
+      // - null
       transform: null
     }
   }
@@ -132,8 +143,12 @@ modules/@apostrophecms/asset/index.js
 </template>
 </AposCodeBlock>
 
+::: warning
+Adding a `breakpointPreviewMode` option at project level to add additional breakpoint sizes, for example, will replace *all* default values. This means that you must pass `enable: true` in the project level `@apostrophecms/asset/index.js` file to have breakpoints displayed if you want to change screen sizes.
+:::
+
 ##### `screens`
-The `screens` object takes a property for each desired breakpoint. Those properties take an object composed of four properties. Adding this property at project-level will override the default `screens` object. The `label` property is optional and takes a string that is displayed to the user when they hover over the icon for the breakpoint. The `icon` property takes the name of a [registered icon](/reference/module-api/module-overview.md#icons) that is displayed in the admin-bar for toggling the breakpoint display. The final two properties are `width` and `height`. These should be set to the `px` dimensions of the emulated device. Note that the mobile preview feature doesn't support device pixel-ratios or resolution.
+The `screens` object takes a property for each desired breakpoint. Those properties take an object composed of two required and three optional properties. Adding this property at project-level will override the default `screens` object. The `label` property is optional, but highly recommended, and takes a string that is displayed to the user when they hover over the icon for the breakpoint and as a label in the dropdown menu. The `shortcut` property takes a boolean and will add the breakpoint to the set of icons displayed to the left of the dropdown. The `icon` property is optional for non-shortcut breakpoints. It takes the name of a [registered icon](/reference/module-api/module-overview.md#icons) that is displayed in the admin-bar for toggling the breakpoint display. The final two properties, `width` and `height`, are required. These should be set to the `px` dimensions of the emulated device. Note that the mobile preview feature doesn't support device pixel-ratios or resolution. You can switch between preview modes by clicking other breakpoint shortcut icons or making a selection from the dropdown menu. Clicking on any active icon or the `X` to the right of the dropdown will exit out of preview mode.
 
 ##### `transform`
 By default, the `transform` property will be set to `null` and accept the built-in transpiling of standard CSS queries into container queries. However, in cases where the standard queries can't be transpiled or the standard method needs adjustment you can pass the existing standard query to a function to provide a customized return.
