@@ -250,7 +250,7 @@ This is looping over the home page's child pages, printing their URLs and titles
 Pages can be enabled to emulate devices, like phones and tablets, making it easy to see how your content will look at different screen sizes.
 
 ![Screen shot of breakpoint preview with ecommerce](../images/new-breakpoint-preview.png)
-When device preview mode is enabled, you’ll see icons in the admin bar for each of the breakpoints (sizes) that have been set through the `breakpointPreviewMode` of the `@apostrophecms/asset` module. By default, there are three shortcut device breakpoints added. Adding additional breakpoint preview sizes will cause a dropdown menu with all of the sizes to appear.
+When device preview mode is enabled, you’ll see icons in the admin bar for each of the breakpoints (sizes) that have been set through the `breakpointPreviewMode` of the `@apostrophecms/asset` module. By default, there are three shortcut device breakpoints added. Adding additional breakpoint preview sizes without `shortcut: true` will cause a dropdown menu with all the sizes to appear, in addition to the icons.
 
 ![Screen shot of the breakpoint preview dropdown menu](../images/new-breakpoint-menu.png)
 
