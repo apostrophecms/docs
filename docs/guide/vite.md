@@ -321,6 +321,17 @@ When migrating your ApostropheCMS project to use Vite, you'll need to make a few
    import Component from 'Modules/module-name/components/Component.vue';
    ```
 
+3. **Convert to ESM Syntax**
+   ```javascript
+   // Remove CommonJS syntax
+   const myComponent = require('./component');
+   module.exports = myComponent;
+
+   // Use ESM instead
+   import myComponent from './component';
+   export default myComponent;
+   ```
+
 ### Known Limitations and Solutions
 
 ### HMR Directory Watching

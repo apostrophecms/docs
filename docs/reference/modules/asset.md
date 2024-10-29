@@ -12,15 +12,22 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 
 ## Options
 
-|  Property | Type | Description |
-|---|---|---|
-| [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
-| [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
-| `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
-| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
-| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
-| [`devSourceMap`](#devsourcemap) | String or `false` | Overrides the `devtool` setting of `webpack` for the admin UI build. |
-| [`breakpointPreviewMode`](#breakpointPreviewMode) | object | Enables and sets screen sizes for mobile preview. |
+|  Property | Type | Description | Configuration Location |
+|---|---|---|---|
+| [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. | Both `app.js` and module `index.js` |
+| [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. | Both `app.js` and module `index.js` |
+| `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. | Both `app.js` and module index |
+| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. | Both `app.js` and module `index.js` |
+| [devSourceMap](#devsourcemap) | String or false | Overrides the devtool setting of webpack for the admin UI build. | Both `app.js` and module `index.js` |
+| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. | Both `app.js` and module `index.js` |
+| [`breakpointPreviewMode`](#breakpointPreviewMode) | object | Enables and sets screen sizes for mobile preview. | Both `app.js` and module `index.js` |
+| [`hmr`](#hmr) | String or Boolean | Controls Hot Module Replacement mode. Values: `'public'` (default), `'apos'`, or `false` | `app.js` only |
+| [`hmrPort`](#hmrport) | Number | Sets custom WebSocket server port for HMR. Defaults to ApostropheCMS server port. | `app.js` only |
+| [`productionSourceMaps`](#productionsourcemaps) | Boolean | If `true`, includes source maps in production builds. | `app.js` only |
+
+::: info
+The `devSourceMap` option has been removed as it was specific to webpack configuration. Source map behavior is now controlled through the `productionSourceMaps` option for Vite builds.
+:::
 
 ### `refreshOnRestart`
 
@@ -34,13 +41,11 @@ By default, `watch` is set to `true`. A truthy value will cause the application 
 
 When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional property can be used to configure an `uploadfs` instance that differs from the one configured by the `attachment` module, allowing changes in where assets from the webpack build process are stored and how they are served. Full documentation for uploadfs can be found [here](https://www.npmjs.com/package/uploadfs).
 
-### `rebundleModules`
-
-The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
-
-Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
-
 ### `devSourceMap`
+
+::: warning Deprecated
+This option only applies when using webpack as your bundler. For projects using Vite, use the `productionSourceMaps` option instead. Source maps in development are automatically handled by Vite and cannot be configured.
+:::
 
 For those who are familiar with webpack's `devtool` setting. This option can be used to override that setting when in a development environment. The default is to use `eval-source-map`, unless `@apostrophecms/security-headers` is active, in which case `false` is used to avoid a Content Security Policy error.
 
@@ -49,6 +54,12 @@ In our experience, settings other than `eval-source-map` result in associating e
 A source map is not produced at all in a production or production-like environment.
 
 This option currently applies only to the admin UI build, not the `ui/src` build.
+
+### `rebundleModules`
+
+The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
+
+Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
 
 #### Example
 
@@ -77,6 +88,63 @@ modules/@apostrophecms/asset/index.js
 </AposCodeBlock>
 
 To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
+
+### hmr
+Hot Module Replacement (HMR) automatically updates your browser when you make changes to your code, without requiring a full page refresh. The `hmr` option controls which parts of your application use this feature:
+
+```javascript
+// in app.js
+modules: {
+  '@apostrophecms/asset': {
+    options: {
+      hmr: 'public'
+    }
+  }
+}
+```
+
+- `'public'` (default): Enables HMR for your project's UI code, including any custom components, stylesheets, and client-side JavaScript in your project's modules.
+- `'apos'`: Enables HMR for the ApostropheCMS admin UI, useful when developing admin UI modifications or custom admin components.
+- `false`: Disables HMR completely, requiring manual page refreshes to see changes.
+
+### hmrPort
+Sets a custom port for the WebSocket server that handles HMR communications. By default, it uses your ApostropheCMS server port:
+
+```javascript
+modules: {
+  '@apostrophecms/asset': {
+    options: {
+      hmrPort: 3001
+    }
+  }
+}
+```
+
+You typically only need to set this if you're running behind a proxy or have port conflicts.
+
+### `productionSourceMaps`
+
+Controls source map generation in production builds. This option replaces the previous webpack-specific devSourceMap option. You cannot use both devSourceMap and productionSourceMaps as they belong to different bundling systems. With the move from webpack to Vite, source map handling has been simplified:
+
+- In development, Vite automatically provides high-quality source maps that work well with browser dev tools. Unlike webpack's `devtool` setting, this behavior is optimized by default and cannot be configured.
+
+- For production, source maps are disabled by default to minimize build size. Setting `productionSourceMaps: true` will include them in the production build:
+
+```javascript
+modules: {
+  '@apostrophecms/asset': {
+    options: {
+      productionSourceMaps: true
+    }
+  }
+}
+```
+
+This option applies to both admin UI and project UI builds, providing better debugging capabilities across your entire application compared to webpack's admin-UI-only source maps.
+
+::: tip
+Source maps in production will increase your build size but can be invaluable for debugging production issues. Consider your specific needs and deployment constraints when enabling this option.
+:::
 
 ### `breakpointPreviewMode`
 The `breakpointPreviewMode` is enabled by default and  adds icons to the admin-bar for each of the breakpoints specified in the `screens` object. Clicking on these icons will cause the markup to display as a CSS container of the specified dimensions. Any styling assets handled by the apostrophe build process added through a [`ui/src/index.scss` file of any module](/guide/front-end-assets.html#placing-client-side-code) will be transpiled and applied as container queries in this display. This is for preview purposes only, the project styling assets will not be directly altered. Any CSS breakpoint styling added through `<style>` blocks in the template will not change in response to the altered display size. There are also some standard CSS breakpoint declarations that cannot be directly converted into container queries, particularly those targeting the viewport height or those relying on global viewport conditions. You will receive console notifications when declarations that can't be converted are encountered if the `debug` property is set to `true`. These exceptions can potentially be handled using the [`transform` property](#tranform) as detailed.
