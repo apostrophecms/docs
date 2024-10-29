@@ -63,7 +63,7 @@ animalType: {
 <!-- |widgetControls | Boolean | false | If `true`, `select` fields can be edited in line on the page if the field is in a widget | | -->
 
 ### `following`
-This option should be set to the name of a field or an array of field names that can be used to dynamically create choices based on the value of the followed field(s).
+The `following` option is used when adding field choices that depend on the value of another field in the schema by passing a string representing a method name to the [`choices`](#choices) option. It should be set to the name of a field or an array of field names that will be used to dynamically create choices based on the value of those named field(s).
 
 If this field is nested in an `array` or `object` field and is following a field in the parent object, then the name of the field should be prefixed with a `<`, e.g. `following: '<title'`. This hoisting also works if the field is following a field in the parent object from a grand-child `array` or `object` that is nested within a child `array` or `object` using `<<`. This pattern can be extended for additional levels of nesting.
 
@@ -71,16 +71,16 @@ The value(s) of the followed field(s) will be used to create an object with prop
 
 ## `choices` configuration
 
-The `choices` setting in `checkboxes`, `radio`, or `select` fields configures the options that a user will see in the interface and the values that the server will allow in validation. The `choices` value is an array of objects with `label` and `value` properties.
+The `choices` setting in `checkboxes`, `radio`, or `select` fields configures the options that a user will see in the interface and the values that the server will allow in validation. The `choices` value is an array of objects with `label` and `value` properties, or a string ending with `()` representing a [`method(self)`](../module-api/module-overview#methods) in your module. See below for more [details](#choices).
 
 - `value` is used in the field's database value
 - `label` is the more human-readable version used in interfaces
 
-## Populating `choices` dynamically
+## Populating `choices` dynamically {#choices}
 
 What if the choices aren't known in advance or are dependent on the value of another schema field? Then you can fetch them dynamically.
 
-First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass the name of the method you'll implement on the server side — **do not** pass a function, as a string ending in `()`. e.g. `choices: 'getChoices()'`
+First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass the name of the method you'll implement on the server side as a string ending in `()`. e.g. `choices: 'getChoices()'` — **do not** pass a function.
 
 Second, implement that method in your module so that it takes `(req, data, following)` arguments and return an array of choices in the usual format. You may use an async function, or return a promise that will resolve to the array. That means you can reach out to APIs using modules like `axios` or `node-fetch`, or make Apostrophe database queries.
 
@@ -88,7 +88,7 @@ The `data` argument is an object containing the parent's `docId` for further ins
 
 The `following` argument is an object containing the schema fields being followed as keys and the value of those fields as values. Note that the key will match the field name(s) in the `following` field array exactly. So if you are passing a parental schema field value in an `object` or `array` schema field, you need to include the prefixing `<` along with the name. See the [`following`](#following) property description.
 
-It is usually a good idea to perform at least short-term caching in your choices method, in order to limit the impact on performance when editing.
+When your `choices` method is async, while calls to the method are debounced to keep the rate of calls reasonable, is usually a good idea to perform at least short-term caching in order to limit the impact on performance when editing.
 
 ``` javascript
 module.exports = {
@@ -117,6 +117,7 @@ module.exports = {
   },
   methods(self) {
     return {
+      // this method can be async
       getCities(req, { docId }, { region }) {
         // Define city choices based on the selected region
         const cityChoices = {
