@@ -146,7 +146,8 @@ const sidebarGuide = [
       { text: 'Webpack Configuration', link: 'guide/webpack.md' },
       { text: 'Using pnpm', link: 'guide/using-pnpm.md' },
       { text: 'Webhooks', link: 'cookbook/creating-webhooks.md' },
-      { text: 'Server-side errors for fields', link: 'guide/server-side-field-errors.md' }
+      { text: 'Server-side errors for fields', link: 'guide/server-side-field-errors.md' },
+      { text: 'Migrating to ESM', link: 'guide/migrating-to-esm.md' }
     ]
   },
   {
