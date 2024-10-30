@@ -1,10 +1,10 @@
 # Vite
 
-[Vite](https://vite.dev/) is a modern build tool that significantly improves the development experience. Unlike traditional bundlers like webpack, Vite leverages native ES modules in the browser to enable lightning-fast hot module replacement (HMR) and on-demand compilation. During development, this means your changes appear instantly in the browser without rebuilding the entire bundle. When building for production, Vite uses Rollup to create highly optimized assets.
+[Vite](https://vite.dev/) is a modern build tool that significantly improves the development experience. Unlike traditional bundlers like webpack, Vite leverages native ES modules in the browser to enable faster builds and updates. During development, when using UI frameworks that support Hot Module Replacement (HMR) like Vue, React, or Svelte, your changes appear instantly in the browser without rebuilding the entire bundle or refreshing the page. For vanilla JavaScript or frameworks without HMR support, Vite still provides fast page reloads on changes. When building for production, Vite uses Rollup to create highly optimized assets.
 
 For ApostropheCMS projects, this translates to faster development cycles, improved debugging with better source maps, and a more streamlined build process that requires less configuration. The dev server starts up instantly regardless of your application size, and HMR updates happen in milliseconds rather than seconds.
 
-Using Vite in an ApostropheCMS project, rather than the default webpack build, is currently in beta. However, moving forward, webpack will slowly be deprecated. At this time we encourage you to test the new build in your `dev` environment.
+Using Vite in an ApostropheCMS project, rather than the default webpack build, is currently in beta. However, moving forward, webpack will slowly be deprecated. At this time we encourage you to test the new build in your `dev` environment. If you want to take advantage of HMR in your project-level non-Admin UI code, we recommend you start any new project using ESM modules in your frontend code. You can see the steps to begin this migration in our [documentation](/guide/migrating-to-esm). While HMR will work out of the box for the Admin UI with `hmr: 'apos'`, project-level UI code will need to use ESM syntax to get the full benefits of using Vite. Traditional CommonJS (require/module.exports) code will still get page reloads on changes, but won't support true HMR.
 
 ## Installation
 Moving forward, all of our starter kits will have the Vite build option available. If you are creating a project from scratch without a starter kit, or want to enable Vite builds in an existing project you can install the package from npm.
@@ -33,7 +33,7 @@ require('apostrophe')({
 
 ## Core Features and Configuration
 
-The Vite bundler for ApostropheCMS comes with sensible defaults while remaining highly configurable. Hot Module Replacement (HMR) is enabled out of the box for project UI code, allowing you to see your changes instantly without a full page refresh.
+The Vite bundler for ApostropheCMS comes with sensible defaults while remaining highly configurable. Hot Module Replacement (HMR) is enabled out of the box for ESM project code, allowing you to see your changes instantly without a full page refresh.
 
 ### Hot Module Replacement
 
@@ -65,7 +65,7 @@ require('apostrophe')({
 </AposCodeBlock>
 
 ::: info
-If you use the `hmr: 'apos'` option, you don't need to pass the `APOS_DEV` flag when editing components of the Admin UI. The Vite build will selectively update altered code leading to a better development experience than `APOS_DEV=1`, which will rebuild the entirety of the Admin UI code.
+If you use the `hmr: 'apos'` option, we recommend you do not pass the `APOS_DEV` flag. The Vite build will selectively update altered code leading to a better development experience than `APOS_DEV=1`, which upon process reload will force rebuilding of the `apos` build. Vite is not using the build assets, so this doesn't make sense.
 :::
 
 ### WebSocket Configuration
@@ -104,10 +104,6 @@ For debugging production builds, you can enable source maps to see the original 
   </template>
 </AposCodeBlock>
 
-::: tip
-Source maps slightly increase your build size but are invaluable for debugging production issues. Consider your specific needs when enabling this option.
-:::
-
 ## Extending Vite Configuration
 
 ApostropheCMS's Vite integration provides two methods to customize your Vite configuration. You can either configure it through your module's code or via a dedicated configuration file in your project root.
@@ -134,15 +130,6 @@ module.exports = {
               additionalData: `$injectedColor: orange;`
             }
           }
-        },
-        optimizeDeps: {
-          // Dependencies optimization options
-          include: ['lodash', 'moment']
-        },
-        server: {
-          // Development server options
-          https: true,
-          port: 3000
         }
       }
     }
@@ -156,7 +143,7 @@ module.exports = {
 
 ### Method 2: Project Configuration File
 
-For project-wide Vite settings, create either `apos.vite.config.js` (ESM) or `apos.vite.config.mjs` (CJS) in your project root:
+For project-wide Vite settings, create either apos.vite.config.js (if your project uses ESM with "type": "module" in package.json) or apos.vite.config.mjs (if your project uses CommonJS) in your project root. The configuration code inside the file should always use ESM syntax regardless of your project type:
 
 <AposCodeBlock>
 
@@ -171,12 +158,6 @@ export default defineConfig({
       svgoConfig: {/* custom SVG optimization options */}
     })
   ],
-  resolve: {
-    alias: {
-      '@components': '/src/components',
-      '@styles': '/src/styles'
-    }
-  },
   build: {
     rollupOptions: {
       // Customize underlying Rollup bundle
@@ -201,20 +182,11 @@ Here are some frequently used Vite configuration options:
 
 - **define**: Replace constants in your code during build time
 - **plugins**: Add Vite plugins for additional functionality
-- **resolve.alias**: Create import aliases for cleaner imports
 - **css**: Configure CSS processing and preprocessors
 - **build**: Customize build output and bundling behavior
-- **server**: Configure development server settings
 - **optimizeDeps**: Control dependency pre-bundling
 
-For a complete list of available options, refer to the [Vite Configuration Documentation](https://vitejs.dev/config/).
-
-::: warning
-When creating aliases that reference ApostropheCMS core or module code, the proper syntax for referencing the compiled apos-build directory is still being developed. For now:
-
-* Use the built-in alias `Modules/module-name/components/...` for accessing ApostropheCMS module components
-* Project-specific aliases (pointing to your own source code) work as normal using standard Vite alias syntax
-:::
+In most cases, any **server** options shouldn't be touched in the Vite config. For a complete list of available options, refer to the [Vite Configuration Documentation](https://vitejs.dev/config/).
 
 ## Development-Specific Features
 
@@ -276,7 +248,7 @@ module.exports = {
 
 ### Visibility Options
 
-The `when` option controls when your component appears:
+The when option controls when your component appears:
 
 ```javascript
 when: 'hmr'   // Only visible when HMR is active
@@ -284,7 +256,14 @@ when: 'dev'   // Visible in any development mode
 when: 'prod'  // Only visible in production
 ```
 
-You can combine these with `bundler: 'vite'` to ensure your component only appears when using the Vite bundler.
+The bundler option allows you to specify which bundler must be active for the component to appear:
+
+```javascript
+bundler: 'vite'    // Only visible when using Vite
+bundler: 'webpack' // Only visible when using webpack
+```
+
+You can combine these options to precisely control when your component appears. For example, to show a component only when using Vite with HMR active, you would use both `when: 'hmr'` and `bundler: 'vite'`.
 
 ### Common Use Cases
 
@@ -326,11 +305,20 @@ When migrating your ApostropheCMS project to use Vite, you'll need to make a few
    // Remove CommonJS syntax
    const myComponent = require('./component');
    module.exports = myComponent;
-
+   
    // Use ESM instead
-   import myComponent from './component';
+   import myComponent from './component.js';  // Note: File extension required
    export default myComponent;
+
+   // When importing your own modules, always include the file extension
+   import { helper } from './utils.js';
+   import styles from './styles.css';
+   import template from './template.html';
    ```
+
+::: info
+ESM requires file extensions in import paths. Always include `.js`, `.css`, `.vue`, etc. when importing your own modules. This is different from webpack, which allowed omitting extensions.
+:::
 
 ### Known Limitations and Solutions
 
@@ -341,21 +329,6 @@ When migrating your ApostropheCMS project to use Vite, you'll need to make a few
   # If using nodemon (default)
   # Type 'rs' and press Enter in your terminal
   rs
-  ```
-
-### Static Assets in `ui/public`
-- **Limitation**: Changes to `ui/public` don't trigger HMR/page reload
-- **Workaround**: Add these directories to your `nodemon` watch list:
-  ```json
-  {
-    "watch": [
-      "app.js",
-      "./modules/**/*",
-      "./lib/**/*",
-      "./src/**/*",
-      "**/ui/public/**/*"
-    ]
-  }
   ```
 
 ### Troubleshooting Common Issues
@@ -369,7 +342,7 @@ If changes aren't reflecting immediately:
 ### Build Errors
 ```bash
 # Clear your build cache
-rm -rf apos-build
+node app @apostrophecms/asset:reset
 npm run build
 
 # Restart your development server

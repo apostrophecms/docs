@@ -25,10 +25,6 @@ The `asset` module serves to organize, process, and output all project JavaScrip
 | [`hmrPort`](#hmrport) | Number | Sets custom WebSocket server port for HMR. Defaults to ApostropheCMS server port. | `app.js` only |
 | [`productionSourceMaps`](#productionsourcemaps) | Boolean | If `true`, includes source maps in production builds. | `app.js` only |
 
-::: info
-The `devSourceMap` option has been removed as it was specific to webpack configuration. Source map behavior is now controlled through the `productionSourceMaps` option for Vite builds.
-:::
-
 ### `refreshOnRestart`
 
 By default, `refreshOnRestart` is set to `false`. If this option has a falsy value, the browser will not automatically refresh following app restart.  If this option is truthy and `process.env.NODE_ENV` is not set to `production`, then restart of the Apostrophe app will trigger a browser refresh. This is very useful in combination with `nodemon` to deliver file changes to the browser.
@@ -44,7 +40,7 @@ When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional p
 ### `devSourceMap`
 
 ::: warning Deprecated
-This option only applies when using webpack as your bundler. For projects using Vite, use the `productionSourceMaps` option instead. Source maps in development are automatically handled by Vite and cannot be configured.
+This option only applies when using webpack as your bundler. Source maps in development are automatically handled by Vite and cannot be configured. However, when using Vite you can elect to use the `productionSourceMaps` option to turn on the creation of production sourcemaps.
 :::
 
 For those who are familiar with webpack's `devtool` setting. This option can be used to override that setting when in a development environment. The default is to use `eval-source-map`, unless `@apostrophecms/security-headers` is active, in which case `false` is used to avoid a Content Security Policy error.
@@ -57,7 +53,7 @@ This option currently applies only to the admin UI build, not the `ui/src` build
 
 ### `rebundleModules`
 
-The `rebundleModules` option allows for overridding the `bundles` properties passed into `webpack` at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
+The `rebundleModules` option allows for overridding the `bundles` properties passed into webpack at the individual module level, including modules added through npm. This option takes an object with module names, or module names with a suffix made up of a `:` and bundle name, as properties. This property designates rebundling of either all the code in the former case, or a single named bundle in the later.
 
 Each property takes a string value, indicating the name of the new bundle for the assets. This allows rebundling of code that used to go to a specific bundle from a particular module. Or, you can rebundle all the code from that module. Bundles from multiple modules can be rebundled into the same new end bundle.
 
@@ -88,6 +84,8 @@ modules/@apostrophecms/asset/index.js
 </AposCodeBlock>
 
 To split files within a single `ui/src` folder into multiple bundles, assign each file separately with a property:value pair for each file.
+
+Bundles in Vite can be controlled through the configuration options.
 
 ### hmr
 Hot Module Replacement (HMR) automatically updates your browser when you make changes to your code, without requiring a full page refresh. The `hmr` option controls which parts of your application use this feature:
