@@ -144,6 +144,7 @@ const sidebarGuide = [
       { text: 'Custom Widget Placeholders', link: 'guide/adding-custom-widget-placeholder-content.md' },
       { text: 'Custom Auth Requirements', link: 'guide/custom-login-requirements.md' },
       { text: 'Webpack Configuration', link: 'guide/webpack.md' },
+      { text: 'Vite Configuration', link: 'guide/vite.md' },
       { text: 'Using pnpm', link: 'guide/using-pnpm.md' },
       { text: 'Webhooks', link: 'cookbook/creating-webhooks.md' },
       { text: 'Server-side errors for fields', link: 'guide/server-side-field-errors.md' }

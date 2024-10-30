@@ -1,8 +1,8 @@
 # Webpack
 
-Apostrophe automatically provides a [webpack](https://webpack.js.org/)-powered build process for our frontend JavaScript and SCSS. Most of the time we don't have to think about this. As long as we [follow the documentation](front-end-assets.md) Apostrophe will take care of it for us.
+In modern Apostrophe (>=4.9.0), there are now two methods available for building project assets. By default, Apostrophe uses a [webpack](https://webpack.js.org/)-powered process to compile frontend JavaScript and SCSS automatically, so following the [frontend asset documentation](front-end-assets.md) is usually all you need. For those who prefer, Apostrophe now offers an optional build process using [Vite](https://vite.dev/) for either the Admin UI or public-facing assets. For details, refer to the [Vite configuration documentation](vite.md).
 
-However, sometimes we want to extend the way webpack processes our frontend code, specifically in two ways:
+Sometimes we want to extend the way webpack processes our frontend code, specifically in two ways:
 
 * By changing the webpack rules (the webpack configuration) via "extensions," or
 * By breaking up the bundle into two or more files, to be loaded only on pages that really require them ("extra bundles").
