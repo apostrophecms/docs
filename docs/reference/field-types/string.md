@@ -61,7 +61,7 @@ The string supplied to the `autocomplete` option is used as the value of the `au
 ### following
 This option should be set to the name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.
 
-If an array of fields is passed, the value of each will be concated in the order they are passed in the array.
+If an array of fields is passed, the value of each will be concatenated in the order they are passed in the array.
 
 If this field is nested in an `array` or `object` field and is following a field in the parent object, then the name of the field should be prefixed with a `<`, e.g. `following: '<title'`. This hoisting also works if the field is following a field in the parent object from a grand-child `array` or `object` that is nested within a child `array` or `object` using `<<`. This pattern can be extended for additional levels of nesting.
 

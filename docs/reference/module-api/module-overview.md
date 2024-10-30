@@ -701,7 +701,7 @@ module.exports = {
 Extension functions should *always* use the `_super` argument to call the original function. If you want to *completely* overwrite the inherited function, add a matching function in the section without the "extend" prefix instead. For example, we could completely overwrite the `insert` method in our piece type by including our own `insert` function in the `methods` section.
 :::
 
-### `methods(self)`
+### `methods(self)` {#methods}
 
 Add methods that can be invoked on `self` or from another module on `self.apos.modules['module-name']` or the designated module alias. Returns an object of functions.
 
