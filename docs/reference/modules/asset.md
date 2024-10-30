@@ -237,6 +237,28 @@ node app @apostrophecms/asset:clear-cache
 ```
 </AposCodeBlock>
 
+### `reset`
+The `reset` task provides a more comprehensive cleanup than `clear-cache` by removing all build artifacts, clearing the public folders (without affecting releases), and emptying the cache. This is useful when you need a complete reset of your asset build system or when troubleshooting build-related issues.
+
+#### Example
+
+<AposCodeBlock>
+
+```sh
+node app @apostrophecms/asset:reset
+```
+</AposCodeBlock>
+
+The key differences between `reset` and `clear-cache` are:
+- `reset` removes all build artifacts in addition to clearing the cache
+- `reset` empties the public folders (excluding releases)
+- `reset` provides a more thorough cleanup of the asset build system
+
+You might need to use this task when:
+- Making significant changes to your webpack of Vite configuration
+- Troubleshooting persistent build issues
+- Wanting to ensure a completely clean state for your asset build system
+
 ## Webpack configuration
 
 The webpack configuration for building the front-facing page assets can be extended from any module. The `asset` module exposes three different properties for accomplishing this.
