@@ -65,11 +65,11 @@ import myModule from './my-module.js';  // Note: .js extension is required
 
 ```javascript
 // Before
-const { apos } = require('@apostrophecms/apostrophe');
+const { myModule } = require('@my/module');
 const { existsSync } = require('fs');
 
 // After
-import { apos } from '@apostrophecms/apostrophe';
+import { myModule } from '@my/module';
 import { existsSync } from 'fs';
 ```
 
@@ -101,8 +101,8 @@ If you encounter errors like `ERR_MODULE_NOT_FOUND`, ensure you've added `.js` e
 These CommonJS variables aren't available in ESM. Instead, use:
 
 ```javascript
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
