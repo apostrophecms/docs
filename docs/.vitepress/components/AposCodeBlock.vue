@@ -1,189 +1,122 @@
 <template>
-  <figure>
-    <div v-if="showToggle" class="code-header">
-      <div class="toggle-container">
-        <button 
-          class="toggle-btn"
-          :class="{ active: !isEsm }"
-          @click="isEsm = false"
-        >
-          CommonJS
-        </button>
-        <button 
-          class="toggle-btn"
-          :class="{ active: isEsm }"
-          @click="isEsm = true"
-        >
-          ESM
-        </button>
-      </div>
+  <div class="code-block-container" ref="container">
+    <div v-if="hasBothVersions" class="module-switch">
+      <button
+        @click="moduleType = 'cjs'" 
+        :class="{ active: moduleType === 'cjs' }"
+      >CommonJS</button>
+      <button
+        @click="moduleType = 'esm'" 
+        :class="{ active: moduleType === 'esm' }"
+      >ES Modules</button>
     </div>
-    <div class="code-container">
-      <!-- Original CJS version -->
-      <div v-show="!isEsm" ref="cjsContainer">
-        <slot></slot>
-      </div>
-      <!-- ESM version -->
-      <div 
-        v-show="isEsm" 
-        ref="esmContainer"
-      ></div>
-      <figcaption v-if="hasCaption" class="code-caption">
+
+    <figure>
+      <slot v-if="!hasBothVersions"></slot>
+      <div v-else v-html="currentCode"></div>
+      <figcaption v-if="hasCaption">
         <slot name="caption"></slot>
       </figcaption>
-    </div>
-  </figure>
+    </figure>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, useSlots } from 'vue';
-import { useData } from 'vitepress';
+import { ref, computed, onMounted, useSlots } from 'vue';
 
+const props = defineProps({
+  language: {
+    type: String,
+    default: 'javascript'
+  }
+});
+
+const container = ref(null);
+const moduleType = ref('cjs');
+const cjsCode = ref('');
+const esmCode = ref('');
 const hasCaption = ref(false);
-const isEsm = ref(false);
-const showToggle = ref(false);
-const cjsContainer = ref(null);
-const esmContainer = ref(null);
 const slots = useSlots();
 
-// Function to detect if code needs CJS/ESM toggle
-const shouldShowToggle = (code, language) => {
-  // Don't show toggle for Vue or Nunjucks
-  if (['vue', 'html', 'njk'].includes(language.toLowerCase())) {
-    return false;
-  }
+const hasBothVersions = computed(() => {
+  return Boolean(cjsCode.value && esmCode.value);
+});
 
-  // Check if code contains CommonJS patterns
-  const hasCjsPatterns = code.includes('require(') || 
-    code.includes('module.exports') || 
-    code.includes('exports.');
-
-  // Check if code contains ESM patterns
-  const hasEsmPatterns = code.includes('import ') || 
-    code.includes('export ');
-
-  // Only show toggle if code contains CJS patterns (since we're converting from CJS)
-  // and doesn't mix patterns
-  return hasCjsPatterns && !hasEsmPatterns;
-};
-
-// Function to convert CJS to ESM
-const convertToEsm = (code) => {
-  return code
-    // Convert require statements to imports
-    .replace(/const\s+(\w+)\s*=\s*require\(['"](.+?)['"]\)/g, 'import $1 from "$2"')
-    // Convert module.exports to export default
-    .replace(/module\.exports\s*=\s*/g, 'export default ')
-    // Convert exports.something to export const something
-    .replace(/exports\.(\w+)\s*=\s*/g, 'export const $1 = ');
-};
+const currentCode = computed(() => {
+  return moduleType.value === 'cjs' ? cjsCode.value : esmCode.value;
+});
 
 onMounted(() => {
   hasCaption.value = !!slots.caption;
 
-  // Get the code element and its content
-  const preEl = cjsContainer.value.querySelector('pre');
-  const codeEl = preEl?.querySelector('code');
-  if (!codeEl) return;
+  // Find the code block within this component's container
+  if (container.value) {
+    const codeBlock = container.value.querySelector('.module-code-block');
+    if (codeBlock) {
+      const cjs = codeBlock.dataset.cjs;
+      const esm = codeBlock.dataset.esm;
 
-  // Get the language and original code
-  const language = Array.from(codeEl.classList)
-    .find(cls => cls.startsWith('language-'))
-    ?.replace('language-', '') || 'javascript';
-  
-  const originalCode = codeEl.textContent;
-
-  // Check if we should show the toggle
-  showToggle.value = shouldShowToggle(originalCode, language);
-
-  if (showToggle.value) {
-    // Convert to ESM
-    const esmCode = convertToEsm(originalCode);
-    console.log('ESM code:', esmCode);
-
-    // 1. Instead of cloning, create a new `<code>` element
-    const esmCodeEl = document.createElement('code');
-    esmCodeEl.classList.add(`language-${language}`); // Add the language class
-
-    // 2. Use Shiki to highlight the ESM code 
-    //const esmHighlighted = useData().page.highlighter.codeToHtml(esmCode, { lang: language });
-
-    // 3. Set the highlighted HTML as the innerHTML of the new code element
-    esmCodeEl.innerHTML = esmCode;
-    //esmCodeEl.innerHTML = esmCode;
-
-    // 4. Create a new `<pre>` element and append the code element to it
-    const esmPre = document.createElement('pre');
-    esmPre.appendChild(esmCodeEl);
-
-    // 5. Add the new <pre> element to the ESM container
-    esmContainer.value.appendChild(esmPre);
+      if (cjs && esm) {
+        cjsCode.value = decodeURIComponent(cjs);
+        esmCode.value = decodeURIComponent(esm);
+        // Remove the original code block since we're showing the switched version
+        codeBlock.innerHTML = '';
+      }
+    }
   }
 });
 </script>
 
-<style lang="stylus" scoped>
+<style scoped>
+.code-block-container {
+  position: relative;
+}
+
+.module-switch {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.module-switch button {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.module-switch button.active {
+  background: var(--vp-c-brand);
+  color: white;
+  border-color: var(--vp-c-brand);
+}
+
 figure {
   position: relative;
   margin: 0;
   padding: 0;
 }
 
-.code-container {
-  position: relative;
-}
-
-.code-header {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0.5rem;
-  margin: 0;
-  background: #1e1e1e;
-}
-
-.toggle-container {
-  display: flex;
-  gap: 0.5rem;
-  z-index: 2;
-}
-
-.toggle-btn {
-  padding: 0.25rem 0.75rem;
-  border: 1px solid #666;
-  border-radius: 4px;
-  background: transparent;
-  color: #fff;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #333;
-  }
-
-  &.active {
-    background: #666;
-    border-color: #888;
-  }
-}
-
-.code-caption {
-  position: absolute;
-  top: 0.85rem;
-  left: 3rem;
-  right: 3rem;
-  text-align: center;
-  color: #fff;
-  font-family: var(--vp-font-family-mono);
-  font-size: 0.85rem;
+figcaption {
   z-index: 1;
+  position: absolute;
+  top: 0.85em;
+  left: 3em;
+  width: calc(100% - 6em);
+  color: #fff;
+  font-family: Hack, monospace;
+  font-size: 0.85rem;
+  text-align: center;
 }
 
-:deep(pre) {
-  margin-top: 0;
+:deep(.vp-code-group) {
+  margin: 0;
 }
 
-:deep(.esm-container pre) {
-  margin-top: 0;
+:deep(.shiki) {
+  font-family: var(--vp-font-family-mono);
+  font-size: var(--vp-code-font-size);
+  line-height: var(--vp-code-line-height);
 }
 </style>

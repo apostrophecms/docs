@@ -10,6 +10,8 @@ import nlp from 'compromise';
 
 import nunjucks from './theme/njk-html.tmLanguage.json';
 
+import { shouldTranspile, transformToESM } from './helpers/transformation';
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for Apostrophe 3',
@@ -267,7 +269,31 @@ export default defineConfig({
         embeddedLangs: ['html'],
         aliases: ['njk', 'nunjucks']
       }
-    ]
+    ],
+    config: (md) => {
+      const defaultFence = md.renderer.rules.fence;
+      md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
+        const token = tokens[idx];
+        if ((token.info === 'js' || token.info === 'javascript' || token.info === 'ts') &&
+            shouldTranspile(token.content)) {
+          const esmCode = transformToESM(token.content);
+          // Create a new token for ESM code to get Shiki highlighting
+          const esmToken = Object.assign({}, token, {
+            content: esmCode
+          });
+          // Get highlighted versions of both
+          const cjsHighlighted = defaultFence(tokens, idx, options, env, slf);
+          const esmHighlighted = defaultFence([ esmToken ], 0, options, env, slf);
+          return `<div class="module-code-block" 
+                    data-cjs="${encodeURIComponent(cjsHighlighted)}"
+                    data-esm="${encodeURIComponent(esmHighlighted)}">
+                    ${cjsHighlighted}
+                  </div>`;
+        }
+
+        return defaultFence(tokens, idx, options, env, slf);
+      };
+    }
   },
   themeConfig: {
     logo: '/apostrophe-primary-mark.svg',
@@ -288,7 +314,7 @@ export default defineConfig({
           { text: 'Extensions', link: 'https://apostrophecms.com/extensions' },
           { text: 'Starter Kits', link: 'https://apostrophecms.com/starter-kits' },
           { text: 'Community', link: 'https://discord.com/invite/XkbRNq7' },
-          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' }    
+          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' }
         ]
       },
     ],
@@ -331,7 +357,7 @@ async function processText(htmlBlock) {
       ) + '...'
     );
   };
-  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function(match) {
+  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function (match) {
     if (match === '\u200B') {
       return ' ';
     }
