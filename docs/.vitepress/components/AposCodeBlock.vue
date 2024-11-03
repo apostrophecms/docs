@@ -99,26 +99,24 @@ onMounted(() => {
   if (showToggle.value) {
     // Convert to ESM
     const esmCode = convertToEsm(originalCode);
+    console.log('ESM code:', esmCode);
 
-    // Clone the original pre element and all its content
-    const esmPre = preEl.cloneNode(true);
-    
-    // Update only the text content of the code element
-    const esmCodeEl = esmPre.querySelector('code');
-    const spans = Array.from(esmCodeEl.children);
-    
-    // Split both versions into lines
-    const originalLines = originalCode.split('\n');
-    const esmLines = esmCode.split('\n');
-    
-    // Update each line's content while preserving spans
-    spans.forEach((span, i) => {
-      if (esmLines[i] !== originalLines[i]) {
-        span.textContent = esmLines[i];
-      }
-    });
-    
-    // Add to container
+    // 1. Instead of cloning, create a new `<code>` element
+    const esmCodeEl = document.createElement('code');
+    esmCodeEl.classList.add(`language-${language}`); // Add the language class
+
+    // 2. Use Shiki to highlight the ESM code 
+    //const esmHighlighted = useData().page.highlighter.codeToHtml(esmCode, { lang: language });
+
+    // 3. Set the highlighted HTML as the innerHTML of the new code element
+    esmCodeEl.innerHTML = esmCode;
+    //esmCodeEl.innerHTML = esmCode;
+
+    // 4. Create a new `<pre>` element and append the code element to it
+    const esmPre = document.createElement('pre');
+    esmPre.appendChild(esmCodeEl);
+
+    // 5. Add the new <pre> element to the ESM container
     esmContainer.value.appendChild(esmPre);
   }
 });
