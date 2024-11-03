@@ -11,8 +11,7 @@ export function shouldTranspile(code) {
     /njk-html/,
     /nunjucks/,
     /<template>/,
-    /\{\{.*\}\}/,
-    /\/\/ skip-transform/
+    /\{\{.*\}\}/
   ];
 
   if (skipCases.some(pattern => pattern.test(code))) {

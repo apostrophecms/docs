@@ -274,6 +274,13 @@ export default defineConfig({
       const defaultFence = md.renderer.rules.fence;
       md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
         const token = tokens[idx];
+        const [lang, ...markers] = token.info.split(/\s+/);
+
+        // Skip transformation if 'skip' is present in markers
+        if (markers.includes('skip')) {
+          return defaultFence(tokens, idx, options, env, slf);
+        }
+
         if ((token.info === 'js' || token.info === 'javascript' || token.info === 'ts') &&
             shouldTranspile(token.content)) {
           const esmCode = transformToESM(token.content);
