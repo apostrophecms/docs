@@ -1,14 +1,18 @@
 <template>
   <div class="code-block-container" ref="container">
     <div v-if="hasBothVersions" class="module-switch">
-      <button
-        @click="moduleType = 'cjs'" 
-        :class="{ active: moduleType === 'cjs' }"
-      >CommonJS</button>
-      <button
-        @click="moduleType = 'esm'" 
-        :class="{ active: moduleType === 'esm' }"
-      >ES Modules</button>
+      <label class="switch-label">
+        <span :class="{ active: moduleType === 'cjs' }">CJS</span>
+        <div class="switch">
+          <input
+            type="checkbox"
+            :checked="moduleType === 'esm'"
+            @change="toggleModuleType"
+          />
+          <span class="slider round"></span>
+        </div>
+        <span :class="{ active: moduleType === 'esm' }">ESM</span>
+      </label>
     </div>
 
     <figure>
@@ -22,7 +26,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, useSlots } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { eventBus } from '../theme'
 
 const props = defineProps({
   language: {
@@ -32,11 +37,12 @@ const props = defineProps({
 });
 
 const container = ref(null);
-const moduleType = ref('cjs');
+const moduleType = ref(eventBus.preference.value);
 const cjsCode = ref('');
 const esmCode = ref('');
 const hasCaption = ref(false);
-const slots = useSlots();
+
+let unsubscribe;
 
 const hasBothVersions = computed(() => {
   return Boolean(cjsCode.value && esmCode.value);
@@ -46,10 +52,19 @@ const currentCode = computed(() => {
   return moduleType.value === 'cjs' ? cjsCode.value : esmCode.value;
 });
 
-onMounted(() => {
-  hasCaption.value = !!slots.caption;
+function toggleModuleType(event) {
+  const newType = event.target.checked ? 'esm' : 'cjs';
+  eventBus.setPreference(newType);
+}
 
-  // Find the code block within this component's container
+onMounted(() => {
+  // Subscribe to preference changes
+  unsubscribe = eventBus.subscribe((newValue) => {
+    moduleType.value = newValue;
+  });
+
+  hasCaption.value = !!container.value?.querySelector('[name="caption"]');
+
   if (container.value) {
     const codeBlock = container.value.querySelector('.module-code-block');
     if (codeBlock) {
@@ -59,10 +74,15 @@ onMounted(() => {
       if (cjs && esm) {
         cjsCode.value = decodeURIComponent(cjs);
         esmCode.value = decodeURIComponent(esm);
-        // Remove the original code block since we're showing the switched version
         codeBlock.innerHTML = '';
       }
     }
+  }
+});
+
+onUnmounted(() => {
+  if (unsubscribe) {
+    unsubscribe();
   }
 });
 </script>
@@ -74,22 +94,73 @@ onMounted(() => {
 
 .module-switch {
   display: flex;
-  gap: 0.5rem;
+  justify-content: flex-end;
   margin-bottom: 0.5rem;
 }
 
-.module-switch button {
-  padding: 0.25rem 0.75rem;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 4px;
-  background: transparent;
-  cursor: pointer;
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  user-select: none;
 }
 
-.module-switch button.active {
-  background: var(--vp-c-brand);
-  color: white;
+.switch-label span {
+  color: var(--vp-c-text-2);
+}
+
+.switch-label span.active {
+  color: var(--vp-c-text-1);
+}
+
+/* Switch container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--vp-c-brand);
   border-color: var(--vp-c-brand);
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+/* Only change the position when checked */
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Focus states */
+input:focus-visible + .slider {
+  box-shadow: 0 0 0 2px var(--vp-c-brand-soft);
 }
 
 figure {

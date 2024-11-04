@@ -10,7 +10,7 @@ import nlp from 'compromise';
 
 import nunjucks from './theme/njk-html.tmLanguage.json';
 
-import { shouldTranspile, transformToESM } from './helpers/transformation';
+import { detectModuleFormat, transpileToESM, transpileToCJS } from './helpers/transpile';
 
 export default defineConfig({
   title: 'ApostropheCMS',
@@ -275,29 +275,43 @@ export default defineConfig({
       md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
         const token = tokens[idx];
         const [lang, ...markers] = token.info.split(/\s+/);
-
+  
         // Skip transformation if 'skip' is present in markers
         if (markers.includes('skip')) {
           return defaultFence(tokens, idx, options, env, slf);
         }
-
-        if ((token.info === 'js' || token.info === 'javascript' || token.info === 'ts') &&
-            shouldTranspile(token.content)) {
-          const esmCode = transformToESM(token.content);
-          // Create a new token for ESM code to get Shiki highlighting
-          const esmToken = Object.assign({}, token, {
-            content: esmCode
-          });
-          // Get highlighted versions of both
-          const cjsHighlighted = defaultFence(tokens, idx, options, env, slf);
-          const esmHighlighted = defaultFence([ esmToken ], 0, options, env, slf);
-          return `<div class="module-code-block" 
-                    data-cjs="${encodeURIComponent(cjsHighlighted)}"
-                    data-esm="${encodeURIComponent(esmHighlighted)}">
-                    ${cjsHighlighted}
-                  </div>`;
+  
+        if (token.info === 'js' || token.info === 'javascript' || token.info === 'ts') {
+          const { format, canTransform } = detectModuleFormat(token.content);
+          
+          if (canTransform) {
+            let cjsCode, esmCode;
+            
+            if (format === 'cjs') {
+              cjsCode = token.content;
+              esmCode = transpileToESM(token.content);
+            } else if (format === 'esm') {
+              esmCode = token.content;
+              cjsCode = transpileToCJS(token.content);
+            }
+  
+            // Create tokens for both versions to get Shiki highlighting
+            const cjsToken = Object.assign({}, token, { content: cjsCode });
+            const esmToken = Object.assign({}, token, { content: esmCode });
+            
+            // Get highlighted versions of both
+            const cjsHighlighted = defaultFence([cjsToken], 0, options, env, slf);
+            const esmHighlighted = defaultFence([esmToken], 0, options, env, slf);
+            
+            return `<div class="module-code-block" 
+                      data-cjs="${encodeURIComponent(cjsHighlighted)}"
+                      data-esm="${encodeURIComponent(esmHighlighted)}"
+                      data-source="${format}">
+                      ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
+                    </div>`;
+          }
         }
-
+  
         return defaultFence(tokens, idx, options, env, slf);
       };
     }
