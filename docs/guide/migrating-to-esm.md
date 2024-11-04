@@ -48,7 +48,7 @@ require('apostrophe')({
 // After
 import apostrophe from 'apostrophe';
 
-export default {
+export default apostrophe {
   root: import.meta,
   shortName: 'my-project',
   baseUrl: 'http://localhost:3000',
