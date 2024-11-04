@@ -2,6 +2,10 @@
 
 Starting with version 4.9.0, ApostropheCMS supports ECMAScript Modules (ESM). This guide will help you convert your existing project to use ESM and understand why this transition is valuable for your development workflow.
 
+::: info
+If you are starting a new project, good news! You don't have to worry about modifying existing modules. Just fork the `vite-demo` branch of any starter kit. They are already setup as ESM projects.
+:::
+
 ## Why Migrate to ESM?
 
 The transition to ESM brings several significant advantages for ApostropheCMS developers:
@@ -16,7 +20,7 @@ ESM is also the future of JavaScript modules. All major JavaScript frameworks an
 
 When planning your migration, keep these key points in mind:
 
-Your project must commit fully to either CommonJS (CJS) or ESM - they cannot be mixed at the project level. However, you can still use Node packages that support both systems through dual packaging. Moving forward, all new ApostropheCMS starter kits and extension packages will use ESM as their default module system.
+Your project must commit fully to either CommonJS (CJS) or ESM - they cannot be mixed at the project level. However, a project using either ESM or CJS may freely use node modules written with either ESM or CJS - there is compatibility at the npm level. Moving forward, all new ApostropheCMS starter kits and extension packages will use ESM as their default module system.
 
 ## Migration Steps
 
