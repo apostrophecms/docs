@@ -48,7 +48,7 @@ require('apostrophe')({
 // After
 import apostrophe from 'apostrophe';
 
-export default apostrophe {
+export default apostrophe ({
   root: import.meta,
   shortName: 'my-project',
   baseUrl: 'http://localhost:3000',
@@ -56,7 +56,7 @@ export default apostrophe {
     // ... module configuration
   }
   // ... other configuration
-};
+});
 ```
 
 The addition of `root: import.meta` is crucial for ESM support. This property helps ApostropheCMS correctly resolve file paths in an ESM context and enables features like HMR with Vite.
