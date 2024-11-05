@@ -11,7 +11,9 @@ import EditOrIssue from '../components/EditOrIssue.vue';
 import AposTwoColumns from '../components/AposTwoColumns.vue';
 import AposCtaButton from '../components/AposCtaButton.vue';
 import AposVideoSidebar from '../components/AposVideoSidebar.vue';
+import { createEventBus } from './eventBus';
 
+export const eventBus = createEventBus();
 export default {
   ...Theme,
   Layout: () => {

@@ -10,6 +10,8 @@ import nlp from 'compromise';
 
 import nunjucks from './theme/njk-html.tmLanguage.json';
 
+import { detectModuleFormat, transpileToESM, transpileToCJS } from './helpers/transpile';
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for Apostrophe 3',
@@ -267,7 +269,52 @@ export default defineConfig({
         embeddedLangs: ['html'],
         aliases: ['njk', 'nunjucks']
       }
-    ]
+    ],
+    config: (md) => {
+      const defaultFence = md.renderer.rules.fence;
+      md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
+        const token = tokens[idx];
+        const [lang, ...markers] = token.info.split(/\s+/);
+  
+        // Skip transformation if 'skip' is present in markers
+        if (markers.includes('skip')) {
+          return defaultFence(tokens, idx, options, env, slf);
+        }
+  
+        if (token.info === 'js' || token.info === 'javascript' || token.info === 'ts') {
+          const { format, canTransform } = detectModuleFormat(token.content);
+          
+          if (canTransform) {
+            let cjsCode, esmCode;
+            
+            if (format === 'cjs') {
+              cjsCode = token.content;
+              esmCode = transpileToESM(token.content);
+            } else if (format === 'esm') {
+              esmCode = token.content;
+              cjsCode = transpileToCJS(token.content);
+            }
+  
+            // Create tokens for both versions to get Shiki highlighting
+            const cjsToken = Object.assign({}, token, { content: cjsCode });
+            const esmToken = Object.assign({}, token, { content: esmCode });
+            
+            // Get highlighted versions of both
+            const cjsHighlighted = defaultFence([cjsToken], 0, options, env, slf);
+            const esmHighlighted = defaultFence([esmToken], 0, options, env, slf);
+            
+            return `<div class="module-code-block" 
+                      data-cjs="${encodeURIComponent(cjsHighlighted)}"
+                      data-esm="${encodeURIComponent(esmHighlighted)}"
+                      data-source="${format}">
+                      ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
+                    </div>`;
+          }
+        }
+  
+        return defaultFence(tokens, idx, options, env, slf);
+      };
+    }
   },
   themeConfig: {
     logo: '/apostrophe-primary-mark.svg',
@@ -288,7 +335,7 @@ export default defineConfig({
           { text: 'Extensions', link: 'https://apostrophecms.com/extensions' },
           { text: 'Starter Kits', link: 'https://apostrophecms.com/starter-kits' },
           { text: 'Community', link: 'https://discord.com/invite/XkbRNq7' },
-          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' }    
+          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' }
         ]
       },
     ],
@@ -331,7 +378,7 @@ async function processText(htmlBlock) {
       ) + '...'
     );
   };
-  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function(match) {
+  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function (match) {
     if (match === '\u200B') {
       return ' ';
     }
