@@ -4,6 +4,7 @@ import Theme from 'vitepress/theme';
 import './style.css';
 import './styles/index.styl';
 import AposCodeBlock from '../components/AposCodeBlock.vue';
+import AposTooltip from '../components/AposTooltip.vue';
 import AposTag from '../components/AposTag.vue';
 import AposRefExtends from '../components/AposRefExtends.vue';
 import AposFeedback from '../components/AposFeedback.vue';
@@ -25,6 +26,7 @@ export default {
   enhanceApp({ app, router, siteData }) {
     // register your custom global components
     app.component('AposCodeBlock', AposCodeBlock);
+    app.component('AposTooltip', AposTooltip);
     app.component('AposTag', AposTag);
     app.component('AposRefExtends', AposRefExtends);
     app.component('AposTwoColumns', AposTwoColumns);
