@@ -159,7 +159,6 @@ export default defineConfig({
     const description = await processText(docText);
 
     const relativePath = context.pageData.relativePath;
-    // console.log('relativePath', relativePath);
     const absolutePath = `https://v3.docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
 
     const returnedArray = [
@@ -270,50 +269,55 @@ export default defineConfig({
         aliases: ['njk', 'nunjucks']
       }
     ],
-    config: (md) => {
+    preConfig: (md) => {
       const defaultFence = md.renderer.rules.fence;
+
+      const getHighlightedCode = (content, lang, options, env, slf) => {
+        const tempToken = {
+          type: 'fence',
+          info: lang,
+          content: content,
+          markup: '```',
+          map: null
+        };
+        return defaultFence([tempToken], 0, options, env, slf)
+      };
+
       md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
         const token = tokens[idx];
-        const [lang, ...markers] = token.info.split(/\s+/);
-  
-        // Skip transformation if 'skip' is present in markers
-        if (markers.includes('skip')) {
+        const lang = token.info.trim().split(/\s+/)[0];
+        const { canTransform, format } = detectModuleFormat(token.content);
+
+        if (!canTransform) {
           return defaultFence(tokens, idx, options, env, slf);
         }
-  
-        if (token.info === 'js' || token.info === 'javascript' || token.info === 'ts') {
-          const { format, canTransform } = detectModuleFormat(token.content);
-          
-          if (canTransform) {
-            let cjsCode, esmCode;
-            
-            if (format === 'cjs') {
-              cjsCode = token.content;
-              esmCode = transpileToESM(token.content);
-            } else if (format === 'esm') {
-              esmCode = token.content;
-              cjsCode = transpileToCJS(token.content);
-            }
-  
-            // Create tokens for both versions to get Shiki highlighting
-            const cjsToken = Object.assign({}, token, { content: cjsCode });
-            const esmToken = Object.assign({}, token, { content: esmCode });
-            
-            // Get highlighted versions of both
-            const cjsHighlighted = defaultFence([cjsToken], 0, options, env, slf);
-            const esmHighlighted = defaultFence([esmToken], 0, options, env, slf);
-            
-            return `<div class="module-code-block" 
-                      data-cjs="${encodeURIComponent(cjsHighlighted)}"
-                      data-esm="${encodeURIComponent(esmHighlighted)}"
-                      data-source="${format}">
-                      ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
-                    </div>`;
+
+        if ([ 'js', 'javascript', 'ts'].includes(lang)) {
+          let cjsCode, esmCode;
+
+          if (format === 'cjs') {
+            cjsCode = token.content;
+            esmCode = transpileToESM(token.content);
+          } else if (format === 'esm') {
+            esmCode = token.content;
+            cjsCode = transpileToCJS(token.content);
           }
+
+          const cjsHighlighted = getHighlightedCode(cjsCode, lang, options, env, slf);
+          const esmHighlighted = getHighlightedCode(esmCode, lang, options, env, slf);
+
+          const finalOutput = `<div class="module-code-block language-${lang}"
+            data-cjs="${encodeURIComponent(cjsHighlighted)}"
+            data-esm="${encodeURIComponent(esmHighlighted)}"
+            data-source="${format}"
+            data-lang="${lang}">
+            ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
+            </div>`;
+          return finalOutput;
         }
-  
+
         return defaultFence(tokens, idx, options, env, slf);
-      };
+      }
     }
   },
   themeConfig: {

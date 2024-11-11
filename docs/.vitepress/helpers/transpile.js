@@ -6,7 +6,13 @@ export function detectModuleFormat(code) {
     /\{\{.*\}\}/
   ];
 
-  if (skipCases.some(pattern => pattern.test(code))) {
+  // Check if we should skip
+  const shouldSkip = skipCases.some(pattern => {
+    const matches = pattern.test(code);
+    return matches;
+  });
+
+  if (shouldSkip) {
     return { format: null, canTransform: false };
   }
 
