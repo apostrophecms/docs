@@ -151,21 +151,37 @@ GET https://example.rocks/api/v1/@apostrophecms/page?all=1&flat=1
 
 ## Getting rendered HTML in responses
 
-Using an object of JSON-like data from a REST API is very normal from a headless CMS. Traditionally the application's "head" (such as a single page Vue.js, React, or Angular application) would use that structured data to display product, event, or similar content information. It is less common for a headless CMS to deliver page content that is tied to particular HTML markup and layout. More often, landing page text and images might be coded directly into the app code or otherwise not be from the same data source.
+Using an object of JSON-like data from a REST API is common with a headless CMS. Traditionally the application's "head" (such as a single page Vue.js, React, Angular or native application) would use that structured data to display product, event, or similar content information. It is less common for a headless CMS to deliver page content that is tied to particular HTML markup and layout. More often, landing page text and images might be coded directly into the app code or otherwise not be from the same data source.
 
-Apostrophe supports both approaches. The in-context editing features and [widget areas](/guide/areas-and-widgets.md) give editors more control over content, but in its default form areas are fairly incomprehensible data objects. When areas are rendered as HTML from widget template files they are fully realized and easier to use.
+Apostrophe supports both approaches. The in-context editing features and [widget areas](/guide/areas-and-widgets.md) give editors more control over content, but in its default form areas are data objects mainly useful in an editing context and for native apps. When areas are rendered as HTML from widget template files they are fully realized and easier to use in contexts that utilize HTML.
 
-**In any Apostrophe REST API single-document `GET` ("get one") request, include the `?render-areas=1` query parameter.** This will return the page document as JSON. Each area field in the response will have a `_rendered` property with a string of HTML instead of the `items` array of widget objects. This could be useful if we mostly want to insert the rendered area HTML into an existing template system.
+### "Just give me the HTML:" `?render-areas=1` parameter
+
+**If you just want the HTML for each area, include the `?render-areas=1` query parameter in your API request.** This will return the page document as JSON. Each area field in the response will have a `_rendered` property with a string of HTML, in place of the `items` array of widget objects. This is useful if we just want to insert the rendered area HTML into an existing template system or utilize an iOS `WKWebView` or Android `WebView`.
 
 ```
-GET https://example.rocks/api/v1/@apostrophecms/page/903y5n76e8j:en:published?render-areas=1
+GET https://example.rocks/api/v1/@apostrophecms/page/_ID-OF-A-PAGE-GOES-HERE?render-areas=1
 ```
 
-If we wanted to get the full page as HTML rendered using the page templates, we could make a `GET` request to the page URL (basically what browsers do). This is only good if we are not trying to insert it into other templates.
+### "I want both:" `?render-areas=inline` parameter
+
+If you prefer to maintain access to the data properties of each individual widget *in addition* to rendered HTML, try:
+
+```
+GET https://example.rocks/api/v1/@apostrophecms/page/_ID-OF-A-PAGE-GOES-HERE?render-areas=inline
+```
+
+A `_rendered` property containing HTML will be added to each individual widget in each area's `items` array, *in addition to* all of the usual properties provided by the API.
+
+### "I just want the whole page:" fetching the page URL directly
+
+If we wanted to get the full page as HTML rendered using the page templates, we could make a `GET` request to the page URL (basically what browsers do). This is only good if we are not trying to insert it into the midst of a larger HTML document.
 
 ```
 GET https://example.rocks/about-us
 ```
+
+### "I want the *content* of the page:" leveraging the `aposRefresh=1` parameter
 
  More likely we would only want the unique page content (without the `head` tag and outer wrapper elements), which we can get by adding the `aposRefresh=1` query parameter. It will include only the HTML markup for the page template. This is great for using Apostrophe page templates inside an external page wrapper (e.g., `head` tag, site header, and site footer).
 
@@ -173,13 +189,20 @@ GET https://example.rocks/about-us
 GET https://example.rocks/about-us?aposRefresh=1
 ```
 
+This technique is quite effective. It can be extended by passing additional custom query parameters and checking `data.query.parameterName` inside page and layout templates to decide how to further adjust the response.
+
 ## Headless integrations
 
 As official platform-specific plugins are made available they will be added here. These are meant to make it even easier to use Apostrophe REST APIs with certain popular front end systems.
 
+### Astro plugin
+
+[Astro](https://astro.build/) is a powerful framework for content-driven websites. The [apostrophe-astro](https://apostrophecms.com/extensions/astro-integration)
+plugin provides a bridge that allows Astro to act as an "external front end" for Apostrophe. Note that Astro allows sites to be built with any mix of React, Vue, SvelteJS and other frontend frameworks which is highly effective when combined with Apostrophe as a back end.
+
 ### Gatsby source plugin
 
-[Gatsby](https://gatsbyjs.com/) is a very popular static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
+[Gatsby](https://gatsbyjs.com/) is a static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
 
 ::: info
 Direct GraphQL support is on the product roadmap for Apostrophe. If you are interested in that feature, [please indicate that on the product roadmap card](https://portal.productboard.com/apostrophecms/1-product-roadmap/c/44-graphql-api) so we can properly prioritize it.
