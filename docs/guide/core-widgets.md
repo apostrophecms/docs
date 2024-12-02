@@ -216,24 +216,31 @@ If you prefer, you can configure only one of the two sections (`toolbar` or `sty
 
 **You can also set your own default** rich text options. Avoid adding the same options repeatedly by configuring these options on the `@apostrophecms/rich-text-widget` module.
 
-```javascript
-// modules/@apostrophecms/rich-text-widget/index.js
-module.exports = {
-  options: {
-    defaultOptions: {
-      toolbar: [
-        // Your default formatting tools
-      ],
-      styles: [
-        // Your own default styles
-      ],
-      color: {
-        // Your own default color picker options
-      },
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    options: {
+      defaultOptions: {
+        toolbar: [
+          // Your default formatting tools
+        ],
+        styles: [
+          // Your own default styles
+        ],
+        color: {
+          // Your own default color picker options
+        },
+      }
     }
   }
-}
-```
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/rich-text-widget/index.js
+  </template>
+
+</AposCodeBlock>
+
 ### Using Markdown in the Rich Text Widget
 The rich text widget has limited support for using [Markdown syntax](https://www.markdownguide.org/cheat-sheet/). Heading styles can be selected by adding the same number of octothorpe ('#') as the heading level, followed by a space, and then the heading text. This will only work if you have that heading added into your `styles` dropdown. If you do not have a particular heading added to your `styles`, the next heading lower will be substituted. For example, if you have the `h2` tag added but not the `h1`, using `# My Title` will result in your title having `h2` tags. For the default rich text widget settings, headings `## H2`, `### H3`, and `#### H4` are defined.
 
@@ -273,30 +280,30 @@ the user is allowed to select for the image:
 
 <AposCodeBlock>
 
-```javascript
-// modules/@apostrophecms/rich-text-widget/index.js
-module.exports = {
-  options: {
-    imageStyles: [
-      {
-        value: 'image-float-left',
-        label: 'Float Left'
-      },
-      {
-        value: 'image-float-right',
-        label: 'Float Right'
-      },
-      {
-        value: 'image-float-center',
-        label: 'Center'
-      }
-    ]
+  ```javascript
+  module.exports = {
+    options: {
+      imageStyles: [
+        {
+          value: 'image-float-left',
+          label: 'Float Left'
+        },
+        {
+          value: 'image-float-right',
+          label: 'Float Right'
+        },
+        {
+          value: 'image-float-center',
+          label: 'Center'
+        }
+      ]
+    }
   }
-}
-```
-<template v-slot:caption>
-/modules/@apostrophecms/rich-text-widget/index.js
-</template>
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/rich-text-widget/index.js
+  </template>
+
 </AposCodeBlock>
 
 Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element.
@@ -321,7 +328,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-/modules/@apostrophecms/rich-text-widget/index.js
+  modules/@apostrophecms/rich-text-widget/index.js
 </template>
 </AposCodeBlock>
 
@@ -341,7 +348,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-/modules/@apostrophecms/rich-text-widget/index.js
+modules/@apostrophecms/rich-text-widget/index.js
 </template>
 </AposCodeBlock>
 
@@ -355,7 +362,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-/modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
+modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
 </template>
 </AposCodeBlock>
 
@@ -366,22 +373,27 @@ The image widget supports displaying a single image, including its alt text. It 
 
 
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
+<APosCodeBlock>
 
 ``` js
-// modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
   '@apostrophecms/image': {}
 }
 ```
+<template v-slot:caption>
+  modules/@apostrophecms/home-page/index.js
+</template>
 
+</AposCodeBlock>
 
 ### Specifying a minimum size
 
 You can specify a minimum size for any image widget:
 
+<AposCodeBlock>
+
 ``` js
-// modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
   '@apostrophecms/image': {
@@ -389,6 +401,11 @@ widgets: {
   }
 }
 ```
+<template v-slot:caption>
+  modules/@apostrophecms/home-page/index.js
+</template>
+
+</AposCodeBlock>
 
 This widget won't allow the editor to select any image under 1000 pixels wide, or under 600 pixels tall. In addition, editors won't be able to crop the image smaller than that after selecting it for that particular widget.
 
@@ -396,8 +413,9 @@ This widget won't allow the editor to select any image under 1000 pixels wide, o
 
 You can specify an aspect ratio for any image widget:
 
+<AposCodeBlock>
+
 ``` js
-// modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
   '@apostrophecms/image': {
@@ -405,6 +423,11 @@ widgets: {
   }
 }
 ```
+<template v-slot:caption>
+  modules/@apostrophecms/home-page/index.js
+</template>
+
+</AposCodeBlock>
 
 In some designs, especially slideshow experiences involving multiple images, allowing images with different aspect ratios just doesn't look good. For these cases, you can set an appropriate aspect ratio.
 
@@ -438,8 +461,9 @@ by 1140px, for the `src` value.
 
 You can change this in the area field widget options, using another image size name.
 
+<AposCodeBlock>
+
 ``` js
-// modules/@apostrophecms/home-page/index.js
 // In area field configuration options
 widgets: {
   '@apostrophecms/image': {
@@ -447,6 +471,11 @@ widgets: {
   }
 }
 ```
+<template v-slot:caption>
+  modules/@apostrophecms/home-page/index.js
+</template>
+
+</AposCodeBlock>
 
 The sizes available by default are:
 
@@ -594,8 +623,9 @@ There are two options to set classes on core widgets. You can add a `className` 
 
 Configuring on the module widget level:
 
+<AposCodeBlock>
+
 ``` js
-// app.js
 require('apostrophe') {
   modules: {
     '@apostrophecms/video-widget': {
@@ -606,11 +636,17 @@ require('apostrophe') {
   }
 };
 ```
+<template v-slot:caption>
+  app.js
+</template>
+
+</AposCodeBlock>
 
 Configuring on the area field widget options:
 
+<AposCodeBlock>
+
 ``` js
-// modules/@apostrophecms/home-page/index.js
 module.exports = {
   fields: {
     add: {
@@ -629,3 +665,8 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/@apostrophecms/home-page/index.js
+</template>
+
+</AposCodeBlock>

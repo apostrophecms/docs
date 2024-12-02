@@ -21,20 +21,48 @@ Modules are organized in a folder at the root of a project named `modules`. Each
 modules/blog-post/index.js
 ```
 
-The module configuration is in an object, assigned to `module.exports`. This may look familiar if you know CommonJS patterns or have worked with Node.js before.
+ApostropheCMS supports ECMAScript Modules (ESM) alongside CommonJS (CJS). While ESM is the recommended format and may become mandatory in the future, CJS remains supported for legacy projects.
+
+### Using CommonJS
+
+If you’re working with a legacy project or prefer CommonJS, the module configuration is assigned to `module.exports`. This is a familiar pattern if you’ve worked with Node.js before.
 
 ```javascript
 // modules/blog-post/index.js
 module.exports = {
   // ...
-}
+};
 ```
 
-The final step to use this blog post module is to tell Apostrophe that it should be turned on, or instantiated. That is done in the main application file, `app.js` in its `modules` object.
+To enable this blog post module, configure it in your main application file (`app.js`) within the `modules` object:
 
-``` js
+```javascript
 // app.js
 require('apostrophe')({
+  modules: {
+    'blog-post': {}
+  }
+});
+```
+
+### Using ESM
+
+For newer projects, we recommend using ECMAScript Modules. The module configuration is exported using `export default`. This approach takes advantage of the latest JavaScript module syntax.
+
+```javascript
+// modules/blog-post/index.js
+export default {
+  // ...
+};
+```
+
+To enable this module in your main application file (`app.mjs`), you’ll use an `import` statement:
+
+```javascript
+// app.mjs
+import apostrophe from 'apostrophe';
+
+apostrophe({
   modules: {
     'blog-post': {}
   }
@@ -54,12 +82,18 @@ Module names may not include periods (`.`).
 
 Inheritance is the glue of the module system. Every module extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
 
-```javascript
-// modules/blog-post/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type'
-};
-```
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-type'
+  };
+  ```
+  <template v-slot:caption>
+    modules/blog-post/index.js
+  </template>
+
+</AposCodeBlock>
 
 ::: tip
 Since this is a piece type, you could add this file from your project root with starting code using the CLI with the command:
@@ -83,20 +117,26 @@ modules/@apostrophecms/piece-type/index.js
 
 Then add the event handler:
 
-```javascript
-// modules/@apostrophecms/piece-type/index.js
-module.exports = {
-  handlers(self) {
-    return {
-      afterPublish: {
-        logPublished (req, data) {
-          console.log(`Published ${data.published.title}`);
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    handlers(self) {
+      return {
+        afterPublish: {
+          logPublished (req, data) {
+            console.log(`Published ${data.published.title}`);
+          }
         }
-      }
-    };
-  }
-};
-```
+      };
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/piece-type/index.js
+  </template>
+
+</AposCodeBlock>
 
 Since every piece type extends that module, they all get the benefits of changes to it. And in the project code we only need to include our changes. All the rest of the module's code is untouched.
 

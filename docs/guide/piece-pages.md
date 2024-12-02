@@ -30,15 +30,21 @@ In this example, the piece type is `article`, since "articles" are the individua
 
 The piece page module then looks like:
 
-```javascript
-// modules/article-page/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-page-type',
-  options: {
-    label: 'Blog page'
-  }
-};
-```
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-page-type',
+    options: {
+      label: 'Blog page'
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/article-page/index.js
+  </template>
+
+</AposCodeBlock>
 
 One benefit of this approach is that the codebase folders for the piece type and piece page type will be next to one another alphabetically. This tends to be the choice of the Apostrophe core team.
 
@@ -48,8 +54,9 @@ One benefit of this approach is that the codebase folders for the piece type and
 
 This method allows you to name the module whatever you want since you are specifically identifying a piece type. Set the [`pieceModuleName` option](/reference/module-api/module-options.md#piecemodulename) to the piece type name and Apostrophe makes the right connection.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/blog-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -58,6 +65,11 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+  modules/blog-page/index.js
+</template>
+
+</AposCodeBlock>
 
 Either method works well and you may find both options useful depending on the situation.
 
@@ -105,7 +117,7 @@ module.export = {
   <template v-slot:caption>
     modules/@apostrophecms/page/index.js
   </template>
-  
+
 </AposCodeBlock>
 
 ::: warning 🛑 Hold up. ✋
@@ -199,37 +211,42 @@ Show pages are the web pages for individual pieces, rendered from `show.html` te
 
 Assuming our `article` piece type example has a single `body` area, it could look like this:
 
-```javascript
-// modules/article/index.js
+<AposCodeBlock>
 
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    label: 'Article'
-    // Additionally add a `pluralLabel` option if needed.
-  },
-  fields: {
-    add: {
-      body: {
-        label: 'Article text',
-        type: 'area',
-        options: {
-          max: 1,
-          widgets: {
-            '@apostrophecms/rich-text': {}
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    options: {
+      label: 'Article'
+      // Additionally add a `pluralLabel` option if needed.
+    },
+    fields: {
+      add: {
+        body: {
+          label: 'Article text',
+          type: 'area',
+          options: {
+            max: 1,
+            widgets: {
+              '@apostrophecms/rich-text': {}
+            }
           }
         }
-      }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [ 'title', 'body' ]
+      },
+      group: {
+        basics: {
+          label: 'Basics',
+          fields: [ 'title', 'body' ]
+        }
       }
     }
   }
-}
-```
+  ```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+
+</AposCodeBlock>
 
 ``` nunjucks
 {# modules/article-page/views/show.html #}

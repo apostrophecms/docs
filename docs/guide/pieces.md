@@ -21,69 +21,87 @@ apos add piece product
 ```
 :::
 
-``` js
-// modules/product/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-};
-```
+<AposCodeBlock>
 
-``` js
-// app.js
-require('apostrophe')({
-  shortName: 'my-store',
-  modules: {
-    product: {}
-  }
-});
-```
+  ``` js
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+  };
+  ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+  ``` js
+  require('apostrophe')({
+    shortName: 'my-store',
+    modules: {
+      product: {}
+    }
+  });
+  ```
+  <template v-slot:caption>
+    app.js
+  </template>
+
+</AposCodeBlock>
 
 A more realistic product piece might also include [fields](/reference/field-types/index.md) for the product price, description, and photo, as well as explicit labels for the UI.
 
-``` js
-// modules/product/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    label: 'Product',
-    pluralLabel: 'Products'
-  },
-  fields: {
-    add: {
-      price: {
-        type: 'float',
-        label: 'Price',
-        required: true
-      },
-      description: {
-        type: 'string',
-        label: 'Description',
-        textarea: true,
-        required: true
-      },
-      image: {
-        label: 'Product photo',
-        type: 'area',
-        options: {
-          max: 1,
-          widgets: {
-            '@apostrophecms/image': {}
+<AposCodeBlock>
+
+  ``` js
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    options: {
+      label: 'Product',
+      pluralLabel: 'Products'
+    },
+    fields: {
+      add: {
+        price: {
+          type: 'float',
+          label: 'Price',
+          required: true
+        },
+        description: {
+          type: 'string',
+          label: 'Description',
+          textarea: true,
+          required: true
+        },
+        image: {
+          label: 'Product photo',
+          type: 'area',
+          options: {
+            max: 1,
+            widgets: {
+              '@apostrophecms/image': {}
+            }
           }
         }
-      }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [ 'title', 'price', 'description', 'image' ]
-        // 👆 'title' is included here because it is in the default `basics`
-        // group for all piece types. Since we are replacing that group, we
-        // include it ourselves.
+      },
+      group: {
+        basics: {
+          label: 'Basics',
+          fields: [ 'title', 'price', 'description', 'image' ]
+          // 👆 'title' is included here because it is in the default `basics`
+          // group for all piece types. Since we are replacing that group, we
+          // include it ourselves.
+        }
       }
     }
-  }
-};
-```
+  };
+  ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+
+</AposCodeBlock>
 
 ::: tip
 There is a full REST API for pieces that you can use in headless contexts, custom interfaces, and more. For more information, see [the REST API section](/reference/api/pieces.md).
