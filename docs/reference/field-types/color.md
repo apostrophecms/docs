@@ -87,6 +87,25 @@ An array of color values, used as swatches.
 ]
 ```
 
+- **Valid Values:**
+<br/>Mix and match as you like.
+
+| Format | Example |
+|----------|------|
+|hex3 | `#f00` |
+|hex6 | `#00ff00` |
+|hex8 | `#00ff0055` |
+|rgb | `rgb(201, 76, 76)` |
+|rgba | `rgba(0, 0, 255, 1)` |
+|hsl | `hsl(89, 43%, 51%)` |
+|hsla | `hsla(89, 43%, 51%, 0.6)` |
+|CSS Variable | `--my-primary-color` |
+
+::: warning
+When using CSS Variables as presets, Apostrophe will save the CSS Variable **name** as a string, regardless of the `format` option (for example `'--my-primary-color'`).
+:::
+
+
 - **Usage**
 
 ```javascript
