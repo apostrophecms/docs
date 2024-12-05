@@ -1,10 +1,10 @@
 ---
 prev:
   text: 'Core modules | @apostrophecms/widget-type'
-  link: 'reference/modules/widget-type.html'
+  link: '/reference/modules/widget-type.html'
 next:
   text: 'area'
-  link: 'reference/field-types/area.html'
+  link: '/reference/field-types/area.html'
 ---
 # Schema Field Type Reference
 

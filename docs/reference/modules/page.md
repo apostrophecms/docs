@@ -44,8 +44,9 @@ In this example, page objects are fetched with one level of page tree "children"
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     builders: {
@@ -55,6 +56,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 In this example, we are not including ancestor pages and are requesting two levels of child pages (direct children and their direct children).
 
@@ -70,8 +75,9 @@ If a user is logged in, or `req.session` has content, Apostrophe always disables
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 options: {
   cache: {
     page: {
@@ -85,6 +91,10 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `home`
 
@@ -97,6 +107,8 @@ The home page document is added to all page requests on `req.data.home` so it ca
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
 // modules/@apostrophecms/page/index.js
 module.exports = {
@@ -106,6 +118,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `minimumPark`
 
@@ -139,8 +155,9 @@ The default is:
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     minimumPark: [
@@ -165,6 +182,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `park`
 
@@ -182,6 +203,8 @@ Required and recommended parked page properties include:
 If added on the top level of the page object, these properties will not be editable through the user interface. Properties other than `parkedId` may be included in a `_defaults` property instead, which will allow them to be edited in the UI.
 
 #### Example
+
+<AposCodeBlock>
 
 ```javascript
 // modules/@apostrophecms/page/index.js
@@ -216,6 +239,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `publicApiProjection`
 
@@ -225,8 +252,9 @@ This should be set to an object containing individual field name keys set to `1`
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     publicApiProjection: {
@@ -237,6 +265,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 Unauthenticated [`GET /api/v1/@apostrophecms/page`](/reference/api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
 
@@ -245,6 +277,8 @@ Unauthenticated [`GET /api/v1/@apostrophecms/page`](/reference/api/pages.md#get-
 Pages are included in the admin bar "quick create" menu by default. Setting `quickCreate: false` on the page module will disable this.
 
 #### Example
+
+<AposCodeBlock>
 
 ```javascript
 // modules/@apostrophecms/page/index.js
@@ -255,6 +289,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `redirectFailedUppercaseUrls`
 
@@ -268,8 +306,9 @@ The `types` array defines the page types available to users when creating or edi
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     types: [
@@ -290,6 +329,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ## Related documentation
 

@@ -186,6 +186,8 @@ Similar to updating pieces and pages, you can use the `eachWidget` helper to add
 
 Here is an example migration that adds an `alignment` property to all `image` widgets, defaulting to `center`:
 
+<AposCodeBlock>
+
 ```js
 module.exports = {
   extend: '@apostrophe/widget-type',
@@ -215,6 +217,9 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+</template>
+</AposCodeBlock>
 
 - The `eachWidget` method iterates over **every** widget in **every** area in **every** document. For this reason, you should check the `widget.type` to make sure you are only altering the desired widgets.
 - In our `criteria` argument we are passing an empty object, indicating that every document should be checked. You can narrow this focus if you only want the widgets on a certain document type changed. For example, passing `type: 'product'` would only change widgets that are in a product piece-type.
@@ -225,6 +230,8 @@ The `iterator` in an `eachWidget` method gets three arguments. In addition to th
 ## Removing a Property from Existing Widgets
 
 Here’s how you can remove a property from widgets using `$unset`. Again, this is an irreversible operation, so you may want to simply remove a schema field. In this case, we are removing the `border` property from all `video` widgets:
+
+<AposCodeBlock>
 
 ```js
 module.exports = {
@@ -253,6 +260,9 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+</template>
+</AposCodeBlock>
 
 - The `eachWidget` method iterates over all document returning each widget found.
 - We check that the widget is the type we want to alter, else we return early.

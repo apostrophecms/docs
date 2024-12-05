@@ -6,15 +6,22 @@ Every page in an Apostrophe website is assigned a **"page type"**. The page type
 
 Apostrophe core only includes a "Home page" type with some basic default content options. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`.
 
-```js
-// modules/default-page/index.js
-module.exports = {
-  extend: '@apostrophecms/page-type'
-};
-```
+<AposCodeBlock>
+
+  ```js
+  module.exports = {
+    extend: '@apostrophecms/page-type'
+  };
+  ```
+  <template v-slot:caption>
+    modules/default-page/index.js
+  </template>
+
+</AposCodeBlock>
+
+<AposCodeBlock>
 
 ```js
-// app.js
 require('apostrophe')({
   shortName: 'my-website',
   modules: {
@@ -22,37 +29,48 @@ require('apostrophe')({
   }
 });
 ```
+<template v-slot:caption>
+  app.js
+</template>
+
+</AposCodeBlock>
 
 <!-- TODO: Replace area field link to a guide page when available. -->
 If we add a string field for the subtitle and an [area field](/reference/field-types/area.md) for rich text and images, the Default page type would look like:
 
-```js
-// modules/default-page/index.js
-module.exports = {
-  extend: '@apostrophecms/page-type',
-  fields: {
-    add: {
-      subtitle: {
-        type: 'string'
-      },
-      main: {
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {},
-            '@apostrophecms/image': {}
+<AposCodeBlock>
+
+  ```js
+  module.exports = {
+    extend: '@apostrophecms/page-type',
+    fields: {
+      add: {
+        subtitle: {
+          type: 'string'
+        },
+        main: {
+          type: 'area',
+          options: {
+            widgets: {
+              '@apostrophecms/rich-text': {},
+              '@apostrophecms/image': {}
+            }
           }
         }
-      }
-    },
-    group: {
-      basics: {
-        fields: ['title', 'subtitle', 'main']
+      },
+      group: {
+        basics: {
+          fields: ['title', 'subtitle', 'main']
+        }
       }
     }
-  }
-};
-```
+  };
+  ```
+  <template v-slot:caption>
+    modules/default-page/index.js
+  </template>
+
+</AposCodeBlock>
 
 See the [field schema](/guide/content-schema.md) page for more on configuring fields.
 
@@ -177,8 +195,9 @@ To overwrite the home page type template, create a template file for it at  `mod
 
 This is a core module option, but you can add your own configuration by giving it an `index.js` file in your project: `modules/@apostrophecms/page/index.js`. You'll then configure it's `types` option with all page types you want to allow.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.export = {
   options: {
     types: [
@@ -196,6 +215,11 @@ module.export = {
   }
 }
 ```
+<template v-slot:caption>
+  modules/@apostrophecms/page/index.js
+</template>
+
+</AposCodeBlock>
 
 Each type needs a `name` matching the module's name and a label for editors. See the reference section for [other core page module options](/reference/module-api/module-options.md#options-for-the-core-page-module).
 

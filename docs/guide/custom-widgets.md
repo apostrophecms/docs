@@ -20,8 +20,9 @@ apos add widget two-column
 ```
 :::
 
+<AposCodeBlock>
+
 ``` js
-// modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -57,11 +58,17 @@ module.exports = {
 };
 
 ```
+<template v-slot:caption>
+modules/two-column-widget/index.js
+</template>
+
+</AposCodeBlock>
 
 You can then add this module to the `app.js` file to instantiate it.
 
+<AposCodeBlock>
+
 ``` js
-// app.js
 require('apostrophe')({
   shortName: 'my-website',
   modules: {
@@ -69,6 +76,11 @@ require('apostrophe')({
   }
 });
 ```
+<template v-slot:caption>
+app.js
+</template>
+
+</AposCodeBlock>
 
 In this example, we only have a limited number of schema fields, so we haven't added a `group` property. Much like with pieces or pages, the `group` property will allow you to organize your schema fields into groups. Like the other document types, the widget `group` property takes a named object for each tab, consisting of a label for the tab and `fields` property with an array of schema field names.
 
@@ -177,8 +189,9 @@ Adding `placeholder: true` in the options for a widget automatically sets `initi
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/two-column-widget/views/widget.html #}
 <section class="two-col">
   <div class="two-col__column">
     {% area data.widget, 'columnOne' %}
@@ -188,14 +201,19 @@ Before using the new widget type, it needs a template file, `widget.html`, in th
   </div>
 </section>
 ```
+<template v-slot:caption>
+modules/two-column-widget/views/widget.html
+</template>
+</AposCodeBlock>
 
 **Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available on `data.contextOptions`.
 
 ::: info
 Here are some two-column styles for people following along.
 
+<AposCodeBlock>
+
 ```css
-/* modules/two-column-widget/ui/src/index.scss */
 .two-col {
   display: flex;
   flex-flow: row wrap;
@@ -208,6 +226,11 @@ Here are some two-column styles for people following along.
   flex: 1;
 }
 ```
+<template v-slot:caption>
+modules/two-column-widget/ui/src/index.scss
+</template>
+</AposCodeBlock>
+
 :::
 
 ## Client-side JavaScript for widgets
@@ -226,8 +249,10 @@ apos add widget collapse --player
 
 ::: details Example collapsible widget code
 **Module configuration**
+
+<AposCodeBlock>
+
 ```javascript
-// modules/collapse-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -248,11 +273,15 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/collapse-widget/index.js
+</template>
+</AposCodeBlock>
 
 **Module template**
+<AposCodeBlock>
 
 ``` nunjucks
-{# modules/collapse-widget/views/widget.html #}
 <section data-collapser class="collapser">
   <h2>
     <button data-collapser-button aria-expanded="false">
@@ -265,6 +294,10 @@ module.exports = {
   </div>
 </section>
 ```
+<template v-slot:caption>
+modules/collapse-widget/views/widget.html
+</template>
+</AposCodeBlock>
 
 **Module styles** (see [front end assets guide](/guide/front-end-assets.md))
 
@@ -288,8 +321,9 @@ The player code is added to an object of widget players, `apos.util.widgetPlayer
 | `selector` | A string selector for the player to find the widget as you would use in [`document.querySelector`](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector). |
 | `player` | A function that takes the matching widget DOM element as an argument. |
 
+<AposCodeBlock>
+
 ```javascript
-// modules/collapse-widget/ui/src/index.js
 export default () => {
   apos.util.widgetPlayers.collapser = {
     selector: '[data-collapser]',
@@ -299,8 +333,13 @@ export default () => {
   };
 };
 ```
+<template v-slot:caption>
+modules/collapse-widget/ui/src/index.js
+</template>
+</AposCodeBlock>
 
 With some code to manage showing and hiding the detail, it would look like:
+<AposCodeBlock>
 
 ```javascript
 export default () => {
@@ -323,6 +362,10 @@ export default () => {
   };
 };
 ```
+<template v-slot:caption>
+modules/collapse-widget/ui/src/index.js
+</template>
+</AposCodeBlock>
 
 [Credit goes to Heydon Pickering](https://inclusive-components.design/collapsible-sections/) for the accessible collapsible example.
 
@@ -334,14 +377,21 @@ Template files on the other hand, *do* have access to widget data (they are rend
 
 For example, we could change our collapse widget to include a `color` field value:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/collapse-widget/views/widget.html #}
 <section data-collapser data-color="{{ data.widget.color }}" class="collapser">
   {# The rest of the code is the same... #}
 </section>
 ```
+<template v-slot:caption>
+modules/collapse-widget/views/widget.html
+</template>
+</AposCodeBlock>
 
 We've added the `data-color` attribute to the widget wrapper with our color data. Then in the player code we could get the value with the wrapper element's `dataset` property.
+
+<AposCodeBlock>
 
 ```javascript
 export default () => {
@@ -354,6 +404,10 @@ export default () => {
   };
 };
 ```
+<template v-slot:caption>
+modules/collapse-widget/views/widget.html
+</template>
+</AposCodeBlock>
 
 The player *does* have access to the widget's wrapping element, so we use `el.dataset.color` to access the color data we stored on `data-color`.
 
@@ -364,5 +418,5 @@ We can pass a string, number, or boolean value with a data attribute using the m
 <div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
 ```
 
-The value will be converted to a JSON string and escaped. The original value can retrieved in the player with `JSON.parse`.
+The value will be converted to a JSON string and escaped. The original value can be retrieved in the player with `JSON.parse`.
 :::

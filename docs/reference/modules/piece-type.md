@@ -38,8 +38,9 @@ The core image and file modules use this option, for example. It eliminates the 
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-category/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -48,6 +49,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-category/index.js
+</template>
+</AposCodeBlock>
 
 ### `cache`
 
@@ -76,8 +81,9 @@ If not set, Apostrophe will convert the module name to a readable label by split
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/feature/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -86,6 +92,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/feature/index.js
+</template>
+</AposCodeBlock>
 
 ### `localized`
 
@@ -95,8 +105,9 @@ The "users" piece type disables localization in this way. It can also be useful 
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/administrative-category/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -105,6 +116,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/administrative-category/index.js
+</template>
+</AposCodeBlock>
 
 ### `perPage`
 
@@ -112,8 +127,9 @@ In piece types, the `perPage` option, expressed as an integer, sets the number o
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -122,6 +138,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `pluralLabel`
 
@@ -131,8 +151,9 @@ If no `pluralLabel` value is provided, Apostrophe will append the `label` (wheth
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/goose/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -142,6 +163,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/goose/index.js
+</template>
+</AposCodeBlock>
 
 ### `publicApiProjection`
 
@@ -151,8 +176,9 @@ This should be set to an object containing individual field name keys set to `1`
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -165,6 +191,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 Unauthenticated [`GET /api/v1/article`](/reference/api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
 
@@ -174,8 +204,9 @@ Setting `quickCreate: true` on a piece adds that piece type to the admin bar "qu
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -184,6 +215,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `searchable`
 
@@ -192,8 +227,9 @@ Setting `searchable: false` on a piece type will exclude that piece type from th
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -202,6 +238,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `sort`
 
@@ -213,8 +253,9 @@ The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns do
 
 This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -236,6 +277,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ## Related documentation
 

@@ -63,8 +63,9 @@ There are various ways to configure and integrate OpenTelemetry in a project. We
 
 Create `telemetry.js` in the project root:
 
+<AposCodeBlock>
+
 ``` js
-// ./telemetry.js
 const { NodeSDK, resources } = require('@opentelemetry/sdk-node');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
@@ -104,13 +105,17 @@ module.exports = {
   sdk,
   shutdown
 };
-
 ```
+<template v-slot:caption>
+telemetry.js
+</template>
+</AposCodeBlock>
 
 Now we'll need to refactor `app.js` a little bit to connect OpenTelemetry with Apostrophe:
 
+<AposCodeBlock>
+
 ``` js
-// ./app.js
 // The Apostrophe bootstrap
 const apostrophe = require('apostrophe');
 const { sdk, shutdown } = require('./telemetry');
@@ -140,6 +145,10 @@ if (process.env.APOS_OPENTELEMETRY) {
   apostrophe(config);
 }
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 The important bits of this change are:
 

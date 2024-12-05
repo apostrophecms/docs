@@ -80,8 +80,9 @@ As when we `include` or `extend` another template file, when that file is in the
 
 For example, you might have an article [index page](/guide/piece-pages.md) that lists a series of linked article titles with rich text teasers. The index page template itself would be at the path `modules/article-page/views/index.html`. You could separate the markup for each article in the listing into a fragment file, `modules/article-page/views/item-fragment.html`.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/article-page/views/item-fragment.html #}
 {# 👇 Accepting an argument with the article data object #}
 {% fragment teaser(article) %}
   <section>
@@ -91,11 +92,16 @@ For example, you might have an article [index page](/guide/piece-pages.md) that 
   </section>
 {% endfragment %}
 ```
+<template v-slot:caption>
+modules/article-page/views/item-fragment.html
+</template>
+</AposCodeBlock>
 
 Since the fragment and page template are both in the `article-page` module, we can import it with only the file name using the `{% import %}` template tag.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/article-page/views/index.html #}
 {% import 'item-fragment.html' as articleFragment %}
 
 {% for article in data.pieces %}
@@ -103,12 +109,17 @@ Since the fragment and page template are both in the `article-page` module, we c
   {% render articleFragment.teaser(article) %}
 {% endfor %}
 ```
+<template v-slot:caption>
+modules/article-page/views/index.html
+</template>
+</AposCodeBlock>
 
 ::: info
 Unlike importing and extending templates, when importing, the fragment is a property of the imported file, e.g, `articleFragment.teaser()`. This allow us to define multiple fragments in a single file, then import the one file and use any inside it.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/article-page/views/show.html #}
 {% import 'fragments.html' as articleFragments %}
 
 <h1>{{ data.piece.title }}</h1>
@@ -117,18 +128,28 @@ Unlike importing and extending templates, when importing, the fragment is a prop
 {# And another handles the article topic tags: #}
 {% render articleFragments.topicTags(data.piece.tags) %}
 ```
+<template v-slot:caption>
+modules/article-page/views/show.html
+</template>
+</AposCodeBlock>
+
 :::
 
 Similarly, **when fragment files are in the root-level `views` directory** or a sub-directory of it, we can import the fragment with only the relative file path from that `views` directory.
 
 The global fragment file:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# views/fragments/utilities.html #}
 {% fragment heading(title) %}
   <h2 class="fancy">{{ title }}</h2>
 {% endfragment %}
 ```
+<template v-slot:caption>
+views/fragments/utilities.html
+</template>
+</AposCodeBlock>
 
 Importing the fragment into any page or widget template would look exactly as if the fragment was in the same module.
 
@@ -144,8 +165,9 @@ Importing the fragment into any page or widget template would look exactly as if
 
 To import template fragments from one module into templates of another module, include the fragment file's module name in the `import` tag. This is what it might look like to import the article teaser fragment from above into a `press-page` index page template:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/press-page/views/index.html #}
 {# 👇 Importing our fragment from the `article-page` module #}
 {% import 'article-page:item-fragment.html' as importedFragment %}
 
@@ -153,6 +175,10 @@ To import template fragments from one module into templates of another module, i
   {% render importedFragment.teaser(article) %}
 {% endfor %}
 ```
+<template v-slot:caption>
+modules/press-page/views/index.html
+</template>
+</AposCodeBlock>
 
 In this case, the file name is prefixed with `article-page:`, indicating the source module for the template fragment.
 
@@ -160,8 +186,9 @@ In this case, the file name is prefixed with `article-page:`, indicating the sou
 
 In addition to passing arguments, it is possible to pass markup directly from a template into a fragment it is using. The fragment must first include `rendercaller()`. This will be the location where the calling template will insert markup.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# /views/fragments/utilities.html #}
 {% fragment highlighter %}
   <aside class="highlight">
     {# 👇The inserted markup will slot in here, inside the `aside` tags. #}
@@ -169,17 +196,26 @@ In addition to passing arguments, it is possible to pass markup directly from a 
   </aside>
 {% endfragment %}
 ```
+<template v-slot:caption>
+/views/fragments/utilities.html
+</template>
+</AposCodeBlock>
 
 When using the fragment, a template would use `{% rendercall %}` instead of `{% render %}`.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/default-page/views/page.html #}
 {% import 'fragments/utilities.html' as utilities %}
 
 {% rendercall utilities.highlighter() %}
   Fun fact: {{ data.page.funFact }}
 {% endrendercall %}
 ```
+<template v-slot:caption>
+modules/default-page/views/page.html
+</template>
+</AposCodeBlock>
 
 This might render something like:
 

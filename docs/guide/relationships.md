@@ -12,8 +12,9 @@ There are many use cases for relationships, but one common use is categorization
 
 We will start with a basic blog article piece type with only an area field for the article text.
 
+<AposCodeBlock>
+
 ``` js
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   fields: {
@@ -38,6 +39,11 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+  modules/article/index.js
+</template>
+
+</AposCodeBlock>
 
 ``` nunjucks
 {# modules/article-page/views/show.html #}
@@ -57,12 +63,18 @@ Refer to the [pieces guide](/guide/pieces.md) for more information on adding pie
 
 Then we can add a "Topics" piece type. Since it is only used for categorization, it doesn't need any special fields.
 
-``` js
-// modules/topic/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type'
-};
-```
+<AposCodeBlock>
+
+  ``` js
+  module.exports = {
+    extend: '@apostrophecms/piece-type'
+  };
+  ```
+  <template v-slot:caption>
+    modules/topic/index.js
+  </template>
+
+</AposCodeBlock>
 
 Now that we have the two piece types, the next step is to add a relationship field to connect them. The important question is: where should we put the relationship field?
 
@@ -70,33 +82,39 @@ Relationships establish **directional connections**. That means that the connect
 
 The article piece type's relationship field would look like:
 
-``` js
-// modules/article/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  fields: {
-    add: {
-      // ...
-      _topics: {
-        type: 'relationship',
-        label: 'Blog post topic',
-        withType: 'topic',
-        builders: {
-          project: {
-            title: 1,
-            _url: 1
+<AposCodeBlock>
+
+  ``` js
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    fields: {
+      add: {
+        // ...
+        _topics: {
+          type: 'relationship',
+          label: 'Blog post topic',
+          withType: 'topic',
+          builders: {
+            project: {
+              title: 1,
+              _url: 1
+            }
           }
         }
+      },
+      group: {
+        basics: {
+          label: 'Basics',
+          fields: [ 'title', 'body', '_topics' ]
+        }
       }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [ 'title', 'body', '_topics' ]
-      }
-    }
-};
-```
+  };
+  ```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+
+</AposCodeBlock>
 
 Like with all fields, we identify the field type, `type: 'relationship'`, and give it a display label. The other two properties are new.
 
@@ -197,8 +215,9 @@ Relationships are directional, but you can still read the relationship from the 
 
 In the example above of articles and topics, you might want to give each topic their own page showing every article using that topic. To do that, add a `relationshipReverse` field to the topic piece type:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/topic/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   fields: {
@@ -212,6 +231,11 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/topic/index.js
+</template>
+
+</AposCodeBlock>
 
 ::: tip
 You don't need to use a fields `group` setting here since the `relationshipReverse` field has no user interface. There is no `label` for the same reason.
@@ -244,47 +268,53 @@ For example, we might be working on a website that displays teams within a compa
 
 If people have *unique job titles within different teams* we could store the job title directly on the relationship itself. Someone might be a "Support engineer" on the Support Team and a "QA engineer" within the Product Team. To do this, we add a standard field schema to the relationship field.
 
-``` js
-// modules/team/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  fields: {
-    add: {
-      // ...
-      _people: {
-        type: 'relationship',
-        label: 'Team members',
-        withType: 'person',
-        // 👇 Our relationship fields
-        fields: {
-          add: {
-            teamTitle: {
-              type: 'string',
-              label: 'Team title'
+<AposCodeBlock>
+
+  ``` js
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    fields: {
+      add: {
+        // ...
+        _people: {
+          type: 'relationship',
+          label: 'Team members',
+          withType: 'person',
+          // 👇 Our relationship fields
+          fields: {
+            add: {
+              teamTitle: {
+                type: 'string',
+                label: 'Team title'
+              },
+              teamRole: {
+                type: 'string',
+                label: 'Team role'
+              }
             },
-            teamRole: {
-              type: 'string',
-              label: 'Team role'
-            }
-          },
-          group: {
-            positions: {
-              label: 'Position',
-              fields: [ 'teamTitle', 'teamRole' ]
+            group: {
+              positions: {
+                label: 'Position',
+                fields: [ 'teamTitle', 'teamRole' ]
+              }
             }
           }
         }
+      },
+      group: {
+        basics: {
+          label: 'Basics',
+          fields: [ 'title', '_people' ]
+        }
       }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [ 'title', '_people' ]
-      }
-    }
-    // ...
-};
-```
+      // ...
+  };
+  ```
+  <template v-slot:caption>
+    modules/team/index.js
+  </template>
+
+</AposCodeBlock>
 
 In the example above, we add a `fields` property to the relationship field, just like the `fields` property on the module itself. Just like the primary schema, we use an `add` subproperty with field configurations inside it. We are also adding a `group` to give a label to the tab within the "Edit Relationship" modal.
 

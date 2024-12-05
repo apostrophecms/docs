@@ -90,6 +90,8 @@ The `following` argument is an object containing the schema fields being followe
 
 When your `choices` method is async, while calls to the method are debounced to keep the rate of calls reasonable, is usually a good idea to perform at least short-term caching in order to limit the impact on performance when editing.
 
+<AposCodeBlock>
+
 ``` javascript
 module.exports = {
   extend: '@apostrophecms/piece-type',
@@ -139,6 +141,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+</template>
+</AposCodeBlock>
+
 ## Use in templates
 
 Radio field data is stored as the string `value` property of the selected choice.

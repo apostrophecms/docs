@@ -30,20 +30,26 @@ The most common base class modules include:
 
 If this property is not set, the module will implicitly extend the base module, `@apostrophecms/module`.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/custom-piece/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // ...
 }
 ```
+<template v-slot:caption>
+modules/custom-piece/index.js
+</template>
+</AposCodeBlock>
 
 You can use any existing module as a base class, whether a core module or one built for your project. To do so, make sure the extending module is instantiated _after_ its base class in `app.js`.
 
 In this example, a "Landing page" module uses a "Default page" as its base class.
 
+<AposCodeBlock>
+
 ```javascript
-// app.js
 require('apostrophe')({
   modules: {
     'default-page': {},
@@ -51,6 +57,11 @@ require('apostrophe')({
   }
 });
 ```
+<template v-slot:caption>app.js
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
 
 ```javascript
 // modules/landing-page/index.js
@@ -58,6 +69,10 @@ module.exports = {
   extend: 'default-page'
 };
 ```
+<template v-slot:caption>
+modules/custom-piece/index.js
+</template>
+</AposCodeBlock>
 
 ### `improve`
 
@@ -72,13 +87,18 @@ Within an application, you can alter installed or core module behavior by adding
 
  You might include this in a stand-alone module that adds functionality to the `@apostrophecms/image` core module:
 
+<AposCodeBlock>
+
 ```javascript
-// index.js
 module.exports = {
   improve: '@apostrophecms/image'
   // Additional functionality ...
 };
 ```
+<template v-slot:caption>
+index.js
+</template>
+</AposCodeBlock>
 
 You should not use both `improve` and `extend` in a single module. If "improving" an existing module, that existing module has already taken care of the "extending."
 
@@ -108,8 +128,9 @@ ls *.vue
 ```
 Each property key in the `icons` setting object will be the name used to reference the icon in an Apostrophe project. The value will be the Material Design name for the icon, written in PascalCase without the `.vue` ending. The Apostrophe reference name for the icon *does not need to match* the Material Design name.
 
+<AposCodeBlock>
+
 ```javascript
-// index.js
 module.exports = {
   // ...
   icons: {
@@ -118,6 +139,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+index.js
+</template>
+</AposCodeBlock>
 
 To use an icon that is not included in the `vue-material-design-icons` list, add your icon Vue file to either a relative path in the project or via an `npm` package. Then register the icon with a property name that will be used to reference the icon in the project, and a value that points to the file.
 
@@ -163,8 +188,9 @@ An object of fields to add to the schema. See the [field type reference](/refere
 
 Adding a field using an object:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   fields: {
     add: {
@@ -180,11 +206,16 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 Adding a field using a function:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   fields(self, options) {
     let fields = {
@@ -207,6 +238,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 
 #### `remove`
@@ -215,8 +250,9 @@ An array of field names from the base class module to remove. Some default field
 
 Removing a field using an object:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/spotlight-article/index.js
 module.exports = {
   extend: 'article',
   fields: {
@@ -224,10 +260,16 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/spotlight-article/index.js
+</template>
+</AposCodeBlock>
+
 Removing a field using a function:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/spoghtlight-article/index.js
 module.exports = {
   extend: 'article',
   fields(self, options) {
@@ -237,6 +279,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/spotlight-article/index.js
+</template>
+</AposCodeBlock>
 
 #### `group`
 
@@ -250,8 +296,9 @@ The `@apostrophecms/doc-type` module arranges the default fields in two groups: 
 
 Grouping fields using an object:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   fields: {
     add: {
@@ -270,10 +317,16 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
+
 Grouping fields using a function:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   fields(self, options) {
     let groupFields = [ 'author', '_category' ];
@@ -294,6 +347,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `filters`
 
@@ -315,8 +372,10 @@ Filter properties include:
 | `def` | The default value for the manager filter. |
 
 Add `filters` with object:
+
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   filters: {
     add: {
@@ -336,9 +395,16 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
+
 Add `filters` with function:
+
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   filters(self, options) {
     // Check self or options to dynamically add schema fields
@@ -361,13 +427,18 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 #### `remove`
 
 An array of filter names from the base class module to remove.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/spotlight-article/index.js
 module.exports = {
   extend: 'article',
   filters: {
@@ -375,13 +446,18 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 #### `order`
 
 An array of field names to sort them in a particular order.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   filters(self, options) {
     // Check self or options to dynamically add schema fields
@@ -405,7 +481,10 @@ module.exports = {
   }
 };
 ```
-
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `columns`
 
@@ -421,8 +500,9 @@ An object of columns or a function that returns an object of columns to add to t
 | `component` | An advanced option to use a custom Vue component for table cells in this column. See core components `AposCellBasic` (default) and `AposCellDate` for examples. |
 <!-- TODO: Link to a guide on custom cell components when available. -->
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
@@ -436,13 +516,18 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 #### `remove`
 
 An array of column names from the base class module to remove.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
@@ -451,13 +536,18 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 #### `order`
 
 An array of column names to sort the columns in a particular order. This will often include default columns.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   columns: {
@@ -472,6 +562,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `batchOperations`
 
@@ -494,8 +588,9 @@ Each batch operation configuration should include the following properties:
 
 The following example uses a hypothetical batch operation that might reset piece fields to default values.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   batchOperations: {
     add: {
@@ -523,6 +618,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ##### Modal options
 
@@ -546,8 +645,9 @@ Valid values are:
 
 An array of batch operation names to sort them in a particular order within the menu.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   batchOperations: {
     add: {
@@ -566,6 +666,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 
 ## Initialization function
@@ -652,8 +756,9 @@ Each function included in an extension section takes the function it is extendin
 
 The following example updates the `generate` method in the `extendMethods` section to add a placeholder `price` upon creation.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   extendMethods(self) {
@@ -672,11 +777,16 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 This example shows another example, extending a [REST API function](#restapiroutes-self):
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   extendRestApiRoutes(self) {
@@ -696,6 +806,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 ::: warning
 Extension functions should *always* use the `_super` argument to call the original function. If you want to *completely* overwrite the inherited function, add a matching function in the section without the "extend" prefix instead. For example, we could completely overwrite the `insert` method in our piece type by including our own `insert` function in the `methods` section.
@@ -705,8 +819,9 @@ Extension functions should *always* use the `_super` argument to call the origin
 
 Add methods that can be invoked on `self` or from another module on `self.apos.modules['module-name']` or the designated module alias. Returns an object of functions.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   methods(self) {
@@ -729,6 +844,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### `extendMethods(self)`
 
@@ -754,8 +873,9 @@ Information returned by the component function will be available in the associat
 
 See the [async component guide](/guide/async-components.md) for more usage information.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // ...
@@ -776,6 +896,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### `extendComponents(self)`
 
@@ -797,8 +921,9 @@ Each should return data in the same form as the original component function.
 
 Helpers are called in templates from their module on the `apos` object. See the [`alias`](/reference/module-api/module-options.md#alias) option to make this less verbose.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   options: {
@@ -814,13 +939,22 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 Using in a template:
 
+<AposCodeBlock>
+
 ```nunjucks
-{# modules/product-page/views/show.html #}
 {{ apos.product.formatPrice(data.piece) }}
 ```
+<template v-slot:caption>
+modules/product-page/views/show.html
+</template>
+</AposCodeBlock>
 
 #### `extendHelpers(self)`
 
@@ -836,8 +970,9 @@ Add a custom REST API for a module. The `restApiRoutes` function takes the modul
 
 Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return some value (usually a data object). You should not use Express response methods here.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   restApiRoutes(self) {
@@ -855,6 +990,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 REST API routes that affect a single, existing document also take the document `_id` property as an argument. These include `getOne`, `patch`, `put`, and `delete`.
 ```javascript
@@ -893,8 +1032,9 @@ Add custom API routes. The `apiRoutes` function takes takes the module as an arg
 
 Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return some value (usually a data object). You should not use Express response methods here.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   apiRoutes(self) {
@@ -919,6 +1059,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
@@ -930,8 +1074,9 @@ Camel-case names will be converted to kebab case names for the URL: `newestThing
 
 Beginning the name of a route with a forward slash (`/`) will allow you to create a completely custom URL path. Custom URL paths will not be prefixed or converted to kebab case.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   apiRoutes(self) {
@@ -950,6 +1095,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### Returning error codes
 
@@ -983,8 +1132,9 @@ The name of the route dictates the template file that will be rendered. For exam
 
 **Information returned by the route function will be used in the associated template as `data`.** Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument. The function should return a data object. You should not use Express response methods here.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   renderRoutes(self) {
@@ -1007,6 +1157,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
@@ -1016,8 +1170,9 @@ Add standard Express routes. The `routes` function takes takes the module as an 
 
 Each route can be defined as a function or an object. If not using any route options, use a function that accepts a request as its argument:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   routes(self) {
@@ -1034,6 +1189,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 If specifying any extra options for your route, use an object. See the [route options](#route-options) section for more.
 
@@ -1062,8 +1221,9 @@ Events belonging to the same module where the handlers are defined, or from its 
 
 Arguments passed to the event handlers will vary depending on the arguments passed when the event is emitted. See the [events reference](/reference/server-events.md) for details.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   handlers(self) {
@@ -1084,6 +1244,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### `extendHandlers(self)`
 
@@ -1114,8 +1278,9 @@ Query builders are defined as objects with a set of properties available to them
 | `finalize` | A function to run at the end of the query building phase, prior to being processed by the database. Used to alter the query with other builders. |
 | `after` | A function run to mutate an array of queried items passed in as an argument. The `after` function should use `query.get` to confirm that the builder was used on the query. |
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   queries(self, query) {
@@ -1155,13 +1320,18 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### `methods`
 
 An object of methods that execute queries after any builders have been applied. These functions should use existing [query methods](/guide/database-queries.md#finishing-with-query-methods) or [MongoDB cursor methods](https://docs.mongodb.com/manual/reference/method/js-cursor/) to return documents.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   queries(self, query) {
@@ -1186,6 +1356,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
 
 #### `extendQueries(self)`
 
@@ -1199,8 +1373,9 @@ Add standard Express middleware to be called on *every* request. The `middleware
 
 Note that `middleware(self)` is global and runs for every request, not just for requests involving the module containing the middleware. If you are considering authoring your own middleware, it is often better to add an event handler or `await` a method in the appropriate API route instead.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/limiter/index.js
 module.exports = {
   // ...
   middleware(self, options) {
@@ -1218,6 +1393,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/limiter/index.js
+</template>
+</AposCodeBlock>
 
 #### Middleware options
 
@@ -1230,8 +1409,9 @@ module.exports = {
 
 Example using the `before` option:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/limiter/index.js
 module.exports = {
   // ...
   middleware(self, options) {
@@ -1253,6 +1433,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/limiter/index.js
+</template>
+</AposCodeBlock>
 
 ### `tasks(self)`
 
@@ -1284,8 +1468,9 @@ Task functions takes the object `argv` as an argument, which includes the argume
 > }
 > ```
 
+<AposCodeBlock>
+
 ```javascript
-// modules/product/index.js
 module.exports = {
   // ...
   tasks(self, options) {
@@ -1308,3 +1493,7 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/product/index.js
+</template>
+</AposCodeBlock>
