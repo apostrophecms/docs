@@ -4,8 +4,9 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 
 **Let's look at a simple layout template file at `views/layout.html`.**
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# views/layout.html #}
 {% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
 
 {# 👇 Inserting markup into a lower level template block #}
@@ -29,6 +30,10 @@ A layout template is common in most Apostrophe apps. As the name suggests, it **
 </div>{# Close page wrapper #}
 {% endblock %}
 ```
+<template v-slot:caption>
+views/layout.html
+</template>
+</AposCodeBlock>
 
 You might notice is that this does not have essential web page elements such as a `head` or `body` tag. That is because the first thing this template does is extend another template:
 

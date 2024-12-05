@@ -21,7 +21,11 @@ Modules are organized in a folder at the root of a project named `modules`. Each
 modules/blog-post/index.js
 ```
 
-ApostropheCMS supports ECMAScript Modules (ESM) alongside CommonJS (CJS). While ESM is the recommended format and may become mandatory in the future, CJS remains supported for legacy projects.
+ApostropheCMS supports both ECMAScript Modules (ESM) and CommonJS (CJS) formats. While we recommend using ESM for all new projects due to its alignment with modern JavaScript standards, CJS remains supported for legacy projects.
+
+However, it’s important to note that at the project-level, you must fully commit to either ESM or CJS—mixing the two within the same project is not compatible. That said, ApostropheCMS supports npm packages in both ESM and CJS formats, so you can freely use a combination of package formats in your dependencies.
+
+As we continue to evolve ApostropheCMS, ESM may become mandatory in the future. We encourage developers to transition to ESM to stay ahead of this shift and take full advantage of modern JavaScript features.
 
 ### Using CommonJS
 

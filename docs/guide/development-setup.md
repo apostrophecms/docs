@@ -133,13 +133,18 @@ If you want to change the project directory name, please do so. We will continue
 
 Open the `app.js` file in the root project directory. Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
 
+<AposCodeBlock>
+
 ```javascript
-// app.js
 require('apostrophe')({
   shortName: 'apos-app', // 👈
   modules: {
   // ...
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 Excellent! Back in your terminal, we'll install dependencies:
 
@@ -173,8 +178,9 @@ node app @apostrophecms/user:add my-user admin
 
 You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/express/index.js
 module.exports = {
   options: {
     session: {
@@ -184,6 +190,10 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+modules/@apostrophecms/express/index.js
+</template>
+</AposCodeBlock>
 
 ### Starting up the website
 

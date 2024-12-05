@@ -14,8 +14,9 @@ Just as with `express-cache-on-demand`, Apostrophe always sends `Cache-Control: 
 
 To enable the feature for ordinary page responses, set the `cache` option of the `@apostrophecms/page` module:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 options: {
   cache: {
     page: {
@@ -24,11 +25,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 To also enable it for GET REST API responses for pages, set the `api` subproperty as well:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 options: {
   cache: {
     page: {
@@ -42,11 +48,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 To enable it for GET REST API responses for a particular piece type, you can set the `cache` option for that module. Here the example is a project-level module named `article`:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 extend: '@apostrophecms/piece-type',
 options: {
   cache: {
@@ -57,11 +68,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 You can also enable it for all piece types by enabling it for `@apostrophecms/piece-type`:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/piece-type/index.js
 options: {
   cache: {
     api: {
@@ -71,6 +87,10 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/piece-type/index.js
+</template>
+</AposCodeBlock>
 
 Since custom piece types extend this module, configuring it at project level configures all of them with a new default. It is still possible to override the `cache` option in the individual modules.
 
@@ -84,8 +104,9 @@ The purpose of this feature is to generate `ETag` headers that allow the browser
 
 To enable the feature for ordinary page responses, set the `etags` option of the `@apostrophecms/page` module:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 options: {
   cache: {
     page: {
@@ -96,11 +117,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 To also enable it for GET REST API responses for pages, set it in the `api` subproperty as well:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 options: {
   cache: {
     page: {
@@ -116,11 +142,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 To enable it for GET REST API responses for a particular piece type, you can set the `etags` option for that module:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 extend: '@apostrophecms/piece-type',
 options: {
   cache: {
@@ -132,11 +163,16 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 You can also enable it for all piece types by enabling it for `@apostrophecms/piece-type`:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/piece-type/index.js
 options: {
   cache: {
     api: {
@@ -147,6 +183,10 @@ options: {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/piece-type/index.js
+</template>
+</AposCodeBlock>
 
 Please note that even with the advanced cache invalidation system there will always be situations where caching allows a website visitor to see old content. Page content might differ based on an async component that fetches modified documents, or API calls to a third party service, or even the time of day.  
 For this reason `maxAge` should always be set to a reasonable value to ensure the served content is never too old. Content is never cached for logged-in users.
