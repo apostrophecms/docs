@@ -90,8 +90,9 @@ Bundles in Vite can be controlled through the configuration options.
 ### hmr
 Hot Module Replacement (HMR) automatically updates your browser when you make changes to your code, without requiring a full page refresh. The `hmr` option controls which parts of your application use this feature:
 
+<AposCodeBlock>
+
 ```javascript
-// in app.js
 modules: {
   '@apostrophecms/asset': {
     options: {
@@ -100,6 +101,10 @@ modules: {
   }
 }
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 - `'public'` (default): Enables HMR for your project's UI code, including any custom components, stylesheets, and client-side JavaScript in your project's modules.
 - `'apos'`: Enables HMR for the ApostropheCMS admin UI, useful when developing admin UI modifications or custom admin components.
@@ -107,6 +112,8 @@ modules: {
 
 ### hmrPort
 Sets a custom port for the WebSocket server that handles HMR communications. By default, it uses your ApostropheCMS server port:
+
+<AposCodeBlock>
 
 ```javascript
 modules: {
@@ -117,6 +124,10 @@ modules: {
   }
 }
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 You typically only need to set this if you're running behind a proxy or have port conflicts.
 
@@ -128,6 +139,8 @@ Controls source map generation in production builds. This option replaces the pr
 
 - For production, source maps are disabled by default to minimize build size. Setting `productionSourceMaps: true` will include them in the production build:
 
+<AposCodeBlock>
+
 ```javascript
 modules: {
   '@apostrophecms/asset': {
@@ -137,6 +150,10 @@ modules: {
   }
 }
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 This option applies to both admin UI and project UI builds, providing better debugging capabilities across your entire application compared to webpack's admin-UI-only source maps.
 

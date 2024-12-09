@@ -15,34 +15,34 @@ Batch operations are a ["cascading" configuration](/reference/module-api/module-
 
 <AposCodeBlock>
 
-  ```javascript
-  module.export = {
-    batchOperations: {
-      add: {
-        reset: {
-          label: 'Reset',
-          icon: 'recycle-icon',
-          messages: {
-            progress: 'Resetting {{ type }}...',
-            completed: 'Reset {{ count }} {{ type }}.'
-          },
-          if: {
-            archived: false
-          },
-          modalOptions: {
-            title: 'Reset {{ type }}',
-            description: 'Are you sure you want to reset {{ count }} {{ type }}?',
-            confirmationButton: 'Yes, reset the selected content'
-          },
-          permission: 'edit'
+```javascript
+module.export = {
+  batchOperations: {
+    add: {
+      reset: {
+        label: 'Reset',
+        icon: 'recycle-icon',
+        messages: {
+          progress: 'Resetting {{ type }}...',
+          completed: 'Reset {{ count }} {{ type }}.'
         },
-      }
-    },
-    icons: {
-      'recycle-icon': 'Recycle'
-    },
-  };
-  ```
+        if: {
+          archived: false
+        },
+        modalOptions: {
+          title: 'Reset {{ type }}',
+          description: 'Are you sure you want to reset {{ count }} {{ type }}?',
+          confirmationButton: 'Yes, reset the selected content'
+        },
+        permission: 'edit'
+      },
+    }
+  },
+  icons: {
+    'recycle-icon': 'Recycle'
+  },
+};
+```
   <template v-slot:caption>
     modules/article/index.js
   </template>

@@ -5,8 +5,10 @@ Apostrophe modules can be configured with settings that influence functionality 
 All settings described here are placed in a module's `options` configuration object. The `options` object can be added in the module's `index.js` file, as well as where the module is instantiated in the `app.js` file.
 
 `index.js` example:
+
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   // 👇 Module configuration options
@@ -19,10 +21,15 @@ module.exports = {
   // Other settings, such as `fields`
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
 
 `app.js` example:
 ```javascript
-// app.js
 require('apostrophe')({
   shortName: 'bowling-league-site', // Unique to your project
   modules: {
@@ -40,6 +47,10 @@ require('apostrophe')({
   }
 });
 ```
+<template v-slot:caption>
+app.js
+</template>
+</AposCodeBlock>
 
 ## Using module options
 
@@ -49,8 +60,9 @@ Module options can also be referenced directly in custom module code. Module con
 
 For example, if you had a custom piece type, it might look like this:
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -69,6 +81,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for any module
 
@@ -90,8 +106,9 @@ set an alias to easily reference the module from other modules. There is no defa
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/news-article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -100,6 +117,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/news-article/index.js
+</template>
+</AposCodeBlock>
 
 This `article` module can then be referenced anywhere the `apos` object is present as `apos.article`. Otherwise it would be available via `apos.modules['news-article']`.
 
@@ -115,8 +136,9 @@ This is an advanced option since it can easily break the user interface.
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/piece-type/index.js
 module.exports = {
   options: {
     components: {
@@ -126,6 +148,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/piece-type/index.js
+</template>
+</AposCodeBlock>
 
 ### `csrfExceptions`
 
@@ -133,8 +159,9 @@ See the [Express module](/reference/modules/express.md#csrf) for more on CSRF pr
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/access/index.js
 module.exports = {
   options: {
     csrfExceptions: [ 'login', '/safe-url' ]
@@ -142,6 +169,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/access/index.js
+</template>
+</AposCodeBlock>
 
 ### `i18n`
 
@@ -162,8 +193,9 @@ The namespace `'apostrophe'` is reserved for Apostrophe's UI. You may intentiona
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/project-languages/index.js
 module.exports = {
   extend: '@apostrophecms/module',
   options: {
@@ -174,6 +206,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/project-languages/index.js
+</template>
+</AposCodeBlock>
 
 ### `templateData`
 
@@ -181,8 +217,9 @@ Similar to [`browser`](#browser), the `templateData` module option can be set to
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/heading-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -193,16 +230,25 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/heading-widget/index.js
+</template>
+</AposCodeBlock>
 
 You might use that value as a fallback for user-editable fields.
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# In `modules/heading-widget/index.js` #}
 {% set bgColor = data.widget.color or data.defaultColor %}
 <h2 style="background-color: {{ bgColor }}">
   Title Here
 </h2>
 ```
+<template v-slot:caption>
+modules/heading-widget/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for all doc type modules
 
@@ -225,8 +271,8 @@ If `true`, only users with the sitewide admin permission can read or write docs 
 
 #### Example
 
+<AposCodeBlock>
 ```javascript
-// modules/official-memo/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -235,6 +281,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/official-memo/index.js
+</template>
+</AposCodeBlock>
 
 ### `autopublish`
 
@@ -244,8 +294,9 @@ The core image and file modules use this option, for example. It eliminates the 
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-category/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -254,6 +305,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-category/index.js
+</template>
+</AposCodeBlock>
 
 <!-- ### `contextBar` -->
 
@@ -269,8 +324,9 @@ If not set, Apostrophe will convert the module `name` meta property to a readabl
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/feature/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -279,6 +335,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/feature/index.js
+</template>
+</AposCodeBlock>
 
 ### `localized`
 
@@ -286,8 +346,9 @@ Defaults to `true`. If set to `false`, this doc type will _not_ be included in t
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/administrative-category/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -296,6 +357,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/administrative-category/index.js
+</template>
+</AposCodeBlock>
 
 ### `sort`
 
@@ -307,8 +372,9 @@ The default sort for all doc types is `{ updatedAt: -1 }`, meaning it returns do
 
 This `sort` setting will return articles first based on a custom `priority` field in ascending order, then by the core `updatedAt` property in descending order.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -330,6 +396,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `slugPrefix`
 
@@ -337,8 +407,9 @@ Set `slugPrefix` to a string to prepend all [slugs](/reference/glossary.md#slug)
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-category/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -347,6 +418,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-category/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for all piece modules
 
@@ -368,8 +443,9 @@ If no `pluralLabel` value is provided, Apostrophe will append the `label` (wheth
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/goose/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -379,6 +455,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/goose/index.js
+</template>
+</AposCodeBlock>
 
 ### `perPage`
 
@@ -386,8 +466,9 @@ In piece types, the `perPage` option, expressed as an integer, sets the number o
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -396,6 +477,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `publicApiProjection` (for pieces)
 
@@ -405,8 +490,9 @@ This should be set to an object containing individual field name keys set to `1`
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -419,6 +505,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 Unauthenticated [`GET /api/v1/article`](/reference/api/pieces.md#get-api-v1-piece-name) requests would return each piece with only the `title`, `authorName`, and `_url` properties.
 
@@ -428,8 +518,9 @@ Setting `quickCreate: true` on a piece adds that piece type to the admin bar "qu
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -438,6 +529,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ### `searchable`
 
@@ -446,8 +541,9 @@ Setting `searchable: false` on a piece type will exclude that piece type from th
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article/index.js
 module.exports = {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -456,6 +552,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for the core page module
 
@@ -489,8 +589,9 @@ In this example, page objects are fetched with one level of page tree "children"
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     builders: {
@@ -500,6 +601,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 In this example, we are not including ancestor pages and are requesting two levels of child pages (direct children and their direct children).
 
@@ -514,8 +619,9 @@ The home page document is added to all page requests on `req.data.home` so it ca
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     home: { children: false }
@@ -523,6 +629,11 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
+
 
 ### `minimumPark`
 
@@ -556,8 +667,9 @@ The default is:
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     minimumPark: [
@@ -582,6 +694,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `park`
 
@@ -600,8 +716,9 @@ If added on the top level of the page object, these properties will not be edita
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     park: [
@@ -626,6 +743,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `publicApiProjection` (for pages)
 
@@ -635,8 +756,9 @@ This should be set to an object containing individual field name keys set to `1`
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     publicApiProjection: {
@@ -647,6 +769,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 Unauthenticated [`GET /api/v1/@apostrophecms/page`](/reference/api/pages.md#get-api-v1-apostrophecms-page) requests would return each piece with only the `title` and `_url` properties.
 
@@ -656,8 +782,9 @@ Pages are included in the admin bar "quick create" menu by default. Setting `qui
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     quickCreate: false
@@ -665,6 +792,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ### `types`
 
@@ -674,8 +805,9 @@ The `types` array defines the page types available to users when creating or edi
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/page/index.js
 module.exports = {
   options: {
     types: [
@@ -696,6 +828,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for page type modules
 
@@ -711,8 +847,9 @@ Scenes are contexts in which certain sets of front end assets are delivered. Nor
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/fancy-form-page/index.js
 module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
@@ -721,6 +858,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/fancy-form-page/index.js
+</template>
+</AposCodeBlock>
 
 ## Options for piece page types
 
@@ -743,8 +884,9 @@ This is, more simply, the number of pieces that will normally be displayed on ea
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -753,6 +895,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 ### `next`
 
@@ -762,8 +908,9 @@ If set to `true`, Apostrophe will include the next piece, based on the [sort opt
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -790,6 +937,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 ### `piecesFilters`
 
@@ -814,8 +965,9 @@ When the index page is served, configured filters will be represented on a `req.
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-page/index.js
 // 👆
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
@@ -845,6 +997,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 ### `pieceModuleName`
 
@@ -854,8 +1010,9 @@ You can override this pattern by explicitly setting `pieceModuleName` to an acti
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/team-page/index.js
 // 👆 This module name would look for a piece type named `team` if not for
 // `pieceModuleName`
 module.exports = {
@@ -867,6 +1024,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/team-page/index.js
+</template>
+</AposCodeBlock>
 
 ### `previous`
 
@@ -876,8 +1037,9 @@ If set to `true`, Apostrophe will include the previous piece, based on the [sort
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/article-page/index.js
 module.exports = {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -904,6 +1066,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 
 ## Options for widget modules
@@ -926,8 +1092,9 @@ Official Apostrophe widget templates support adding an html class from the `clas
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/image-widget/index.js
 module.exports = {
   options: {
     className: 'c-image-widget'
@@ -935,6 +1102,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
 
 <!-- NOTE: Not ready to document yet. There are elements to this that need to be worked out. -->
 <!--
@@ -969,8 +1140,9 @@ Identify an icon to be used with a widget label in the area menu with the `icon`
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -983,6 +1155,10 @@ module.exports = {
 };
 
 ```
+<template v-slot:caption>
+modules/two-column-widget/index.js
+</template>
+</AposCodeBlock>
 
 !['Area menu with icons next to widget labels'](/images/area-menu-with-icons.png)
 
@@ -992,8 +1168,9 @@ module.exports = {
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/two-column-widget/index.js
 module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -1003,6 +1180,10 @@ module.exports = {
 };
 
 ```
+<template v-slot:caption>
+modules/two-column-widget/index.js
+</template>
+</AposCodeBlock>
 
 <!-- TODO: Flesh out once questions around scenes are resolve, or delete. -->
 <!-- ### `scene` -->
@@ -1023,8 +1204,9 @@ Rich text widgets can start with default content by setting `defaultData` to an 
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
   options: {
     defaultData: {
@@ -1034,6 +1216,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>
 
 ### `defaultOptions`
 
@@ -1043,8 +1229,9 @@ The rich text widget is configured by default with useful [rich text toolbar set
 
 #### Example
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
   options: {
     defaultOptions: {
@@ -1063,6 +1250,10 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>
 
 <!-- TODO: Link to a guide page about configuring the RTE when available. -->
 
@@ -1077,9 +1268,9 @@ If introducing an editor tool that is not included in core, you will need to cre
 :::
 <!-- TODO: link to an RTE extension guide when available. -->
 
+<AposCodeBlock>
 
 ```javascript
-// modules/@apostrophecms/rich-text-widget/index.js
 module.exports = {
   options: {
     editorTools: {
@@ -1104,3 +1295,7 @@ module.exports = {
   // ...
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/rich-text-widget/index.js
+</template>
+</AposCodeBlock>

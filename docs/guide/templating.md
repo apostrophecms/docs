@@ -35,14 +35,19 @@ For example, the layout template will often be structured like this:
 
 Individual page type templates will extend that layout:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/default-page/views/page.html #}
 {% extends "layout.html" %}{# 👈 Our template extension #}
 
 {% block main %}
   {% area data.page, 'mainContent' %}
 {% endblock %}
 ```
+<template v-slot:caption>
+modules/default-page/views/page.html
+</template>
+</AposCodeBlock>
 
 `page.html` *inherits* all of the markup and template blocks of `layout.html`. When it uses the `main` block, that *replaces* only the matching block from `layout.html`.
 
@@ -56,19 +61,23 @@ You may have noticed that the layout template above also extends another templat
 
 For example, this may be in your layout file:
 
-``` nunjucks
-{# views/layout.html #}
+<AposCodeBlock>
 
+``` nunjucks
 {% block main %}
 <h1>{{ data.piece.title or data.page.title }}</h1>
 {% endblock main %}
 ```
+<template v-slot:caption>
+modules/default-page/views/page.html
+</template>
+</AposCodeBlock>
 
 In my home page template I could extend the layout template and use `super()` to include that `h1` tag before new content markup:
 
-``` nunjucks
-{# modules/@apostrophecms/home-page/views/page.html #}
+<AposCodeBlock>
 
+``` nunjucks
 {% block main %}
   {{ super() }} {# 👈 That will render the <h1> tag above #}
   <div>
@@ -76,6 +85,10 @@ In my home page template I could extend the layout template and use `super()` to
   </div>
 {% endblock %}
 ```
+<template v-slot:caption>
+modules/@apostrophecms/home-page/views/page.html
+</template>
+</AposCodeBlock>
 
 See another example [in the Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html#template-inheritance).
 
@@ -83,14 +96,18 @@ See another example [in the Nunjucks documentation](https://mozilla.github.io/nu
 
 The `{% include %}` template tag pulls one template *into* another template. This can be useful to break large template files into pieces. For example, you might write your site footer in a template file: `views/footer.html`. The layout template could include that like so:
 
-``` nunjucks
-{# views/layout.html #}
+<AposCodeBlock>
 
+``` nunjucks
 {% block afterMain %}
   </main> {# Closing tag for the main block #}
   {% include "footer.html" %}
 {% endblock %}
 ```
+<template v-slot:caption>
+views/layout.html
+</template>
+</AposCodeBlock>
 
 That footer template would render as part of the layout template.
 
@@ -104,8 +121,9 @@ In some cases, **we will need to extend or include a template file that belongs 
 
 For example, we may have a default page type that includes a sidebar we want to use in other page types:
 
+<AposCodeBlock>
+
 ``` nunjucks
-{# modules/default-page/views/page.html #}
 {% extends "layout.html" %}
 
 {% block main %}
@@ -119,6 +137,10 @@ For example, we may have a default page type that includes a sidebar we want to 
   {% endblock %}
 {% endblock %}
 ```
+<template v-slot:caption>
+modules/default-page/views/page.html
+</template>
+</AposCodeBlock>
 
 Let's extend it in a contact page type to reuse that sidebar. We will only replace the `content` block. To do this, the `{% extend %}` tag must include the name of the default page module:
 

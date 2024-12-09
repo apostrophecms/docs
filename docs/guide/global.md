@@ -15,8 +15,9 @@ The global doc is a special [piece](/guide/pieces.md): it is created automatical
 
 To demonstrate, we may want to display an organizational Github URL in the website footer and a "Contact" page. We can add that to the global doc as we would on any other piece type.
 
+<AposCodeBlock>
+
 ```javascript
-// modules/@apostrophecms/global/index.js
 module.exports = {
   fields: {
     add: {
@@ -34,6 +35,10 @@ module.exports = {
   }
 }
 ```
+<template v-slot:caption>
+modules/@apostrophecms/global/index.js
+</template>
+</AposCodeBlock>
 
 Once the global doc is configured with fields, it will be added to the admin bar for editing.
 

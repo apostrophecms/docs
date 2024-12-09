@@ -4,39 +4,44 @@ The content **field schema** is another key concept in Apostrophe. The "schema" 
 
 Our blog post module's schema might look something like this:
 
-```javascript
-// modules/blog-post/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  // 👇 The field schema
-  fields: {
-    add: {
-      authorName: {
-        label: 'Author name',
-        type: 'string'
-      },
-      body: {
-        label: 'Blog post body',
-        // The `area` field type supports dynamic content widgets. It is
-        // covered in the "Areas and widgets" guide section.
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {}
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    // 👇 The field schema
+    fields: {
+      add: {
+        authorName: {
+          label: 'Author name',
+          type: 'string'
+        },
+        body: {
+          label: 'Blog post body',
+          // The `area` field type supports dynamic content widgets. It is
+          // covered in the "Areas and widgets" guide section.
+          type: 'area',
+          options: {
+            widgets: {
+              '@apostrophecms/rich-text': {}
+            }
           }
         }
-      }
-    },
-    group: {
-      blogFields: {
-        label: 'Blog fields',
-        fields: [ 'authorName', 'body' ]
+      },
+      group: {
+        blogFields: {
+          label: 'Blog fields',
+          fields: [ 'authorName', 'body' ]
+        }
       }
     }
-  }
-};
-```
+  };
+  ```
+  <template v-slot:caption>
+  modules/blog-post/index.js
+  </template>
 
+</AposCodeBlock>
 Content schemas are configured in the `fields` setting. In this case, `fields` has two subsections: `add`, where fields are added to the schema, and `group`, which organizes the fields for the user interface.
 
 Each property in the `add` object is a field you are including in the schema. Each property in `group` is a section of the interface, set to an array of fields to include in that section.
@@ -51,22 +56,27 @@ Fields that a piece type inherits will likely already be in field groups. This i
 
  Working with inherited fields and field groups can be difficult when you don't know what they are. You can make it easier by logging them in your terminal from the module's [initialization function](/reference/module-api/module-overview.md#initialization-function).
 
-```javascript
-// modules/product/index.js
-module.exports = {
-  extend: '@apostrophecms/piece-type',
-  init (self) {
-    console.log(self.fieldsGroups);
+<AposCodeBlock>
 
-    // Output:
-    // {
-    //   basics: { label: 'Basics', fields: [ 'title' ] },
-    //   utility: { fields: [ 'slug', 'visibility' ] }
-    // }
-  }
-};
-```
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    init (self) {
+      console.log(self.fieldsGroups);
 
+      // Output:
+      // {
+      //   basics: { label: 'Basics', fields: [ 'title' ] },
+      //   utility: { fields: [ 'slug', 'visibility' ] }
+      // }
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+
+</AposCodeBlock>
 The `init` function runs once on start up and has access to the module as an argument. By the time it runs, the field groups have been compiled into an object named `fieldsGroups`. If you haven't added any fields yet you can log this to see what you are working with.
 
 ::: info
@@ -79,8 +89,9 @@ For example, `title` is in the default "Basics" group. If you add a `basics` gro
 
 As in the example above, you could include `title` with the "Basics" group along with new fields.
 
+<AposCodeBlock>
+
 ``` js
-// modules/product/index.js
 module.exports = {
   // ...
   fields: {
@@ -96,6 +107,11 @@ module.exports = {
   }
 };
 ```
+<template v-slot:caption>
+  modules/product/index.js
+</template>
+
+</AposCodeBlock>
 
 ### You don't need a `basics` group
 
