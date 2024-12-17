@@ -137,6 +137,7 @@ const sidebarGuide = [
         ]
       },
       { text: 'Keyboard Shortcuts', link: 'guide/command-menu.md' },
+      { text: 'Breakpoint Preview', link: 'guide/breakpoint-preview.md' },
       { text: 'Custom Admin UI', link: 'guide/custom-ui.md' },
       { text: 'Custom Field Types', link: 'guide/custom-schema-field-types.md' },
       { text: 'Adding Batch Operations', link: 'guide/batch-operations.md' },
