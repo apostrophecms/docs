@@ -176,19 +176,9 @@ Remember that while you have full control over the public build configuration, i
 
 ApostropheCMS's Vite integration provides two powerful path aliases to simplify imports in your project:
 
-### The `Modules/` Alias
-
-The `Modules/` alias is available for both public and admin UI builds. It allows you to import modules without worrying about relative paths, but restricts you to sources inside `ui/src/` directories.
-
-```javascript
-// Current file: modules/another-module/ui/src/index.js
-// Actual import path: modules/some-module/ui/src/lib/utils.js
-import utils from 'Modules/some-module/lib/utils.js';
-```
-
 ### The `@/` Alias
 
-The `@/` alias is available for both public and admin UI builds and provides access to your entire project's source code. It follows the same path as your original source code but skips the `ui/` part of the path.
+The `@/` alias is the recommended way to handle imports in your project. It is available for both public and admin UI builds and provides access to your entire project's source code. It follows the same path as your original source code but skips the `ui/` part of the path.
 
 ```javascript
 // Current file: any file in any module inside of the `ui/` folder
@@ -197,6 +187,19 @@ import utils from '@/some-module/src/lib/utils.js';
 
 // Actual path: modules/some-module/ui/apos/mixins/SomeMixin.js
 import SomeMixin from '@/some-module/apos/mixins/SomeMixin.js';
+```
+::: warning
+Important: When using the `@/` alias, you cannot import files from `ui/apos` directories within files located in `ui/src`. This restriction helps maintain proper separation between admin and public code.
+:::
+
+### The `Modules/` Alias
+
+The `Modules/` alias is available for both public and admin UI builds. It allows you to import modules without worrying about relative paths, **but** restricts you to sources inside `ui/src/` directories.
+
+```javascript
+// Current file: modules/another-module/ui/src/index.js
+// Actual import path: modules/some-module/ui/src/lib/utils.js
+import utils from 'Modules/some-module/lib/utils.js';
 ```
 
 ### Important Considerations
@@ -213,6 +216,30 @@ When using the `@/` alias:
 - Best practices:
   - Include mostly sources from your current build
   - Ensure imported sources don't contain `Modules/` aliased imports when cross-importing
+
+### Resolving Alias Errors {#resolve-alias-errors}
+The error message 'Unable to resolve module source "X/X/X/X.js" from alias "X/X/X.js"', typically occurs when the `Modules/` alias cannot correctly resolve the source file you're trying to import. This can happen for several reasons:
+
+1. The target file doesn't exist in the expected location
+2. You're trying to import a file from `ui/apos` using the `Modules/` alias (which only works with `ui/src` files)
+3. The import path doesn't follow the expected structure for the `Modules/` alias
+
+The Modules/ alias resolves paths using this pattern:
+
+```
+Modules/[module-name]/[path-within-src]
+```
+
+Where:
+
+* `[module-name]` is the name of your module
+* `[path-within-src]` is the path to your file, relative to that module's `ui/src` directory
+
+If you're seeing this error, consider:
+
+1. Double-checking the file path and ensuring the file exists
+2. Using the `@/` alias instead, especially if you need to access files outside of `ui/src`
+3. Reviewing the module name and path structure in your import statement
 
 ### Editor Configuration
 
@@ -234,7 +261,7 @@ To enable proper path resolution and autocompletion in your code editor, add a `
 - `exclude` should include `apos-build/@apostrophecms/vite/my-namespace/dist`
 
 :::warning
-When following imports in your editor (e.g., Ctrl + Click in VSCode), you'll be taken to the `apos-build` directory rather than the original source code. This is because the `apos-build` directory contains a complete copy of your project's source code (including Admin UI) from all modules (local and npm) and serves as Vite's actual source directory for building the project.
+When following imports in your editor (e.g., Ctrl + Click in VSCode), you'll be taken to the `apos-build` directory rather than the original source code. This is because the `apos-build` directory contains a complete copy of your project's source code (including Admin UI) from all modules (local and npm) and serves as Vite's actual source directory for building the project. Do not modify code in this folder as your changes will be lost. Change files in the original folder.
 :::
 
 ## Asset Handling

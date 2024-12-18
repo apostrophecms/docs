@@ -1,7 +1,7 @@
 
 ## Device breakpoint preview
 
-Pages can be enabled to emulate devices, like phones and tablets, making it easy to see how your content will look at different screen sizes.
+Apostrophe provides a convenient way to emulate devices, like phones and tablets, making it easy to see how your content will look at different screen sizes.
 
 ![Screen shot of breakpoint preview with ecommerce](../images/new-breakpoint-preview.png)
 When device preview mode is enabled, you’ll see icons in the admin bar for each of the breakpoints (sizes) that have been set through the `breakpointPreviewMode` of the `@apostrophecms/asset` module. By default, there are three shortcut device breakpoints added. Adding additional breakpoint preview sizes without `shortcut: true` will cause a dropdown menu with all the sizes to appear, in addition to the icons.
@@ -78,14 +78,14 @@ modules/@apostrophecms/asset/index.js
 </template>
 </AposCodeBlock>
 
-You can learn about all the properties that can be passed to the `breakpointPreviewMode` option on the [`@apostrophecms/asset` reference page](/reference/modules/asset.md#breakpointPreviewMode). The two most critical are `enable` and `screens`. If you pass `enable: false` it will remove the breakpoint preview icons and menu from the admin-bar. The `screens` property takes an object where each property is a different breakpoint. Adding the `breakpointPreviewMode` at the project level will override any default values, so you need to pass `enable: true` if you wish to add additional brekpoints.
+You can learn about all the properties that can be passed to the `breakpointPreviewMode` option on the [`@apostrophecms/asset` reference page](/reference/modules/asset.md#breakpointPreviewMode). The two most critical are `enable` and `screens`. If you pass `enable: false` it will remove the breakpoint preview icons and menu from the adminbar. The `screens` property takes an object where each property is a different breakpoint. Adding the `breakpointPreviewMode` at the project level will override any default values, so you need to pass `enable: true` if you wish to add additional breakpoints.
 
-Each of the individual breakpoint properties in the `screen` object take a `label` that will be displayed to the user when they hover over the icon. The `icon` property supplies the icon that will be displayed if the breakpoint is also given a property of `shortcut: true`. This icon name should be either an icon you can [register in this module](/reference/module-api/module-options.md#icon) or an icon that is [already registered](/reference/module-api/module-overview.md#icons). Finally, each breakpoint needs the `width` and `height` of the container that corresponds to the device being emulated.
+Each of the individual breakpoint properties in the `screen` object take a `label` that will be displayed to the user when they hover over the icon. The `icon` property supplies the icon that will be displayed if the breakpoint is also given a property of `shortcut: true`. This icon name should be either an icon you can [register in this module](/reference/module-api/module-options.md#icon) or an icon that is [already registered](/reference/module-api/module-overview.md#icons). Finally, each breakpoint needs the `width` and `height`, in pixels, of the container that corresponds to the device being emulated.
 
 ---
 
 ### Limitations and Differences
-While the ApostropheCMS breakpoint Preview effectively converts many media queries to container queries, there are some key limitations and differences to be aware of. These limitations stem from fundamental differences between **media queries** (which target the viewport) and **container queries** (which target individual containers).
+While the ApostropheCMS breakpoint preview effectively converts many media queries to container queries, there are some key limitations and differences to be aware of. These limitations stem from fundamental differences between **media queries** (which target the viewport) and **container queries** (which target individual containers).
 
 #### 1. **Unsupported Parameters**
 Certain media query conditions are not supported or do not translate well to container queries:
@@ -115,7 +115,7 @@ Media queries operate on the **viewport size**, whereas container queries respon
 - **Nested containers**:
   - Container queries work within the bounds of their parent container. If a nested container has a different size, the styles applied to its content may differ from expectations.
 - **Resizing effects**:
-  - Breakpoint Preview resizes containers but does not simulate the behavior of the entire viewport. This can impact layouts that rely on viewport-relative units like `vw` and `vh`.
+  - Breakpoint preview resizes containers but does not simulate the behavior of the entire viewport. This can impact layouts that rely on viewport-relative units like `vw` and `vh`.
 
 #### 3. **Specificity and Logical Operators**
 Complex media query conditions may not translate exactly when converted to container queries:
