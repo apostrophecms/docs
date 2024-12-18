@@ -189,12 +189,12 @@ import utils from '@/some-module/src/lib/utils.js';
 import SomeMixin from '@/some-module/apos/mixins/SomeMixin.js';
 ```
 ::: warning
-Important: When using the `@/` alias, you cannot import files from `ui/apos` directories within files located in `ui/src`. This restriction helps maintain proper separation between admin and public code.
+Important: When using the `@/` alias, you should exercise caution sharing code between the public and Admin UI builds through the import of files from `ui/apos` directories within files located in `ui/src`. If any of those `ui/apos` located files use the `Modules/` alias, it will not be resolved correctly and result in a build error. Note that a common example of this is importing SASS files.
 :::
 
 ### The `Modules/` Alias
 
-The `Modules/` alias is available for both public and admin UI builds. It allows you to import modules without worrying about relative paths, **but** restricts you to sources inside `ui/src/` directories.
+The `Modules/` alias is available for both public and admin UI builds. It allows you to import modules without worrying about relative paths, **but** restricts you to sources inside either the `ui/src/` or `ui/apos` directories, respectively, depending on the build.
 
 ```javascript
 // Current file: modules/another-module/ui/src/index.js
