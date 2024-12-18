@@ -104,6 +104,209 @@ For debugging production builds, you can enable source maps to see the original 
   </template>
 </AposCodeBlock>
 
+### Default Public Build Configuration
+
+While the `apos` build (code in `/ui/apos/` directories) is fully preconfigured, the `public` build (code in `/ui/src/`) comes with minimal configuration to give you more flexibility. Here's what's included by default:
+
+1. **Core Features**:
+   - PostCSS plugin for essential ApostropheCMS features (e.g., "Breakpoint Preview" when enabled)
+   - `Modules/` alias for simplified module imports within `/ui/src/`
+   - `@/` alias for cross-module and cross-build access
+
+2. **Everything Else**:
+   For additional features or frameworks, you'll need to configure them yourself. Common examples include:
+
+   ```javascript
+   // apos.vite.config.js
+   import { defineConfig } from '@apostrophecms/vite/vite';
+   import vue from '@vitejs/plugin-vue';
+   import react from '@vitejs/plugin-react';
+
+   export default defineConfig({
+     plugins: [
+       // Add framework support
+       vue(),
+       // or
+       react(),
+
+       // Add other Vite plugins as needed
+       imagemin({
+         // image optimization options
+       })
+     ],
+     css: {
+       // Additional PostCSS plugins
+       postcss: {
+         plugins: [
+           autoprefixer(),
+           tailwindcss()
+         ]
+       },
+       // Preprocessor options
+       preprocessorOptions: {
+         scss: {
+           additionalData: `$theme: "light";`
+         }
+       }
+     }
+   });
+   ```
+
+### Framework-Specific Configuration
+
+When adding UI frameworks to your project, you'll need to:
+
+1. Install the framework and its Vite plugin:
+   ```bash
+   # For Vue
+   npm install vue @vitejs/plugin-vue
+   
+   # For React
+   npm install react react-dom @vitejs/plugin-react
+   ```
+
+2. Configure the plugin in your Vite config
+3. Follow the framework's best practices for file organization within your `ui/src/` directory
+
+::: tip
+Remember that while you have full control over the public build configuration, it's best to start minimal and add only what you need to keep your build process efficient.
+:::
+
+## Built-in Aliases
+
+ApostropheCMS's Vite integration provides two powerful path aliases to simplify imports in your project:
+
+### The `Modules/` Alias
+
+The `Modules/` alias is available for both public and admin UI builds. It allows you to import modules without worrying about relative paths, but restricts you to sources inside `ui/src/` directories.
+
+```javascript
+// Current file: modules/another-module/ui/src/index.js
+// Actual import path: modules/some-module/ui/src/lib/utils.js
+import utils from 'Modules/some-module/lib/utils.js';
+```
+
+### The `@/` Alias
+
+The `@/` alias is available for both public and admin UI builds and provides access to your entire project's source code. It follows the same path as your original source code but skips the `ui/` part of the path.
+
+```javascript
+// Current file: any file in any module inside of the `ui/` folder
+// Actual path: modules/some-module/ui/src/lib/utils.js
+import utils from '@/some-module/src/lib/utils.js';
+
+// Actual path: modules/some-module/ui/apos/mixins/SomeMixin.js
+import SomeMixin from '@/some-module/apos/mixins/SomeMixin.js';
+```
+
+### Important Considerations
+
+When using the `@/` alias:
+- You can access `public` builds from within the `apos` build, and vice versa
+- Use with caution as it might lead to import resolution issues if:
+  - The imported file contains `Modules/` aliased imports
+  - Deep imports within the imported file contain `Modules/` aliased imports
+- Benefits of using `@/`:
+  - More developer-friendly
+  - Enables auto-completion in supported editors
+  - More intuitive and readable paths
+- Best practices:
+  - Include mostly sources from your current build
+  - Ensure imported sources don't contain `Modules/` aliased imports when cross-importing
+
+### Editor Configuration
+
+To enable proper path resolution and autocompletion in your code editor, add a `jsconfig.json` file to your project root:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": "./apos-build/@apostrophecms/vite/default",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+**Note:** If you've changed your project asset namespace from the default, adjust the `baseUrl` and `exclude` paths accordingly. For example, with a namespace of `my-namespace`:
+- `baseUrl` should be `./apos-build/@apostrophecms/vite/my-namespace`
+- `exclude` should include `apos-build/@apostrophecms/vite/my-namespace/dist`
+
+:::warning
+When following imports in your editor (e.g., Ctrl + Click in VSCode), you'll be taken to the `apos-build` directory rather than the original source code. This is because the `apos-build` directory contains a complete copy of your project's source code (including Admin UI) from all modules (local and npm) and serves as Vite's actual source directory for building the project.
+:::
+
+## Asset Handling
+
+The Vite integration allows direct imports of static assets like images, fonts, and other files, as well as Sass files, in both public and admin UI builds.
+
+### Importing Static Assets
+
+You can import assets directly in your JavaScript/framework code:
+
+```javascript
+// Using aliases or relative paths
+// Actual path: modules/some-module/ui/assets/logo.svg
+import logo from '@/some-module/assets/logo.svg';
+// The logo variable now contains the normalized path to the image
+```
+
+#### Framework-Specific Asset Imports
+
+**Vue**
+```vue
+<template>
+  <!-- Direct template imports -->
+  <img src="@/some-module/assets/logo.svg" alt="My logo" />
+</template>
+```
+
+**React**
+```jsx
+import logo from '@/some-module/assets/logo.svg';
+
+function MyComponent() {
+  return <img src={logo} alt="My logo" />;
+}
+```
+
+### Importing Sass
+
+You can import Sass files using standard import syntax:
+
+```scss
+/* Using aliases or relative paths */
+/* Actual path: modules/some-module/ui/scss/_styles.scss */
+@use '@/some-module/scss/styles';
+```
+
+### CSS URL Resolution
+
+There are two ways to resolve URLs in your CSS:
+
+1. **Using the Public Folder**
+```css
+/* File location: ./modules/some-module/public/font.ttf */
+@font-face {
+  font-family: MyFont;
+  src: url("/modules/some-module/font.ttf") format("truetype");
+}
+```
+
+2. **Using Source Root Path**
+```css
+/* File location: ./modules/some-module/ui/fonts/font.ttf */
+@font-face {
+  font-family: Inter;
+  src: url("/src/some-module/fonts/font.ttf") format("truetype");
+}
+```
+
+::: tip
+You can inspect the sources in the `apos-build/@apostrophecms/vite/default` directory to understand how Vite resolves these paths when building your project.
+:::
+
 ## Extending Vite Configuration
 
 ApostropheCMS's Vite integration provides two methods to customize your Vite configuration. You can either configure it through your module's code or via a dedicated configuration file in your project root.
@@ -319,38 +522,65 @@ When migrating your ApostropheCMS project to use Vite, you'll need to make a few
 ::: info
 ESM requires file extensions in import paths. Always include `.js`, `.css`, `.vue`, etc. when importing your own modules. This is different from webpack, which allowed omitting extensions.
 :::
+## Known Limitations and Solutions
 
-### Known Limitations and Solutions
+### HMR Limitations
 
-### HMR Directory Watching
-- **Limitation**: HMR only watches existing `anyModule/ui` directories
-- **Solution**: After adding new `ui` directories, restart your development server:
-  ```bash
-  # If using nodemon (default)
-  # Type 'rs' and press Enter in your terminal
-  rs
+1. **New UI Directories**
+   - **Issue**: HMR only watches existing `anyModule/ui` directories
+   - **Solution**: After adding new `ui` directories, restart your development server:
+     ```bash
+     # Using nodemon (default setup)
+     rs
+     ```
+
+2. **Vue and Admin UI**
+   - **Issue**: Admin UI HMR (`hmr: 'apos'`) won't work when the public build contains Vue sources
+   - **Solution**: Use separate pages for Vue development, or stick to `hmr: 'public'` when working with Vue components
+   - **Note**: Public build HMR continues to work as expected
+
+### Public Assets
+
+- **Issue**: Changes to `ui/public` directories don't trigger HMR or page reloads
+- **Solution**: Add the directories to your nodemon watch list in `package.json`:
+  ```json
+  {
+    "nodemonConfig": {
+      "watch": [
+        "./app.js",
+        "./modules/**/*",
+        "./lib/**/*.js",
+        "./views/**/*.html",
+        "./modules/*/ui/public/**/*"
+      ]
+    }
+  }
   ```
 
-### Troubleshooting Common Issues
+### Build and Performance
 
-### Missing Hot Updates
-If changes aren't reflecting immediately:
-1. Check your browser console for HMR connection errors
-2. Verify the module's `ui` directory is being watched
-3. Ensure you're using ESM syntax in affected files
+1. **Source Map Issues**
+   - **Issue**: Source maps not working correctly in development
+   - **Solutions**:
+     - Clear your browser's DevTools cache
+     - Disable source-map-related browser extensions
+     - Verify file paths in your imports are correct
 
-### Build Errors
-```bash
-# Clear your build cache
-node app @apostrophecms/asset:reset
-npm run build
+2. **Build Errors**
+   - If you encounter build errors, try clearing your build cache:
+     ```bash
+     node app @apostrophecms/asset:reset
+     npm run build
+     ```
 
-# Restart your development server
-npm run dev
-```
+### Common Workarounds
 
-### Source Map Issues
-If you're not seeing proper source maps in development:
-1. Clear your browser's DevTools cache
-2. Verify no source-map-related browser extensions are interfering
-3. Check that the file paths in your imports are correct
+- For most issues, try these steps in order:
+  1. Clear your browser cache
+  2. Reset the asset build
+  3. Restart your development server
+  4. Check the browser console for specific error messages
+
+::: tip
+Remember to check the terminal output and browser console for specific error messages. Most HMR issues will show clear error messages indicating the problem.
+:::
