@@ -89,12 +89,7 @@ While the ApostropheCMS breakpoint preview effectively converts many media queri
 
 #### 1. **Unsupported Parameters**
 Certain media query conditions are not supported or do not translate well to container queries:
-- **Height-based queries**:
-  - `min-height` and `max-height` conditions cannot be applied to containers. Container queries only consider the container's width.
-  - Example of unsupported query:
-    ```css
-    @media (min-height: 600px) { ... }
-    ```
+
 - **Orientation queries**:
   - Parameters like `orientation: landscape` or `orientation: portrait` do not apply to containers, as containers lack inherent orientation.
   - Example of unsupported query:
@@ -108,7 +103,22 @@ Certain media query conditions are not supported or do not translate well to con
     @media (min-aspect-ratio: 16/9) { ... }
     ```
 
-#### 2. **Behavioral Differences**
+#### 2. Operator and Descriptor Limitations
+Some combinations of size-related descriptors and operators may not work reliably:
+
+When `min-width`, `max-width`, `min-height`, or `max-height` are used with `>=` or `<=` operators.
+
+- Example of problematic query:
+  ```css
+    @media (min-width >= 600px) { ... }
+  ```
+
+- Note: These descriptors work when used with standard comparisons:
+  ```css
+    @media (min-width: 600px) { ... } /* Works fine */
+  ```
+
+#### 3. **Behavioral Differences**
 Media queries operate on the **viewport size**, whereas container queries respond to the **size of a specific container**. This distinction can lead to subtle differences in layout and behavior:
 - **Viewport context**:
   - Media queries are global; they consider the entire screen or browser window. If a layout condition depends on the viewport, such as full-page navigation menus, it might not behave as expected when converted to container queries.
@@ -149,11 +159,14 @@ Advanced features of media queries, including experimental or non-standard ones,
 ### Summary of Unsupported or Partially Supported Features
 | **Media Query Feature**       | **Support in Container Queries**       |
 |-------------------------------|---------------------------------------|
-| `min-height` / `max-height`   | ❌ Unsupported                        |
-| `orientation`                 | ❌ Unsupported                        |
-| `aspect-ratio`                | ❌ Unsupported                        |
-| Complex logical conditions    | ⚠️ Partial / Unreliable               |
-| Viewport-relative units       | ⚠️ Not container-aware               |
-| User preference queries       | ❌ Unsupported (e.g., dark mode)      |
+| `orientation` | ❌ Unsupported |
+| `aspect-ratio` | ❌ Unsupported |
+| Size descriptors with `>=` or `<=` | ⚠️ Not recommended |
+| Complex logical conditions | ⚠️ Not recommended |
+| Viewport-relative units | ⚠️ Not container-aware |
+| User preference queries | ❌ Unsupported (e.g., dark mode) |
+| Unit conversion in @media rules | ❌ Skipped |
+| Basic size queries | ✅ Supported |
+| Print media queries| ✅ Preserved |
 
 ---
