@@ -146,54 +146,9 @@ Adding to the stylesheet:
 The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
 ### Configuring the color picker
-If you choose to add the `color` button to the toolbar you can optionally pass in a `color` configuration object. These are a subset of the options that are passed to the [`color` schema field](/reference/field-types/color.html).
+If you choose to add the `color` button to the toolbar you can optionally pass in a `color` configuration object.
 
-#### **color**
-The `color` option takes an object with three possible properties.
-
-#### `presetColors`
-The `presetColors` property takes an array of colors that will populate the swatches below the spectrum color picker.
-
-- **Default Value:**
-
-```javascript
-[
-  '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321',
-  '#417505', '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2',
-  '#B8E986', '#000000', '#4A4A4A', '#9B9B9B', '#FFFFFF'
-]
-```
-
-- **Valid Values:**
-<br/>Mix and match as you like.
-
-| Format | Example |
-|----------|------|
-|hex3 | `#f00` |
-|hex6 | `#00ff00` |
-|hex8 | `#00ff0055` |
-|rgb | `rgb(201, 76, 76)` |
-|rgba | `rgba(0, 0, 255, 1)` |
-|hsl | `hsl(89, 43%, 51%)` |
-|hsla | `hsla(89, 43%, 51%, 0.6)` |
-|CSS Variable | `--my-primary-color` |
-
-::: warning
-When using CSS Variables as presets, Apostrophe will save the CSS Variable **name** as a string, regardless of the `format` option (for example `'--my-primary-color'`).
-:::
-
-- **Usage**
-
-```javascript
-color: {
-  presetColors: ['#ea433a', '#cc9300', '#b327bf', '#66f', '#00bf9a']
-}
-```
-#### `disableAlpha`
-The `disableAlpha` property is `false` by default. Setting it to `true` removes the alpha transparency range input from the picker.
-
-#### `disableFields`
-The `disableFields` property is `false` by default. Setting it to `true` removes the string inputs for hex and rgba from the picker.
+The `color` configuration is an extension of the color schema field and as such follows the same options API. [See the configuration here](/reference/field-types/color.html#options).
 
 ### Default rich text configuration
 
