@@ -14,6 +14,10 @@ themeColor: {
 }
 ```
 
+## Color Field UI
+You have the ability to control and customize several parts of the color field's UI, as detailed in the `options` section below.
+![Screenshot of the Apostrophe color field UI](/images/apostrophe-color-picker-ui.png)
+
 ## Settings
 
 ### Required
@@ -46,6 +50,8 @@ Color fields have additional settings configured in an `options` object:
 
 #### `format`
 
+**Type:** String
+
 The color string format saved to the database. Possible options are:
 
 - `rgb`
@@ -67,17 +73,20 @@ backgroundColor: {
   }
 }
 ```
+<br/>
 
-#### `pickerOptions`
-
-The color picker interface can be configured to present editors with different selection options. The configuration should go in the `options` property as `pickerOptions`. The picker options are below.
-
-##### `presetColors`
-- **Type:** Array
+#### `presetColors`
 
 An array of color values, used as swatches.
 
-- **Default Value:**
+**Type:** Array, Boolean
+
+::: tip
+Passing `false` will disable the preset colors UI
+:::
+
+
+**Default Value:**
 
 ```javascript
 [
@@ -87,7 +96,7 @@ An array of color values, used as swatches.
 ]
 ```
 
-- **Valid Values:**
+**Valid Color Strings:**
 <br/>Mix and match as you like.
 
 | Format | Example |
@@ -106,22 +115,21 @@ When using CSS Variables as presets, Apostrophe will save the CSS Variable **nam
 :::
 
 
-- **Usage**
+**Usage**
 
 ```javascript
 backgroundColor: {
   type: 'color',
   label: 'Background color',
   options: {
-    pickerOptions: {
-      presetColors: ['#ea433a', '#cc9300', '#b327bf', '#66f', '#00bf9a']
-    }
+    presetColors: ['#ea433a', '#cc9300', '#b327bf', '#66f', '#00bf9a']
   }
 }
 ```
+<br/>
 
 ##### `disableAlpha`
-- **Type:** Boolean
+**Type:** Boolean
 
 Control alpha transparency with a range input.
 
@@ -130,10 +138,24 @@ Control alpha transparency with a range input.
 ```javascript
 false
 ```
-##### `disableFields`
-- **Type:** Boolean
+<br/>
 
-Control color value with string inputs (Hex & RGBA).
+##### `disableFields`
+**Type:** Boolean
+
+Disable the inputs for editing the hex & RGBA value of a color. Good for limiting the user's choices.
+
+*Default value*
+
+```javascript
+false
+```
+<br/>
+
+##### `disableSpectrum`
+**Type:** Boolean
+
+Disable the full color spectrum UI. Good for limiting the user's choices.
 
 *Default value*
 
