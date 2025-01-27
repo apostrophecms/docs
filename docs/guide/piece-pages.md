@@ -78,7 +78,7 @@ Either method works well and you may find both options useful depending on the s
 Piece page types use two templates, both added in the module's `views` directory (e.g., `modules/article-page/views/`).
 
 ::: tip
-When using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) to create a piece page type, include the `--page` option when creating the piece type. It will not only generate the piece type for you, but also the piece page code including blank template files.
+When using the [official CLI](/guide/development-setup.md#installing-the-apostrophe-cli) to create a piece page type, include the `--page` option when creating the piece type. It will not only generate the piece type for you, but also the piece page code including blank template files.
 
 ```bash
 apos add piece article --page

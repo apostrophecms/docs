@@ -13,7 +13,7 @@ First create the module configuration file, extend the core widget type module, 
 **The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This two-column widget is named `two-column-widget`.
 
 ::: tip
-Generate the starter code using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) with the command:
+Generate the starter code using the [official CLI](/guide/development-setup.md#installing-the-apostrophe-cli) with the command:
 
 ```bash
 apos add widget two-column
@@ -240,7 +240,7 @@ When adding client-side JavaScript for widget interaction, add a widget "player"
 We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
 
 ::: tip
-When using the [official CLI](/guide/setting-up.md#the-apostrophe-cli-tool) to create a widget type, include widget player starter code with the `--player` option.
+When using the [official CLI](/guide/development-setup.md#installing-the-apostrophe-cli) to create a widget type, include widget player starter code with the `--player` option.
 
 ```bash
 apos add widget collapse --player
