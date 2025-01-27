@@ -12,7 +12,7 @@ To reduce costs for this how-to, we'll be using free services from Amazon Web Se
 ## Before you begin
 
 ### Create the project (or use your own)
-First, build an Apostrophe site! See the [setting up page](../guide/setting-up.md) to get started with the installation of the CLI. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
+First, build an Apostrophe site! See the [setting up page](../guide/development-setup.md) to get started with the installation of the CLI. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
 
 ```bash
 $ apos create heroku-tut
