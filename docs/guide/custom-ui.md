@@ -419,7 +419,16 @@ module.exports = {
       action: 'myUniqueAction',
       label: 'My Menu Item',
       modal: 'MyModalComponent',
-      conditions: [ 'canEdit', 'canPublish' ]
+      // Optional
+      conditions: [ 'canEdit', 'canPublish' ],
+      // Optional: match properties of the individual document
+      if: {
+        type: 'my-type'
+      },
+      // Optional: match properties of the module, not the individual document
+      moduleIf: [
+        autopublish: true
+      ]
     });
   }
 }
@@ -440,8 +449,10 @@ Do not use core actions as your `action` property value - this would lead to unp
 * Overriding the same `action` is possible (the last wins).
 * You may mark the action as "dangerous" via an optional property `modifiers: [ 'danger' ]` (see the 'Archive' and 'Unpublish' menu items).
 * An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
-* The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'
+* The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'. To go beyond these, see the more flexible `if` and `moduleIf` features below.
 * The optional `moduleName` property can be used to override the `moduleName` prop passed to the modal. By default, it will be the name of the piece type module corresponding to the individual piece, or `@apostrophecms/page` in the case of pages.
+* The `if` property takes an object that works like a MongoDB query criteria object, in a limited way: each property must match the corresponding property of the document. The `$or`, `$and` and `$ne` operators are supported as in MongoDB, along with dot notation to match nested properties. Other MongoDB query features are not supported at this time.
+* The `moduleIf` property works like `if`, but it matches properties of the module rather than the document. Note this extends only to properties passed down to the browser via the `getBrowserData` method of the module in question. You can expose new properties via this method by using the `extendMethods` feature, [as mentioned here](https://docs.apostrophecms.org/reference/modules/piece-type.html#getbrowserdata-req).
 * For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
 :::
 
