@@ -3,7 +3,7 @@ title: Redirecting...
 head:
   - - link
     - rel: canonical
-      href: /guide/development-setup
+      href: /guide/development-setup.html
 ---
 
 <script setup>
@@ -11,7 +11,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter, withBase } from 'vitepress'
 
 const router = useRouter()
-const targetPath = withBase('/guide/development-setup')
+const targetPath = withBase('/guide/development-setup.html')
 
 onMounted(() => {
 
