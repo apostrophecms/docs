@@ -239,9 +239,11 @@ As a reminder, namespacing is primarily necessary for *installable modules* and 
 
 ## Localizing the Apostrophe user interface
 
-The Apostrophe user interface contains many registered strings, currently localized to English and a few other languages. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that. Localizing text in your own **custom** admin UI modules is a separate topic which we'll address later.
+### Core UI localization
 
-To localize Apostrophe's existing user interface strings, we need to create JSON files for the `apostrophe` namespace, which contains all of the phrases for the core UI of Apotrophe. To do that, add JSON files for the locales to a project-level `modules/@apostrophecms/i18n/i18n/apostrophe` directory. The name of the subdirectory determines the namespace. You can also do this in any other module as long as you use an `i18n/apostrophe` subdirectory within that module, keeping these localizations separate from your project-level strings.
+The Apostrophe user interface contains many registered strings, currently localized to English and a few other languages. We will be working to provide more localization files, but if you are interested in adding l10n files to your project for the UI, you are welcome to do that.
+
+To localize Apostrophe's existing user interface strings, we need to create JSON files for the `apostrophe` namespace, which contains all of the phrases for the core UI of Apostrophe. To do that, add JSON files for the locales to a project-level `modules/@apostrophecms/i18n/i18n/apostrophe` directory. The name of the subdirectory determines the namespace. You can also do this in any other module as long as you use an `i18n/apostrophe` subdirectory within that module, keeping these localizations separate from your project-level strings.
 
 Note that separately installed npm modules may use other namespaces, which you can see in their source code. You can create subdirectories for these as well, again keeping these localizations separate from your project-level strings.
 
@@ -249,7 +251,79 @@ In each JSON file, copy the contents of [the Apostrophe core l10n file](https://
 
 Of course, this can be a lot of work and would likely involve tracking down where strings are used for testing purposes. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
 
-### Localizing your own custom Apostrophe user interface modules
+### Localizing schema field labels
+
+An important part of the admin UI that often needs localization is the field labels in your schemas. These labels appear throughout the admin interface and should be presented in the editor's preferred language. You can localize these labels using namespaced keys in your schema fields:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  fields: {
+    add: {
+      location: {
+        type: 'string',
+        label: 'venueStrings:location'
+      },
+      capacity: {
+        type: 'integer',
+        label: 'venueStrings:capacity'
+      }
+    },
+    group: {
+      basics: {
+        label: 'venueStrings:basicInfo',
+        fields: [ 'location', 'capacity' ]
+      }
+    }
+  },
+  // Configure the namespace for browser use since these labels 
+  // appear in the admin UI
+  i18n: {
+    venueStrings: {
+      browser: true  // Makes translations available in the admin UI
+    }
+  }
+};
+```
+<template v-slot:caption>
+/modules/venue/index.js
+</template>
+</AposCodeBlock>
+
+Then add your translations to the corresponding namespace directory:
+
+<AposCodeBlock>
+
+```json
+{
+  "location": "Venue Location",
+  "capacity": "Maximum Capacity",
+  "basicInfo": "Basic Information"
+}
+```
+<template v-slot:caption>
+/modules/venue/i18n/venueStrings/en.json
+</template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```json
+{
+  "location": "Ubicación del lugar",
+  "capacity": "Capacidad máxima",
+  "basicInfo": "Información básica"
+}
+```
+<template v-slot:caption>
+/modules/venue/i18n/venueStrings/es.json
+</template>
+</AposCodeBlock>
+
+Since these labels appear in the admin UI, they need to be configured in your module's top-level i18n property. This property is separate from your schema configuration and contains options for each namespace used in your module. Currently, the only available option is `browser: true`, which tells Apostrophe to include these translations in the browser-side admin UI bundle. Without this setting, the translations would only be available server-side, which works for public-facing content (like Nunjucks templates) but not for the admin UI where the labels need to be available in the browser. Each namespace that needs to be available in the admin UI must be configured with `browser: true`.
+
+### Localizing custom UI modules
 
 If you are [writing your own extensions to the Apostrophe user interface](../custom-ui.md), you will want to localize strings there just as you would in any module, with the following additions:
 
@@ -261,19 +335,19 @@ Here is an example module `index.js` file that sets the `browser: true` flag for
 
 <AposCodeBlock>
 
-  ```javascript
-  module.exports = {
-    // Note this is at top level, not under options
-    i18n: {
-      ourTeamUI: {
-        browser: true
-      }
+```javascript
+module.exports = {
+  // Note this is at top level, not under options
+  i18n: {
+    ourTeamUI: {
+      browser: true
     }
-  };
-  ```
-  <template v-slot:caption>
-    /modules/team-ui/index.js
-  </template>
+  }
+};
+```
+<template v-slot:caption>
+/modules/team-ui/index.js
+</template>
 </AposCodeBlock>
 
 Once that file is in place we can populate the `/modules/team-ui/i18n/ourTeamUI` folder with JSON files as described earlier.
