@@ -321,7 +321,7 @@ Then add your translations to the corresponding namespace directory:
 </template>
 </AposCodeBlock>
 
-Since these labels appear in the admin UI, they need to be configured in your module's top-level i18n property. This property is separate from your schema configuration and contains options for each namespace used in your module. Currently, the only available option is `browser: true`, which tells Apostrophe to include these translations in the browser-side admin UI bundle. Without this setting, the translations would only be available server-side, which works for public-facing content (like Nunjucks templates) but not for the admin UI where the labels need to be available in the browser. Each namespace that needs to be available in the admin UI must be configured with `browser: true`.
+Since these labels will appear in the admin UI, we need to tell Apostrophe to make sure they are available to the browser, not just on the server side. To accomplish this, they need to be configured in your module's top-level `i18n` property. This property is separate from your schema configuration and contains options for each namespace used in your module. Currently, the only available option is `browser: true`, which tells Apostrophe to include these translations in the browser-side admin UI bundle. Without this setting, the translations would only be available server-side, which works for public-facing content (like Nunjucks templates) but not for the admin UI where the labels need to be available in the browser. Each namespace that needs to be available in the admin UI must be configured with `browser: true`.
 
 ### Localizing custom UI modules
 
@@ -339,18 +339,18 @@ Here is an example module `index.js` file that sets the `browser: true` flag for
 module.exports = {
   // Note this is at top level, not under options
   i18n: {
-    ourTeamUI: {
+    venueStrings: {
       browser: true
     }
   }
 };
 ```
 <template v-slot:caption>
-/modules/team-ui/index.js
+/modules/venue/index.js
 </template>
 </AposCodeBlock>
 
-Once that file is in place we can populate the `/modules/team-ui/i18n/ourTeamUI` folder with JSON files as described earlier.
+Once that file is in place we can populate the `/modules/venue/i18n/venueStrings` folder with JSON files as described earlier.
 
 To access our phrases in our custom admin UI Vue components, we invoke `this.$t()` when writing Vue methods, or just `$t()` when in the template block. In all other respects invoking `$t()` works the same way as `__t()`, discussed earlier.
 
