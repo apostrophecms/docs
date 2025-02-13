@@ -174,43 +174,6 @@ modules/access/index.js
 </template>
 </AposCodeBlock>
 
-### `i18n`
-
-If set to a truthy value, Apostrophe will look for an `i18n` subdirectory *in that module* with one or more JSON files with localization string definitions (e.g., `modules/project-languages/es.json`). The JSON file names should match configured locale names. [See the static i18n guide](/guide/localization/static.md) for more information.
-
-If set to an object, there may be `ns` and `browser` properties.
-
-| `i18n` setting | Value type | Description |
-|---------|---------|---------|
-| `ns` | String | A namespace for localization string keys in this module. If undefined, Apostrophe will use the `'default'` namespace. That namespace is intended for project-level localization. |
-| `browser` | Boolean | Set to `true` to make the JSON key/string pairs available on the browser window (e.g., `apos.i18n.i18n.en.default`) *when logged in*. Necessary when localizing strings in the UI, including doc type labels. |
-
-::: info
-The namespace `'apostrophe'` is reserved for Apostrophe's UI. You may intentionally set `ns` to `'apostrophe'` if your goal is to localize the Apostrophe user interface.
-:::
-
-[See the static i18n guide](/guide/localization/static.md) for more information on both settings.
-
-#### Example
-
-<AposCodeBlock>
-
-```javascript
-module.exports = {
-  extend: '@apostrophecms/module',
-  options: {
-    i18n: {
-      namespace: 'projectName',
-      browser: true
-    }
-  }
-}
-```
-<template v-slot:caption>
-modules/project-languages/index.js
-</template>
-</AposCodeBlock>
-
 ### `templateData`
 
 Similar to [`browser`](#browser), the `templateData` module option can be set to an object whose properties will be made available in templates of that module. Properties are attached directly to the `data` object in templates.

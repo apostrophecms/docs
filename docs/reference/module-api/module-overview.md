@@ -16,6 +16,7 @@ Module configuration objects may use the following configuration properties. The
 | [`instantiate`](#instantiate) | Boolean | Prevent a module from being fully instantiated | All |
 | [`bundle`](#bundle) | Object | Identify multiple modules to load | All |
 | [`icons`](#icons) | Object | Register a Material Design icon for the UI | All |
+| [`i18n`](#i18n) | Object | Add translation strings. | All |
 
 ### `extend`
 
@@ -159,6 +160,31 @@ Everything following the `~` becomes part of an `import` statement during the bu
 If you need to convert your icon(s) to Vue components, you can use any of the icons in the `vue-material-design-icons` as a template for constructing a simple wrapper.
 
 At the present time, the same icon cannot be registered under two names (that is, it can't be registered as `my-icon` and as `core-icon` if they both refer to the same icon). Since this can be inconvenient and requires checking the `globalicons.js` file to make sure you are not registering a duplicate, we plan to correct it in an upcoming release.
+
+### `i18n`
+
+An object that configures internationalization behavior for translation namespaces. Most translations in your modules don't require any configuration - they are automatically detected from JSON files in your module's `i18n` directory. This setting is only needed when you want translations to be available in the admin UI.
+
+Each property in the `i18n` object represents a namespace that needs special handling, and its value is an object of configuration options for that namespace. The JSON files for these namespaces should be placed in a subdirectory of your module's `i18n` directory matching the namespace name (e.g., `modules/my-module/i18n/adminStrings/en.json`):
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  // ...
+  i18n: {
+    adminStrings: {
+      browser: true  // Include this namespace in admin UI
+    }
+  }
+};
+```
+<template v-slot:caption>
+index.js
+</template>
+</AposCodeBlock>
+
+The `browser: true` option should only be set for namespaces containing translations needed in the admin UI. For translations used only in server-side rendering (e.g., Nunjucks templates like `{{ __t('Related articles') }}`), no configuration is needed - simply place the JSON files in your module's `i18n` directory and Apostrophe will automatically detect and use them. This optimization keeps the admin UI bundle size smaller by only including the translations it needs.
 
 ## Configuration cascades
 
