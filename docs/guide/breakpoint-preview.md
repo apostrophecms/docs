@@ -89,12 +89,7 @@ While the ApostropheCMS breakpoint preview effectively converts many media queri
 
 #### 1. **Unsupported Parameters**
 Certain media query conditions are not supported or do not translate well to container queries:
-- **Height-based queries**:
-  - `min-height` and `max-height` conditions cannot be applied to containers. Container queries only consider the container's width.
-  - Example of unsupported query:
-    ```css
-    @media (min-height: 600px) { ... }
-    ```
+
 - **Orientation queries**:
   - Parameters like `orientation: landscape` or `orientation: portrait` do not apply to containers, as containers lack inherent orientation.
   - Example of unsupported query:
@@ -108,7 +103,25 @@ Certain media query conditions are not supported or do not translate well to con
     @media (min-aspect-ratio: 16/9) { ... }
     ```
 
-#### 2. **Behavioral Differences**
+#### 2. Operator and Descriptor Limitations
+Some combinations of size-related descriptors and operators will not work since they are invalid CSS media queries:
+
+When `min-width`, `max-width`, `min-height`, or `max-height` are used with `>=` or `<=` operators.
+
+- Example of problematic query:
+  ```css
+    @media (min-width >= 600px) { ... }
+  ```
+
+- Note: These descriptors work when used with standard comparisons:
+  ```css
+    @media (min-width: 600px) { ... } /* Works fine */
+  ```
+  These operators are also fine in the context of a descriptor that accepts a range:
+  ```css
+    @media ( width >= 600px) { ... } /* Works fine */
+
+#### 3. **Behavioral Differences**
 Media queries operate on the **viewport size**, whereas container queries respond to the **size of a specific container**. This distinction can lead to subtle differences in layout and behavior:
 - **Viewport context**:
   - Media queries are global; they consider the entire screen or browser window. If a layout condition depends on the viewport, such as full-page navigation menus, it might not behave as expected when converted to container queries.
@@ -149,11 +162,121 @@ Advanced features of media queries, including experimental or non-standard ones,
 ### Summary of Unsupported or Partially Supported Features
 | **Media Query Feature**       | **Support in Container Queries**       |
 |-------------------------------|---------------------------------------|
-| `min-height` / `max-height`   | ❌ Unsupported                        |
-| `orientation`                 | ❌ Unsupported                        |
-| `aspect-ratio`                | ❌ Unsupported                        |
-| Complex logical conditions    | ⚠️ Partial / Unreliable               |
-| Viewport-relative units       | ⚠️ Not container-aware               |
-| User preference queries       | ❌ Unsupported (e.g., dark mode)      |
+| `orientation` | ❌ Unsupported |
+| `aspect-ratio` | ❌ Unsupported |
+| Complex logical conditions | ⚠️ Not recommended |
+| Viewport-relative units | ⚠️ Not container-aware |
+| User preference queries | ❌ Unsupported (e.g., dark mode) |
+| Unit conversion in @media rules | ❌ Skipped |
+| Basic size queries | ✅ Supported |
+| Print media queries| ✅ Preserved |
 
 ---
+
+# Transform Option
+
+The transform option provides a workaround for handling unsupported media query combinations by allowing you to provide a custom function to modify how media query parameters are converted into container query parameters. This function only affects the media query transformation and does not impact the conversion of viewport units (vh/vw) to container query units (cqh/cqw) within rules.
+
+## Usage
+
+```js
+require('postcss-viewport-to-container-toggle')({
+  transform: (mediaFeature) => string
+})
+```
+
+### Parameters
+
+- `mediaFeature` (string): The original media query parameters that would be transformed into container query parameters.
+
+### Return Value
+
+- Returns a string containing the transformed container query parameters.
+
+### Default Behavior
+
+When no transform function is provided, the plugin uses the original media feature string without modification:
+
+```js
+transform = null // Default value
+// Equivalent to:
+transform = (mediaFeature) => mediaFeature
+```
+
+## Examples
+
+### Basic Transform
+
+```js
+// Custom transformation of media queries
+{
+  transform: (mediaFeature) => {
+    return mediaFeature.replace(/(\d+)px/g, '$1em');
+  }
+}
+
+// Input
+@media (width > 600px) {
+  .element { width: 100vw; }
+}
+
+// Output
+@media (width > 600px) {
+  :where(body:not([data-breakpoint-preview-mode])) .element { width: 100vw; }
+}
+@container (width > 600em) {
+  .element { width: 100cqw; }
+}
+```
+
+### Complex Transform
+
+```js
+// Modify specific types of queries while preserving others
+{
+  transform: (mediaFeature) => {
+    // Convert pixel-based width queries to percentage-based
+    if (mediaFeature.includes('width')) {
+      return mediaFeature.replace(/(\d+)px/g, ($0, $1) => `${($1 / 1920) * 100}%`);
+    }
+    // Leave other queries unchanged
+    return mediaFeature;
+  }
+}
+
+// Input
+@media (width > 600px) and (orientation: landscape) {
+  .element { width: 100vw; height: 50vh; }
+}
+
+// Output
+@media (width > 600px) and (orientation: landscape) {
+  :where(body:not([data-breakpoint-preview-mode])) .element {
+    width: 100vw;
+    height: 50vh;
+  }
+}
+@container (width > 31.25%) and (orientation: landscape) {
+  .element {
+    width: 100cqw;
+    height: 50cqh;
+  }
+}
+```
+
+## Important Notes
+
+1. The transform function is called when converting media queries to container queries.
+2. The plugin creates two sets of rules:
+   - The original media query with a `:where(body:not([data-breakpoint-preview-mode]))` selector
+   - A new container query with the transformed parameters
+3. Print-specific media queries (e.g., `@media print`) are preserved as-is without transformation
+4. The transform function only affects the container query parameters, not the actual CSS properties
+5. When `debug: true` is set, warnings will be shown for unsupported combinations of:
+   - min-width, max-width, min-height, max-height with <= or >= operators
+
+## Limitations
+
+- Print-specific media queries are not transformed
+- The transform function only affects the container query parameters, not the original media query
+- Media queries with `print` and no `screen` or `all` are skipped entirely
