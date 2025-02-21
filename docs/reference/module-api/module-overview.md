@@ -184,7 +184,9 @@ index.js
 </template>
 </AposCodeBlock>
 
-The `browser: true` option should only be set for namespaces containing translations needed in the admin UI. For translations used only in server-side rendering (e.g., Nunjucks templates like `{{ __t('Related articles') }}`), no configuration is needed - simply place the JSON files in your module's `i18n` directory and Apostrophe will automatically detect and use them. This optimization keeps the admin UI bundle size smaller by only including the translations it needs.
+The `browser: true` option should only be set for namespaces containing translations needed in the admin UI. For translations used only in server-side rendering (e.g., Nunjucks templates like
+<span v-pre>`{{ __t('Related articles') }}`</span>
+), no configuration is needed - simply place the JSON files in your module's `i18n` directory and Apostrophe will automatically detect and use them. This optimization keeps the admin UI bundle size smaller by only including the translations it needs.
 
 ## Configuration cascades
 
