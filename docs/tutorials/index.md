@@ -71,6 +71,54 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
   </template>
 </AposTwoColumns>
 
+## Astro Topics
+<AposTwoColumns>
+<template #leftColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="ApostropheCMS and Astro"
+      content="ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
+      url="/tutorials/Astro/apostrophecms-and-astro.html"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="Introducing the Apollo Theme"
+      content="This tutorial will walk through the Apollo theme that provides the perfect starting point for your hybrid project."
+      url="/tutorials/Astro/introducing-apollo.html"
+    />
+  </template>
+</AposTwoColumns>
+<AposTwoColumns>
+<template #leftColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="Creating Pages"
+      content="ApostropheCMS and Astro handle page routing and content through a unified dynamic route system. Learn how to structure your pages, work with slots, and create custom page templates for your site."
+      url="/tutorials/Astro/creating-pages.html"
+    />
+  </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="Creating Widgets"
+      content="Widgets are the building blocks for your site's content areas. Learn how to create widgets that handle nested content, dynamic layouts, and client-side interactivity in your ApostropheCMS + Astro project."
+      url="/tutorials/Astro/creating-widgets.html"
+    />
+  </template>
+</AposTwoColumns>
+<AposTwoColumns>
+<template #leftColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="Creating Pieces"
+      content="TBD"
+      url="/tutorials/Astro/creating-pieces.html"
+    />
+  </template>
+</AposTwoColumns>
+
 ## Pro topics
 <AposTwoColumns>
   <template #leftColumn>

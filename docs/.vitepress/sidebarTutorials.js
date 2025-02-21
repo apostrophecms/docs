@@ -66,6 +66,32 @@ const sidebarTutorials = [
     ]
   },
   {
+    text: 'Astro Topics',
+    collapsed: false,
+    items: [
+      {
+        text: 'ApostropheCMS + Astro',
+        link: 'tutorials/Astro/apostrophe-and-astro.md'
+      },
+      {
+        text: 'Introducing Apollo',
+        link: 'tutorials/Astro/introducing-apollo.md'
+      },
+      {
+        text: 'Creating Pages',
+        link: 'tutorials/Astro/creating-pages.md'
+      },
+      {
+        text: 'Creating Widgets',
+        link: 'tutorials/Astro/creating-widgets.md'
+      },
+      {
+        text: 'Creating Pieces',
+        link: 'tutorials/Astro/creating-pieces.md'
+      }
+    ]
+  },
+  {
     text: 'Pro topics',
     collapsed: false,
     items: [
