@@ -139,7 +139,7 @@ export default {
   // Regular pages
   '@apostrophecms/home-page': HomePage,
   'default-page': DefaultPage,
-  
+
   // Piece pages with their specific templates
   'article-page:index': ArticleIndexPage,
   'article-page:show': ArticleShowPage
@@ -289,31 +289,26 @@ const {
 
 #### 2. Filtering with `piecesFilters`
 
-The `piecesFilters` array provides pre-configured filtering options for your piece collection. This is powered by the [ApostropheCMS filters system](https://docs.apostrophecms.org/guide/piece-pages.html#filtering-by-category) which is configured in the piece page module:
+The `piecesFilters` array provides pre-configured filtering options for your piece collection. This is powered by the [ApostropheCMS filters system](/reference/modules/piece-page-type.html#piecesfilters) which is configured in the piece page module:
 
 ```javascript
 // Example from backend/modules/article-page/index.js
 export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
-    label: 'Article Index Page',
-    pluralLabel: 'Article Index Pages',
-    // Configure the filters that appear on the page
-    filters: {
-      projection: {
-        title: 1,
-        category: 1
-      },
-      columns: {
-        category: true
+    label: 'Article Page',
+    perPage: 7,
+    piecesFilters: [
+      {
+        name: 'category'
       }
-    }
-  }
+    ]
+  },
   // ... more configuration
 };
 ```
 
-The template then renders these as clickable filter tags:
+The template then renders each of the values for the `article` module `category` field as clickable filter tags:
 
 ```javascript
 {
@@ -331,6 +326,7 @@ The template then renders these as clickable filter tags:
   )
 }
 ```
+Clicking on one of these filters will result in the backend populating the `aposData.pieces` with only those that match the filter value. So, you don't need any special markup, just the same markup you use to display all the unfiltered pieces.
 
 #### 3. Pagination
 
@@ -430,110 +426,190 @@ This approach gives content editors flexibility in how they present articles whi
 
 ## Using Pieces Outside Dedicated Pages
 
-While piece pages provide a structured way to display collections, you can also use pieces throughout your site in other contexts. Here's how you might feature recent articles on your home page:
+While piece pages provide a structured way to display collections of content, there are many situations where you'll want to use pieces in other contexts throughout your site. Let's explore three approaches to incorporate pieces anywhere in your site: using built-in API endpoints, creating custom API routes, and leveraging relationships.
+
+### Approach 1: Built-in API Endpoints
+
+An easy way to fetch pieces is through ApostropheCMS's built-in API endpoints. These endpoints accept query parameters that let you filter and sort pieces without writing any backend code.
+
+Here's an example that fetches and displays article pieces that have a `news` category:
 
 ```javascript
 ---
-// In your HomePage.astro component
-import { getAttachmentUrl } from '../lib/attachments.js';
-import formatDate from '../lib/formatDate.js';
+// frontend/src/components/NewsArticles.astro
+const apiUrl = new URL('/api/v1/article', Astro.url.origin);
+// Add query parameters to filter for news category
+apiUrl.searchParams.set('category', 'news');
+// Sort by publish date, most recent first
+apiUrl.searchParams.set('sort', '{"publishDate":-1}');
+// Limit to 5 articles
+apiUrl.searchParams.set('limit', '5');
 
-const { global, page } = Astro.props.aposData;
-
-// Fetch recent articles
-const articles = await fetch(`/api/v1/article?sort={"publishDate":-1}&limit=3`)
-  .then(res => res.json())
-  .then(data => data.results);
+const response = await fetch(apiUrl);
+const { results: newsArticles } = await response.json();
 ---
 
-<section class="recent-articles">
-  <h2>Latest Articles</h2>
-  <div class="articles-grid">
-    {articles.map(article => (
-      <div class="article-card">
-        {article._heroImage?.[0] && (
-          <img 
-            src={getAttachmentUrl(article._heroImage[0], { size: 'one-third' })}
-            alt={article._heroImage[0].title || 'Article image'}
-          />
-        )}
-        <h3><a href={article._url}>{article.title}</a></h3>
-        <p class="date">{formatDate(article.publishDate)}</p>
-        <p class="excerpt">{article.excerpt}</p>
-      </div>
+<div class="latest-news">
+  <h2>Latest News</h2>
+  <div class="news-grid">
+    {newsArticles.map(article => (
+      <article class="news-item">
+        <h3>{article.title}</h3>
+        <p>{article.excerpt}</p>
+        <a href={article._url}>Read More</a>
+      </article>
     ))}
   </div>
+</div>
+```
+
+This approach is perfect for simple filtering and sorting needs - no custom backend code is required. The query parameters correspond directly to MongoDB query operators, giving you powerful filtering capabilities out of the box. You can [read more](/guide/database-queries.html) about this in the main documentation.
+
+### Approach 2: Custom API Routes
+
+Sometimes you need more complex logic to fetch and transform your piece's data. That's where custom API routes come in. Let's look at an example that fetches the latest article from each author and adds a purchase link:
+
+```javascript
+// backend/modules/article/index.js
+apiRoutes(self) {
+  return {
+    get: {
+      async 'latest-by-author'(req) {
+        // Fetch all authors
+        // Since this is the article module, we need to specify
+        // we want documents from the author module
+        const authors = await self.apos.modules.author.find(req).toArray();
+
+        if (!authors.length) {
+          return [];
+        }
+
+        // Fetch the latest article for each author
+        const latestArticles = await Promise.all(authors.map(async (author) => {
+          // Here we can use just `self.find()` since we want article pieces
+          const article = await self.find(req, {
+            // There can be more than one author so it is an array
+            authorIds: { $in: [ author.aposDocId ] }
+          })
+            .sort({ publishDate: -1 })
+            // We only need the title, no since grabbing extra data
+            .project({
+              title: 1
+            })
+            .limit(1)
+            .toArray();
+
+          return article.length
+            ? {
+              author: author.title,
+              articleTitle: article[0].title,
+              purchaseLink: `https://www.amazon.com/s?k=${encodeURIComponent(article[0].title)}`
+            }
+            : null;
+        }));
+
+        // Filter out authors without articles
+        return latestArticles.filter(entry => entry !== null);
+      }
+    }
+  };
+}
+```
+
+Then we can use this custom endpoint in any Astro component:
+
+```javascript
+---
+// frontend/src/templates/HomePage.astro
+const apiUrl = new URL('/api/v1/article/latest-by-author', Astro.url.origin);
+const response = await fetch(apiUrl);
+const latestArticles = await response.json();
+---
+
+<section class="author-latest">
+  <h3>Latest Articles by Our Authors</h3>
+  <ul class="article-list">
+    {
+      latestArticles.length > 0 ? (
+        latestArticles.map((entry) => (
+          <li class="article-item">
+            <strong>{entry.author}</strong>: "{entry.articleTitle}" -
+            <a href={entry.purchaseLink} target="_blank" rel="noopener noreferrer">
+              Buy on Amazon
+            </a>
+          </li>
+        ))
+      ) : (
+        <p>No articles found.</p>
+      )
+    }
+  </ul>
 </section>
 ```
 
-This approach directly queries the ApostropheCMS API to fetch recent articles and display them on the home page, regardless of the page's template type. For more information on the ApostropheCMS REST API, refer to the [API documentation](https://docs.apostrophecms.org/reference/api/pieces.html).
+This approach lets you create specialized endpoints that encapsulate complex business logic while keeping your frontend code clean and focused on presentation.
 
-Alternatively, you could create a dedicated widget for displaying articles:
+### Approach 3: Using Relationships
+
+The third approach leverages ApostropheCMS's relationship fields to connect pieces to your pages or widgets. This is perfect for curated content selections where editors want direct control over which pieces appear.
+
+For example, let's say you want to feature specific articles on your homepage. First, add a relationship field to your home page type:
 
 ```javascript
-// backend/modules/featured-articles-widget/index.js
+// backend/modules/@apostrophecms/home-page/index.js
 export default {
-  extend: '@apostrophecms/widget-type',
-  options: {
-    label: 'Featured Articles'
-  },
   fields: {
     add: {
-      headline: {
-        type: 'string',
-        label: 'Section Headline',
-        def: 'Featured Articles'
-      },
-      _articles: {
+      _featuredArticles: {
         type: 'relationship',
-        label: 'Articles to Feature',
+        label: 'Featured Articles',
         withType: 'article',
         max: 3,
-        required: true
-      },
-      displayExcerpt: {
-        type: 'boolean',
-        label: 'Display Excerpt',
-        def: true
+        builders: {
+          // Only fetch the fields we need
+          project: {
+            title: 1,
+            excerpt: 1,
+            _url: 1
+          }
+        }
       }
     }
   }
 };
 ```
 
-The corresponding Astro component would then display these selected articles:
+Then use these relationships in your home page template:
 
 ```javascript
 ---
-// frontend/src/widgets/FeaturedArticlesWidget.astro
-import { getAttachmentUrl } from '../lib/attachments.js';
-const { widget } = Astro.props;
+// frontend/src/templates/HomePage.astro
+const { page } = Astro.props.aposData;
+const featuredArticles = page._featuredArticles || [];
 ---
 
 <section class="featured-articles">
-  <h2>{widget.headline}</h2>
-  <div class="articles-grid">
-    {widget._articles.map(article => (
-      <div class="article-card">
-        {article._heroImage?.[0] && (
-          <img 
-            src={getAttachmentUrl(article._heroImage[0], { size: 'one-third' })}
-            alt={article._heroImage[0].title || 'Article image'}
-          />
-        )}
-        <h3><a href={article._url}>{article.title}</a></h3>
-        {widget.displayExcerpt && <p>{article.excerpt}</p>}
-      </div>
+  <h2>Featured Articles</h2>
+  <div class="article-grid">
+    {featuredArticles.map(article => (
+      <article class="featured-item">
+        <h3>{article.title}</h3>
+        <p>{article.excerpt}</p>
+        <a href={article._url}>Read More</a>
+      </article>
     ))}
   </div>
 </section>
 ```
 
-This widget-based approach gives content editors more control over which specific articles to feature and how they should be displayed. Remember that to complete this implementation, you would need to:
+The beauty of relationships is that they maintain referential integrity - if an article is archived or deleted, it's automatically removed from the relationships. Plus, editors can easily manage these connections through the ApostropheCMS admin UI.
 
-1. Register the widget in `backend/app.js`
-2. Map the widget in `frontend/src/widgets/index.js`
-3. Add it to the appropriate areas in your page types
+Each of these approaches has its strengths:
+- **Built-in API endpoints** are perfect for simple filtering and sorting
+- **Custom API routes** handle complex data transformations and business logic
+- **Relationships** give editors direct control over content connections
+
+By combining these approaches, you can create rich, interconnected content experiences that go well beyond traditional page-based navigation.
 
 ## The Author Piece Type
 
@@ -572,17 +648,3 @@ And then displayed:
   </div>
 )}
 ```
-
-## Beyond Apollo: Extending Piece Functionality
-
-The same patterns demonstrated with articles and authors can be applied to many other content types:
-
-- Products in an e-commerce site
-- Events in a calendar system
-- Team members in a company directory
-- Locations for a multi-location business
-- Testimonials for display throughout your site
-
-Pieces provide a way to manage collections of similar content items that need to be organized, related to each other, and displayed in various contexts throughout your site.
-
-The integration between ApostropheCMS and Astro makes it particularly powerful to extend piece functionality. You can leverage ApostropheCMS's robust content management features while using Astro's modern frontend capabilities to create dynamic, performant displays of your piece content.

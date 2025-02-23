@@ -113,7 +113,7 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
     <AposCtaButton
       detail-heading="Astro"
       title="Creating Pieces"
-      content="TBD"
+      content="Pieces manage collections of reusable content like articles or team members. Learn how to create, organize, and display piece content throughout your ApostropheCMS + Astro site."
       url="/tutorials/Astro/creating-pieces.html"
     />
   </template>

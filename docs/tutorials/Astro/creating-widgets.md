@@ -177,7 +177,13 @@ Astro provides several routes for adding JavaScript to your the browser. This cc
 
 ### Web Components Approach
 
-Web Components are a great choice for widgets that need to maintain their own state and behavior. The Apollo `VideoWidget` relies on a custom web component to access the ApostropheCMS backend oEmbed endpoint. Within the widget it passes `title` and `URL` data to this component:
+Web Components are a great choice for widgets that need to maintain their own state and behavior. The Apollo `VideoWidget` relies on a custom web component to access the ApostropheCMS backend oEmbed endpoint.
+
+::: info
+You can add additional routes into your ApostropheCMS backend that can be accessed by client-side fetch operations. If they are prefixed with `/api/v1/` they will be proxied by the `apostrophe-astro` extension. If not, they can be added to the `proxyRoutes` array in the extension configuration within the `astro.config.mjs` file.
+:::
+
+Within the widget it passes `title` and `URL` data to this component:
 
 ```javascript
 <video-widget
