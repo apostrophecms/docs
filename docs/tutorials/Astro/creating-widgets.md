@@ -455,6 +455,8 @@ The slideshow widget uses a combination of Astro and ApostropheCMS event handlin
 
 Currently, when a new slideshow widget is first added to a page through ApostropheCMS, a page reload is required for the JavaScript initialization to take effect. However, once the page has been reloaded, the slideshow functions normally and handles preview/edit mode switches correctly. This initial load limitation is a known issue in the current implementation, related to the timing of widget addition and script hydration.
 
+Another approach to initializing JavaScript is to use a `MutationObserver` as we do in the `backend/src/widgets/AccordionWidget.astro`. We won't go through this approach in detail, but you can look through the code to see if it is a preferred approach in your own project.
+
 ## Creating a Custom Testimonial Widget
 
 Let's create a testimonial widget from scratch to demonstrate the complete widget development process. This widget will display customer testimonials with a quote, author name, role, and optional image.
