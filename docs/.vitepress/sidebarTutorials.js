@@ -88,6 +88,10 @@ const sidebarTutorials = [
       {
         text: 'Creating Pieces',
         link: 'tutorials/Astro/creating-pieces.md'
+      },
+      {
+        text: 'Deploying an ApostropheCMS-Astro project',
+        link: 'tutorials/Astro/deploying-hybrid-projects.md'
       }
     ]
   },

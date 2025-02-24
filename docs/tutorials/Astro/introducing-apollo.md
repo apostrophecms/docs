@@ -37,7 +37,6 @@ import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
 import path from 'path';
 
-// https://astro.build/config
 export default defineConfig({
   viewTransitions: true,
   output: "server",
@@ -74,7 +73,7 @@ export default defineConfig({
   }
 });
 ```
-The key parts of this Astro configuration file are the specification of server-side rendering using `output: "server"`, usage of the `node` adapter, and `integration` of the `apostrophe` extension. The `aposHost` setting tells Astro where to find your ApostropheCMS server, defaulting to `localhost:3000` in development. Within the extension configuration, we specify where the template and widget components for mapping to ApostropheCMS documents should be located - we'll cover this mapping system in detail later. We also configure which headers should be passed between the servers: `includeResponseHeaders` preserves important security and caching headers from ApostropheCMS responses, while `excludeRequestHeaders` lets you block specific headers from being forwarded (useful when hosting the frontend and backend on different servers where the host header might cause conflicts). Finally, the `vite.ssr.noExternal` setting ensures the integration can properly handle virtual URLs during server-side rendering.
+The key parts of this Astro configuration file are the specification of server-side rendering using `output: "server"`, usage of the `node` adapter, and `integration` of the `apostrophe` extension. The `aposHost` setting tells Astro where to find your ApostropheCMS server, defaulting to `localhost:3000` in development. This gets set by an environment variable during deployment. Within the extension configuration, we specify where the template and widget components for mapping to ApostropheCMS documents should be located - we'll cover this mapping system in detail later. We also configure which headers should be passed between the servers: `includeResponseHeaders` preserves important security and caching headers from ApostropheCMS responses, while `excludeRequestHeaders` lets you block specific headers from being forwarded (useful when hosting the frontend and backend on different servers where the host header might cause conflicts). Finally, the `vite.ssr.noExternal` setting ensures the integration can properly handle virtual URLs during server-side rendering.
 
 ## Development Environment Set Up
 
@@ -226,8 +225,9 @@ ApostropheCMS provides a structured approach to managing content and design, and
 
 Here's how an area is configured in your backend:
 
+<AposCodeBlock>
+
 ```javascript
-// backend/modules/@apostrophecms/home-page/index.js
 export default {
   fields: {
     add: {
@@ -245,6 +245,11 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+  backend/modules/@apostrophecms/home-page/index.js
+</template>
+</AposCodeBlock>
+
 This area would allow for content managers to add any number of three different widget types - rich-text, image, and row. You can [read about](/guide/areas-and-widgets.html) additional configuration options, like limiting the number of widgets that can be added, and passing options to the individual widgets.
 
 ::: info
@@ -255,8 +260,9 @@ Note two things:
 
 And here's how that same area is rendered in your Astro frontend:
 
-```javascript
-// frontend/src/templates/HomePage.astro
+<AposCodeBlock>
+
+```Astro
 ---
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 const { page } = Astro.props.aposData;
@@ -266,6 +272,11 @@ const { page } = Astro.props.aposData;
   <AposArea area={page.main} />
 </div>
 ```
+<template v-slot:caption>
+  frontend/src/templates/HomePage.astro
+</template>
+</AposCodeBlock>
+
 In this example, the `area` schema field in the ApostropheCMS backend is named `main`. Data from the page is passed into the template through the `aposData` prop. The individual `main` area is then passed to the `AposArea` component through the named `area` prop.
 
 Note that widgets themselves can have areas. For example, the layout widgets in the Apollo theme each have multiple areas for adding content widgets.
@@ -307,7 +318,7 @@ Page types that come from the ApostropheCMS core are prefixed with `@apostrophec
 ApostropheCMS [piece type pages](/guide/piece-pages.html) render an `index` template when viewing the main page of the blog, and a `show` template when viewing a single blog post (a "permalink" page) - these templates are identified by adding the template name following a `:` as a suffix, as shown in the example.
 
 ::: info
-Note that in a standard ApostropheCMS project the file name for them template of a standard page type is `page.html`. While the non-piece type pages don't have a suffix at the end, by default they are treated as if they have `:page` at the end.
+Note that in a standard ApostropheCMS project the file name for the template of a standard page type is `page.html`. While the non-piece type pages don't have a suffix at the end, by default they are treated as if they have `:page` at the end.
 :::
 
 #### Piece Types
@@ -323,7 +334,7 @@ In the frontend, you create:
 - Templates for displaying individual pieces ("show" pages)
 - Templates for displaying lists of pieces ("index" pages)
 
-A blog piece type might have a show template for full articles and an index template for the main blog listing. However, through relationships, these same pieces can appear anywhere on your site - featured posts on your homepage, related articles on other blog posts, or in a "Latest News" widget in your sidebar. This flexibility lets you manage content in one place while displaying it in multiple contexts.
+A blog piece type might have a show template for full articles and an index template for the main blog listing. However, through relationships and use of the REST API endpoints, these same pieces can appear anywhere on your site - featured posts on your homepage, related articles on other blog posts, or in a "Latest News" widget in your sidebar. This flexibility lets you manage content in one place while displaying it in multiple contexts.
 
 #### Widgets
 [Widgets](/guide/core-widgets.html) are the building blocks that editors use to construct content within areas. Unlike pieces or pages, widgets don't exist as standalone content - they are always part of an area field within a page, piece, or another widget. When that parent content is removed, its widgets are removed as well.
@@ -343,8 +354,9 @@ Each widget type requires two key components:
 
 For example, a testimonial widget might look like this in the backend:
 
+<AposCodeBlock>
+
 ```javascript
-// backend/modules/testimonial-widget/index.js
 export default {
   extend: '@apostrophecms/widget-type',
   fields: {
@@ -360,11 +372,16 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+backend/modules/testimonial-widget/index.js
+</template>
+</AposCodeBlock>
 
 And have a corresponding frontend component:
 
-```javascript
-//frontend/src/widgets/TestimonialWidget.astro
+<AposCodeBlock>
+
+```astro
 ---
 const { widget } = Astro.props;
 ---
@@ -374,11 +391,16 @@ const { widget } = Astro.props;
   <cite>{widget.author}</cite>
 </div>
 ```
+<template v-slot:caption>
+frontend/src/widgets/TestimonialWidget.astro
+</template>
+</AposCodeBlock>
 
 Any added widget needs to be mapped in your frontend's `widgets/index.js` file, similar to how templates are mapped:
 
+<AposCodeBlock>
+
 ```javascript
-// frontend/src/widgets/index.js
 import TestimonialWidget from './TestimonialWidget.astro';
 import RichTextWidget from './RichTextWidget.astro';
 
@@ -387,6 +409,10 @@ export default {
   '@apostrophecms/rich-text': RichTextWidget
 };
 ```
+<template v-slot:caption>
+frontend/src/widgets/index.js
+</template>
+</AposCodeBlock>
 
 Just like adding widgets to areas, core widgets should be prefixed with `@apostrophecms/`, while project-level widgets are mapped without prefix. The mapping should leave the `-widget` suffix off of the ApostropheCMS widget name.
 
@@ -404,7 +430,7 @@ This dual-sided development approach allows you to leverage the strengths of bot
 Now that we understand these core concepts - how content is structured in ApostropheCMS and how it maps to Astro components - we can explore how the Apollo Theme puts them into practice. The theme provides a collection of pre-built components that demonstrate these concepts while giving you a foundation to build upon.
 
 ## Introducing the Apollo Theme
-The Apollo theme can serve as a starting point for building out your own project, but is also a complete example of how these two systems can be used together to produce a production-ready site.
+The [Apollo theme](https://github.com/apostrophecms/apollo) can serve as a starting point for building out your own project, but is also a complete example of how these two systems can be used together to produce a production-ready site.
 
 ### Page Types and Layout
 
@@ -436,7 +462,7 @@ The user can then select to view individual articles displayed by the `ArticleSh
 
 The theme includes ten widgets that cover common content needs while demonstrating different aspects of component development. These widgets fall into two main categories: layout and content.
 
-The layout widgets help structure your content in responsive, visually appealing ways. The **Rows** widget creates rows with varying numbers of columns that automatically adjust for different screen sizes. The **Grid Layout** widget provides even more flexibility, allowing you to either select from preconfigured layouts or create custom layouts using CSS grid. These layout components show how complex styling can be abstracted into manageable, reusable pieces.
+The layout widgets help structure your content. The **Rows** widget creates rows with varying numbers of columns that automatically adjust for different screen sizes. The **Grid Layout** widget provides even more flexibility, allowing you to either select from preconfigured layouts or create custom layouts using CSS grid. These layout components show how complex styling can be abstracted into manageable, reusable pieces.
 
 The content widgets allow content managers to add a wide variety of engaging elements to their pages without needing technical knowledge.
 
@@ -466,7 +492,7 @@ The theme includes several helper functions for working with images, whether the
 - Cropped image selection
 - Focal point management
 
-We'll cover the usage of these helpers in detail when we look at implementing widgets and piece types.
+We'll cover the usage of these helpers in more detail when we look at implementing widgets and piece types.
 
 ### Theme Customization
 
@@ -474,4 +500,4 @@ While the Apollo Theme provides a complete website toolbox out of the box, it's 
 
 The theme's component structure makes it easy to extend or replace functionality. Each component is self-contained, with clear separation between content structure and presentation. This means you can modify a component's appearance without affecting its content management capabilities, or extend its functionality while maintaining its existing styling.
 
-Now that we understand these core concepts - how content is structured in ApostropheCMS and how it maps to Astro components - we can explore how the Apollo Theme puts them into practice. In the next section, we'll dive into implementing pages and components, starting with how Astro's single dynamic route handles all your ApostropheCMS content and moving through the creation of both simple and complex page templates. We'll see how these concepts come together in real-world examples, with detailed explanations of the code and patterns you'll use in your own projects.
+Now that we understand these core concepts - how content is structured in ApostropheCMS and how it maps to Astro components - we can explore how the Apollo Theme puts them into practice. In the next section, we'll dive into implementing pages and components, starting with how Astro's single dynamic route handles all your ApostropheCMS content. We'll see how these concepts come together in real-world examples, with detailed explanations of the code and patterns you'll use in your own projects.

@@ -15,6 +15,8 @@ Unlike widgets (which are managed within pages), pieces get their own dedicated 
 
 Let's look at Apollo's article piece module (`backend/modules/article/index.js`) as an example of a piece type implementation:
 
+<AposCodeBlock>
+
 ```javascript
 import { getWidgetGroups } from '../../lib/helpers/area-widgets.js';
 
@@ -106,6 +108,10 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+backend/modules/article/index.js
+</template>
+</AposCodeBlock>
 
 This piece type includes:
 
@@ -115,7 +121,7 @@ This piece type includes:
 - Relationships to other articles (`_related`)
 - Organizational grouping of fields through the `group` property
 
-The relationship between articles and authors demonstrates a key strength of pieces in ApostropheCMS. By specifying `withRelationships: [ '_articles' ]` in the `_author` field, we establish a bidirectional relationship where authors know which articles they've written and articles know who their authors are. For more information on relationships in ApostropheCMS, refer to the [relationship field documentation](https://docs.apostrophecms.org/reference/field-types/relationship.html).
+The relationship between articles and authors demonstrates a key strength of pieces in ApostropheCMS. By specifying `withRelationships: [ '_articles' ]` in the `_author` field, we establish a bidirectional relationship where authors know which articles they've written and articles store who authored them. For more information on relationships in ApostropheCMS, refer to the [relationship field documentation](https://docs.apostrophecms.org/reference/field-types/relationship.html).
 
 ## Displaying Pieces in Astro Templates
 
@@ -130,8 +136,9 @@ Each template comes with multiple layout options in the `frontend/src/layouts/ar
 
 Remember that piece pages require special mapping in your `frontend/src/templates/index.js` file. Unlike regular pages, piece types have both an index template (for listing pieces) and a show template (for individual pieces):
 
+<AposCodeBlock>
+
 ```javascript
-// frontend/src/templates/index.js
 import ArticleIndexPage from './ArticleIndexPage.astro';
 import ArticleShowPage from './ArticleShowPage.astro';
 
@@ -145,6 +152,10 @@ export default {
   'article-page:show': ArticleShowPage
 };
 ```
+<template v-slot:caption>
+frontend/src/templates/index.js
+</template>
+</AposCodeBlock>
 
 The `:index` and `:show` suffixes tell ApostropheCMS which template to use for each view. This mapping ensures that when users navigate to an article listing page or an individual article, the correct template is rendered.
 
@@ -152,7 +163,9 @@ The `:index` and `:show` suffixes tell ApostropheCMS which template to use for e
 
 The `ArticleIndexPage.astro` template demonstrates several important concepts for displaying collections of pieces:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
 import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
@@ -268,6 +281,10 @@ for (let i = 1; i <= totalPages; i++) {
   </div>
 </section>
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
 
 This template highlights several important features:
 
@@ -291,8 +308,9 @@ const {
 
 The `piecesFilters` array provides pre-configured filtering options for your piece collection. This is powered by the [ApostropheCMS filters system](/reference/modules/piece-page-type.html#piecesfilters) which is configured in the piece page module:
 
+<AposCodeBlock>
+
 ```javascript
-// Example from backend/modules/article-page/index.js
 export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -307,10 +325,16 @@ export default {
   // ... more configuration
 };
 ```
+<template v-slot:caption>
+backend/modules/article-page/index.js
+</template>
+</AposCodeBlock>
 
 The template then renders each of the values for the `article` module `category` field as clickable filter tags:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 {
   Array.isArray(piecesFilters) && piecesFilters.length > 0 && (
     <div class='tags are-medium mb-5'>
@@ -326,6 +350,11 @@ The template then renders each of the values for the `article` module `category`
   )
 }
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
+
 Clicking on one of these filters will result in the backend populating the `aposData.pieces` with only those that match the filter value. So, you don't need any special markup, just the same markup you use to display all the unfiltered pieces.
 
 #### 3. Pagination
@@ -334,7 +363,9 @@ The template handles pagination in two parts:
 
 First, it generates an array of page objects with URLs:
 
-```javascript
+<AposCodeBlock>
+
+```js-astro
 const pages = [];
 for (let i = 1; i <= totalPages; i++) {
   pages.push({
@@ -344,12 +375,18 @@ for (let i = 1; i <= totalPages; i++) {
   });
 }
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
 
 The `setParameter` helper from the `apostrophe-astro` package ensures that pagination URLs maintain other query parameters (like active filters) while changing only the page number.
 
 Then it renders a pagination component if there's more than one page:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 {totalPages > 1 && (
   <Pagination
   currentPage={currentPage}
@@ -359,12 +396,18 @@ Then it renders a pagination component if there's more than one page:
   />
 )}
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
 
 #### 4. Dynamic Layout Selection
 
 The template renders different layouts based on the `indexLayout` value from the page document:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 {page.indexLayout === 'heroGrid' && (
   <HeroGrid
     pieces={pieces}
@@ -383,23 +426,26 @@ The template renders different layouts based on the `indexLayout` value from the
   />
 )}
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
 
 This allows content editors to select their preferred layout from the page settings in the ApostropheCMS admin UI.
 
 ### The Show Page: Displaying Individual Articles
 
-The `ArticleShowPage.astro` template is simpler but demonstrates a similar dynamic layout approach:
+The `ArticleShowPage.astro` template is more simple, but demonstrates a similar dynamic layout approach:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
 import FullWidth from '../layouts/article-layouts/ShowFullWidth.astro';
 import Magazine from '../layouts/article-layouts/ShowMagazine.astro';
 import Minimal from '../layouts/article-layouts/ShowMinimal.astro';
 
-const {
-  page,
-  piece
-} = Astro.props.aposData;
+const { piece } = Astro.props.aposData;
 
 const layouts = {
   fullWidth: FullWidth,
@@ -414,6 +460,10 @@ const SelectedLayout = layouts[page.showLayout] || FullWidth;
   <SelectedLayout article={piece} />
 </div>
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleShowPage.astro
+</template>
+</AposCodeBlock>
 
 Key points from this template:
 
@@ -469,8 +519,9 @@ This approach is perfect for simple filtering and sorting needs - no custom back
 
 Sometimes you need more complex logic to fetch and transform your piece's data. That's where custom API routes come in. Let's look at an example that fetches the latest article from each author and adds a purchase link:
 
+<AposCodeBlock>
+
 ```javascript
-// backend/modules/article/index.js
 apiRoutes(self) {
   return {
     get: {
@@ -515,12 +566,17 @@ apiRoutes(self) {
   };
 }
 ```
+<template v-slot:caption>
+backend/modules/article/index.js
+</template>
+</AposCodeBlock>
 
 Then we can use this custom endpoint in any Astro component:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
-// frontend/src/templates/HomePage.astro
 const apiUrl = new URL('/api/v1/article/latest-by-author', Astro.url.origin);
 const response = await fetch(apiUrl);
 const latestArticles = await response.json();
@@ -546,6 +602,10 @@ const latestArticles = await response.json();
   </ul>
 </section>
 ```
+<template v-slot:caption>
+frontend/src/templates/HomePage.astro
+</template>
+</AposCodeBlock>
 
 This approach lets you create specialized endpoints that encapsulate complex business logic while keeping your frontend code clean and focused on presentation.
 
@@ -555,8 +615,9 @@ The third approach leverages ApostropheCMS's relationship fields to connect piec
 
 For example, let's say you want to feature specific articles on your homepage. First, add a relationship field to your home page type:
 
+<AposCodeBlock>
+
 ```javascript
-// backend/modules/@apostrophecms/home-page/index.js
 export default {
   fields: {
     add: {
@@ -578,12 +639,17 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+backend/modules/@apostrophecms/home-page/index.js
+</template>
+</AposCodeBlock>
 
 Then use these relationships in your home page template:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
-// frontend/src/templates/HomePage.astro
 const { page } = Astro.props.aposData;
 const featuredArticles = page._featuredArticles || [];
 ---
@@ -601,6 +667,10 @@ const featuredArticles = page._featuredArticles || [];
   </div>
 </section>
 ```
+<template v-slot:caption>
+frontend/src/templates/HomePage.astro
+</template>
+</AposCodeBlock>
 
 The beauty of relationships is that they maintain referential integrity - if an article is archived or deleted, it's automatically removed from the relationships. Plus, editors can easily manage these connections through the ApostropheCMS admin UI.
 
@@ -631,7 +701,7 @@ const authors = piece._author || [];
 
 And then displayed:
 
-```html
+```astro
 <!-- Display author information -->
 {authors.length > 0 && (
   <div class="article-authors">

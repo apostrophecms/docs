@@ -117,6 +117,14 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
       url="/tutorials/Astro/creating-pieces.html"
     />
   </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Astro"
+      title="Deploying ApostropheCMS-Astro Projects"
+      content="Make your ApostropheCMS + Astro project public. Learn deployment options, environment configuration, and hosting best practices for your integrated application."
+      url="/tutorials/Astro/deploying-hybrid-projects.html"
+    />
+  </template>
 </AposTwoColumns>
 
 ## Pro topics

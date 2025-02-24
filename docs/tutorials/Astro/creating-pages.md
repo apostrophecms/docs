@@ -7,7 +7,7 @@ If you're coming from ApostropheCMS, Astro's page structure might look quite dif
 **Frontmatter Scripts**
 Astro pages begin with a frontmatter section enclosed by triple dashes (---). This section contains JavaScript that runs during server-side rendering:
 
-```javascript
+```astro
 ---
 // This is the frontmatter section
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
@@ -30,7 +30,7 @@ The frontmatter is where you:
 **Template Section**
 After the frontmatter comes the template section, which contains your HTML markup and component usage:
 
-```javascript
+```astro
 <section class="main-content">
   <h1>{page.title}</h1>
   <AposArea area={page.main} />
@@ -46,7 +46,7 @@ The template section supports:
 **Styles & Scripts**
 Astro components can include scoped styles, global styles, and client-side scripts with a number of options for rendering. Consult the documentation for [styling](https://docs.astro.build/en/guides/styling/) and [adding scripts](https://docs.astro.build/en/guides/client-side-scripts/) for additional details.
 
-```javascript
+```html
 <style>
   /* These styles only affect this component */
   .main-content {
@@ -74,7 +74,7 @@ In this hybrid setup, all page routing is handled through a single dynamic route
 
 <AposCodeBlock>
 
-```javascript
+```astro
 ---
 import aposPageFetch from '@apostrophecms/apostrophe-astro/lib/aposPageFetch.js';
 import AposLayout from '@apostrophecms/apostrophe-astro/components/layouts/AposLayout.astro';
@@ -166,7 +166,7 @@ The full `[...slug].astro` file in the Apollo theme also handles 404 errors and 
 
 ## Template Slot Limitations
 
-When working with Apostrophe-Astro, it's important to understand how template content and slots work:
+When working with an ApostropheCMS-Astro project, it's important to understand how template content and slots work:
 
 1. Individual page templates (like `HomePage.astro` or `DefaultPage.astro`) can only render content within the `main` slot because the `AposTemplate` component is specifically placed in the `main` slot in your `[...slug].astro` file:
 
@@ -182,7 +182,7 @@ There are several approaches to customizing your pages in an ApostropheCMS and A
 
 <AposCodeBlock>
 
-```javascript
+```astro
 ---
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -205,13 +205,13 @@ import SiteFooter from '../components/SiteFooter.astro';
 </AposLayout>
 ```
   <template v-slot:caption>
-    backend/src/pages/[...slug].astro
+    frontend/src/pages/[...slug].astro
   </template>
 </AposCodeBlock>
 
 While this is the approach used in Apollo, there are other valid strategies you might consider. You could use conditional rendering based on page types - for example, showing different components or styles on your home page versus other pages.
 
-```javascript
+```astro
 <Fragment slot="standardHead">
   <meta name="description" content={aposData.page?.seoDescription} />
   {isHomePage && <link rel="stylesheet" href="/styles/home.css" />}
@@ -220,17 +220,25 @@ While this is the approach used in Apollo, there are other valid strategies you 
 
 Another approach is to pass custom props through to your page templates, allowing for more dynamic customization of how each template renders.
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
-// [...slug].astro
 const customProps = {
   showSidebar: aposData.page?.type === 'default-page',
   theme: aposData.page?.type === '@apostrophecms/home-page' ? 'dark' : 'light'
 };
 ---
 <AposTemplate {aposData} slot="main" {...customProps} />
+```
+<template v-slot:caption>
+frontend/src/pages/[...slug].astro
+</template>
+</AposCodeBlock>
 
-// DefaultPage.astro
+<AposCodeBlock>
+
+```astro
 ---
 const { showSidebar, theme } = Astro.props;
 ---
@@ -241,6 +249,11 @@ const { showSidebar, theme } = Astro.props;
   </main>
 </div>
 ```
+<template v-slot:caption>
+frontend/src/templates/DefaultPage.astro
+</template>
+</AposCodeBlock>
+
 Each of these strategies serves different needs in your site architecture. The first option provides a clean way to manage global elements, the second allows for page-specific customizations, and the third offers deep template customization through props. You can mix and match these approaches based on your specific requirements - for instance, using global elements for your header and footer while employing props for page-specific customizations.
 
 While there are many ways to organize your templates and slots, the key is to use component composition effectively. Breaking down slot management into reusable components makes your code more maintainable and easier to test. Choose the approach that best fits your project's needs, whether that's organizing slots in the main layout file or creating dedicated components for different sections of your site.
@@ -306,6 +319,8 @@ This setup is exactly what you would see in a standard ApostropheCMS project wit
 
 Next, we need to add the page to the `backend/app.js` file.
 
+<AposCodeBlock>
+
 ```javascript
 import apostrophe from 'apostrophe';
 
@@ -318,8 +333,14 @@ export default apostrophe({
   }
 });
 ```
+<template v-slot:caption>
+backend/app.js
+</template>
+</AposCodeBlock>
 
 Finally, we need to register the page so that it shows up as a page type for the content manager to select from the page creation modal. This is accomplished by adding it to the `types` array in the `backend/modules/@apostrophecms/page/index.js` file:
+
+<AposCodeBlock>
 
 ```javascript
 export default {
@@ -346,6 +367,11 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+backend/modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
+
 In this case, our `default-page` module is at the project-level, so we don't prefix it with `@apostrophecms/`.
 
 ### Frontend Template
@@ -354,7 +380,7 @@ Next, we need a frontend template to render the page. Instead of creating pages 
 
 <AposCodeBlock>
 
-```javascript
+```astro
 ---
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 const { page, user, query } = Astro.props.aposData;
@@ -428,6 +454,8 @@ In a standard ApostropheCMS project, this would be accomplished by adding `index
 
 To handle this, the template mapping uses a suffix notation with `:index` and `:show` to specify which template handles which view:
 
+<AposCodeBlock>
+
 ```javascript
 // other template imports
 import ArticleIndexPage from './ArticleIndexPage.astro';
@@ -442,14 +470,19 @@ export default {
   'article-page:show': ArticleShowPage
 };
 ```
+<template v-slot:caption>
+frontend/src/templates/index.js
+</template>
+</AposCodeBlock>
 
 ## Handling Index Pages
 
 Index templates need to handle not just the display of multiple pieces, but also pagination and filtering. We will cover this in greater depth, along with options that can be passed to your piece page type when we cover pieces. As a first glance, ApostropheCMS provides extra data to these types of pages through the `aposData` prop:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
-// frontend/src/templates/ArticleIndexPage.astro
 const {
   pieces,      // Array of pieces for current page
   totalPages,  // Total number of pages
@@ -467,6 +500,11 @@ const {
   ))}
 </div>
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleIndexPage.astro
+</template>
+</AposCodeBlock>
+
 The template uses Astro's curly brace syntax for dynamic content. Inside these braces, you can write JavaScript expressions, including array methods like map().
 This code:
 
@@ -475,7 +513,7 @@ This code:
 3. Creates an `<article>` element for each piece
 4. Uses curly braces to insert the article's URL and title into the HTML
 
-The curly braces tell Astro to evaluate the JavaScript expression inside and insert the result into the HTML. This is similar to other template systems like `{{ }}` in Vue or `<%= %>` in EJS, but with native JavaScript syntax.
+The curly braces tell Astro to evaluate the JavaScript expression inside and insert the result into the HTML. This is similar to other template systems like <span v-pre>`{{ }}`</span> in Vue or `<%= %>` in EJS, but with native JavaScript syntax.
 
 We can use the pagination data passed into our piece page to create our own pagination, but as we will cover in the section on pieces, we can also use a helper component from the `apostrophe-astro` extension.
 
@@ -483,9 +521,10 @@ We can use the pagination data passed into our piece page to create our own pagi
 
 Show templates receive the individual piece through the `piece` property of `aposData`:
 
-```javascript
+<AposCodeBlock>
+
+```astro
 ---
-// frontend/src/templates/ArticleShowPage.astro
 const { piece: article } = Astro.props.aposData;
 ---
 
@@ -502,6 +541,10 @@ const { piece: article } = Astro.props.aposData;
   )}
 </article>
 ```
+<template v-slot:caption>
+frontend/src/templates/ArticleShowPage.astro
+</template>
+</AposCodeBlock>
 
 ### URL Generation
 
@@ -516,7 +559,8 @@ Note that piece documents include a `_url` property that provides the correct UR
 ### Working with Query Parameters
 When building interactive pages, you'll often need to work with query parameters for features like pagination, filtering, or search. The `apostrophe-astro` package provides the `aposSetQueryParameter` helper to safely manage URL parameters while preserving ApostropheCMS's admin UI parameters:
 
-```javascript
+```astro
+---
 import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
 
 // Add or update a parameter
@@ -524,13 +568,15 @@ const filterUrl = setParameter(Astro.url, 'category', 'news');
 
 // Remove a parameter by passing empty string
 const clearFilter = setParameter(Astro.url, 'category', '');
+---
 ```
 
 #### Accessing Global Data
 ApostropheCMS provides a global document for site-wide settings and content. This is configured in your backend through the `@apostrophecms/global` module:
 
+<AposCodeBlock>
+
 ```javascript
-// backend/modules/@apostrophecms/global/index.js
 export default {
   fields: {
     add: {
@@ -590,14 +636,19 @@ export default {
   }
 };
 ```
+<template v-slot:caption>
+backend/modules/@apostrophecms/global/index.js
+</template>
+</AposCodeBlock>
 
 This global data is then available in any Astro template through the `aposData` prop:
 
-```javascript
+```astro
+---
 const { global } = Astro.props.aposData;
-
+---
 // Using simple fields
-<title>{global.siteTitle}</title>
+<h1>{global.siteTitle}</h1>
 
 // Using areas
 <footer>
