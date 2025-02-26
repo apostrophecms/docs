@@ -255,7 +255,7 @@ This area would allow for content managers to add any number of three different 
 ::: info
 Note two things:
   - the widgets are passed into the area options without including the `-widget` suffix
-  - widgets that come from the ApostropheCMS core are prefixed with `@apostrophecms/` - This is also true for any other widgets that come from official ApostropheCMS npm pages
+  - widgets that come from the ApostropheCMS core are prefixed with `@apostrophecms/` - This is also true for any other widgets that come from official ApostropheCMS npm packages
 :::
 
 And here's how that same area is rendered in your Astro frontend:

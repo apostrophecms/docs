@@ -551,7 +551,7 @@ Sometimes you need more complex logic to fetch and transform your piece's data. 
 apiRoutes(self) {
   return {
     get: {
-      async 'latestByAuthor'(req) {
+      async latestByAuthor(req) {
         // Fetch all authors
         // Since this is the article module, we need to specify
         // we want documents from the author module

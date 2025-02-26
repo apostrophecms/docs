@@ -175,17 +175,23 @@ Your Astro frontend can be deployed to any service, including our [managed hosti
 
 #### Common Frontend Hosting Options
 
-1. **Netlify**
+1. **ApostropheCMS**
+  - Hosts the combined Astro + ApostropheCMS monorepo in one step
+  - Zero latency when Astro communicates with ApostropheCMS
+  - Configures MongoDB and S3 automatically
+  - Provides `APOS_EXTERNAL_FRONTEND_KEY` automatically
+
+2. **Netlify**
    - Excellent Astro integration
    - Easy setup with continuous deployment
    - Great for sites with moderate traffic
 
-2. **Vercel**
+3. **Vercel**
    - Strong Node.js support
    - Optimized for SSR applications
    - Robust edge network
 
-3. **Cloudflare Pages**
+4. **Cloudflare Pages**
    - Global CDN with edge computing
    - Strong caching capabilities
    - Good for high-traffic sites
