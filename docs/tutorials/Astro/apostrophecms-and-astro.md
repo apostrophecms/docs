@@ -6,15 +6,15 @@ The tutorials in this section will guide you through building modern websites us
 
 ### Who Is This For?
 
-**Current ApostropheCMS Developers**
-- You're experienced with ApostropheCMS and ready to explore additional frontend options
-- You're interested in expanding your stack to include modern frontend frameworks alongside ApostropheCMS's powerful content management
-- You want to enhance your sites while preserving the intuitive in-context editing experience your clients value
-
 **Astro Developers**
 - You need a robust CMS backend for your Astro projects
 - You want more than just a headless CMS - you need full in-context editing
 - You're looking for a flexible content management system that works with your existing components
+
+**Current ApostropheCMS Developers**
+- You're experienced with ApostropheCMS and ready to explore additional frontend options
+- You're interested in expanding your stack to include modern frontend frameworks alongside ApostropheCMS's powerful content management
+- You want to enhance your sites while preserving the intuitive in-context editing experience your clients value
 
 **Teams Building Modern Websites**
 - You're looking for a modern, flexible CMS solution
@@ -48,4 +48,4 @@ If you get stuck:
 - Review the [Astro documentation](https://docs.astro.build)
 - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
 
-Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/Astro/introducing-apollo.html).
+Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html).

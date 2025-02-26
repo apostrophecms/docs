@@ -64,7 +64,7 @@ Astro components can include scoped styles, global styles, and client-side scrip
   });
 </script>
 ```
-Unlike the frontmatter section which runs during server-side rendering, code in the `<script>` tag runs in the browser after the component loads. Because of how Astro hydrates the page, you typically don't need to add something like a `DOMContentLoaded` listener. Some widgets that interact with the ApostropheCMS admin UI may require additional timing considerations, which we'll cover in the widgets section.
+Unlike the frontmatter section which runs during server-side rendering, code in the `<script>` tag runs client-side. Astro deduplicates script tags from the same component, ensuring each script only appears once in the final HTML, regardless of how many component instances exist on the page. The script executes once when loaded by the browser (after the DOM is ready), so you don't need a `DOMContentLoaded` listener. If your component appears multiple times, your script should use DOM queries to find and initialize all instances. Some widgets that interact with the ApostropheCMS admin UI may require additional initialization strategies, which we'll cover in the widgets section.
 
 Now that we understand Astro's structure, let's look at how pages work in an ApostropheCMS + Astro project.
 
@@ -97,7 +97,7 @@ const bodyClass = `myclass`;
   </template>
 </AposCodeBlock>
 
-Let's do a walk through of the relevant sections of code:
+Let's do a walkthrough of the relevant sections of code:
 
 ``` javascript
 import aposPageFetch from '@apostrophecms/apostrophe-astro/lib/aposPageFetch.js';
@@ -174,7 +174,7 @@ When working with an ApostropheCMS-Astro project, it's important to understand h
 <AposTemplate {aposData} slot="main" />
 ```
 
-2. Content that needs to appear in other slots (like `startHead`, `standardHead`, `beforeMain`, etc.) must be defined in your `[...slug].astro` file or added programmatically to the page.
+1. Content that needs to appear in other slots (like `startHead`, `standardHead`, `beforeMain`, etc.) must be defined in your `[...slug].astro` file.
 
 ## Customization Strategies
 
@@ -210,6 +210,9 @@ import SiteFooter from '../components/SiteFooter.astro';
 </AposCodeBlock>
 
 While this is the approach used in Apollo, there are other valid strategies you might consider. You could use conditional rendering based on page types - for example, showing different components or styles on your home page versus other pages.
+ In your `[...slug].astro` page:
+
+<AposCodeBlock>
 
 ```astro
 <Fragment slot="standardHead">
@@ -217,6 +220,28 @@ While this is the approach used in Apollo, there are other valid strategies you 
   {isHomePage && <link rel="stylesheet" href="/styles/home.css" />}
 </Fragment>
 ```
+<template v-slot:caption>
+backend/src/pages/[...slug].astro
+</template>
+</AposCodeBlock>
+
+And in your `HomePage.astro` template:
+
+<AposCodeBlock>
+
+```astro
+----
+// imports and other code
+
+const isHomePage = aposData.page?.type === '@apostrophecms/home-page';
+---
+```
+<template v-slot:caption>
+backend/src/templates/HomePage.astro
+</template>
+</AposCodeBlock>
+
+Adding this check to the frontmatter of your HomePage template will check the type of page data being supplied by the backend (ApostropheCMS). This will set the `isHomePage` variable and in turn conditionally determine the addition of the extra styling.
 
 Another approach is to pass custom props through to your page templates, allowing for more dynamic customization of how each template renders.
 
@@ -270,14 +295,14 @@ This slot system provides a structured way to organize your site's content while
 
 ## Implementing a Default Page
 
-Now let's look at a simple default page type that can be used for basic content pages. This requires configuration in both the backend and frontend.
+Now let's look at a simple default page type that can be used for basic content pages. This requires configuration in both the backend (ApostropheCMS) and frontend (Astro).
 
 ### Backend Configuration
 
 The backend ApostropheCMS module defines the page type's structure and available content areas.
 
 ::: info
-The Apollo project uses ECMAScript modules (ESM) syntax in the backend code rather than CommonJS (CJS). This aligns with modern JavaScript practices and is the recommended approach for new ApostropheCMS projects.
+The Apollo project uses ECMAScript modules (ESM) syntax in the ApostropheCMS backend code rather than CommonJS (CJS). This aligns with modern JavaScript practices and is the recommended approach for new ApostropheCMS projects. You don't have to follow this pattern, but keep in mind the entire backend project must be written with 100% ESM or 100% CommonJS.
 :::
 
 <AposCodeBlock>
@@ -376,7 +401,7 @@ In this case, our `default-page` module is at the project-level, so we don't pre
 
 ### Frontend Template
 
-Next, we need a frontend template to render the page. Instead of creating pages in the `src/pages` directory, we create them in the `src/templates` directory. These templates correspond to your ApostropheCMS page types.
+Next, we need a frontend (Astro) template to render the page. Instead of creating pages in the `src/pages` directory, we create them in the `src/templates` directory. These templates correspond to your ApostropheCMS page types.
 
 <AposCodeBlock>
 
@@ -403,14 +428,14 @@ Common data properties for page templates include:
 const {
   page,      // The current page document
   piece,     // Current piece (for show pages)
-  pieces,    // Array of pieces (for index pages),
+  pieces,    // Array of pieces (for index pages)
   user,      // Current user info
   query,     // URL query parameters
   global     // Global document
 } = Astro.props.aposData;
 ```
 
-Second, it shows the import of the `AposArea` component that is used to easily output the area widget content to the page. Here, we are passing in the contents of the `main` schema field that we set up in the ApostropheCMS schema field to the `area` named prop.
+Second, it shows the import of the `AposArea` component that is used to easily output each user-edited area's widget content to the page. Here, we are passing in the contents of the `main` schema field that we set up in the ApostropheCMS schema field as the `area` prop.
 
 ::: info
 You can pass any number of props to the `AposArea` component besides the required `area` named prop. You just need to have your widget template destructure those props from the `Astro.props` to use them. This is shown with the implementation of the core `ImageWidget.astro` component and the author piece image in the `backend/src/layouts/article-layouts/HeroGrid.astro` template.
@@ -418,7 +443,7 @@ You can pass any number of props to the `AposArea` component besides the require
 
 ### Template Mapping
 
-To connect the backend and frontend, we need to map the page type to its template:
+To connect the backend (ApostropheCMS) and frontend (Astro), we need to map the page type to its template:
 
 <AposCodeBlock>
 
@@ -601,7 +626,6 @@ export default {
           }
         }
       },
-      // Even relationships
       socialLinks: {
         type: 'array',
         label: 'Social Media Links',
@@ -641,7 +665,7 @@ backend/modules/@apostrophecms/global/index.js
 </template>
 </AposCodeBlock>
 
-This global data is then available in any Astro template through the `aposData` prop:
+The global data is then available in any Astro template through the `aposData` prop. This also means that you should use relationships sparingly in the global document. Remember they must be loaded on every page view.
 
 ```astro
 ---

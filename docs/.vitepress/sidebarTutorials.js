@@ -71,27 +71,27 @@ const sidebarTutorials = [
     items: [
       {
         text: 'ApostropheCMS + Astro',
-        link: 'tutorials/Astro/apostrophe-and-astro.md'
+        link: 'tutorials/astro/apostrophe-and-astro.md'
       },
       {
         text: 'Introducing Apollo',
-        link: 'tutorials/Astro/introducing-apollo.md'
+        link: 'tutorials/astro/introducing-apollo.md'
       },
       {
         text: 'Creating Pages',
-        link: 'tutorials/Astro/creating-pages.md'
+        link: 'tutorials/astro/creating-pages.md'
       },
       {
         text: 'Creating Widgets',
-        link: 'tutorials/Astro/creating-widgets.md'
+        link: 'tutorials/astro/creating-widgets.md'
       },
       {
         text: 'Creating Pieces',
-        link: 'tutorials/Astro/creating-pieces.md'
+        link: 'tutorials/astro/creating-pieces.md'
       },
       {
         text: 'Deploying an ApostropheCMS-Astro project',
-        link: 'tutorials/Astro/deploying-hybrid-projects.md'
+        link: 'tutorials/astro/deploying-hybrid-projects.md'
       }
     ]
   },

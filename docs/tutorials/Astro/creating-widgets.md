@@ -1,7 +1,61 @@
 # Creating Widgets in ApostropheCMS + Astro
-Widgets are the fundamental building blocks of content in ApostropheCMS. They allow content editors to change the page layout, add images, or rich text to a page. As we covered in the [Core Concepts](/tutorials/Astro/introducing-apollo.html#core-concepts) section of the Apollo introduction, this occurs through the addition of widgets to areas on the page. As we will briefly touch on, Astro also allows developers to reuse widgets as components added directly to the page. To understand widget creation, we will first look at several widgets from the Apollo theme and then create a new widget from scratch.
+Widgets are the fundamental building blocks of content in ApostropheCMS. They allow content editors to change the page layout, add images, or rich text to a page. As we covered in the [Core Concepts](/tutorials/astro/introducing-apollo.html#core-concepts) section of the Apollo introduction, this occurs through the addition of widgets to areas on the page. As we will briefly touch on, Astro also allows developers to reuse widgets as components added directly to the page. To understand widget creation, we will first look at several widgets from the Apollo theme and then create a new widget from scratch.
 
 This tutorial provides only a brief introduction to widget development in ApostropheCMS, but there's much more to explore. For comprehensive documentation on Apostrophe's field types, query syntax, and advanced widget features, visit the [core ApostropheCMS documentation](https://docs.apostrophecms.org).
+
+## Understanding Widget Mapping
+
+As with pages, when ApostropheCMS serves content containing widgets, the Astro frontend needs to know which component should render each widget type. This is handled through a mapping configuration defined in your Astro project.
+
+The mapping between ApostropheCMS widget types and Astro components is defined in the `frontend/src/widgets/index.js` file:
+
+<AposCodeBlock>
+
+```javascript
+import RichTextWidget from './RichTextWidget.astro';
+import ImageWidget from './ImageWidget.astro';
+import VideoWidget from './VideoWidget.astro';
+import GridLayoutWidget from './GridLayoutWidget.astro';
+import AccordionWidget from './AccordionWidget.astro';
+import CardWidget from './CardWidget.astro';
+import HeroWidget from './HeroWidget.astro';
+import LinkWidget from './LinkWidget.astro';
+import SlideshowWidget from './SlideshowWidget.astro';
+import RowsWidget from './RowsWidget.astro';
+
+const widgetComponents = {
+  '@apostrophecms/rich-text': RichTextWidget,
+  '@apostrophecms/image': ImageWidget,
+  '@apostrophecms/video': VideoWidget,
+  'grid-layout': GridLayoutWidget,
+  'accordion': AccordionWidget,
+  'card': CardWidget,
+  'hero': HeroWidget,
+  'link': LinkWidget,
+  'slideshow': SlideshowWidget,
+  'rows': RowsWidget
+};
+
+export default widgetComponents;
+```
+<template v-slot:caption>
+frontend/src/widgets/index.js
+</template>
+</AposCodeBlock>
+
+This mapping file is referenced in your `astro.config.mjs` through the `apostrophe` integration settings:
+
+```javascript
+// astro.config.mjs
+integrations: [apostrophe({
+  // Other configuration...
+  widgetsMapping: './src/widgets',
+  // Additional settings...
+})],
+```
+If desired, you could use this configuration setting to specify that the mapping come from a different file.
+
+As with pages, core widgets and widgets added through packages in the node modules are prefixed with the namespace, e.g. `@apostrophecms/widget-name`. Project-level widgets use just the base name. For all the widgets you remove the `-widget` suffix.
 
 ## The Apollo Rows Widget
 ![The rows-widget edit modal](../../images/apollo-rows-widget.png)
@@ -101,7 +155,32 @@ backend/modules/rows-widget
 </template>
 </AposCodeBlock>
 
-The `if` condition with `$or` operator is part of ApostropheCMS's MongoDB-style query syntax. It's used throughout Apostrophe for conditional field visibility, permissions, and querying content. Each potential column gets its own uniquely named area, which becomes available for content only when the chosen layout supports it.  The `getWidgetGroups` helper ensures that each area accepts the same set of widgets, excluding the grid layout to prevent nesting conflicts.
+The `if` condition with `$or` operator is part of ApostropheCMS's MongoDB-style query syntax. It's used throughout Apostrophe for conditional field visibility, permissions, and querying content. Each potential column gets its own uniquely named area, which becomes available for content only when the chosen layout supports it.
+
+The `getWidgetGroups` helper used in the `options` is a utility that transforms a simple configuration into a fully expanded area configuration with organized widget groups. Without this helper, a standard area configuration would look more verbose:
+
+```javascript
+columnOneContent: {
+  type: 'area',
+  label: 'First Column',
+  options: {
+    widgets: {
+      '@apostrophecms/rich-text': {
+        toolbar: ['styles', 'bold', 'italic', 'link']
+      },
+      '@apostrophecms/image': {},
+      '@apostrophecms/video': {},
+      'hero': {},
+      'card': {}
+      // Each widget must be individually configured
+    }
+  }
+}
+```
+
+The helper centralizes these configurations and organizes widgets into groups, making the code more maintainable. For more details on how this helper works, you can examine the `backend/lib/helpers/area-widgets.js` file in the Apollo project. Using the `getWidgetGroups` helper ensures that each area of the row accepts the same set of widgets, excluding the grid layout to prevent nesting conflicts.
+
+Note that within areas you use the same naming conventions used for mapping. Core widgets get prefixed, and none receive the `-widget` suffix.
 
 ### Frontend Implementation in Astro
 Just like the page template components, the widget frontend implementation starts with the component frontmatter, where we handle imports, type definitions, and data processing:
@@ -124,7 +203,7 @@ The component then defines configuration objects that map our backend choices to
 
 <AposCodeBlock>
 
-```js-astro
+```javascript
 const layouts = {
   'two-equal': {
     classes: ['is-12-mobile is-6-tablet', 'is-12-mobile is-6-tablet'],
@@ -146,7 +225,7 @@ These configurations are processed in the frontmatter to generate our final clas
 
 <AposCodeBlock>
 
-```js-astro
+```javascript
 const currentLayout = layouts[widget.columnLayout || 'two-equal'];
 const columnsClasses = [
   'columns',
@@ -163,7 +242,7 @@ frontend/src/widgets/RowsWidget.astro
 </AposCodeBlock>
 
 ::: info
-Astro has a built in directive for creating class lists - [`class:list`](https://docs.astro.build/en/reference/directives-reference/#classlist). This allows for construction of the class list directly in the template instead of the frontmatter.
+Astro has a built-in directive for creating class lists - [`class:list`](https://docs.astro.build/en/reference/directives-reference/#classlist). This allows for construction of the class list directly in the template instead of the frontmatter.
 ```astro
 <span class:list={['columns', {spacingClass}, {verticalAlignClass}, ['mx-auto'] ]} />
 ```
@@ -222,7 +301,7 @@ The rows widget demonstrates the foundational patterns of widget development in 
 Next, let's look at how we can add client-side interactivity to widgets. The video and slideshow widgets offer two different approaches to handling JavaScript in the widget ecosystem.
 
 ## Adding Client-Side Interactivity to Widgets
-Astro provides several routes for adding JavaScript to the browser. This can take the form of public scripts loaded on every page, `<script>` tags in your components, and the addition of client-side framework component, e.g. Vue of React components. Let's explore the different approaches available for adding client-side interactivity to widgets in the ApostropheCMS + Astro environment, using examples from the Apollo project.
+Astro provides several routes for adding JavaScript to the browser. This can take the form of public scripts loaded on every page, `<script>` tags in your components, and the addition of client-side framework components, e.g. Vue or React components. Let's explore the different approaches available for adding client-side interactivity to widgets in the ApostropheCMS + Astro environment, using examples from the Apollo project.
 
 ### Web Components Approach
 
@@ -285,14 +364,14 @@ We are accessing the data passed from the ApostropheCMS backend server through t
 
 #### Web Component Implementation
 
-The web component itself is defined in a separate file:
+The [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components) itself is defined in a separate file. Here's a simplified version showing the core functionality:
 
 <AposCodeBlock>
 
 ```javascript
 class VideoWidget extends HTMLElement {
   static observedAttributes = ['url', 'title'];
-  
+
   constructor() {
     super();
     this.videoData = null;
@@ -314,7 +393,7 @@ class VideoWidget extends HTMLElement {
 
     try {
       // Fetch oEmbed data from ApostropheCMS
-      const response = await fetch(`/api/v1/oembed?url=${encodeURIComponent(url)}`);
+      const response = await fetch(`/api/v1/@apostrophecms/oembed/query?url=${encodeURIComponent(url)}`);
       this.videoData = await response.json();
       this.render();
     } catch (error) {
@@ -347,7 +426,7 @@ We aren't going to go through this file in detail. The one thing that you will n
 ```javascript
 const response = await fetch(`/api/v1/oembed?url=${encodeURIComponent(url)}`);
 ```
-If desired, you could create [custom API routes](https://docs.apostrophecms.org/reference/module-api/module-overview.html#restapiroutes-self) for any of your widgets or other web components to query in this manner. We will touch on this in the [Creating Pieces tutorial](/tutorials/Astro/creating-pieces.html#approach-2-custom-api-routes) section.
+If desired, you could create [custom API routes](https://docs.apostrophecms.org/reference/module-api/module-overview.html#restapiroutes-self) for any of your widgets or other web components to query in this manner. We will touch on this in the [Creating Pieces tutorial](/tutorials/astro/creating-pieces.html#approach-2-custom-api-routes) section.
 
 #### Loading the Web Component
 
@@ -416,10 +495,13 @@ The template just brings in the widget data and creates simple markup to display
 
 #### JavaScript Initialization
 
+We won't look at all the JavaScript powering the slideshow functionality, just the portion that initializes the script during page load.
+
 <AposCodeBlock>
 
-```js-astro
-// ... slideshow specific code
+```astro
+<script>
+// ... other slideshow specific code
 
 const slideshows = new Map();
 
@@ -445,6 +527,7 @@ function initSlideshows() {
     });
   }, 100);
 }
+</script>
 ```
 <template v-slot:caption>
 frontend/src/widgets/SlideshowWidget.astro

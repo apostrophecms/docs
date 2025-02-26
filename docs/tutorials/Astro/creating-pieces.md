@@ -365,7 +365,7 @@ First, it generates an array of page objects with URLs:
 
 <AposCodeBlock>
 
-```js-astro
+```javascript
 const pages = [];
 for (let i = 1; i <= totalPages; i++) {
   pages.push({
@@ -482,7 +482,7 @@ While piece pages provide a structured way to display collections of content, th
 
 An easy way to fetch pieces is through ApostropheCMS's built-in API endpoints. These endpoints accept query parameters that let you filter and sort pieces without writing any backend code.
 
-Here's an example that fetches and displays article pieces that have a `news` category:
+Here's an example that fetches and displays article pieces that have a `news` category. In your Astro component you would construct your fetch along with parameters to structure what pieces you get back:
 
 ```javascript
 ---
@@ -513,6 +513,32 @@ const { results: newsArticles } = await response.json();
 </div>
 ```
 
+On the backend (ApostropheCMS), you need to give permission for this `GET` request by setting the [`publicApiProjection` option](/reference/modules/piece-type.html#publicapiprojection) in the `backend/modules/article/index.js` file:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Article',
+    pluralLabel: 'Articles',
+    shortcut: 'Shift+Alt+A',
+    publicApiProjection: {
+      title: 1,
+      excerpt: 1,
+      _url: 1
+    }
+  },
+  // ... remainder of code
+```
+<template v-slot:caption>
+backend/modules/article/index.js
+</template>
+</AposCodeBlock>
+
+The `publicApiProjection` can be set to allow any of the document fields to be returned. In this case, since we do have a piece type page for displaying the individual article pieces, we are also returning the computed `_url` property.
+
 This approach is perfect for simple filtering and sorting needs - no custom backend code is required. The query parameters correspond directly to MongoDB query operators, giving you powerful filtering capabilities out of the box. You can [read more](/guide/database-queries.html) about this in the main documentation.
 
 ### Approach 2: Custom API Routes
@@ -525,7 +551,7 @@ Sometimes you need more complex logic to fetch and transform your piece's data. 
 apiRoutes(self) {
   return {
     get: {
-      async 'latest-by-author'(req) {
+      async 'latestByAuthor'(req) {
         // Fetch all authors
         // Since this is the article module, we need to specify
         // we want documents from the author module
@@ -577,6 +603,7 @@ Then we can use this custom endpoint in any Astro component:
 
 ```astro
 ---
+// ApostropheCMS will automatically kebab-case our `latestByAuthor` route
 const apiUrl = new URL('/api/v1/article/latest-by-author', Astro.url.origin);
 const response = await fetch(apiUrl);
 const latestArticles = await response.json();

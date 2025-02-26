@@ -22,7 +22,9 @@ Regardless of your deployment method, you'll need:
 
 - A MongoDB database - Atlas or host-specific
 - Environment variables properly configured
-- Asset storage solution like AWS S3 (for uploaded images/files)
+- Asset storage solution like AWS S3 or a persistent folder that doesn't get erased during each deployment (for uploaded images/files)
+
+If you prefer, we can handle all of those details for you via our [Managed Hosting](https://apostrohecms.com/hosting).
 
 ## Configuring Astro for Production
 
@@ -121,7 +123,7 @@ Apostrophe offers a straightforward hosting solution specifically designed for A
 
 ### Getting Started with Apostrophe Hosting
 
-Contact the Apostrophe team through their [website](https://apostrophecms.com/contact-us) to set up your hosting. The team will provide detailed instructions for connecting your repository for automatic deployment.
+Contact the Apostrophe team through their [website](https://apostrophecms.com/hosting) to set up your hosting. The team will provide detailed instructions for connecting your repository for automatic deployment.
 
 ## Split Deployment (Separate Backend and Frontend)
 
@@ -131,7 +133,7 @@ For more control or to leverage specific platform features, you can deploy the b
 
 Your ApostropheCMS backend requires:
 
-- Node.js environment (v18 or later recommended)
+- Node.js environment (v18 or better, at least v20 recommended)
 - MongoDB database connection
 - Asset storage solution (S3 or equivalent cloud storage)
 
@@ -169,7 +171,7 @@ There are several guides for other [deployment options](/guide/hosting.html) and
 
 ### Frontend (Astro) Deployment
 
-Your Astro frontend can be deployed to any service that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend' folder as the root for your Astro deployment.
+Your Astro frontend can be deployed to any service, including our [managed hosting](https://www.apostrophecms/hosting), that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend' folder as the root for your Astro deployment.
 
 #### Common Frontend Hosting Options
 

@@ -260,6 +260,8 @@ export default defineConfig({
     theme: require('./theme/dracula-at-night.json'),
     defaultHighlightLang: 'sh',
     languages: [
+      'html',
+      'astro',
       {
         id: 'njk-html',
         scopeName: 'text.html.njk',
