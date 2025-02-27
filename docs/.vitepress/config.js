@@ -261,7 +261,6 @@ export default defineConfig({
     defaultHighlightLang: 'sh',
     languages: [
       'html',
-      'astro',
       {
         id: 'njk-html',
         scopeName: 'text.html.njk',
