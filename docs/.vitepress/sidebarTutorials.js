@@ -71,7 +71,7 @@ const sidebarTutorials = [
     items: [
       {
         text: 'ApostropheCMS + Astro',
-        link: 'tutorials/astro/apostrophe-and-astro.md'
+        link: 'tutorials/astro/apostrophecms-and-astro.md'
       },
       {
         text: 'Introducing Apollo',

@@ -1,3 +1,8 @@
+---
+next:
+  text: 'Introducing Apollo'
+  link: '/tutorials/astro/introducing-apollo.html'
+---
 # Building Websites with ApostropheCMS and Astro
 
 ## Introduction
