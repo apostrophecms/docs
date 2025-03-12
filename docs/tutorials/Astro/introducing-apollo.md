@@ -4,6 +4,11 @@
 
 Many of the tutorials in this section explore the integration of ApostropheCMS with Astro, using the [Apollo project](https://github.com/apostrophecms/apollo) as a working example. While Apollo provides an opinionated, production-ready setup, the principles and patterns covered here apply to any ApostropheCMS-Astro integration, regardless of your preferred frontend framework or styling approach. These tutorials are not aimed at being a comprehensive dissection of the entire Apollo codebase, but rather a high level introduction to using Astro as a frontend for ApostropheCMS.
 
+::: tip Watch & Learn! 🎥
+This tutorial is available in both text and video formats. The videos cover the key highlights, while this page provides additional details and references. Watch the videos for a guided introduction, then read on for deeper insights!
+:::
+
+
 ### Learning Through Apollo
 
 We'll use the [`Apollo`](https://github.com/apostrophecms/apollo) project to demonstrate the basic concepts of hybrid project development, and the overall codebase can be used as examples for topics not covered by this tutorial. Apollo includes:
@@ -78,6 +83,8 @@ The key parts of this Astro configuration file are the specification of server-s
 ## Development Environment Set Up
 
 Before diving into the ApostropheCMS and Astro integration, let's set up your development environment. The requirements for ApostropheCMS and Astro largely overlap, so you can look at our [ApostropheCMS guides to setting up your environment](/guide/development-setup.html).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/aiDBlbDkTwY?si=dY5sbhWgLZFlGj1O" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Prerequisites
   > [!IMPORTANT]
@@ -219,6 +226,8 @@ Current ApostropheCMS users are likely already familiar with its core concepts a
 That said, even experienced ApostropheCMS developers will find value here — we’re not just reviewing core concepts, but also how they integrate with Astro.
 
 ApostropheCMS provides a structured approach to managing content and design, and understanding these concepts is key because they require implementation on both the backend (ApostropheCMS) and the frontend (Astro). If you're already comfortable with ApostropheCMS, the transition to using Astro as a frontend isn’t a huge leap—you’ll primarily be shifting how you handle templates.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/P3ELmgL5aYA?si=CZnLq56_M5yOEkR1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 #### Areas
 [Areas](/guide/areas-and-widgets.html) are editable regions on your pages where content editors can add and arrange content. In the ApostropheCMS backend, you define what types of content (widgets) can be placed in each area and configure their options. In your Astro frontend templates, these areas are rendered using the `AposArea` component, which maintains the in-context editing capabilities of ApostropheCMS while working within Astro's component system.
@@ -431,6 +440,8 @@ Now that we understand these core concepts - how content is structured in Apostr
 
 ## Introducing the Apollo Theme
 The [Apollo theme](https://github.com/apostrophecms/apollo) can serve as a starting point for building out your own project, but is also a complete example of how these two systems can be used together to produce a production-ready site.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-qCb-qhpmAg?si=_IAc0AO18VBVHuIo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Page Types and Layout
 
