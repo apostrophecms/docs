@@ -4,13 +4,13 @@ prev: false
 ---
 # Using JSX in Apostrophe with Vite
 
-In modern web development, tools and technologies evolve rapidly, and so do the demands of web applications. ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
+ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
 
 ### Why Customize Your Vite Build?
 
 Vite is a modern build tool that offers a lightning-fast development experience and optimized production builds. Customizing your Vite configuration can offer several benefits:
 
-1. **Enhanced Development Workflow**: Customizing Vite allows you to integrate modern JavaScript frameworks like React, enabling a more component-based architecture.
+1. **Enhanced Development Workflow**: Customizing Vite allows you to integrate modern JavaScript frameworks like React, Vue, and Svelte, enabling a more component-based architecture.
 2. **Performance Optimization**: By customizing Vite, you can take advantage of advanced features such as code splitting, tree shaking, and caching to optimize the performance of your application.
 3. **Extended Functionality**: Vite's plugin system allows you to extend its functionality to handle various types of assets (e.g., images, fonts, SVGs) and preprocessors.
 4. **Improved Maintainability**: A customized Vite build can help maintain a cleaner and more modular codebase, making it easier to manage and scale your project.
@@ -103,59 +103,54 @@ export default {
 
 ## Adding JSX to Our Project
 
-Now that we have our widget added, we will turn our attention to modifying the project Vite configuration. A typical Vite configuration is organized into several key sections that define how different types of files should be processed and managed. Within an ApostropheCMS project, we typically modify these configuration sections:
+Now that we have our widget added, we'll turn our attention to modifying the project's Vite configuration. In ApostropheCMS, Vite configuration can either be handled through a project level Vite configuration file - `apos.vite.config.js`, or through individual modules. Each module can specify their Vite configuration requirements in their `index.js` files under the `build.vite` property.
 
-1. **Plugins:** Allows for the inclusion of plugins that perform a wide range of tasks, from optimizing bundles to injecting environment variables.
-2. **Resolve:** Helps Vite understand how to locate and bundle modules by specifying file extensions and aliasing module paths.
-3. **Build:** Controls the way Vite builds your project for production.
-
-Vite has built-in support for handling JSX files through the `@vitejs/plugin-react` plugin. Open the `modules/react-weather-widget/index.js` and add the following:
+Let's add React support to our widget module by opening `modules/react-weather-widget/index.js` and adding the following:
 
 <AposCodeBlock>
 
 ```javascript
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'React Weather Widget'
   },
-  vite: {
-    plugins: [
-      {
-        name: 'react-plugin',
-        config: {
-          plugin: '@vitejs/plugin-react',
-          options: {
-            babel: {
-              plugins: []
+  build: {
+    vite: {
+      plugins: [
+        {
+          name: 'react-plugin',
+          config: {
+            plugin: '@vitejs/plugin-react',
+            options: {
+              babel: {
+                plugins: []
+              }
             }
           }
         }
+      ],
+      resolve: {
+        extensions: ['.jsx', '.js', '.json']
       }
-    ],
-    resolve: {
-      extensions: ['.jsx', '.js', '.json']
     }
   }
 };
 ```
-
 <template v-slot:caption>
   modules/react-weather-widget/index.js
 </template>
 
 </AposCodeBlock>
 
-::: info
-Vite has built-in support for JSX, and the plugin system makes it easy to add React support without complex configuration.
-:::
-
 The configuration we're adding does a few things:
 
 1. It uses the official Vite React plugin (`@vitejs/plugin-react`) to enable JSX processing
 2. It sets up the `resolve.extensions` to handle `.jsx` files, ensuring that imports without file extensions still work properly
 
-In order for our new Vite build to function, we need to add the new development dependencies. Navigate to the root of your project in your terminal and issue the following command:
+This configuration is specific to this module, but ApostropheCMS will merge this with the project-wide Vite configuration.
+
+In order for our new Vite build to function, we need to add the new development dependency. Navigate to the root of your project in your terminal and issue the following command:
 
 ```sh
 npm install @vitejs/plugin-react --save-dev
