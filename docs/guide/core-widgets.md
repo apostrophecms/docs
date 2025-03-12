@@ -66,6 +66,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'alignRight'` | Text Align Right |
 | `'alignJustify'` | Text Align Justify |
 | `'table'` | Insert and edit tables |
+| `'importTable'` | Import a CSV file to be added as a table |
 | `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
@@ -76,7 +77,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 ### Configuring the insert menu
 
 Note that the toolbar appears only when text is already selected. Some features, like
-`table`, `image`, and `horizontalRule` should be available all the time because they insert entirely
+`table`, `importTable`, `image`, and `horizontalRule` should be available all the time because they insert entirely
 new content unrelated to existing text.
 
 To accommodate this, you can enable the "insert menu" as well:
@@ -87,9 +88,9 @@ To accommodate this, you can enable the "insert menu" as well:
 widgets: {
   '@apostrophecms/rich-text': {
     //  Toolbar configuration
-    toolbar: ['styles', 'bold', 'italic', 'table', 'image'],
+    toolbar: ['styles', 'bold', 'italic', 'table', 'importTable', 'image'],
     // 👇 Insert menu configuration
-    insert: ['table', 'image', 'horizontalRule']
+    insert: ['table', 'importTable', 'image', 'horizontalRule']
 }
 ```
 
@@ -122,6 +123,10 @@ Including a class with a style will not automatically apply any styles. You stil
 
 Some tags will wrap the selected text, rather than converting the entire block to be enclosed in a specific tag. For example, selecting just a few words within a paragraph and applying a style using the span tag will surround the selected text with span tags configured with the configured class attribute(s).
 
+The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
+
+Any tags of these types added to the `styles` array will be displayed in a new `Apply styles` dropdown to the right of the non-wrapping tags dropdown.
+
 Adding to the toolbar styles:
 
 ``` js
@@ -138,12 +143,10 @@ Adding to the toolbar styles:
 Adding to the stylesheet:
 
 ```css
-.highlight-red { color: #FF0000; } 
+.highlight-seafoam { color: #2e8b57; }
 ```
 
-![Screenshot showing the addition of red highlighting to text in the Rich Text Editor](../images/rich-text-highlighting.png)
-
-The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
+![Screenshot showing the addition of seafoam highlighting to text in the Rich Text Editor](../images/rich-text-style-dropdown.png)
 
 ### Configuring the color picker
 If you choose to add the `color` button to the toolbar you can optionally pass in a `color` configuration object.
