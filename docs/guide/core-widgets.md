@@ -97,7 +97,7 @@ widgets: {
 When you do so, the user receives a hint to press the `/` key at the start of any
 line to open the insert menu.
 
-Note that in this example, both insert menu options appear on the toolbar as well.
+Note that in this example, the table and image insert menu options appear on the toolbar as well.
 This is because there are useful features included for editing *existing* tables and
 images, not just inserting new ones.
 
@@ -117,15 +117,18 @@ A single style including class might look like:
 
 You can use the same tag in several styles with various CSS classes.
 
+> [!IMPORTANT]
+> If you want the content manager to be able to remove a class, you will also have to add the same tag without a class to the style array.
+
 ::: info
 Including a class with a style will not automatically apply any styles. You still need to [write your own CSS](/guide/front-end-assets.md) for the class.
 :::
 
 Some tags will wrap the selected text, rather than converting the entire block to be enclosed in a specific tag. For example, selecting just a few words within a paragraph and applying a style using the span tag will surround the selected text with span tags configured with the configured class attribute(s).
 
-The other tags that wrap the selected text instead of converting the entire section include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
+The other tags that wrap the selected text instead of converting the entire block include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
 
-Any tags of these types added to the `styles` array will be displayed in a new `Apply styles` dropdown to the right of the non-wrapping tags dropdown.
+Any of these wrapping-style tags added to the `styles` array will appear in a new `Apply styles` dropdown menu, separate from the dropdown for non-wrapping tags.
 
 Adding to the toolbar styles:
 
@@ -134,8 +137,8 @@ Adding to the toolbar styles:
   styles: [
     {
       tag: 'span',
-      label: 'Highlight: Red',
-      class: 'highlight-red'
+      label: 'Highlight: Seafoam',
+      class: 'highlight-seafoam'
     }
   ]
 }
