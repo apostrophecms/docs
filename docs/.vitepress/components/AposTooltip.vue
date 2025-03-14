@@ -56,7 +56,7 @@ defineExpose({ setActive })
 .tooltip-container {
   display: inline-block;
   position: relative;
-  z-index: 1000;
+  z-index: 99;
 }
 
 .tooltip-trigger {
@@ -71,7 +71,6 @@ defineExpose({ setActive })
   border-radius: 4px;
   font-size: 14px;
   white-space: nowrap;
-  z-index: 1000;
   pointer-events: none;
   opacity: 1;
   visibility: visible;
