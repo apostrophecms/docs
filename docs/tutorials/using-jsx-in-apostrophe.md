@@ -105,33 +105,20 @@ export default {
 
 Now that we have our widget added, we'll turn our attention to modifying the project's Vite configuration. In ApostropheCMS, Vite configuration can either be handled through a project level Vite configuration file - `apos.vite.config.js`, or through individual modules. Each module can specify their Vite configuration requirements in their `index.js` files under the `build.vite` property.
 
-Let's add React support to our widget module by opening `modules/react-weather-widget/index.js` and adding the following:
+ For our React widget, we'll use the module-level configuration since we only need React support for this specific component. Open the `modules/react-weather-widget/index.js` file and add the following:
 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'React Weather Widget'
   },
   build: {
     vite: {
-      plugins: [
-        {
-          name: 'react-plugin',
-          config: {
-            plugin: '@vitejs/plugin-react',
-            options: {
-              babel: {
-                plugins: []
-              }
-            }
-          }
-        }
-      ],
-      resolve: {
-        extensions: ['.jsx', '.js', '.json']
+      bundles: {
+        'weather-react': {}
       }
     }
   }
@@ -143,10 +130,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-The configuration we're adding does a few things:
-
-1. It uses the official Vite React plugin (`@vitejs/plugin-react`) to enable JSX processing
-2. It sets up the `resolve.extensions` to handle `.jsx` files, ensuring that imports without file extensions still work properly
+This simple configuration tells ApostropheCMS that we want the Vite build process to add the `weather-react.js` code and all of its dependencies. We will add that code to the `ui/src` folder of this widget next. This configuration is similar to how [Webpack bundling](/reference/modules/asset.html#bundles) worked in previous versions of ApostropheCMS. But, you don't need to specify additional loaders or rules as you would with Webpack - Vite automatically handles different file types, including JSX, CSS, and SVG files. The empty object (`{}`) as the value for `weather-react` is where you could add advanced configuration if needed, but for most use cases, the default settings are sufficient.
 
 This configuration is specific to this module, but ApostropheCMS will merge this with the project-wide Vite configuration.
 
@@ -158,47 +142,54 @@ npm install @vitejs/plugin-react --save-dev
 
 ## Creating the Weather App Component
 
-Now that we are able to use JSX in our project, we need to create a component that utilizes it. We'll place our app component files into the custom module `ui/src` folder and import them through the `index.js` file located in that folder. That file is also going to act to bootstrap our app.
+Now that we are able to use JSX in our project, we need to create a component that utilizes it. We'll place our app component files into the widget module `ui/src` folder and import them through the `weather-react.js` file we just specified in our `vite.build`. That file is also going to act to bootstrap our app.
 
 <AposCodeBlock>
 
 ```javascript
-import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { createElement } from 'react';
 import App from './jsx-components/App.jsx';
 
 export default () => {
   apos.util.widgetPlayers.reactWeather = {
     selector: '[data-react-weather-widget]',
     player(el) {
+      if (!el) {
+        return;
+      }
       const rootElement = el.querySelector('#react-weather-root');
-      if (rootElement) {
+      if (rootElement && !rootElement.hasAttribute('data-react-mounted')) {
         const defaultCity = rootElement.getAttribute('data-default-city');
-        const root = createRoot(rootElement);
-        root.render(<App defaultCity={defaultCity} />);
+        const app = createElement(App, { defaultCity });
+        createRoot(rootElement).render(app);
+
+        // Mark as mounted to prevent multiple rendering
+        rootElement.setAttribute('data-react-mounted', 'true');
       }
     }
   };
 };
+
 ```
 
   <template v-slot:caption>
-    modules/react-weather-widget/ui/src/index.js
+    modules/react-weather-widget/ui/src/weather-react.js
   </template>
 
 </AposCodeBlock>
 
-At the top of this file we are importing both `react` and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. To use these packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Vite build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command:
+At the top of this file we are importing `createElement` from the `react` package and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. To use these packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Vite build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command:
 
 ```sh
 npm install react react-dom
 ```
 
-The remainder of this file is a [standard widget player](https://docs.apostrophecms.org/guide/custom-widgets.html#client-side-javascript-for-widgets). This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to set the value of this attribute using the data passed to the template from the widget schema.
+The remainder of this file is a [standard widget player](/guide/custom-widgets.html#client-side-javascript-for-widgets). This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to set the value of this attribute using the data passed to the template from the widget schema.
 
 ### Adding the widget Nunjucks template
 
-The markup for this widget on the Nunjucks side is going to be simple. We require an attribute for the player to identify the code our client-side JavaScript player should target, a target where React will render our component root, and another attribute for passing data between the widget schema fields and the react app.
+The markup for this widget on the Nunjucks side is going to be simple. We require an attribute for the player to identify the code our client-side JavaScript player should target, a target where React will render our component root, and another attribute for passing data between the widget schema fields and the React app.
 
 <AposCodeBlock>
 
@@ -223,9 +214,6 @@ We have already added our Vite configuration changes to the `modules/react-weath
 <AposCodeBlock>
 
 ```javascript
-import dotenv from 'dotenv';
-dotenv.config();
-
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -260,11 +248,13 @@ Since this tutorial is mainly focused on how you use React in an ApostropheCMS p
 <AposCodeBlock>
 
 ```jsx
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import CityComponent from './CityComponent';
 import WeatherComponent from './WeatherComponent';
 
+// Move styled components outside the functional component
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -314,6 +304,7 @@ function App({ defaultCity }) {
     e.preventDefault();
     fetchWeather(city);
   };
+
   return (
     <Container>
       <AppLabel>React Weather App</AppLabel>
@@ -327,6 +318,7 @@ function App({ defaultCity }) {
 }
 
 export default App;
+
 ```
 
   <template v-slot:caption>
@@ -335,7 +327,7 @@ export default App;
 
 </AposCodeBlock>
 
-It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/index.js` file. Vite automatically processes the JSX syntax and imports the necessary components. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
+It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/weather-react.js` file. Vite automatically processes the JSX syntax and imports the necessary components. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
 
 ```javascript
 const response = await fetch(
@@ -351,6 +343,9 @@ This line in that function performs a fetch on the `/fetch-weather` endpoint, pa
 <AposCodeBlock>
 
 ```javascript
+import dotenv from 'dotenv';
+dotenv.config();
+
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -408,7 +403,6 @@ Again, we aren't going to focus on most of the JSX component code.
 
 ```jsx
 import styled from 'styled-components';
-import React from 'react';
 import PerfectDay from '../icons/perfect-day.svg';
 
 const SearchBox = styled.form`
@@ -481,9 +475,7 @@ We have already installed `react` as a dependency of our project, but we are als
 npm install styled-components
 ```
 
-One of the key advantages of Vite is its built-in support for various asset types. Unlike Webpack which needed specific loaders, Vite automatically handles SVG imports: `import PerfectDay from '../icons/perfect-day.svg';`. We'll place all our SVG files in the `modules/react-weather-widget/ui/src/icons` folder.
-
-With Vite, there's no need for additional configuration to handle SVG files - they're supported out of the box. This is a significant improvement over the Webpack configuration which required additional loaders and configuration.
+One of the key advantages of Vite is its built-in support for various asset types. Unlike Webpack which needed specific loaders, Vite automatically handles SVG imports: `import PerfectDay from '../icons/perfect-day.svg';`. We'll place all our SVG files from the original demo in the `modules/react-weather-widget/ui/src/icons` folder.
 
 ### Creating the `WeatherComponent` component
 
@@ -492,7 +484,6 @@ Again, we won't touch much on the JSX code.
 <AposCodeBlock>
 
 ```javascript
-import React from 'react';
 import styled from 'styled-components';
 import SunsetIcon from '../icons/sunset.svg';
 import SunriseIcon from '../icons/sunrise.svg';
@@ -644,18 +635,137 @@ export default WeatherComponent;
 
 </AposCodeBlock>
 
-As with the `CityComponent.jsx` file, we are importing `react` and `styled-components` packages. We are also importing five SVG weather info icons from the `modules/react-weather-widget/ui/src/icons` folder. The OpenWeatherMap site makes the remainder of the images we need available on their site.
+As with the `CityComponent.jsx` file, we are importing the `styled-components` package. We are also importing five SVG weather info icons from the `modules/react-weather-widget/ui/src/icons` folder. The OpenWeatherMap site makes the remainder of the images we need available on their site.
+
+## Adding Hot Module Replacement for React
+
+At this point, your React weather widget is fully functional! You can add it to pages in the ApostropheCMS admin UI, configure the default city, and users can interact with it to search for weather data in different locations. However, there's one more enhancement we can make to improve the development experience.
+
+While Vite provides excellent built-in Hot Module Replacement (HMR) capabilities for many frameworks, integrating React's HMR functionality in an ApostropheCMS project requires a few extra steps. This is because React's "Fast Refresh" needs specific runtime code injected into the page to properly maintain component state during development.
+
+With proper HMR support, you can make changes to your React components and see them instantly reflected in the browser without losing the current state of your application or requiring a full page reload—making your development workflow much more efficient.
+
+### Adding the Vite-React Module from the Demo Repository
+
+Instead of creating this module from scratch, we can leverage the work already done in the official ApostropheCMS Vite demo repository (https://github.com/apostrophecms/vite-demo). This repository contains a ready-to-use `vite-react` module that we can copy into our project.
+
+Clone or download the demo repository, then copy the `modules/vite-react` directory into your project:
+
+```sh
+# Clone the repository (if you haven't already)
+git clone https://github.com/apostrophecms/vite-demo.git
+
+# Copy the vite-react module to your project
+cp -r vite-demo/modules/vite-react your-project/modules/
+```
+Next, register the module in your `app.js` file:
+
+<AposCodeBlock>
+
+```javascript
+export default apostrophe({
+  shortName: 'jsx-project',
+  modules: {
+    // other modules
+    'react-weather-widget': {},
+    'vite-react': {}
+  }
+});
+```
+
+  <template v-slot:caption>
+    app.js
+  </template>
+
+</AposCodeBlock>
+
+Let's take a quick look at the code this module adds to our project, starting with the `index.js` file:
+
+<AposCodeBlock>
+
+```javascript
+import { defineConfig } from '@apostrophecms/vite/vite';
+import react from '@vitejs/plugin-react';
+
+export default {
+  build: {
+    vite: {
+      extensions: {
+        enableReact: defineConfig({
+          plugins: [ react() ]
+        })
+      }
+    }
+  },
+  init(self) {
+    // Add the React Refresh runtime to the head of the page
+    // but only in HMR mode.
+    self.apos.template.prepend({
+      where: 'head',
+      when: 'hmr:public',
+      bundler: 'vite',
+      component: 'vite-react:reactRefresh'
+    });
+  },
+  components(self) {
+    return {
+      // Our async server component for the React refresh runtime
+      reactRefresh(req, data) {
+        return {};
+      }
+    };
+  }
+};
+```
+
+  <template v-slot:caption>
+    modules/vite-react/index.js
+  </template>
+
+</AposCodeBlock>
+
+This code extends Vite's configuration by adding the official React plugin, which provides Fast Refresh capabilities for React applications.
+
+The most interesting part is how this module connects to ApostropheCMS's templating system. In the `init` function, we use `self.apos.template.prepend` to inject code into the `<head>` section of our pages, but only when running in development mode with HMR enabled (specified by `when: 'hmr:public'`). The `component: 'vite-react:reactRefresh'` line creates the connection between this insertion point and the actual content to be inserted.
+
+That connection works through ApostropheCMS's component system. When we define `reactRefresh` in the `components(self)` method, we're telling ApostropheCMS, "When you see `vite-react:reactRefresh`, run this function and then look for a template with the same name." The system then finds and renders the `reactRefresh.html` template from the `views` directory.
+
+The rendered template contains the JavaScript needed to connect React's Fast Refresh with Vite's HMR system. This script imports the React Refresh runtime directly from the Vite dev server and sets up the necessary global hooks that React's Fast Refresh mechanism requires to maintain component state during updates.
+
+Now, let's take a quick look at the component template that will inject the React Fast Refresh runtime into our page:
+
+<AposCodeBlock>
+
+```html
+<script type="module">
+  import RefreshRuntime from '{{ apos.asset.devServerUrl("/@react-refresh") }}'
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.$RefreshReg$ = () => {}
+  window.$RefreshSig$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>
+```
+
+  <template v-slot:caption>
+    modules/vite-react/views/reactRefresh.html
+  </template>
+
+</AposCodeBlock>
+
+
+Unlike Vue or Svelte, which have HMR capabilities more directly integrated with Vite out of the box, React requires this additional runtime code to properly preserve component state during hot updates. The code we're adding essentially bridges Vite's HMR API with React's Fast Refresh system.
+
+I highly recommend checking out the full Vite demo repository at https://github.com/apostrophecms/vite-demo for more examples of how to leverage Vite in your ApostropheCMS projects. The repository contains additional patterns and techniques that might be helpful as you continue to build more complex applications with React and other frontend frameworks.
 
 ## Conclusions
 
 In this tutorial, we covered the basics of how to create a widget powered by React and JSX components using Vite as the build tool. One of the biggest advantages of migrating from Webpack to Vite is the simplified configuration and the improved developer experience. With Vite:
 
 1. **Less Configuration**: Vite requires minimal configuration compared to Webpack, handling most common use cases out of the box.
-2. **Native ES Module Support**: Vite leverages native ES modules in the browser during development, resulting in faster startup times.
+2. **Native ES Module Support**: Vite leverages native ES modules in the browser during development, resulting in faster startup times, and also allows for better tree-shaking and provides a more modern development experience.
 3. **Automatic Asset Handling**: Vite automatically handles various file types including SVGs, images, and CSS files without additional loaders.
-4. **Native ESM Support**: Vite is built around ES modules, which allows for better tree-shaking and provides a more modern development experience.
-5. **Hot Module Replacement (HMR)**: Vite offers lightning-fast HMR which updates your browser instantly without a full page reload.
+4. **Hot Module Replacement (HMR)**: Vite offers lightning-fast HMR which updates your browser instantly without a full page reload.
 
 Similar steps can be used to allow you to use Vue, Svelte, or Angular components in your project. You need to identify the correct Vite plugins for the framework you want to use, add them to your configuration, and ensure that your component files are properly structured. Remember that with Vite, ECMAScript Modules (ESM) are the preferred module format, which means using `import`/`export` syntax instead of CommonJS `require()`/`module.exports`.
 
-For this widget, we only added a single render root. But to add additional components, we simply need to make sure that each element passed from the DOM to the `createRoot()` function is unique. Whether it is passed through a widget player, added as a fragment, or directly into the Nunjucks template. Note that if you are adding front-end JavaScript to create and render your root element outside a widget player, make sure to wrap your script in an [`apos.util.onReady()`](https://docs.apostrophecms.org/guide/front-end-helpers.html#onready-fn) listener so that it triggers a rerender when the page content is updated during editing.
+For this widget, we only added a single render root. But to add additional components, we simply need to make sure that each element passed from the DOM to the `createRoot()` function is unique. Whether it is passed through a widget player, added as a fragment, or directly into the Nunjucks template. Note that if you are adding front-end JavaScript to create and render your root element outside a widget player, make sure to wrap your script in an [`apos.util.onReady()`](/guide/front-end-helpers.html#onready-fn) listener so that it triggers a re-render when the page content is updated during editing.
