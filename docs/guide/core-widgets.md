@@ -126,7 +126,7 @@ Including a class with a style will not automatically apply any styles. You stil
 
 Some tags will wrap the selected text, rather than converting the entire block to be enclosed in a specific tag. For example, selecting just a few words within a paragraph and applying a style using the span tag will surround the selected text with span tags configured with the configured class attribute(s).
 
-The other tags that wrap the selected text instead of converting the entire block include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `strike`, `u`, `anchor`, `superscript`, and `subscript`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to add them to the page with a class.
+In addition to the `span` tag, several other tags can wrap selected text without converting the entire block. These include `b`, `strong`, `code`, `mark`, `em`, `i`, `a`, `s`, `del`, `u`, `sup`, and `sub`. While the majority of these have dedicated toolbar buttons, you can also add them to the style menu if you want to apply a class when inserting them into the page.
 
 Any of these wrapping-style tags added to the `styles` array will appear in a new `Apply styles` dropdown menu, separate from the dropdown for non-wrapping tags.
 

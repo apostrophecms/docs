@@ -2,18 +2,18 @@
 next: false
 prev: false
 ---
-# Using JSX in Apostrophe with Vite
+# Using JSX in Apostrophe
 
-In modern web development, tools and technologies evolve rapidly, and so do the demands of web applications. ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
+In modern web development, tools and technologies evolve rapidly, and so do the demands of web applications. ApostropheCMS offers a robust and flexible platform for building content-rich websites, it comes with a powerful built-in Webpack build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Webpack to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
 
-### Why Customize Your Vite Build?
+### Why Customize Your Webpack Build?
 
-Vite is a modern build tool that offers a lightning-fast development experience and optimized production builds. Customizing your Vite configuration can offer several benefits:
+Webpack is a powerful module bundler that compiles JavaScript modules into a single file or multiple files that the browser can understand. Customizing your Webpack configuration can offer several benefits:
 
-1. **Enhanced Development Workflow**: Customizing Vite allows you to integrate modern JavaScript frameworks like React, enabling a more component-based architecture.
-2. **Performance Optimization**: By customizing Vite, you can take advantage of advanced features such as code splitting, tree shaking, and caching to optimize the performance of your application.
-3. **Extended Functionality**: Vite's plugin system allows you to extend its functionality to handle various types of assets (e.g., images, fonts, SVGs) and preprocessors.
-4. **Improved Maintainability**: A customized Vite build can help maintain a cleaner and more modular codebase, making it easier to manage and scale your project.
+1. **Enhanced Development Workflow**: Customizing Webpack allows you to integrate modern JavaScript frameworks like React, enabling a more component-based architecture.
+2. **Performance Optimization**: By customizing Webpack, you can take advantage of advanced features such as code splitting, tree shaking, and caching to optimize the performance of your application.
+3. **Extended Functionality**: Webpack's plugin system allows you to extend its functionality to handle various types of assets (e.g., images, fonts, SVGs) and preprocessors (e.g., Babel for modern JavaScript syntax).
+4. **Improved Maintainability**: A customized Webpack build can help maintain a cleaner and more modular codebase, making it easier to manage and scale your project.
 
 ### Advantages of Using JSX for a Dynamic Component
 
@@ -27,9 +27,7 @@ While Nunjucks is a powerful templating engine for server-side rendering in Apos
 
 ![Screenshot of the react weather widget with Philadelphia set to the default city](../images/react-weather-app.png)
 
-In this tutorial, we'll walk through the process of customizing your Vite configuration to support JSX in an ApostropheCMS project. We'll build a weather widget that leverages the power of React components for a dynamic and interactive user interface. The code for this widget is based on a basic React tutorial that you can find [here](https://github.com/ayushkul/react-weather-app). By the end of this tutorial, you'll understand how to set up a custom Vite build and take advantage of JSX to enhance your ApostropheCMS projects.
-
-> [!IMPORTANT] With ApostropheCMS's switch to Vite, we now encourage the use of ECMAScript Modules (ESM) for all new projects. This tutorial uses ESM syntax throughout. It's important to note that you should not mix CommonJS (CJS) and ESM syntax at the project level, as this can lead to compatibility issues. Choose one module system for your entire project.
+In this tutorial, we'll walk through the process of customizing your Webpack configuration to support JSX in an ApostropheCMS project. We'll build a weather widget that leverages the power of React components for a dynamic and interactive user interface. The code for this widget is based on a basic React tutorial that you can find [here](https://github.com/ayushkul/react-weather-app). By the end of this tutorial, you'll understand how to set up a custom Webpack build and take advantage of JSX to enhance your ApostropheCMS projects.
 
 ## Adding the Weather Widget to your Project
 
@@ -44,9 +42,7 @@ Next, add the new widget to the `app.js` file.
 <AposCodeBlock>
 
 ```javascript
-import apostrophe from 'apostrophe';
-
-export default apostrophe({
+require('apostrophe')({
   shortName: 'jsx-project',
   modules: {
     // other modules
@@ -66,7 +62,7 @@ You can choose to add this widget to any area, but for this tutorial we will add
 <AposCodeBlock>
 
 ```javascript
-export default {
+module.exports = {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Default Page'
@@ -103,38 +99,43 @@ export default {
 
 ## Adding JSX to Our Project
 
-Now that we have our widget added, we will turn our attention to modifying the project Vite configuration. A typical Vite configuration is organized into several key sections that define how different types of files should be processed and managed. Within an ApostropheCMS project, we typically modify these configuration sections:
+Now that we have our widget added, we will turn our attention to modifying the project Webpack configuration. A typical Webpack configuration is organized into several key sections that define how different types of files should be processed and managed. Within an ApostropheCMS project, we typically modify three configuration sections:
 
-1. **Plugins:** Allows for the inclusion of plugins that perform a wide range of tasks, from optimizing bundles to injecting environment variables.
-2. **Resolve:** Helps Vite understand how to locate and bundle modules by specifying file extensions and aliasing module paths.
-3. **Build:** Controls the way Vite builds your project for production.
+1. **Module:** Specifies rules for handling different file types through loaders.
+2. **Plugins:** Allows for the inclusion of plugins that perform a wide range of tasks, from optimizing bundles to injecting environment variables.
+3. **Resolve:** Helps Webpack understand how to locate and bundle modules by specifying file extensions and aliasing module paths.
 
-Vite has built-in support for handling JSX files through the `@vitejs/plugin-react` plugin. Open the `modules/react-weather-widget/index.js` and add the following:
+The existing Apostrophe Webpack build uses the Babel compiler to allow the use of modern JavaScript while supporting older browsers. In this case, we will be extending the `module` section to recognize and transpile JSX files by adding a new object to the `rules` array. Open the `modules/react-weather-widget/index.js` and add the following:
 
 <AposCodeBlock>
 
 ```javascript
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'React Weather Widget'
   },
-  vite: {
-    plugins: [
-      {
-        name: 'react-plugin',
-        config: {
-          plugin: '@vitejs/plugin-react',
-          options: {
-            babel: {
-              plugins: []
+  webpack: {
+    extensions: {
+      jsxAddition: {
+        module: {
+          rules: [
+            {
+              test: /\.(js|jsx)$/, // Apply this rule to .js and .jsx files
+              exclude: /node_modules/,
+              use: {
+                loader: 'babel-loader',
+                options: {
+                  presets: ['@babel/preset-react'] // Presets for ES6+ and React
+                }
+              }
             }
-          }
+          ]
+        },
+        resolve: {
+          extensions: ['.jsx']
         }
       }
-    ],
-    resolve: {
-      extensions: ['.jsx', '.js', '.json']
     }
   }
 };
@@ -147,23 +148,24 @@ export default {
 </AposCodeBlock>
 
 ::: info
-Vite has built-in support for JSX, and the plugin system makes it easy to add React support without complex configuration.
+This new rule will be merged by Apostrophe into the existing array of rules, allowing you to create rules in multiple project-level modules.
 :::
 
-The configuration we're adding does a few things:
+Within the new rule, we are adding a `test` property with a regular expression to determine if the rule should be applied to a file. In this case, we are using the loader for files with either the `.js` or `.jsx` extensions. It is a matter of preference whether you want other developers to be able to use the `.js` extension for JSX files. We are also adding an `exclude` property so that the files in the `node_modules` folder aren't processed.
 
-1. It uses the official Vite React plugin (`@vitejs/plugin-react`) to enable JSX processing
-2. It sets up the `resolve.extensions` to handle `.jsx` files, ensuring that imports without file extensions still work properly
+In the `use` section, we state that the file should be loaded using the `babel-loader`. This Webpack loader will let us use Babel presets and plugins to transpile our `.jsx` files. In this case, we are using the `@babel/preset-react` preset to interpret our JSX.
 
-In order for our new Vite build to function, we need to add the new development dependencies. Navigate to the root of your project in your terminal and issue the following command:
+In addition to providing a new module rule, we also need to tell the Webpack build that files with a `.jsx` extension should be run through the build process. This is done by extending the `resolve` section's `extensions` array.
+
+In order for our new Webpack build to function, we need to add the new development dependencies. Navigate to the root of your project in your terminal and issue the following command:
 
 ```sh
-npm install @vitejs/plugin-react --save-dev
+npm install babel-loader @babel/preset-react --save-dev
 ```
 
 ## Creating the Weather App Component
 
-Now that we are able to use JSX in our project, we need to create a component that utilizes it. We'll place our app component files into the custom module `ui/src` folder and import them through the `index.js` file located in that folder. That file is also going to act to bootstrap our app.
+Now that we are able to use JSX in our project, we need to create a component that utilizes it. At the moment, we have only modified our project to be able to transpile JSX files. We haven't changed the build entry point. That means that all of our app component files should be placed into the custom module `ui/src` folder and be imported through the `index.js` file located in that folder. That file is also going to act to bootstrap our app.
 
 <AposCodeBlock>
 
@@ -193,11 +195,7 @@ export default () => {
 
 </AposCodeBlock>
 
-At the top of this file we are importing both `react` and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. To use these packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Vite build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command:
-
-```sh
-npm install react react-dom
-```
+At the top of this file we are importing both `react` and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. In this case I'm electing to add that file and the other component files inside the `ui/src` folder, but you can elect to place them anywhere inside your project, as long as you import them through the `ui/src/index.js` file. To use these two packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Webpack build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command: `npm install react react-dom/client`.
 
 The remainder of this file is a [standard widget player](https://docs.apostrophecms.org/guide/custom-widgets.html#client-side-javascript-for-widgets). This player is attached to the `[data-react-weather-widget]` attribute that we will need to add to the widget Nunjucks template. Within that element, it selects an element with an id of `react-weather-root` to create the root for our React component. We are also passing a prop we are getting from the `data-default-city` attribute on our `rootElement`. We will need to set the value of this attribute using the data passed to the template from the widget schema.
 
@@ -223,15 +221,14 @@ Briefly, the attribute on the `section` tag is what we are passing into the `sel
 
 ### Modifying the widget schema fields
 
-We have already added our Vite configuration changes to the `modules/react-weather-widget/index.js` file, but now we also want to add the `defaultCity` schema field.
+We have already added our Webpack configuration changes to the `modules/react-weather-widget/index.js` file, but now we also want to add the `defaultCity` schema field.
 
 <AposCodeBlock>
 
 ```javascript
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'React Weather Widget'
@@ -242,10 +239,16 @@ export default {
         type: 'string',
         label: 'Default City'
       }
+    },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: ['defaultCity']
+      }
     }
   },
-  vite: {
-    // vite configuration here
+  webpack: {
+    // configuration code
   }
 };
 ```
@@ -340,7 +343,7 @@ export default App;
 
 </AposCodeBlock>
 
-It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/index.js` file. Vite automatically processes the JSX syntax and imports the necessary components. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
+It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/index.js` file. The Webpack build is clever enough to import all the files without having to import them to the base, as long as they are imported into a file that is imported into the base. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
 
 ```javascript
 const response = await fetch(
@@ -356,7 +359,7 @@ This line in that function performs a fetch on the `/fetch-weather` endpoint, pa
 <AposCodeBlock>
 
 ```javascript
-export default {
+module.exports = {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'React Weather Widget'
@@ -364,8 +367,8 @@ export default {
   fields: {
     // schema field code
   },
-  vite: {
-    // vite configuration code
+  webpack: {
+    // webpack configuration code
   },
   apiRoutes(self) {
     return {
@@ -480,15 +483,67 @@ export default CityComponent;
 
 </AposCodeBlock>
 
-We have already installed `react` as a dependency of our project, but we are also utilizing the `styled-components` package in this component. Again, this will be front-end, so it should be a normal, not development dependency. Navigate to the root of your project in your terminal and issue the following command:
+We have already installed `react` as a dependency of our project, but we are also utilizing the `styled-components` package in this component. Again, this will be front-end, so it should be a normal, not development dependency. Navigate to the root of your project in your terminal and issue the following command: `npm install styled-components`.
 
-```sh
-npm install styled-components
+The one line of code that needs to be addressed in an ApostropheCMS project is the import of the icon this component uses: `import PerfectDay from '../icons/perfect-day.svg';`. While the `@apostrophecms/attachment` module will allow the upload of files with an `svg` extension, These files won't be included in the bundled code sent to the front-end. To facilitate image access like you would experience in a React app, we are going to further modify our Webpack configuration and add all of our icons to the `modules/react-weather-widget/ui/src/icons` folder.
+
+To import the files into our Webpack build, we also have to make a modification to the project Webpack configuration. Open the `modules/react-weather-widget/index.js` and make the following modifications:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'React Weather Widget'
+  },
+  fields: {
+    //schema fields
+  },
+  webpack: {
+    extensions: {
+      jsxAddition: {
+        module: {
+          rules: [
+            {
+              test: /\.(js|jsx)$/, // Apply this rule to .js and .jsx files
+              exclude: /node_modules/,
+              use: {
+                loader: 'babel-loader',
+                options: {
+                  presets: ['@babel/preset-react'] //  presets for ES6+ and React
+                }
+              }
+            },
+            {
+              test: /\.svg$/,
+              use: [
+                {
+                  loader: 'file-loader'
+                }
+              ]
+            }
+          ]
+        },
+        resolve: {
+          extensions: ['.jsx', '.svg']
+        }
+      }
+    }
+  },
+  apiRoutes(self) {
+    // apiRoutes code
+  }
+};
 ```
 
-One of the key advantages of Vite is its built-in support for various asset types. Unlike Webpack which needed specific loaders, Vite automatically handles SVG imports: `import PerfectDay from '../icons/perfect-day.svg';`. We'll place all our SVG files in the `modules/react-weather-widget/ui/src/icons` folder.
+  <template v-slot:caption>
+    modules/react-weather-widget/index.js
+  </template>
 
-With Vite, there's no need for additional configuration to handle SVG files - they're supported out of the box. This is a significant improvement over the Webpack configuration which required additional loaders and configuration.
+</AposCodeBlock>
+
+We are adding a new `rules` object that specifies that any files with an `svg` extension use the `file-loader` to be brought into the project bundle. The `extensions` array of the `resolve` section also needs to be modified to allow for processing of files with the `.svg` extension. We have to install this loader in our project by running the command `npm install file-loader --save-dev` on the command line at the root of our project.
 
 ### Creating the `WeatherComponent` component
 
@@ -653,14 +708,6 @@ As with the `CityComponent.jsx` file, we are importing `react` and `styled-compo
 
 ## Conclusions
 
-In this tutorial, we covered the basics of how to create a widget powered by React and JSX components using Vite as the build tool. One of the biggest advantages of migrating from Webpack to Vite is the simplified configuration and the improved developer experience. With Vite:
-
-1. **Less Configuration**: Vite requires minimal configuration compared to Webpack, handling most common use cases out of the box.
-2. **Native ES Module Support**: Vite leverages native ES modules in the browser during development, resulting in faster startup times.
-3. **Automatic Asset Handling**: Vite automatically handles various file types including SVGs, images, and CSS files without additional loaders.
-4. **Native ESM Support**: Vite is built around ES modules, which allows for better tree-shaking and provides a more modern development experience.
-5. **Hot Module Replacement (HMR)**: Vite offers lightning-fast HMR which updates your browser instantly without a full page reload.
-
-Similar steps can be used to allow you to use Vue, Svelte, or Angular components in your project. You need to identify the correct Vite plugins for the framework you want to use, add them to your configuration, and ensure that your component files are properly structured. Remember that with Vite, ECMAScript Modules (ESM) are the preferred module format, which means using `import`/`export` syntax instead of CommonJS `require()`/`module.exports`.
+In this tutorial, we covered the basics of how to create a widget powered by React and JSX components. Similar steps can be used to allow you to use Vue, Svelte, or Angular components in your project. You need to identify the correct loader(s) for the file types you want to use, add any presets to transpile the files, and make sure that the Webpack build is screening files with the expected extensions.
 
 For this widget, we only added a single render root. But to add additional components, we simply need to make sure that each element passed from the DOM to the `createRoot()` function is unique. Whether it is passed through a widget player, added as a fragment, or directly into the Nunjucks template. Note that if you are adding front-end JavaScript to create and render your root element outside a widget player, make sure to wrap your script in an [`apos.util.onReady()`](https://docs.apostrophecms.org/guide/front-end-helpers.html#onready-fn) listener so that it triggers a rerender when the page content is updated during editing.
