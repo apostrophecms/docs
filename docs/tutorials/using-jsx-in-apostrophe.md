@@ -4,7 +4,7 @@ prev: false
 ---
 # Using JSX in Apostrophe with Vite
 
-ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project for browser-side rendering, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end JavaScript componentscomponents, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
+ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project for browser-side rendering, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end JavaScript components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
 
 ### Why Customize Your Vite Build?
 
@@ -17,7 +17,7 @@ Vite is a modern build tool that offers a lightning-fast development experience 
 
 ### Advantages of Using JSX for a Dynamic Component
 
-ApostropheCMS uses Nunjucks as its server-side templating engine to handles the initial HTML rendering of your pages. To complement this server-side rendering, you can use JSX with React to add interactive and dynamic components that run entirely in the browser. This combination gives you several advantages:
+ApostropheCMS uses Nunjucks as its server-side templating engine to handle the initial HTML rendering of your pages. To complement this server-side rendering, you can use JSX with React to add interactive and dynamic components that run entirely in the browser. This combination gives you several advantages:
 
 1. **Component-Based Architecture**: JSX allows you to build reusable components, encapsulating both the markup and logic. This modularity makes it easier to manage complex UIs and promotes code reusability.
 2. **State Management**: React's state management capabilities enable you to handle dynamic data changes efficiently. This means you can easily manage and update the state as new data is fetched.
