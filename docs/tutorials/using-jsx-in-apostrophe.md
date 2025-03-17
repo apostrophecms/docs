@@ -4,30 +4,30 @@ prev: false
 ---
 # Using JSX in Apostrophe with Vite
 
-ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
+ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project for browser-side rendering, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end JavaScript componentscomponents, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
 
 ### Why Customize Your Vite Build?
 
 Vite is a modern build tool that offers a lightning-fast development experience and optimized production builds. Customizing your Vite configuration can offer several benefits:
 
-1. **Enhanced Development Workflow**: Customizing Vite allows you to integrate modern JavaScript frameworks like React, Vue, and Svelte, enabling a more component-based architecture.
+1. **Enhanced Development Workflow**: Customizing Vite allows you to integrate modern browser-side JavaScript frameworks like React, Vue, and Svelte, enabling a more component-based architecture.
 2. **Performance Optimization**: By customizing Vite, you can take advantage of advanced features such as code splitting, tree shaking, and caching to optimize the performance of your application.
-3. **Extended Functionality**: Vite's plugin system allows you to extend its functionality to handle various types of assets (e.g., images, fonts, SVGs) and preprocessors.
+3. **Extended Functionality**: Vite's plugin system allows you to extend its functionality to handle various types of assets (e.g., images, fonts, SVGs) and preprocessors for client-side assets.
 4. **Improved Maintainability**: A customized Vite build can help maintain a cleaner and more modular codebase, making it easier to manage and scale your project.
 
 ### Advantages of Using JSX for a Dynamic Component
 
-While Nunjucks is a powerful templating engine for server-side rendering in ApostropheCMS, using JSX with React offers several advantages for building interactive and dynamic user interfaces:
+ApostropheCMS uses Nunjucks as its server-side templating engine to handles the initial HTML rendering of your pages. To complement this server-side rendering, you can use JSX with React to add interactive and dynamic components that run entirely in the browser. This combination gives you several advantages:
 
 1. **Component-Based Architecture**: JSX allows you to build reusable components, encapsulating both the markup and logic. This modularity makes it easier to manage complex UIs and promotes code reusability.
 2. **State Management**: React's state management capabilities enable you to handle dynamic data changes efficiently. This means you can easily manage and update the state as new data is fetched.
-3. **Enhanced Interactivity**: With React and JSX, you can create highly interactive UIs with real-time updates and smooth user experiences, such as automatically updating elements without a full page reload.
+3. **Enhanced Interactivity**: With React and JSX running in the browser, you can create highly interactive UIs with real-time updates and smooth user experiences, such as automatically updating elements without a full page reload.
 
 ### Building a Weather App with JSX
 
 ![Screenshot of the react weather widget with Philadelphia set to the default city](../images/react-weather-app.png)
 
-In this tutorial, we'll walk through the process of customizing your Vite configuration to support JSX in an ApostropheCMS project. We'll build a weather widget that leverages the power of React components for a dynamic and interactive user interface. The code for this widget is based on a basic React tutorial that you can find [here](https://github.com/ayushkul/react-weather-app). By the end of this tutorial, you'll understand how to set up a custom Vite build and take advantage of JSX to enhance your ApostropheCMS projects.
+In this tutorial, we'll walk through the process of customizing your Vite configuration to support JSX in an ApostropheCMS project for browser-side rendering. We'll build a weather widget that leverages the power of React components for a dynamic and interactive user interface. The code for this widget is based on a basic React tutorial that you can find [here](https://github.com/ayushkul/react-weather-app). By the end of this tutorial, you'll understand how to set up a custom Vite build and take advantage of JSX to enhance your ApostropheCMS projects with client-side interactivity.
 
 > [!IMPORTANT] With ApostropheCMS's switch to Vite, we now encourage the use of ECMAScript Modules (ESM) for all new projects. This tutorial uses ESM syntax throughout. It's important to note that you should not mix CommonJS (CJS) and ESM syntax at the project level, as this can lead to compatibility issues. Choose one module system for your entire project.
 
@@ -38,6 +38,8 @@ We will start this tutorial by creating a new widget in an already created start
 ```sh
 apos add widget react-weather-widget --player
 ```
+
+The `--player` flag is important here because we'll need a browser-side JavaScript player to initialize our React components.
 
 Next, add the new widget to the `app.js` file.
 
@@ -105,7 +107,7 @@ export default {
 
 Now that we have our widget added, we'll turn our attention to modifying the project's Vite configuration. In ApostropheCMS, Vite configuration can either be handled through a project level Vite configuration file - `apos.vite.config.js`, or through individual modules. Each module can specify their Vite configuration requirements in their `index.js` files under the `build.vite` property.
 
- For our React widget, we'll use the module-level configuration since we only need React support for this specific component. Open the `modules/react-weather-widget/index.js` file and add the following:
+ For our React widget, we'll use the module-level configuration since we only need React support for this specific front-end component. Open the `modules/react-weather-widget/index.js` file and add the following:
 
 <AposCodeBlock>
 
@@ -130,7 +132,7 @@ export default {
 
 </AposCodeBlock>
 
-This simple configuration tells ApostropheCMS that we want the Vite build process to add the `weather-react.js` code and all of its dependencies. We will add that code to the `ui/src` folder of this widget next. This configuration is similar to how [Webpack bundling](/reference/modules/asset.html#bundles) worked in previous versions of ApostropheCMS. But, you don't need to specify additional loaders or rules as you would with Webpack - Vite automatically handles different file types, including JSX, CSS, and SVG files. The empty object (`{}`) as the value for `weather-react` is where you could add advanced configuration if needed, but for most use cases, the default settings are sufficient.
+This simple configuration tells ApostropheCMS that we want the Vite build process to add the `weather-react.js` code and all of its dependencies to be processed and bundled for use in the browser. We will add that code to the `ui/src` folder of this widget next. This configuration is similar to how [Webpack bundling](/reference/modules/asset.html#bundles) worked in previous versions of ApostropheCMS. But, you don't need to specify additional loaders or rules as you would with Webpack - Vite automatically handles different file types, including JSX, CSS, and SVG files. The empty object (`{}`) as the value for `weather-react` is where you could add advanced configuration if needed, but for most use cases, the default settings are sufficient.
 
 This configuration is specific to this module, but ApostropheCMS will merge this with the project-wide Vite configuration.
 
@@ -142,7 +144,7 @@ npm install @vitejs/plugin-react --save-dev
 
 ## Creating the Weather App Component
 
-Now that we are able to use JSX in our project, we need to create a component that utilizes it. We'll place our app component files into the widget module `ui/src` folder and import them through the `weather-react.js` file we just specified in our `vite.build`. That file is also going to act to bootstrap our app.
+Now that we are able to use JSX in our project, we need to create a component that utilizes it for front-end rendering. We'll place our app component files into the widget module `ui/src` folder and import them through the `weather-react.js` file we just specified in our `vite.build`. That file is also going to act to bootstrap our app.
 
 <AposCodeBlock>
 
@@ -179,7 +181,7 @@ export default () => {
 
 </AposCodeBlock>
 
-At the top of this file we are importing `createElement` from the `react` package and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. To use these packages we need to add them to our project dependencies. Since they are being used on the front-end, not during the Vite build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command:
+At the top of this file we are importing `createElement` from the `react` package and the `createRoot` function from `react-dom/client`. This will allow us to use the React framework in our project. We are also importing the main entry point `App`. To use these packages we need to add them to our project dependencies. Since they are being used on the front-end in the browser, not during the Vite build, we need to add them as regular dependencies. Navigate to the root of your project in your terminal and issue the following command:
 
 ```sh
 npm install react react-dom
@@ -189,7 +191,7 @@ The remainder of this file is a [standard widget player](/guide/custom-widgets.h
 
 ### Adding the widget Nunjucks template
 
-The markup for this widget on the Nunjucks side is going to be simple. We require an attribute for the player to identify the code our client-side JavaScript player should target, a target where React will render our component root, and another attribute for passing data between the widget schema fields and the React app.
+The markup for this widget on the Nunjucks side (server-side template) is going to be simple. We require an attribute for the player to identify the code our client-side JavaScript player should target, a target where React will render our component root, and another attribute for passing data between the widget schema fields and the React app.
 
 <AposCodeBlock>
 
@@ -205,7 +207,7 @@ The markup for this widget on the Nunjucks side is going to be simple. We requir
 
 </AposCodeBlock>
 
-Briefly, the attribute on the `section` tag is what we are passing into the `selector` property of the player. This section contains a single `div` element that will be used as the root. Finally, on that same element we are setting the `data-default-city` attribute value to data passed from the widget `defaultCity` schema field, or an empty string if the content manager hasn't added a string to that field.
+Briefly, the attribute on the `section` tag is what we are passing into the `selector` property of the player. This section contains a single `div` element that will be used as the root for our browser-side React application. Finally, on that same element we are setting the `data-default-city` attribute value to data passed from the widget `defaultCity` schema field, or an empty string if the content manager hasn't added a string to that field.
 
 ### Modifying the widget schema fields
 
@@ -243,7 +245,7 @@ As we will see when we cover the JSX code files, this default city will cause th
 
 ### Adding the main `App.jsx` component
 
-Since this tutorial is mainly focused on how you use React in an ApostropheCMS project, we aren't going to go through the fine points of the React code we are adding.
+Since this tutorial is mainly focused on how you use React in the browser in an ApostropheCMS project, we aren't going to go through the fine points of the React code we are adding.
 
 <AposCodeBlock>
 
@@ -327,7 +329,7 @@ export default App;
 
 </AposCodeBlock>
 
-It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/weather-react.js` file. Vite automatically processes the JSX syntax and imports the necessary components. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our component.
+It should be noted that the two components used by this React app are being imported in the `App.jsx` file that is imported in the base `ui/src/weather-react.js` file. Vite automatically processes the JSX syntax and imports the necessary components for front-end use. The only other part of this code we need to focus on is the `fetchWeather()` function. In this app we have elected to use the [OpenWeatherMap](https://openweathermap.org/) API to retrieve the weather for each city. At the time of this writing it had a generous free tier, and easy geolocation from a city name. However, it does require an API key. We don't want to directly add this key into our `App.jsx` code since it will be exposed client-side. Instead, we are going to create a proxy endpoint in our project that will fetch the data and pass it back to our front-end component.
 
 ```javascript
 const response = await fetch(
@@ -338,7 +340,7 @@ const response = await fetch(
 );
 ```
 
-This line in that function performs a fetch on the `/fetch-weather` endpoint, passing in the city name as a parameter.
+This line in that function performs a fetch on the `/fetch-weather` endpoint from JavaScript running in the browser, passing in the city name as a parameter.
 
 <AposCodeBlock>
 
@@ -393,7 +395,7 @@ There are several ways we can add endpoints to an ApostropheCMS project. In this
 
 The remainder of this code should be fairly self-explanatory. We are getting the `city` value from the request object and the API key from the environment variable that should be passed when starting our project, `OPENWEATHERMAP_API_KEY=XXXXXX npm run dev`.
 
-Next the function passes this information to the Open Weather Map API and gets back data that is returned to the component.
+Next the function passes this information to the Open Weather Map API and gets back data that is returned to the browser-side component.
 
 ### Creating the `CityComponent` component
 
@@ -730,7 +732,7 @@ The most interesting part is how this module connects to ApostropheCMS's templat
 
 That connection works through ApostropheCMS's component system. When we define `reactRefresh` in the `components(self)` method, we're telling ApostropheCMS, "When you see `vite-react:reactRefresh`, run this function and then look for a template with the same name." The system then finds and renders the `reactRefresh.html` template from the `views` directory.
 
-The rendered template contains the JavaScript needed to connect React's Fast Refresh with Vite's HMR system. This script imports the React Refresh runtime directly from the Vite dev server and sets up the necessary global hooks that React's Fast Refresh mechanism requires to maintain component state during updates.
+The rendered template contains the JavaScript needed to connect React's Fast Refresh with Vite's HMR system. This script imports the React Refresh runtime directly from the Vite dev server and sets up the necessary global hooks that React's Fast Refresh mechanism requires for maintaining component state during updates.
 
 Now, let's take a quick look at the component template that will inject the React Fast Refresh runtime into our page:
 
@@ -753,19 +755,28 @@ Now, let's take a quick look at the component template that will inject the Reac
 </AposCodeBlock>
 
 
-Unlike Vue or Svelte, which have HMR capabilities more directly integrated with Vite out of the box, React requires this additional runtime code to properly preserve component state during hot updates. The code we're adding essentially bridges Vite's HMR API with React's Fast Refresh system.
+Unlike Vue or Svelte, which have HMR capabilities more directly integrated with Vite out of the box, React requires this additional runtime code to properly preserve component state during hot updates. The code we're adding essentially bridges Vite's HMR API with React's Fast Refresh system for front-end development.
 
 I highly recommend checking out the full Vite demo repository at https://github.com/apostrophecms/vite-demo for more examples of how to leverage Vite in your ApostropheCMS projects. The repository contains additional patterns and techniques that might be helpful as you continue to build more complex applications with React and other frontend frameworks.
 
 ## Conclusions
 
-In this tutorial, we covered the basics of how to create a widget powered by React and JSX components using Vite as the build tool. One of the biggest advantages of migrating from Webpack to Vite is the simplified configuration and the improved developer experience. With Vite:
+In this tutorial, we covered the basics of how to create a widget powered by React and JSX components running in the browser using Vite as the build tool. One of the biggest advantages of migrating from Webpack to Vite is the simplified configuration and the improved developer experience. With Vite:
 
 1. **Less Configuration**: Vite requires minimal configuration compared to Webpack, handling most common use cases out of the box.
 2. **Native ES Module Support**: Vite leverages native ES modules in the browser during development, resulting in faster startup times, and also allows for better tree-shaking and provides a more modern development experience.
-3. **Automatic Asset Handling**: Vite automatically handles various file types including SVGs, images, and CSS files without additional loaders.
+3. **Automatic Asset Handling**: Vite automatically handles various file types including SVGs, images, and CSS files without additional loaders for browser-side assets.
 4. **Hot Module Replacement (HMR)**: Vite offers lightning-fast HMR which updates your browser instantly without a full page reload.
 
 Similar steps can be used to allow you to use Vue, Svelte, or Angular components in your project. You need to identify the correct Vite plugins for the framework you want to use, add them to your configuration, and ensure that your component files are properly structured. Remember that with Vite, ECMAScript Modules (ESM) are the preferred module format, which means using `import`/`export` syntax instead of CommonJS `require()`/`module.exports`.
 
 For this widget, we only added a single render root. But to add additional components, we simply need to make sure that each element passed from the DOM to the `createRoot()` function is unique. Whether it is passed through a widget player, added as a fragment, or directly into the Nunjucks template. Note that if you are adding front-end JavaScript to create and render your root element outside a widget player, make sure to wrap your script in an [`apos.util.onReady()`](/guide/front-end-helpers.html#onready-fn) listener so that it triggers a re-render when the page content is updated during editing.
+
+> [!IMPORTANT] The approach shown in this tutorial is specifically for enhancing your ApostropheCMS site with interactive browser-side components using React. This is not an alternative to ApostropheCMS's server-side Nunjucks templating system but rather a complementary approach for adding rich client-side interactivity to your pages.
+
+Remember the clear separation of concerns:
+
+- **Server-side templates (Nunjucks)**: Handle the initial HTML rendering and provide the structure of your pages. This is where ApostropheCMS shines with its powerful CMS capabilities.
+- **Browser-side components (React/JSX)**: Enhance specific parts of your pages with rich interactivity that happens entirely in the user's browser after the initial page load.
+
+This hybrid approach gives you the best of both worlds: the content management capabilities and server-rendered performance of ApostropheCMS, plus the rich interactive experiences possible with React running in the browser.
