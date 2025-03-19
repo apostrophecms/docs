@@ -54,3 +54,7 @@ If you get stuck:
 - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
 
 Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html).
+
+## Want to learn more?
+Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8HczFSLFDno?si=tHxIhDTdOboNyIPN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

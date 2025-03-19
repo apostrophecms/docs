@@ -672,12 +672,6 @@ module.exports = {
         step: 1,
         def: 1
       }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [ 'productQuality', 'productSafety', 'productValue' ]
-      }
     }
   },
   components(self) {

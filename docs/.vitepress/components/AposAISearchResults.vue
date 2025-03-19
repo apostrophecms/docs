@@ -389,6 +389,18 @@ onBeforeUnmount(() => {
   margin-bottom: 15px;
 }
 
+.answer-container .content :deep(h1) {
+  font-weight: 700;
+  font-size: 24px;
+  margin: 16px 0 10px;
+}
+
+.answer-container .content :deep(h2) {
+  font-weight: 600;
+  font-size: 22px;
+  margin: 14px 0 8px;
+}
+
 .answer-container .content :deep(h3) {
   font-weight: 600;
   font-size: 20px;
@@ -420,6 +432,91 @@ onBeforeUnmount(() => {
   background-color: #414141;
   border-color: #616161;
   color: #ff5180;
+}
+
+.answer-container .content :deep(h5) {
+  font-weight: 600;
+  font-size: 14px;
+  margin: 6px 0 4px;
+}
+
+.answer-container .content :deep(h6) {
+  font-weight: 600;
+  font-size: 13px;
+  margin: 5px 0 3px;
+}
+
+/* List styles */
+.answer-container .content :deep(ul), 
+.answer-container .content :deep(ol) {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.answer-container .content :deep(li) {
+  margin-bottom: 5px;
+}
+
+/* Blockquote styles */
+.answer-container .content :deep(blockquote) {
+  border-left: 4px solid #6236ff;
+  padding-left: 15px;
+  margin: 15px 0;
+  color: #555;
+}
+
+.dark .answer-container .content :deep(blockquote) {
+  color: #bbb;
+}
+
+/* Table styles */
+.answer-container .content :deep(table) {
+  border-collapse: collapse;
+  margin: 15px 0;
+  width: 100%;
+}
+
+.answer-container .content :deep(th),
+.answer-container .content :deep(td) {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.dark .answer-container .content :deep(th),
+.dark .answer-container .content :deep(td) {
+  border-color: #444;
+}
+
+.answer-container .content :deep(th) {
+  background-color: #f2f2f2;
+  font-weight: 600;
+}
+
+.dark .answer-container .content :deep(th) {
+  background-color: #333;
+}
+
+/* Horizontal rule */
+.answer-container .content :deep(hr) {
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+  margin: 15px 0;
+}
+
+.dark .answer-container .content :deep(hr) {
+  background-color: #444;
+}
+
+/* Fix for links */
+.answer-container .content :deep(a) {
+  color: #6236ff;
+  text-decoration: none;
+}
+
+.answer-container .content :deep(a:hover) {
+  text-decoration: underline;
 }
 
 /* Question container styles */
