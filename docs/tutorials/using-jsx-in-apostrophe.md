@@ -2,7 +2,7 @@
 next: false
 prev: false
 ---
-# Using JSX in Apostrophe
+# Using JSX in Apostrophe with Vite
 
 ApostropheCMS offers a robust and flexible platform for building content-rich websites, and it now comes with a powerful built-in Vite build system that caters to most development needs out of the box. This system streamlines the process of managing assets, optimizing performance, and ensuring a smooth developer experience. However, there are times when you may want to extend its capabilities by customizing the build process. One common scenario is integrating React components into your ApostropheCMS project for browser-side rendering, which involves customizing Vite to support JSX (JavaScript XML). By leveraging JSX and React, you can enhance the interactivity and maintainability of your front-end JavaScript components, providing a richer user experience while still taking advantage of the features offered by ApostropheCMS.
 
