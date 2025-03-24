@@ -92,7 +92,7 @@ Certain media query conditions do not translate well to container queries:
 
 - **Orientation queries**:
   - Parameters like `orientation: landscape` or `orientation: portrait` don't have equivalent behavior in container queries, as containers don't have the same orientation concept as viewports.
-  - Example of query with limited support:
+  - Example of query:
     ```css
     @media (orientation: landscape) { ... }
     ```
@@ -124,25 +124,39 @@ Media queries operate on the **viewport size**, whereas container queries respon
 
 - **Viewport context**:
   - Media queries are global; they consider the entire screen or browser window. If a layout condition depends on the viewport, such as full-page navigation menus, it might not behave identically when converted to container queries.
-  
+
 - **Nested containers**:
   - Container queries work within the bounds of their parent container. If a nested container has a different size, the styles applied to its content may differ from expectations.
-  
+
 - **Resizing effects**:
   - Breakpoint preview resizes containers but does not simulate the entire viewport behavior. This can impact layouts that rely on viewport-relative units like `vw` and `vh`.
 
 #### 4. **Viewport-relative Units**
-Units like `vw`, `vh`, `vmin`, and `vmax` are converted to their container-query equivalents (`cqw`, `cqh`, `cqmin`, `cqmax`), but they calculate values differently:
+While the conversion from viewport-relative units (`vw`, `vh`, `vmin`, `vmax`) to container-relative units (`cqw`, `cqh`, `cqmin`, `cqmax`) generally provides a good approximation for the breakpoint preview feature, there are some practical considerations to be aware of:
+
+- Nested Container References
+
+The preview container becomes the new reference point for all calculations, which may not accurately represent the actual viewport proportions in the final design.
+
+- Fixed-Size Elements Lose Their Consistency
+
+Some designs might intentionally use viewport units for consistent sizing across different views. For example, a header that should always be exactly 10vh tall regardless of container. Converting these to container query units changes this intended behavior.
+
+- Mixed Unit Relationships Change
+
+When designs mix viewport units with other units, their relative proportions will change in the preview:
 
 ```css
-/* Original CSS */
-.element {
-  width: 50vw; /* 50% of viewport width */
+/* Original CSS with mixed units */
+.sidebar {
+  width: 30vw; /* 30% of viewport width */
+  margin-right: 20px; /* Fixed margin */
 }
 
-/* Converted to */
-.element {
-  width: 50cqw; /* 50% of container width, not viewport */
+/* When converted in preview */
+.sidebar {
+  width: 30cqw; /* 30% of container width */
+  margin-right: 20px; /* Still a fixed margin */
 }
 ```
 
@@ -159,12 +173,12 @@ Media queries that target user preferences don't translate to container contexts
 |-------------------------------|---------------------------------------|
 | Standard width/height queries | ✅ Fully supported |
 | Range syntax queries | ✅ Fully supported |
-| `orientation` | ⚠️ Limited support |
-| `aspect-ratio` | ⚠️ Limited support |
-| Complex logical conditions (multiple combined conditions) | ⚠️ May behave differently |
 | Viewport-relative units | ✅ Converted to container units |
-| User preference queries | ❌ Not applicable to containers |
 | Print media queries| ✅ Preserved |
+| Complex logical conditions (multiple combined conditions) | ⚠️ May behave differently |
+| User preference queries | ❌ Not applicable to containers |
+| `orientation` | ❌ Not applicable to containers |
+| `aspect-ratio` | ❌ Not applicable to containers |
 
 ---
 
