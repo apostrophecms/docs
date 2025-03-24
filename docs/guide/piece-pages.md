@@ -13,7 +13,7 @@ Index pages support all features from [pages](/guide/pages.md), then add on some
 
 There are two critical steps to adding a new module for a piece page type:
 
-1. Extend `@apostrophecms/piece-page-type`
+1. [Extend](/guide/module-configuration-patterns.html) `@apostrophecms/piece-page-type`
 2. Specify what piece type should be shown on the page
 
 Extending the right module is simple enough. These modules use the property:

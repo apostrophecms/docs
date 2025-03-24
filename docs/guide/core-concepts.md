@@ -12,7 +12,7 @@ Apostrophe is built using a system of **modules**. We'll get into a more detaile
 
 If you're familiar with JavaScript modules, the module concept should already be familiar to you. But if not, a module is self-contained code that defines a specific set of functionality. In other words, each module is responsible for providing one feature, such as a type of widget, a type of customized page, or a service. This could be anything from defining fields for a blog post content type to integrating with third-party services. In short, modules are the building blocks of your application.
 
-One important concept regarding modules in Apostrophe is how they work within the project's ecosystem. The majority of modules inherit the functionality of the core Apostrophe modules and then extend or improve that functionality. Later in this training, we will provide a more detailed technical review of Apostrophe's module system.
+One important concept regarding modules in Apostrophe is how they work within the [project's ecosystem](/guide/module-configuration-patterns.html). The majority of modules inherit the functionality of the core Apostrophe modules and then extend or improve that functionality. Later in this training, we will provide a more detailed technical review of Apostrophe's module system.
 
 ## Schemas
 
@@ -31,21 +31,21 @@ Page types are created by extending the `@apostrophecms/page-type` module and ca
 Out of the box, Apostrophe defines a `home-page` type for you that is "parked" at the top of the page tree. Other pages are typically sub-pages of the home page.
 
 ::: info
-📌 For additional information on configuring pages, see [Page Templates](https://docs.apostrophecms.org/guide/pages.html) in the Apostrophe docs.
+📌 For additional information on configuring pages, see [Page Templates](/guide/pages.html) in the Apostrophe docs.
 :::
 
 ## Pieces
 
-**["Piece types"](https://docs.apostrophecms.org/guide/pieces.html)** in Apostrophe are collections of structured content, often referred to as "content types" in other systems. Each item created from a piece type is a **"piece."** Pieces are typically organized by date or taxonomy.
+**["Piece types"](/guide/pieces.html)** in Apostrophe are collections of structured content, often referred to as "content types" in other systems. Each item created from a piece type is a **"piece."** Pieces are typically organized by date or taxonomy.
 
-[**Field schemas**](https://docs.apostrophecms.org/guide/content-schema.html) are used to define the data modal of a particular piece type. When you define a piece type by extending the `@apostrophecms/piece-type` module, Apostrophe will include basic required schema fields out of the box, such as the title and slug fields. You can then configure your schema with more fields to fit your requirements.
+[**Field schemas**](/guide/content-schema.html) are used to define the data modal of a particular piece type. When you define a piece type by extending the `@apostrophecms/piece-type` module, Apostrophe will include basic required schema fields out of the box, such as the title and slug fields. You can then configure your schema with more fields to fit your requirements.
 
 Pieces can be displayed using pieces pages, which are specialized page types, or widgets. Pieces pages can show a collection of pieces through the `index.html` template page, or an individual piece using the `show.html` template page. Using widgets to display pieces allows you to show pieces in the context of other relevant content, like related articles. We'll explore this later, just know for now that there are different ways to display pieces.
 
 Common examples of pieces are articles, events, or products.
 
 ::: info
-📌 For additional information on schema field types, see the [Schema Field Type reference](https://docs.apostrophecms.org/reference/field-types/) in the Apostrophe docs.
+📌 For additional information on schema field types, see the [Schema Field Type reference](/reference/field-types/) in the Apostrophe docs.
 :::
 
 ## Widgets
@@ -59,5 +59,5 @@ Apostrophe provides several simple widgets to help you get started building your
 Common examples of widgets are Rich Text Widgets, Image Widgets, Slideshow Widgets, or an Article Widget.
 
 ::: info
-📌 For a list of the included widgets, see [Standard (Included) Widgets](https://docs.apostrophecms.org/guide/core-widgets.html) in the Apostrophe docs.
+📌 For a list of the included widgets, see [Standard (Included) Widgets](/guide/core-widgets.html) in the Apostrophe docs.
 :::
