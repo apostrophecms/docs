@@ -84,100 +84,109 @@ Each of the individual breakpoint properties in the `screen` object take a `labe
 
 ---
 
-### Limitations and Differences
+## Limitations and Differences
 While the ApostropheCMS breakpoint preview effectively converts many media queries to container queries, there are some key limitations and differences to be aware of. These limitations stem from fundamental differences between **media queries** (which target the viewport) and **container queries** (which target individual containers).
 
 #### 1. **Unsupported Parameters**
-Certain media query conditions are not supported or do not translate well to container queries:
+Certain media query conditions do not translate well to container queries:
 
 - **Orientation queries**:
-  - Parameters like `orientation: landscape` or `orientation: portrait` do not apply to containers, as containers lack inherent orientation.
-  - Example of unsupported query:
+  - Parameters like `orientation: landscape` or `orientation: portrait` don't have equivalent behavior in container queries, as containers don't have the same orientation concept as viewports.
+  - Example of query:
     ```css
     @media (orientation: landscape) { ... }
     ```
 - **Aspect ratio**:
-  - Queries based on aspect ratio, such as `min-aspect-ratio` and `max-aspect-ratio`, are not supported. Containers do not inherently track their aspect ratio.
-  - Example of unsupported query:
+  - Queries based on aspect ratio, such as `min-aspect-ratio` and `max-aspect-ratio`, may not behave as expected in container contexts.
+  - Example:
     ```css
     @media (min-aspect-ratio: 16/9) { ... }
     ```
 
-#### 2. Operator and Descriptor Limitations
-Some combinations of size-related descriptors and operators will not work since they are invalid CSS media queries:
+#### 2. **Valid Syntax Patterns**
+The plugin supports both standard media query syntax and modern range syntax:
 
-When `min-width`, `max-width`, `min-height`, or `max-height` are used with `>=` or `<=` operators.
-
-- Example of problematic query:
+- **Standard syntax** (fully supported):
   ```css
-    @media (min-width >= 600px) { ... }
+  @media (min-width: 600px) { ... }
+  @media (max-width: 1200px) { ... }
   ```
 
-- Note: These descriptors work when used with standard comparisons:
+- **Range syntax** (fully supported):
   ```css
-    @media (min-width: 600px) { ... } /* Works fine */
+  @media (width >= 600px) { ... }
+  @media (width <= 1200px) { ... }
+  @media (600px <= width <= 1200px) { ... }
   ```
-  These operators are also fine in the context of a descriptor that accepts a range:
-  ```css
-    @media ( width >= 600px) { ... } /* Works fine */
 
 #### 3. **Behavioral Differences**
 Media queries operate on the **viewport size**, whereas container queries respond to the **size of a specific container**. This distinction can lead to subtle differences in layout and behavior:
+
 - **Viewport context**:
-  - Media queries are global; they consider the entire screen or browser window. If a layout condition depends on the viewport, such as full-page navigation menus, it might not behave as expected when converted to container queries.
+  - Media queries are global; they consider the entire screen or browser window. If a layout condition depends on the viewport, such as full-page navigation menus, it might not behave identically when converted to container queries.
+
 - **Nested containers**:
   - Container queries work within the bounds of their parent container. If a nested container has a different size, the styles applied to its content may differ from expectations.
-- **Resizing effects**:
-  - Breakpoint preview resizes containers but does not simulate the behavior of the entire viewport. This can impact layouts that rely on viewport-relative units like `vw` and `vh`.
 
-#### 3. **Specificity and Logical Operators**
-Complex media query conditions may not translate exactly when converted to container queries:
-- **Logical operators**:
-  - Combining multiple conditions with `and`, `or`, or `not` might result in unexpected behavior. For example:
-    ```css
-    @media (min-width: 600px) and (max-width: 800px) { ... }
-    ```
-    Container queries handle these operators differently and may not correctly apply styles in nested containers.
-- **Specificity conflicts** 
-  - Container queries may conflict with or override existing media queries or other styles due to CSS specificity rules. This is especially true when mixing global media queries and container-specific styles.
+- **Resizing effects**:
+  - Breakpoint preview resizes containers but does not simulate the entire viewport behavior. This can impact layouts that rely on viewport-relative units like `vw` and `vh`.
 
 #### 4. **Viewport-relative Units**
-- Units like `vw`, `vh`, `vmin`, and `vmax` are **not container-aware**. They continue to calculate values based on the viewport, not the container.
-  - Example of affected styles:
-    ```css
-    @media (min-width: 800px) {
-      .example {
-        width: 50vw; /* Still based on viewport width */
-      }
-    }
-    ```
+While the conversion from viewport-relative units (`vw`, `vh`, `vmin`, `vmax`) to container-relative units (`cqw`, `cqh`, `cqmin`, `cqmax`) generally provides a good approximation for the breakpoint preview feature, there are some practical considerations to be aware of:
 
-#### 5. **Non-standard or Advanced Queries**
-Advanced features of media queries, including experimental or non-standard ones, are unlikely to convert successfully:
+- Nested Container References
+
+The preview container becomes the new reference point for all calculations, which may not accurately represent the actual viewport proportions in the final design.
+
+- Fixed-Size Elements Lose Their Consistency
+
+Some designs might intentionally use viewport units for consistent sizing across different views. For example, a header that should always be exactly 10vh tall regardless of container. Converting these to container query units changes this intended behavior.
+
+- Mixed Unit Relationships Change
+
+When designs mix viewport units with other units, their relative proportions will change in the preview:
+
+```css
+/* Original CSS with mixed units */
+.sidebar {
+  width: 30vw; /* 30% of viewport width */
+  margin-right: 20px; /* Fixed margin */
+}
+
+/* When converted in preview */
+.sidebar {
+  width: 30cqw; /* 30% of container width */
+  margin-right: 20px; /* Still a fixed margin */
+}
+```
+
+#### 5. **User Preference Queries**
+Media queries that target user preferences don't translate to container contexts:
+
 - **Prefers-color-scheme**: Media queries like `@media (prefers-color-scheme: dark)` are not applicable to containers, as they rely on global user settings.
 - **Prefers-reduced-motion**: Similar to color schemes, these queries target user preferences and cannot be container-specific.
 
 ---
 
-### Summary of Unsupported or Partially Supported Features
+### Summary of Support
 | **Media Query Feature**       | **Support in Container Queries**       |
 |-------------------------------|---------------------------------------|
-| `orientation` | ❌ Unsupported |
-| `aspect-ratio` | ❌ Unsupported |
-| Complex logical conditions | ⚠️ Not recommended |
-| Viewport-relative units | ⚠️ Not container-aware |
-| User preference queries | ❌ Unsupported (e.g., dark mode) |
-| Unit conversion in @media rules | ❌ Skipped |
-| Basic size queries | ✅ Supported |
+| Standard width/height queries | ✅ Fully supported |
+| Range syntax queries | ✅ Fully supported |
+| Viewport-relative units | ✅ Converted to container units |
 | Print media queries| ✅ Preserved |
+| Complex logical conditions (multiple combined conditions) | ⚠️ May behave differently |
+| User preference queries | ❌ Not applicable to containers |
+| `orientation` | ❌ Not applicable to containers |
+| `aspect-ratio` | ❌ Not applicable to containers |
 
 ---
 
-# Transform Option
+## Transform Option
 
-The transform option provides a workaround for handling unsupported media query combinations by allowing you to provide a custom function to modify how media query parameters are converted into container query parameters. This function only affects the media query transformation and does not impact the conversion of viewport units (vh/vw) to container query units (cqh/cqw) within rules.
+The transform option provides a workaround for handling special cases by allowing you to provide a custom function to modify how media query parameters are converted into container query parameters. This function only affects the media query transformation and does not impact the conversion of viewport units (vh/vw) to container query units (cqh/cqw) within rules.
 
-## Usage
+### Usage
 
 ```js
 require('postcss-viewport-to-container-toggle')({
@@ -203,7 +212,7 @@ transform = null // Default value
 transform = (mediaFeature) => mediaFeature
 ```
 
-## Examples
+### Examples
 
 ### Basic Transform
 
@@ -267,16 +276,9 @@ transform = (mediaFeature) => mediaFeature
 ## Important Notes
 
 1. The transform function is called when converting media queries to container queries.
-2. The plugin creates two sets of rules:
-   - The original media query with a `:where(body:not([data-breakpoint-preview-mode]))` selector
-   - A new container query with the transformed parameters
-3. Print-specific media queries (e.g., `@media print`) are preserved as-is without transformation
-4. The transform function only affects the container query parameters, not the actual CSS properties
-5. When `debug: true` is set, warnings will be shown for unsupported combinations of:
-   - min-width, max-width, min-height, max-height with <= or >= operators
-
-## Limitations
-
-- Print-specific media queries are not transformed
-- The transform function only affects the container query parameters, not the original media query
-- Media queries with `print` and no `screen` or `all` are skipped entirely
+2. The plugin modifies selectors and creates container queries in the following way:
+   - For the original media query, selectors are modified to include the conditional attribute, like `:where(body:not([data-breakpoint-preview-mode])) .selector`
+   - A new `@container` query is created with the transformed parameters
+3. The attribute name (`data-breakpoint-preview-mode`) can be customized via the `modifierAttr` option in your plugin configuration
+4. Print-specific media queries (e.g., `@media print`) are preserved as-is without transformation
+5. The transform function only affects the container query parameters, not the actual CSS properties
