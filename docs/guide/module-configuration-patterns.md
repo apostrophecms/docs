@@ -21,14 +21,56 @@ Instead, ApostropheCMS is designed to let you customize modules by creating corr
 
 ApostropheCMS provides three distinct ways to customize module behavior, each with its own purpose:
 
-### 1. Module Configuration
+### 1. Module options
 
 **Use for:** Adjusting existing behavior using options that have been specifically built into modules.
 
-Configuration provides a way to set values for options that are already designed into the modules. You can only configure options that the module explicitly supports in this way, not create new ones. You can apply configuration in these places:
+The module `options` property provides a way to set values for options that are already designed into the modules. You can only configure options that the module (or code you are adding to it) explicitly supports in this way, not create new ones. You can apply these configuration options in your project level module files or `app.js` when registering the module:
 
-1. In your `app.js` file when registering modules:
+**For core ApostropheCMS modules:**
+Create an `index.js` file with a path matching how the core module is organized in the `node_modules` folder.
 
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    session: {
+      // If this still says `undefined`, set a real secret!
+      secret: undefined
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/express/index.js
+  </template>
+</AposCodeBlock>
+
+This example is from our [starter-kit-essentials](https://github.com/apostrophecms/starter-kit-essentials) repository and configures the options for the core `@apostrophecms/express` module.
+
+**For project-specific modules:**
+You can just configure the options within the modules main `index.js` file.
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    // Configuration options
+    label: 'Article',
+    pluralLabel: 'Articles',
+    sort: { publishedAt: -1 }
+  }
+}
+```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+
+For both core and project-specific modules you can pass an `options` object when registering modules in your `app.js` file:
 
 <AposCodeBlock>
 
@@ -49,70 +91,11 @@ export default {
   </template>
 </AposCodeBlock>
 
-2. In the `options` object when creating or customizing a module at the project level:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  extend: '@apostrophecms/piece-type',
-  options: {
-    // Configuration options
-    label: 'Article',
-    pluralLabel: 'Articles',
-    sort: { publishedAt: -1 }
-  }
-}
-```
-  <template v-slot:caption>
-    modules/article/index.js
-  </template>
-</AposCodeBlock>
-
-3. In area field definitions when configuring widgets - this will set the options for this area field only:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  // ...other properties...
-  fields: {
-    add: {
-      mainContent: {
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {
-              // Configuration for this specific rich text widget in this area
-              toolbar: [ 'bold', 'italic', 'link' ],
-              styles: [
-                { tag: 'p', label: 'Paragraph' },
-                { tag: 'h2', label: 'Heading 2' }
-              ]
-            },
-            '@apostrophecms/image': {
-              // Configuration for this specific image widget in this area
-              size: 'full'
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-  <template v-slot:caption>
-    modules/article/index.js
-  </template>
-</AposCodeBlock>
-
-Remember: A module can only recognize configuration options that have been specifically programmed into it. You cannot invent new options and expect the module to understand them.
-
 ### 2. Module Improvement
 
 **Use for:** Adding or enhancing functionality of an existing module without changing its core purpose.
 
-Module improvement lets you add new methods, event handlers, or other features to an existing module that was installed as a npm package. You do this by creating a file with the same path as the module you want to improve. For core Apostrophe modules you place your improvement files inside an `@apostrophecms` folder like they are in the `node_modules` folder:
+Module improvement lets you add new methods, event handlers, or other features to an existing module that was installed as a npm package. You do this by creating a file with the same path as the module you want to improve For core Apostrophe modules you place your improvement files inside an `@apostrophecms` folder like they are in the `node_modules` folder, just like setting the `options` configuration:
 
 <AposCodeBlock>
 
@@ -149,7 +132,7 @@ export default {
 
 In this example we are adding a `handler(self)` and a `methods(self)` to the core `@apostrophecms/piece-type` module. This means that any other module in your project that uses `extend` to create a new piece type will have access to that handler and method.
 
-### 2. Module Extension
+### 3. Module Extension
 
 **Use for:** Creating a new module that inherits behavior from an existing one.
 
@@ -311,21 +294,57 @@ When Apostrophe initializes your project:
 3. The `executive-team-chart` module inherits all the functionality from the improved base module, plus gets its own specialized fields and behavior
 
 This powerful pattern lets you:
-1. Add global improvements that affect all instances of a module
+1. Add global improvements that affect both the module and those that extend it
 2. Create specialized versions of modules for specific purposes
 3. Maintain clean separation of concerns in your code
 
 It's particularly useful when you want to both enhance a module's core functionality and create specialized variants of it for different use cases in your project.
 
+## The `improve` Property in npm Packages
+
+While project-level module improvements are made by creating matching file paths in your `/modules` directory, npm packages that aim to improve core ApostropheCMS modules use a different approach: the `improve` property. Much like the `extend` property, the specific module being improved is passed as the value.
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  improve: '@apostrophecms/rich-text-widget',
+  options: {
+    typoConfig: {}
+  },
+  extendMethods(self) {
+    return {
+      // We need to extend this method so that our configuration data is available
+      getBrowserData(_super, req) {
+        const initialData = _super(req);
+        const finalData = {
+          ...initialData,
+          aposTypoConfig: self.options.typoConfig
+        }
+        return finalData;
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    rich-text-example-extensions/modules/@apostrophecms/typography/index.js
+  </template>
+</AposCodeBlock>
+
+This example is from the [rich-text-example-extensions](https://github.com/apostrophecms/rich-text-example-extensions) repository that can be installed into a project using `npm install @apostrophecms/rich-text-example-extensions`. It uses the `improve` property to target the core `@apostrophecms/rich-text-widget` module and add additional functionality.
+
+> [!IMPORTANT]
+> The `improve` property should never be used in a project-level module, only in modules installed as packages in the `node_modules` folder.
+
 ## Conclusion
 
-Understanding the difference between configuration, improvement, and extension in ApostropheCMS will help you customize the CMS effectively while maintaining a clean, maintainable codebase.
+Understanding the difference between configuration options, improvement, and extension in ApostropheCMS will help you customize the CMS effectively while maintaining a clean, maintainable codebase.
 
 To summarize:
 - **Configuration** adjusts existing behavior using predefined options
 - **Improvement** enhances existing modules with new capabilities
 - **Extension** creates new module types based on existing ones
-- **Widget options** customize how widgets behave in specific areas
 
 These patterns apply to all modules, whether they're core modules, official packages, third-party modules, or your own custom modules installed via npm.
 

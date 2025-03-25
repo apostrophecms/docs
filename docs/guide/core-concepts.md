@@ -12,7 +12,7 @@ Apostrophe is built using a system of **modules**. We'll get into a more detaile
 
 If you're familiar with JavaScript modules, the module concept should already be familiar to you. But if not, a module is self-contained code that defines a specific set of functionality. In other words, each module is responsible for providing one feature, such as a type of widget, a type of customized page, or a service. This could be anything from defining fields for a blog post content type to integrating with third-party services. In short, modules are the building blocks of your application.
 
-One important concept regarding modules in Apostrophe is how they work within the [project's ecosystem](/guide/module-configuration-patterns.html). The majority of modules inherit the functionality of the core Apostrophe modules and then extend or improve that functionality. Later in this training, we will provide a more detailed technical review of Apostrophe's module system.
+One important concept regarding modules in Apostrophe is how they work within the [project's ecosystem](/guide/module-configuration-patterns.html). Project-level modules inherit the functionality of core Apostrophe modules and then extend or improve that functionality. Later in this training, we will provide a more detailed technical review of Apostrophe's module system.
 
 ## Schemas
 
