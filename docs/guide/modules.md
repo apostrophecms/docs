@@ -84,7 +84,7 @@ Module names may not include periods (`.`).
 
 ## Module inheritance
 
-Inheritance is the glue of the module system. Every module extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
+As we stressed in [`Module Configuration'](/guide/module-configuration-patterns.html), inheritance is the glue of the module system. Every module extends another module, inheriting functionality and structure. This means that your blog post module, which extends the ["piece type"](/reference/glossary.md#piece) module, comes with a huge set of features you never have to write.
 
 <AposCodeBlock>
 

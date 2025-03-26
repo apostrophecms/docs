@@ -4,7 +4,7 @@ Every page in an Apostrophe website is assigned a **"page type"**. The page type
 
 ## Creating a page type
 
-Apostrophe core only includes a "Home page" type with some basic default content options. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`.
+Apostrophe core only includes a "Home page" type with some basic default content options. You will likely need your own page types, which you create by adding modules that extend `@apostrophecms/page-type` and instantiating them in `app.js`. You can read more about using `extend` in our [section on module configuration](/guide/module-configuration-patterns.md).
 
 <AposCodeBlock>
 

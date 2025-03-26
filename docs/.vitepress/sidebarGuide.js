@@ -34,6 +34,10 @@ const sidebarGuide = [
     collapsed: false,
     items: [
       {
+        text: 'Module Configuration',
+        link: '/guide/module-configuration-patterns.md'
+      },
+      {
         text: 'Code Organization',
         collapsed: true,
         items: [
