@@ -15,30 +15,42 @@ The rich text widget provides a space for entering and editing formatted text. E
 
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`color`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field.
 
+<AposCodeBlock>
+
 ``` js
-// modules/@apostrophecms/home-page/index.js
-// In area field configuration options
-widgets: {
-  '@apostrophecms/rich-text': {
-    // 👇 Toolbar configuration
-    toolbar: ['styles', 'bold', 'italic', 'color'],
-    // 👇 Styles configuration
-    styles: [
-      {
-        tag: 'p',
-        label: 'Paragraph (P)'
-      },
-      {
-        tag: 'h2',
-        label: 'Heading 2 (H2)'
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {
+              // 👇 Toolbar configuration
+              toolbar: ['styles', 'bold', 'italic', 'color'],
+              // 👇 Styles configuration
+              styles: [
+                {
+                  tag: 'p',
+                  label: 'Paragraph (P)'
+                },
+                {
+                  tag: 'h2',
+                  label: 'Heading 2 (H2)'
+                }
+              ],
+              color: {
+                presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff']
+              }
+            }
+          }
+        }
       }
-    ],
-    color: {
-      presetColors: [ '#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff']
-    }
-  }
-}
+// remainder of fields
 ```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
 
 ### Configuring the toolbar
 
@@ -350,20 +362,26 @@ modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
 
 The image widget supports displaying a single image, including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
 
-
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
-<APosCodeBlock>
+
+<AposCodeBlock>
 
 ``` js
-// In area field configuration options
-widgets: {
-  '@apostrophecms/image': {}
-}
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/image': {}
+          }
+        }
+      }
+// remainder of fields
 ```
-<template v-slot:caption>
-  modules/@apostrophecms/home-page/index.js
-</template>
-
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
 </AposCodeBlock>
 
 ### Specifying a minimum size
@@ -559,6 +577,26 @@ The core video widget accepts a video URL and fetches the embed code to display 
 
 <!-- TODO: Link to the `allowList` option on the oembed module once module references are available. -->
 
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/video': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
 ### Adding a placeholder video
 
 By default, the video widget displays a placeholder video. To block this behavior, set the `placeholder` option to a value of `false`. The default video can be changed by adding a hosted video URL string as the value of the `placeholderUrl` option. The video URL must be compatible with the video widget, e.g., a YouTube video page URL, Vimeo video page URL, etc.
@@ -585,7 +623,28 @@ module.exports = {
 
 The HTML widget allows content editors to embed raw HTML directly into a template. This can be helpful if they may need to add third-party features (e.g., sign-up forms). This can also be very dangerous since there are no limits to what they can add. Bad JavaScript in embedded HTML can break the user interface, making it impossible to remove the bad code.
 
-**Think carefully before providing this widget option to editors and make them aware of the risks.**
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/html': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+>[!IMPORTANT]
+> **Think carefully before providing this widget option to editors and make them aware of the risks.**
 
 There is a safety mechanism in case things do go wrong. If embedded HTML breaks the Apostrophe interface, append the query parameter `safemode=1` to the end of the URL. The HTML widget will not render its contents and editors will be able to edit it to remove or fix the embed.
 
