@@ -30,7 +30,9 @@ The Vue component name configured via the `widgetEditor` subproperty of the `com
 
 The widget editor receives a `modelValue` Vue prop containing the existing value of the widget (an object), and emits an `update` Vue event with a new object whenever appropriate. The component should *not* modify the `modelValue` prop given to it.
 
-The widgetEditor **must not** attempt to save changes by itself. Instead it must emit the `update` event and let Apostrophe takes care of the rest. Never assume the widget will be in a particular document type. It may be in any area, nested in any document type. Apostrophe will handle this for you.
+The widget editor **must not** attempt to save changes by itself. Instead it must emit the `update` event and let Apostrophe takes care of the rest. Never assume the widget will be in a particular document type. It may be in any area, nested in any document type. Apostrophe will handle this for you.
+
+The widget editor also receives an `options` prop. This object contains any options that were passed to this particular widget as part of the configuration of an `area` field. For instance, this is how the rich text widget receives its `toolbar` option.
 
 ### Debouncing update events
 
