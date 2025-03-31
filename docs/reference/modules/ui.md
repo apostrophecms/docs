@@ -4,13 +4,16 @@ extends: '@apostrophecms/module'
 
 # `@apostrophecms/ui`
 
- The `@apostrophecms/ui` module provides the components and mixins for creating the admin UI. It also provides the UI styling with some built-in theming capabilities that can be leveraged to create a custom admin experience.
+ The `@apostrophecms/ui` module provides the components and mixins for creating the admin UI seen by logged-in users with editing privileges. It also provides the UI styling with some built-in theming capabilities that can be leveraged to create a custom admin experience. This module has no impact on the experience of ordinary logged-out site visitors.
 
 ## Options
 
 |  Property | Type | Description |
 |---|---|---|
 | `widgetMargin` | String | CSS margin value for widget spacing, default is `'20px 0'` |
+
+### `widgetMargin`
+This option sets the padding on nested areas and only impacts what a logged-in user with editing privileges will see. It has no impact on the CSS for logged-out users or users without editing privileges.
 
 ## Core Components
 
@@ -42,10 +45,10 @@ The `@apostrophecms/ui` module provides the foundation for customizing the admin
 
 Common customization options include:
 
-- **Overriding standard components** by placing files with the same name in project modules
-- **Adding custom field types** to extend schema capabilities
-- **Creating custom manager view columns** to display piece-specific data
-- **Defining custom context menu operations** for documents
+- [**Overriding standard components**](/guide/custom-ui.html#overriding-standard-vue-js-components-by-name) by placing files with the same name in project modules
+- [**Adding custom field types**](/guide/custom-ui.html#registering-custom-field-types) to extend schema capabilities
+- [**Creating custom manager view columns**](/guide/custom-ui.html#adding-custom-columns-to-the-piece-type-manager) to display piece-specific data
+- [**Defining custom context menu operations**](/guide/custom-ui.html#adding-custom-context-menu-items) for documents
 
 ## Theming
 
