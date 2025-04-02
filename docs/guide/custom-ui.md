@@ -398,11 +398,57 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items from within any module, targeting any Vue component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue). The menu registration should happen in the initialization phase. It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, take note of the various options below to limit when they appear.
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. You can add custom context menu items from within any module.
 
-Here is an example of how to add a custom context menu item labeled "My Menu Item".
+Custom context menu items can either:
+1. Open a modal component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
+2. Emit an event that can be listened for elsewhere in your code using `apos.bus.$on()`
+
+It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, you can use the options described below to limit when they appear.
 
 ![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
+
+The menu registration should happen in the initialization phase. While context menu operations will appear for all documents by default, there are various options to control when they appear.
+
+### Opening a Modal
+
+Here's an example of adding a custom context menu item that opens a modal:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Article',
+    pluralLabel: 'Articles'
+  },
+  init(self) {
+    self.apos.doc.addContextOperation({
+      context: 'update',
+      action: 'myUniqueAction',
+      label: 'My Menu Item',
+      modal: 'MyModalComponent',
+      // Optional properties shown below
+      conditions: [ 'canEdit', 'canPublish' ],
+      if: {
+        type: 'my-type'
+      },
+      moduleIf: {
+        autopublish: true
+      }
+    });
+  }
+}
+```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+### Emitting Events
+
+Alternatively, you can create a context menu item that emits an event instead of opening a modal:
 
 <AposCodeBlock>
 
@@ -416,45 +462,121 @@ module.exports = {
   init(self) {
     self.apos.doc.addContextOperation({
       context: 'update',
-      action: 'myUniqueAction',
-      label: 'My Menu Item',
-      modal: 'MyModalComponent',
-      // Optional
-      conditions: [ 'canEdit', 'canPublish' ],
-      // Optional: match properties of the individual document
+      action: 'refresh-related-content',
+      label: 'Refresh Related Content',
+      type: 'event',
       if: {
-        type: 'my-type'
-      },
-      // Optional: match properties of the module, not the individual document
-      moduleIf: [
-        autopublish: true
-      ]
+        type: self.__meta.name
+      }
     });
-  }
-}
 ```
   <template v-slot:caption>
     modules/article/index.js
   </template>
 </AposCodeBlock>
 
-::: warning
-Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
-:::
 
-::: info
-* The `context`, `action`, `label`, and `modal` properties are required.
-* The current API supports only `context: 'update'` (the custom menu items are available for previously saved documents).
-* The `action` property should be globally unique.
-* Overriding the same `action` is possible (the last wins).
-* You may mark the action as "dangerous" via an optional property `modifiers: [ 'danger' ]` (see the 'Archive' and 'Unpublish' menu items).
-* An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
-* The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'. To go beyond these, see the more flexible `if` and `moduleIf` features below.
-* The optional `moduleName` property can be used to override the `moduleName` prop passed to the modal. By default, it will be the name of the piece type module corresponding to the individual piece, or `@apostrophecms/page` in the case of pages.
-* The `if` property takes an object that works like a MongoDB query criteria object, in a limited way: each property must match the corresponding property of the document. The `$or`, `$and` and `$ne` operators are supported as in MongoDB, along with dot notation to match nested properties. Other MongoDB query features are not supported at this time.
-* The `moduleIf` property works like `if`, but it matches properties of the module rather than the document. Note this extends only to properties passed down to the browser via the `getBrowserData` method of the module in question. You can expose new properties via this method by using the `extendMethods` feature, [as mentioned here](/reference/modules/piece-type.html#getbrowserdata-req).
-* For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
-:::
+When a user clicks on an event-type context menu item, it triggers an event with the same name as the `action` property. You can listen for this event elsewhere in your code:
+
+<AposCodeBlock>
+
+``` javascript
+// Listen for the event elsewhere in your code or another module
+self.apos.bus.$on('refresh-related-content', (data) => {
+  // Handle the event
+  // data contains doc, moduleName, moduleLabels, and any props
+  console.log('Refreshing related content for:', data.doc._id);
+
+  // Example: Fetch related content based on tags
+  if (data.doc.tags && data.doc.tags.length) {
+    self.apos.http.get('/api/v1/article', {
+      qs: {
+        tags: { $in: data.doc.tags },
+        _id: { $ne: data.doc._id },
+        limit: 5
+      }
+    }).then(result => {
+      // Update UI or cache with the fresh related content
+      self.apos.notify('Related content refreshed', { type: 'success' });
+    }).catch(err => {
+      self.apos.notify('Failed to refresh related content', { type: 'error' });
+    });
+  }
+});
+```
+</AposCodeBlock>
+
+The event data passed with the event is an object which includes:
+
+```js
+{
+  moduleName: operation.moduleName || this.moduleName,
+  moduleLabels: this.moduleLabels,
+  doc,
+  ...docProps(doc),
+  ...operation.props
+}
+```
+
+### Configuration Options
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `context` | Yes | Currently only `'update'` is supported (for previously saved documents) |
+| `action` | Yes | A globally unique identifier for this operation |
+| `label` | Yes | The text displayed in the context menu |
+| `modal` | Only added for modals | The name of the modal component to open. Not required when type: 'event' is specified. |
+| `type` | Only added for events | Set to 'event' to emit an event instead of opening a modal. Omit this property when using modal. |
+| `conditions` | No | Array of built-in permission conditions that must all be satisfied |
+| `if` | No | MongoDB-style query to match document properties |
+| `moduleIf` | No | MongoDB-style query to match module properties |
+| `modifiers` | No | Array of UI modifiers (e.g., `['danger']` for warning styling) |
+| `manuallyPublished` | No | When `true`, item only appears for non-autopublished document types |
+| `moduleName` | No | Override the module name passed to the modal |
+| `props` | No | Additional custom properties to pass to the modal or event data |
+
+#### Available Condition Checks
+
+When using the `conditions` property, you can specify any of these built-in permission checks:
+- `'canPublish'`
+- `'canEdit'`
+- `'canDismissSubmission'`
+- `'canDiscardDraft'`
+- `'canLocalize'`
+- `'canArchive'`
+- `'canUnpublish'`
+- `'canCopy'`
+- `'canRestore'`
+
+For more complex conditions, use the `if` and `moduleIf` properties.
+
+### Advanced Filtering
+
+The `if` property allows you to filter menu items based on document properties:
+
+```js
+if: {
+  type: 'article',
+  'metadata.featured': true,
+  $or: [
+    { status: 'published' },
+    { status: 'draft' }
+  ]
+}
+```
+
+The `moduleIf` property matches against module properties instead of document properties:
+
+```js
+moduleIf: {
+  autopublish: false,
+  localized: true
+}
+```
+
+Both support MongoDB-style operators like `$or`, `$and`, and `$ne`, as well as dot notation for nested properties.
+
+> **Warning:** Do not use core actions as your `action` property value. This would lead to unpredictable results and broken UI. You can find the core actions in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
 
 ## Toggling the visibility of the admin-bar
 
