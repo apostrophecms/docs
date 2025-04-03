@@ -77,7 +77,6 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'alignCenter'` | Text Align Center |
 | `'alignRight'` | Text Align Right |
 | `'alignJustify'` | Text Align Justify |
-| `'table'` | Insert and edit tables |
 | `'importTable'` | Import a CSV file to be added as a table |
 | `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
@@ -100,7 +99,7 @@ To accommodate this, you can enable the "insert menu" as well:
 widgets: {
   '@apostrophecms/rich-text': {
     //  Toolbar configuration
-    toolbar: ['styles', 'bold', 'italic', 'table', 'importTable', 'image'],
+    toolbar: ['styles', 'bold', 'italic', 'importTable', 'image'],
     // 👇 Insert menu configuration
     insert: ['table', 'importTable', 'image', 'horizontalRule']
 }
@@ -165,6 +164,63 @@ Adding to the stylesheet:
 
 ### Configuring the color picker
 If you choose to add the `color` button to the toolbar you can optionally pass in a `color` configuration object.
+
+The `color` configuration is an extension of the color schema field and as such follows the same options API. [See the configuration here](/reference/field-types/color.html#options).
+
+### Configuring the table editor
+By default tables in rich text are configured with resizable (draggable) column widths, minimum cell widths, and other helpers.
+
+```javascript
+tableOptions: {
+  resizable: true,
+  handleWidth: 10,
+  cellMinWidth: 100,
+  lastColumnResizable: false,
+  class: 'apos-rich-text-table'
+}
+```
+
+::: info
+To override the defaults you must provide a new configuration object **at the `@apostrophecms/rich-text-widget`** module level. These options **do not** merge.
+:::
+
+#### Table editor options
+| Property | Type | Default | What it does|
+| --- | --- | --- | ------- |
+| `resizable` | `Boolean` | `true` | Column widths are resizable (draggable) |
+| `handleWidth` | `Integer` | `10` | The width of the resizable drag handle (in pixels) |
+| `cellMinWidth` | `Integer` | `100` | The minimum width of a cell (in pixels) |
+| `lastColumnResizable` | `Boolean` | `false` | Whether the last column of the table can be resized from the right side |
+| `class` | `String` | `apos-rich-text-table` | Class applied to table element |
+
+#### Custom table options example
+
+<AposCodeBlock>
+
+  ```js
+  import apostrophe from 'apostrophe';
+
+  apostrophe({
+    modules: {
+      '@apostrophecms/rich-text-widget': {
+        options: {
+          tableOptions: {
+            resizable: false,
+            class: 'my-table-class'
+          }
+        }
+      }
+    }
+  });
+
+  ```
+  <template v-slot:caption>
+    app.js
+  </template>
+
+</AposCodeBlock>
+
+
 
 The `color` configuration is an extension of the color schema field and as such follows the same options API. [See the configuration here](/reference/field-types/color.html#options).
 
