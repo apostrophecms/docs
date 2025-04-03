@@ -486,14 +486,14 @@ When a user clicks on an event-type context menu item, it triggers an event with
 
 ``` javascript
 // Listen for the event elsewhere in your code or another module
-self.apos.bus.$on('refresh-related-content', (data) => {
+apos.bus.$on('refresh-related-content', (data) => {
   // Handle the event
   // data contains doc, moduleName, moduleLabels, and any props
   console.log('Refreshing related content for:', data.doc._id);
 
   // Example: Fetch related content based on tags
   if (data.doc.tags && data.doc.tags.length) {
-    self.apos.http.get('/api/v1/article', {
+    apos.http.get('/api/v1/article', {
       qs: {
         tags: { $in: data.doc.tags },
         _id: { $ne: data.doc._id },
@@ -501,9 +501,9 @@ self.apos.bus.$on('refresh-related-content', (data) => {
       }
     }).then(result => {
       // Update UI or cache with the fresh related content
-      self.apos.notify('Related content refreshed', { type: 'success' });
+      apos.notify('Related content refreshed', { type: 'success' });
     }).catch(err => {
-      self.apos.notify('Failed to refresh related content', { type: 'error' });
+      apos.notify('Failed to refresh related content', { type: 'error' });
     });
   }
 });
