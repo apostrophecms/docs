@@ -2,6 +2,10 @@
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
 
+::: tip
+Why customize the CMS UI? Tailoring the admin interface can streamline workflows, match branding, or simplify content editing for non-technical users.
+:::
+
 ::: warning
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
@@ -13,7 +17,7 @@ This guide focuses on how to customize Apostrophe's administrative user interfac
 
 Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules. These are typically found in Apostrophe core, but they can be anywhere in the project. This means that we can introduce our own Vue components to the admin UI just by adding `.vue` files to the `ui/apos/components` subdirectory of any Apostrophe module. As explained below, it is also possible to override existing components by supplying a component with the same name.
 
-## Rebuilding the UI when we make changes
+## Rebuilding the custom admin UI when we make changes
 
 For performance reasons, Apostrophe projects are not configured to automatically rebuild the admin UI every time your code changes. This makes sense because in most projects there is no custom admin UI code, and it takes time to build.
 
@@ -37,7 +41,7 @@ Apostrophe's [schema field types](content-schema.md) cover many situations, but 
 
 Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However, note that you will find it easier to follow the remainder of this article if you read that article first.
 
-## Adding custom columns to the piece type manager
+## Adding custom columns to the ApostropheCMS piece type manager
 
 Another common extension is a custom column for the piece type manager. By default the manager modal displays the title, certain flags, and the last time the piece was updated. We can extend this to display our custom star ratings.
 
@@ -133,7 +137,7 @@ This component uses `AposCellMixin` to do two important things:
 * The component gains access to the configuration of the column by accessing the `header` prop, which is automatically declared by the mixin.
 * The component can fetch properties from the piece by invoking `this.get` with any property name. Following Apostrophe's convention this method automatically fetches from the published version of the piece if it exists, otherwise from the draft.
 
-## Overriding standard Vue.js components by name
+## Overriding standard Vue.js components by name in ApostropheCMS
 
 Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
 
@@ -343,7 +347,7 @@ To remove the version number, change the contents of that final `transition` ele
 Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
 :::
 
-## Overriding standard Vue.js components through configuration
+## Overriding standard Vue.js components through configuration in ApostropheCMS
 
 There can be only one `AposDocsManager` component definition in a project, but sometimes we need different behavior for a specific piece type. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better to **specify a different, custom component name to be used** to manage a particular piece type.
 
@@ -398,21 +402,21 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. You can add custom context menu items from within any module.
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as "preview", "duplicate", and so on. You can add custom context menu items from within any module.
+
+![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
 
 Custom context menu items can either:
-1. Open a modal component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
+1. Open a modal dialog box that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
 2. Emit an event that can be listened for elsewhere in your code using `apos.bus.$on()`
 
 It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, you can use the options described below to limit when they appear.
-
-![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
 
 The menu registration should happen in the initialization phase. While context menu operations will appear for all documents by default, there are various options to control when they appear.
 
 ### Opening a Modal
 
-Here's an example of adding a custom context menu item that opens a modal:
+Here's an example of adding a custom context menu item that opens a modal dialog box:
 
 <AposCodeBlock>
 
@@ -578,7 +582,7 @@ Both support MongoDB-style operators like `$or`, `$and`, and `$ne`, as well as d
 
 > **Warning:** Do not use core actions as your `action` property value. This would lead to unpredictable results and broken UI. You can find the core actions in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
 
-## Toggling the visibility of the admin-bar
+## Toggling the visibility of the ApostropheCMS admin-bar
 
 There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. For example, the visibility of a page or a piece document can be set to `login required`, so only those with an account can view it. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
 
