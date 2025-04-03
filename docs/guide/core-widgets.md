@@ -220,10 +220,6 @@ To override the defaults you must provide a new configuration object **at the `@
 
 </AposCodeBlock>
 
-
-
-The `color` configuration is an extension of the color schema field and as such follows the same options API. [See the configuration here](/reference/field-types/color.html#options).
-
 ### Default rich text configuration
 
 ```javascript
