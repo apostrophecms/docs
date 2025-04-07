@@ -2,6 +2,10 @@
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
 
+::: tip
+Why customize the CMS UI? Tailoring the admin interface can streamline workflows, match branding, or simplify content editing for non-technical users.
+:::
+
 ::: warning
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
@@ -13,7 +17,7 @@ This guide focuses on how to customize Apostrophe's administrative user interfac
 
 Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules. These are typically found in Apostrophe core, but they can be anywhere in the project. This means that we can introduce our own Vue components to the admin UI just by adding `.vue` files to the `ui/apos/components` subdirectory of any Apostrophe module. As explained below, it is also possible to override existing components by supplying a component with the same name.
 
-## Rebuilding the UI when we make changes
+## Rebuilding the custom admin UI when we make changes
 
 For performance reasons, Apostrophe projects are not configured to automatically rebuild the admin UI every time your code changes. This makes sense because in most projects there is no custom admin UI code, and it takes time to build.
 
@@ -37,7 +41,7 @@ Apostrophe's [schema field types](content-schema.md) cover many situations, but 
 
 Since it is a larger topic that touches on more than just UI, we've created a [separate article on how to add a custom field type](/guide/custom-schema-field-types.md). However, note that you will find it easier to follow the remainder of this article if you read that article first.
 
-## Adding custom columns to the piece type manager
+## Adding custom columns to the ApostropheCMS piece type manager
 
 Another common extension is a custom column for the piece type manager. By default the manager modal displays the title, certain flags, and the last time the piece was updated. We can extend this to display our custom star ratings.
 
@@ -133,7 +137,7 @@ This component uses `AposCellMixin` to do two important things:
 * The component gains access to the configuration of the column by accessing the `header` prop, which is automatically declared by the mixin.
 * The component can fetch properties from the piece by invoking `this.get` with any property name. Following Apostrophe's convention this method automatically fetches from the published version of the piece if it exists, otherwise from the draft.
 
-## Overriding standard Vue.js components by name
+## Overriding standard Vue.js components by name in ApostropheCMS
 
 Most of the time we don't need to override admin UI components that ship with Apostrophe. But if we have a need, we can do so by **placing a file with the same name as a standard component in the `ui/apos/components` subdirectory of a project-level module.** You can also do this in a custom npm module to achieve reuse across projects.
 
@@ -343,7 +347,7 @@ To remove the version number, change the contents of that final `transition` ele
 Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
 :::
 
-## Overriding standard Vue.js components through configuration
+## Overriding standard Vue.js components through configuration in ApostropheCMS
 
 There can be only one `AposDocsManager` component definition in a project, but sometimes we need different behavior for a specific piece type. We could work around this by overriding a core component and adding conditional logic, but this results in code that is hard to maintain, and also means we are stuck maintaining a copy of a complex component and missing out on bug fixes and improvements. It would be better to **specify a different, custom component name to be used** to manage a particular piece type.
 
@@ -398,11 +402,57 @@ Before you override an editor modal, consider [adding a custom schema field type
 
 ## Adding custom context menu items
 
-Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as 'preview', 'duplicate', and so on. We can add custom context menu items from within any module, targeting any Vue component that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue). The menu registration should happen in the initialization phase. It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, take note of the various options below to limit when they appear.
-
-Here is an example of how to add a custom context menu item labeled "My Menu Item".
+Apostrophe offers a context menu that can be used to carry out certain operations on a document, such as "preview", "duplicate", and so on. You can add custom context menu items from within any module.
 
 ![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
+
+Custom context menu items can either:
+1. Open a modal dialog box that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
+2. Emit an event that can be listened for elsewhere in your code using `apos.bus.$on()`
+
+It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, you can use the options described below to limit when they appear.
+
+The menu registration should happen in the initialization phase. While context menu operations will appear for all documents by default, there are various options to control when they appear.
+
+### Opening a Modal
+
+Here's an example of adding a custom context menu item that opens a modal dialog box:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Article',
+    pluralLabel: 'Articles'
+  },
+  init(self) {
+    self.apos.doc.addContextOperation({
+      context: 'update',
+      action: 'myUniqueAction',
+      label: 'My Menu Item',
+      modal: 'MyModalComponent',
+      // Optional properties shown below
+      conditions: [ 'canEdit', 'canPublish' ],
+      if: {
+        type: 'my-type'
+      },
+      moduleIf: {
+        autopublish: true
+      }
+    });
+  }
+}
+```
+  <template v-slot:caption>
+    modules/article/index.js
+  </template>
+</AposCodeBlock>
+
+### Emitting Events
+
+Alternatively, you can create a context menu item that emits an event instead of opening a modal:
 
 <AposCodeBlock>
 
@@ -416,47 +466,123 @@ module.exports = {
   init(self) {
     self.apos.doc.addContextOperation({
       context: 'update',
-      action: 'myUniqueAction',
-      label: 'My Menu Item',
-      modal: 'MyModalComponent',
-      // Optional
-      conditions: [ 'canEdit', 'canPublish' ],
-      // Optional: match properties of the individual document
+      action: 'refresh-related-content',
+      label: 'Refresh Related Content',
+      type: 'event',
       if: {
-        type: 'my-type'
-      },
-      // Optional: match properties of the module, not the individual document
-      moduleIf: [
-        autopublish: true
-      ]
+        type: self.__meta.name
+      }
     });
-  }
-}
 ```
   <template v-slot:caption>
     modules/article/index.js
   </template>
 </AposCodeBlock>
 
-::: warning
-Do not use core actions as your `action` property value - this would lead to unpredictable results and generally broken UI. You may consult what the core actions are in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
-:::
 
-::: info
-* The `context`, `action`, `label`, and `modal` properties are required.
-* The current API supports only `context: 'update'` (the custom menu items are available for previously saved documents).
-* The `action` property should be globally unique.
-* Overriding the same `action` is possible (the last wins).
-* You may mark the action as "dangerous" via an optional property `modifiers: [ 'danger' ]` (see the 'Archive' and 'Unpublish' menu items).
-* An additional optional boolean property `manuallyPublished` is supported. When set to true, the custom menu item is available only for document types that do not have the `autopublish: true` or `localized: false` options set.
-* The `conditions` property is optional. It takes an array of one or more strings specifying conditions that all must be satisfied to determine if the action can be run on the current doc. Valid values are: 'canPublish', 'canEdit', 'canDismissSubmission', 'canDiscardDraft', 'canLocalize', 'canArchive', 'canUnpublish', 'canCopy', 'canRestore'. To go beyond these, see the more flexible `if` and `moduleIf` features below.
-* The optional `moduleName` property can be used to override the `moduleName` prop passed to the modal. By default, it will be the name of the piece type module corresponding to the individual piece, or `@apostrophecms/page` in the case of pages.
-* The `if` property takes an object that works like a MongoDB query criteria object, in a limited way: each property must match the corresponding property of the document. The `$or`, `$and` and `$ne` operators are supported as in MongoDB, along with dot notation to match nested properties. Other MongoDB query features are not supported at this time.
-* The `moduleIf` property works like `if`, but it matches properties of the module rather than the document. Note this extends only to properties passed down to the browser via the `getBrowserData` method of the module in question. You can expose new properties via this method by using the `extendMethods` feature, [as mentioned here](/reference/modules/piece-type.html#getbrowserdata-req).
-* For backward compatibility, this method can also be called with the `moduleName` passed as the first argument and the object as the second, but this is discouraged.
-:::
+When a user clicks on an event-type context menu item, it triggers an event with the same name as the `action` property. You can listen for this event elsewhere in your code:
 
-## Toggling the visibility of the admin-bar
+<AposCodeBlock>
+
+``` javascript
+// Listen for the event elsewhere in your code or another module
+apos.bus.$on('refresh-related-content', (data) => {
+  // Handle the event
+  // data contains doc, moduleName, moduleLabels, and any props
+  console.log('Refreshing related content for:', data.doc._id);
+
+  // Example: Fetch related content based on tags
+  if (data.doc.tags && data.doc.tags.length) {
+    apos.http.get('/api/v1/article', {
+      qs: {
+        tags: { $in: data.doc.tags },
+        _id: { $ne: data.doc._id },
+        limit: 5
+      }
+    }).then(result => {
+      // Update UI or cache with the fresh related content
+      apos.notify('Related content refreshed', { type: 'success' });
+    }).catch(err => {
+      apos.notify('Failed to refresh related content', { type: 'error' });
+    });
+  }
+});
+```
+</AposCodeBlock>
+
+The event data passed with the event is an object which includes:
+
+```js
+{
+  moduleName: operation.moduleName || this.moduleName,
+  moduleLabels: this.moduleLabels,
+  doc,
+  ...docProps(doc),
+  ...operation.props
+}
+```
+
+### Configuration Options
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `context` | Yes | Currently only `'update'` is supported (for previously saved documents) |
+| `action` | Yes | A globally unique identifier for this operation |
+| `label` | Yes | The text displayed in the context menu |
+| `modal` | Only added for modals | The name of the modal component to open. Not required when type: 'event' is specified. |
+| `type` | Only added for events | Set to 'event' to emit an event instead of opening a modal. Omit this property when using modal. |
+| `conditions` | No | Array of built-in permission conditions that must all be satisfied |
+| `if` | No | MongoDB-style query to match document properties |
+| `moduleIf` | No | MongoDB-style query to match module properties |
+| `modifiers` | No | Array of UI modifiers (e.g., `['danger']` for warning styling) |
+| `manuallyPublished` | No | When `true`, item only appears for non-autopublished document types |
+| `moduleName` | No | Override the module name passed to the modal |
+| `props` | No | Additional custom properties to pass to the modal or event data |
+
+#### Available Condition Checks
+
+When using the `conditions` property, you can specify any of these built-in permission checks:
+- `'canPublish'`
+- `'canEdit'`
+- `'canDismissSubmission'`
+- `'canDiscardDraft'`
+- `'canLocalize'`
+- `'canArchive'`
+- `'canUnpublish'`
+- `'canCopy'`
+- `'canRestore'`
+
+For more complex conditions, use the `if` and `moduleIf` properties.
+
+### Advanced Filtering
+
+The `if` property allows you to filter menu items based on document properties:
+
+```js
+if: {
+  type: 'article',
+  'metadata.featured': true,
+  $or: [
+    { status: 'published' },
+    { status: 'draft' }
+  ]
+}
+```
+
+The `moduleIf` property matches against module properties instead of document properties:
+
+```js
+moduleIf: {
+  autopublish: false,
+  localized: true
+}
+```
+
+Both support MongoDB-style operators like `$or`, `$and`, and `$ne`, as well as dot notation for nested properties.
+
+> **Warning:** Do not use core actions as your `action` property value. This would lead to unpredictable results and broken UI. You can find the core actions in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
+
+## Toggling the visibility of the ApostropheCMS admin-bar
 
 There are times when you want to allow people that don't have editing or content creation permissions to log into your project site. For example, the visibility of a page or a piece document can be set to `login required`, so only those with an account can view it. In that case, it may be desirable to not display the admin-bar. The `@apostrophecms/admin-bar` module `getShowAdminBar()` method can be extended to return `false` which will hide the admin-bar for that role when logged in.
 
