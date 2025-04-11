@@ -82,7 +82,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
-| `'|'` | Add a visual separator to the toolbar (not a formatting action) |
+| `'\|'` | Add a visual separator to the toolbar (not a formatting action) |
 
 <!-- TODO: Add a link to the how-to on adding your own tools when available. -->
 
@@ -654,6 +654,94 @@ https://example.net/broken-page?safemode=1
 
 
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
+
+## Enabling real-time preview for widgets
+
+The `preview` option allows widgets to update in real time as edits are made, giving editors immediate visual feedback. When enabled, the editing modal will intelligently position itself to avoid overlapping the widget.
+
+### Global preview configuration
+
+You can enable this feature globally for all widgets in your project:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  modules: {
+    '@apostrophecms/widget-type': {
+      options: {
+        preview: true
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+### Widget-specific configuration
+
+You can enable or disable this feature for individual widget types:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  modules: {
+    '@apostrophecms/rich-text-widget': {
+      options: {
+        preview: true
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+### Overriding at the area level
+
+You can also override both global and widget-type settings for specific instances of a widget in an area:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {
+              // Enable for this specific instance, regardless of global setting
+              preview: true
+            },
+            '@apostrophecms/image': {
+              // Disable for this specific instance, even if enabled globally
+              preview: false
+            }
+          }
+        }
+      }
+    },
+    // ...
+  }
+};
+```
+<template v-slot:caption>
+modules/@apostrophecms/home-page/index.js
+</template>
+</AposCodeBlock>
+
+When the preview option is enabled:
+- Widgets update in real time as edits are made
+- New widgets will only appear once all required fields are completed
+- The editing modal will position itself to avoid overlapping the widget
 
 ## Setting a CSS class on core widgets
 
