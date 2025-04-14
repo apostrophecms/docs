@@ -9,7 +9,7 @@ Like other fields, area fields are configured as part of the [field schema](/gui
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Landing Page'
@@ -90,7 +90,7 @@ introduction: {
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Landing Page'
@@ -175,7 +175,7 @@ you can do that with the following configuration:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     // The "my-" prefix tells Apostrophe to use the project-level
     // folder, not the one in the core apostrophe module
@@ -218,6 +218,61 @@ For legacy reasons, `placeholderUrl` is also supported for image widgets, howeve
 The custom placeholder content for the rich text widget is passed as a string to the `placeholderText` option in the `/modules/@apostrophecms/rich-text-widget/index.js` file. This can be either a simple string or a namespaced i18n string.
 
 Both the image and video widgets have a `placeholderClass` option that takes a string and adds that class to the content wrapper.
+
+## Real-time content editing with the `preview` option
+
+ApostropheCMS offers a real-time preview feature that allows editors to see their changes immediately as they edit widget content. This can be configured either globally for all widgets or individually for specific widget types.
+
+### Global preview configuration
+
+To enable real-time preview for all widgets in your project, configure the `@apostrophecms/widget-type` module in your project:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    preview: true
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/widget-type/index.js
+</template>
+
+</AposCodeBlock>
+
+### Individual widget preview configuration
+
+You can also enable or disable the preview feature for specific widget types:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Hero Widget',
+    preview: true
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/hero-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+When the preview option is enabled:
+
+- Widgets will update in real time as edits are made
+- Editors can immediately see the impact of their changes in context
+- Previews will only update when all required fields and validation errors have been dealt with
+- The editing modal will intelligently position itself to avoid overlapping the widget, typically to the left or right
+
+This feature enhances the in-context editing experience by providing immediate visual feedback to editors as they work with content.
 
 ## Adding areas to templates
 

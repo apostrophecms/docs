@@ -28,6 +28,7 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`label`](#label) | String | Identifies this widget in a list of widget types. |
 | [`neverLoad`](#neverload) | Array | Widget types never loaded recursively by this widget. |
 | [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
+| [`preview`](#preview) | Boolean | Allow for in-context preview during widget edit. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The Nunjucks template name to render. |
 | [`width`](#width) | String | Define the size of the widget modal. |
@@ -91,6 +92,12 @@ This option specifies an array of widget types that should never be loaded recur
 ### `neverLoadSelf`
 
 If this option is set to `true`, and the widget has relationships with documents that contain more widgets of the **same** type, those widgets will **not** load their own relationships. This option defaults to `true`, which is an effective guard against runaway recursion and performance problems. Disabling this option should be done with care to ensure infinite loops do not become possible when loading the page.
+
+### `preview`
+
+Defaults to false. When set to true, widgets update in real time as edits are made, helping editors immediately see their impact. Note that new widgets will not appear until all required fields are completed. The editing modal will attempt to open without overlapping the widget, automatically positioning itself to the left or right as needed.
+
+Setting this option globally enables the behavior for all widgets. To enable or disable it for specific widgets only, set the option in the individual widget module at project level.
 
 ### `scene`
 

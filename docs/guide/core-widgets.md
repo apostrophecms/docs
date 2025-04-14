@@ -82,7 +82,7 @@ To add formatting tools to the rich text toolbar, add their names to the `toolba
 | `'image'` | Insert and edit images |
 | `'undo'` | Undo the last change |
 | `'redo'` | Redo the last undone change |
-| `'|'` | Add a visual separator to the toolbar (not a formatting action) |
+| `'\|'` | Add a visual separator to the toolbar (not a formatting action) |
 
 <!-- TODO: Add a link to the how-to on adding your own tools when available. -->
 
@@ -210,7 +210,7 @@ If you prefer, you can configure only one of the two sections (`toolbar` or `sty
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     options: {
       defaultOptions: {
         toolbar: [
@@ -272,7 +272,7 @@ the user is allowed to select for the image:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     options: {
       imageStyles: [
         {
@@ -311,7 +311,7 @@ By default, the rich text widget allows you to add links to URLs or internal pag
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     linkWithType: [ '@apostrophecms/any-page-type', 'article' ]
   }
@@ -330,7 +330,7 @@ By default, the rich text widget displays placeholder content. To block this beh
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     placeholderText: 'myNamespace:placeholder'
   }
@@ -492,7 +492,7 @@ You can also elect to change the default size for all image widgets by passing a
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     size: 'one-half'
   }
@@ -509,7 +509,7 @@ You can elect to add a `loading` attribute to your image markup by passing the `
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     loadingType: 'lazy'
   }
@@ -529,7 +529,7 @@ Alternatively, the placeholder image can be changed for your project. For the im
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     // for a file named 'placeholder.png' in the module's project-level public folder
     placeholderImage: 'png'
@@ -552,7 +552,7 @@ you can do that with the following configuration:
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     // The "my-" prefix tells Apostrophe to use the project-level
     // folder, not the one in the core apostrophe module
@@ -604,7 +604,7 @@ By default, the video widget displays a placeholder video. To block this behavio
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     placeholderUrl: 'https://vimeo.com/375468729'
   }
@@ -655,6 +655,59 @@ https://example.net/broken-page?safemode=1
 
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
 
+## Enabling real-time preview for widgets
+
+The `preview` option allows widgets to update in real time as edits are made, giving editors immediate visual feedback. When enabled, the editing modal will intelligently position itself to avoid overlapping the widget.
+
+### Global preview configuration
+
+You can enable this feature globally for all widgets in your project:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  modules: {
+    '@apostrophecms/widget-type': {
+      options: {
+        preview: true
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+### Widget-specific configuration
+
+You can enable or disable this feature for individual widget types:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  modules: {
+    '@apostrophecms/rich-text-widget': {
+      options: {
+        preview: true
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+When the preview option is enabled:
+- Widgets update in real time as edits are made
+- Previews will only update when all required fields and validation errors have been dealt with
+- The editing modal will position itself to avoid overlapping the widget
+
 ## Setting a CSS class on core widgets
 
 There are two options to set classes on core widgets. You can add a `className` option to **either the widget module or the widget options in an area field**. That value will be added to the outer-most HTML element in core widget templates. If both are set, the `className` property on the area configuration will be used.
@@ -664,7 +717,10 @@ Configuring on the module widget level:
 <AposCodeBlock>
 
 ``` js
-require('apostrophe') {
+import apostrophe from 'apostrophe';
+
+apostrophe ({
+  root: import.meta,
   modules: {
     '@apostrophecms/video-widget': {
       options: {
@@ -685,7 +741,7 @@ Configuring on the area field widget options:
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   fields: {
     add: {
       main: {
