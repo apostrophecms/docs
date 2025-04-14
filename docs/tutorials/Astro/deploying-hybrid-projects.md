@@ -1,3 +1,14 @@
+---
+title: "Deploying ApostropheCMS-Astro Projects"
+detailHeading: "Astro"
+url: "/tutorials/astro/deploying-hybrid-projects.html"
+content: "Make your ApostropheCMS + Astro project public. Learn deployment options, environment configuration, and hosting best practices for your integrated application."
+tags:
+  topic: basics
+  type: astro
+  effort: beginner
+order: 6
+---
 # Deploying ApostropheCMS + Astro Projects
 
 Now that you've built your site with ApostropheCMS and Astro, it's time to deploy it for the world to see. The Apollo project's dual-repository structure (backend + frontend) offers flexibility but also requires special considerations for deployment.

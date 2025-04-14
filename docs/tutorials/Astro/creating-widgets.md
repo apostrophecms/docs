@@ -1,3 +1,14 @@
+---
+title: "Creating Widgets"
+detailHeading: "Astro"
+url: "/tutorials/astro/creating-widgets.html"
+content: "Widgets are the building blocks for your site's content areas. Learn how to create widgets that handle nested content, dynamic layouts, and client-side interactivity in your ApostropheCMS + Astro project."
+tags:
+  topic: basics
+  type: astro
+  effort: beginner
+order: 4
+---
 # Creating Widgets in ApostropheCMS + Astro
 Widgets are the fundamental building blocks of content in ApostropheCMS. They allow content editors to change the page layout, add images, or rich text to a page. As we covered in the [Core Concepts](/tutorials/astro/introducing-apollo.html#core-concepts) section of the Apollo introduction, this occurs through the addition of widgets to areas on the page. As we will briefly touch on, Astro also allows developers to reuse widgets as components added directly to the page. To understand widget creation, we will first look at several widgets from the Apollo theme and then create a new widget from scratch.
 

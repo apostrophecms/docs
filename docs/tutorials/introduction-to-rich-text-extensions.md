@@ -1,3 +1,13 @@
+---
+title: "Creating rich text extensions"
+detailHeading: "Series"
+url: "/tutorials/introduction-to-rich-text-extensions.html"
+content: "The Apostrophe rich-text-widget can be extended to give your editor new functionality. This series provides several examples to kickstart your customization."
+tags:
+  topic: extensions
+  type: series
+  effort: medium
+---
 # Creating custom extensions for Rich Text widgets
 
 The ApostropheCMS `rich-text-widget` is powered by [Tiptap](https://tiptap.dev), a headless wrapper for the [ProseMirror](https://prosemirror.net/) toolkit for building rich-text WYSIWYG editors. Both of these frameworks offer a wide array of ready-made extensions to enhance their capabilities and also offer a rich API to further customize their behavior. In this series of tutorials, we'll explore both how to integrate existing Tiptap extensions, in addition to developing custom extensions to enhance functionality in ApostropheCMS projects.

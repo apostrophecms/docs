@@ -1,3 +1,13 @@
+---
+title: "Harnessing dynamic routing in ApostropheCMS"
+detailHeading: "Tutorial"
+url: "/tutorials/dynamic-routing.html"
+content: "Discover how to dynamically route and display content using the `dispatch()` and `dispatchAll()` methods, offering a flexible solution for both API and local data sources."
+tags:
+  topic: routing
+  type: tutorial
+  effort: medium
+---
 # Dynamic Routing with dispatch() and dispatchAll()
 ![Screen capture of the dog breed images page created in the tutorial](../images/dispatch-dog-breeds.png)
 In many of our projects, accessing dynamic data from an API is a key requirement, whether it's a list of products or customer support tickets. In this tutorial, we will learn how to harness the power of built-in Apostrophe methods to create a dynamic module for fetching and displaying content. To add an element of fun, we'll use DaaS (dogs as a service) to fetch info about our beloved canine companions! Our goal is to develop a module where each dog breed is featured on its own page, dynamically generated and populated with data from an API. This means no manual data entry, just seamless integration and display of information about Fido, Milou, Hachiko, or your favorite canine.

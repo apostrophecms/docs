@@ -1,6 +1,14 @@
 ---
 next: false
 prev: false
+title: "Using JSX in Apostrophe with Vite"
+detailHeading: "Tutorial"
+url: "/tutorials/using-jsx-in-apostrophe.html"
+content: "The Apostrophe Webpack build can easily be extended to include additional files. In this tutorial, we will add a weather widget powered by JSX and React to our ApostropheCMS project."
+tags:
+  topic: api
+  type: tutorial
+  effort: advanced
 ---
 # Using JSX in Apostrophe with Vite
 

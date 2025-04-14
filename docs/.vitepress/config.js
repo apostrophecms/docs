@@ -355,7 +355,6 @@ export default defineConfig({
   }
 });
 
-
 async function parseContent(htmlBlock) {
   const dom = new JSDOM(htmlBlock);
   const h1Element = dom.window.document.querySelector('h1');

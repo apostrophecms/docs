@@ -1,3 +1,15 @@
+---
+title: "Creating Pieces"
+detailHeading: "Astro"
+url: "/tutorials/astro/creating-pieces.html"
+content: "Pieces manage collections of reusable content like articles or team members. Learn how to create, organize, and display piece content throughout your ApostropheCMS + Astro site."
+tags:
+  topic: astro
+  type: astro
+  effort: beginner
+order: 5
+---
+
 # Working with Pieces in ApostropheCMS + Astro
 
 While widgets excel at providing modular content blocks for your pages, pieces serve a different purpose in ApostropheCMS. They represent collections of structured content that can be reused throughout your site. The Apollo project demonstrates this through two key piece types: articles and authors.

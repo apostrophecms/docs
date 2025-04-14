@@ -1,3 +1,14 @@
+---
+title: "Creating Pages"
+detailHeading: "Astro"
+url: "/tutorials/astro/creating-pages.html"
+content: "ApostropheCMS and Astro handle page routing and content through a unified dynamic route system. Learn how to structure your pages, work with slots, and create custom page templates for your site."
+tags:
+  topic: basics
+  type: astro
+  effort: beginner
+order: 3
+---
 # Building Pages in ApostropheCMS + Astro
 This section will give you an idea of the basics of page creation, but it only scratches the surface of using Astro components for templating. We encourage you to look at the excellent [Astro documentation](https://docs.astro.build/en/basics/astro-pages/#astro-pages).
 

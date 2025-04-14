@@ -2,6 +2,15 @@
 next:
   text: 'Introducing Apollo'
   link: '/tutorials/astro/introducing-apollo.html'
+title: "ApostropheCMS and Astro"
+detailHeading: "Astro"
+url: "/tutorials/astro/apostrophecms-and-astro.html"
+content: "ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
+tags:
+  topic: basics
+  type: astro
+  effort: beginner
+order: 1
 ---
 # Building Websites with ApostropheCMS and Astro
 
