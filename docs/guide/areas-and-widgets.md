@@ -9,7 +9,7 @@ Like other fields, area fields are configured as part of the [field schema](/gui
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Landing Page'
@@ -90,7 +90,7 @@ introduction: {
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Landing Page'
@@ -175,7 +175,7 @@ you can do that with the following configuration:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     // The "my-" prefix tells Apostrophe to use the project-level
     // folder, not the one in the core apostrophe module
@@ -230,7 +230,7 @@ To enable real-time preview for all widgets in your project, configure the `@apo
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     preview: true
   }
@@ -250,7 +250,7 @@ You can also enable or disable the preview feature for specific widget types:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Hero Widget',
@@ -269,7 +269,7 @@ When the preview option is enabled:
 
 - Widgets will update in real time as edits are made
 - Editors can immediately see the impact of their changes in context
-- New widgets will only appear once all required fields are completed
+- Previews will only update when all required fields and validation errors have been dealt with
 - The editing modal will intelligently position itself to avoid overlapping the widget, typically to the left or right
 
 This feature enhances the in-context editing experience by providing immediate visual feedback to editors as they work with content.
