@@ -13,7 +13,10 @@ export function detectModuleFormat(code) {
   });
 
   if (shouldSkip) {
-    return { format: null, canTransform: false };
+    return {
+      format: null,
+      canTransform: false
+    };
   }
 
   const hasCJS =
@@ -24,21 +27,54 @@ export function detectModuleFormat(code) {
   const hasESM = /\b(import|export)\b/.test(code);
 
   if (hasCJS && !hasESM) {
-    return { format: 'cjs', canTransform: true };
+    return {
+      format: 'cjs',
+      canTransform: true
+    };
   }
 
   if (hasESM && !hasCJS) {
-    return { format: 'esm', canTransform: true };
+    return {
+      format: 'esm',
+      canTransform: true
+    };
   }
 
-  return { format: null, canTransform: false };
+  return {
+    format: null,
+    canTransform: false
+  };
 }
 
+// CJS to ESM transformation function
 export function transpileToESM(code) {
   try {
     let esmCode = code;
     const imports = new Set();
     const namedExports = [];
+
+    // Special case for apostrophe
+    const apostrophePattern = /require\(['"]apostrophe['"]\)\s*\(/;
+    if (apostrophePattern.test(esmCode)) {
+      // First, transform the basic import pattern
+      esmCode = esmCode.replace(/require\(['"]apostrophe['"][\s\S]*?\)\s*\(/g,
+        "import apostrophe from 'apostrophe';\n\napostrophe(");
+
+      // Check if it's a compact format (no newlines after opening brace)
+      const isCompactFormat = esmCode.match(/apostrophe\(\s*{\s*\w+/);
+
+      if (isCompactFormat) {
+        // Handle compact formatting
+        esmCode = esmCode.replace(/apostrophe\(\s*{/g,
+          'apostrophe({\n  root: import.meta,  ');
+      } else {
+        // Handle standard formatting with newlines, but avoid adding extra blank lines
+        esmCode = esmCode.replace(/apostrophe\(\s*{\s*\n/g,
+          'apostrophe({\n  root: import.meta,');
+      }
+
+      return esmCode;
+    }
 
     // Handle immediate require calls - pattern: require('x')({ ... })
     esmCode = esmCode.replace(/require\(['"]([^'"]+)['"]\)\s*\(/g, (match, moduleName) => {
@@ -73,7 +109,7 @@ export function transpileToESM(code) {
     let matches;
     const exportsRegex = /exports\.(\w+)\s*=\s*([^;]+);/g;
     while ((matches = exportsRegex.exec(code)) !== null) {
-      const [ fullMatch, key, value ] = matches;
+      const [fullMatch, key, value] = matches;
       namedExports.push(`export const ${key} = ${value}`);
       // Remove the export from the code
       esmCode = esmCode.replace(fullMatch, '');
@@ -115,11 +151,37 @@ export function transpileToESM(code) {
     console.error('Error transforming to ESM:', error);
     return code;
   }
-};
+}
 
+// ESM to CJS transformation function
 export function transpileToCJS(code) {
   try {
     let cjsCode = code;
+
+    // Special case for apostrophe with import.meta
+    const apostropheEsmPattern = /import\s+apostrophe\s+from\s+['"]apostrophe['"]/;
+    const importMetaPattern = /root:\s*import\.meta/;
+
+    if (apostropheEsmPattern.test(cjsCode) && importMetaPattern.test(cjsCode)) {
+      // First, remove the root: import.meta line
+      cjsCode = cjsCode.replace(/\s*root:\s*import\.meta,?\s*/g, '');
+
+      // Then transform the import and function call
+      // Use a more relaxed pattern that preserves comments
+      const importPattern = /import\s+apostrophe\s+from\s+['"]apostrophe['"];/;
+      if (importPattern.test(cjsCode)) {
+        // Remove the import line
+        cjsCode = cjsCode.replace(importPattern, '');
+
+        // Replace the apostrophe function call
+        cjsCode = cjsCode.replace(/apostrophe\s*\(/g, 'require(\'apostrophe\')(');
+
+        // Clean up any excessive newlines
+        cjsCode = cjsCode.replace(/\n{3,}/g, '\n\n');
+      }
+
+      return cjsCode;
+    }
 
     // Transform default exports
     cjsCode = cjsCode.replace(/export\s+default\s+([^;]+);?/, 'module.exports = $1;');
@@ -163,4 +225,4 @@ export function transpileToCJS(code) {
     console.error('Error transforming to CJS:', error);
     return code;
   }
-};
+}
