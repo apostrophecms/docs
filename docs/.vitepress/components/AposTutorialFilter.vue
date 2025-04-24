@@ -42,7 +42,11 @@
           <template #leftColumn>
             <AposCtaButton
               v-if="pair[0]"
-              :detail-heading="pair[0].detailHeading"
+              :cardType="pair[0].tags.type"
+              :cardTopic="pair[0].tags.topic"
+              :cardEffort="pair[0].tags.effort"
+              :isSeries="pair[0].isSeries"
+              :seriesCount="pair[0].seriesCount"
               :title="pair[0].title"
               :content="pair[0].content"
               :url="pair[0].url"
@@ -51,7 +55,11 @@
           <template #rightColumn>
             <AposCtaButton
               v-if="pair[1]"
-              :detail-heading="pair[1].detailHeading"
+              :cardType="pair[1].tags.type"
+              :cardTopic="pair[1].tags.topic"
+              :cardEffort="pair[1].tags.effort"
+              :isSeries="pair[1].isSeries"
+              :seriesCount="pair[1].seriesCount"
               :title="pair[1].title"
               :content="pair[1].content"
               :url="pair[1].url"
@@ -173,8 +181,11 @@ onMounted(() => {
     content: page.frontmatter.content || '',
     url: page.frontmatter.url,
     order: page.frontmatter.order,
-    tags: page.frontmatter.tags
+    tags: page.frontmatter.tags,
+    isSeries: page.frontmatter.isSeries,
+    seriesCount: page.frontmatter.seriesCount
   }));
+  console.log('Loaded tutorials:', page.frontmatter);
 
   // Extract unique filter options
   const typeSet = new Set();

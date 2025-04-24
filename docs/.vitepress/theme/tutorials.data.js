@@ -30,6 +30,8 @@ export default createContentLoader('tutorials/**/*.md', {
             content: page.frontmatter.content || '',
             url: page.frontmatter.url || page.url,
             order: page.frontmatter.order !== undefined ? page.frontmatter.order : 999,
+            isSeries: page.frontmatter.isSeries || false,
+            seriesCount: page.frontmatter.seriesCount || 1,
             tags: page.frontmatter.tags || {
               type: defaultType,
               topic: defaultTopic,

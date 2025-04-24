@@ -3,6 +3,8 @@ title: "ApostropheCMS A-Z: Building Your Site from Scratch"
 detailHeading: "Series"
 url: "/tutorials/introduction.html"
 content: "Dive into ApostropheCMS with a hands-on tutorial series. We'll guide you step-by-step through crafting your first website, exploring fundamental concepts and practical implementations."
+isSeries: true
+seriesCount: 8
 tags:
   topic: general
   type: series
