@@ -6,9 +6,10 @@ content: "Dive into ApostropheCMS with a hands-on tutorial series. We'll guide y
 isSeries: true
 seriesCount: 8
 tags:
-  topic: general
+  topic: "Core Concepts"
   type: series
-  effort: beginner
+  effort: advanced
+order: 1
 ---
 # Welcome to our ApostropheCMS Web Development Series
 

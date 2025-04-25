@@ -4,7 +4,7 @@ detailHeading: "Astro"
 url: "/tutorials/astro/deploying-hybrid-projects.html"
 content: "Make your ApostropheCMS + Astro project public. Learn deployment options, environment configuration, and hosting best practices for your integrated application."
 tags:
-  topic: basics
+  topic: "Core Concepts"
   type: astro
   effort: beginner
 order: 6

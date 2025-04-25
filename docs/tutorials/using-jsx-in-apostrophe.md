@@ -6,7 +6,7 @@ detailHeading: "Tutorial"
 url: "/tutorials/using-jsx-in-apostrophe.html"
 content: "The Apostrophe Webpack build can easily be extended to include additional files. In this tutorial, we will add a weather widget powered by JSX and React to our ApostropheCMS project."
 tags:
-  topic: api
+  topic: "Advanced Techniques"
   type: tutorial
   effort: advanced
 ---

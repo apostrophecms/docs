@@ -4,7 +4,7 @@ detailHeading: "Astro"
 url: "/tutorials/astro/creating-pieces.html"
 content: "Pieces manage collections of reusable content like articles or team members. Learn how to create, organize, and display piece content throughout your ApostropheCMS + Astro site."
 tags:
-  topic: astro
+  topic: "Core Concepts"
   type: astro
   effort: beginner
 order: 5

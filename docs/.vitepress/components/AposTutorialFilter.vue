@@ -18,9 +18,9 @@
       </div>
 
       <div class="filter-group">
-        <label for="effort-filter">Effort:</label>
+        <label for="effort-filter">Experience level:</label>
         <select id="effort-filter" v-model="selectedEffort" @change="applyFilters">
-          <option value="">Any Effort</option>
+          <option value="">Any Experience</option>
           <option v-for="effort in efforts" :key="effort" :value="effort">{{ formatTitle(effort) }}</option>
         </select>
       </div>
@@ -185,7 +185,7 @@ onMounted(() => {
     isSeries: page.frontmatter.isSeries,
     seriesCount: page.frontmatter.seriesCount
   }));
-  console.log('Loaded tutorials:', page.frontmatter);
+  console.log('Loaded tutorials:', tutorials.value);
 
   // Extract unique filter options
   const typeSet = new Set();

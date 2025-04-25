@@ -4,9 +4,9 @@ detailHeading: "Tutorial"
 url: "/tutorials/dynamic-routing.html"
 content: "Discover how to dynamically route and display content using the `dispatch()` and `dispatchAll()` methods, offering a flexible solution for both API and local data sources."
 tags:
-  topic: routing
+  topic: "Advanced Techniques"
   type: tutorial
-  effort: medium
+  effort: intermediate
 ---
 # Dynamic Routing with dispatch() and dispatchAll()
 ![Screen capture of the dog breed images page created in the tutorial](../images/dispatch-dog-breeds.png)

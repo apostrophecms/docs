@@ -6,8 +6,8 @@ detailHeading: "Series"
 url: "/tutorials/html-conversion.html"
 content: "This tutorial will walk through the conversion of a pre-made HTML template for use in an ApostropheCMS project."
 tags:
-  topic: general
-  type: series
+  topic: "Core Concepts"
+  type: tutorial
   effort: beginner
 ---
 # Converting a premade HTML template for use in an Apostrophe Project

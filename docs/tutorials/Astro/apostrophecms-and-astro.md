@@ -7,7 +7,7 @@ detailHeading: "Astro"
 url: "/tutorials/astro/apostrophecms-and-astro.html"
 content: "ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
 tags:
-  topic: basics
+  topic: "Core Concepts"
   type: astro
   effort: beginner
 order: 1

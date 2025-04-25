@@ -3,10 +3,12 @@ title: "Creating rich text extensions"
 detailHeading: "Series"
 url: "/tutorials/introduction-to-rich-text-extensions.html"
 content: "The Apostrophe rich-text-widget can be extended to give your editor new functionality. This series provides several examples to kickstart your customization."
+isSeries: true
+seriesCount: 3
 tags:
   topic: extensions
   type: series
-  effort: medium
+  effort: intermediate
 ---
 # Creating custom extensions for Rich Text widgets
 

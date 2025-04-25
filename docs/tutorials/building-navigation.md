@@ -6,7 +6,7 @@ detailHeading: "Tutorial"
 url: "/tutorials/navigation.html"
 content: "Apostrophe provides multiple ways to construct navigation menus for your site. This tutorial will cover several practical approaches."
 tags:
-  topic: general
+  topic: "Core Concepts"
   type: tutorial
   effort: beginner
 ---

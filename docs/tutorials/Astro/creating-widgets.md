@@ -4,7 +4,7 @@ detailHeading: "Astro"
 url: "/tutorials/astro/creating-widgets.html"
 content: "Widgets are the building blocks for your site's content areas. Learn how to create widgets that handle nested content, dynamic layouts, and client-side interactivity in your ApostropheCMS + Astro project."
 tags:
-  topic: basics
+  topic: "Core Concepts"
   type: astro
   effort: beginner
 order: 4
