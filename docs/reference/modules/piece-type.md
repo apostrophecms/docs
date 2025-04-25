@@ -170,7 +170,7 @@ modules/goose/index.js
 
 ### `publicApiProjection`
 
-By default the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
+By default, the built-in Apostrophe REST APIs are not accessible without proper [authentication](/reference/api/authentication.md). You can set an exception to this for `GET` requests to return specific document properties with the `publicApiProjection` option.
 
 This should be set to an object containing individual field name keys set to `1` for their values. Those fields names included in the `publicApiProjection` object will be returned when the `GET` API requests are made without authentication.
 
@@ -303,6 +303,29 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | `req` | Object | The associated request object. Using a provided `req` object is important for maintaining user role permissions. |
 | `criteria` | Object | A [MongoDB criteria object](https://docs.mongodb.com/manual/tutorial/query-documents/). It is often as simple as properties that match schema field names assigned to the desired value. |
 | `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
+
+### `getManagerApiProjection(req)`
+The `getManagerApiProjection()` method defines which fields are returned when pieces are loaded in the manager modal, improving performance by reducing the amount of data transferred. By default, this method returns essential fields needed for the manager interface plus any fields configured as visible columns in the manager modal UI. You can extend this method to add additional fields that should be included in the manager modal API responses.
+When extending this method, remember to use the _super parameter to call the original method and build upon its results.
+Example
+javascriptmodule.exports = {
+  extend: '@apostrophecms/piece-type',
+  extendMethods(self) {
+    return {
+      getManagerApiProjection(_super, req) {
+        // Get the original projection using _super
+        const projection = _super(req);
+        
+        // Add your custom fields to the projection
+        projection.customField = 1;
+        projection.authorReference = 1;
+        
+        return projection;
+      }
+    };
+  }
+  // ...
+}
 
 ### `async insert(req, piece, options)`
 
