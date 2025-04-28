@@ -1,3 +1,15 @@
+---
+videoList:
+  - id: 'aiDBlbDkTwY'
+    title: 'Development Environment Setup'
+    link: '#development-environment-set-up'
+  - id: 'P3ELmgL5aYA'
+    title: 'Core Concepts'
+    link: '#core-concepts'
+  - id: '-qCb-qhpmAg'
+    title: 'Introducing Apollo'
+    link: '#introducing-the-apollo-theme'
+---
 # Introducing Apollo
 
 ## Introduction
