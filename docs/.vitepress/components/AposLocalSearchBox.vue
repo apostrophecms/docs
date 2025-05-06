@@ -88,15 +88,26 @@ const dynamicLabel = computed(() => {
 
 const buttonText = computed(() => getDefaultButtonText(searchType.value))
 
+function trackEvent(eventName, eventData = {}) {
+  if (window.umami) {
+    window.umami.track(eventName, eventData);
+  }
+}
+
 function getDefaultButtonText(searchType) {
   return searchType === 'MiniSearch' ? 'Search' : 'Ask AI about Apostrophe documentation'
 }
 
 function toggleSearchType() {
-  searchType.value = searchType.value === 'MiniSearch' ? 'AISearch' : 'MiniSearch'
-  sessionStorage.setItem('vitepress:search-type', searchType.value)  // Save the current search type to session storage
-}
+  const previousType = searchType.value;
+  searchType.value = searchType.value === 'MiniSearch' ? 'AISearch' : 'MiniSearch';
+  sessionStorage.setItem('vitepress:search-type', searchType.value);
 
+  // Track when a user switches to AI search
+  if (previousType === 'MiniSearch' && searchType.value === 'AISearch') {
+    trackEvent('switch_to_ai_search', { source: 'search_box' });
+  }
+}
 
 function resetSearch() {
   filterText.value = ''

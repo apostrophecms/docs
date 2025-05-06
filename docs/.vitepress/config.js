@@ -12,6 +12,8 @@ import nunjucks from './theme/njk-html.tmLanguage.json';
 
 import { detectModuleFormat, transpileToESM, transpileToCJS } from './helpers/transpile';
 
+const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for Apostrophe 3',
@@ -80,6 +82,15 @@ export default defineConfig({
       gtag('js', new Date());
       gtag('config', 'G-T1M7W6BWMD');
     `
+    ],
+    // Umami tracking code
+    [
+      'script',
+      {
+        defer: '',
+        src: 'https://cloud.umami.is/script.js',
+        'data-website-id': umamiWebsiteId
+      }
     ],
     [
       'link',

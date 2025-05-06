@@ -207,9 +207,19 @@ const highlightSyntax = (index) => {
   });
 };
 
+// Function to track events
+function trackEvent(eventName, eventData = {}) {
+  if (window.umami) {
+    window.umami.track(eventName, eventData);
+  }
+}
+
 // Function to send query to the server
 function sendQuery(query) {
   if (state.socket && query.trim() !== '') {
+    // Track the AI search query
+    trackEvent('ai_search_query', { query });
+
     hasAsked.value = true
     const index = appendQuestion(query)
     state.socket.emit('query', { query, index })
@@ -252,6 +262,13 @@ const scrollToChatItem = (index, reversed = false) => {
   const element = document.getElementById(elementId)
 
   if (element) {
+    // Track when users click on a previous question from history
+    if (reversed) {
+      trackEvent('click_ai_search_history', {
+        question: reversedAiResults.value[index].question
+      });
+    }
+
     element.scrollIntoView({ behavior: 'smooth' })
   }
 }
@@ -340,12 +357,20 @@ onMounted(() => {
 
   // Check if there's a filter text to send as an initial query
   if (props.filterText && !hasAsked.value) {
+    // Track the initial AI search event
+    trackEvent('initial_ai_search', { query: props.filterText });
+
     isConnecting.value = true; // Show the connecting message
     initialQuery.value = props.filterText;
     props.filterText = ''; // Clear the filter text to avoid submitting "Connecting..."
   }
 
   state.socket.on('answer', (answer) => {
+    trackEvent('ai_search_response_received', {
+      question: aiResults[answer.index]?.question || 'unknown',
+      responseLength: answer.text.length
+    });
+
     appendAnswer(answer.text, answer.index)
   });
 
