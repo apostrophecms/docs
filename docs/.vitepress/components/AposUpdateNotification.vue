@@ -1,7 +1,7 @@
 <template>
   <div class="update-notification">
-    <span>Site update required. Content may not display correctly.</span>
-    <button @click="refreshPage" class="refresh-button">Refresh Now</button>
+    <span>The documentation has updates</span>
+    <button @click="refreshPage" class="refresh-button">Refresh Page</button>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #e74c3c;
+  background-color: var(--vp-c-brand);
   color: white;
   padding: 12px 20px;
   border-radius: 4px;
@@ -35,7 +35,7 @@ export default {
 
 .refresh-button {
   background-color: white;
-  color: #e74c3c;
+  color: black;
   border: none;
   padding: 8px 15px;
   border-radius: 3px;
