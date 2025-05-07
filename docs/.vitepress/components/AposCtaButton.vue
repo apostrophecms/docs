@@ -12,7 +12,7 @@
     </div>
 
     <p class="cta-button__title">{{ title }}</p>
-    <p class="cta-button__content">{{ content }}<span v-if="url" class="cta-button__arrow"> &#8594</span> </p>
+    <p class="cta-button__content">{{ content }}</p>
     
     <div class="details">
       <!-- Series indicator -->
