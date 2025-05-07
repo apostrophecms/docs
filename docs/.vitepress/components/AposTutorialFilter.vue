@@ -214,17 +214,25 @@ onMounted(() => {
   gap: 1rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+
+  select {
+    appearance: base-select;
+    font: -webkit-small-control;
+    padding: 8px 10px;
+  }
 }
 
 .filter-group {
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-width: 150px;
 }
 
 label {
   margin-bottom: 0.5rem;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 select {

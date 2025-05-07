@@ -14,36 +14,31 @@
     <p class="cta-button__title">{{ title }}</p>
     <p class="cta-button__content">{{ content }}<span v-if="url" class="cta-button__arrow"> &#8594</span> </p>
     
-    <!-- Series indicator (if applicable) -->
-    <div v-if="isSeries" class="series-indicator">
-      <div class="series-stack">
-        <div class="series-card"></div>
-        <div class="series-card"></div>
-        <div class="series-count">{{ seriesCount }}</div>
-      </div>
-    </div>
-    
-    <!-- Empty space to push effort indicator to bottom -->
-    <div class="spacer"></div>
-    
-    <!-- Experience level with dots -->
-    <div class="effort-indicator">
-      <span class="effort-badge">
-        <span class="effort-dots">
-          <span v-for="n in 3" :key="n" class="effort-dot" :class="{
-            'effort-dot--filled': n <= getLevelDots(cardEffort),
-            'effort-dot--empty': n > getLevelDots(cardEffort)
-          }"></span>
-        </span>
-        {{ cardEffort }}
+    <div class="details">
+      <!-- Series indicator -->
+      <span class="tag tag--series" v-if="isSeries">
+        <InlineSvg src="/images/icons/stack.svg" class="icon" />
+        {{ seriesCount }} Part Series
       </span>
+      <!-- Experience level with dots -->
+      <div class="tag tag--effort effort-indicator">
+        <span class="effort-badge">
+          <span class="effort-dots">
+            <span v-for="n in 3" :key="n" class="effort-dot" :class="{
+              'effort-dot--filled': n <= getLevelDots(cardEffort),
+              'effort-dot--empty': n > getLevelDots(cardEffort)
+            }"></span>
+          </span>
+          {{ cardEffort }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
+<script setup>
+  import InlineSvg from 'vue-inline-svg';
+  const props = defineProps({
     cardType: String,
     cardTopic: String,
     cardEffort: String,
@@ -61,35 +56,23 @@ export default {
       type: Number,
       default: 1
     }
-  },
-  // created() {
-  //   console.log('Props received in child component:', {
-  //     cardType: this.cardType,
-  //     cardTopic: this.cardTopic,
-  //     cardEffort: this.cardEffort,
-  //     title: this.title,
-  //     content: this.content,
-  //     url: this.url,
-  //     isSeries: this.isSeries,
-  //     seriesCount: this.seriesCount
-  //   })
-  // },
-  methods: {
-    navigate() {
-      if (this.url) {
-        window.location.href = this.url;
+  });
+
+  const navigate = () => {
+    if (props.url.value) {
+      window.location.href = props.url.value;
+    }
+  };
+  const handleEnter = () => {
+    navigate();
+  };
+  const handleSpace = (event) => {
+    if (event.target === event.currentTarget) {
+        navigate();
       }
-    },
-    handleEnter() {
-      this.navigate();
-    },
-    handleSpace(event) {
-      if (event.target === event.currentTarget) {
-        this.navigate();
-      }
-    },
-    getLevelDots(cardEffort) {
-      switch (cardEffort?.toLowerCase()) {
+  };
+  const getLevelDots = (cardEffort) => {
+    switch (cardEffort?.toLowerCase()) {
         case 'beginner':
         case 'easy':
           return 1;
@@ -101,9 +84,7 @@ export default {
         default:
           return 0;
       }
-    }
-  }
-}
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -134,6 +115,7 @@ export default {
 
   &__content {
     margin: 0;
+    flex: 1;
   }
 
   &__arrow {
@@ -162,101 +144,54 @@ export default {
 }
 
 // Tags container
-.tags-container {
+.tags-container,
+.details {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
   margin-bottom: 0.5rem;
 }
 
 // Tag styles
 .tag {
-  border-radius: 9999px; // rounded-full
-  padding: 0.25rem 0.5rem; // px-2 py-1
-  font-size: 0.875rem; // text-sm
+  display: flex;
+  gap: 5px;
+  border-radius: 5px;
+  padding: 0 0.5rem; // px-2 py-1
+  height: 24px;
+  font-size: 0.6rem;
   font-weight: 600; // font-semibold
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: rgb(238, 238, 238);
+  border-width: 1px;
+  border-style: solid;
+  border-color: oklch(87% 0 0); // bg-neutral-300
+
+  .icon {
+    width: 12px;
+  }
   
   &--type {
     background-color: rgba(219, 234, 254, 1); // bg-blue-100
     color: rgba(30, 58, 138, 1); // text-blue-900
+    border-color: oklch(88.2% 0.059 254.128); // bg-blue-200
   }
   
   &--topic {
     background-color: rgba(254, 243, 199, 1); // bg-yellow-100
     color: rgba(146, 64, 14, 1); // text-yellow-800
+    border-color: oklch(94.5% 0.129 101.54); // bg-yellow-200
   }
-}
-
-// Series indicator styling
-.series-indicator {
-  margin-top: 1rem;
-  align-self: flex-start;
-}
-
-.series-stack {
-  position: relative;
-  width: 3rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.series-card {
-  position: absolute;
-  width: 2rem;
-  height: 1.5rem;
-  background-color: rgba(237, 233, 254, 1); // bg-purple-100
-  border: 1px solid rgba(91, 33, 182, 1); // border-purple-800
-  border-radius: 0.25rem;
-  
-  &:nth-child(1) {
-    transform: rotate(-10deg);
-    z-index: 1;
-    left: 0;
-  }
-  
-  &:nth-child(2) {
-    transform: rotate(5deg);
-    z-index: 2;
-    left: 0.5rem;
-  }
-}
-
-.series-count {
-  position: absolute;
-  z-index: 3;
-  width: 1.5rem;
-  height: 1.5rem;
-  background-color: rgba(91, 33, 182, 1); // bg-purple-800
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: bold;
-  right: 0;
-  bottom: 0;
-}
-
-// Spacer to push content to the bottom
-.spacer {
-  flex-grow: 1;
 }
 
 // Effort indicator
 .effort-indicator {
-  margin-top: 1rem;
-  font-size: 0.875rem; // text-sm
   color: rgba(17, 24, 39, 1); // text-gray-900
   display: flex;
   align-items: center;
   gap: 0.5rem; // gap-2
   
   .effort-badge {
-    background-color: rgba(229, 231, 235, 1); // bg-gray-200
-    border-radius: 9999px; // rounded-full
-    padding: 0.25rem 0.5rem; // px-2 py-1
     display: flex;
     align-items: center;
     
@@ -270,14 +205,14 @@ export default {
         width: 0.5rem; // w-2
         height: 0.5rem; // h-2
         border-radius: 9999px; // rounded-full
-        border: 1px solid black; // border border-black
         
         &--filled {
           background-color: rgba(16, 185, 129, 1); // bg-green-500
+          background-color: oklch(69.6% 0.17 162.48); // bg-emerald-600
         }
         
         &--empty {
-          background-color: transparent; // bg-transparent
+          background-color: oklch(70.7% 0.022 261.325); // bg-gray-400
         }
       }
     }
