@@ -1,4 +1,8 @@
 ---
+videoList:
+  - id: '8HczFSLFDno'
+    title: 'Apollo Overview'
+    link: '#want-to-learn-more'
 next:
   text: 'Introducing Apollo'
   link: '/tutorials/astro/introducing-apollo.html'

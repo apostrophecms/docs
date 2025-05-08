@@ -8,6 +8,16 @@ tags:
   type: astro
   effort: beginner
 order: 3
+videoList:
+  - id: 'lKJkXomBa4U'
+    title: 'Introducing Page-types'
+    link: '#building-pages-in-apostrophecms-astro'
+  - id: 'AlWPERA3E1w'
+    title: 'Creating Pages'
+    link: '#implementing-a-default-page'
+  - id: 'grvZKHb35BQ'
+    title: 'Creating Piece Pages'
+    link: '#implementing-piece-pages'
 ---
 # Building Pages in ApostropheCMS + Astro
 This section will give you an idea of the basics of page creation, but it only scratches the surface of using Astro components for templating. We encourage you to look at the excellent [Astro documentation](https://docs.astro.build/en/basics/astro-pages/#astro-pages).

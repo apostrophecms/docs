@@ -8,11 +8,24 @@ tags:
   type: astro
   effort: beginner
 order: 5
+videoList:
+  - id: 'tCG5GtbIlYI'
+    title: 'Piece-type Basics'
+    link: '#working-with-pieces-in-apostrophecms-astro'
+  - id: '_spAfke_Rt8'
+    title: 'Advanced Piece Display'
+    link: '#using-pieces-outside-dedicated-pages'
 ---
-
 # Working with Pieces in ApostropheCMS + Astro
 
 While widgets excel at providing modular content blocks for your pages, pieces serve a different purpose in ApostropheCMS. They represent collections of structured content that can be reused throughout your site. The Apollo project demonstrates this through two key piece types: articles and authors.
+
+::: tip Watch & Learn! 🎥
+This tutorial is available in both text and video formats. The videos cover the key highlights, while this page provides additional details and references. Watch the videos for a guided introduction, then read on for deeper insights!
+:::
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tCG5GtbIlYI?si=Nw5i3RYStlXmOZl-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 ## Understanding Pieces in Apollo
 
@@ -489,6 +502,8 @@ This approach gives content editors flexibility in how they present articles whi
 ## Using Pieces Outside Dedicated Pages
 
 While piece pages provide a structured way to display collections of content, there are many situations where you'll want to use pieces in other contexts throughout your site. Let's explore three approaches to incorporate pieces anywhere in your site: using built-in API endpoints, creating custom API routes, and leveraging relationships.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_spAfke_Rt8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Approach 1: Built-in API Endpoints
 

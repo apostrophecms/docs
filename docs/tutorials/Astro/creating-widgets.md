@@ -8,11 +8,27 @@ tags:
   type: astro
   effort: beginner
 order: 4
+videoList:
+  - id: 'JEU2RdgqrIs'
+    title: 'Introducing Widgets'
+    link: '#creating-widgets-in-apostrophecms-astro'
+  - id: 'grhDL8Xo0xE'
+    title: 'Simple Widgets'
+    link: '#the-apollo-rows-widget'
+  - id: 'JEU2RdgqrIs'
+    title: 'Widget Interactivity'
+    link: '#adding-client-side-interactivity-to-widgets'
 ---
 # Creating Widgets in ApostropheCMS + Astro
 Widgets are the fundamental building blocks of content in ApostropheCMS. They allow content editors to change the page layout, add images, or rich text to a page. As we covered in the [Core Concepts](/tutorials/astro/introducing-apollo.html#core-concepts) section of the Apollo introduction, this occurs through the addition of widgets to areas on the page. As we will briefly touch on, Astro also allows developers to reuse widgets as components added directly to the page. To understand widget creation, we will first look at several widgets from the Apollo theme and then create a new widget from scratch.
 
+::: tip Watch & Learn! 🎥
+This tutorial is available in both text and video formats. The videos cover the key highlights, while this page provides additional details and references. Watch the videos for a guided introduction, then read on for deeper insights!
+:::
+
 This tutorial provides only a brief introduction to widget development in ApostropheCMS, but there's much more to explore. For comprehensive documentation on Apostrophe's field types, query syntax, and advanced widget features, visit the [core ApostropheCMS documentation](https://docs.apostrophecms.org).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/tC6vJwqYO8o?si=Inv-0eTcMhbpE-a_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Understanding Widget Mapping
 
@@ -72,6 +88,8 @@ As with pages, core widgets and widgets added through packages in the node modul
 ![The rows-widget edit modal](../../images/apollo-rows-widget.png)
 
 In ApostropheCMS, areas provide a flexible way to structure content, making it easy to build dynamic layouts. While areas can be defined at the page level, widgets (and pieces) can also have their own areas, allowing them to act as containers for other widgets. This enables complex, nested layouts.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/grhDL8Xo0xE?si=_00W4gmum16Wo3ZG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 A great example of this is the rows widget in the Apollo project. When added to a page, it lets users configure a set number of column areas based on their chosen layout. Each column can hold any type of widget—including another rows widget—enabling deep nesting when needed. This pattern appears throughout Apollo; for instance, the hero widget uses an area to manage call-to-action buttons while still fitting seamlessly into ApostropheCMS’s editing interface.
 
@@ -313,6 +331,8 @@ Next, let's look at how we can add client-side interactivity to widgets. The vid
 
 ## Adding Client-Side Interactivity to Widgets
 Astro provides several routes for adding JavaScript to the browser. This can take the form of public scripts loaded on every page, `<script>` tags in your components, and the addition of client-side framework components, e.g. Vue or React components. Let's explore the different approaches available for adding client-side interactivity to widgets in the ApostropheCMS + Astro environment, using examples from the Apollo project.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JEU2RdgqrIs?si=reRnkOBt_rTIpXTA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Web Components Approach
 

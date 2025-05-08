@@ -1,5 +1,5 @@
 // https://vitepress.dev/guide/custom-theme
-import { h } from 'vue';
+import { h, onMounted } from 'vue';
 import Theme from 'vitepress/theme';
 import './style.css';
 import './styles/index.styl';
@@ -14,6 +14,7 @@ import AposCtaButton from '../components/AposCtaButton.vue';
 import AposVideoSidebar from '../components/AposVideoSidebar.vue';
 import { createEventBus } from './eventBus';
 import AposTutorialFilter from '../components/AposTutorialFilter.vue';
+import { setupUpdateChecker } from '../helpers/updateChecker';
 
 export const eventBus = createEventBus();
 export default {
@@ -21,11 +22,16 @@ export default {
   Layout: () => {
     return h(Theme.Layout, null, {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
-      'aside-outline-after': () => [h(AposVideoSidebar), h(AposFeedback), h(EditOrIssue)]
+      'aside-outline-after': () => [
+        h(AposVideoSidebar),
+        h(AposFeedback),
+        h(EditOrIssue)
+      ]
     });
   },
+  // In your enhanceApp function:
   enhanceApp({ app, router, siteData }) {
-    // register your custom global components
+    // Your existing component registrations
     app.component('AposCodeBlock', AposCodeBlock);
     app.component('AposTooltip', AposTooltip);
     app.component('AposTag', AposTag);
@@ -33,5 +39,8 @@ export default {
     app.component('AposTwoColumns', AposTwoColumns);
     app.component('AposCtaButton', AposCtaButton);
     app.component('AposTutorialFilter', AposTutorialFilter);
+    if (typeof window !== 'undefined') {
+      setupUpdateChecker();
+    }
   }
 };
