@@ -4,6 +4,19 @@
 
 The admin bar is often the primary navigation tool content managers use every day. A thoughtfully configured admin bar can significantly reduce friction in content workflows, decrease training time, and increase overall satisfaction with the CMS. Remember: developers configure the site once, but content managers use it every day.
 
+<!-- VIDEO: Admin Bar Overview Tutorial -->
+
+## Understanding the Admin Bar Components
+
+Before diving into configuration, let's understand the key components of the ApostropheCMS admin bar:
+
+1. **Main menu items**: The primary navigation links in the left section of the admin bar, typically grouped by content type or function
+2. **Quick create menu**: The "+" button that provides shortcuts to create new content of various types
+3. **Utility context items**: Icons on the right side of the admin bar providing access to universal tools and features
+4. **User preferences**: The user profile menu for account settings and personalization options
+
+Each component serves a specific purpose in the content management workflow and can be customized to better serve your editors' needs.
+
 ## Core Principles
 
 When configuring your admin bar in ApostropheCMS 4.x, keep these principles in mind:
@@ -17,38 +30,44 @@ When configuring your admin bar in ApostropheCMS 4.x, keep these principles in m
 
 ### Logical Grouping
 
-Configure your admin bar to group related functionality together. For example:
-
-- Content creation tools (group your custom content types logically)
-- Publishing workflow tools (keep approval steps together)
-- Support tools (place your custom support options in a dedicated section)
+Configure your admin bar to group related functionality together. For example: content creation tools, publishing workflow tools, and support tools.
 
 ### Menu Priority and Organization
 
-- Place most frequently used items in prominent positions (typically left side)
-- Keep your most important custom modules in the main menu, not nested in submenus
-- Consider the natural workflow of content creation when ordering menu items
+Place frequently used items in prominent positions, keep important custom modules in the main menu, and consider the natural workflow of content creation when ordering items.
 
 ### Naming Conventions
 
-- Use clear, action-oriented labels (e.g., "Create Article" vs. "Article Module")
-- Maintain consistency in your naming patterns across all custom modules
-- Avoid technical jargon in menu labels visible to content managers
+Use clear, action-oriented labels, maintain consistency in naming patterns across modules, and avoid technical jargon in menu labels visible to content managers.
+
+### Managing the Quick Create Menu
+
+The Quick Create menu (the "+" icon) should only contain content types that editors frequently create. By default, all piece types appear here, but you can selectively remove items to streamline the experience:
+
+```javascript
+// in modules/article/index.js
+export default {
+  options: {
+    // Prevent this content type from appearing in the quick create menu
+    quickCreate: false
+  }
+};
+```
 
 ## Common Mistakes to Avoid
 
-- **Overloading**: Adding too many custom options creates decision paralysis
+- **Overloading**: Adding too many options creates decision paralysis
 - **Technical naming**: Using developer terminology instead of content-focused language
-- **Inconsistent menu structure**: Creating confusing or unpredictable groupings
+- **Inconsistent structure**: Creating confusing or unpredictable groupings
 - **Hidden essentials**: Burying frequently-needed tools under multiple clicks
 
 ## Basic Implementation Example
 
-Here's a simplified example of how to configure the admin bar in ApostropheCMS 4.x to create a more intuitive experience for content managers:
+Here's a simplified example of how to configure the admin bar to create a more intuitive experience for content managers:
 
 ```javascript
 // in modules/@apostrophecms/admin-bar/index.js
-module.exports = {
+export default {
   options: {
     // Customize the admin bar groups and their ordering
     groups: [
@@ -87,27 +106,18 @@ module.exports = {
 
 ## Advanced Configuration Options
 
-### Right-Side Menu Customization
+### Utility Menu Customization
 
-The right side of the admin bar (near the global config cog) is ideal for frequently accessed utilities that should be available from anywhere in the admin interface. This area should be reserved for:
-
-- **Universal tools**: Functions that make sense regardless of content context
-- **User-focused features**: Support, help, or personalization options
-- **Global actions**: Site-wide utilities or quick access to important resources
+The right side of the admin bar is ideal for frequently accessed utilities that should be available from anywhere in the admin interface.
 
 **When to use right-side icons:**
 - For features that content managers need to access from any context
 - For support tools that should never be more than one click away
-- For project-specific tools that don't fit within the standard content workflow
-
-**When NOT to use right-side icons:**
-- For content-specific actions that only make sense in certain contexts
-- For rarely used administrative functions
-- For features already accessible through the main admin bar
+- For project-specific tools, like the global configuration, that don't fit within the standard content workflow
 
 ```javascript
 // in modules/@apostrophecms/admin-bar/index.js
-module.exports = {
+export default {
   options: {
     // Add custom icons to the right side of the admin bar
     rightItems: [
@@ -130,49 +140,65 @@ module.exports = {
 
 ### Controlling Menu Visibility
 
-Selectively hiding modules from the admin bar can significantly improve usability by reducing clutter and focusing attention on the most important content types.
+Selectively hiding modules from the admin bar can significantly improve usability by reducing clutter and focusing attention on the most relevant content types.
 
-**When to opt modules out of admin bar visibility:**
-- For technical or infrastructure modules content managers don't need to access directly
-- For content types that are only used as components within other content types
-- For specialized modules only relevant to specific user roles
-- When your project has many content types and you need to reduce cognitive load
+**Why remove modules from the admin bar:**
+- Creates a cleaner interface focused on content editors actually need to manage
+- Reduces cognitive load and training time for non-technical users
+- Prevents confusion between similar but functionally different content types
+- Keeps specialized or technical modules from cluttering the main navigation
 
-**When to keep modules visible:**
-- For primary content types that content managers work with regularly
-- For modules that represent a distinct section of the site
-- For functionality content managers need to discover easily
-
+**Implementation example:**
 ```javascript
+// Correct implementation for removing a module from the admin bar
 // in modules/article/index.js
-module.exports = {
-  options: {
-    // Prevent this content type from appearing in the admin bar
-    showCreate: false,
-    // Prevent this content type from appearing in the quick create menu
-    quickCreate: false
+export default {
+  methods(self) {
+    return {
+      // Empty method prevents this module from appearing in the admin bar
+      addToAdminBar() {
+        return;
+      }
+    };
   }
 };
 ```
 
+For some modules like `submitted-draft`, you might want custom behavior instead of hiding completely. In this case, you can override the default implementation to provide special indicators or contextual utilities:
+
+```javascript
+// Example from the submitted-draft module showing custom admin bar behavior
+addToAdminBar() {
+  self.apos.adminBar.add(
+    `${self.__meta.name}:manager`,
+    self.pluralLabel,
+    {
+      action: 'edit',
+      type: self.name
+    },
+    {
+      component: 'AposSubmittedDraftIcon',
+      contextUtility: true,
+      tooltip: 'apostrophe:submittedDrafts'
+    }
+  );
+}
+```
+
+This approach allows you to customize how modules appear in the admin bar, adding special indicators or behaviors while maintaining a focused, intuitive interface for content managers.
+
 ### User Preferences Menu Customization
 
-Customizing the user preferences menu allows you to give content managers control over their own experience. This is particularly valuable for improving accessibility and personalization.
+Customizing the user preferences menu allows you to give content managers control over their own experience, particularly valuable for improving accessibility and personalization.
 
 **When to add custom user preferences:**
-- To accommodate different accessibility needs (contrast, text size)
-- To allow personalization of notification settings or communication preferences
+- To accommodate different accessibility needs
+- To allow personalization of notification settings
 - To enable user-specific workflow configurations
-- To provide role-specific options or preferences
-
-**When custom preferences add value:**
-- When users spend significant time in the CMS
-- When you have diverse users with different needs or preferences
-- When certain configurations could improve efficiency for some users
 
 ```javascript
 // in modules/@apostrophecms/user/index.js
-module.exports = {
+export default {
   options: {
     // Add custom preferences sections
     preferences: {
