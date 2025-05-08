@@ -1,6 +1,6 @@
 <template>
   <div class="cta-button tip custom-block" @click="navigate" @keydown.enter.prevent="handleEnter"
-    @keydown.space.prevent="handleSpace" :class="{ 'clickable': url }" role="button" tabindex=0>
+    @keydown.space.prevent="handleSpace" :class="{ 'clickable': url }" :role="url ? 'button' : undefined" :tabindex="url ? 0 : undefined">
     <!-- Tags at the top -->
     <div class="tags-container">
       <span class="tag tag--type" v-if="cardType">
@@ -13,7 +13,7 @@
 
     <p class="cta-button__title">{{ title }}</p>
     <p class="cta-button__content">{{ content }}</p>
-    
+
     <div class="details">
       <!-- Series indicator -->
       <span class="tag tag--series" v-if="isSeries">
@@ -59,8 +59,8 @@
   });
 
   const navigate = () => {
-    if (props.url.value) {
-      window.location.href = props.url.value;
+    if (props.url) {
+      window.location.href = props.url;
     }
   };
   const handleEnter = () => {

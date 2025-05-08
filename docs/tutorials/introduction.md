@@ -8,7 +8,7 @@ seriesCount: 8
 tags:
   topic: "Core Concepts"
   type: series
-  effort: advanced
+  effort: beginner
 order: 1
 ---
 # Welcome to our ApostropheCMS Web Development Series

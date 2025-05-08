@@ -185,7 +185,6 @@ onMounted(() => {
     isSeries: page.frontmatter.isSeries,
     seriesCount: page.frontmatter.seriesCount
   }));
-  console.log('Loaded tutorials:', tutorials.value);
 
   // Extract unique filter options
   const typeSet = new Set();
