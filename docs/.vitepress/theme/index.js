@@ -13,6 +13,7 @@ import AposTwoColumns from '../components/AposTwoColumns.vue';
 import AposCtaButton from '../components/AposCtaButton.vue';
 import AposVideoSidebar from '../components/AposVideoSidebar.vue';
 import { createEventBus } from './eventBus';
+import AposTutorialFilter from '../components/AposTutorialFilter.vue';
 import { setupUpdateChecker } from '../helpers/updateChecker';
 
 export const eventBus = createEventBus();
@@ -37,6 +38,7 @@ export default {
     app.component('AposRefExtends', AposRefExtends);
     app.component('AposTwoColumns', AposTwoColumns);
     app.component('AposCtaButton', AposCtaButton);
+    app.component('AposTutorialFilter', AposTutorialFilter);
     if (typeof window !== 'undefined') {
       setupUpdateChecker();
     }

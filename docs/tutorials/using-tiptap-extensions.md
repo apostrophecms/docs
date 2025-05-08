@@ -1,3 +1,6 @@
+---
+excludeFromFilters: true
+---
 # The `@apostrophecms/typography` extension
 ![Examples of character conversion in the typography extension](../images/typography.png)
 
