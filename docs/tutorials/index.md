@@ -137,4 +137,12 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
       url="/tutorials/setting-up-the-advanced-permission-pro-extension.html"
     />
   </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Snippit"
+      title="Admin Bar"
+      content="TBD"
+      url="/tutorials/snippet/admin-bar-best-practices.html"
+    />
+  </template>
 </AposTwoColumns>
