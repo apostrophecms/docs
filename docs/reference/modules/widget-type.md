@@ -189,7 +189,7 @@ If this option is set to `true`, and the widget has relationships with documents
 
 ### `preview`
 
-Defaults to false. When set to true, widgets update in real time as edits are made, helping editors immediately see their impact. Note that new widgets will not appear until all required fields are completed. The editing modal will attempt to open without overlapping the widget, automatically positioning itself to the left or right as needed.
+Defaults to true. When set to true, widgets update in real time as edits are made, helping editors immediately see their impact. Note that new widgets will not appear until all required fields are completed. The editing modal will attempt to open without overlapping the widget, automatically positioning itself to the left or right as needed.
 
 Setting this option globally enables the behavior for all widgets. To enable or disable it for specific widgets only, set the option in the individual widget module at project level.
 
