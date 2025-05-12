@@ -12,7 +12,7 @@ The only reason to configure this module directly would be to apply the changes 
 
 ### `widgetOperations`
 
-This configuration cascade allows you to define custom operations that appear in the menu that appears when editing the widget on page. These operations can trigger modals, perform actions, or be conditionally displayed based on widget state and user permissions. These operation can be added to either the main menu, or to the dropdown menu that appears when clicking on the context menu (three dots).
+This configuration cascade allows you to define custom operations that appear in the menu that appears when editing the widget on page. These operations can trigger modals, perform actions, or be conditionally displayed based on widget state and user permissions.
 
 The `widgetOperations` should be a function that takes `self` and `options` as parameters and returns an object specifying operations to add to the widget context menu:
 
@@ -31,7 +31,6 @@ widgetOperations(self, options) {
         // Optional properties
         tooltip: 'Tooltip text or i18n key', // Text shown on hover
         action: 'customAction',            // Event emitted when clicked (defaults to operation name)
-        secondaryLevel: true|false,        // If true, shows in the context menu instead of primary
 
         // Conditional display based on widget state
         if: {
@@ -59,8 +58,6 @@ widgetOperations(self, options) {
   };
 }
 ```
-
-Operations with `secondaryLevel: true` appear in the dropdown menu, while primary operations (the default) appear directly in the widget controls.
 
 **Example:**
 
