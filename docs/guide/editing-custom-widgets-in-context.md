@@ -1,7 +1,7 @@
 # Editing custom widgets in context
 
 ::: info
-Be sure to read [customizing the user interface](custom-ui.md) first before proceeding with this guide. In this guide we will assume you are already familiar with `APOS_DEV=1`, `ui/apos/components` and other concepts covered there.
+Be sure to read [customizing the user interface](custom-ui.md) first before proceeding with this guide. In this guide we will assume you are already familiar with `APOS_DEV=1` or using `hmr: 'apos'`, `ui/apos/components` and other concepts covered there.
 :::
 
 Most [custom widgets](custom-widgets.md), and indeed most core widgets, are edited in a dialog box when the user clicks on the edit button. But there is another possibility: in-context editing on the page. The standard rich text widget is an example of this. The user types text directly on the page.
