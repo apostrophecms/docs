@@ -305,27 +305,87 @@ The `find()` method initiates a database query. Learn more about initiating quer
 | `builders` | Object | The builders object is converted to matching [query builders](/reference/query-builders.md). |
 
 ### `getManagerApiProjection(req)`
-The `getManagerApiProjection()` method defines which fields are returned when pieces are loaded in the manager modal, improving performance by reducing the amount of data transferred. By default, this method returns essential fields needed for the manager interface plus any fields configured as visible columns in the manager modal UI. You can extend this method to add additional fields that should be included in the manager modal API responses.
-When extending this method, remember to use the _super parameter to call the original method and build upon its results.
-Example
-javascriptmodule.exports = {
+
+The `getManagerApiProjection()` method defines which fields are returned when pieces are loaded in the manager modal, improving performance by reducing the amount of data transferred. By default, when `managerApiProjection` is not configured, this method returns `null`, which means all fields will be fetched. This default behavior ensures all data is available, but can be less efficient.
+
+Setting `managerApiProjection: true` in your module's options causes the method to only include the essential fields and visible columns, which can improve performance when working with thousands of pieces. Alternatively, you can provide an object with specific field projections (e.g., `{ customField: 1, authorReference: 1 }`). When you provide an object, those fields will be returned in addition to the essential fields, which is a convenient way to include extra fields without having to extend the method.
+
+Essential fields are always included in the projection, even if not specified in your custom projection. These essential fields are:
+
+```javascript
+{
+  _id: 1,
+  _url: 1,
+  aposDocId: 1,
+  aposLocale: 1,
+  aposMode: 1,
+  docPermissions: 1,
+  slug: 1,
+  title: 1,
+  type: 1,
+  visibility: 1
+}
+```
+
+These fields provide document identifiers, permissions, and metadata required for the manager interface to function properly. When columns are configured for the manager view, their field names are automatically added to the projection, with any "draft:" or "published:" prefixes properly handled.
+
+**Example: Configuring the Projection in Options**
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    // Only return essential fields and columns
+    managerApiProjection: true,
+    
+    // Or specify additional fields to include
+    // managerApiProjection: {
+    //   customField: 1,
+    //   authorReference: 1
+    // }
+  }
+  // ...
+}
+```
+
+When extending this method, remember to use the `_super` parameter to call the original method and build upon its results. Check if the original projection is `null` before attempting to add fields, as `null` indicates that all fields should be fetched.
+
+**Example: Extending the Projection**
+
+```javascript
+export default {
   extend: '@apostrophecms/piece-type',
   extendMethods(self) {
     return {
       getManagerApiProjection(_super, req) {
         // Get the original projection using _super
         const projection = _super(req);
-        
+
+        // If projection is null, it means "fetch everything"
+        if (projection === null) {
+          return null;
+        }
+
         // Add your custom fields to the projection
         projection.customField = 1;
         projection.authorReference = 1;
-        
+
         return projection;
       }
     };
   }
   // ...
 }
+```
+
+**When to Use Options vs. Extending the Method**
+
+Configuring `managerApiProjection` in your options is simpler and sufficient for most use cases when you just need to add specific fields. You should use the `extendMethods` approach when you need more complex logic, such as:
+
+1. When your projection needs to be dynamic based on the request
+2. When you need to perform conditional logic to determine which fields to include
+3. When you need to access other module methods or services to decide on the projection
+4. When you're building upon a module that might already have extended this method
 
 ### `async insert(req, piece, options)`
 
