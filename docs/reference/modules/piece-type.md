@@ -337,7 +337,7 @@ export default {
   options: {
     // Only return essential fields and columns
     managerApiProjection: true,
-    
+
     // Or specify additional fields to include
     // managerApiProjection: {
     //   customField: 1,
