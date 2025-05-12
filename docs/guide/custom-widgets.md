@@ -185,6 +185,70 @@ Even when placeholder content is not needed, for some types of custom widgets, i
 Adding `placeholder: true` in the options for a widget automatically sets `initialModal` to `false`. This can **not** be overridden by passing a `true` value.
 :::
 
+# Server-Side Widget Validation
+
+ApostropheCMS supports server-side validation for widgets with user-friendly error notifications. This feature allows you to enforce content rules and display helpful messages to editors when validation fails. This is only needed if you want to add custom validation in addition to the validation that ApostropheCMS already performs on schema field input and when a field is marked as `required`.
+
+## Implementing Server-Side Validation
+
+To add server-side validation to a widget, extend the `sanitize` method in your widget module:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/widget-type',
+  // other configuration...
+  extendMethods(self) {
+    return {
+      async sanitize(_super, req, input, ...rest) {
+        // First call the original sanitize method
+        const sanitized = await _super(req, input, ...rest);
+
+        // Add your validation logic
+        if (sanitized.title?.toLowerCase().includes('invalid term')) {
+          throw self.apos.error('invalid', 'Validation failed', {
+            detail: 'This title contains terms that are not permitted. Please revise it.'
+          });
+        }
+        
+        return sanitized;
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/my-widget/index.js
+  </template>
+</AposCodeBlock>
+
+When throwing validation errors, use this format:
+
+```javascript
+throw self.apos.error('invalid', 'Technical error message', {
+  detail: 'User-friendly message for the UI'
+});
+```
+
+The `detail` property contains the message that will be displayed to the user. If omitted, the error message itself will be shown.
+
+## How Validation Works
+
+Server-side validation offers key benefits:
+
+- Validation occurs on the server when the user clicks "Save"
+- If validation fails, the save operation is interrupted
+- An error notification appears with the user-friendly message
+- The user is returned to the widget editor to correct the issue
+- Invalid content is prevented from being saved to the database
+
+During live preview, validation behaves differently:
+- Preview pauses until the issue is fixed, without showing error messages
+- Preview resumes automatically when the content becomes valid
+
+This approach allows you to implement complex validation rules that can access the database or enforce business logic that cannot be handled client-side.
+
 ## Widget templates
 
 Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
