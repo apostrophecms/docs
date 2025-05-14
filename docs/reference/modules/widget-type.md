@@ -30,7 +30,6 @@ widgetOperations(self, options) {
 
         // Optional properties
         tooltip: 'Tooltip text or i18n key', // Text shown on hover
-        action: 'customAction',            // Event emitted when clicked (defaults to operation name)
 
         // Conditional display based on widget state
         if: {
@@ -58,6 +57,25 @@ widgetOperations(self, options) {
   };
 }
 ```
+#### Modal Interaction
+When a user clicks on an operation that specifies a modal property, the modal component will be launched with the following props:
+```javascript
+{
+  widget,       // The current widget instance
+  widgetSchema  // The schema for the widget
+}
+```
+
+To update the original widget from your modal, you must emit a `modal-result` event before closing:
+```javascript
+// Inside your modal component emit the updated data
+this.$emit('modal-result', widgetData);
+```
+
+Note the following important considerations:
+
+  - The widget's `type` and `_id` properties must not be changed.
+  - If the modal closes without emitting a `modal-result` event, the original widget remains unchanged.
 
 **Example:**
 
@@ -340,3 +358,4 @@ node app @apostrophecms/rich-text-widget:list
 ```
 
 Will list all of the rich text widgets on the site.
+
