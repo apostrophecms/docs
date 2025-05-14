@@ -34,8 +34,8 @@ exampleTutorials:
         type: "pro"
         effort: "advanced"
 ---
-# Tutorials
+# Recipes
 
-Step-by-step tutorials that go beyond the technical explanations in our Guide or Reference sections. Explore real-world implementations, from full project builds to focused how-tos, designed to help you get hands-on with ApostropheCMS.
+Practical, standalone tutorials for solving specific challenges in ApostropheCMS. These recipes range from simple tips to advanced patterns and can be filtered by topic to match your needs.
 
 <AposTutorialFilter />
