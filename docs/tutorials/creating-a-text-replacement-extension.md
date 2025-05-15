@@ -1,3 +1,6 @@
+---
+excludeFromFilters: true
+---
 # The `@apostrophecms/smilies` extension
 ![Screenshot of emojis added in the ApostropheCMS rich-test-widget](../images/smilies.png)
 
