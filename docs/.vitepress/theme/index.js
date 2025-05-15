@@ -1,6 +1,7 @@
 // https://vitepress.dev/guide/custom-theme
 import { h } from 'vue';
 import Theme from 'vitepress/theme';
+import { useData } from 'vitepress';
 import './style.css';
 import './styles/index.styl';
 import AposCodeBlock from '../components/AposCodeBlock.vue';
@@ -14,7 +15,7 @@ import AposCtaButton from '../components/AposCtaButton.vue';
 import AposVideoSidebar from '../components/AposVideoSidebar.vue';
 import { createEventBus } from './eventBus';
 import { setupUpdateChecker } from '../helpers/updateChecker';
-import { setupYouTubeTracking } from './youtubeTracking';
+import { setupYouTubeTracking } from '../helpers/youtubeTracking';
 
 export const eventBus = createEventBus();
 export default {
@@ -31,7 +32,6 @@ export default {
   },
   // In your enhanceApp function:
   enhanceApp({ app, router, siteData }) {
-    // Your existing component registrations
     app.component('AposCodeBlock', AposCodeBlock);
     app.component('AposTooltip', AposTooltip);
     app.component('AposTag', AposTag);
