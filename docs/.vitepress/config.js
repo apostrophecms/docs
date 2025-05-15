@@ -1,20 +1,25 @@
-import { resolve } from 'node:path';
 import { defineConfig } from 'vitepress';
 import { fileURLToPath, URL } from 'node:url';
 import { sidebarGuide } from './sidebarGuide';
 import { sidebarTutorials } from './sidebarTutorials';
-import { readdirSync } from 'node:fs';
-import { join } from 'path';
 import { JSDOM } from 'jsdom';
 import nlp from 'compromise';
 
 import nunjucks from './theme/njk-html.tmLanguage.json';
 
-import { detectModuleFormat, transpileToESM, transpileToCJS } from './helpers/transpile';
+import {
+  detectModuleFormat,
+  transpileToESM,
+  transpileToCJS
+} from './helpers/transpile';
+
+const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
+const DEBUG_TRACKING = process.env.DEBUG_TRACKING || 'false';
+const ENV = process.env.ENV || 'production';
 
 export default defineConfig({
   title: 'ApostropheCMS',
-  description: 'Documentation for Apostrophe 3',
+  description: 'Documentation for ApostropheCMS',
 
   ignoreDeadLinks: 'localhostLinks',
   vite: {
@@ -80,6 +85,15 @@ export default defineConfig({
       gtag('js', new Date());
       gtag('config', 'G-T1M7W6BWMD');
     `
+    ],
+    // Umami tracking code
+    [
+      'script',
+      {
+        defer: '',
+        src: 'https://cloud.umami.is/script.js',
+        'data-website-id': umamiWebsiteId
+      }
     ],
     [
       'link',
@@ -351,10 +365,11 @@ export default defineConfig({
     socialLinks: [{ icon: 'github', link: 'https://github.com/apostrophecms' }],
     search: {
       provider: 'local'
-    }
+    },
+    __DEBUG_TRACKING__: JSON.stringify(DEBUG_TRACKING),
+    __ENV__: JSON.stringify(ENV)
   }
 });
-
 
 async function parseContent(htmlBlock) {
   const dom = new JSDOM(htmlBlock);

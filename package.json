@@ -9,8 +9,10 @@
     "preview": "npm run docs:preview",
     "docs:preview": "vitepress preview docs",
     "test": "npx eslint .",
-    "deploy": "npm run build && bash ./deploy && rm -r ./docs/.vitepress/dist",
-    "deploy-all": "npm run build && ENV=staging bash ./deploy && ENV=production bash ./deploy && rm -r ./docs/.vitepress/dist"
+    "deploy": "npm run update-version && npm run docs:build && bash ./deploy && rm -r ./docs/.vitepress/dist",
+    "deploy-staging": "UMAMI_WEBSITE_ID=7e078a27-082b-4e1b-bd8c-f964d2f4896d ENV=staging npm run deploy",
+    "deploy-production": "UMAMI_WEBSITE_ID=78f65ccd-0305-4ce8-b00e-de8c46412e9d ENV=production npm run deploy",
+    "deploy-all": "npm run deploy-staging && npm run deploy-production"
   },
   "dependencies": {
     "body-scroll-lock": "^4.0.0-beta.0",
