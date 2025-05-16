@@ -187,7 +187,6 @@ function setupYouTubePlayers() {
           onReady: function (event) {
             logDebug(`Player ready for video: ${videoTitle}`);
             trackingState.videoLoaded = true;
-            trackEvent('video_ready');
           },
           onStateChange: function (event) {
             const player = event.target;
@@ -278,7 +277,7 @@ function setupWatchOnYouTubeTracking(iframe, videoId, videoTitle) {
   // Get iframe parent container
   const container = iframe;
   logDebug('Setting up YouTube tracking for container:', container);
-  
+
   if (!container) {
     logDebug('No container found for iframe, aborting setup');
     return;
