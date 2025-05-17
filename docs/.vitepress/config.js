@@ -307,7 +307,7 @@ export default defineConfig({
           return defaultFence(tokens, idx, options, env, slf);
         }
 
-        if ([ 'js', 'javascript', 'ts'].includes(lang)) {
+        if ([ 'js', 'javascript', 'ts' ].includes(lang)) {
           let cjsCode, esmCode;
 
           if (format === 'cjs') {
