@@ -106,6 +106,10 @@ const sidebarTutorials = [
     ]
   },
   {
+    text: 'Ecomm test',
+    link: 'e-comm/introduction.md'
+  },
+  {
     text: 'Return to the guide &#8594',
     link: '/',
     icon: 'book-marked',

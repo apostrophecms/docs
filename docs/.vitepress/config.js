@@ -55,7 +55,8 @@ export default defineConfig({
             new URL('./components/AposLocalSearchBox.vue', import.meta.url)
           )
         }
-      ]
+      ],
+      preserveSymlinks: true
     }
   },
   head: [
@@ -354,7 +355,8 @@ export default defineConfig({
           { text: 'Extensions', link: 'https://apostrophecms.com/extensions' },
           { text: 'Starter Kits', link: 'https://apostrophecms.com/starter-kits' },
           { text: 'Community', link: 'https://discord.com/invite/XkbRNq7' },
-          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' }
+          { text: 'Enterprise Solutions', link: 'https://apostrophecms.com/pricing' },
+          { text: 'ecom', link: '/e-comm/' }
         ]
       },
     ],
