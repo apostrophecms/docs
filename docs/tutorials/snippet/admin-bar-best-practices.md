@@ -40,13 +40,15 @@ Each component can be customized to better serve your editors' needs.
 
 ### Logical Grouping & Naming
 
-Configure your admin bar to group related functionality together. For example: content creation tools, publishing workflow tools, and support tools. Make sure to use clear, action-oriented labels. Maintain consistent naming patterns across modules and avoid technical jargon in menu labels visible to content managers.
+Configure your admin bar to group related functionality together. For example: content creation tools, media organization, etc... Make sure to use clear, action-oriented labels. Maintain consistent naming patterns across modules and avoid technical jargon in menu labels visible to content managers.
 
 **Using Translation Strings for Admin UI:**
-For all user-facing text in the admin interface, always use translation strings rather than hardcoded English text. This ensures your CMS can be properly internationalized and maintains consistency.
+For all user-facing text in the admin interface, always use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency.
 
 > [!IMPORTANT]
 > For admin UI translations, [you must use a custom namespace prefix](/guide/localization/static.html#adding-and-using-localization-files) (like `myproject:`). Never use the `apostrophe:` namespace for your custom strings, as this could conflict with existing or future core translations.
+
+For example, if you wanted to organize several custom pieces that editors constantly use and all the media related content in a separate menu:
 
 <AposCodeBlock>
 
@@ -60,9 +62,9 @@ export default {
         name: 'content',
         label: 'myproject:content', // User-friendly label
         items: [
-          'articles',
-          'events',
-          'collections'
+          'article',
+          'event',
+          'collection'
         ]
       },
       {
@@ -70,28 +72,10 @@ export default {
         name: 'media',
         label: 'myproject:media', // Clear category label
         items: [
-          'images',
-          'image-tags',
-          'files',
-          'file-tags'
-        ]
-      },
-      {
-        // Group workflow items together for logical task completion
-        name: 'workflow',
-        label: 'myproject:publishingTools', // Clear, action-oriented label
-        items: [
-          'submissions',
-          'scheduled'
-        ]
-      },
-      {
-        // Make help prominent and accessible
-        name: 'help',
-        label: 'myproject:getHelp', // Action-oriented label
-        items: [
-          'docs',
-          'support'
+          '@apostrophecms/image',
+          '@apostrophecms/image-tag',
+          '@apostrophecms/file',
+          '@apostrophecms/file-tag'
         ]
       }
     ]
@@ -105,9 +89,8 @@ export default {
 
 ### Menu Priority and Organization
 
-ApostropheCMS provides three ways to control item order:
+Most developers will find organizing their menus using `order` to be sufficient:
 
-1. **Global ordering with `order` option:**
     <AposCodeBlock>
 
       ```javascript
@@ -123,34 +106,12 @@ ApostropheCMS provides three ways to control item order:
       </template>
     </AposCodeBlock>
 
-2. **Relative positioning with `after` option:**
-    ```javascript
-    // When adding an item, specify what it should come after
-    // Note: 'custom-item' module must have a manager
-    self.apos.adminBar.add('custom-item', 'myproject:myCustomItem',
-      // Opens the manager view for the custom-item piece-type
-      { action: 'view', type: 'custom-item' },
-      // Places this item right after the article menu
-      { after: 'article' }
-    );
-    ```
-
-3. **Sending items to the end with `last` option:**
-    ```javascript
-    // When adding an item that should appear at the end
-    // Note: 'infrequent-item' module must have a manager
-    self.apos.adminBar.add('infrequent-item', 'myproject:rarelyUsed',
-      // Points to a rarely used module
-      { action: 'edit', type: 'infrequent-item' },
-      // This item will be pushed to the end of the menu
-      { last: true }
-    );
-    ```
+Additional positioning can be achieved using the `last` and `after` options of the [`@apostrophecms/admin-bar` module](https://github.com/apostrophecms/apostrophe/blob/42e2074f68d407fafac5106d4b02093da6d305e3/modules/%40apostrophecms/admin-bar/index.js#L166). You can read about this method in the [documentation reference section](/reference/modules/admin-bar.html#add-name-label-permission-options).
 
 **How Grouped and Ungrouped Items Work Together:**
 
 When mixing groups of items and ungrouped menu items, the system:
-1. Positions all items first (based on `order`, `last`, or initialization order)
+1. Positions all items first (based on `order` or initialization order)
 2. Then ensures grouped items stay together, with their position determined by their first item
 
 <AposCodeBlock>
