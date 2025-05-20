@@ -14,7 +14,8 @@ tags:
   topic: "Core Concepts"
   type: astro
   effort: beginner
-order: 1
+order: 1,
+excludeFromFilters: true
 ---
 # Building Websites with ApostropheCMS and Astro
 

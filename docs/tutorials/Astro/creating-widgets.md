@@ -8,6 +8,7 @@ tags:
   type: astro
   effort: beginner
 order: 4
+excludeFromFilters: true
 videoList:
   - id: 'JEU2RdgqrIs'
     title: 'Introducing Widgets'

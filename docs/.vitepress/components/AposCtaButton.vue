@@ -20,8 +20,8 @@
         <InlineSvg src="/images/icons/stack.svg" class="icon" />
         {{ seriesCount }} Part Series
       </span>
-      <!-- Experience level with dots -->
-      <div class="tag tag--effort effort-indicator">
+      <!-- Experience level with dots - only show if cardEffort has a valid value -->
+      <div class="tag tag--effort effort-indicator" v-if="shouldShowEffort">
         <span class="effort-badge">
           <span class="effort-dots">
             <span v-for="n in 3" :key="n" class="effort-dot" :class="{
@@ -38,6 +38,7 @@
 
 <script setup>
   import InlineSvg from 'vue-inline-svg';
+  import { computed } from 'vue';
   const props = defineProps({
     cardType: String,
     cardTopic: String,
@@ -55,6 +56,10 @@
     seriesCount: {
       type: Number,
       default: 1
+    },
+    hideEffort: {
+      type: Boolean,
+      default: false
     }
   });
 
@@ -85,6 +90,13 @@
           return 0;
       }
   };
+
+  // Computed property to determine if effort badge should be shown
+  const shouldShowEffort = computed(() => {
+    if (props.hideEffort) return false;
+    if (!props.cardEffort) return false;
+    return getLevelDots(props.cardEffort) > 0;
+  });
 </script>
 
 <style lang="scss" scoped>

@@ -9,7 +9,8 @@ tags:
   topic: "Core Concepts"
   type: series
   effort: beginner
-order: 1
+order: 1,
+excludeFromFilters: true
 ---
 # Welcome to our ApostropheCMS Web Development Series
 

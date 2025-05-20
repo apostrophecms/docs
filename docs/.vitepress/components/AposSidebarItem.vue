@@ -14,13 +14,9 @@ watch(page, newValue => {
   myIsActive.value = normalizePath(newValue.relativePath) === normalizePath(props.item.link);
   if (props.item.items) {
     const hasActiveChild = checkForActivePage(props.item.items, newValue);
-    myCollapsed.value = (!hasActiveChild && !myIsActive.value);
+    // Only collapse if not configured to stay open and not active
+    myCollapsed.value = (!hasActiveChild && !myIsActive.value && props.item.collapsed !== false);
     myHasActive.value = hasActiveChild;
-
-    // if the item has been configured not to collapse, then don't collapse it
-    if (props.item.collapsed === false) {
-      myCollapsed.value = false;
-    }
   }
 })
 
@@ -45,10 +41,13 @@ const {
   hasChildren,
   toggle
 } = useSidebarControl(computed(() => props.item));
+
 const myCollapsed = ref(false);
 const myIsActive = ref(false);
 const myHasActive = ref(false);
 myIsActive.value = page.value.relativePath === props.item.link;
+
+const isFixed = computed(() => props.item.collapsed === 'fixed');
 
 const sectionTag = computed(() => hasChildren.value ? 'section' : `div`)
 
@@ -60,12 +59,12 @@ const textTag = computed(() => {
     : props.depth + 2 === 7 ? 'p' : `h${props.depth + 2}`
 })
 
-const itemRole = computed(() => isLink.value ? undefined : 'button')
+const itemRole = computed(() => isLink.value && !props.item.items ? undefined : 'button')
 
 function checkForActivePage(items, page) {
   let hasActiveChild = false;
   items.forEach(item => {
-    if (page.relativePath === item.link) {
+    if (normalizePath(page.relativePath) === normalizePath(item.link)) {
       hasActiveChild = true;
     }
     if (item.items) {
@@ -79,22 +78,35 @@ let hasActiveChild = false;
 if (props.item.items) {
   hasActiveChild = checkForActivePage(props.item.items, page.value);
 }
-myCollapsed.value = props.item.items ? (!hasActiveChild) : null;
+
+// Initialize collapse state but respect 'fixed' option
+if (props.item.collapsed === 'fixed') {
+  // Fixed items are always open but not toggleable
+  myCollapsed.value = false;
+} else if (props.item.items) {
+  // Regular items follow normal collapse logic
+  myCollapsed.value = props.item.collapsed === false ? false : !hasActiveChild;
+} else {
+  myCollapsed.value = null;
+}
 myHasActive.value = hasActiveChild;
 
-// if the item has been configured not to collapse, then don't collapse it
-if (props.item.collapsed === false) {
-  myCollapsed.value = false;
-}
+// Determine if we should show a caret
+const showCaret = computed(() => {
+  // Only show caret for items with children that aren't fixed
+  return props.item.items && props.item.items.length > 0 && props.item.collapsed !== 'fixed';
+});
 
 const classes = computed(() => [
   [`level-${props.depth}`],
-  { collapsible: collapsible.value },
+  { collapsible: collapsible.value || isFixed.value },
   { collapsed: myCollapsed.value },
   { 'is-link': isLink.value },
   { 'is-active': myIsActive.value },
   { 'has-active': myHasActive.value },
   { [`is-style-${props.item.style}`]: props.item.style },
+  { 'is-fixed': isFixed.value },
+  { 'parent-of-active': myHasActive.value },
   props.item.customClass
 ])
 
@@ -102,23 +114,49 @@ function onItemInteraction(e: MouseEvent | Event) {
   if ('key' in e && e.key !== 'Enter') {
     return
   }
-  !props.item.link && myToggle()
+  
+  // If item is fixed, don't toggle
+  if (isFixed.value) {
+    return;
+  }
+  
+  // For items without links or with both link and items, toggle
+  if (!props.item.link) {
+    myToggle();
+  }
 }
 
-function onCaretClick() {
-  props.item.link && myToggle()
+function onCaretClick(e: MouseEvent) {
+  // Prevent the event from bubbling to parent handlers
+  e.preventDefault();
+  e.stopPropagation();
+  
+  // If fixed, do nothing
+  if (isFixed.value) {
+    return;
+  }
+  
+  myToggle();
 }
 
 function onLinkClick(e: MouseEvent) {
+  // If fixed, just follow the link
+  if (isFixed.value) {
+    return;
+  }
+  
+  // For regular collapsible items with links and children
   if (props.item.items) {
-    // prevent following the link when the item can be toggled
-    e.preventDefault()
-    myToggle()
+    e.preventDefault();
+    myToggle();
   }
 }
 
 function myToggle() {
-  myCollapsed.value = !myCollapsed.value;
+  // Only toggle if not fixed
+  if (!isFixed.value) {
+    myCollapsed.value = !myCollapsed.value;
+  }
 }
 
 function normalizePath(path) {
@@ -150,15 +188,24 @@ function normalizePath(path) {
     <hr v-if="item.break || (item?.items && item.items[0] && item.items[0].break)">
     <div v-else>
       <div v-if="item.text" class="item" :role="itemRole"
-        v-on="item.items ? { click: onItemInteraction, keydown: onItemInteraction } : {}" :tabindex="item.items && 0">
+        v-on="(item.items && !isFixed.value) ? { click: onItemInteraction, keydown: onItemInteraction } : {}" 
+        :tabindex="(item.items && !isFixed.value) ? 0 : undefined">
         <div class="indicator" />
 
-        <div v-if="myCollapsed != null" class="caret" role="button" aria-label="toggle section" @click="onCaretClick"
+        <!-- Show caret for regular collapsible items -->
+        <div v-if="showCaret" class="caret" role="button" aria-label="toggle section" @click="onCaretClick"
           @keydown.enter="onCaretClick" tabindex="0">
           <VPIconChevronRight class="caret-icon" />
         </div>
+        <!-- For fixed items, show a bullet -->
+        <div v-else-if="props.item.collapsed === 'fixed'" class="fixed-bullet" aria-hidden="true">
+          <div class="bullet-icon"></div>
+        </div>
+        <!-- Placeholder for items without children -->
         <div v-else class="apos-caret-placeholder" />
-        <VPLink v-if="item.link" :tag="linkTag" :href="item.link" @click="onLinkClick" class="link">
+        
+        <VPLink v-if="item.link" :tag="linkTag" :href="item.link" 
+          @click="!isFixed.value && item.items ? onLinkClick : undefined" class="link">
           <AposSidebarIcon v-if="item.icon" :name="item.icon" />
           <component :is="textTag" class="text" v-html="item.text" />
         </VPLink>
@@ -166,7 +213,6 @@ function normalizePath(path) {
           <AposSidebarIcon v-if="item.icon" :name="item.icon" />
           <component :is="textTag" class="text" v-html="item.text" />
         </span>
-
       </div>
 
       <div v-if="item.items && item.items.length" class="items">
@@ -201,7 +247,11 @@ hr {
   width: 100%;
 }
 
-.VPSidebarItem.collapsible>.item {
+.VPSidebarItem.collapsible:not(.is-fixed)>.item {
+  cursor: pointer;
+}
+
+.VPSidebarItem.is-fixed>.item {
   cursor: pointer;
 }
 
@@ -352,8 +402,47 @@ hr {
   padding-left: 16px;
 }
 
-.VPSidebarItem.collapsed.collapsible .items {
+/* Always show items for fixed items */
+.VPSidebarItem.is-fixed > div > .items {
+  display: block !important;
+}
+
+/* Only hide items for regular collapsible items that are collapsed */
+.VPSidebarItem.collapsed.collapsible:not(.is-fixed) > div > .items {
   display: none;
+}
+
+.VPSidebarItem.is-fixed.parent-of-active > div > .item .text {
+    color: color-mix(in srgb, var(--vp-c-brand), white 30%);
+    font-weight: 600;
+}
+
+.fixed-bullet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+}
+
+.bullet-icon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--vp-c-text-3);
+}
+
+.VPSidebarItem.is-fixed.parent-of-active .bullet-icon,
+.VPSidebarItem.is-fixed.is-active .bullet-icon {
+  background-color: var(--vp-c-brand);
+}
+
+.VPSidebarItem.is-fixed .item:hover .bullet-icon {
+  background-color: var(--vp-c-text-2);
+}
+
+.VPSidebarItem.is-fixed .apos-caret-placeholder {
+  width: 32px;
 }
 
 .is-style-cta {

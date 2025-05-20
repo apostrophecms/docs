@@ -8,6 +8,7 @@ tags:
   type: astro
   effort: beginner
 order: 6
+excludeFromFilters: true
 ---
 # Deploying ApostropheCMS + Astro Projects
 
