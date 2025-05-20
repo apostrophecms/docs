@@ -98,7 +98,7 @@ The `.dockerignore` file prevents specific files from being copied into your fin
 apos-build/
 badges/
 data/
-node-modules/
+node_modules/
 public/uploads/
 .dockerignore
 .env
