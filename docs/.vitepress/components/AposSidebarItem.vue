@@ -231,7 +231,7 @@ hr {
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.collapsible:not(.collapsed) .VPSidebarItem {
+.collapsible:not(.collapsed):not(.is-fixed) .VPSidebarItem {
   &.level-1 .item .apos-caret-placeholder {
     width: 24px;
   }
