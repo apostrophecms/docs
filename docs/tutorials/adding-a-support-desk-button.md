@@ -193,7 +193,7 @@ export default () => {
 
 This conditional loading approach ensures the support desk is only available to authenticated CMS users, not to your website visitors.
 
-> **Note**: Replace the example URLs, configuration object names, and properties with the specifics from your chosen support desk provider's documentation. Each provider will have slightly different implementation requirements.
+> **Note**: Replace the example URLs, configuration object names, and properties with the specifics from your chosen support desk provider's documentation. Pay attention to API key exposure and whether there are both private and public API keys. Each provider will have slightly different implementation requirements.
 
 ## Hiding the Default Widget Button
 
@@ -235,8 +235,9 @@ Check your support desk provider's documentation for specific guidance on hiding
 ## Conclusion
 
 Integrating a third-party support desk into the ApostropheCMS admin bar provides an immediate help channel for your content managers without creating a custom module. By leveraging the `apos.adminBar.add()` method and the third-party widget's JavaScript API, you can create a seamless support experience that feels like a natural part of the CMS.
+
 ---
 
 **Related Resources:**
-- [ApostropheCMS 4.x Admin-bar Module Documentation](/reference/modules/admin-bar.md)
+- [ApostropheCMS Admin-bar Module Documentation](/reference/modules/admin-bar.md)
 - [Best Practices for Admin Bar Setup](/tutorials/snippet/admin-bar-best-practices.html)
