@@ -44,9 +44,13 @@ Note that the build version is *less* tolerant of errors in your markdown files,
 For deployment (requires credentials of course), you can select to deploy to staging, production, or both. For deployment to staging only, for example, you would use
 
 ```
-ENV=staging npm run deploy
+npm run deploy-staging
 ```
-For deployment to production only (unusual), change the `NODE_ENV` environment variable to `production`.
+For deployment to production only (unusual):
+
+```
+npm run deploy-production
+```
 
 For deployment to both, 
 

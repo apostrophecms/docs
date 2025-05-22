@@ -10,6 +10,115 @@ This module is the foundation for all widget types in Apostrophe, including the 
 
 The only reason to configure this module directly would be to apply the changes to *every* widget type, including those in Apostrophe core (e.g., `@apostrophecms/image-widget`).
 
+### `widgetOperations`
+
+This configuration cascade allows you to define custom operations that appear in the menu that appears when editing the widget on page. These operations can trigger modals, perform actions, or be conditionally displayed based on widget state and user permissions.
+
+The `widgetOperations` should be a function that takes `self` and `options` as parameters and returns an object specifying operations to add to the widget context menu:
+
+```javascript
+widgetOperations(self, options) {
+  return {
+    add: {
+      operationName: {
+        // Required properties
+        label: 'Label text or i18n key',   // Text displayed in the menu
+        modal: 'ComponentName',            // Modal component to open when clicked
+
+        // Required for addition to the primary display menu
+        icon: 'icon-name',                 // Icon to display (needs to be registered already)
+
+        // Optional properties
+        tooltip: 'Tooltip text or i18n key', // Text shown on hover
+
+        // Conditional display based on widget state
+        if: {
+          // MongoDB-style query conditions against the widget
+          'fieldName': value,              // Simple equality check
+          'nestedField.0': { $exists: true }, // Check if field exists
+          'someField': { $ne: 'value' },   // Not equal check
+          '$or': [                         // Logical OR
+            { condition1: value1 },
+            { condition2: value2 }
+          ],
+          '$and': [                        // Logical AND
+            { condition1: value1 },
+            { condition2: value2 }
+          ]
+        },
+
+        // Conditional display based on user permissions
+        permission: {
+          action: 'edit|delete|publish|view', // Required permission action
+          type: 'article|page|etc'            // Document type the permission applies to
+        }
+      }
+    }
+  };
+}
+```
+#### Modal Interaction
+When a user clicks on an operation that specifies a modal property, the modal component will be launched with the following props:
+```javascript
+{
+  widget,       // The current widget instance
+  widgetSchema  // The schema for the widget
+}
+```
+
+To update the original widget from your modal, you must emit a `modal-result` event before closing:
+```javascript
+// Inside your modal component emit the updated data
+this.$emit('modal-result', widgetData);
+```
+
+Note the following important considerations:
+
+  - The widget's `type` and `_id` properties must not be changed.
+  - If the modal closes without emitting a `modal-result` event, the original widget remains unchanged.
+
+**Example:**
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Image'
+  },
+  widgetOperations(self, options) {
+    const {
+      relationshipEditor = 'AposImageRelationshipEditor',
+      relationshipEditorLabel = 'apostrophe:editImageAdjustments',
+      relationshipEditorIcon = 'image-edit-outline'
+    } = options.apos.image.options || {};
+
+    return {
+      add: {
+        adjustImage: {
+          label: relationshipEditorLabel,
+          icon: relationshipEditorIcon,
+          modal: relationshipEditor,
+          tooltip: relationshipEditorLabel,
+          if: {
+            '_image.0': {
+              $exists: true
+            }
+          }
+        }
+      }
+    };
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/image-widget/index.js
+  </template>
+</AposCodeBlock>
+
+This example adds an "Adjust Image" operation to the image widget's context menu that appears only when an image has been selected, and opens a modal for editing image adjustments when clicked.
+
 ## Options
 
 ::: info
@@ -95,7 +204,7 @@ If this option is set to `true`, and the widget has relationships with documents
 
 ### `preview`
 
-Defaults to false. When set to true, widgets update in real time as edits are made, helping editors immediately see their impact. Note that new widgets will not appear until all required fields are completed. The editing modal will attempt to open without overlapping the widget, automatically positioning itself to the left or right as needed.
+Defaults to true. When set to true, widgets update in real time as edits are made, helping editors immediately see their impact. Note that new widgets will not appear until all required fields are completed. The editing modal will attempt to open without overlapping the widget, automatically positioning itself to the left or right as needed.
 
 Setting this option globally enables the behavior for all widgets. To enable or disable it for specific widgets only, set the option in the individual widget module at project level.
 
@@ -249,3 +358,4 @@ node app @apostrophecms/rich-text-widget:list
 ```
 
 Will list all of the rich text widgets on the site.
+
