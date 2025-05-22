@@ -18,7 +18,7 @@ Customer support is a critical part of any website management experience. By int
 
 ## Understanding Third-Party Support Desk Options
 
-Most popular third-party support desk solutions can be easily integrated with ApostropheCMS. Many create buttons that the users can click to trigger the help desk through a simple script embedded in the head of your site. However, using this approach means that you might have to worry that the end reader of your site has the option to open the help desk, which may not be desired. Adding it as a button to the admin-bar means that you can allow just logged-in users to access the support desk. But, this also means that you need to disable the automatic button addition.
+Most popular third-party support desk solutions can be easily integrated with ApostropheCMS. Many create buttons that the users can click to trigger the help desk through a simple script embedded in the head of your site. However, using this approach means that you might have to worry that the end reader of your site has the option to open the help desk, which may not be desired. Adding it as a button to the admin bar means that you can allow just logged-in users to access the support desk. But, this also means that you need to disable the automatic button addition.
 
 Common third-party support desk solutions that work well with ApostropheCMS include Zendesk Support Widget (a comprehensive customer service platform with ticketing and knowledge base), Intercom Chat (a conversational relationship platform with chat-based support), Freshdesk Messaging (customer support software with ticketing and automation), Help Scout Beacon (email-based customer support with a clean interface), and Crisp Live Chat (a lightweight customer messaging platform with chatbot capabilities).
 
@@ -42,15 +42,36 @@ export default {
       false,                    // Available to all users with admin access
       {
         contextUtility: true,   // Places button in the right side utility area
-        icon: 'question-circle', // Icon for the button
-        tooltip: 'myProject:supportDesk' // Namespaced tooltip text for translation
+        icon: 'phone-icon', // Icon for the button
+        tooltip: 'supportDesk:supportDesk' // Namespaced tooltip text for translation
       }
     );
   }
 };
 ```
   <template v-slot:caption>
-    modules/asset/index.js
+    modules/support-desk/index.js
+  </template>
+</AposCodeBlock>
+
+Here we are creating a new project-level module named `support-desk`. We don't have an `extend` property, so it will implicitly extend the core `@apostrophecms/module`. Since it is a new project-level module, we also need to register it in the project `app.js` file.
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-website',
+  modules: {
+    'support-desk': {},
+    // other modules
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
   </template>
 </AposCodeBlock>
 
@@ -101,9 +122,12 @@ export default () => {
 };
 ```
   <template v-slot:caption>
-    modules/asset/ui/src/index.js
+    modules/support-desk/ui/apos/apps/SupportDesk.js
   </template>
 </AposCodeBlock>
+
+> [!IMPORTANT]
+> Note the location of this script. It should be placed in the `ui/apos/apps` folder of your module in order to have access to the `apos.bus.$on()`.
 
 This approach ensures that when a content manager clicks the support button in the admin bar, the third-party support desk widget appears, allowing them to get help without leaving the CMS interface.
 
@@ -157,12 +181,14 @@ This approach works well for simpler implementations:
 
 #### JavaScript-Based Implementation
 
-For more control, you can load the script programmatically:
+For more control, you can load the script programmatically.  Since we are already bringing in custom JavaScript for powering our support desk button click, we can just append this code:
 
 <AposCodeBlock>
 
 ```javascript
 export default () => {
+  // existing code to handle admin bar button click
+
   // Only initialize for authenticated users
   if (!apos.user) {
     return;
@@ -187,7 +213,7 @@ export default () => {
 };
 ```
   <template v-slot:caption>
-    modules/asset/ui/src/index.js
+    modules/support-desk/ui/apos/apps/SupportDesk.js
   </template>
 </AposCodeBlock>
 
@@ -231,6 +257,118 @@ If configuration doesn't work, you can use CSS as a fallback. You'll need to ins
 ```
 
 Check your support desk provider's documentation for specific guidance on hiding the default launcher through configuration or CSS.
+
+## Working Example: Crisp Live Chat Integration
+
+Here's a complete working example using Crisp, which is a lightweight chat solution that's easy to implement. You can sign-up for an account at [Crisp.chat](https://crisp.chat).
+
+### Step 1: Create the Support Desk Module
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  init(self) {
+    // Add Crisp support desk button to the admin bar
+    self.apos.adminBar.add(
+      'support-desk',
+      'Get Support',
+      false,
+      {
+        contextUtility: true,
+        icon: 'phone-icon',
+        tooltip: 'supportDesk:supportDesk'
+      }
+    );
+  }
+};
+```
+  <template v-slot:caption>
+    modules/support-desk/index.js
+  </template>
+</AposCodeBlock>
+
+### Step 2: Create the UI Component to Handle Clicks
+
+<AposCodeBlock>
+
+```javascript
+export default () => {
+  // Only proceed for logged-in users
+  if (!apos.user) {
+    return;
+  }
+
+  // Listen for admin bar button clicks
+  apos.util.onReady(() => {
+    apos.bus.$on('admin-menu-click', (item) => {
+      if (item === 'support-desk') {
+        openCrispChat();
+      }
+    });
+  });
+
+  function openCrispChat() {
+    if (window.$crisp) {
+      window.$crisp.push(['do', 'chat:open']);
+      window.$crisp.push(['do', 'chat:show']);
+
+      // Set user information
+      if (apos.user) {
+        window.$crisp.push(['set', 'user:email', apos.user.email || '']);
+        window.$crisp.push(['set', 'user:nickname', apos.user.title || '']);
+      }
+    }
+  }
+
+  // Initialize Crisp chat
+  initCrispChat();
+
+  function initCrispChat() {
+    window.$crisp = [];
+    window.CRISP_WEBSITE_ID = "YOUR_WEBSITE_ID"; // Replace with your actual ID
+
+    // Load Crisp script
+    const script = document.createElement('script');
+    script.src = 'https://client.crisp.chat/l.js';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // Hide default button and handle close events
+    window.$crisp.push(['do', 'chat:hide']);
+    window.$crisp.push(['on', 'chat:closed', function() {
+      window.$crisp.push(['do', 'chat:hide']);
+    }]);
+  }
+};
+```
+  <template v-slot:caption>
+    modules/support-desk/ui/apos/apps/SupportDesk.js
+  </template>
+</AposCodeBlock>
+
+### Step 3: Register the Module in your app.js
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-website',
+  modules: {
+    'support-desk': {},
+    // other modules
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+That's it! With this implementation, content editors will see a support button in the admin bar. When clicked, the Crisp chat window will open, but the default Crisp chat button will remain hidden, ensuring a clean interface that's only accessible to authenticated users through the ApostropheCMS admin bar.
 
 ## Conclusion
 
