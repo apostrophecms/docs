@@ -12,7 +12,11 @@ tags:
 
 ## Why This Matters & Core Principles
 
-The content editing experience is shaped not just by the fields you create, but also by the guidance you provide alongside them. Well-crafted help text, placeholders, and tooltips significantly reduce confusion, minimize errors, and increase content manager confidence. Developers often overlook these details, but they're crucial for day-to-day content management.
+Ever had a content editor ask, “What does this field mean?” You’re not alone.
+
+In ApostropheCMS, how you label fields — and the help you give editors through placeholders and help text — directly shapes their experience. Clear, consistent field guidance doesn’t just reduce errors and support accessibility; it builds trust and confidence for anyone using the CMS.
+
+This short guide shows you how to write helpful labels, implement localized help text, and use placeholders where appropriate — so your projects are easier to use and faster to train people on.
 
 When implementing field guidance in your ApostropheCMS project, prioritize:
 - **Clarity**: Use concise, straightforward language that avoids technical jargon
@@ -23,7 +27,7 @@ When implementing field guidance in your ApostropheCMS project, prioritize:
 
 <!-- VIDEO: Field Help Text Best Practices Tutorial -->
 
-## Understanding Field Guidance Components
+## Types of Field Guidance in ApostropheCMS
 
 ApostropheCMS provides several ways to guide content editors through their work:
 
@@ -123,7 +127,7 @@ Some effective uses for `htmlHelp`:
 - Including multiple paragraphs of guidance for complex fields
 - Highlighting important warnings or recommendations
 
-### Best Practices for Help Text
+### Best Practices for Writing Help Text
 
 1. **Keep it concise**: Aim for 1-2 short sentences that provide immediate clarity
 2. **Include technical constraints**: Mention character limits, formatting requirements, or other constraints
@@ -136,7 +140,7 @@ Some effective uses for `htmlHelp`:
 
 ## Using Placeholder Text Effectively
 
-Placeholder text appears inside empty fields, suggesting the type of content expected. It disappears when the user begins typing. 
+Placeholder text appears inside empty fields, suggesting the type of content expected. It disappears when the user begins typing.
 
 > [!NOTE]
 > Placeholders are only supported for specific field types: email, float, integer, string, and url.
@@ -196,73 +200,7 @@ While placeholders can be helpful, they have accessibility limitations:
 
 **For this reason, never use placeholders as the only way to convey essential information.** Always include critical guidance in the help text or label.
 
-## Implementing Tooltips
-
-Tooltips provide additional information that appears on hover or focus, typically triggered by a small icon next to a field label.
-
-### Basic Implementation
-
-ApostropheCMS automatically creates a tooltip when you provide both `help` text and an `htmlHelp` property:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  fields: {
-    add: {
-      imageAltText: {
-        type: 'string',
-        label: 'myproject:imageAltText',
-        help: 'myproject:imageAltTextHelp',
-        htmlHelp: 'myproject:imageAltTextHtmlHelp'
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  modules/article-image/index.js
-</template>
-</AposCodeBlock>
-
-When both properties are provided, the `help` text appears below the field as usual, while the `htmlHelp` content is accessible via a tooltip icon that appears next to the field label.
-
-With corresponding translation strings:
-
-<AposCodeBlock>
-
-```json
-{
-  "imageAltText": "Alt Text",
-  "imageAltTextHelp": "Describe the image for screen readers and SEO.",
-  "imageAltTextHtmlHelp": "<p>Good alt text should:</p><ul><li>Be specific and descriptive</li><li>Convey the image's purpose</li><li>Be under 125 characters</li><li>Not start with 'Image of' or 'Picture of'</li></ul>"
-}
-```
-<template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
-</template>
-</AposCodeBlock>
-
-> [!IMPORTANT]
-> Only use HTML in the `htmlHelp` property. The `help` property should contain plain text only. This separation ensures accessibility and proper formatting.
-
-### When to Use Tooltips
-
-Use tooltips for:
-- **Detailed examples** that would clutter the main help text
-- **Additional context** that only some editors might need
-- **Step-by-step instructions** for complex tasks
-- **Complex formatting rules** with multiple bullet points
-
-### Accessibility Considerations for Tooltips
-
-Tooltips must be accessible to all users:
-- Ensure they can be accessed via keyboard (not just mouse hover)
-- Make sure the tooltip content is readable by screen readers
-- Maintain sufficient color contrast
-- Avoid overly long tooltip content that might be difficult to read quickly
-
-## Field Label Best Practices
+## Field Label Writing Tips
 
 Although labels are required for all fields, their quality significantly impacts the editing experience:
 
@@ -277,7 +215,6 @@ export default {
         type: 'attachment',
         label: 'myproject:image'
       },
-      
       // More helpful label
       heroImage: {
         type: 'attachment',
@@ -289,7 +226,7 @@ export default {
 };
 ```
 <template v-slot:caption>
-  modules/homepage/index.js
+  modules/@apostrophecms/home-page/index.js
 </template>
 </AposCodeBlock>
 
@@ -301,259 +238,12 @@ export default {
 4. **Keep it concise**: Aim for 1-3 words that clearly identify the field
 5. **Use sentence case**: Capitalize the first word only, unless using proper nouns
 
-## Comprehensive Examples
-
-Let's explore some well-crafted fields that make excellent use of help text, placeholders, and tooltips:
-
-### Example 1: SEO Fields
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  fields: {
-    add: {
-      metaTitle: {
-        type: 'string',
-        label: 'myproject:seoTitle',
-        help: 'myproject:seoTitleHelp',
-        placeholder: 'myproject:seoTitlePlaceholder',
-        htmlHelp: 'myproject:seoTitleHtmlHelp',
-        max: 60
-      },
-      metaDescription: {
-        type: 'string',
-        label: 'myproject:seoDescription',
-        help: 'myproject:seoDescriptionHelp',
-        placeholder: 'myproject:seoDescriptionPlaceholder',
-        textarea: true,
-        max: 160
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  modules/seo-fields/index.js
-</template>
-</AposCodeBlock>
-
-Translation strings:
-
-<AposCodeBlock>
-
-```json
-{
-  "seoTitle": "SEO Title",
-  "seoTitleHelp": "The page title shown in search results (max 60 characters).",
-  "seoTitlePlaceholder": "Product Name | Your Brand",
-  "seoTitleHtmlHelp": "<p>Best practices for SEO titles:</p><ul><li>Include primary keyword near the beginning</li><li>Make each page title unique</li><li>Keep length under 60 characters</li><li>Include your brand name</li></ul>",
-  
-  "seoDescription": "SEO Description",
-  "seoDescriptionHelp": "A compelling summary that appears in search results (max 160 characters).",
-  "seoDescriptionPlaceholder": "Discover our award-winning product that helps you accomplish your goals faster and with less effort."
-}
-```
-<template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
-</template>
-</AposCodeBlock>
-
-### Example 2: Rich Text Field with Specific Instructions
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  fields: {
-    add: {
-      productDescription: {
-        type: 'area',
-        label: 'myproject:productDescription',
-        help: 'myproject:productDescriptionHelp',
-        htmlHelp: 'myproject:productDescriptionHtmlHelp',
-        options: {
-          max: 1,
-          widgets: {
-            '@apostrophecms/rich-text': {
-              toolbar: [
-                'styles',
-                'bold',
-                'italic',
-                'link',
-                'bulletList',
-                'orderedList'
-              ]
-            }
-          }
-        }
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  modules/product/index.js
-</template>
-</AposCodeBlock>
-
-Translation strings:
-
-<AposCodeBlock>
-
-```json
-{
-  "productDescription": "Product Description",
-  "productDescriptionHelp": "Detailed product information including features and benefits.",
-  "productDescriptionHtmlHelp": "<p>Effective product descriptions should:</p><ul><li>Lead with key benefits</li><li>Include all essential features</li><li>Use short paragraphs and bullet points</li><li>Address common customer questions</li><li>Include dimensions and specifications</li></ul>"
-}
-```
-<template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
-</template>
-</AposCodeBlock>
-
-## Conditional Help Text for Complex Fields
-
-For fields with complex behavior based on different scenarios, consider using conditional help text that changes based on the current context:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  fields: {
-    add: {
-      redirectType: {
-        type: 'select',
-        label: 'myproject:redirectType',
-        help: 'myproject:redirectTypeHelp',
-        choices: [
-          {
-            label: 'myproject:redirectTypeInternal',
-            value: 'internal'
-          },
-          {
-            label: 'myproject:redirectTypeExternal',
-            value: 'external'
-          }
-        ]
-      },
-      redirectUrl: {
-        type: 'string',
-        label: 'myproject:redirectUrl',
-        htmlHelp: 'myproject:redirectUrlHtmlHelp',
-        if: {
-          redirectType: 'external'
-        }
-      },
-      internalPage: {
-        type: 'relationship',
-        label: 'myproject:internalPage',
-        help: 'myproject:internalPageHelp',
-        withType: '@apostrophecms/page',
-        if: {
-          redirectType: 'internal'
-        }
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  modules/redirect-page/index.js
-</template>
-</AposCodeBlock>
-
-This example uses the `if` option to show different fields based on the selected redirect type, each with its own specific guidance.
-
-## Localization Best Practices
-
-### Namespace Your Translation Strings
-
-Always use a custom namespace prefix for your translation strings to avoid conflicts with core ApostropheCMS strings:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  fields: {
-    add: {
-      authorBio: {
-        type: 'string',
-        label: 'myproject:authorBio',
-        help: 'myproject:authorBioHelp',
-        textarea: true
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  modules/author/index.js
-</template>
-</AposCodeBlock>
-
-### Organize Translation Files Logically
-
-Group related translations in themed files to make maintenance easier:
-
-<AposCodeBlock>
-
-```
-modules/
-  myproject/
-    i18n/
-      en/
-        general.json      // Common UI elements
-        seo.json          // SEO-related field labels and help
-        media.json        // Image and file upload guidance
-        product.json      // Product-specific field text
-```
-</AposCodeBlock>
-
-### Keep Translation Keys Consistent
-
-Use a consistent naming pattern for related translations:
-
-<AposCodeBlock>
-
-```json
-{
-  "authorName": "Author Name",
-  "authorNameHelp": "Full name of the content author.",
-  "authorNamePlaceholder": "Jane Smith",
-  
-  "authorTitle": "Author Title",
-  "authorTitleHelp": "Professional title or position.",
-  "authorTitlePlaceholder": "Senior Editor"
-}
-```
-<template v-slot:caption>
-  modules/myproject/i18n/en/author.json
-</template>
-</AposCodeBlock>
-
-## Testing Your Guidance
-
-Regularly test your field guidance by asking these questions:
-1. Would a new content editor understand what to enter in this field based on the provided guidance?
-2. Is all critical information available even if placeholder text isn't visible?
-3. Is the guidance accessible to users of assistive technologies?
-4. Does the help text and other guidance remain clear when translated to other languages?
-
-> [!TIP]
-> Consider conducting brief usability sessions where new or potential content editors attempt to create content without prior training. Their questions and hesitations can reveal where additional guidance is needed.
-
 ## Conclusion
 
-Thoughtful implementation of help text, placeholders, and tooltips transforms the content editing experience from confusing to intuitive. By following these best practices, you create an environment where content managers can work confidently and efficiently.
-
-Well-crafted field guidance reduces training time, prevents errors, and ultimately leads to higher quality content on your site. Remember that small improvements to frequently used interfaces can significantly impact overall satisfaction with your CMS implementation.
+Thoughtful implementation of help text, placeholders, and labels transforms the content editing experience from confusing to intuitive. This reduces training time, prevents errors, and ultimately leads to higher quality content on your site. Remember that small improvements to frequently used interfaces can significantly impact overall satisfaction with your CMS implementation.
 
 ---
 
 **Related Resources:**
-- [ApostropheCMS 4.x Schema Field Types](/reference/field-types/index.md)
-- [ApostropheCMS Localization Guide](/guide/localization/static.html)
-- [Best Practices for Admin Bar Setup](/tutorials/snippet/admin-bar-best-practices.html)
-- [Admin-bar Customization in Our Tutorial Project](/tutorials/admin-ui.md)
+- [ApostropheCMS schema field types](/reference/field-types/index.md)
+- [ApostropheCMS localization namespacing](/guide/localization/static.html#using-namespaces)
