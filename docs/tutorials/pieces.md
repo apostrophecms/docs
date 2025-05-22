@@ -6,6 +6,7 @@ videoList:
   - id: 'vl8ex11H0XY'
     title: 'Pieces: Creating a Piece Widget'
     link: '#creating-a-piece-widget'
+excludeFromFilters: true
 ---
 # Piece Creation
 
