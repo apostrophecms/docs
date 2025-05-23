@@ -213,13 +213,13 @@ export default {
       // Less helpful label
       img: {
         type: 'attachment',
-        label: 'myproject:image'
+        label: 'Image'
       },
       // More helpful label
       heroImage: {
         type: 'attachment',
-        label: 'myproject:heroImage',
-        help: 'myproject:heroImageHelp'
+        label: 'Hero image',
+        help: 'Large banner image displayed prominently at the top of the page. Recommended size: 1920x1080 pixels for best quality across devices.'
       }
     }
   }
@@ -232,7 +232,7 @@ export default {
 
 ### Field Label Guidelines
 
-1. **Be specific**: Use precise terms that indicate the field's purpose ("Hero Image" vs. "Image")
+1. **Be specific**: Use precise terms that indicate the field's purpose ("Hero image" vs. "Image")
 2. **Maintain consistency**: Use the same terminology across similar fields
 3. **Avoid technical terms**: Write labels from the content editor's perspective
 4. **Keep it concise**: Aim for 1-3 words that clearly identify the field
