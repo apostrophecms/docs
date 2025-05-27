@@ -90,6 +90,10 @@ const sidebarTutorials = [
       {
         text: 'Building a JSX Widget',
         link: 'tutorials/using-jsx-in-apostrophe.md'
+      },
+      {
+        text: 'Managing Brand Colors',
+        link: 'tutorials/managing-brand-colors.md'
       }
     ]
   },
