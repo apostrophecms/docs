@@ -8,6 +8,7 @@ tags:
   type: astro
   effort: beginner
 order: 5
+excludeFromFilters: true
 videoList:
   - id: 'tCG5GtbIlYI'
     title: 'Piece-type Basics'

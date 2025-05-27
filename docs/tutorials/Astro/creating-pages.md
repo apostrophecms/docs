@@ -8,6 +8,7 @@ tags:
   type: astro
   effort: beginner
 order: 3
+excludeFromFilters: true
 videoList:
   - id: 'lKJkXomBa4U'
     title: 'Introducing Page-types'

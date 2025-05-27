@@ -7,7 +7,7 @@ const sidebarTutorials = [
   },
   {
     text: 'Intro to ApostropheCMS',
-    collapsed: false,
+    collapsed: 'fixed',
     link: 'tutorials/introduction.md',
     items: [
       { text: 'Organizing Your Code', link: 'tutorials/code-organization.md' },
@@ -22,7 +22,7 @@ const sidebarTutorials = [
   },
   {
     text: 'ApostropheCMS & Astro',
-    collapsed: false,
+    collapsed: 'fixed',
     link: 'tutorials/astro/apostrophecms-and-astro.md',
     items: [
       {
@@ -49,7 +49,7 @@ const sidebarTutorials = [
   },
   {
     text: 'Recipes',
-    collapsed: false,
+    collapsed: 'fixed',
     link: 'tutorials/recipes.md',
     items: [
       {
@@ -66,7 +66,7 @@ const sidebarTutorials = [
       },
       {
         text: 'Customizing Rich Text',
-        collapsed: false,
+        collapsed: 'true',
         link: 'tutorials/introduction-to-rich-text-extensions.md',
         items: [
           {
@@ -95,7 +95,7 @@ const sidebarTutorials = [
   },
   {
     text: 'Pro Topics',
-    collapsed: false,
+    collapsed: 'fixed',
     link: 'tutorials/pro.md',
     items: [
       {

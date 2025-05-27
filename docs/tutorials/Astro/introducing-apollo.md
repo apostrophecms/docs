@@ -8,6 +8,7 @@ tags:
   type: astro
   effort: beginner
 order: 2
+excludeFromFilters: true
 videoList:
   - id: 'aiDBlbDkTwY'
     title: 'Development Environment Setup'

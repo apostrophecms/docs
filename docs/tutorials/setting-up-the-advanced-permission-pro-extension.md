@@ -7,6 +7,7 @@ tags:
   topic: extensions
   type: pro
   effort: beginner
+excludeFromFilters: true
 ---
 # How To Set Up the Advanced Permission Pro Extension
 The [Advanced Permission](https://apostrophecms.com/extensions/advanced-permission) module is a Pro extension that adds more granular control over content permissions. It provides the ability to create custom groups and assign them to users directly in the admin UI. 
