@@ -1,14 +1,14 @@
 ---
-title: "Consistent Brand Colors in ApostropheCMS Color Fields"
+title: "Managing Brand Colors"
 detailHeading: "Tutorial"
-url: "/tutorials/consistent-brand-colors-color-fields.html"
+url: "/tutorials/managing-brand-colors.html"
 content: "Learn how to create a reusable brand color configuration that ensures content editors always have access to approved colors across all color field instances in your ApostropheCMS project."
 tags:
   topic: "content modeling"
   type: tutorial
   effort: beginner
 ---
-# Consistent Brand Colors in ApostropheCMS Color Fields
+# Managing Brand Colors in ApostropheCMS Color Fields
 
 ## Why This Matters
 
@@ -21,7 +21,6 @@ Create a shared configuration file that defines your brand's color palette. This
 <AposCodeBlock>
 
 ```javascript
-// lib/brand-colors.js
 export default [
   '#2563eb', // Primary Blue
   '#64748b', // Secondary Gray
@@ -45,7 +44,7 @@ Import your brand colors and apply them to any color field. Content editors will
 <AposCodeBlock>
 
 ```javascript
-import brandColors from '../lib/brand-colors.js';
+import brandColors from '../../lib/brand-colors.js';
 
 export default {
   extend: '@apostrophecms/piece-type',
@@ -57,7 +56,7 @@ export default {
       accentColor: {
         type: 'color',
         label: 'Accent Color',
-        help: 'Choose a color to highlight this article',
+        help: 'Choose a color to highlight this article title',
         options: {
           presetColors: brandColors
         }
@@ -85,7 +84,7 @@ Sometimes you'll want to limit color choices based on context. You can filter yo
 <AposCodeBlock>
 
 ```javascript
-import brandColors from '../lib/brand-colors.js';
+import brandColors from '../../lib/brand-colors.js';
 
 export default {
   extend: '@apostrophecms/piece-type',
@@ -100,7 +99,7 @@ export default {
         help: 'Color for event status indicators',
         options: {
           // Only show status-related colors
-          presetColors: brandColors.filter(color => 
+          presetColors: brandColors.filter(color =>
             color.includes('#10b981') || // Success Green
             color.includes('#f59e0b') ||  // Warning Yellow
             color.includes('#ef4444')    // Error Red
@@ -133,36 +132,80 @@ export default {
 
 **Mix Formats Carefully**: While you can mix hex, RGB, and CSS variables, stick to one format for consistency unless you have a specific reason to mix them.
 
-**Plan for Updates**: When you need to update brand colors, change them in the central file and they'll automatically update across all fields using the configuration.
+## Taking Brand Colors Further with Palette
+
+While the centralized configuration approach works great for developer-defined brand colors, you might want to give content managers the ability to adjust brand colors site-wide without code changes. The [ApostropheCMS Palette extension](https://apostrophecms.com/extensions/palette-extension) makes this possible by creating an in-context interface for editing CSS variables that automatically update across your entire site.
+
+Here's how you can combine both approaches:
 
 <AposCodeBlock>
 
 ```javascript
-// Good: Clear, organized array with comments
 export default [
-  '#2563eb', // Primary Brand
-  '#374151', // Neutral Dark  
-  '#f59e0b'  // Accent Bright
-];
-
-// Also valid: Mix of color formats
-export default [
-  '#2563eb',           // Hex
-  'rgb(55, 65, 81)',   // RGB
-  'var(--brand-accent)' // CSS Variable
+  'var(--brand-primary)',   // Editable via Palette
+  'var(--brand-secondary)', // Editable via Palette
+  'var(--brand-accent)',    // Editable via Palette
+  '#10b981', // Fixed success color
+  '#f59e0b', // Fixed warning color
+  '#ef4444'  // Fixed error color
 ];
 ```
   <template v-slot:caption>
-    lib/brand-colors.js (examples)
+    lib/brand-colors.js
   </template>
 </AposCodeBlock>
 
+With Palette configured to manage these CSS variables, content managers can adjust the primary brand colors in real-time while developers maintain control over functional colors like success and error states. Changes appear instantly across all color fields and throughout the site.
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  fields: {
+    add: {
+      brandPrimary: {
+        type: 'color',
+        label: 'Primary Brand Color',
+        selector: ':root',
+        property: '--brand-primary'
+      },
+      brandSecondary: {
+        type: 'color',
+        label: 'Secondary Brand Color',
+        selector: ':root',
+        property: '--brand-secondary'
+      },
+      brandAccent: {
+        type: 'color',
+        label: 'Accent Brand Color',
+        selector: ':root',
+        property: '--brand-accent'
+      }
+    },
+    group: {
+      brandColors: {
+        label: 'Brand Colors',
+        fields: ['brandPrimary', 'brandSecondary', 'brandAccent']
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms-pro/palette/index.js
+  </template>
+</AposCodeBlock>
+
+Now content managers can adjust these colors through Palette's in-context interface, and the changes automatically flow through to all your color field presets and any CSS that uses these variables.
+
+[Learn more about ApostropheCMS Palette →](https://apostrophecms.com/extensions/palette-extension)
+
 ## Conclusion
 
-A centralized brand color configuration eliminates guesswork for content editors and ensures consistent brand application across your site. This simple pattern reduces maintenance overhead while improving the content editing experience.
+A centralized brand color configuration eliminates guesswork for content editors and ensures consistent brand application across your site. This simple pattern reduces maintenance overhead while improving the content editing experience. For sites requiring more dynamic brand control, consider combining this approach with the ApostropheCMS Palette extension for the ultimate flexibility.
 
 ---
 
 **Related Resources:**
 - [ApostropheCMS Color Field Documentation](/reference/field-types/color.html)
-- [Content Schema Best Practices](/tutorials/content-schema-best-practices.html)
+- [ApostropheCMS Palette Extension](https://apostrophecms.com/extensions/palette-extension)
