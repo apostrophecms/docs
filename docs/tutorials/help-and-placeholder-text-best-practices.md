@@ -225,9 +225,9 @@ export default {
   }
 };
 ```
-<template v-slot:caption>
-  modules/@apostrophecms/home-page/index.js
-</template>
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
 </AposCodeBlock>
 
 ### Field Label Guidelines
