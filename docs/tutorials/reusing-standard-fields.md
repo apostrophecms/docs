@@ -1,6 +1,14 @@
 ---
 prev: false
 next: false
+title: "Crafting Custom Schema Fields in ApostropheCMS"
+detailHeading: "Tutorial"
+url: "/tutorials/reusing-standard-fields.html"
+content: "This tutorial guides you through leveraging existing fields to build unique, user-friendly content structures, enhancing your CMS's flexibility and functionality."
+tags:
+  topic: "Advanced Techniques"
+  type: tutorial
+  effort: beginner
 ---
 # Composing custom schema fields from standard fields
 

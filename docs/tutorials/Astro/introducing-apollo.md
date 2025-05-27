@@ -1,4 +1,14 @@
 ---
+title: "Introducing the Apollo Theme"
+detailHeading: "Astro"
+url: "/tutorials/astro/introducing-apollo.html"
+content: "This tutorial will walk through the Apollo theme that provides the perfect starting point for your hybrid project."
+tags:
+  topic: "Core Concepts"
+  type: astro
+  effort: beginner
+order: 2
+excludeFromFilters: true
 videoList:
   - id: 'aiDBlbDkTwY'
     title: 'Development Environment Setup'

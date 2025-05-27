@@ -6,6 +6,7 @@ videoList:
   - id: 'j0Shrq6xjC0'
     title: 'Pages: Fragments & Localization'
     link: '#using-fragments'
+excludeFromFilters: true
 ---
 # Page Creation
 
