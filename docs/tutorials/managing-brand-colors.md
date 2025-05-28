@@ -142,9 +142,9 @@ Here's how you can combine both approaches:
 
 ```javascript
 export default [
-  'var(--brand-primary)',   // Editable via Palette
-  'var(--brand-secondary)', // Editable via Palette
-  'var(--brand-accent)',    // Editable via Palette
+  '--brand-primary',   // Editable via Palette
+  '--brand-secondary', // Editable via Palette
+  '--brand-accent',    // Editable via Palette
   '#10b981', // Fixed success color
   '#f59e0b', // Fixed warning color
   '#ef4444'  // Fixed error color
@@ -154,6 +154,9 @@ export default [
     lib/brand-colors.js
   </template>
 </AposCodeBlock>
+
+> [!IMPORTANT]
+> Note that in order to set the color for the swatches using variables, you should just pass the variable name, don't enclose it with `var()`. If you choose to mix CSS variables with fixed color values, make sure your template can handle both cases, e.g. `{% if bgColor.startsWith('--') %}`
 
 With Palette configured to manage these CSS variables, content managers can adjust the primary brand colors in real-time while developers maintain control over functional colors like success and error states. Changes appear instantly across all color fields and throughout the site.
 
