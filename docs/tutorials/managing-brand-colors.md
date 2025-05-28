@@ -196,6 +196,9 @@ export default {
   </template>
 </AposCodeBlock>
 
+> [!NOTE]
+> If you don't want those CSS variables to be undefined before the content manager edits them in Palette, you can add fallback values to any modules `/ui/src/index.scss` file. The styles from these stylesheets will be added early in the `<head>`, and Palette injects its stylesheet at the end. The cascade will ensure that the values set in the Palette styles are displayed.
+
 Now content managers can adjust these colors through Palette's in-context interface, and the changes automatically flow through to all your color field presets and any CSS that uses these variables.
 
 [Learn more about ApostropheCMS Palette →](https://apostrophecms.com/extensions/palette-extension)
