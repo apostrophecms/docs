@@ -18,6 +18,7 @@ However, poorly planned nesting can create confusing interfaces that frustrate c
 
 **Core principles for effective widget nesting:**
 - **Logical grouping**: Nest widgets that naturally belong together conceptually
+- **Layout separation**: Use container widgets to handle layout concerns while keeping content widgets focused on content
 - **Reduced cognitive load**: Use nesting to simplify choices, not complicate them
 - **Clear hierarchy**: Maintain obvious parent-child relationships
 - **Purposeful organization**: Each level of nesting should serve a specific editorial need
@@ -250,21 +251,18 @@ export default {
 };
 ```
 
-**Why this works**: Reduces interface complexity by showing only relevant options while maintaining flexibility.
+> [!NOTE]
+> **Template handling**: With conditional area fields, your template needs to check which areas have content and render them appropriately. You'll typically use template conditionals that mirror your schema conditionals - checking the `heroStyle` value to determine whether to render the `imageContent`, `videoContent`, or `contentOnlyArea` fields.
 
-**Template handling**: With conditional area fields, your template needs to check which areas have content and render them appropriately. You'll typically use template conditionals that mirror your schema conditionals - checking the heroStyle value to determine whether to render the imageContent, videoContent, or contentOnlyArea fields. For styles that support overlays (image and video), you'd wrap the textOverlay area in a positioned container, while the content-only style would render the contentOnlyArea in a standard content wrapper. This approach keeps your template logic clean and predictable.
+**Why this works**: Reduces interface complexity by showing only relevant widget options while maintaining flexibility.
 
 ## Anti-Patterns to Avoid
 
 ### 1. Excessive Nesting Depth
-
-**Problem**: More than 3 levels of nesting becomes difficult to navigate and understand.
-
-```javascript
-// BAD: Too many nested levels
-// Page → Section → Subsection → Content Block → Text Widget
-// This creates a confusing editing experience
-```
+> [!WARNING]
+> Avoid structures like: Page → Section → Subsection → Content Block → Text Widget
+> 
+> This creates a confusing editing experience where content managers lose track of where they are in the hierarchy.
 
 **Solution**: Flatten the structure by combining related functionality into single widgets.
 
@@ -272,8 +270,11 @@ export default {
 
 **Problem**: Allowing widgets to contain themselves creates potential for infinite nesting.
 
+**Example of what NOT to do:**
+
+<AposCodeBlock>
+
 ```javascript
-// BAD: Section widget allows itself as child
 export default {
   // ... section widget config
   fields: {
@@ -291,42 +292,29 @@ export default {
   }
 };
 ```
+  <template v-slot:caption>
+    modules/content-section-widget/index.js
+  </template>
+</AposCodeBlock>
+
+> [!CAUTION]
+> This allows editors to create sections within sections within sections indefinitely, leading to confusion and potential performance issues.
 
 **Solution**: Carefully control which widgets can appear in nested areas.
-
-```javascript
-// GOOD: Clear separation of container and content widgets
-export default {
-  // ... section widget config
-  fields: {
-    add: {
-      content: {
-        type: 'area',
-        options: {
-          widgets: {
-            // Only content widgets, no containers
-            'text-block': {},
-            'image': {},
-            'call-to-action': {}
-          }
-        }
-      }
-    }
-  }
-};
-```
 
 ### 3. Nesting for Technical Convenience Rather than Editorial Logic
 
 **Problem**: Creating nested structures that make sense technically but confuse content managers.
 
-```javascript
-// BAD: Nesting based on code organization rather than content logic
-// "Layout wrapper" that doesn't add editorial value
-```
+> [!WARNING]
+> **Red flag**: If you're creating a "layout wrapper" widget that doesn't add clear editorial value, reconsider the approach.
+
+**Ask yourself**: 
+- Does this nesting level help content managers understand their content better?
+- Would a content manager naturally think of their content this way?
+- Does this reduce or increase the number of decisions they need to make?
 
 **Solution**: Only nest when it serves a clear editorial purpose that content managers understand.
-
 ## Best Practices for Implementation
 
 ### 1. Establish Clear Widget Categories
@@ -419,26 +407,7 @@ export default {
 };
 ```
 
-### 4. Provide Preview Context
-
-Help content managers understand how nested widgets will appear:
-
-```javascript
-// In your widget template
-<!-- views/content-section.html -->
-<section class="content-section content-section--{{ data.widget.backgroundColor }}">
-  {% if data.widget.title %}
-    <h2 class="section-title">{{ data.widget.title }}</h2>
-  {% endif %}
-  
-  <div class="section-content">
-    <!-- Show clear visual boundaries for nested content -->
-    {% area data.widget, 'content' %}
-  </div>
-</section>
-```
-
-### 5. Consider Mobile Editing Experience
+### 4. Consider Mobile Editing Experience
 
 Nested widgets can be particularly challenging on mobile devices:
 
@@ -471,7 +440,5 @@ Remember that every level of nesting adds cognitive load for content managers. M
 ---
 
 **Related Resources:**
-- [ApostropheCMS Widget Development Guide](/guide/widgets.html)
+- [Areas and Widgets Guide](/guide/areas-and-widgets.html)
 - [Area Field Configuration Reference](/reference/field-types/area.html)
-- [Content Architecture Best Practices](/tutorials/content-architecture-best-practices.html)
-- [Widget Testing and Quality Assurance](/tutorials/widget-testing-qa.html)
