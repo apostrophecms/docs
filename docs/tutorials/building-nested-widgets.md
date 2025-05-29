@@ -1,14 +1,14 @@
 ---
-title: "Effective Widget Nesting"
+title: "Building Nested Widgets"
 detailHeading: "Tutorial"
-url: "/tutorials/building-widget-hierarchies.html"
+url: "/tutorials/building-nested-widgets.html"
 content: "Learn how to effectively structure nested widgets in ApostropheCMS to create intuitive content authoring experiences. This guide covers when to use nesting, how to structure widget hierarchies, and best practices for content manager workflows."
 tags:
   topic: best practices
   type: tutorial
   effort: beginner
 ---
-# Effective Widget Nesting in ApostropheCMS
+# Building Nested Widgets in ApostropheCMS
 
 ## Why This Matters & Core Principles
 
@@ -76,24 +76,24 @@ This `content-section` widget acts as a container that provides styling and stru
 **Use Case**: Create reusable layout patterns with consistent styling options.
 
 ```javascript
-// Column layout widget that contains flexible content
+// Two-column layout widget that contains flexible content
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
-    label: 'myproject:columnLayout',
+    label: 'myproject:twoColumnLayout',
     icon: 'view-column-icon'
   },
   fields: {
     add: {
-      columns: {
+      columnRatio: {
         type: 'select',
-        label: 'myproject:columnCount',
+        label: 'myproject:columnRatio',
         choices: [
-          { label: 'myproject:twoColumns', value: '2' },
-          { label: 'myproject:threeColumns', value: '3' },
-          { label: 'myproject:fourColumns', value: '4' }
+          { label: 'myproject:equalColumns', value: '50-50' },
+          { label: 'myproject:leftWider', value: '60-40' },
+          { label: 'myproject:rightWider', value: '40-60' }
         ],
-        def: '2'
+        def: '50-50'
       },
       leftColumn: {
         type: 'area',
@@ -176,7 +176,7 @@ export default {
 **Use Case**: Create widgets that adapt their available options based on content type or user selections.
 
 ```javascript
-// Hero widget with different content options based on style
+// Hero widget with different content areas based on style selection
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -191,27 +191,58 @@ export default {
         choices: [
           { label: 'myproject:imageHero', value: 'image' },
           { label: 'myproject:videoHero', value: 'video' },
-          { label: 'myproject:contentHero', value: 'content' }
+          { label: 'myproject:contentOnly', value: 'content' }
         ]
       },
-      content: {
+      imageContent: {
         type: 'area',
-        label: 'myproject:heroContent',
+        label: 'myproject:heroImage',
+        if: { heroStyle: 'image' },
         options: {
           widgets: {
-            'hero-image': {
-              // Only show when heroStyle is 'image'
-              if: { heroStyle: 'image' }
-            },
-            'hero-video': {
-              // Only show when heroStyle is 'video'  
-              if: { heroStyle: 'video' }
-            },
-            'hero-text': {
-              // Always available for content overlay
-            }
+            'hero-image': {}
           },
-          max: 2 // Allow background + text overlay
+          max: 1
+        }
+      },
+      videoContent: {
+        type: 'area',
+        label: 'myproject:heroVideo', 
+        if: { heroStyle: 'video' },
+        options: {
+          widgets: {
+            'hero-video': {}
+          },
+          max: 1
+        }
+      },
+      textOverlay: {
+        type: 'area',
+        label: 'myproject:textOverlay',
+        help: 'myproject:overlayHelp', // "Add text that appears over the background"
+        if: { 
+          $or: [
+            { heroStyle: 'image' },
+            { heroStyle: 'video' }
+          ]
+        },
+        options: {
+          widgets: {
+            'hero-text': {},
+            'call-to-action': {}
+          },
+          max: 2
+        }
+      },
+      contentOnlyArea: {
+        type: 'area',
+        label: 'myproject:heroContent',
+        if: { heroStyle: 'content' },
+        options: {
+          widgets: {
+            'text-block': {},
+            'call-to-action': {}
+          }
         }
       }
     }
@@ -220,6 +251,8 @@ export default {
 ```
 
 **Why this works**: Reduces interface complexity by showing only relevant options while maintaining flexibility.
+
+**Template handling**: With conditional area fields, your template needs to check which areas have content and render them appropriately. You'll typically use template conditionals that mirror your schema conditionals - checking the heroStyle value to determine whether to render the imageContent, videoContent, or contentOnlyArea fields. For styles that support overlays (image and video), you'd wrap the textOverlay area in a positioned container, while the content-only style would render the contentOnlyArea in a standard content wrapper. This approach keeps your template logic clean and predictable.
 
 ## Anti-Patterns to Avoid
 
@@ -424,33 +457,6 @@ export default {
           }
         }
       }
-    }
-  }
-};
-```
-
-## Testing Your Nested Widget Structure
-
-### Content Manager Testing Checklist
-
-Before deploying nested widgets, test with actual content managers:
-
-1. **Discoverability**: Can editors find the widgets they need?
-2. **Navigation**: Can editors easily move between nested levels?
-3. **Understanding**: Do editors understand the purpose of each nesting level?
-4. **Efficiency**: Does nesting speed up or slow down content creation?
-5. **Error recovery**: Can editors easily fix mistakes in nested content?
-
-### Technical Testing
-
-```javascript
-// Test nested widget data structure
-export default {
-  // Add validation to ensure nested data integrity
-  beforeSave(req, data) {
-    // Validate that nested widgets have required content
-    if (data.content && data.content.items) {
-      // Custom validation logic for nested structure
     }
   }
 };
