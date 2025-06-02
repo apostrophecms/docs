@@ -10,6 +10,12 @@ tags:
 ---
 # Help and Placeholder Text Best Practices in ApostropheCMS
 
+::: tip Howdy! 👋🏻
+This tutorial is available in textual and video forms. Watch the video and use this page to copy code into your project, or continue reading if you prefer. Of course, you can also do both!
+:::
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Zuj-_UDMzNU?si=Bw1DoQ-2knJSfLZW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Why This Matters & Core Principles
 
 Ever had a content editor ask, “What does this field mean?” You’re not alone.
