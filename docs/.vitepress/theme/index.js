@@ -17,6 +17,7 @@ import { createEventBus } from './eventBus';
 import AposTutorialFilter from '../components/AposTutorialFilter.vue';
 import { setupUpdateChecker } from '../helpers/updateChecker';
 import { setupYouTubeTracking } from '../helpers/youtubeTracking';
+import AposApiExplorer from '../components/AposApiExplorer.vue'
 
 export const eventBus = createEventBus();
 export default {
@@ -40,6 +41,7 @@ export default {
     app.component('AposTwoColumns', AposTwoColumns);
     app.component('AposCtaButton', AposCtaButton);
     app.component('AposTutorialFilter', AposTutorialFilter);
+    app.component('AposApiExplorer', AposApiExplorer);
     if (typeof window !== 'undefined') {
       setupUpdateChecker();
     }
