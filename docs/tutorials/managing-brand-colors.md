@@ -47,9 +47,9 @@ Import your brand colors and apply them to any color field. Content editors will
 import brandColors from '../../lib/brand-colors.js';
 
 export default {
-  extend: '@apostrophecms/piece-type',
+  extend: '@apostrophecms/widget-type',
   options: {
-    label: 'Article'
+    label: 'Card'
   },
   fields: {
     add: {
@@ -76,6 +76,12 @@ export default {
     modules/article/index.js
   </template>
 </AposCodeBlock>
+
+> [!IMPORTANT]
+> Changing the color values in your centralized file will update the available swatches that editors see going forward.
+However, documents that already have color values saved will not automatically update.
+
+> This is usually the desired behavior — previously published content remains stable even if your brand colors evolve.
 
 ## Filtering Colors for Specific Use Cases
 
@@ -113,7 +119,6 @@ export default {
           // Only show primary brand colors (first three in array)
           presetColors: brandColors.slice(0, 3)
         }
-        }
       }
     }
   }
@@ -132,23 +137,101 @@ export default {
 
 **Mix Formats Carefully**: While you can mix hex, RGB, and CSS variables, stick to one format for consistency unless you have a specific reason to mix them.
 
+## Advanced: Using Semantic Tokens for Easier Filtering
+As your project grows, maintaining filters based on hex values can become brittle. A more scalable approach is to store both a name and a value for each color. Then you can export either the entire array of `brandColors`, or just the values.
+
+<AposCodeBlock>
+
+```javascript
+export const brandColors = [
+  { name: 'primary', value: '#2563eb' },
+  { name: 'secondary', value: '#64748b' },
+  { name: 'accent', value: '#f97316' },
+  { name: 'success', value: '#10b981' },
+  { name: 'warning', value: '#f59e0b' },
+  { name: 'error', value: '#ef4444' }
+];
+
+export const brandColorValues = brandColors.map(c => c.value);
+```
+  <template v-slot:caption>
+    lib/brand-colors.js
+  </template>
+</AposCodeBlock>
+
+For fields that allow all brand colors:
+
+```javascript
+import { brandColorValues } from '../../lib/brand-colors.js'
+export default {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Card'
+  },
+  fields: {
+    add: {
+      accentColor: {
+        type: 'color',
+        label: 'Accent Color',
+        help: 'Choose a color to highlight this article title',
+        options: {
+          presetColors: brandColorValues
+        }
+      },
+      // ...remainder of code
+```
+
+### Filtering using names
+When filtering, you can now select colors by name:
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    label: 'Event'
+  },
+  fields: {
+    add: {
+      statusColor: {
+        type: 'color',
+        label: 'Status Color',
+        help: 'Color for event status indicators',
+        options: {
+          presetColors: brandColors
+            .filter(c => ['success', 'warning', 'error'].includes(c.name))
+            .map(c => c.value)
+        }
+      },
+      //...remainder of code
+```
+
+> [!TIP]
+> By storing both names and values, your system becomes easier to update when colors change, without having to modify every schema where filters are used.
+
 ## Taking Brand Colors Further with Palette
 
 While the centralized configuration approach works great for developer-defined brand colors, you might want to give content managers the ability to adjust brand colors site-wide without code changes. The [ApostropheCMS Palette extension](https://apostrophecms.com/extensions/palette-extension) makes this possible by creating an in-context interface for editing CSS variables that automatically update across your entire site.
+
+One advantage of using Palette with CSS variables is that any changes to your brand colors automatically flow through to all areas that reference those variables — both in CSS and in any saved documents that use the variables as color values.
+
+This allows content managers to safely update brand colors site-wide without manually republishing every piece of content.
 
 Here's how you can combine both approaches:
 
 <AposCodeBlock>
 
 ```javascript
-export default [
-  '--brand-primary',   // Editable via Palette
-  '--brand-secondary', // Editable via Palette
-  '--brand-accent',    // Editable via Palette
-  '#10b981', // Fixed success color
-  '#f59e0b', // Fixed warning color
-  '#ef4444'  // Fixed error color
+export const brandColors = [
+  { name: 'primary', value: '--brand-primary' },
+  { name: 'secondary', value: '--brand-secondary' },
+  { name: 'accent', value: '--brand-accent' },
+  { name: 'success', value: '#10b981' },
+  { name: 'warning', value: '#f59e0b' },
+  { name: 'error', value: '#ef4444' }
 ];
+
+export const brandColorValues = brandColors.map(c => c.value);
+
 ```
   <template v-slot:caption>
     lib/brand-colors.js
