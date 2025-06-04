@@ -45,10 +45,11 @@ info:
     url: https://github.com/apostrophecms/apostrophe/blob/main/LICENSE.md
 
 servers:
-  - url: https://your-site.com/api/v1
-    description: Production server (not for online use)
   - url: http://localhost:3000/api/v1
     description: Development server
+  - url: https://your-site.com/api/v1
+    description: Production server (not for online use)
+
 
 components:
   securitySchemes:
