@@ -1,5 +1,6 @@
 ---
 next: false
+excludeFromFilters: true
 ---
 # Adding extensions to your project
 
