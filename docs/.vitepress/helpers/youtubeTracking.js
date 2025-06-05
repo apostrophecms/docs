@@ -1,8 +1,10 @@
 /**
  * YouTube Video Tracking using YouTube IFrame API
+ * Tracks video interactions including play, pause, progress,
+ * completion, and "Watch on YouTube" clicks
  */
 
-const shouldDebug = true;
+const shouldDebug = false; // Set to true for development debugging
 
 // Helper function for logging
 function logDebug(...args) {
@@ -139,7 +141,6 @@ function setupYouTubePlayers() {
 
     // Track event helper function
     const trackEvent = function (eventName, additionalData = {}) {
-      // Prepare the data object that will be sent
       const eventData = {
         videoId,
         videoTitle,
@@ -148,20 +149,17 @@ function setupYouTubePlayers() {
         ...additionalData
       };
 
-      // Log the complete data being sent
       logDebug(`Tracking ${eventName}:`, eventData);
 
-      // Check if umami is available and has the track function
       if (window.umami && typeof window.umami.track === 'function') {
         try {
-          // Track the event
           window.umami.track(eventName, eventData);
           logDebug(`✅ Successfully tracked ${eventName}`);
         } catch (error) {
           logDebug(`❌ Error tracking ${eventName}:`, error);
         }
       } else {
-        logDebug(`❌ Umami not available or track function missing, can't track ${eventName}`);
+        logDebug(`❌ Umami not available, can't track ${eventName}`);
       }
     };
 
@@ -169,7 +167,6 @@ function setupYouTubePlayers() {
     const trackingState = {
       lastState: -1,
       videoLoaded: false,
-      playedSeconds: 0,
       quartiles: {
         25: false,
         50: false,
@@ -187,7 +184,6 @@ function setupYouTubePlayers() {
           onReady: function (event) {
             logDebug(`Player ready for video: ${videoTitle}`);
             trackingState.videoLoaded = true;
-            trackEvent('video_ready');
           },
           onStateChange: function (event) {
             const player = event.target;
@@ -215,6 +211,7 @@ function setupYouTubePlayers() {
                   clearInterval(trackingState.progressInterval);
                   return;
                 }
+
                 const duration = player.getDuration();
                 const currentTime = player.getCurrentTime();
                 const percent = Math.floor((currentTime / duration) * 100);
@@ -242,11 +239,11 @@ function setupYouTubePlayers() {
               trackEvent('video_pause', {
                 duration: player.getDuration(),
                 currentTime: player.getCurrentTime(),
-                // eslint-disable-next-line max-len
-                percent: Math.floor((player.getCurrentTime() / player.getDuration()) * 100)
+                percent: Math.floor(
+                  (player.getCurrentTime() / player.getDuration()) * 100
+                )
               });
-            }
-            else if (event.data === window.YT.PlayerState.ENDED) {
+            } else if (event.data === window.YT.PlayerState.ENDED) {
               // Clear any existing interval
               if (trackingState.progressInterval) {
                 clearInterval(trackingState.progressInterval);
@@ -272,21 +269,13 @@ function setupYouTubePlayers() {
 
 /**
  * Setup tracking for "Watch on YouTube" clicks
- * This uses a MutationObserver to detect when YouTube adds the logo button
+ * Uses focus detection to identify when users click
+ * the YouTube logo to navigate to YouTube
  */
 function setupWatchOnYouTubeTracking(iframe, videoId, videoTitle) {
-  // Get iframe parent container
-  const container = iframe;
-  logDebug('Setting up YouTube tracking for container:', container);
-  
-  if (!container) {
-    logDebug('No container found for iframe, aborting setup');
-    return;
-  }
+  logDebug('Setting up "Watch on YouTube" tracking');
 
-  // Create a function to track YouTube logo clicks
   const trackYouTubeLogoClick = () => {
-    logDebug('trackYouTubeLogoClick function called');
     if (window.umami && typeof window.umami.track === 'function') {
       try {
         window.umami.track('watch_on_youtube', {
@@ -299,130 +288,38 @@ function setupWatchOnYouTubeTracking(iframe, videoId, videoTitle) {
       } catch (error) {
         logDebug('❌ Error tracking watch_on_youtube:', error);
       }
-    } else {
-      logDebug('Umami tracking not available');
     }
   };
 
-  // Helper to find YouTube button from click target
-  function findYouTubeButton(element) {
-    logDebug('Checking if element is a YouTube button:', element);
-    // Check if element or any parent has the YouTube logo class
-    let current = element;
-    const maxDepth = 5; // Prevent infinite loop
-    let depth = 0;
+  const container = iframe.parentElement;
+  let isHovered = false;
 
-    while (current && depth < maxDepth) {
-      // Log what we're checking
-      logDebug(`Checking element at depth ${depth}:`, current);
-      logDebug(`- classList:`, current.classList?.toString());
-      logDebug(`- aria-label:`, current.getAttribute('aria-label'));
-      logDebug(`- href:`, current.href);
-      
-      // Check for YouTube button classes
-      if (
-        current.classList?.contains('ytp-youtube-button') ||
-        current.classList?.contains('ytp-title-link') ||
-        current.getAttribute('aria-label') === 'YouTube' ||
-        current.href?.includes('youtube.com/watch')
-      ) {
-        logDebug('Found YouTube button:', current);
-        return current;
-      }
-      current = current.parentElement;
-      depth++;
-    }
-    logDebug('No YouTube button found in path');
-    return null;
-  }
+  // Track when mouse enters/leaves the YouTube container
+  container.addEventListener('mouseenter', () => {
+    isHovered = true;
+    logDebug('Mouse entered YouTube container');
+  });
 
-  // Setup click handler (existing approach)
-  logDebug('Adding click event listener to container');
-  container.addEventListener('click', (event) => {
-    logDebug('Container click detected:', event.target);
-    const target = event.target;
-    const ytLogoButton = findYouTubeButton(target);
+  container.addEventListener('mouseleave', () => {
+    isHovered = false;
+    logDebug('Mouse left YouTube container');
+  });
 
-    if (ytLogoButton) {
-      logDebug('YouTube logo button clicked via container event delegation');
+  // Detect focus loss while hovering (indicates YouTube logo click)
+  window.addEventListener('blur', () => {
+    if (isHovered) {
+      logDebug('Window blur while YouTube hovered - tracking logo click');
       trackYouTubeLogoClick();
-    } else {
-      logDebug('Click was not on YouTube logo button');
     }
   });
 
-  // Check if MutationObserver is available
-  if (typeof MutationObserver === 'undefined') {
-    logDebug('⚠️ MutationObserver is not defined in this environment');
-    return; // Exit early if MutationObserver is not available
-  }
-
-  logDebug('MutationObserver is available, setting up observer');
-
-  try {
-    // Add MutationObserver to detect when YouTube adds the logo button
-    const observer = new MutationObserver((mutations) => {
-      logDebug(`Mutation observed: ${mutations.length} changes`, mutations);
-      
-      // Look for YouTube logo button in the container
-      const logoButton = container.querySelector('.ytp-youtube-button');
-      const titleLink = container.querySelector('.ytp-title-link');
-      
-      logDebug('Search results - Logo button:', logoButton, 'Title link:', titleLink);
-    
-      // If found, add direct click handlers and disconnect observer
-      if (logoButton) {
-        logDebug('Found YouTube logo button, adding direct click handler');
-        logoButton.addEventListener('click', () => {
-          logDebug('YouTube logo button clicked (direct handler)');
-          trackYouTubeLogoClick();
-        });
-        observer.disconnect();
-        logDebug('Observer disconnected after finding logo button');
-      }
-      
-      if (titleLink) {
-        logDebug('Found YouTube title link, adding direct click handler');
-        titleLink.addEventListener('click', () => {
-          logDebug('YouTube title link clicked (direct handler)');
-          trackYouTubeLogoClick();
-        });
-        observer.disconnect();
-        logDebug('Observer disconnected after finding title link');
-      }
-    });
-    
-    // Start observing with a configuration that watches for child nodes
-    logDebug('Starting observation of container');
-    observer.observe(container, { 
-      childList: true,
-      subtree: true 
-    });
-    logDebug('Observer setup complete');
-  } catch (error) {
-    logDebug('⚠️ Error setting up MutationObserver:', error);
-  }
-  
-  // Also try to find buttons immediately (they might already be there)
-  logDebug('Checking if YouTube buttons already exist');
-  const existingLogoButton = container.querySelector('.ytp-youtube-button');
-  const existingTitleLink = container.querySelector('.ytp-title-link');
-  
-  if (existingLogoButton) {
-    logDebug('YouTube logo button already exists, adding click handler');
-    existingLogoButton.addEventListener('click', () => {
-      logDebug('Pre-existing YouTube logo button clicked');
+  // Detect page visibility change while hovering (alternative detection method)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isHovered) {
+      logDebug('Page hidden while YouTube hovered - tracking logo click');
       trackYouTubeLogoClick();
-    });
-  }
-  
-  if (existingTitleLink) {
-    logDebug('YouTube title link already exists, adding click handler');
-    existingTitleLink.addEventListener('click', () => {
-      logDebug('Pre-existing YouTube ttitle link clicked');
-      trackYouTubeLogoClick();
-    });
-  }
+    }
+  });
 }
 
 /**
