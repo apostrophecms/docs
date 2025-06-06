@@ -30,6 +30,7 @@ projectSlug: {
 |[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
 |[`following`](#following) | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.|
+|[`followingIgnore`](#followingignore) | Boolean/Array | n/a | Controls which `following` values should be ignored when auto-generating field content. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
@@ -68,6 +69,49 @@ slug: {
 
 Overriding the `slug` field is typically only necessary if you want to change the `following` string fields.
 :::
+
+
+### followingIgnore
+The `followingIgnore` option controls which `following` values should be ignored when auto-generating this field's content. This is useful when you want to follow certain fields for conditional display logic while only using other fields for the actual slug generation.
+
+**Boolean usage:**
+- `followingIgnore: true` - Ignores all `following` values. This effectively disables the `following` behavior for content generation.
+
+**Array usage:**
+- `followingIgnore: ['fieldName1', 'fieldName2']` - Ignores only the specified field names from the `following` array
+
+```javascript
+// Example: Generate slug from title, but only show slug field when article is published
+add: {
+  title: {
+    label: 'Article Title',
+    type: 'string'
+  },
+  status: {
+    label: 'Status',
+    type: 'select',
+    choices: [
+      { label: 'Draft', value: 'draft' },
+      { label: 'Published', value: 'published' }
+    ]
+  },
+  customSlug: {
+    label: 'Custom URL Slug',
+    type: 'slug',
+    following: ['title', 'archived', 'status'],
+    // 👇 Only title and archived generate the value, status is just for conditional logic
+    followingIgnore: ['status'],
+    if: {
+      status: 'published'
+    }
+  }
+}
+```
+
+In this example, the `customSlug` field will:
+- Auto-generate its value from the `title` field (plus `archived` for prefix management)
+- Only appear when `status` is "published"
+- But changes to `status` won't affect the actual field content
 
 ## Use in templates
 
