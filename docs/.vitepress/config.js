@@ -20,6 +20,10 @@ const ENV = process.env.ENV || 'production';
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for ApostropheCMS',
+  lang: 'en-US',
+
+  // Clean URLs for better SEO
+  cleanUrls: true,
 
   ignoreDeadLinks: 'localhostLinks',
   vite: {
@@ -64,26 +68,7 @@ export default defineConfig({
       'script',
       {},
       `
-      (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "emium5rsl8");
-    `
-    ],
-    // Google Analytics Tag manager script 1
-    [
-      'script',
-      {
-        async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-T1M7W6BWMD'
-      }
-    ],
-    // Google Analytics Tag manager script 2
-    [
-      'script',
-      {},
-      `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T1M7W6BWMD');
+      (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, 'clarity', 'script', 'emium5rsl8');
     `
     ],
     // Umami tracking code
@@ -171,11 +156,12 @@ export default defineConfig({
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
     const description = await processText(docText);
+    const { pageData } = context;
 
-    const relativePath = context.pageData.relativePath;
+    const relativePath = pageData.relativePath;
     const absolutePath = `https://v3.docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
 
-    const returnedArray = [
+    const head = [
       [
         'meta',
         {
@@ -193,8 +179,57 @@ export default defineConfig({
       [
         'meta',
         {
+          property: 'og:locale',
+          content: 'en_US'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'author',
+          content: 'ApostropheCMS Team'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:site',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:creator',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1.0'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'theme-color',
+          content: '#ffffff'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'apple-mobile-web-app-capable',
+          content: 'yes'
+        }
+      ],
+      [
+        'meta',
+        {
           property: 'og:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -250,7 +285,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -266,9 +301,130 @@ export default defineConfig({
           property: 'twitter:image',
           content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
         }
+      ],
+
+      [
+        'meta',
+        {
+          property: 'og:site_name',
+          content: 'ApostropheCMS Documentation'
+        }
       ]
     ];
-    return returnedArray;
+
+    // Basic SEO meta tags from frontmatter
+    if (pageData.frontmatter.description) {
+      head.push([ 'meta',
+        {
+          name: 'description',
+          content: pageData.frontmatter.description
+        }
+      ]);
+    }
+
+    // Keywords from tags
+    if (pageData.frontmatter.tags && Array.isArray(pageData.frontmatter.tags)) {
+      head.push([ 'meta',
+        {
+          name: 'keywords',
+          content: pageData.frontmatter.tags.join(', ')
+        }
+      ]);
+    }
+
+    // Article-specific meta tags
+    if (pageData.frontmatter.date) {
+      head.push([ 'meta',
+        { property: 'article:published_time',
+          content: pageData.frontmatter.date
+        }
+      ]);
+    }
+
+    if (pageData.frontmatter.lastmod) {
+      head.push([ 'meta',
+        {
+          property: 'article:modified_time',
+          content: pageData.frontmatter.lastmod
+        }
+      ]);
+    }
+
+    if (pageData.frontmatter.author) {
+      head.push([ 'meta',
+        {
+          property: 'article:author',
+          content: pageData.frontmatter.author
+        }
+      ]);
+    }
+
+    // Categories for article tagging
+    if (pageData.frontmatter.categories &&
+      Array.isArray(pageData.frontmatter.categories)) {
+      pageData.frontmatter.categories.forEach(category => {
+        head.push([ 'meta',
+          {
+            property: 'article:section',
+            content: category
+          }
+        ]);
+      });
+    }
+
+    // Tags for article tagging
+    if (pageData.frontmatter.tags &&
+      Array.isArray(pageData.frontmatter.tags)) {
+      pageData.frontmatter.tags.forEach(tag => {
+        head.push([ 'meta',
+          {
+            property: 'article:tag',
+            content: tag
+          }
+        ]);
+      });
+    }
+
+    // Canonical URL
+    const canonicalUrl = pageData.frontmatter.canonical || absolutePath;
+    head.push([ 'link',
+      {
+        rel: 'canonical',
+        href: canonicalUrl
+      }
+    ]);
+
+    // Structured data for tutorials
+    if (pageData.frontmatter.categories?.includes('Tutorials')) {
+      const structuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: pageData.title,
+        description: pageData.frontmatter.description || description,
+        author: {
+          '@type': 'Organization',
+          name: pageData.frontmatter.author || 'ApostropheCMS Team'
+        },
+        datePublished: pageData.frontmatter.date,
+        dateModified: pageData.frontmatter.lastmod || pageData.frontmatter.date,
+        keywords: pageData.frontmatter.tags?.join(', '),
+        programmingLanguage: 'JavaScript',
+        operatingSystem: 'Cross-platform',
+        applicationCategory: 'Web Development',
+        about: {
+          '@type': 'SoftwareApplication',
+          name: 'ApostropheCMS'
+        }
+      };
+
+      if (pageData.frontmatter.featured_image) {
+        structuredData.image = `https://v3.docs.apostrophecms.org${pageData.frontmatter.featured_image}`;
+      }
+
+      head.push([ 'script', { type: 'application/ld+json' }, JSON.stringify(structuredData) ]);
+    }
+
+    return head;
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
@@ -307,7 +463,7 @@ export default defineConfig({
           return defaultFence(tokens, idx, options, env, slf);
         }
 
-        if ([ 'js', 'javascript', 'ts' ].includes(lang)) {
+        if (['js', 'javascript', 'ts'].includes(lang)) {
           let cjsCode, esmCode;
 
           if (format === 'cjs') {
@@ -321,11 +477,11 @@ export default defineConfig({
           const cjsHighlighted = getHighlightedCode(cjsCode, lang, options, env, slf);
           const esmHighlighted = getHighlightedCode(esmCode, lang, options, env, slf);
 
-          const finalOutput = `<div class="module-code-block language-${lang}"
-            data-cjs="${encodeURIComponent(cjsHighlighted)}"
-            data-esm="${encodeURIComponent(esmHighlighted)}"
-            data-source="${format}"
-            data-lang="${lang}">
+          const finalOutput = `<div class='module-code-block language-${lang}'
+            data-cjs='${encodeURIComponent(cjsHighlighted)}'
+            data-esm='${encodeURIComponent(esmHighlighted)}'
+            data-source='${format}'
+            data-lang='${lang}'>
             ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
             </div>`;
           return finalOutput;
