@@ -63,22 +63,26 @@ add: {
     type: 'integer'
   },
   assignee: {
-    label: 'Assignee',
-    type: 'string'
-  },
+  type: 'string',
+  label: 'Assignee',
+},
   escalationNotes: {
     label: 'Escalation Notes',
     type: 'string',
     textarea: true,
     // 👇 Show this field for high/critical priority tasks with 20+ hours
+    // where someone has been assigned
     if: {
       priority: { $in: ['high', 'critical'] },
       estimatedHours: { $gte: 20 },
-      assignee: { $exists: true }
+      'assignee.length': { $gt: 0 }
     }
   }
 }
 ```
+> [!NOTE]
+> For the `assignee` field we are checking that the string length is greater than `0` characters.
+> We can't use `$exists: true` because an empty string is truthy.
 
 ### Supported comparison operators
 
@@ -122,9 +126,8 @@ While there's no `$not` operator, you can achieve negation using other operators
 - Use `$exists: false` instead of `$not: { $exists: true }`
 :::
 
-::: info
-When using `$exists`, a value of `true` checks that the field has a value (not null or undefined), while `false` checks that the field is null or undefined.
-:::
+> [!INFO]
+> When using `$exists`, a value of `true` checks that the field has a value (not null or undefined), while `false` checks that the field is null or undefined. Again, an empty string will evaluate as `true`, so use either `$ne` or check the length.
 
 ## Nested Conditional Fields
 
@@ -133,6 +136,20 @@ You can also create a hierarchy of conditional fields where child field visibili
 ## Accessing parent schema fields
 
 When working with nested schemas (like `array` or `object` fields), conditional fields can access values from parent schema fields using the `following` property with the same `<` prefix syntax used for dynamic choices.
+
+> [!IMPORTANT]
+> If you need to use a parent schema field for conditional display of a `string` field, and you do not want the value of that followed field to be used for the string value you need to pass any `following` fields into a `followingIgnore` property. If you do want to set a value from one of the `following` fields, leave that field out of the array passed to the `followingIgnore` property.
+
+### Parent field access syntax reference
+
+  - `<fieldName` - access parent level field
+  - `<<fieldName` - access grandparent level field
+  - `<<<fieldName` - access great-grandparent level field
+  - `<arrayField.length` - access array length property
+  - `<arrayField.0.property` - access specific array element by index
+  - `<arrayField.property` - access property across all array elements (flattened search)
+  - `<objectField.nestedProperty` - access nested object properties
+  - `<arrayField.nestedObject.deepProperty` - access deeply nested properties
 
 ```javascript
 // Example with nested object field
@@ -153,6 +170,7 @@ add: {
         clientBudget: {
           label: 'Client Budget',
           type: 'integer',
+          following: [ '<projectType' ],
           // 👇 Access parent field value
           if: {
             '<projectType': 'client'
@@ -161,6 +179,9 @@ add: {
         internalCostCenter: {
           label: 'Cost Center',
           type: 'string',
+          following: [ '<projectType' ],
+          // 👇 Don't use the `following` field to set the field value
+          followingIgnore: [ '<projectType' ],
           if: {
             '<projectType': 'internal'
           }
@@ -206,6 +227,8 @@ add: {
         taskSummary: {
           label: 'Task Summary',
           type: 'string',
+          following: [ '<tasks' ],
+          followingIgnore: [ '<tasks' ],
           if: {
             '<tasks.length': { $gt: 0 }
           }
@@ -214,6 +237,7 @@ add: {
         bulkActions: {
           label: 'Bulk Actions',
           type: 'checkboxes',
+          following: [ '<tasks' ],
           choices: [
             { label: 'Mark all complete', value: 'complete' },
             { label: 'Delete all', value: 'delete' }
@@ -226,6 +250,8 @@ add: {
         urgentNotice: {
           label: 'Urgent Notice',
           type: 'string',
+          following: [ '<tasks' ],
+          followingIgnore: [ '<tasks' ],
           if: {
             '<tasks.0.priority': 'high'
           }
@@ -233,7 +259,22 @@ add: {
         // Show when any task has high priority
         highPrioritySettings: {
           label: 'High Priority Settings',
-          type: 'string',
+          type: 'checkboxes',
+          choices: [
+            {
+              label: 'Send email notifications',
+              value: 'emailNotifications'
+            },
+            {
+              label: 'Escalate to team lead',
+              value: 'escalateToLead'
+            },
+            {
+              label: 'Flag for immediate review',
+              value: 'immediateReview'
+            },
+          ],
+          following: [ '<tasks' ],
           if: {
             '<tasks.priority': 'high'  // Automatically searches all array elements
           }
@@ -243,17 +284,6 @@ add: {
   }
 }
 ```
-
-### Parent field access syntax reference
-
-- `<fieldName` - access parent level field
-- `<<fieldName` - access grandparent level field
-- `<<<fieldName` - access great-grandparent level field
-- `<arrayField.length` - access array length property
-- `<arrayField.0.property` - access specific array element by index
-- `<arrayField.property` - access property across all array elements (flattened search)
-- `<objectField.nestedProperty` - access nested object properties
-- `<arrayField.nestedObject.deepProperty` - access deeply nested properties
 
 ## Complex conditions
 
@@ -352,11 +382,14 @@ By default, multiple conditions use AND logic - all must be true. For OR logic (
 
 ## Conditional field requirement
 
-In addition to conditionally displaying a field, you can also conditionally mark a field as `required: true` based on the value of another field using the `requiredIf` setting. Like `if`, this property takes an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass, or you can use MongoDB-style comparison operators.
+In addition to conditionally displaying a field, you can also conditionally mark a field as `required: true` based on the value of another field using the `requiredIf` setting. Like `if`, this property takes an object with keys *matching the names of other fields in the same schema*. The condition values must match the sibling field values *exactly* to pass, use MongoDB-style comparison operators, or dot notation.
 
 Also like the `if` setting, the `requiredIf` can take complex conditionals with a mix of comparisons to other schema fields within the same modal, and calls to a method. All conditions must be met before the field will be active.
 
 You can have both an `if` and `requiredIf` with different conditions on the same field. If the conditions for the `if` are not met, the `requiredIf` will be ignored.
+
+> [!IMPORTANT]
+> At this time, `requiredIf` does not support `following` parent schema fields. If this functionality is needed, create a hidden sibling field that takes its value from the parent field and then set the `requiredIf` based on the value of that "cloned" field.
 
 ```javascript
 // Example using MongoDB-style operators in requiredIf
