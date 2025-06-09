@@ -103,7 +103,7 @@ add: {
 > - When comparing arrays, ApostropheCMS matches if all condition values exist in the document array (order doesn't matter)
 > - When the document field is an array but the condition isn't, ApostropheCMS matches if the condition value exists anywhere in the array
 >
-> MongoDB's `$eq` requires exact array matches including order and length. For MongoDB-equivalent behavior, use `$in` for "exists in array" or combine multiple operators for exact array matching.
+> MongoDB's `$eq` requires exact array matches including order and length.
 
 ### Combining multiple operators
 
