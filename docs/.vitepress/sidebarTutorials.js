@@ -105,6 +105,10 @@ const sidebarTutorials = [
       {
         text: 'Using Advanced Permissions',
         link: 'tutorials/setting-up-the-advanced-permission-pro-extension.md'
+      },
+      {
+        text: 'Passing Site Data in Multisite',
+        link: '/tutorials/passing-site-data-in-multisite.md'
       }
     ]
   },
