@@ -43,7 +43,7 @@ add: {
 
 ## MongoDB-style comparison operators
 
-For more flexible conditions, you can use MongoDB-style comparison operators instead of exact value matching. This allows for range checks, existence checks, and matching against multiple values.
+For more flexible conditions, you can use [MongoDB-style comparison operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) instead of exact value matching. This allows for range checks, existence checks, and matching against multiple values.
 
 ```javascript
 // A field schema's `add` configuration
@@ -97,6 +97,13 @@ add: {
 | `$in` | Value is in array | `{ category: { $in: ['news', 'blog'] } }` |
 | `$nin` | Value is not in array | `{ status: { $nin: ['draft', 'archived'] } }` |
 | `$exists` | Field exists (not null/undefined) | `{ author: { $exists: true } }` |
+
+> [!NOTE]
+> The `$eq` operator differs slightly from MongoDB's implementation when working with arrays:
+> - When comparing arrays, ApostropheCMS matches if all condition values exist in the document array (order doesn't matter)
+> - When the document field is an array but the condition isn't, ApostropheCMS matches if the condition value exists anywhere in the array
+>
+> MongoDB's `$eq` requires exact array matches including order and length. For MongoDB-equivalent behavior, use `$in` for "exists in array" or combine multiple operators for exact array matching.
 
 ### Combining multiple operators
 
@@ -287,7 +294,7 @@ add: {
 
 ## Complex conditions
 
-In addition to simple field names and comparison operators, the conditional object can take the name of a method as a key. The sibling field value will be compared using strict equivalence to the value returned from the method. Like simple conditional fields, the returned value should be a string, number, boolean, or any [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive).
+In addition to simple field names and comparison operators, the conditional object can take the name of a method as a key. The sibling field value will be compared using strict equivalence to the value returned from the method. You cannot use MongoDB-like conditionals (like `$eq`, `$gt`, etc.) to test the returned values, only strict equivalence is supported. Like simple conditional fields, the returned value should be a string, number, boolean, or any [primitive value](https://developer.mozilla.org/en-US/docs/Glossary/Primitive).
 
 This conditional method can either be defined in the `methods` section of the same module as the conditional field, or another module by prefixing the method with the name of defining module followed by a colon. In either case, the method name must have parentheses appended to the end.
 
