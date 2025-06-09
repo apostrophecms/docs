@@ -226,33 +226,63 @@ To override the defaults you must provide a new configuration object **at the `@
 {
   toolbar: [
     'styles',
+    '|',
     'bold',
     'italic',
     'strike',
+    'underline',
+    'subscript',
+    'superscript',
+    'blockquote',
+    '|',
+    'alignLeft',
+    'alignCenter',
+    'alignRight',
+    'image',
+    'horizontalRule',
     'link',
+    'anchor',
     'bulletList',
     'orderedList',
-    'blockquote'
+    'color'
   ],
   styles: [
+    // you may also use a `class` property with these
     {
       tag: 'p',
-      label: 'Paragraph (P)'
+      label: 'apostrophe:richTextParagraph'
+    },
+    {
+      tag: 'h1',
+      label: 'apostrophe:richTextH1'
     },
     {
       tag: 'h2',
-      label: 'Heading 2 (H2)'
+      label: 'apostrophe:richTextH2'
     },
     {
       tag: 'h3',
-      label: 'Heading 3 (H3)'
+      label: 'apostrophe:richTextH3'
     },
     {
       tag: 'h4',
-      label: 'Heading 4 (H4)'
+      label: 'apostrophe:richTextH4'
+    },
+    {
+      tag: 'h5',
+      label: 'apostrophe:richTextH5'
+    },
+    {
+      tag: 'h6',
+      label: 'apostrophe:richTextH6'
     }
+  ],
+  insert: [
+    'image',
+    'table',
+    'importTable'
   ]
-},
+}
 ```
 
 If you prefer, you can configure only one of the two sections (`toolbar` or `styles`), and keep the default configuration for the other.
@@ -315,7 +345,7 @@ Spaces in the syntax between the symbol and any text in the table are required, 
 
 If you choose to enable the `image` toolbar option, which allows images to
 appear inline in text, you will usually want to also add it to the `insert` option so
-that the user can easily insert a brand new image without selecting text first.
+that the user can easily insert a brand-new image without selecting text first.
 
 In addition, you will likely want to configure the `imageStyles` option
 of the `@apostrophecms/rich-text-widget` module, in order to specify CSS classes
@@ -349,7 +379,7 @@ the user is allowed to select for the image:
 
 </AposCodeBlock>
 
-Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element.
+Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element. You can also choose to add a link to your image. Like text links, by default images can be linked to URLs or internal pages. See the [next section](#allowing-links-to-specific-piece-types) for expanding that capability to linking with specific piece-type show pages.
 Note that writing CSS styles for those classes to suit your needs is up to you. `image-float-left` does not ship with Apostrophe,
 it is just an example.
 
@@ -412,7 +442,7 @@ modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
 
 ## Image widget
 
-The image widget supports displaying a single image, including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
+The image widget displays a single image with full caption and linking support. Images are wrapped in semantic figure elements, allowing you to add optional captions beneath each image. The widget also supports adding links to external URLs, internal pages, or any piece-type show page (using the [`linkWithType` option](#allowing-image-links-to-specific-piece-types)). Apostrophe automatically generates responsive image variants to optimize loading across different screen sizes.
 
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
@@ -435,6 +465,26 @@ fields: {
     modules/@apostrophecms/home-page/index.js
   </template>
 </AposCodeBlock>
+
+### Styling
+By default, image widgets output a `figure` element with an optional `figcaption` when a caption is added. An inline style of `margin: 0` is applied to the `figure` by default to reduce unwanted spacing. If you prefer to handle all styling in your own CSS, you can disable the default inline styles by setting `inlineStyles: false` and adding your own `className` in the widget configuration, either in a project level module or per-area:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  options: {
+    inlineStyles: false,
+    className: 'image-class'
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/image-widget/index.js
+  </template>
+</AposCodeBlock>
+
+The `className` string will be appended with `__wrapper` on the `figure` element and `__caption` on the `figcaption` element.
 
 ### Specifying a minimum size
 
@@ -560,16 +610,16 @@ You can elect to add a `loading` attribute to your image markup by passing the `
 
 <AposCodeBlock>
 
-``` js
+``` javascript
 export default {
   options: {
     loadingType: 'lazy'
   }
 }
 ```
-<template v-slot:caption>
-modules/@apostrophecms/image-widget/index.js
-</template>
+  <template v-slot:caption>
+    modules/@apostrophecms/image-widget/index.js
+  </template>
 </AposCodeBlock>
 
 ### Adding a placeholder image
@@ -622,6 +672,25 @@ Note the `my-` prefix in `@apostrophecms/my-image-widget`. Without this
 prefix, Apostrophe would look for the file in the core Apostrophe npm
 module, and would not find it.
 :::
+
+### Allowing image links to specific piece-types
+
+By default, the image widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that you don't need to change this setting if you just want to link to the main index page for a piece type.
+
+<AposCodeBlock>
+
+``` javascript
+export default {
+  options: {
+    linkWithType: [ '@apostrophecms/any-page-type', 'article' ]
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
 
 ## Video widget
 
