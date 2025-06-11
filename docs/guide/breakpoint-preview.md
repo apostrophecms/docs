@@ -166,6 +166,8 @@ Media queries that target user preferences don't translate to container contexts
 - **Prefers-color-scheme**: Media queries like `@media (prefers-color-scheme: dark)` are not applicable to containers, as they rely on global user settings.
 - **Prefers-reduced-motion**: Similar to color schemes, these queries target user preferences and cannot be container-specific.
 
+#### 6. **Body Element Styling**
+Styles targeting the `body` element are supported in breakpoint preview mode. The system handles common body selector patterns like `body`, `html > body`, and `html body`, as well as body selectors with classes or attributes. However, very complex selector chains involving body may not be fully supported.
 ---
 
 ### Summary of Support
