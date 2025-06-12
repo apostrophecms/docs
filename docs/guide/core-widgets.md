@@ -13,6 +13,8 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LmVOzjKW13s?si=P3NxaJTFqwUBxK5I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`color`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field.
 
 <AposCodeBlock>
