@@ -12,22 +12,53 @@ tags:
 
 ## Why This Matters
 
-Content editors need quick access to approved brand colors without memorizing hex codes or risking off-brand color choices. By creating a centralized color configuration, you ensure brand consistency across all color fields while making future brand updates simple and reliable.
+Content editors need quick access to approved brand colors without memorizing hex codes or risking off-brand color choices. More importantly, when brand colors change (and they will), you want those changes to flow through your entire site automatically—including content that's already been created.
 
-## Creating a Reusable Color Configuration
+By using CSS variables with a centralized color configuration, you get true site-wide color management where updating a single value instantly changes colors across all templates, existing content, and future content.
 
-Create a shared configuration file that defines your brand's color palette. This keeps all color definitions in one place and makes them easily importable across modules.
+## The CSS Variables Approach (Recommended)
+
+The most powerful approach uses CSS custom properties (CSS variables) that create a true single source of truth for your brand colors. When you update the value of a CSS variable, the change appears instantly everywhere it's used—including in previously saved content.
+
+> [!NOTE]
+> **Understanding Mixed Color Usage**: When you configure `presetColors` with CSS variables, content editors see those variables as color swatches in the picker alongside the option to choose custom colors. If an editor selects a preset swatch, the stored value is the CSS variable name (like `--brand-primary`). If they choose a custom color, the stored value is the actual color (like `#ff0000` or `rgb(255, 0, 0)`). Your templates need to handle both cases—we'll show you how in Step 4.
+
+### Step 1: Define Your Brand Colors as CSS Variables
+
+Add your brand colors as CSS custom properties to your main stylesheet:
+
+<AposCodeBlock>
+
+```css
+/* Define your brand colors as CSS variables */
+:root {
+  --brand-primary: #2563eb;
+  --brand-secondary: #64748b;
+  --brand-accent: #f97316;
+  --brand-success: #10b981;
+  --brand-warning: #f59e0b;
+  --brand-error: #ef4444;
+}
+```
+  <template v-slot:caption>
+    ui/src/variables.scss
+  </template>
+</AposCodeBlock>
+
+### Step 2: Create Your JavaScript Configuration
+
+Create a shared configuration file that references your CSS variables. This makes them available as preset colors in all your color fields and easily imported across modules:
 
 <AposCodeBlock>
 
 ```javascript
 export default [
-  '#2563eb', // Primary Blue
-  '#64748b', // Secondary Gray
-  '#f97316', // Accent Orange
-  '#10b981', // Success Green
-  '#f59e0b', // Warning Yellow
-  '#ef4444'  // Error Red
+  '--brand-primary',   // Primary Blue
+  '--brand-secondary', // Secondary Gray
+  '--brand-accent',    // Accent Orange
+  '--brand-success',   // Success Green
+  '--brand-warning',   // Warning Yellow
+  '--brand-error'      // Error Red
 ];
 ```
   <template v-slot:caption>
@@ -35,14 +66,12 @@ export default [
   </template>
 </AposCodeBlock>
 
-The array of color strings matches exactly what the color field expects for `presetColors`. You can use hex codes, CSS color names, or even CSS variables in this array.
+> [!IMPORTANT]
+> Using CSS Variables in Color Fields: When setting up `presetColors` with CSS variables, use just the variable name (`--brand-primary`) without the `var()` wrapper. The color field handles the CSS function internally.
 
-> [!NOTE]
-> This approach centralizes color options for content editors, but colors used in existing content won't automatically update when you change the hex values. For true site-wide color management, CSS variables (covered below) can solve this problem. For the ultimate solution that instantly updates both new and existing content across your entire site, see how the ApostropheCMS Palette extension transforms this workflow in the [section below](#taking-brand-colors-further-with-palette).
+### Step 3: Apply to Your Schemas
 
-## Using Brand Colors in Your Schemas
-
-Import your brand colors and apply them to any color field. Content editors will see these as preset options in the color picker interface.
+Import your brand colors and apply them to any color field. Content editors will see these as preset color swatches in the color picker interface:
 
 <AposCodeBlock>
 
@@ -80,15 +109,79 @@ export default {
   </template>
 </AposCodeBlock>
 
-> [!IMPORTANT]
-> Changing the color values in your centralized file will update the available swatches that editors see going forward.
-However, documents that already have color values saved will not automatically update.
+### Step 4: Using Colors in Your Templates
 
-> This is usually the desired behavior — previously published content remains stable even if your brand colors evolve.
+When using CSS variables as preset swatches, content editors can choose either:
+- A preset swatch (stored as `--brand-primary`)
+- A custom color (stored as `#ff0000` or `rgb(255, 0, 0)`)
+
+Your templates need to handle both cases. Check if the value starts with `--` to determine if it's a CSS variable:
+
+<AposCodeBlock>
+
+```nunjucks
+<div class="article-card" 
+     style="background-color: {% if data.piece.backgroundColor.startsWith('--') %}var({{ data.piece.backgroundColor }}){% else %}{{ data.piece.backgroundColor }}{% endif %};">
+  <h2 style="color: {% if data.piece.accentColor.startsWith('--') %}var({{ data.piece.accentColor }}){% else %}{{ data.piece.accentColor }}{% endif %};">
+    {{ data.piece.title }}
+  </h2>
+  <p>{{ data.piece.content }}</p>
+</div>
+```
+  <template v-slot:caption>
+    modules/article/views/show.html
+  </template>
+</AposCodeBlock>
+
+For cleaner templates, you can create a macro to handle this logic:
+
+<AposCodeBlock>
+
+```nunjucks
+{# Create a reusable macro for color values #}
+{% macro colorValue(color) %}
+  {%- if color and color.startsWith('--') -%}
+    var({{ color }})
+  {%- else -%}
+    {{ color }}
+  {%- endif -%}
+{% endmacro %}
+
+<div class="article-card" style="background-color: {{ colorValue(data.piece.backgroundColor) }};">
+  <h2 style="color: {{ colorValue(data.piece.accentColor) }};">
+    {{ data.piece.title }}
+  </h2>
+  <p>{{ data.piece.content }}</p>
+</div>
+```
+  <template v-slot:caption>
+    modules/article/views/show.html
+  </template>
+</AposCodeBlock>
+
+**How This Works:**
+- CSS variable swatches: `--brand-primary` becomes `var(--brand-primary)`
+- Custom colors: `#ff0000` or `rgb(255, 0, 0)` remain unchanged
+- The conditional ensures both types work correctly in your CSS
+
+### The Power of This Approach
+
+Now when you need to update colors, change a single CSS variable:
+
+```css
+:root {
+  --brand-primary: #1d4ed8; /* Updated from #2563eb */
+}
+```
+
+This instantly updates the color everywhere it appears across your site—in new content, existing content, and any CSS that references the variable.
+
+> [!IMPORTANT]
+> **Managing Complexity**: Using CSS variables creates a dependency between your CSS and JavaScript configurations. Your JavaScript config references the variable names (like `--brand-primary`) while your CSS defines their values. Changes to CSS variable names must be coordinated with your JavaScript config. We recommend establishing team conventions for managing this coupling and documenting the relationship clearly.
 
 ## Filtering Colors for Specific Use Cases
 
-Sometimes you'll want to limit color choices based on context. You can filter your brand colors for specific fields while maintaining the central configuration.
+You can still filter your brand colors for specific fields while maintaining the central configuration. This works the same way whether you're using CSS variables or hex codes:
 
 <AposCodeBlock>
 
@@ -109,9 +202,9 @@ export default {
         options: {
           // Only show status-related colors
           presetColors: brandColors.filter(color =>
-            color.includes('#10b981') || // Success Green
-            color.includes('#f59e0b') ||  // Warning Yellow
-            color.includes('#ef4444')    // Error Red
+            color.includes('--brand-success') || // Success Green
+            color.includes('--brand-warning') ||  // Warning Yellow
+            color.includes('--brand-error')    // Error Red
           )
         }
       },
@@ -119,8 +212,8 @@ export default {
         type: 'color',
         label: 'Theme Color',
         options: {
-          // Only show primary brand colors (first three in array)
-          presetColors: brandColors.slice(0, 3)
+          // Only show primary brand colors
+          presetColors: brandColors.slice(0, 3) // Primary, Secondary, Accent
         }
       }
     }
@@ -132,86 +225,20 @@ export default {
   </template>
 </AposCodeBlock>
 
-## Best Practices
+## Advanced: Using Semantic Tokens for Better Organization
 
-**Use Descriptive Comments**: Since the array only contains color values, use inline comments to document what each color represents for future developers.
-
-**Keep It Focused**: Include only the colors content editors actually need. Too many options can be overwhelming.
-
-**Mix Formats Carefully**: While you can mix hex, RGB, and CSS variables, stick to one format for consistency unless you have a specific reason to mix them.
-
-## Using CSS Variables for True Site-Wide Management
-
-While the hex code approach centralizes color selection for editors, CSS variables take it further by enabling true site-wide color management. When you update a CSS variable, the change appears instantly everywhere it's used—including in previously saved content.
-
-### Setting Up CSS Variables
-
-First, define your brand colors as CSS custom properties. Add these to your main stylesheet or create a dedicated variables file:
-
-<AposCodeBlock>
-
-```css
-/* Define your brand colors as CSS variables */
-:root {
-  --brand-primary: #2563eb;
-  --brand-secondary: #64748b;
-  --brand-accent: #f97316;
-  --brand-success: #10b981;
-  --brand-warning: #f59e0b;
-  --brand-error: #ef4444;
-}
-```
-  <template v-slot:caption>
-    ui/src/variables.scss
-  </template>
-</AposCodeBlock>
-
-### Reference Variables in Your Color Configuration
-
-Update your brand colors configuration to reference the CSS variables:
-
-<AposCodeBlock>
-
-```javascript
-export default [
-  'var(--brand-primary)',   // Primary Blue
-  'var(--brand-secondary)', // Secondary Gray
-  'var(--brand-accent)',    // Accent Orange
-  'var(--brand-success)',   // Success Green
-  'var(--brand-warning)',   // Warning Yellow
-  'var(--brand-error)'      // Error Red
-];
-```
-  <template v-slot:caption>
-    lib/brand-colors.js
-  </template>
-</AposCodeBlock>
-
-The key advantage becomes clear when you need to update colors. Change a single CSS variable:
-
-```css
-:root {
-  --brand-primary: #1d4ed8; /* Updated from #2563eb */
-}
-```
-
-This instantly updates the color everywhere it appears across your site—in new content, existing content, and any CSS that references the variable.
-
-> **Note**: Using CSS variables does require managing colors in both your CSS file and your JavaScript config. However, this approach gives you true site-wide color control—when you update a CSS variable, it instantly changes everywhere it's used, including in saved content.
-
-## Advanced: Using Semantic Tokens for Easier Filtering
-As your project grows, maintaining filters based on hex values can become brittle. A more scalable approach is to store both a name and a value for each color. Then you can export either the entire array of `brandColors`, or just the values.
+As your project grows, you can make color management more maintainable by storing both names and values. This makes filtering more explicit and less brittle:
 
 <AposCodeBlock>
 
 ```javascript
 export const brandColors = [
-  { name: 'primary', value: '#2563eb' },
-  { name: 'secondary', value: '#64748b' },
-  { name: 'accent', value: '#f97316' },
-  { name: 'success', value: '#10b981' },
-  { name: 'warning', value: '#f59e0b' },
-  { name: 'error', value: '#ef4444' }
+  { name: 'primary', value: '--brand-primary' },
+  { name: 'secondary', value: '--brand-secondary' },
+  { name: 'accent', value: '--brand-accent' },
+  { name: 'success', value: '--brand-success' },
+  { name: 'warning', value: '--brand-warning' },
+  { name: 'error', value: '--brand-error' }
 ];
 
 export const brandColorValues = brandColors.map(c => c.value);
@@ -244,9 +271,14 @@ export default {
 ```
 
 ### Filtering using names
-When filtering, you can now select colors by name:
+
+Now you can filter by semantic names rather than array positions:
+
+<AposCodeBlock>
 
 ```javascript
+import { brandColors } from '../../lib/brand-colors.js';
+
 export default {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -263,47 +295,55 @@ export default {
             .filter(c => ['success', 'warning', 'error'].includes(c.name))
             .map(c => c.value)
         }
-      },
-      //...remainder of code
+      }
+    }
+  }
+};
 ```
+  <template v-slot:caption>
+    modules/event/index.js
+  </template>
+</AposCodeBlock>
 
-> [!TIP]
-> By storing both names and values, your system becomes easier to update when colors change, without having to modify every schema where filters are used.
+## Alternative: Static Color Values
+
+In some cases, you might prefer using static hex codes instead of CSS variables. This approach is simpler to manage but doesn't provide automatic updates to existing content.
+
+**Use static colors when:**
+- Colors truly never change after launch
+- You need email template compatibility
+- You're integrating with third-party tools that need actual color values
+- You want to avoid the CSS/JavaScript coordination complexity
+
+<AposCodeBlock>
+
+```javascript
+export default [
+  '#2563eb', // Primary Blue
+  '#64748b', // Secondary Gray
+  '#f97316', // Accent Orange
+  '#10b981', // Success Green
+  '#f59e0b', // Warning Yellow
+  '#ef4444'  // Error Red
+];
+```
+  <template v-slot:caption>
+    lib/static-brand-colors.js
+  </template>
+</AposCodeBlock>
+
+> [!NOTE]
+> With static colors, changing the hex values in your configuration will update the available swatches for editors going forward, but documents that already have color values saved will not automatically update.
 
 ## Taking Brand Colors Further with Palette
 
 While the centralized configuration approach works great for developer-defined brand colors, you might want to give content managers the ability to adjust brand colors site-wide without code changes. The [ApostropheCMS Palette extension](https://apostrophecms.com/extensions/palette-extension) makes this possible by creating an in-context interface for editing CSS variables that automatically update across your entire site.
 
-One advantage of using Palette with CSS variables is that any changes to your brand colors automatically flow through to all areas that reference those variables — both in CSS and in any saved documents that use the variables as color values.
+When combined with CSS variables, Palette allows content managers to safely update brand colors site-wide without code changes or manually republishing content.
 
-This allows content managers to safely update brand colors site-wide without manually republishing every piece of content.
+You brand colors config file remains the same, exporting an array of either the values alone, or the named values. Your Nunjucks template and schema fields using the `brandColorValues` also remain the same.
 
-Here's how you can combine both approaches:
-
-<AposCodeBlock>
-
-```javascript
-export const brandColors = [
-  { name: 'primary', value: '--brand-primary' },
-  { name: 'secondary', value: '--brand-secondary' },
-  { name: 'accent', value: '--brand-accent' },
-  { name: 'success', value: '#10b981' },
-  { name: 'warning', value: '#f59e0b' },
-  { name: 'error', value: '#ef4444' }
-];
-
-export const brandColorValues = brandColors.map(c => c.value);
-
-```
-  <template v-slot:caption>
-    lib/brand-colors.js
-  </template>
-</AposCodeBlock>
-
-> [!IMPORTANT]
-> Note that in order to set the color for the swatches using variables, you should just pass the variable name, don't enclose it with `var()`. If you choose to mix CSS variables with fixed color values, make sure your template can handle both cases, e.g. `{% if bgColor.startsWith('--') %}`
-
-With Palette configured to manage these CSS variables, content managers can adjust the primary brand colors in real-time while developers maintain control over functional colors like success and error states. Changes appear instantly across all color fields and throughout the site.
+In the Palette configuration, you add a field for each CSS variable you want to set with `:root` as the `selector`:
 
 <AposCodeBlock>
 
@@ -344,16 +384,24 @@ export default {
   </template>
 </AposCodeBlock>
 
-> [!NOTE]
-> If you don't want those CSS variables to be undefined before the content manager edits them in Palette, you can add fallback values to any modules `/ui/src/index.scss` file. The styles from these stylesheets will be added early in the `<head>`, and Palette injects its stylesheet at the end. The cascade will ensure that the values set in the Palette styles are displayed.
+> [!TIP]
+> To prevent CSS variables from being undefined before content managers edit them in Palette, add fallback values to your `/ui/src/index.scss` file. Palette's styles will override these defaults through CSS cascade.
 
-Now content managers can adjust these colors through Palette's in-context interface, and the changes automatically flow through to all your color field presets and any CSS that uses these variables.
+## Best Practices
 
-[Learn more about ApostropheCMS Palette →](https://apostrophecms.com/extensions/palette-extension)
+**Document Dependencies**: When using CSS variables, clearly document the relationship between your CSS and JavaScript configurations. Establish team conventions for managing changes.
+
+**Use Descriptive Names**: Whether using CSS variables or hex codes, use clear, semantic names that communicate purpose, not just appearance.
+
+**Keep It Focused**: Include only the colors content editors actually need. Too many options can be overwhelming.
+
+**Plan for Change**: Even if you start with static colors, structure your configuration to make upgrading to CSS variables straightforward later.
 
 ## Conclusion
 
-A centralized brand color configuration eliminates guesswork for content editors and ensures consistent brand application across your site. This simple pattern reduces maintenance overhead while improving the content editing experience. For sites requiring more dynamic brand control, consider combining this approach with the ApostropheCMS Palette extension for the ultimate flexibility.
+CSS variables provide the most powerful approach to brand color management in ApostropheCMS, enabling true site-wide color control where changes instantly flow through all content—past, present, and future. While this approach requires coordinating CSS and JavaScript configurations, the benefits of automatic content updates typically outweigh the additional complexity.
+
+For simpler projects or specific constraints, static color values remain a valid choice. The key is choosing the approach that best fits your project's needs and team capabilities.
 
 ---
 
