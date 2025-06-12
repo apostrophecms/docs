@@ -5,10 +5,17 @@
 .custom-block.important,
 .custom-block.warning,
 .custom-block.caution {
-  padding: .1rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-left-width: .5rem;
   border-left-style: solid;
   margin: 1rem 0;
+
+  p:first-child:is(.custom-block-title):has(+ *) {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
 }
 
 /* Note/Info - Blue */
@@ -16,6 +23,10 @@
 .custom-block.info {
   background-color: rgba(9, 105, 218, 0.1);
   border-color: #0969da;
+
+  .custom-block-title {
+    border-bottom-color: #0969da;
+  }
 }
 
 .custom-block.note .custom-block-title::before,
@@ -35,6 +46,10 @@
 .custom-block.tip {
   background-color: rgba(26, 127, 55, 0.1);
   border-color: #1a7f37;
+
+  .custom-block-title {
+    border-bottom-color: #1a7f37;
+  }
 }
 
 .custom-block.tip .custom-block-title::before {
@@ -53,6 +68,10 @@
 .custom-block.important {
   background-color: rgba(130, 80, 223, 0.1);
   border-color: #8250df;
+
+  .custom-block-title {
+    border-bottom-color: #8250df;
+  }
 }
 
 .custom-block.important .custom-block-title::before {
@@ -71,6 +90,10 @@
 .custom-block.warning {
   background-color: rgba(154, 103, 0, 0.1);
   border-color: #9a6700;
+
+  .custom-block-title {
+    border-bottom-color: #9a6700;
+  }
 }
 
 .custom-block.warning .custom-block-title::before {
@@ -89,6 +112,10 @@
 .custom-block.caution {
   background-color: rgba(218, 54, 51, 0.1);
   border-color: #da3633;
+  
+  .custom-block-title {
+    border-bottom-color: #da3633;
+  }
 }
 
 .custom-block.caution .custom-block-title::before {
