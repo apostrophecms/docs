@@ -13,6 +13,8 @@ Brand consistency is critical for professional websites, but managing colors acr
 
 ApostropheCMS color fields support preset color swatches that give editors one-click access to approved colors. This tutorial shows you how to create a centralized brand color system that works across all your color fields and automatically updates existing content when colors change. For teams that need content managers to adjust brand colors without code changes, we'll also explore how the Palette extension provides a complete brand management interface.
 
+<!-- INSERT VIDEO HERE -->
+
 ## Why This Matters
 
 Content editors need quick access to approved brand colors without memorizing hex codes or risking off-brand color choices. More importantly, when brand colors change (and they will), you want those changes to flow through your entire site automatically—including content that's already been created.
