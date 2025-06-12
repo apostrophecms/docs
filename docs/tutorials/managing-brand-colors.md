@@ -9,6 +9,9 @@ tags:
   effort: beginner
 ---
 # Managing Brand Colors in ApostropheCMS Color Fields
+Brand consistency is critical for professional websites, but managing colors across a CMS can be challenging. Content editors need quick access to approved brand colors without memorizing hex codes, while developers need a system that scales and adapts when brand guidelines change.
+
+ApostropheCMS color fields support preset color swatches that give editors one-click access to approved colors. This tutorial shows you how to create a centralized brand color system that works across all your color fields and automatically updates existing content when colors change. For teams that need content managers to adjust brand colors without code changes, we'll also explore how the Palette extension provides a complete brand management interface.
 
 ## Why This Matters
 
@@ -21,7 +24,7 @@ By using CSS variables with a centralized color configuration, you get true site
 The most powerful approach uses CSS custom properties (CSS variables) that create a true single source of truth for your brand colors. When you update the value of a CSS variable, the change appears instantly everywhere it's used—including in previously saved content.
 
 > [!NOTE]
-> **Understanding Mixed Color Usage**: When you configure `presetColors` with CSS variables, content editors see those variables as color swatches in the picker alongside the option to choose custom colors. If an editor selects a preset swatch, the stored value is the CSS variable name (like `--brand-primary`). If they choose a custom color, the stored value is the actual color (like `#ff0000` or `rgb(255, 0, 0)`). Your templates need to handle both cases—we'll show you how in Step 4.
+> **Understanding Mixed Color Usage**: When you configure `presetColors` with CSS variables, content editors see those variables as color swatches in the picker alongside the option to choose custom colors. If an editor selects a preset swatch, the stored value is the CSS variable name (like `--brand-primary`). If they choose a custom color, the stored value is the actual color (like `#ff0000` or `rgb(255, 0, 0)`). Your templates need to handle both cases—we'll show you how in [Step 4](/tutorials/managing-brand-colors.html#step-4-using-colors-in-your-templates).
 
 ### Step 1: Define Your Brand Colors as CSS Variables
 
