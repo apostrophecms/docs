@@ -114,6 +114,9 @@ export default {
   </template>
 </AposCodeBlock>
 
+> [!TIP]
+> **Enforcing Brand Compliance**: To prevent editors from straying from approved colors, you can restrict the color picker interface by disabling custom color options. Set `options.disableSpectrum: true` to remove the color spectrum, `options.disableAlpha: true` to disable transparency controls, and `options.disableFields: true` to hide hex/RGB input fields. This leaves only your preset swatches available, ensuring perfect brand compliance. See the [documentation](/reference/field-types/color.html) for more info.
+
 ### Step 4: Using Colors in Your Templates
 
 When using CSS variables as preset swatches, content editors can choose either:
