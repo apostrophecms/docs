@@ -688,3 +688,252 @@ html.dark #swagger-ui span > span.model .brace-close {
   padding: 0 0 0 10px;
   color: #e2e8f0;
 }
+
+/* === AUTHORIZATION MODAL === */
+html.dark #swagger-ui .dialog-ux {
+  /* Modal backdrop */
+}
+
+html.dark #swagger-ui .dialog-ux .backdrop-ux {
+  background: rgba(15, 15, 35, 0.85);
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux {
+  background-color: #1a1a2e;
+  border: 1px solid #2a2a40;
+  box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Modal header */
+html.dark #swagger-ui .dialog-ux .modal-ux-header {
+  border-bottom: 1px solid #2a2a40;
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux-header h3 {
+  color: #ffffff;
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux-header .close-modal {
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s ease;
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux-header .close-modal:hover {
+  color: #ffffff;
+}
+
+/* Close button SVG styling */
+html.dark #swagger-ui .dialog-ux .modal-ux-header .close-modal svg {
+  fill: currentColor;
+  width: 16px;
+  height: 16px;
+}
+
+/* Modal content */
+html.dark #swagger-ui .dialog-ux .modal-ux-content {
+  color: #e2e8f0;
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux-content p {
+  color: #e2e8f0;
+}
+
+html.dark #swagger-ui .dialog-ux .modal-ux-content h4 {
+  color: #ffffff;
+}
+
+/* Auth containers */
+html.dark #swagger-ui .auth-container {
+  border-bottom: 1px solid #2a2a40;
+}
+
+html.dark #swagger-ui .auth-container:last-of-type {
+  border-bottom: none;
+}
+
+html.dark #swagger-ui .auth-container h4 {
+  color: #ffffff;
+}
+
+/* Auth form inputs */
+html.dark #swagger-ui .auth-container input[type="text"],
+html.dark #swagger-ui .auth-container input[type="password"] {
+  background-color: #16213e;
+  color: #e2e8f0;
+  border: 1px solid #2a2a40;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+html.dark #swagger-ui .auth-container input[type="text"]:focus,
+html.dark #swagger-ui .auth-container input[type="password"]:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+  outline: none;
+}
+
+html.dark #swagger-ui .auth-container input[type="text"]::placeholder,
+html.dark #swagger-ui .auth-container input[type="password"]::placeholder {
+  color: #64748b;
+}
+
+/* Error messages */
+html.dark #swagger-ui .auth-container .errors {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+html.dark #swagger-ui .auth-container .errors b {
+  color: #ef4444;
+}
+
+/* Scopes section */
+html.dark #swagger-ui .scopes h2 {
+  color: #ffffff;
+}
+
+html.dark #swagger-ui .scopes h2 a {
+  color: #60a5fa;
+}
+
+html.dark #swagger-ui .scopes h2 a:hover {
+  color: #93c5fd;
+}
+
+/* Scope definitions */
+html.dark #swagger-ui .scope-def {
+  color: #e2e8f0;
+}
+
+/* Checkboxes for scopes */
+html.dark #swagger-ui .auth-container input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #2a2a40;
+  border-radius: 3px;
+  background-color: #16213e;
+  position: relative;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+html.dark #swagger-ui .auth-container input[type="checkbox"]:checked {
+  background-color: #60a5fa;
+  border-color: #60a5fa;
+}
+
+html.dark #swagger-ui .auth-container input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -2px;
+  left: 2px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+html.dark #swagger-ui .auth-container input[type="checkbox"]:focus {
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+  outline: none;
+}
+
+/* Auth button wrapper */
+html.dark #swagger-ui .auth-btn-wrapper {
+  border-top: 1px solid #2a2a40;
+  padding: 15px 20px;
+  background-color: rgba(26, 26, 46, 0.5);
+}
+
+/* Auth buttons */
+html.dark #swagger-ui .auth-btn-wrapper .btn,
+html.dark #swagger-ui .btn.authorize,
+html.dark #swagger-ui .btn[type="submit"] {
+  background-color: #60a5fa !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  text-shadow: none !important;
+}
+
+html.dark #swagger-ui .auth-btn-wrapper .btn:hover,
+html.dark #swagger-ui .btn.authorize:hover,
+html.dark #swagger-ui .btn[type="submit"]:hover {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+html.dark #swagger-ui .auth-btn-wrapper .btn-done,
+html.dark #swagger-ui .btn-done {
+  background-color: #34d399 !important;
+  color: #ffffff !important;
+}
+
+html.dark #swagger-ui .auth-btn-wrapper .btn-done:hover,
+html.dark #swagger-ui .btn-done:hover {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+/* Cancel/secondary buttons */
+html.dark #swagger-ui .auth-btn-wrapper .btn.cancel {
+  background-color: transparent;
+  color: #94a3b8;
+  border: 1px solid #2a2a40;
+}
+
+html.dark #swagger-ui .auth-btn-wrapper .btn.cancel:hover {
+  background-color: rgba(42, 42, 64, 0.3);
+  color: #ffffff;
+}
+
+/* Labels and form text */
+html.dark #swagger-ui .auth-container label {
+  color: #e2e8f0;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* Auth wrapper (the authorize button in topbar) */
+html.dark #swagger-ui .auth-wrapper .authorize {
+  color: #94a3b8;
+}
+
+html.dark #swagger-ui .auth-wrapper .authorize:hover {
+  color: #60a5fa;
+}
+
+/* Small text and descriptions */
+html.dark #swagger-ui .auth-container small,
+html.dark #swagger-ui .auth-container .description {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+/* OAuth flow information */
+html.dark #swagger-ui .auth-container .flow {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Token display area */
+html.dark #swagger-ui .auth-container .token {
+  background-color: #16213e;
+  border: 1px solid #2a2a40;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #fbbf24;
+  word-break: break-all;
+}
