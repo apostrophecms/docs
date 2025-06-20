@@ -253,4 +253,3 @@ Integrating a third-party support desk into the ApostropheCMS admin bar provides
 
 **Related Resources:**
 - [ApostropheCMS Admin-bar Module Documentation](/reference/modules/admin-bar.md)
-- [Best Practices for Admin Bar Setup](/tutorials/admin-bar-best-practices.html)
