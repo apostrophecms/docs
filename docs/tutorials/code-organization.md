@@ -1,3 +1,6 @@
+---
+excludeFromFilters: true
+---
 # Overview of Apostrophe code organization
 
 <iframe src="https://www.youtube.com/embed/yd9HV5JNqLw?si=kCgnQ6cV4noHzJJV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
