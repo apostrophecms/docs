@@ -94,6 +94,10 @@ const sidebarTutorials = [
       {
         text: 'Managing Brand Colors',
         link: 'tutorials/managing-brand-colors.md'
+      },
+      {
+        text: 'Adding a support desk button',
+        link: 'tutorials/adding-a-support-desk-button.md'
       }
     ]
   },
