@@ -53,18 +53,6 @@ const sidebarTutorials = [
     link: 'tutorials/recipes.md',
     items: [
       {
-        text: 'Converting a Static Template',
-        link: 'tutorials/html-conversion.md'
-      },
-      {
-        text: 'Composing Custom Fields',
-        link: 'tutorials/reusing-standard-fields.md'
-      },
-      {
-        text: 'Building Navigation',
-        link: 'tutorials/building-navigation.md'
-      },
-      {
         text: 'Customizing Rich Text',
         collapsed: 'true',
         link: 'tutorials/introduction-to-rich-text-extensions.md',
@@ -84,20 +72,36 @@ const sidebarTutorials = [
         ]
       },
       {
+        text: 'Adding a support desk button',
+        link: 'tutorials/adding-a-support-desk-button.md'
+      },
+      {
+        text: 'Building Navigation',
+        link: 'tutorials/building-navigation.md'
+      },
+      {
         text: 'Harnessing Dynamic Routing',
         link: 'tutorials/dynamic-routing.md'
       },
       {
-        text: 'Building a JSX Widget',
-        link: 'tutorials/using-jsx-in-apostrophe.md'
+        text: 'Creating Better Help Text',
+        link: 'tutorials/help-and-placeholder-text-best-practices.md'
+      },
+      {
+        text: 'Converting a Static Template',
+        link: 'tutorials/html-conversion.md'
       },
       {
         text: 'Managing Brand Colors',
         link: 'tutorials/managing-brand-colors.md'
       },
       {
-        text: 'Adding a support desk button',
-        link: 'tutorials/adding-a-support-desk-button.md'
+        text: 'Composing Custom Fields',
+        link: 'tutorials/reusing-standard-fields.md'
+      },
+      {
+        text: 'Building a JSX Widget',
+        link: 'tutorials/using-jsx-in-apostrophe.md'
       }
     ]
   },
