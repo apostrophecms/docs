@@ -10,9 +10,12 @@ tags:
 ---
 # Local Development of ApostropheCMS Extensions
 
+> [!TIP]
+> This guide is for developers creating reusable ApostropheCMS extensions (npm packages) that can be installed across multiple projects. If you're just adding custom modules to a single ApostropheCMS project, you don't need this - simply create your modules directly in the project's `modules/` folder.
+
 ## Why This Matters
 
-When building custom extensions for ApostropheCMS, you need a reliable way to develop and test them locally before publishing to npm. However, ES Modules in Node.js handle symlinks differently than CommonJS, and ApostropheCMS's use of Vite for bundling creates additional complexity that breaks many traditional local development approaches.
+ApostropheCMS extensions are standalone npm packages that add functionality to multiple sites. When building these extensions, you need a reliable way to develop and test them locally before publishing to npm. However, ES Modules in Node.js handle symlinks differently than CommonJS, and ApostropheCMS's use of Vite for bundling creates additional complexity that breaks many traditional local development approaches.
 
 This guide shows you proven methods for local extension development that work reliably with the modern ApostropheCMS toolchain.
 
@@ -33,20 +36,45 @@ Based on extensive testing with ApostropheCMS projects, manual symbolic links pr
 
 #### For Published Extensions
 
-When working on an extension that's already published to npm:
+When working on an extension that's already published to npm, you'll need to clone the extension's repository and link to your local git checkout:
+
+**Step 1: Clone and prepare the extension repository**
+
+<AposCodeBlock>
+
+```bash
+# Clone the extension's repository
+git clone https://github.com/your-org/your-extension.git
+cd your-extension
+
+# Install the extension's dependencies
+npm install
+```
+
+</AposCodeBlock>
+
+**Step 2: Link to your ApostropheCMS project**
 
 <AposCodeBlock>
 
 ```bash
 # In your ApostropheCMS project directory
-# First, install the extension normally
+# Install the extension normally to add it as a dependency
 npm install @your-org/your-extension
 
-# Create symbolic link (use absolute path)
-ln -s /absolute/path/to/your/local/extension node_modules/@your-org/your-extension
+# Remove the installed npm version
+rm -rf node_modules/@your-org/your-extension
+
+# Create symbolic link to your git checkout
+ln -s /absolute/path/to/your-extension-repo node_modules/@your-org/your-extension
 ```
 
 </AposCodeBlock>
+
+> [!IMPORTANT]
+> Always use absolute paths when creating symbolic links. Relative paths are resolved from the symlink's location, not your current directory. For example, if you use `ln -s ../form node_modules/@apostrophecms/form`, the symlink will look for `../form` relative to `node_modules/@apostrophecms/`, which would be `node_modules/form` (likely non-existent). This creates a broken symlink that appears as an empty file icon.
+
+**After linking, restart your ApostropheCMS development server** to ensure all changes are properly detected.
 
 #### For New (Unpublished) Extensions
 
@@ -77,7 +105,7 @@ npm install dependency-a dependency-b
 
 ### 2. npm Workspaces (For Monorepos)
 
-Workspaces work well when both your project and extension live in the same repository, but may require Vite configuration adjustments for complex setups:
+Workspaces work well when both your project and extension live in the same repository, providing automatic dependency linking without manual symlink management. You *may* require Vite configuration adjustments for complex setups::
 
 <AposCodeBlock>
 
@@ -97,7 +125,7 @@ apostrophe-monorepo/
   </template>
 </AposCodeBlock>
 
-Configure the root package.json:
+**Step 1: Configure the workspace root**
 
 <AposCodeBlock>
 
@@ -112,18 +140,20 @@ Configure the root package.json:
 }
 ```
   <template v-slot:caption>
-    package.json (root)
+    package.json
   </template>
 </AposCodeBlock>
 
-Reference the extension in your website's package.json:
+**Step 2: Reference the extension in your ApostropheCMS project**
 
 <AposCodeBlock>
 
 ```json
 {
+  "name": "my-website",
   "dependencies": {
-    "@your-org/your-extension": "workspace:*"
+    "apostrophe": "^4.0.0",
+    "@your-org/your-extension": "*"
   }
 }
 ```
@@ -131,6 +161,23 @@ Reference the extension in your website's package.json:
     my-website/package.json
   </template>
 </AposCodeBlock>
+
+**Step 3: Install and run**
+
+<AposCodeBlock>
+
+```bash
+# From the workspace root
+npm install
+
+# Start your ApostropheCMS project
+cd my-website
+npm run dev
+```
+
+</AposCodeBlock>
+
+npm workspaces automatically creates symbolic links between your extension and ApostropheCMS project, eliminating the need for manual linking. Changes to your extension code are immediately available in your project without restarting the development server.
 
 ## Approaches to Avoid ❌
 
