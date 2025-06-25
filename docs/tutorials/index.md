@@ -69,6 +69,14 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
       url="/tutorials/using-jsx-in-apostrophe.html"
     />
   </template>
+  <template #rightColumn>
+    <AposCtaButton
+      detail-heading="Tutorial"
+      title="Adding External Link Buttons to the ApostropheCMS Admin Bar"
+      content="Learn how to add a custom button to the ApostropheCMS admin bar that opens an external URL, giving content editors quick access to external resources without leaving the CMS interface."
+      url="/tutorials/adding-admin-bar-external-links.html"
+    />
+  </template>
 </AposTwoColumns>
 
 ## Astro Topics
