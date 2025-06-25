@@ -172,19 +172,7 @@ Generate responsive CSS classes based on editor selections, keeping the template
 {% endif %}
 
 <section class="hero-banner {{ responsiveClasses | join(' ') }}"
-  <div class="hero-banner__content">
-    <h1 class="hero-banner__title">{{ data.widget.title }}</h1>
-    {% if data.widget._image %}
-      <div class="hero-banner__image">
-        <img 
-          src="{{ apos.attachment.url(data.widget._image) }}" 
-          srcset="{{ apos.attachment.srcset(data.widget._image) }}" 
-          sizes="(max-width: 768px) 100vw, 50vw"
-          alt="{{ data.widget._image.alt | escape }}"
-        />
-      </div>
-    {% endif %}
-  </div>
+  <!-- widget content -->
 </section>
 ```
   <template v-slot:caption>
@@ -228,11 +216,6 @@ Define your responsive visibility classes using the CSS variables established ea
 
 > [!IMPORTANT]
 > Using `!important` in utility classes like these is acceptable and sometimes necessary. These classes represent explicit editor intent to hide content, and should override any other display properties that might conflict.
-
-## Advanced: Container-Based Responsive Design
-
-> [!NOTE]
-> **Advanced Layouts vs. Editorial Control**: Modern CSS techniques like container queries, CSS Grid, and Flexbox can create responsive layouts that adapt automatically without breakpoints. While these approaches often provide better technical solutions, they can reduce editorial control by making layout behavior "automatic" rather than configurable. When editors need explicit control over widget visibility across devices, the breakpoint-based approach outlined above provides clear, predictable options that editors can understand and control. For layouts where automatic responsive behavior is desired, consider using intrinsic CSS techniques that eliminate the need for visibility controls entirely.
 
 ## Accessibility Considerations
 
@@ -447,7 +430,7 @@ While viewport-width breakpoints remain the most editor-friendly approach for ge
 }
 ```
 
-**Intrinsic responsive design** using modern layout properties like `flex`, `grid`, `clamp()`, and `min()` often eliminates the need for breakpoint-based hiding entirely. However, when explicit editor control over widget visibility is needed, the breakpoint approach provides the clearest interface for content managers.
+**Intrinsic responsive design** using modern layout properties like `flex`, `grid`, `clamp()`, and `min()` and `@container` queries often eliminates the need for breakpoint-based hiding entirely. However, when explicit editor control over widget visibility is needed, the breakpoint approach provides the clearest interface for content managers.
 
 For most ApostropheCMS projects, start with the viewport-based approach outlined above, then consider these advanced techniques for widgets with specific requirements like data visualizations, animations, or high-detail graphics.
 
