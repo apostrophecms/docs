@@ -503,4 +503,4 @@ Remember that responsive design is about more than hiding content—it's about c
 **Related Resources:**
 - [CSS Media Queries (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_media_queries)
 - [CSS Container Queries (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_container_queries)
-- [Help and Placeholder Text Best Practices](/tutorials/snippet/help-placeholder-text-best-practices.html)
+- [Help and Placeholder Text Best Practices](/tutorials/help-and-placeholder-text-best-practices.html)
