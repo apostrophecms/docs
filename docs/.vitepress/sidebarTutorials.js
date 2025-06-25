@@ -6,77 +6,25 @@ const sidebarTutorials = [
     customClass: 'reduce-bottom-margin'
   },
   {
-    text: 'Learn ApostropheCMS',
-    collapsed: false,
+    text: 'Intro to ApostropheCMS',
+    collapsed: 'fixed',
+    link: 'tutorials/introduction.md',
     items: [
-      { text: 'Introduction', link: 'tutorials/introduction.md' },
-      { text: 'Code Organization', link: 'tutorials/code-organization.md' },
+      { text: 'Organizing Your Code', link: 'tutorials/code-organization.md' },
       { text: 'Creating Pages', link: 'tutorials/pages.md' },
-      { text: 'Add CSS and JS Assets', link: 'tutorials/assets.md' },
+      { text: 'Adding CSS and JS Assets', link: 'tutorials/assets.md' },
       { text: 'Creating Widgets', link: 'tutorials/widgets.md' },
       { text: 'Creating Pieces', link: 'tutorials/pieces.md' },
       { text: 'Building Navigation', link: 'tutorials/navigation.md' },
-      { text: 'Configuring Admin Bar', link: 'tutorials/admin-ui.md' },
+      { text: 'Configuring the Admin Bar', link: 'tutorials/admin-ui.md' },
       { text: 'Adding Extensions', link: 'tutorials/adding-extensions.md' }
     ]
   },
   {
-    text: 'Beyond the Basics',
-    collapsed: false,
+    text: 'ApostropheCMS & Astro',
+    collapsed: 'fixed',
+    link: 'tutorials/astro/apostrophecms-and-astro.md',
     items: [
-      {
-        text: 'From HTML to ApostropheCMS',
-        link: 'tutorials/html-conversion.md'
-      },
-      {
-        text: 'Composing Custom Fields',
-        link: 'tutorials/reusing-standard-fields.md'
-      },
-      {
-        text: 'Navigation Building Techniques',
-        link: 'tutorials/building-navigation.md'
-      },
-      {
-        text: 'Creating Custom Rich Text Extensions',
-        collapsed: false,
-        link: 'tutorials/introduction-to-rich-text-extensions.md',
-        items: [
-          {
-            text: 'Using Tiptap Extensions',
-            link: 'tutorials/using-tiptap-extensions.md'
-          },
-          {
-            text: 'Creating a Text Replacement Extension',
-            link: 'tutorials/creating-a-text-replacement-extension.md'
-          },
-          {
-            text: 'Toolbar and Insert Menu Extensions',
-            link: 'tutorials/rich-text-extension-deep-dive.md'
-          }
-        ]
-      },
-      {
-        text: 'Harnessing Dynamic Routing in ApostropheCMS',
-        link: 'tutorials/dynamic-routing.md'
-      },
-      {
-        text: 'Using JSX to Build a Weather Widget in ApostropheCMS',
-        link: 'tutorials/using-jsx-in-apostrophe.md'
-      },
-      {
-        text: 'Adding an External Link to the Admin Bar',
-        link: 'tutorials/adding-admin-bar-external-links.md'
-      }
-    ]
-  },
-  {
-    text: 'Astro Topics',
-    collapsed: false,
-    items: [
-      {
-        text: 'ApostropheCMS + Astro',
-        link: 'tutorials/astro/apostrophecms-and-astro.md'
-      },
       {
         text: 'Introducing Apollo',
         link: 'tutorials/astro/introducing-apollo.md'
@@ -94,18 +42,90 @@ const sidebarTutorials = [
         link: 'tutorials/astro/creating-pieces.md'
       },
       {
-        text: 'Deploying an ApostropheCMS-Astro project',
+        text: 'Deploying With Astro',
         link: 'tutorials/astro/deploying-hybrid-projects.md'
       }
     ]
   },
   {
-    text: 'Pro topics',
-    collapsed: false,
+    text: 'Recipes',
+    collapsed: 'fixed',
+    link: 'tutorials/recipes.md',
     items: [
       {
-        text: 'Setting up Advanced Permissions',
+        text: 'Customizing Rich Text',
+        collapsed: 'true',
+        link: 'tutorials/introduction-to-rich-text-extensions.md',
+        items: [
+          {
+            text: 'Installing Extensions',
+            link: 'tutorials/using-tiptap-extensions.md'
+          },
+          {
+            text: 'Creating an Extension',
+            link: 'tutorials/creating-a-text-replacement-extension.md'
+          },
+          {
+            text: 'Extending the Toolbar',
+            link: 'tutorials/rich-text-extension-deep-dive.md'
+          }
+        ]
+      },
+      {
+        text: 'Adding a support desk button',
+        link: 'tutorials/adding-a-support-desk-button.md'
+      },
+
+      {
+        text: 'Adding an Admin Bar External Link',
+        link: 'tutorials/adding-admin-bar-external-links.md'
+      },
+      {
+        text: 'Building Navigation',
+        link: 'tutorials/building-navigation.md'
+      },
+      {
+        text: 'Harnessing Dynamic Routing',
+        link: 'tutorials/dynamic-routing.md'
+      },
+      {
+        text: 'Creating Better Help Text',
+        link: 'tutorials/help-and-placeholder-text-best-practices.md'
+      },
+      {
+        text: 'Converting a Static Template',
+        link: 'tutorials/html-conversion.md'
+      },
+      {
+        text: 'Managing Brand Colors',
+        link: 'tutorials/managing-brand-colors.md'
+      },
+      {
+        text: 'Responsive Widget Visibility',
+        link: '/tutorials/responsive-widget-visibility.md'
+      },
+      {
+        text: 'Composing Custom Fields',
+        link: 'tutorials/reusing-standard-fields.md'
+      },
+      {
+        text: 'Building a JSX Widget',
+        link: 'tutorials/using-jsx-in-apostrophe.md'
+      }
+    ]
+  },
+  {
+    text: 'Pro Topics',
+    collapsed: 'fixed',
+    link: 'tutorials/pro.md',
+    items: [
+      {
+        text: 'Using Advanced Permissions',
         link: 'tutorials/setting-up-the-advanced-permission-pro-extension.md'
+      },
+      {
+        text: 'Passing Site Data in Multisite',
+        link: '/tutorials/passing-site-data-in-multisite.md'
       }
     ]
   },

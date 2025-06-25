@@ -59,33 +59,6 @@ export default defineConfig({
     }
   },
   head: [
-    // Microsoft Clarity tag script
-    [
-      'script',
-      {},
-      `
-      (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "emium5rsl8");
-    `
-    ],
-    // Google Analytics Tag manager script 1
-    [
-      'script',
-      {
-        async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-T1M7W6BWMD'
-      }
-    ],
-    // Google Analytics Tag manager script 2
-    [
-      'script',
-      {},
-      `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T1M7W6BWMD');
-    `
-    ],
     // Umami tracking code
     [
       'script',
@@ -171,11 +144,12 @@ export default defineConfig({
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
     const description = await processText(docText);
+    const { pageData } = context;
 
-    const relativePath = context.pageData.relativePath;
+    const relativePath = pageData.relativePath;
     const absolutePath = `https://v3.docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
 
-    const returnedArray = [
+    const head = [
       [
         'meta',
         {
@@ -193,8 +167,57 @@ export default defineConfig({
       [
         'meta',
         {
+          property: 'og:locale',
+          content: 'en_US'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'author',
+          content: 'ApostropheCMS Team'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:site',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:creator',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1.0'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'theme-color',
+          content: '#ffffff'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'apple-mobile-web-app-capable',
+          content: 'yes'
+        }
+      ],
+      [
+        'meta',
+        {
           property: 'og:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -250,7 +273,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -266,9 +289,123 @@ export default defineConfig({
           property: 'twitter:image',
           content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
         }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:site_name',
+          content: 'ApostropheCMS Documentation'
+        }
       ]
     ];
-    return returnedArray;
+
+    // Basic SEO meta tags from frontmatter
+    if (pageData.frontmatter.description) {
+      head.push(['meta', {
+        name: 'description',
+        content: pageData.frontmatter.description
+      }]);
+    }
+
+    // Keywords from structured tags (new object format)
+    if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+      const tagValues = Object.values(pageData.frontmatter.tags).filter(Boolean);
+      if (tagValues.length > 0) {
+        head.push(['meta', {
+          name: 'keywords',
+          content: tagValues.join(', ')
+        }]);
+      }
+    }
+
+    // Article-specific meta tags
+    if (pageData.frontmatter.date) {
+      head.push(['meta', {
+        property: 'article:published_time',
+        content: pageData.frontmatter.date
+      }]);
+    }
+
+    if (pageData.frontmatter.lastmod) {
+      head.push(['meta', {
+        property: 'article:modified_time',
+        content: pageData.frontmatter.lastmod
+      }]);
+    }
+
+    if (pageData.frontmatter.author) {
+      head.push(['meta', {
+        property: 'article:author',
+        content: pageData.frontmatter.author
+      }]);
+    }
+
+    // Categories for article tagging
+    if (pageData.frontmatter.categories && Array.isArray(pageData.frontmatter.categories)) {
+      pageData.frontmatter.categories.forEach(category => {
+        head.push(['meta', {
+          property: 'article:section',
+          content: category
+        }]);
+      });
+    }
+
+    // Tags for article tagging (structured tags - new object format)
+    if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+      Object.values(pageData.frontmatter.tags).filter(Boolean).forEach(tag => {
+        head.push(['meta', {
+          property: 'article:tag',
+          content: tag
+        }]);
+      });
+    }
+
+    // Canonical URL
+    const canonicalUrl = pageData.frontmatter.canonical || absolutePath;
+    head.push(['link', {
+      rel: 'canonical',
+      href: canonicalUrl
+    }]);
+
+    // Structured data for tutorials
+    if (pageData.frontmatter.categories?.includes('Tutorials')) {
+      // Handle keywords for structured data
+      let keywordsString = '';
+      if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+        keywordsString = Object.values(pageData.frontmatter.tags).filter(Boolean).join(', ');
+      } else if (pageData.frontmatter.tags && Array.isArray(pageData.frontmatter.tags)) {
+        keywordsString = pageData.frontmatter.tags.join(', ');
+      }
+
+      const structuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: pageData.title,
+        description: pageData.frontmatter.description || description,
+        author: {
+          '@type': 'Organization',
+          name: pageData.frontmatter.author || 'ApostropheCMS Team'
+        },
+        datePublished: pageData.frontmatter.date,
+        dateModified: pageData.frontmatter.lastmod || pageData.frontmatter.date,
+        keywords: keywordsString,
+        programmingLanguage: 'JavaScript',
+        operatingSystem: 'Cross-platform',
+        applicationCategory: 'Web Development',
+        about: {
+          '@type': 'SoftwareApplication',
+          name: 'ApostropheCMS'
+        }
+      };
+
+      if (pageData.frontmatter.featured_image) {
+        structuredData.image = `https://v3.docs.apostrophecms.org${pageData.frontmatter.featured_image}`;
+      }
+
+      head.push(['script', { type: 'application/ld+json' }, JSON.stringify(structuredData)]);
+    }
+
+    return head;
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
@@ -295,7 +432,7 @@ export default defineConfig({
           markup: '```',
           map: null
         };
-        return defaultFence([tempToken], 0, options, env, slf)
+        return defaultFence([tempToken], 0, options, env, slf);
       };
 
       md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
@@ -307,7 +444,7 @@ export default defineConfig({
           return defaultFence(tokens, idx, options, env, slf);
         }
 
-        if ([ 'js', 'javascript', 'ts' ].includes(lang)) {
+        if (['js', 'javascript', 'ts'].includes(lang)) {
           let cjsCode, esmCode;
 
           if (format === 'cjs') {

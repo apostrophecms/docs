@@ -9,6 +9,7 @@ videoList:
   - id: 'x2tHUIvJr9w'
     title: 'Creating the rating widget'
     link: '#creating-the-rating-widget'
+excludeFromFilters: true
 ---
 # Widget Creation
 <iframe src="https://www.youtube.com/embed/KS4o4IUmSGE?si=W6vCP5pZfleMtVUg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
