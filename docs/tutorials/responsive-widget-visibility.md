@@ -180,6 +180,64 @@ Generate responsive CSS classes based on editor selections, keeping the template
   </template>
 </AposCodeBlock>
 
+### Alternative: Single Checkboxes Field
+
+For a more streamlined approach, you can use a single checkboxes field that outputs CSS class names directly:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Hero Banner'
+  },
+  fields: {
+    add: {
+      // other fields
+      hideOn: {
+        type: 'checkboxes',
+        label: 'myproject:hideOn',
+        help: 'myproject:hideOnHelp',
+        choices: [
+          { label: 'myproject:hideOnDesktop', value: 'hide-desktop' },
+          { label: 'myproject:hideOnTablet', value: 'hide-tablet' },
+          { label: 'myproject:hideOnMobile', value: 'hide-mobile' }
+        ]
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    modules/hero-banner-widget/index.js
+  </template>
+</AposCodeBlock>
+
+This approach simplifies the template significantly since the field value is already an array of CSS class names:
+
+<AposCodeBlock>
+
+```nunjucks
+<section class="hero-banner {{ data.widget.hideOn | join(' ') }}"
+  <!-- widget content -->
+</section>
+```
+  <template v-slot:caption>
+    modules/hero-banner/views/widget.html (Alternative template)
+  </template>
+</AposCodeBlock>
+
+**Benefits of the checkboxes approach:**
+- Cleaner template code with no conditional logic
+- Easier to extend with additional breakpoints
+- Better editor UX with grouped options
+- More maintainable schema
+
+**When to use each approach:**
+- Use **separate boolean fields** when you need specific help text for each option or complex conditional grouping
+- Use **checkboxes field** for simpler implementations and when you might add more breakpoints later
+
 ### CSS Implementation
 
 Define your responsive visibility classes using the CSS variables established earlier:
