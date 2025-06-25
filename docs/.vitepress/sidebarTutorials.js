@@ -75,6 +75,11 @@ const sidebarTutorials = [
         text: 'Adding a support desk button',
         link: 'tutorials/adding-a-support-desk-button.md'
       },
+
+      {
+        text: 'Adding an Admin Bar External Link',
+        link: 'tutorials/adding-admin-bar-external-links.md'
+      },
       {
         text: 'Building Navigation',
         link: 'tutorials/building-navigation.md'
@@ -96,20 +101,16 @@ const sidebarTutorials = [
         link: 'tutorials/managing-brand-colors.md'
       },
       {
+        text: 'Responsive Widget Visibility',
+        link: '/tutorials/responsive-widget-visibility.md'
+      },
+      {
         text: 'Composing Custom Fields',
         link: 'tutorials/reusing-standard-fields.md'
       },
       {
         text: 'Building a JSX Widget',
         link: 'tutorials/using-jsx-in-apostrophe.md'
-      },
-      {
-        text: 'Responsive Widget Visibility',
-        link: '/tutorials/responsive-widget-visibility.md'
-      },
-      {
-        text: 'Adding an External Link to the Admin Bar',
-        link: 'tutorials/adding-admin-bar-external-links.md'
       }
     ]
   },
