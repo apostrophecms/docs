@@ -62,6 +62,10 @@ const sidebarTutorials = [
       {
         text: 'Using JSX to Build a Weather Widget in ApostropheCMS',
         link: 'tutorials/using-jsx-in-apostrophe.md'
+      },
+      {
+        text: 'Adding an External Link to the Admin Bar',
+        link: 'tutorials/adding-admin-bar-external-links.md'
       }
     ]
   },

@@ -1,18 +1,29 @@
 ---
-title: "Adding a URL-Opening Button to the ApostropheCMS Admin Bar"
+title: "Adding External Link Buttons to the ApostropheCMS Admin Bar"
 detailHeading: "Tutorial"
-url: "/tutorials/opening-url-from-admin-bar.html"
+url: "/tutorials/adding-admin-bar-external-links.html"
 content: "Learn how to add a custom button to the ApostropheCMS admin bar that opens an external URL, giving content editors quick access to external resources without leaving the CMS interface."
 tags:
   topic: "Admin UI"
   type: tutorial
   effort: beginner
 ---
-# Adding a URL-Opening Button to the ApostropheCMS Admin Bar
+# Adding External Link Buttons to the ApostropheCMS Admin Bar
 
 ## Why This Matters
 
 Content editors often need quick access to external resources like style guides, analytics dashboards, or a company intranet while working in the CMS. By adding a custom button to the ApostropheCMS admin bar that opens external URLs, you create a seamless workflow that keeps essential tools just one click away, improving efficiency and reducing context switching.
+
+## When to Use This Approach
+
+This pattern works best for:
+- Documentation sites or style guides
+- Analytics dashboards  
+- Company intranets or wikis
+- Support ticket systems
+- Any frequently-accessed external tool that complements content creation
+
+For tools that need to pass data from the CMS or deeply integrate with ApostropheCMS workflows, consider building custom modules instead.
 
 ## Integration Approach
 
@@ -112,14 +123,14 @@ export default () => {
 
 > [!IMPORTANT]
 > Make sure to add this to the `ui/apos/apps/` folder, or import it into a file located there. If you try to load this code by adding it to `ui/src` you will get an error in the console because the admin functions won't be available, yet.
+> 
+> **Why this path matters**: The `ui/apos/apps/` directory ensures your code loads in the admin interface context where `apos.bus` and other admin APIs are available. Code in `ui/src/` loads in the public site context where these APIs don't exist.
 
 This code uses `apos.util.onReady` to ensure our event listener is only registered after ApostropheCMS is fully initialized. It then listens to the `apos.bus` for the admin-bar to emit the `admin-menu-click` event, that will also provide our button name. If it was our button that was clicked a link is added to the page and then triggered. This ensures that screen readers are signalled that we are navigating to a new page.
 
 ## Conclusion
 
-Adding URL-opening buttons to the ApostropheCMS admin bar provides content editors with quick access to external resources without requiring complex custom modules. By leveraging the `apos.adminBar.add()` method and browser-side event handling, you can create a seamless integration between your CMS and external tools.
-
-> **Tip**: For more advanced implementations, consider adding a confirmation dialog before opening external URLs. This helps prevent accidental navigation away from the CMS. See our tutorial on [Adding Confirmation Dialogs to ApostropheCMS User Actions](/tutorials/adding-confirmation-dialogs.html) for details.
+Adding external link buttons to the ApostropheCMS admin bar provides content editors with quick access to external resources without requiring complex custom modules. By leveraging the `apos.adminBar.add()` method and browser-side event handling, you can create a seamless integration between your CMS and external tools.
 
 For more complex integrations with external services, consider exploring deeper integration patterns that leverage the ApostropheCMS REST API or custom modules.
 
@@ -127,6 +138,4 @@ For more complex integrations with external services, consider exploring deeper 
 
 **Related Resources:**
 - [ApostropheCMS 4.x Admin-bar Module Documentation](/reference/modules/admin-bar.md)
-- [Best Practices for Admin Bar Setup](/tutorials/snippet/admin-bar-best-practices.html)
 - [Integrating a Third-Party Support Desk](/tutorials/adding-a-support-desk-button.html)
-- [Adding Confirmation Dialogs to ApostropheCMS User Actions](/tutorials/adding-confirmation-dialogs.html)
