@@ -1,7 +1,7 @@
 ---
 title: "Help and Placeholder Text Best Practices in ApostropheCMS"
 detailHeading: "Tutorial"
-url: "/tutorials/snippet/help-placeholder-text-best-practices.html"
+url: "/tutorials/help-and-placeholder-text-best-practices.html"
 content: "Learn how to create intuitive schema fields with effective help text, placeholders, and tooltips that improve content creation workflows in ApostropheCMS. This guide covers internationalization, accessibility, and practical examples to enhance editor experience."
 tags:
   topic: best practices
@@ -84,7 +84,7 @@ Then define your translated strings in a localization file:
 }
 ```
 <template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
+  modules/localization/i18n/myproject/en.json
 </template>
 </AposCodeBlock>
 
@@ -123,7 +123,7 @@ With corresponding translation strings:
 }
 ```
 <template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
+  modules/localization/i18n/myproject/en.json
 </template>
 </AposCodeBlock>
 
@@ -186,7 +186,7 @@ With corresponding translation strings:
 }
 ```
 <template v-slot:caption>
-  modules/myproject/i18n/en/myproject.json
+  modules/localization/i18n/myproject/en.json
 </template>
 </AposCodeBlock>
 

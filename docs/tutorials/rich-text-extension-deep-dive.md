@@ -1,3 +1,6 @@
+---
+excludeFromFilters: true
+---
 # The `@apostrophecms/characterCount` extension
 ![Screenshot of the insert menu character count modal](../images/character-count.png)
 
