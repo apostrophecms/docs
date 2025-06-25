@@ -102,6 +102,10 @@ const sidebarTutorials = [
       {
         text: 'Building a JSX Widget',
         link: 'tutorials/using-jsx-in-apostrophe.md'
+      },
+      {
+        text: 'Responsive Widget Visibility',
+        link: '/tutorials/responsive-widget-visibility.md'
       }
     ]
   },
