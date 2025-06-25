@@ -21,16 +21,12 @@ description: Interactive OpenAPI documentation for ApostropheCMS REST API
 
 ## About This Reference
 
-This interactive documentation is generated from our [OpenAPI specification](/openapi.yaml). You can:
+This interactive documentation is generated from our [OpenAPI specification](/apostrophecms-openapi.yaml). You can:
 
 - **Test endpoints live**: Make real API calls to your locally running project (with authentication)
 - **View request/response examples**: See exactly what data to send and expect
 - **Understand schemas**: Explore all data models and field requirements
 - **Copy code samples**: Get ready-to-use code
-
-## Need the Raw Specification?
-
-- [Download YAML format](/openapi.yaml) - For human reading and editing
 
 ## Start learning about the ApostropheCMS API
 [Learn more about API authentication →](/reference/api/authentication)
