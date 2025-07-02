@@ -104,7 +104,7 @@ For a fun and, more importantly, clear way to identify key lines of code in code
 Example:
 
 ```javascript
-module.export = {
+module.exports = {
   // 👆 Everything inside this is our module configuration.
   extend: '@apostrophecms/piece-type', // 👈 This means we're in a piece type.
   // 👇 Here's where we configure schema fields.
