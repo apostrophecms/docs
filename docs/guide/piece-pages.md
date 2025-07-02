@@ -97,7 +97,7 @@ Once those template files exist, you would **add this to the `app.js` configurat
 <AposCodeBlock>
 
 ```javascript
-module.export = {
+module.exports = {
   options: {
     types: [
       // 👇 Adding our new page type

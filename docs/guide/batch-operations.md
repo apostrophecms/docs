@@ -16,7 +16,7 @@ Batch operations are a ["cascading" configuration](/reference/module-api/module-
 <AposCodeBlock>
 
 ```javascript
-module.export = {
+module.exports = {
   batchOperations: {
     add: {
       reset: {
@@ -110,7 +110,7 @@ Batch operation route handlers will usually have a few steps in common, so we ca
 <AposCodeBlock>
 
   ```javascript
-  module.export = {
+  module.exports = {
     // `batchOperations` and other module settings...
     apiRoutes(self) {
       return {
