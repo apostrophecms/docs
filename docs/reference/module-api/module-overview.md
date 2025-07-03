@@ -1206,7 +1206,7 @@ module.exports = {
   routes(self) {
     return {
       get: {
-        // GET /api/v1/product/redirect
+        // GET /redirect
         async redirect(req, res) {
           const product = await self.find(req).toObject();
 
@@ -1226,7 +1226,7 @@ If specifying any extra options for your route, use an object. See the [route op
 
 Each route function takes the Express arguments `req` (the [request object](https://expressjs.com/en/api.html#req)) and `res` (the [response object](https://expressjs.com/en/api.html#res)). The functions must generate a response via `res` to avoid leaking resources, typically using the `res.redirect` or `res.send` methods.
 
-See [Naming routes](#naming-routes) for more on function names and their route URLs.
+Note that unlike the API route customization functions, the `routes(self)` creates routes that are based off your base URL, not `/api/v1/`. So for local development, the example above would be accessed at `http://localhost:3000/redirect`.
 
 ::: tip
 We recommend using `apiRoutes` or `restApiRoutes` whenever possible before using `routes` as they handle the potential pitfalls of Express routes. There are situations where writing Express routes may be necessary, such as when you need to use `res.redirect` or pipe a stream.
