@@ -91,20 +91,20 @@ export default {
 
 Most developers will find organizing their menus using `order` to be sufficient:
 
-    <AposCodeBlock>
+<AposCodeBlock>
 
-      ```javascript
-      export default {
-        options: {
-          // Items appear in the exact order specified here
-          order: ['@apostrophecms/page', 'event', 'article']
-        }
-      };
-      ```
-      <template v-slot:caption>
-        modules/@apostrophecms/admin-bar/index.js
-      </template>
-    </AposCodeBlock>
+  ```javascript
+  export default {
+    options: {
+      // Items appear in the exact order specified here
+      order: ['@apostrophecms/page', 'event', 'article']
+    }
+  };
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/admin-bar/index.js
+  </template>
+</AposCodeBlock>
 
 Additional positioning can be achieved using the `last` and `after` options of the [`@apostrophecms/admin-bar` module](https://github.com/apostrophecms/apostrophe/blob/42e2074f68d407fafac5106d4b02093da6d305e3/modules/%40apostrophecms/admin-bar/index.js#L166). You can read about this method in the [documentation reference section](/reference/modules/admin-bar.html#add-name-label-permission-options).
 
