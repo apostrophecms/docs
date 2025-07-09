@@ -59,7 +59,8 @@ Just use the following format when making a `POST`, `PUT` or `PATCH` REST API ca
         // the image-importing behavior
         "import": {
           "baseUrl": "https://myoldsite.com",
-          "html": "<p>Here is some text.</p>\n<img src=\"/my-image.jpg\" />"
+          "html": "<p>Here is some text.</p>\n<img src=\"/my-image.jpg\" />",
+          "imageTags": ["tag-piece-id-1", "tag-piece-id-2"]
         }
       }
     ]
@@ -75,8 +76,10 @@ Note that:
 
 * The actual markup is passed in the `html` sub-property.
 
-* Any images found during import are imported into the system as Apostrophe image pieces. This means they will appear in the media library alongside images added to Apostrophe in the usual way.
+* Any images found during import are imported into the system as Apostrophe image pieces and automatically converted to the proper figure format with optional captions. This means they will appear in the media library alongside images added to Apostrophe in the usual way.
 
 * Any `alt` attributes found are also imported.
+
+* The optional `imageTags` sub-property accepts an array of tag piece `_id`s that will be applied to any image(s) imported during the process. These tags will be added to the imported images in the media library.
 
 * The rich text widget still must specify the `image` control in its `toolbar` and/or `insert` options or the images will be filtered out.
