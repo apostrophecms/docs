@@ -80,6 +80,6 @@ Note that:
 
 * Any `alt` attributes found are also imported.
 
-* The optional `imageTags` sub-property accepts an array of tag piece `_id`s that will be applied to any image(s) imported during the process. These tags will be added to the imported images in the media library.
+* The optional `imageTags` sub-property accepts an array `_id`s from existing `@apostrophecms/image-tag` pieces that will be applied to any image(s) imported during the process. These tags will be added to the imported images in the media library.
 
 * The rich text widget still must specify the `image` control in its `toolbar` and/or `insert` options or the images will be filtered out.
