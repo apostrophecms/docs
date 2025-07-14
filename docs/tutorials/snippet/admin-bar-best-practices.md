@@ -1,7 +1,7 @@
 ---
 title: "Best Practices for Admin Bar Setup in ApostropheCMS"
 detailHeading: "Tutorial"
-url: "/tutorials/snippet/admin-bar-best-practices.html"
+url: "/tutorials/admin-bar-best-practices.html"
 content: "Learn how to configure an intuitive admin bar that improves content manager workflows. This guide covers logical grouping, custom actions, and visibility control to create a more efficient CMS interface."
 tags:
   topic: best practices
@@ -46,7 +46,7 @@ Configure your admin bar to group related functionality together. For example: c
 For all user-facing text in the admin interface, always use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency.
 
 > [!IMPORTANT]
-> For admin UI translations, [you must use a custom namespace prefix](/guide/localization/static.html#adding-and-using-localization-files) (like `myproject:`). Never use the `apostrophe:` namespace for your custom strings, as this could conflict with existing or future core translations.
+> For admin UI translations, [you must use a custom namespace prefix](/guide/localization/static.html#adding-and-using-localization-files) (like `myproject`). Never use the `apos` namespace for your custom strings, as this could conflict with existing or future core translations.
 
 For example, if you wanted to organize several custom pieces that editors constantly use and all the media related content in a separate menu:
 
@@ -140,64 +140,6 @@ export default {
 
 > [!TIP]
 > Place frequently-used items at the beginning of the admin bar for quick access.
-
-## Adding Custom Action Buttons
-You can add custom action buttons to the admin bar that trigger custom actions or navigation. To accomplish this you'll need:
-
-1. Server-side configuration to add the button to the admin bar
-2. Browser-side code to handle the button click event
-
-#### Server-Side Configuration
-First, add your custom button to the admin bar in your module's `init(self)` method:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  init(self) {
-    // Add a custom action button to the main menu
-    self.apos.adminBar.add(
-      'custom-module:generate-report', // Unique identifier
-      'myproject:generateReport',      // Translation string
-      false,                           // Permissions (false = available to all)
-      {
-        // For custom navigation or actions, the options object
-        // should either be empty or only contain UI properties
-        // like icon, tooltip, etc. - not action or type
-      }
-    );
-  }
-};
-```
-  <template v-slot:caption>
-    // modules/custom-actions/index.js
-  </template>
-</AposCodeBlock>
-
-#### Browser-Side Event Handling
-Then, create a browser-side component or script to listen for clicks on your custom button:
-
-<AposCodeBlock>
-
-```javascript
-export default () => {
-  // This code runs in the browser
-  apos.bus.$on('admin-menu-click', async (item) => {
-    // Check if our custom item was clicked
-    if (item === 'custom-module:generate-report') {
-      // Perform custom action here
-      // ...custom code
-    } else if (item === 'custom-module:external-link') {
-      // Open an external link in a new tab
-      window.open('https://example.com', '_blank');
-    }
-  });
-};
-```
-  <template v-slot:caption>
-    modules/custom-actions/ui/src/index.js
-  </template>
-</AposCodeBlock>
 
 ## Managing the Quick Create Menu
 
