@@ -81,6 +81,10 @@ const sidebarTutorials = [
         link: 'tutorials/adding-admin-bar-external-links.md'
       },
       {
+        text: 'Admir Bar Best Practices',
+        link: 'tutorials/admin-bar-best-practices.md'
+      },
+      {
         text: 'Building Navigation',
         link: 'tutorials/building-navigation.md'
       },
