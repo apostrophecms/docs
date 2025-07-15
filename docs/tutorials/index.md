@@ -74,7 +74,7 @@ Comprehensive, step-by-step exploration of various topics, complete with practic
       detail-heading="Tutorial"
       title="Admin Bar Best Practices"
       content="Learn how to configure an intuitive admin bar that improves content manager workflows. This guide covers logical grouping, custom actions, and visibility control to create a more efficient CMS interface."
-      url="/tutorials/snippet/admin-bar-best-practices.html"
+      url="/tutorials/admin-bar-best-practices.html"
     />
   </template>
 </AposTwoColumns>

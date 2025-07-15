@@ -28,7 +28,7 @@ When configuring your admin bar, prioritize:
 
 The ApostropheCMS admin bar consists of four key components:
 1.  **Main menu items**: Primary navigation links in the left section
-    * Pages menu (always present)
+    * Pages menu (always present and always appears first - cannot be grouped or reordered)
     * Piece-type modules (each registered piece type gets its own menu item by default)
 2. **Quick create menu**: The "+" button providing shortcuts to create new content
 3. **Utility context items**: Right-side icons for universal tools 
@@ -40,22 +40,30 @@ Each component can be customized to better serve your editors' needs.
 
 ### Logical Grouping & Naming
 
-Configure your admin bar to group related functionality together. For example: content creation tools, media organization, etc... Make sure to use clear, action-oriented labels. Maintain consistent naming patterns across modules and avoid technical jargon in menu labels visible to content managers.
+**Groups are your primary tool for organizing admin bar items.** They allow you to categorize related functionality together, making navigation intuitive for content managers. Instead of having a flat list of menu items, groups create logical sections that mirror your editors' workflows.
+
+> [!NOTE]
+> The `@apostrophecms/page` menu item always appears first in the admin bar and cannot be grouped or reordered. All other menu items can be organized using groups.
+
+Configure your admin bar to group related functionality together - for example: content creation tools, media organization, user management, etc. This reduces cognitive load and helps editors find what they need quickly.
+
+**Using Clear, Action-Oriented Labels:**
+Use clear, action-oriented labels and maintain consistent naming patterns across modules. Avoid technical jargon in menu labels visible to content managers.
 
 **Using Translation Strings for Admin UI:**
-For all user-facing text in the admin interface, always use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency.
+For all user-facing text in the admin interface, we recommend to use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency.
 
 > [!IMPORTANT]
 > For admin UI translations, [you must use a custom namespace prefix](/guide/localization/static.html#adding-and-using-localization-files) (like `myproject`). Never use the `apos` namespace for your custom strings, as this could conflict with existing or future core translations.
 
-For example, if you wanted to organize several custom pieces that editors constantly use and all the media related content in a separate menu:
+**Example Configuration:**
+Here's how to organize several custom pieces that editors constantly use, with media-related content in a separate menu:
 
 <AposCodeBlock>
 
 ``` javascript
 export default {
   options: {
-    // Customize the admin bar groups and their ordering
     groups: [
       {
         // Prioritize content creation - the most common task
@@ -89,7 +97,7 @@ export default {
 
 ### Menu Priority and Organization
 
-Most developers will find organizing their menus using `order` to be sufficient:
+Most developers will find organizing their menus using `groups` to be sufficient. However, you can also add an `order` array for finer control.
 
 <AposCodeBlock>
 
@@ -97,7 +105,7 @@ Most developers will find organizing their menus using `order` to be sufficient:
   export default {
     options: {
       // Items appear in the exact order specified here
-      order: ['@apostrophecms/page', 'event', 'article']
+      order: ['event', 'article', '@apostrophecms/image']
     }
   };
   ```
@@ -111,7 +119,7 @@ Additional positioning can be achieved using the `last` and `after` options of t
 **How Grouped and Ungrouped Items Work Together:**
 
 When mixing groups of items and ungrouped menu items, the system:
-1. Positions all items first (based on `order` or initialization order)
+1. Positions all items first (based on `order` or module initialization order in the `app.js` file)
 2. Then ensures grouped items stay together, with their position determined by their first item
 
 <AposCodeBlock>
@@ -120,13 +128,13 @@ When mixing groups of items and ungrouped menu items, the system:
 // Group position is determined by its first item's position
 export default {
   options: {
-    // The entire content group will follow the page menu
-    order: ['@apostrophecms/page', 'content-group-leader'],
+    // The content group will appear between image and file modules
+    order: ['@apostrophecms/image', 'content-group-leader', '@apostrophecms/file'],
     groups: [
       {
         name: 'content',
         label: 'myproject:content',
-        // These stay together
+        // These stay together and appear where content-group-leader is positioned
         items: ['content-group-leader', 'articles', 'events']
       }
     ]
@@ -187,7 +195,7 @@ export default {
 };
 ```
 > [!NOTE]
-> Custom actions or link navigation need to be added through browser-side scripting as shown in the [Adding Custom Action Buttons](#adding-custom-action-buttons) section.
+> Custom actions or link navigation need to be added through browser-side scripting as shown in the [Adding External Link Buttons](/tutorials/adding-admin-bar-external-links.html#handling-the-button-click-event) tutorial.
 
 **Best uses for context utilities:**
 - Universal features needed from any context
