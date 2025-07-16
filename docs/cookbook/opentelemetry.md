@@ -13,7 +13,7 @@ Install the required dependencies in your ApostropheCMS project:
 ```sh
 npm install @opentelemetry/sdk-node \
   @opentelemetry/auto-instrumentations-node \
-  @opentelemetry/semantic-conventions@1.0.1 \
+  @opentelemetry/semantic-conventions \
   @opentelemetry/exporter-trace-otlp-http \
   @opentelemetry/resources
 ```
