@@ -24,7 +24,7 @@ When configuring your admin bar, prioritize:
 
 ## Understanding the Admin Bar Components
 
-![The basic ApostropheCMS admin-bar with markup](../../images/admin-bar-base-markup.png)
+![The basic ApostropheCMS admin-bar with markup](../images/admin-bar-base-markup.png)
 
 The ApostropheCMS admin bar consists of four key components:
 1.  **Main menu items**: Primary navigation links in the left section
