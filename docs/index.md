@@ -28,7 +28,7 @@ ApostropheCMS is a full-featured, open source CMS built with Node.js that seeks 
 
 ## About ApostropheCMS
 
-ApostropheCMS is content software for everyone in an organization. It helps teams of all sizes create dynamic digital experiences with elegance and efficiency by blending powerful features, developer happiness, and a low learning curve for content creators. Apostrophe has powered websites and web apps for organizations large and small for over a decade.
+ApostropheCMS is content software for everyone in an organization. It helps teams of all sizes create dynamic digital experiences with elegance and efficiency by blending powerful features, developer experience, and a low learning curve for content creators. Apostrophe has powered websites and web apps for organizations large and small for over a decade.
 
 ## Community
 
