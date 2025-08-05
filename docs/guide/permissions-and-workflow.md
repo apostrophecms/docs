@@ -57,9 +57,8 @@ As a contributor, the writer can:
 However, contributors **cannot**:
 - Publish the article (it remains in draft status)
 - Upload images or files
-- Delete the article once submitted
 
-The article remains editable by the original author even after submission, allowing them to make revisions, corrections, or improvements while the editor reviews their work through their own submission management interface. Any changes made during this review period will be included when the editor eventually publishes the piece.
+The article remains editable by the original author even after submission, allowing them to make revisions, corrections, or improvements while the editor reviews their work through their own submission management interface. Any changes made during this review period will be included when the editor eventually publishes the piece. Contributors can also elect to take the content out of the submission flow and resubmit at a later point.
 
 ### Step 2: Editor Reviews and Enhances
 
