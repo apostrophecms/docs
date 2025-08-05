@@ -59,7 +59,7 @@ However, contributors **cannot**:
 - Upload images or files
 - Delete the article once submitted
 
-Once the contributor submits their draft, they can still access and edit it through their own submission management interface. The article remains editable by the original author even after submission, allowing them to make revisions, corrections, or improvements while the editor reviews their work. Any changes made during this review period will be included when the editor eventually publishes the piece.
+The article remains editable by the original author even after submission, allowing them to make revisions, corrections, or improvements while the editor reviews their work through their own submission management interface. Any changes made during this review period will be included when the editor eventually publishes the piece.
 
 ### Step 2: Editor Reviews and Enhances
 
@@ -85,31 +85,14 @@ The article is now live on the website. If changes are needed later:
 - The original Contributor can continue to edit the published article (but changes remain as drafts until an editor publishes them)
 - The Editor can make immediate changes and publish them
 
-## Advanced Permission Control
+## Advanced Permissions Extension
 
-While the four standard roles handle most situations, some organizations need more granular control. For complex permission requirements, consider:
+While the four standard roles handle most situations, some organizations need more granular control. For complex hierarchies, departmental workflows, or custom permission requirements, Apostrophe offers an Advanced Permissions extension that provides:
 
-### Content Visibility Settings
-
-Every piece of content in Apostrophe has a **"Who can view this?"** setting that works independently of user roles:
-
-- **Public**: Anyone can view (the default)
-- **Login required**: Only logged-in users can view
-- **Admin only**: Only administrators can view
-
-*[Screenshot would show: The permissions tab of a page editor with the "Who can view this?" dropdown menu open]*
-
-This allows you to create member-only sections, internal company pages, or staged content that's hidden from the public.
-
-### Advanced Permissions Extension
-
-For organizations with complex hierarchies, departmental workflows, or custom permission needs, Apostrophe offers an Advanced Permissions extension that provides:
-
-- **Custom user groups** with specific permission sets
+- **Custom user groups** for departments or teams with specific permission sets
 - **Content-based permissions** (e.g., "can only edit blog posts")
-- **Hierarchical permissions** for multi-department organizations
-- **Advanced workflow states** beyond draft/published
+- **Per-document permissions**, allowing you to grant specific users or groups access to individual pieces of content rather than all content of that type
 
-The Advanced Permissions extension also enables per-document permissions, allowing you to grant specific users or groups access to individual pieces of content rather than all content of that type. This enables more targeted workflows - for example, a freelance writer could be given permission to edit only their assigned articles, or a department editor could manage only content in their section.
+The Advanced Permissions extension enables more targeted workflows - for example, a freelance writer could be given permission to edit only their assigned articles, or a department editor could manage only content in their section.
 
-The Advanced Permissions extension integrates seamlessly with Apostrophe's core permission system while adding enterprise-level control. For detailed implementation guidance, see the [Advanced Permissions documentation](link-to-extension-readme).
+The Advanced Permissions extension integrates seamlessly with Apostrophe's core permission system while adding enterprise-level control. For detailed implementation guidance, see the [Advanced Permissions documentation](https://apostrophecms.com/extensions/advanced-permission).
