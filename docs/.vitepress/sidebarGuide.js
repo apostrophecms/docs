@@ -98,7 +98,7 @@ const sidebarGuide = [
       },
       { text: 'Headless', link: 'guide/headless-cms.md' },
       { text: 'Users and Roles', link: 'guide/users.md' },
-      { text: 'Permissions and Workflow', link: 'guide/permissions-and-workflows.md' },
+      { text: 'Permissions and Workflow', link: 'guide/permissions-and-workflow.md' },
       { text: 'Site Settings', link: 'guide/global.md' },
     ]
   },

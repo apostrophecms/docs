@@ -47,6 +47,8 @@ node app @apostrophecms/user:change-password username
 ```
 :::
 
+You can [read more about permissions and content workflows](/guide/permissions-and-workflow.md) to see how these roles work together in practice.
+
 ## Logging into an Apostrophe website
 
 Users can log into Apostrophe websites at the `/login` URL path for the website. If the website base URL (homepage) is `https://example.rocks`, the login page will be `https://example.rocks/login`.

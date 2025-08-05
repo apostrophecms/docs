@@ -12,6 +12,8 @@ The permission system available through the core `@apostrophecms/permission` mod
 
 Apostrophe provides four user roles that cover most organizational needs:
 
+*Screenshot of permissions grid*
+
 ### Guest
 Guest users can log in to view content marked as "Login required" but cannot make any changes to the website. Use this role for:
 - Newsletter subscribers who get early access to articles
@@ -43,7 +45,7 @@ Let's walk through a typical content workflow to see how permissions create a sm
 
 A freelance writer with the **Contributor** role logs into the website and creates a new blog post.
 
-*[Screenshot would show: A contributor creating a new blog post, with the content editor open showing a draft article titled "10 Tips for Remote Work Success"]*
+*Screenshot of ....?*
 
 As a contributor, the writer can:
 - Write and format the article
@@ -60,7 +62,7 @@ However, contributors **cannot**:
 
 The content editor with the **Editor** role receives a notification about the new draft article.
 
-*[Screenshot would show: The content manager interface with a list of articles, showing the draft with a "Draft" status indicator]*
+*Screenshot showing the draft with a "Draft" status indicator and maybe inbox indicator*
 
 The editor opens the article and reviews it. Editors can:
 - Edit the content for style and accuracy
@@ -68,13 +70,9 @@ The editor opens the article and reviews it. Editors can:
 - Preview how the article will look when published
 - Either publish immediately or request changes
 
-*[Screenshot would show: Mike editing the article, with the file upload interface visible showing him adding a header image]*
-
 ### Step 3: Publication
 
 After reviewing the work and adding appropriate images, the Editor publishes the article.
-
-*[Screenshot would show: The article editor with Mike clicking the "Publish" button, and the article status changing from "Draft" to "Published"]*
 
 The article is now live on the website. If changes are needed later:
 - The original Contributor can continue to edit the published article (but changes remain as drafts until an editor publishes them)
