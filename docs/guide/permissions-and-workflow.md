@@ -45,30 +45,37 @@ Let's walk through a typical content workflow to see how permissions create a sm
 
 A freelance writer with the **Contributor** role logs into the website and creates a new blog post.
 
-*Screenshot of ....?*
+*[Screenshot would show: The save button with the dropdown open, showing "Submit" option instead of "Publish"]*
 
 As a contributor, the writer can:
 - Write and format the article
 - Add internal links to other pages
 - Save work as a draft
 - Edit content multiple times
+- Submit the draft for review (using the "Submit" button instead of "Publish")
 
 However, contributors **cannot**:
 - Publish the article (it remains in draft status)
 - Upload images or files
 - Delete the article once submitted
 
+Once the contributor submits their draft, they can still access and edit it through their own submission management interface. The article remains editable by the original author even after submission, allowing them to make revisions, corrections, or improvements while the editor reviews their work. Any changes made during this review period will be included when the editor eventually publishes the piece.
+
 ### Step 2: Editor Reviews and Enhances
 
 The content editor with the **Editor** role receives a notification about the new draft article.
 
-*Screenshot showing the draft with a "Draft" status indicator and maybe inbox indicator*
+*[Screenshot would show: The content manager with a draft showing "Submitted" status indicator and inbox notification]*
 
-The editor opens the article and reviews it. Editors can:
+The editor can open their submitted drafts inbox to review the content. The inbox provides information about when the content was submitted and author details. Articles are clearly marked to indicate whether they are new submissions or revisions to previously published content.
+
+From the submitted drafts interface, editors can:
 - Edit the content for style and accuracy
 - Upload and add images to enhance the article
 - Preview how the article will look when published
-- Either publish immediately or request changes
+- Publish the submission immediately
+- Share a preview link for others to review the draft
+- Dismiss the submission if it's not ready for publication
 
 ### Step 3: Publication
 
