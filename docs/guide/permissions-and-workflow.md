@@ -8,36 +8,32 @@ The permission system available through the core `@apostrophecms/permission` mod
 - **Manage user access** to sensitive or premium content
 - **Scale your editorial team** with clear roles and responsibilities
 
-## The Four User Roles
+## The four default user roles
 
 Apostrophe provides four user roles that cover most organizational needs:
 
-![The Basic ApostropheCMS User permissions grid](../images/permissions-grid.png)
-
-### Guest
-Guest users can log in to view content marked as "Login required" but cannot make any changes to the website. Use this role for:
-- Newsletter subscribers who get early access to articles
-- Community members viewing member-only resources
-- External stakeholders who need to review content without editing rights
-
-### Contributor
-Contributors can create and edit content but cannot publish it live or upload files. This role is ideal for:
-- Freelance writers submitting articles for review
-- Team members creating draft content
-
-### Editors
-Editors have all contributor permissions plus the ability to publish content and upload files. Perfect for:
-- Senior editorial staff who review and approve content
-- Content managers overseeing publication schedules
-- Marketing teams managing campaigns and assets
-
-### Administrators
-Admins can do everything, including user management. Essential for:
-- Website administrators
-- IT staff managing user accounts
-- Senior managers with full oversight needs
+| **Ability**                      | **Guest** | **Contributor** | **Editor** | **Administrator** |
+|----------------------------------|-----------|------------------|------------|--------------------|
+| View "Login Required" Content   | ✅        | ✅               | ✅         | ✅                 |
+| Create Content                  | ❌        | ✅               | ✅         | ✅                 |
+| Edit Content                    | ❌        | ✅               | ✅         | ✅                 |
+| Publish Content                 | ❌        | ❌               | ✅         | ✅                 |
+| Upload Files                    | ❌        | ❌               | ✅         | ✅                 |
+| Manage Users                    | ❌        | ❌               | ❌         | ✅                 |
 
 ## Content Workflow
+
+Let's walk through a typical content workflow to see how permissions create a smooth editorial process.
+
+| **Step**       | **Contributor Workflow**                                                                 | **Administrator Workflow**                             |
+|----------------|-------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| **1. Create**  | Logs in and creates a draft post.                                                         | Logs in and creates a post.                            |
+| **2. Edit**    | Can format text, link pages, and revise drafts.                                           | Can format, revise, and add media.                     |
+| **3. Save**    | Saves as a draft — **cannot publish or upload files**.                                   | Saves and can publish immediately.                     |
+| **4. Submit**  | Submits for editor review.                                                                | Skips review — manages and publishes their own work.   |
+| **5. Publish** | Waits for an Editor to review and publish.                                                | Publishes instantly — full control.                    |
+| **6. Revisions**| Can continue editing; changes remain drafts until republished by an Editor.              | Can edit live content and push updates directly.       |
+
 
 Let's walk through a typical content workflow to see how permissions create a smooth editorial process.
 
