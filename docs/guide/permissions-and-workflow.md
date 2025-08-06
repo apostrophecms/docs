@@ -12,7 +12,7 @@ The permission system available through the core `@apostrophecms/permission` mod
 
 Apostrophe provides four user roles that cover most organizational needs:
 
-*Screenshot of permissions grid*
+![The Basic ApostropheCMS User permissions grid](../images/permissions-grid.png)
 
 ### Guest
 Guest users can log in to view content marked as "Login required" but cannot make any changes to the website. Use this role for:
@@ -45,7 +45,7 @@ Let's walk through a typical content workflow to see how permissions create a sm
 
 A freelance writer with the **Contributor** role logs into the website and creates a new blog post.
 
-*[Screenshot would show: The save button with the dropdown open, showing "Submit" option instead of "Publish"]*
+![The altered submission button that a contributor sees](../images/submit-button.png)
 
 As a contributor, the writer can:
 - Write and format the article
@@ -64,7 +64,7 @@ The article remains editable by the original author even after submission, allow
 
 The content editor with the **Editor** role receives a notification about the new draft article.
 
-*[Screenshot would show: The content manager with a draft showing "Submitted" status indicator and inbox notification]*
+![The inbox notification and manage submitted drafts modal](../images/submitted-drafts.png)
 
 The editor can open their submitted drafts inbox to review the content. The inbox provides information about when the content was submitted and author details. Articles are clearly marked to indicate whether they are new submissions or revisions to previously published content.
 
