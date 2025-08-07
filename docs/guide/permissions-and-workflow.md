@@ -141,12 +141,3 @@ While the four standard roles handle most situations, some organizations need mo
 The Advanced Permissions extension enables more targeted workflows - for example, a freelance writer could be given permission to edit only their assigned articles, or a department editor could manage only content in their section.
 
 The Advanced Permissions extension integrates seamlessly with Apostrophe's core permission system while adding enterprise-level control. For detailed implementation guidance, see the [Advanced Permissions documentation](https://apostrophecms.com/extensions/advanced-permission).
-
-<style>
-@media (max-width: 768px) {
-  div[style*='grid-template-columns'] {
-    grid-template-columns: 1fr !important;
-  }
-}
-</style>
-
