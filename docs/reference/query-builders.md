@@ -117,7 +117,7 @@ query._ids([
 ])
 ```
 
-The `_ids` builder causes the query to return only the document with matching `_id` properties and to return them in that order, assuming the documents with the specified IDs exist. All documents are fetched in the locale and mode of the request regardless of the locale suffix of the values. If no locale can be determined via query parameters, the locale is inferred from the first _id in the set.
+The `_ids` builder causes the query to return only the documents with matching `_id` properties and to return them in that order, assuming the documents with the specified IDs exist. All documents are fetched in the locale and mode of the request regardless of the locale suffix of the values. If no locale can be determined via query parameters, the locale is inferred from the first _id in the set.
 
 The query builder can also be called with a string, which is treated as a single document ID.
 

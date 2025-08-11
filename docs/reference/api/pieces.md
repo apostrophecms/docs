@@ -59,6 +59,7 @@ You can also query based on the value of most top level [schema fields](/referen
 
 | Parameter | Example | Description |
 |----------|------|-------------|
+|`_ids[]` | `?_ids[]=firstidhere:en:published&_ids[]=secondidhere:en:published` | One or more piece `_id` properties |
 |`slug` | `?slug=friday-gathering` | The value of the slug field |
 |`title` | `?title=Friday%20Gathering` | The value of the title field |
 |`_topic` | `?_topic=idOfTopicGoesHere` | The `_id` property of a related piece |
@@ -66,7 +67,7 @@ You can also query based on the value of most top level [schema fields](/referen
 |`_topic[]` | `?_topic[]=cheese&_topic[]=bread` | An "OR" search on multiple related pieces |
 |`_topicAnd[]` | `?_topicAnd[]=cheese&_topicAnd[]=bread` | An "AND" search on multiple related pieces |
 
-`slug` and `title` exist in all piece types. For the `_topic` and `topic` examples, your piece type must have a [relationship field](../field-types/relationship.md) by that name permitting the user to select related topics, for instance:
+`_ids[]`, `slug` and `title` exist in all piece types. For the `_topic` and `topic` examples, your piece type must have a [relationship field](../field-types/relationship.md) by that name permitting the user to select related topics, for instance:
 
 ```javascript
 fields: {
@@ -81,6 +82,10 @@ fields: {
 ```
 
 Note that `title` is not intended as a general-purpose search and titles might not be unique.
+
+#### `_ids` preserves order
+
+For convenience, when `_ids` is used the results are sorted in the order specified. For instance, the above example, `firstidhere:en:published` is guaranteed to be returned before `secondidhere:en:published` in the `results` array.
 
 #### Relationship searches on `_id` versus `slug`
 
