@@ -308,7 +308,7 @@ The `toChoices` query method builds on `toDistinct` by returning each choice as 
 
 ```javascript
 const teamOffices = await self.find(req, { type: 'team' })
-  .toChoices('office', { count: true });
+  .toChoices('office', { counts: true });
 ```
 
 ## Query across modules
