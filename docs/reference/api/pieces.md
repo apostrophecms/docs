@@ -83,6 +83,10 @@ fields: {
 
 Note that `title` is not intended as a general-purpose search and titles might not be unique.
 
+#### `_ids` preserves order
+
+For convenience, when `_ids` is used the results are sorted in the order specified. For instance, the above example, `firstidhere:en:published` is guaranteed to be returned before `secondidhere:en:published` in the `results` array.
+
 #### Relationship searches on `_id` versus `slug`
 
 Leaving the `_` off the query parameter for a relationship field causes it to match on the slug rather than the `_id` of the related document. This is useful for public-facing URLs.
