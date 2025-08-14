@@ -6,10 +6,10 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 
 | Software | Minimum Version |
 | ------------- | ------------- |
-| Ubuntu | 16+ |
-| [NGINX](https://www.nginx.com/) (or another proxy server) | Latest |
-| [Node.js](https://nodejs.org/en/) | 18.x+ |
-| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 4.4+ |
+| Ubuntu | 22.04+ |
+| [NGINX](https://www.nginx.com/) (or another reverse proxy like Caddy, Traefik) | Latest |
+| [Node.js](https://nodejs.org/en/) | 20.x+ |
+| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 6.0+ (tested through 8.0) |
 
 
 | Hardware specification | Minimum recommendation |
