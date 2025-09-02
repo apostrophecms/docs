@@ -448,9 +448,9 @@ Apostrophe will complete asset builds for each theme, as well as running any nec
 
 ## Profiling with OpenTelemetry
 
-ApostropheCMS supports profiling with OpenTelemetry. There is an [article in the documentation](https://v3.docs.apostrophecms.org/cookbook/opentelemetry.html) covering the use of OpenTelemetry in general. Launching Apostrophe Assembly with OpenTelemetry support is slightly different. However for your convenience, `app.js` and `telemetry.js` are already set up appropriately in this project.
+ApostropheCMS supports profiling with OpenTelemetry. There is an [article in the documentation](https://docs.apostrophecms.org/cookbook/opentelemetry.html) covering the use of OpenTelemetry in general. Launching Apostrophe Assembly with OpenTelemetry support is slightly different. However for your convenience, `app.js` and `telemetry.js` are already set up appropriately in this project.
 
-To launch in your local development environment with OpenTelemetry logging to Jaeger, first [launch Jaeger according to the instructions in our documentation](https://v3.docs.apostrophecms.org/cookbook/opentelemetry.html). Then start your Apostrophe Assembly project like this:
+To launch in your local development environment with OpenTelemetry logging to Jaeger, first [launch Jaeger according to the instructions in our documentation](https://docs.apostrophecms.org/cookbook/opentelemetry.html). Then start your Apostrophe Assembly project like this:
 
 ```
 APOS_OPENTELEMETRY=1 npm run dev
