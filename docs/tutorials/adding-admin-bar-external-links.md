@@ -18,7 +18,7 @@ Content editors often need quick access to external resources like style guides,
 
 This pattern works best for:
 - Documentation sites or style guides
-- Analytics dashboards  
+- Analytics dashboards
 - Company intranets or wikis
 - Support ticket systems
 - Any frequently-accessed external tool that complements content creation
@@ -52,6 +52,9 @@ export default {
         tooltip: 'myProject:openDocs' // Namespaced tooltip text for translation
       }
     );
+  },
+  icons: {
+    'book-open': 'BookOpen'
   }
 };
 ```
@@ -59,6 +62,9 @@ export default {
     modules/external-links/index.js
   </template>
 </AposCodeBlock>
+
+> [!TIP]
+> The `book-open` icon isn't already registered as an ApostropheCMS icon, but is in the version of the [vue-material-design-icons](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) that is present in core. You can register the new icon using the top-level `icons` configuration property. To do so, you pass the name you want to use, in this case `book-open`, as a key and the icon name in the package as value. You can read more [here](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
 
 This method call registers a new button in the admin bar. The parameters are:
 
@@ -100,7 +106,7 @@ export default () => {
         openExternalURL();
       }
     });
-  }
+  });
 
   function openExternalURL() {
     // Create an accessible link element with appropriate attributes

@@ -118,7 +118,7 @@ const sidebarTutorials = [
       },
       {
         text: 'Local Extension Development',
-        link: 'tutorials/local-extension-development.html'
+        link: 'tutorials/local-extension-development.md'
       }
     ]
   },
