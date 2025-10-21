@@ -51,10 +51,13 @@ Configure your admin bar to group related functionality together - for example: 
 Use clear, action-oriented labels and maintain consistent naming patterns across modules. Avoid technical jargon in menu labels visible to content managers.
 
 **Using Translation Strings for Admin UI:**
-For all user-facing text in the admin interface, we recommend to use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency.
+For all user-facing text in the admin interface, we recommend to use translation strings rather than hard-coded English text. This ensures your CMS can be properly internationalized and maintains consistency. For a complete guide including schema field localization and advanced techniques, see [Localizing schema field labels](/guide/localization/static.html#localizing-schema-field-labels).
 
 > [!IMPORTANT]
 > For admin UI translations, [you must use a custom namespace prefix](/guide/localization/static.html#adding-and-using-localization-files) (like `myproject`). Never use the `apos` namespace for your custom strings, as this could conflict with existing or future core translations.
+
+> [!WARNING]
+> **Common pitfall**: Forgetting to set `browser: true` is the most common reason admin UI translations don't work. Without this setting, your translations are only available server-side (for Nunjucks templates) but not in the browser-based admin interface.
 
 **Example Configuration:**
 Here's how to organize several custom pieces that editors constantly use, with media-related content in a separate menu:
@@ -63,6 +66,11 @@ Here's how to organize several custom pieces that editors constantly use, with m
 
 ``` javascript
 export default {
+  i18n: {
+    myproject: {
+      browser: true
+    }
+  },
   options: {
     groups: [
       {

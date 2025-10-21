@@ -63,6 +63,9 @@ export default {
   </template>
 </AposCodeBlock>
 
+> [!NOTE]
+> The `tooltip` property uses a namespaced localization key (`myProject:openDocs`) to support multiple languages in the admin UI. To set up translations for admin interface elements like tooltips, button labels, and schema field labels, see the guide on [localizing schema field labels](/guide/localization/static.html#localizing-schema-field-labels).
+ 
 > [!TIP]
 > The `book-open` icon isn't already registered as an ApostropheCMS icon, but is in the version of the [vue-material-design-icons](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) that is present in core. You can register the new icon using the top-level `icons` configuration property. To do so, you pass the name you want to use, in this case `book-open`, as a key and the icon name in the package as value. You can read more [here](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
 

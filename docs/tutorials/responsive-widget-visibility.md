@@ -83,6 +83,11 @@ export default {
   options: {
     label: 'Hero Banner'
   },
+  i18n: {
+    myProject: {
+      browser: true
+    }
+  },
   fields: {
     add: {
       title: {
@@ -131,7 +136,7 @@ export default {
 
 ### Translation Strings
 
-Always use translation strings for user-facing text to support internationalization:
+Always use [translation strings](/guide/localization/static.html#localizing-schema-field-labels) for user-facing text to support internationalization:
 
 <AposCodeBlock>
 
@@ -192,17 +197,22 @@ export default {
   options: {
     label: 'Hero Banner'
   },
+  i18n: {
+    myProject: {
+      browser: true
+    }
+  },
   fields: {
     add: {
       // other fields
       hideOn: {
         type: 'checkboxes',
-        label: 'myproject:hideOn',
-        help: 'myproject:hideOnHelp',
+        label: 'myProject:hideOn',
+        help: 'myProject:hideOnHelp',
         choices: [
-          { label: 'myproject:hideOnDesktop', value: 'hide-desktop' },
-          { label: 'myproject:hideOnTablet', value: 'hide-tablet' },
-          { label: 'myproject:hideOnMobile', value: 'hide-mobile' }
+          { label: 'myProject:hideOnDesktop', value: 'hide-desktop' },
+          { label: 'myProject:hideOnTablet', value: 'hide-tablet' },
+          { label: 'myProject:hideOnMobile', value: 'hide-mobile' }
         ]
       }
     }
@@ -303,7 +313,7 @@ export default {
         }
       },
       mobileContent: {
-        type: 'area', 
+        type: 'area',
         label: 'Mobile Content',
         options: {
           widgets: ['@apostrophecms/rich-text', 'simple-image']
