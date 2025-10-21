@@ -77,7 +77,7 @@ apostrophe({
 
 In this example we have added the button to the context menu, but you may choose to add it as a main navigation item or the user drop-down menu. See the [reference documentation for other placement options](/reference/modules/admin-bar.html#add-name-label-permission-options).
 
-This single method call is all you need to add the button to the admin bar. The first parameter is a unique identifier that you'll reference in your event handler. The second parameter is the visible label (ideally using a translation string in production). The third parameter controls permissions, where `false` makes it available to all users with admin access. The final parameter is an options object that determines the button's placement and appearance.
+This single method call is all you need to add the button to the admin bar. The first parameter is a unique identifier that you'll reference in your event handler. The second parameter is the visible label (ideally using a [translation string](/guide/localization/static.html#localizing-schema-field-labels) in production). The third parameter controls permissions, where `false` makes it available to all users with admin access. The final parameter is an options object that determines the button's placement and appearance.
 
 ### Handling the Button Click Event
 

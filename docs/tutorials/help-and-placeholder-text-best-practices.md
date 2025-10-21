@@ -49,12 +49,17 @@ Help text appears directly below the field label, providing context about a fiel
 
 ### Basic Implementation
 
-Always use translation strings for help text to support localization:
+Always use [translation strings](/guide/localization/static.html#localizing-schema-field-labels) for help text to support localization:
 
 <AposCodeBlock>
 
 ```javascript
 export default {
+  i18n: {
+    myproject: {
+      browser: true
+    }
+  },
   fields: {
     add: {
       metaDescription: {
@@ -96,6 +101,11 @@ For more complex guidance that requires formatting, ApostropheCMS provides the `
 
 ```javascript
 export default {
+  i18n: {
+    myproject: {
+      browser: true
+    }
+  },
   fields: {
     add: {
       imageAltText: {
@@ -157,6 +167,11 @@ Placeholder text appears inside empty fields, suggesting the type of content exp
 
 ```javascript
 export default {
+  i18n: {
+    myproject: {
+      browser: true
+    }
+  },
   fields: {
     add: {
       ctaButtonText: {
