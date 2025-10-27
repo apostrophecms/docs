@@ -4,10 +4,311 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 | Common name/label | Widget reference | What is it? |
 | ------ | ------ | ------ |
+| [Layout (beta)](#layout-widget-beta) | `@apostrophecms/layout-widget` | Create responsive grid-based layouts with configurable columns |
 | [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
 | [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
 | [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
 | [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
+
+## Layout widget (BETA)
+
+> [!WARNING]
+> **This widget is currently in BETA**. The API and configuration options are subject to change in future releases. Use with caution in production environments.
+
+The layout widget provides a powerful grid-based layout system for creating responsive column-based designs. Editors can add the layout widget to a page and then directly add, remove, and resize columns in-context without leaving the page. This provides precise control over column positioning, spanning, and responsive behavior across different screen sizes.
+
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/layout': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+### How it works
+
+The layout widget creates a CSS grid container with a configurable number of grid columns (default 12). By default, two layout-column widgets (`@apostrophecms/layout-column-widget`) are added when the layout widget is first placed on a page. Editors can then add or remove columns in-context. Each column has its own area for widget addition and can:
+- Span multiple grid columns
+- Be positioned precisely on the grid
+- Adjust its visibility at different breakpoints (desktop, tablet, mobile)
+- Apply custom alignment (horizontal and vertical)
+
+### Basic configuration
+
+The layout widget comes with sensible defaults but can be customized through various options:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        columns: 12,          // Total number of grid columns
+        minSpan: 2,           // Minimum columns a cell can span
+        defaultSpan: 6,       // Default span when adding new columns
+        gap: '1.5rem',        // Gap between grid items
+        mobile: {
+          breakpoint: 600     // Mobile breakpoint in pixels
+        },
+        tablet: {
+          breakpoint: 1024    // Tablet breakpoint in pixels
+        },
+        defaultCellHorizontalAlignment: null,  // Default horizontal alignment
+        defaultCellVerticalAlignment: null     // Default vertical alignment
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+### Configuration options
+
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `columns` | `Integer` | `12` | Total number of CSS grid columns in the grid template (minimum 2). This does not control how many layout-column widgets are added to the page. |
+| `minSpan` | `Integer` | `2` | Minimum number of columns a cell can span |
+| `defaultSpan` | `Integer` | `6` | Default number of columns for new cells |
+| `gap` | `String` | `'1.5rem'` | CSS gap value between grid items |
+| `mobile.breakpoint` | `Integer` | `600` | Mobile breakpoint in pixels |
+| `tablet.breakpoint` | `Integer` | `1024` | Tablet breakpoint in pixels |
+| `defaultCellHorizontalAlignment` | `String` | `null` | Default horizontal alignment (`'start'`, `'end'`, `'center'`, `'stretch'`) |
+| `defaultCellVerticalAlignment` | `String` | `null` | Default vertical alignment (`'start'`, `'end'`, `'center'`, `'stretch'`) |
+| `injectStyles` | `Boolean` | `true` | Automatically inject layout styles |
+| `minifyStyles` | `Boolean` | `true` | Minify injected CSS |
+
+> [!NOTE]
+> The `columns` option defines the CSS grid template columns for layout calculations, not the number of layout-column widgets on the page. When a layout widget is first added, two layout-column widgets are created by default. Editors can add or remove columns in-context as needed. The `minSpan` option controls the minimum number of grid columns each layout-column widget can span.
+
+### Configuring allowed widgets in columns
+
+By default, layout columns contain the core rich text, image, and video widgets. You can customize this by extending the `@apostrophecms/layout-column-widget`:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {},
+            'custom-content': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/@apostrophecms/layout-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+### Best practices for nested layouts
+
+> [!IMPORTANT]
+> **We do not recommend infinite nesting of layout widgets**. While it's technically possible to add layout widgets inside column content areas, this can lead to complex, difficult-to-maintain content structures and potential performance issues.
+
+#### Recommended approach: Extend for nested layouts with controlled depth
+
+Instead of allowing infinite nesting, the recommended pattern is to create a nested layout widget that uses custom column widgets which only allow content widgets (not additional layout widgets). This gives editors one level of nesting while preventing complexity:
+
+First, create a custom column widget that only accepts content widgets:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  options: {
+    label: 'Nested Layout Column'
+  },
+  fields: {
+      add: {
+        content: {
+          type: 'area',
+          options: {
+            widgets: {
+              '@apostrophecms/rich-text': {},
+              '@apostrophecms/image': {},
+              '@apostrophecms/video': {},
+              'custom-content': {}
+            }
+          }
+        }
+      }
+    };
+  }
+};
+```
+<template v-slot:caption>
+  modules/nested-layout-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+Then create a nested layout widget that uses these custom columns:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Nested Layout',
+    icon: 'view-grid-icon',
+    columns: 6,
+    minSpan: 1,
+    defaultSpan: 2
+  },
+  fields: {
+    add: {
+      columns: {
+        type: 'area',
+        options: {
+          widgets: {
+            'nested-layout-column': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/nested-layout-widget/index.js
+</template>
+</AposCodeBlock>
+
+Finally, add this new `nested-layout-widget` to any areas, with or without the base `@apostrophecms/layout-widget` and other content widgets.
+
+This pattern allows editors to use the main layout widget (12 columns) and place a nested layout widget (6 columns) inside it, but the nested layout's columns can only contain content widgets, preventing infinite nesting.
+
+### Creating custom column widgets
+
+You can also create custom column widgets that extend the base column widget with different content options or restrictions:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  options: {
+    label: 'Specialized Content Column'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {
+              toolbar: [ 'bold', 'italic', 'link' ]
+            }
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/specialized-content-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+Then configure your layout widget to use the custom column widget:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Custom Layout'
+  },
+  fields: {
+    add: {
+      columns: {
+        type: 'area',
+        options: {
+          widgets: {
+            'nested-column': {},
+            'specialized-content-column': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/custom-layout-widget/index.js
+</template>
+</AposCodeBlock>
+
+### Responsive behavior
+
+The layout widget automatically adjusts column layout at different screen sizes:
+
+- **Desktop**: Full control over column positioning (start, span, row position, order, alignment)
+- **Tablet** (below {tablet breakpoint}px): Columns automatically reflow to 2 per row
+- **Mobile** (below {mobile breakpoint}px): Columns automatically stack into a single column
+
+At tablet and mobile breakpoints, editors can control:
+- **Visibility**: Show or hide individual columns (default: visible)
+- **Order**: The stacking order is determined by the desktop `order` property
+
+All other positioning configured at the desktop level is overridden by the automatic responsive behavior.
+
+### Styling and customization
+
+The layout widget automatically injects its styles into the page. If you need to customize the layout styles or disable automatic injection:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        injectStyles: false  // Disable automatic style injection
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+You can then provide your own CSS for the layout grid classes in your project stylesheets.
+
+### Advanced: External front-end integration
+
+If you're using Apostrophe in headless mode or with an external front-end, the layout widget provides configuration data through the `annotateWidgetForExternalFront` method. This exports the grid configuration including columns, spans, breakpoints, gaps, and alignment settings.
 
 ## Rich text widget
 
