@@ -15,7 +15,9 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 > [!WARNING]
 > **This widget is currently in BETA**. The API and configuration options are subject to change in future releases. Use with caution in production environments.
 
-The layout widget provides a powerful grid-based layout system for creating responsive column-based designs. Editors can add the layout widget to a page and then directly add, remove, and resize columns in-context without leaving the page. This provides precise control over column positioning, spanning, and responsive behavior across different screen sizes.
+![The layout widget after first addition to the page](../images/basic-layout-selection.png)
+
+The layout widget provides a powerful CSS grid-based layout system for creating responsive column-based designs. Editors can add the layout widget to a page and then directly add, remove, and resize columns in-context without leaving the page. This provides precise control over column positioning, spanning, and responsive behavior across different screen sizes.
 
 <AposCodeBlock>
 
@@ -44,6 +46,172 @@ The layout widget creates a CSS grid container with a configurable number of gri
 - Be positioned precisely on the grid
 - Adjust its visibility at different breakpoints (desktop, tablet, mobile)
 - Apply custom alignment (horizontal and vertical)
+
+### Editor experience
+
+The layout widget provides a specialized editing interface that separates layout management from content editing. This two-mode approach gives editors precise control over their grid structure while keeping content editing straightforward.
+
+#### Editing modes
+
+When a layout widget is selected on the page, the breadcrumb area at the top displays two mode-switching buttons:
+
+- **Edit Content** (left button) - Add and edit widgets within existing columns
+- **Edit Columns** (right button) - Modify the grid structure by adding, removing, resizing, and repositioning columns
+
+Toggle between these modes depending on whether you need to work with content or adjust the layout structure.
+
+#### Edit Content mode
+
+![Layout widget with the "Edit content" button selected and widget menu open](../images/layout-content-editing.png)
+
+In Edit Content mode, the interface behaves like a standard Apostrophe area with a few key differences:
+
+- Each column displays its standard widget controls (add, edit, move, etc.)
+- You can add any configured widget type to each column's content area
+- The grid structure remains locked - you cannot resize or reposition columns
+- This mode is ideal for editors who need to work with content without accidentally modifying the layout
+
+**Common tasks in Edit Content mode:**
+- Adding rich text, images, videos, or custom widgets to columns
+- Editing existing widget content
+- Reordering widgets within a column
+- Removing widgets from columns
+
+#### Edit Columns mode
+
+![The layout widget with the "Edit columns" button selected](../images/layout-column-editing.png)
+
+Edit Columns mode unlocks the full power of the layout system, allowing you to manipulate the grid structure itself. Each column displays a set of controls and supports multiple interaction methods.
+
+##### Column controls
+
+Each column displays three icons in its upper-left corner:
+
+1. **Move handle** (drag icon) - Click and drag to reposition the column on the grid
+2. **Settings** (cog icon) - Opens the Column Settings dialog
+3. **Delete** (trash icon) - Removes the column from the layout
+
+##### Resizing columns
+
+![Resizing columns in the layout widget using the side handles](../images/layout-column-resize.png)
+
+Columns can be resized horizontally using the drag handles that appear on the left and right edges of each column on hover:
+
+1. **Hover over a column edge** - Resize handles appear at hover location
+2. **Click and hold a handle** - The underlying grid structure becomes visible, showing column tracks and gaps
+3. **Drag horizontally** - The column edge will snap to the nearest grid column line
+4. **Release** - The column resizes to span the new width
+
+**Resizing behavior:**
+- Columns respect the configured `minSpan` setting (default: 2 columns)
+- Columns cannot resize beyond the grid boundaries
+- Columns can only be resized to the edge of adjacent columns
+- The grid visualization disappears when you release the handle
+
+**Visual feedback during resize:**
+- Semi-transparent grid column indicators appear
+- Gap indicators show the spacing between grid tracks
+- The resizing column is highlighted
+- Invalid resize positions are prevented automatically
+
+##### Adding new columns
+
+![When there is enough space, a plus will apper in the layout widget to allow addition of another column](../images/layout-add-column.png)
+
+The layout widget intelligently detects when there's space available for a new column:
+
+1. **Create space** - Resize existing columns or remove columns to create available space
+2. **Watch for the plus icon** - When the available space equals or exceeds the `minSpan` setting, a plus icon (➕) appears in the available space
+3. **Click the plus icon** - A new column is added at the `defaultSpan` width
+4. **Position the column** - Use the move handle to reposition if needed
+
+**Column addition requirements:**
+- Available space must be at least `minSpan` columns wide (default: 2 columns)
+- New columns are created at `defaultSpan` width (default: 6 columns)
+- Maximum number of columns is limited by the grid's total `columns` setting
+
+##### Repositioning columns
+
+![You can drag-and-drop the layout columns by directly interacting with the column or the drag icon](../images/layout-column-drag.png)
+
+There are two methods for moving columns:
+
+**Method 1: Body drag**
+
+1. Click and hold anywhere on the column (except the move handle)
+2. Drag the column over another column until it visually shifts
+3. Release to exchange positions
+
+**Method 2: Icon drag (drag via move handle)**
+
+1. Click and hold the **move icon** in the upper-left corner
+2. Drag the column to a new position
+3. The grid visualization appears showing column tracks
+4. Release to place the column
+
+*Smart positioning behavior:*
+
+When you drag over another column, the system intelligently decides whether to **nudge** or **swap**:
+
+- **If there's enough grid space**: Adjacent columns are "nudged" over to make room for your column at the new position
+- **If there isn't enough space**: Columns swap positions instead
+
+> [!TIP]
+> The swapping will occur when there is more than 40% overlap between the columns. This means that sometimes there will be more room to nudge the existing column, but the columns will swap anyway. If you want a column to nudge more than one or two grid columns, it is better to drag them separately.
+
+This smart behavior means you don't have to worry about whether there's room - the layout automatically adapts:
+- Dragging left or right with available space → neighbors shift to accommodate
+- Dragging when grid is tight → clean position swap
+- The grid visualization helps you see available space while dragging
+
+##### Column Settings dialog
+
+![The column settings dialog contains toggles and dropdowns for visibility and content orientation](../images/layout-column-settings.png)
+
+Click the settings icon (cog) on any column to open the Column Settings dialog, which provides options for:
+
+**Responsive visibility controls**
+
+- **Show on Tablet** - Toggle to show or hide this column at tablet viewport widths (configurable, default: 1024px and below)
+- **Show on Mobile** - Toggle to show or hide this column at mobile viewport widths (configurable, default: 600px and below)
+
+*Responsive behavior notes:*
+- Columns are automatically visible at desktop widths
+- Tablet and mobile visibility are independent settings
+- Hidden columns still exist in the content but are not rendered
+- Use these settings to create responsive layouts that adapt to smaller screens
+
+**Content alignment controls**
+
+- **Horizontal Alignment (justify)** - Controls how content aligns horizontally within the column. Options: `start`, `end`, `center`, `stretch`. Default: `stretch` (or the widget's `defaultCellHorizontalAlignment` setting)
+- **Vertical Alignment (align)** - Controls how content aligns vertically within the column. Options: `start`, `end`, `center`, `stretch`. Default: `stretch` (or the widget's `defaultCellVerticalAlignment` setting)
+
+*Alignment behavior notes:*
+- These settings apply to the column's content area, not the column itself
+- `stretch` (default) makes content fill the available space
+- Alignment is applied via CSS Grid's `justify-self` and `align-self` properties
+- Changes preview in real-time as you adjust settings
+
+##### Deleting columns
+
+![The layout widget with the "Edit columns" button selected and the configuration icons displayed](../images/layout-column-editing.png)
+
+To remove a column from the layout:
+
+1. Click the trash icon in the upper-left corner of the column
+2. Confirm the deletion if prompted
+3. The column and all its content are removed
+4. Adjacent columns are left untouched
+
+> [!IMPORTANT]
+> **Deleting a column also deletes all widgets within that column**. This action can be undone using **Ctrl/Cmd + Z**.
+
+#### Keyboard shortcuts
+
+While in Edit Columns mode, several keyboard shortcuts enhance your workflow:
+
+- **Escape** - Close the Column Settings dialog
+- **Ctrl/Cmd + Z** - Undo the last column operation (resize, move, add, delete)
 
 ### Basic configuration
 
@@ -267,48 +435,6 @@ export default {
   modules/custom-layout-widget/index.js
 </template>
 </AposCodeBlock>
-
-### Responsive behavior
-
-The layout widget automatically adjusts column layout at different screen sizes:
-
-- **Desktop**: Full control over column positioning (start, span, row position, order, alignment)
-- **Tablet** (below {tablet breakpoint}px): Columns automatically reflow to 2 per row
-- **Mobile** (below {mobile breakpoint}px): Columns automatically stack into a single column
-
-At tablet and mobile breakpoints, editors can control:
-- **Visibility**: Show or hide individual columns (default: visible)
-- **Order**: The stacking order is determined by the desktop `order` property
-
-All other positioning configured at the desktop level is overridden by the automatic responsive behavior.
-
-### Styling and customization
-
-The layout widget automatically injects its styles into the page. If you need to customize the layout styles or disable automatic injection:
-
-<AposCodeBlock>
-
-``` js
-export default {
-  modules: {
-    '@apostrophecms/layout-widget': {
-      options: {
-        injectStyles: false  // Disable automatic style injection
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  app.js
-</template>
-</AposCodeBlock>
-
-You can then provide your own CSS for the layout grid classes in your project stylesheets.
-
-### Advanced: External front-end integration
-
-If you're using Apostrophe in headless mode or with an external front-end, the layout widget provides configuration data through the `annotateWidgetForExternalFront` method. This exports the grid configuration including columns, spans, breakpoints, gaps, and alignment settings.
 
 ## Rich text widget
 
