@@ -110,7 +110,7 @@ export default {
                 '@apostrophecms/layout': {}
               },
           👉🏻  columns: 2
-            }
+            },
             basic: {
               label: 'Basic',
               widgets: {
@@ -150,9 +150,7 @@ export default {
 
 </AposCodeBlock>
 
-TODO: CHANGE IMAGE!!!!!
-
-![Editing an area with the expanded widget preview open.](../images/widget-preview-menu.png)
+![Editing an area with the expanded widget preview open.](../images/new-widget-preview-menu.png)
 
  For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
