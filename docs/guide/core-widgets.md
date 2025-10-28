@@ -168,7 +168,7 @@ This smart behavior means you don't have to worry about whether there's room - t
 
 ![The column settings dialog contains toggles and dropdowns for visibility and content orientation](../images/layout-column-settings.png)
 
-Click the settings icon (cog) on any column to open the Column Settings dialog, which provides options for:
+When in Edit Columns mode, click the settings icon (cog) on any column to open the Column Settings dialog, which provides options for:
 
 **Responsive visibility controls**
 
