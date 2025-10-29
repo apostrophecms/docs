@@ -119,6 +119,10 @@ const sidebarTutorials = [
       {
         text: 'Local Extension Development',
         link: 'tutorials/local-extension-development.md'
+      },
+      {
+        text: 'Creating Command Line Tasks',
+        link: 'tutorials/creating-command-line-tasks.md'
       }
     ]
   },

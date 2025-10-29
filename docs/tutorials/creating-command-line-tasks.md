@@ -17,7 +17,6 @@ Command-line tasks are essential tools for any content management system. They a
 Common use cases for command-line tasks include:
 - **Data generation**: Creating sample content for development and testing
 - **Maintenance operations**: Cleaning up orphaned data or optimizing content
-- **Migrations**: Transforming data when your schema changes
 - **Reporting**: Generating analytics or export files
 - **Batch operations**: Bulk updates to content or user accounts
 
@@ -33,7 +32,7 @@ When a task runs, Apostrophe fully initializes (connecting to the database, load
 
 ## Creating Your First Task
 
-Let's create a practical example: a task that generates sample article content for testing purposes. This will demonstrate the key concepts you'll use in any task.
+Let's create a practical example: a task that generates sample article content for testing purposes. While ApostropheCMS already includes a basic version of this functionality for all piece types (`node app [piece-type-name]:generate --total=[integer]`), building our own version demonstrates the key concepts you'll use in any custom task.
 
 ### Step 1: Define the Task in Your Module
 
@@ -114,10 +113,30 @@ export default {
   }
 };
 ```
-  <template v-slot:caption>
+<template v-slot:caption>
     modules/article/index.js
   </template>
 </AposCodeBlock>
+
+Let's break down this task structure:
+
+**The `tasks(self)` function** returns an object where each property defines a task. In this example, we're defining a single task named `generate`. The property name becomes the task name, so this task is invoked as `article:generate` (module name + colon + task name).
+
+Each task definition is an object with two key properties:
+- **`usage`**: A string that describes the task and shows how to use it. This is displayed when someone runs `node app help article:generate`, making your task self-documenting.
+- **`task`**: The async function that actually runs when the task is invoked. It receives an `argv` parameter containing all the command-line arguments and options.
+
+You can define multiple tasks in a single module by adding more properties to the returned object:
+
+```javascript
+tasks(self) {
+  return {
+    generate: { /* ... */ },
+    export: { /* ... */ },
+    cleanup: { /* ... */ }
+  };
+}
+```
 
 ### Step 2: Run Your Task
 
@@ -163,7 +182,7 @@ tasks(self) {
         // Use this when you need to access ALL content regardless of publish state
         const req = self.apos.task.getReq();
         const articles = await self.find(req).toArray();
-        
+
         console.log(`Found ${articles.length} total articles (published and unpublished)`);
         for (const article of articles) {
           console.log(`- ${article.title} (${article.aposMode})`);
@@ -177,7 +196,7 @@ tasks(self) {
         // Use this to see content as an unauthenticated user would
         const req = self.apos.task.getAnonReq();
         const articles = await self.find(req).toArray();
-        
+
         console.log(`Found ${articles.length} published articles`);
         for (const article of articles) {
           console.log(`- ${article.title}`);
@@ -191,7 +210,7 @@ tasks(self) {
         // Useful for testing content visibility at different permission levels
         const req = self.apos.task.getEditorReq();
         const articles = await self.find(req).toArray();
-        
+
         console.log(`Editor can see ${articles.length} articles`);
       }
     }
@@ -218,17 +237,17 @@ tasks(self) {
       usage: 'Generate sample articles.\nUsage: node app article:generate [category] --total=20 --published=true',
       async task(argv) {
         const req = self.apos.task.getReq();
-        
+
         // Access positional arguments from argv._
         // argv._ is an array: [0] is the task name, [1] is first positional arg, etc.
         const category = argv._[1] || 'general';
-        
+
         // Access named options with -- syntax
         const total = parseInt(argv.total) || 10;
         const published = argv.published !== 'false'; // defaults to true
-        
+
         console.log(`Generating ${total} articles in category "${category}"...`);
-        
+
         for (let i = 1; i <= total; i++) {
           const article = {
             title: `${category} Article ${i}`,
@@ -245,7 +264,7 @@ tasks(self) {
             // Set publish state based on argument
             aposMode: published ? 'published' : 'draft'
           };
-          
+
           try {
             await self.insert(req, article);
             console.log(`✓ Created: ${article.title} (${article.aposMode})`);
@@ -253,7 +272,7 @@ tasks(self) {
             console.error(`✗ Failed to create article ${i}:`, error.message);
           }
         }
-        
+
         console.log(`\nCompleted! Generated ${total} ${published ? 'published' : 'draft'} articles.`);
       }
     }
@@ -275,17 +294,23 @@ node app article:generate technology --total=20 --published=true
 node app article:generate news --total=5 --published=false
 ```
 
-## Advanced Example: Data Export Task
+## Advanced Example: Data Export and Cleanup Tasks
 
-Let's create a more advanced task that exports article data to a CSV file:
+Let's create two more advanced tasks that demonstrate additional patterns you'll commonly need:
+
+1. **Export task**: Demonstrates file system operations, CSV generation, query builders (like `sort()`), and the pattern of using different permission levels based on flags (`--published-only`).
+
+2. **Cleanup task**: Shows how to perform destructive operations safely with database deletion, MongoDB query operators (regex), and the critical dry-run pattern for previewing changes before executing them.
+
+Together, these examples show how tasks can both export data for external use and maintain your database by removing unwanted content.
 
 <AposCodeBlock>
 
 ```javascript
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   // ... fields configuration ...
   tasks(self) {
@@ -294,19 +319,19 @@ module.exports = {
         usage: 'Export articles to CSV.\nUsage: node app article:export --output=articles.csv --published-only',
         async task(argv) {
           // Use getAnonReq if --published-only flag is set
-          const req = argv['published-only'] 
-            ? self.apos.task.getAnonReq() 
+          const req = argv['published-only']
+            ? self.apos.task.getAnonReq()
             : self.apos.task.getReq();
-          
+
           const outputPath = argv.output || 'articles.csv';
-          
+
           console.log('Fetching articles...');
           const articles = await self.find(req)
             .sort({ createdAt: -1 })
             .toArray();
-          
+
           console.log(`Found ${articles.length} articles. Creating CSV...`);
-          
+
           // Create CSV content
           const headers = ['Title', 'Subtitle', 'Slug', 'Created', 'Modified', 'Status'];
           const rows = articles.map(article => [
@@ -317,17 +342,17 @@ module.exports = {
             new Date(article.updatedAt).toISOString(),
             article.aposMode
           ]);
-          
+
           // Format as CSV
           const csvContent = [
             headers.join(','),
             ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
           ].join('\n');
-          
+
           // Write to file
           const fullPath = path.join(process.cwd(), outputPath);
           fs.writeFileSync(fullPath, csvContent);
-          
+
           console.log(`✓ Export complete! File saved to: ${fullPath}`);
         }
       },
@@ -336,14 +361,14 @@ module.exports = {
         async task(argv) {
           const req = self.apos.task.getReq();
           const dryRun = argv['dry-run'] || false;
-          
+
           console.log('Searching for sample articles...');
           const articles = await self.find(req, {
             title: { $regex: /sample/i }
           }).toArray();
-          
+
           console.log(`Found ${articles.length} sample articles.`);
-          
+
           if (dryRun) {
             console.log('\nDRY RUN - No articles will be deleted:');
             for (const article of articles) {
@@ -465,10 +490,10 @@ Sometimes you need to run a task from within your application code rather than f
 async handler(req) {
   // Invoke a task with positional arguments
   await self.apos.task.invoke('@apostrophecms/user:add', [ 'username', 'admin' ]);
-  
+
   // Invoke a task with options
   await self.apos.task.invoke('article:generate', { total: 50 });
-  
+
   // Invoke with both positional arguments and options
   await self.apos.task.invoke('article:generate', [ 'technology' ], { total: 20 });
 }
