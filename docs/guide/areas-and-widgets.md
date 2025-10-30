@@ -4,7 +4,7 @@
 
 ## Basic area configuration
 
-Like other fields, area fields are configured as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`. Every area requires a `widgets` option to configure the allowed widget types. This example includes three core widget types.
+Like other fields, area fields are configured as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`. Every area requires a `widgets` option to configure the allowed widget types. This example includes four core widget types.
 
 <AposCodeBlock>
 
@@ -20,6 +20,7 @@ export default {
         type: 'area',
         options: {
           widgets: {
+            '@apostrophecms/layout': {},
             '@apostrophecms/rich-text': {},
             '@apostrophecms/image': {},
             '@apostrophecms/video': {}
@@ -44,7 +45,7 @@ export default {
 </AposCodeBlock>
 
 
-![The landing page main area with the menu open, showing available widgets](/images/area-in-context.jpg)
+![The landing page main area with the menu open, showing available widgets](../images/new-area-in-context.png)
 
 ### Leave `-widget` out of area configuration
 
@@ -59,6 +60,7 @@ main: {
   type: 'area',
   options: {
     widgets: {
+      '@apostrophecms/layout': {},
       '@apostrophecms/rich-text': {},
       '@apostrophecms/image': {},
       '@apostrophecms/video': {}
@@ -102,6 +104,13 @@ export default {
         options: {
       👉🏻  expanded: true,
       👉🏻  groups: {
+            layout: {
+              label: 'Layout',
+              widgets: {
+                '@apostrophecms/layout': {}
+              },
+          👉🏻  columns: 2
+            },
             basic: {
               label: 'Basic',
               widgets: {
@@ -112,14 +121,14 @@ export default {
               },
           👉🏻  columns: 2
             },
-            layout: {
+            specialty: {
               label: 'Specialty',
               widgets: {
-                'two-column': {},
                 'hero': {},
+                'review': {},
                 '@apostrophecms/html': {}
               },
-              columns: 3
+          👉🏻  columns: 3
             }
           }
         }
@@ -141,7 +150,7 @@ export default {
 
 </AposCodeBlock>
 
-![Editing an area with the expanded widget preview open.](../images/widget-preview-menu.png)
+![Editing an area with the expanded widget preview open.](../images/new-widget-preview-menu.png)
 
  For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
