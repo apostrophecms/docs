@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 ## Layout widget (BETA)
 
 > [!WARNING]
-> **This widget is currently in BETA**. The API and configuration options are subject to change in future releases. Use with caution in production environments.
+> **This widget is currently in BETA**. Bugs and rough edges may still be found. The API and configuration options are subject to change in future releases, but a migration path will be provided if this occcurs. Use with caution in production environments.
 
 ![The layout widget after first addition to the page](../images/basic-layout-selection.png)
 
