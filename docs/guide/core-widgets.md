@@ -13,7 +13,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 ## Layout widget (BETA)
 
 > [!WARNING]
-> **This widget is currently in BETA**. The API and configuration options are subject to change in future releases. Use with caution in production environments.
+> **This widget is currently in BETA**. Bugs and rough edges may still be found. The API and configuration options are subject to change in future releases, but a migration path will be provided if this occcurs. Use with caution in production environments.
 
 ![The layout widget after first addition to the page](../images/basic-layout-selection.png)
 
@@ -435,6 +435,74 @@ export default {
   modules/custom-layout-widget/index.js
 </template>
 </AposCodeBlock>
+
+### Troubleshooting: content stretches, overlaps, or vanishes inside Layout
+
+If a widget or custom component behaves strangely **only after** you place it in a Layout column (stretches to full height, overlaps content below, or disappears at some breakpoints), the cause is almost always legacy CSS inside that component, not the grid itself. CSS Grid’s default for items is `justify-self: stretch` and `align-self: stretch`. That’s normal—and usually harmless—unless a child has old percentage-height or positioning tricks.
+
+#### Fast diagnosis
+
+1. **Toggle alignment for just that cell**
+   In **Edit Columns → Column Settings**, set **Horizontal** and **Vertical** alignment to **start**. If the bug vanishes, your child had rules that don’t tolerate stretching. (You can keep “start” for this one column or fix the child CSS.)
+
+2. **Remove legacy percentage heights**
+   In DevTools, look for `height: 100%`, or `min-height` with percentages on the component or its immediate wrappers. Delete them temporarily. If the bug disappears, replace those with modern equivalents (see below).
+
+3. **Check positioning & overflow**
+   Look for `position: absolute` without a positioned ancestor, `overflow: visible` paired with large negative margins, or `width: 100vw`. Any of these can jump outside a column and overlap neighbors.
+
+### Common legacy patterns → modern fixes
+
+| Legacy pattern                                            | Why it breaks in grid                                                                                                | Safer modern replacement                                                                                                                                               |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `height: XX%` on cards, iframes, wrappers | Percent heights need a *definite* parent height; grid columns are auto-height by default → weird stretching/overflow | Remove it. Prefer `height: auto`. If you need aspect locking, use `aspect-ratio` (e.g. `aspect-ratio: 16/9`) or intrinsic sizing with `max-width: 100%; height: auto;` |
+| “Equal height” hacks (from pre-grid times)                | Conflicts with grid’s track sizing & `stretch`                                                                       | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%`                                     |
+| `position: absolute` children                             | Without `position: relative` on the column content wrapper, they escape and overlap                                  | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }`                                                           |
+| Full-viewport widths (`width: 100vw`)                     | Ignores grid gutters and column width → overflow                                                                     | Use `width: 100%` within columns; the grid defines the width                                                                                                           |
+| Sticky headers in a column                                | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness                                | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor                                                                          |
+| Big negative margins                                      | Can visually overrun grid gaps/rows                                                                                  | Prefer padding on the parent, or use smaller translations with `transform`                                                                                             |
+
+#### Quick CSS safety net (scoped)
+
+If lots of legacy components are in play, add a minimal reset **scoped to your project’s card/components**, not to Apostrophe’s core classes:
+
+```css
+/* Example: scope to your design system cards */
+.card, .tile, .widget-root {
+  height: auto;
+  min-height: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.card img, .card video, .card iframe {
+  max-width: 100%;
+  height: auto;
+}
+```
+
+> Tip: If just one column needs “non-stretch” behavior by default, open the column’s **Settings** and set **Horizontal/Vertical** alignment to **start** for that column only.
+
+#### Project-level mitigation (defaults)
+
+If you know many legacy widgets won’t like stretching, set Layout’s defaults to “start” alignment project-wide:
+
+```js
+// app.js (or your module config)
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        // existing options…
+        defaultCellHorizontalAlignment: 'start',
+        defaultCellVerticalAlignment: 'start'
+      }
+    }
+  }
+};
+```
+
+This flips the default from `stretch` to `start`, while editors can still choose `stretch` per column when appropriate.
 
 ## Rich text widget
 
