@@ -438,7 +438,7 @@ export default {
 
 ### Troubleshooting: content stretches, overlaps, or vanishes inside Layout
 
-If a widget or custom component behaves strangely **only after** you place it in a Layout column (stretches to full height, overlaps content below, or disappears at some breakpoints), the cause is almost always legacy CSS inside that component, not the grid itself. CSS Grid’s default for items is `justify-self: stretch` and `align-self: stretch`. That’s normal—and usually harmless—unless a child has old percentage-height or positioning tricks.
+If a widget or custom component behaves strangely **only after** you place it in a Layout column (stretches to full height, overlaps content below, or disappears at some breakpoints), the cause is almost always legacy CSS inside that component, not the grid itself. CSS Grid’s default for items is `justify-self: stretch` and `align-self: stretch`. That’s normal — and usually harmless — unless a child has old percentage-height or positioning tricks.
 
 #### Fast diagnosis
 
