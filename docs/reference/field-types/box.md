@@ -37,8 +37,6 @@ The value of a box field is always an object with `top`, `right`, `bottom`, `lef
 
 ### Optional
 
-<!-- |`def` | Object | `{ top: null, right: null, bottom: null, left: null }` | The default value. Must be an object with keys `top`, `right`, `bottom`, `left`. Each value must be a number | -->
-
 |  Property | Type   | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`help` | String | n/a | Help text for the content editor |
