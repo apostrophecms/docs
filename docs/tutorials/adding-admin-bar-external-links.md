@@ -147,4 +147,4 @@ For more complex integrations with external services, consider exploring deeper 
 
 **Related Resources:**
 - [ApostropheCMS 4.x Admin-bar Module Documentation](/reference/modules/admin-bar.md)
-- [Integrating a Third-Party Support Desk](/tutorials/adding-a-support-desk-button.html)
+- [Integrating a Third-Party Support Desk](/tutorials/adding-a-support-desk-button.md)

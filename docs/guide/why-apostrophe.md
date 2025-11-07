@@ -60,7 +60,7 @@ This is why Apostrophe has built-in features to scale images to a set of suitabl
 
 ## **Scalability**
 
-Not all CMSes are designed to scale up smoothly for the largest audiences. While Apostrophe starts out configured for simple development and production environments, Apostrophe's [uploadfs](https://github.com/apostrophecms/uploadfs#readme) module already includes support for storing media with Amazon Web Services, Azure, or Google Cloud Storage. With the addition of a [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/) cloud database, Apostrophe becomes "stateless," allowing you to load-balance as many instances as you need for a high-traffic site.
+Not all CMSes are designed to scale up smoothly for the largest audiences. While Apostrophe starts out configured for simple development and production environments, Apostrophe's [uploadfs](https://github.com/apostrophecms/uploadfs?tab=readme-ov-file#readme) module already includes support for storing media with Amazon Web Services, Azure, or Google Cloud Storage. With the addition of a [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/) cloud database, Apostrophe becomes "stateless," allowing you to load-balance as many instances as you need for a high-traffic site.
 
 ## **Better for your content creators**
 

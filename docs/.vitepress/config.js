@@ -75,7 +75,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: '/images/favicon/favicon-32.png'
+        href: '/docs/images/favicon/favicon-32.png'
       }
     ],
     [
@@ -84,7 +84,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '128x128',
-        href: '/images/favicon/favicon-128.png'
+        href: '/docs/images/favicon/favicon-128.png'
       }
     ],
     [
@@ -93,7 +93,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        href: '/images/favicon/favicon-192.png'
+        href: '/docs/images/favicon/favicon-192.png'
       }
     ],
     [
@@ -102,7 +102,7 @@ export default defineConfig({
         rel: 'shortcut icon',
         type: 'image/png',
         sizes: '196x196',
-        href: '/images/favicon/favicon-196.png'
+        href: '/docs/images/favicon/favicon-196.png'
       }
     ],
     [
@@ -111,7 +111,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '152x152',
-        href: '/images/favicon/favicon-152.png'
+        href: '/docs/images/favicon/favicon-152.png'
       }
     ],
     [
@@ -120,7 +120,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '167x167',
-        href: '/images/favicon/favicon-167.png'
+        href: '/docs/images/favicon/favicon-167.png'
       }
     ],
     [
@@ -129,7 +129,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '180x180',
-        href: '/images/favicon/favicon-180.png'
+        href: '/docs/images/favicon/favicon-180.png'
       }
     ]
   ],
@@ -148,7 +148,7 @@ export default defineConfig({
     const { pageData } = context;
 
     const relativePath = pageData.relativePath;
-    const absolutePath = `https://apostrophecms.com/${relativePath.replace('.md', '.html')}`;
+    const absolutePath = `https://apostrophecms.com/docs/${relativePath.replace('.md', '.html')}`;
 
     const head = [
       [
@@ -232,7 +232,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://apostrophecms.com/docs/images/og-docs-image.png'
+          content: '/docs/images/og-docs-image.png'
         }
       ],
       [
@@ -288,7 +288,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://apostrophecms.com/docs/images/og-docs-image.png'
+          content: '/docs/images/og-docs-image.png'
         }
       ],
       [

@@ -754,7 +754,7 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 
 | Function name | Description |
 | ------- | ------- |
-| [`methods`](#methods-self) | Add new methods and override base class methods |
+| [`methods`](#methods) | Add new methods and override base class methods |
 | [`extendMethods`](#extendmethods-self) | Extend the functionality of base class methods |
 | [`components`](#components-self) | Configure asynchronous template components |
 | [`extendComponents`](#extendcomponents-self) | Extend base class template components |
@@ -880,7 +880,7 @@ modules/product/index.js
 #### `extendMethods(self)`
 
 <!-- TODO: Link to module reference section to find existing methods. -->
-Add to the functionality of a method inherited from the base class. This must return an object of functions, similar to [`methods`](#methods-self).
+Add to the functionality of a method inherited from the base class. This must return an object of functions, similar to [`methods`](#methods).
 
 Methods included should take a `_super` argument, followed by the normal arguments of the method being extended. If the original method took only a `req` argument, the extending method should take the arguments `_super, req`.
 

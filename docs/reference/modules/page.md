@@ -348,7 +348,7 @@ Because this module has an alias, you can call these from another module using t
 
 ### `async find(req, criteria, builders)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-database-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
@@ -450,7 +450,7 @@ Returns the effective base URL for the given request (`req`). If a hostname is c
 
 ### `inferIdLocaleAndMode(req, _id)`
 
-This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id).
+This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md#inferidlocaleandmode-req-id).
 
 ## Template helpers
 

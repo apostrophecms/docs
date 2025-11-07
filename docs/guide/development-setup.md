@@ -29,7 +29,7 @@ Let's get started with what you will need to have installed on your machine to r
 
 ### 1. Node.js 18+/ npm<br>
 
-Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. You can download and install these at https://nodejs.org. However, we (and indeed Microsoft) highly encourage the use of NVM to allow you to switch easily between Node and npm versions. You can find the installation instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
+Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. You can download and install these at https://nodejs.org. However, we (and indeed Microsoft) highly encourage the use of NVM to allow you to switch easily between Node and npm versions. You can find the installation instructions [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating).
 
 ⚠️ NVM is only available for Linux / Mac OS / Windows WSL.
 
@@ -176,7 +176,7 @@ node app @apostrophecms/user:add my-user admin
 
 ### Finishing touches
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+You should also update the [session secret for Express.js](https://github.com/expressjs/session?tab=readme-ov-file#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
 <AposCodeBlock>
 

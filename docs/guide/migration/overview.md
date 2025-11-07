@@ -55,4 +55,4 @@ A4 uses the [tiptap](https://tiptap.dev/) rich text editor, a modern, open-sourc
 - In addition to the classic template macros, there are now [fragments](/guide/fragments.md). These are compatible with the new async components, unlike macros.
 - [Content localization](../localization/dynamic.md), which was a feature of Apostrophe Workflow for A2, is now fully available in A4 core.
 
-There are additional features planned for Apostrophe 4. Keep an eye on the [product roadmap](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/2-planned) for more on those.
+There are additional features planned for Apostrophe 4. Keep an eye on the [product roadmap](https://roadmap.apostrophecms.com/roadmap) for more on those.

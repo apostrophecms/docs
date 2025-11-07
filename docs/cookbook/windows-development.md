@@ -7,7 +7,7 @@ next:
 
 ## Installing Windows Subsystem for Linux
 
-As Microsoft says, ["When working with JavaScript-based frameworks in a professional capacity, we recommend WSL..."](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/windows-or-wsl#install-on-windows-subsystem-for-linux) So we'll start by installing WSL (Windows Subsystem for Linux). WSL allows us to run many Linux applications without change on any up-to-date Windows 10 or Windows 11 system. Crucially, we can follow most Linux- and Mac-oriented ApostropheCMS documentation without change. There are just a few things to note, which we'll cover here.
+In the end, Node.js is almost always deployed to Linux in production — even when hosting with Microsoft Azure. We need a development environment that closely matches that, and Microsoft provides a great one. So we'll start by installing WSL (Windows Subsystem for Linux). WSL allows us to run many Linux applications without change on any up-to-date Windows 10 or Windows 11 system. Crucially, we can follow most Linux- and Mac-oriented ApostropheCMS documentation without change. There are just a few things to note, which we'll cover here.
 
 ::: warning
 We recommend that you use WSL2. If you have WSL1, here are [Microsoft's upgrade instructions.](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) As described in that article, you may need to take care of several steps including a kernel update and enabling virtualization in your BIOS. The correct steps to enable virtualization depend on your machine.
@@ -23,7 +23,7 @@ Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt
 From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
 :::
 
-Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little utility that lets us run any version of Node.js we want without fussing with operating system packages. The correct command for installation changes over time, so [follow the official nvm installation guide](https://github.com/nvm-sh/nvm#installing-and-updating). **Do not** follow nvm installation guides meant for the Windows command prompt. We want the plain vanilla instructions.
+Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little utility that lets us run any version of Node.js we want without fussing with operating system packages. The correct command for installation changes over time, so [follow the official nvm installation guide](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating). **Do not** follow nvm installation guides meant for the Windows command prompt. We want the plain vanilla instructions.
 
 ::: warning
 You will need to exit the Ubuntu 22.04 window and open a new one after you complete the `nvm` installation step above. Otherwise, the `nvm install` command in the next step will cause a Command Not Found error.
