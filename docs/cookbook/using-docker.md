@@ -11,7 +11,7 @@ Docker can be installed on Mac, Windows, and Linux machines with either a CLI in
 
 ### Apostrophe project setup
 
-For this tutorial, we will be using the [a3-demo](https://github.com/apostrophecms/a3-demo) template. However, you can also use an existing project or create a new one by following our getting started [tutorial](https://docs.apostrophecms.org/guide/setting-up.html). If using the a3-demo, follow the link and click on the "Use this template" button to fork the template into your own repo. Next, clone the repo to your local machine and open it in your favorite code editor.
+For this tutorial, we will be using the [a3-demo](https://github.com/apostrophecms/a3-demo) template. However, you can also use an existing project or create a new one by following our getting started [tutorial](/guide/setting-up.md). If using the a3-demo, follow the link and click on the "Use this template" button to fork the template into your own repo. Next, clone the repo to your local machine and open it in your favorite code editor.
 
 ### Creating the dockerfile
 
@@ -234,7 +234,7 @@ While in this example, our project is still being hosted locally, any of these c
 Right now, our Dockerized container is limited to a single server. For simple, low-traffic sites this could be fine. However, if we want to scale our site over several servers and add a load balancer like Nginix, we need to add support for cloud storage and a cloud database. Fortunately, Apostrophe makes this relatively easy.
 
 ## Using AWS S3 services
-If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](https://docs.apostrophecms.org/reference/modules/uploadfs.html#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
+If you aren't hosting your project on a single server, you will need to have a different uploaded asset storage method. Typically this is a service like Amazon Web Services S3 or another similar service. Apostrophe is set up to easily use S3 services by adding environment variables. You can read more in the [documentation](/reference/modules/uploadfs.md#s3-storage-options). We can take advantage of this in Docker by expanding our `docker-compose.yml` and `.env` files.
 
 ### Changing the `docker-compose.yaml` file
 In order to pass the environment variables into our project container we just need to add them inside the `environment:` key. If we are using S3 services at Amazon, we need to add four variables: `APOS_S3_REGION`, `APOS_S3_BUCKET`, `APOS_S3_KEY`, and `APOS_S3_SECRET`. For other S3-type storage solutions, such as [filebase](https://filebase.com/), you will also want to set the `APOS_S3_ENDPOINT` variable. For AWS, your `environment:` section should now look like this:

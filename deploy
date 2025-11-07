@@ -28,7 +28,7 @@ fi
   git pull &&
   git checkout $BRANCH
 ) &&
-rsync -a ./docs/.vitepress/dist/ ~/apostrophecms/apostrophecms-website/public/docs &&
+rsync -a --delete ./docs/.vitepress/dist/ ~/apostrophecms/apostrophecms-website/public/docs &&
 (
   cd ~/apostrophecms/apostrophecms-website &&
   git add -A . &&
