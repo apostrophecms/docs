@@ -6,7 +6,7 @@ extends: '@apostrophecms/doc-type'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module adds two specialized views to those exposed by the `page-type` module, which `piece-page-type` extends. The [index page](/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](https://docs.apostrophecms.org/reference/glossary.md#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
+This module adds two specialized views to those exposed by the `page-type` module, which `piece-page-type` extends. The [index page](/reference/glossary.html#index-page) displays all pieces of a particular `piece-type` in a paginated, filterable manner. The [show page](/reference/glossary.md#show-page) is for presenting individual pieces. These features are added to those exposed by the [`@apostrophecms/page`](/reference/modules/page.md) module.
 
 Once an editor adds a page of this type to the site via the user interface, it becomes possible to view a listing of pieces by visiting that page's URL. Individual pieces of the relevant type can be viewed by adding the piece slug to the page's URL, like this: `/slug-of-index-page/slug-of-piece`.
 
@@ -46,7 +46,7 @@ Most schema fields of a piece can also be used to filter content using query par
 | [`previous`](#previous) | Boolean \|\| Object | If set to `true`, `data.previous` is the previous piece based on the sort. |
 
 ### `next`
-If this option is set to true, it exposes the next piece in the current [sort order](/reference/module-api/module-options.html#sort) as `req.data.next` (`data.next` in the template) when serving a [show page](https://docs.apostrophecms.org/reference/glossary.md#general-terms). This can be used to provide a link to the next item in a series (e.g., the next oldest blog post).
+If this option is set to true, it exposes the next piece in the current [sort order](/reference/module-api/module-options.md#sort) as `req.data.next` (`data.next` in the template) when serving a [show page](/reference/glossary.md#general-terms). This can be used to provide a link to the next item in a series (e.g., the next oldest blog post).
 
 This option can also be set to an object whose keys are [query builders](/reference/query-builders.md#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
 
@@ -289,7 +289,7 @@ modules/fiction-page/index.js
 </AposCodeBlock>
 
 ### `previous`
-If this option is set to true, it exposes the previous piece in the current [sort order](/reference/module-api/module-options.html#localized) as `req.data.previous` (`data.previous` in the template) when serving a [show page](https://docs.apostrophecms.org/reference/glossary.md#general-terms). This can be used to provide a link to the previous item in a series (e.g., the next newest blog post).
+If this option is set to true, it exposes the previous piece in the current [sort order](/reference/module-api/module-options.html#localized) as `req.data.previous` (`data.previous` in the template) when serving a [show page](/reference/glossary.md#general-terms). This can be used to provide a link to the previous item in a series (e.g., the next newest blog post).
 
 This option can also be set to an object whose keys are [query builders](/reference/query-builders.md#query-builders), such as `project`, and whose values are the parameters passed to each query builder.
 
