@@ -24,8 +24,33 @@ padding: {
 The UI of the box field allows you to edit all values uniformly or each individually.
 ![Screenshot of the Apostrophe box field UI](/images/apostrophe-box-field-ui.png)
 
-## Value
-The value of a box field is always an object with `top`, `right`, `bottom`, `left` properties. All property values are stored as numbers, any omitted values are made  `null`.
+## Use in templates
+The value of a box field is always an object with `top`, `right`, `bottom`, `left` properties. All property values are stored as numbers, any omitted values are made  `null`. You can pull out each value in your template like
+
+```nunjucks
+<button
+  {% if data.piece.margin.left %}
+    style="margin-left: {{ data.piece.margin.left }}px;"
+  {% endif %}
+>
+  I might have a left margin
+</button>
+```
+
+### `toCss` helper function
+There is also a helper function that will return a string of CSS rules.
+
+|  Parameter | Type   | Default | Description |
+|-----------|-----------|-----------|-----------|
+|`value` | Object | n/a | The box field value |
+|`property` | String | n/a | The CSS property to assign values |
+|`unit` | String | 'px' | The CSS unit |
+
+```nunjucks
+<button style="{{ apos.boxField.toCss( data.piece.margin, 'margin', 'em') }}">
+  I might have margins
+</button>
+```
 
 ## Settings
 
