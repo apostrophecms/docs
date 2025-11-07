@@ -328,7 +328,7 @@ docker compose up
 Great, so we have a working Apostrophe Docker image. How do we get it on the web? There are many options. Here are a few.
 
 * [Automated builds from GitHub](https://docs.docker.com/docker-hub/github/)
-* Install [Dokku](http://dokku.viewdocs.io/dokku/) on the server then use [Dockerfile deployment](http://dokku.viewdocs.io/dokku/deployment/methods/dockerfiles/)
+* Install [Dokku](https://dokku.com/docs/getting-started/installation/) on the server then use [Dockerfile deployment](https://dokku.com/docs/getting-started/install/docker/)
 * Use `docker save` and `docker load` to [deploy without a private registry](https://realguess.net/2015/02/04/docker-save-load-and-deploy/)
 * Build the image directly on the server
 * Many more (use a web search!)

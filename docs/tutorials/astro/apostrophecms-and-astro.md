@@ -63,7 +63,7 @@ The tutorials in this section will guide you through building modern websites us
 
 If you get stuck:
 - Join our [Discord community](http://chat.apostrophecms.org)
-- Check the [ApostropheCMS documentation](https://apostrophecms/docs)
+- Check the [ApostropheCMS documentation](https://apostrophecms.com/docs)
 - Review the [Astro documentation](https://docs.astro.build)
 - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
 

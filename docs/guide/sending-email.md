@@ -2,7 +2,7 @@
 
 Any module in Apostrophe can send email by calling its own [`self.email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
 
-Due to the difficulty of ensuring that emails are delivered reliably, we recommend that you utilize a delivery provider. However, if your server is set up with both [DKIM](https://www.dkim.org/) and [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) ([DMARC](https://en.wikipedia.org/wiki/DMARC)) configured correctly, you can easily use the `sendmail` server app.
+Due to the difficulty of ensuring that emails are delivered reliably, we recommend that you utilize a delivery provider. However, if your server is set up with both [DKIM](https://dkim.org/) and [SPF](https://en.wikipedia.org/wiki/Sender_Policy_Framework) ([DMARC](https://en.wikipedia.org/wiki/DMARC)) configured correctly, you can easily use the `sendmail` server app.
 
 ## Configuring to use `sendmail`
 

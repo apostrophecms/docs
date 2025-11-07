@@ -17,6 +17,16 @@ const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
 const DEBUG_TRACKING = process.env.DEBUG_TRACKING || 'false';
 const ENV = process.env.ENV || 'production';
 
+// package.json sets ENV to one of these, otherwise we're doing local testing and
+// a domain + port in the URL will just be a pain in the butt -Tom
+const hostnames = {
+  staging: 'https://staging.apostrophecms.com',
+  production: 'https://apostrophecms.com',
+  dev: ''
+};
+
+const hostname = hostnames[process.env.ENV || 'dev' ];
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for ApostropheCMS',
@@ -134,7 +144,7 @@ export default defineConfig({
     ]
   ],
   sitemap: {
-    hostname: 'https://apostrophecms.com/',
+    hostname,
     transformItems: (items) => {
       items.forEach(page => {
         page.changefreq = 'monthly';
@@ -148,7 +158,7 @@ export default defineConfig({
     const { pageData } = context;
 
     const relativePath = pageData.relativePath;
-    const absolutePath = `https://apostrophecms.com/docs/${relativePath.replace('.md', '.html')}`;
+    const absolutePath = `${hostname}/docs/${relativePath.replace('.md', '.html')}`;
 
     const head = [
       [
@@ -400,7 +410,7 @@ export default defineConfig({
       };
 
       if (pageData.frontmatter.featured_image) {
-        structuredData.image = `https://apostrophecms.com${pageData.frontmatter.featured_image}`;
+        structuredData.image = `${hostname}${pageData.frontmatter.featured_image}`;
       }
 
       head.push(['script', { type: 'application/ld+json' }, JSON.stringify(structuredData)]);
