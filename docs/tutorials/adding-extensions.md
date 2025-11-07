@@ -507,7 +507,7 @@ finalize() {
   }
 },
 ```
-The `finalize()` method runs at the end of query building prior to processing by the database. There are also `prefinalize()` and `after()` methods that run prior to the `finalize()` method and after database submission, respectively. You can read more about them in the [documentation](https://docs.apostrophecms.org/reference/module-api/module-overview.html#builders). 
+The `finalize()` method runs at the end of query building prior to processing by the database. There are also `prefinalize()` and `after()` methods that run prior to the `finalize()` method and after database submission, respectively. You can read more about them in the [documentation](/reference/module-api/module-overview.md#builders). 
 
 The first thing this method does is retrieve the value of the `future` key from the query object. The first conditional then tests if the user is able to edit draft versions of pieces. If not, then the value of `future` is set to false, allowing the user to only see blog pieces that have already been published.
 
@@ -609,7 +609,7 @@ async choices() {
 }
 ```
 
-The `choices()` method populates the user choices by performing a database query and then creating an array from the database results. The value of the `allDates` variable is set by modifying the query with the [`toDistinct()`](https://docs.apostrophecms.org/guide/database-queries.html#finishing-with-query-methods) query method. This query method returns an array with all the `publishedAt` values across all the blog pieces, with each value only appearing once. It then takes each full date, extracts just the year, and pushes that value to the `years` array, finally sorting the array before returning it. Additionally, in order to allow the user to remove the year filter and have blog articles from any year appear, the `years` array is defined with a first item that passes `null` as a value to the `finalize()` method.
+The `choices()` method populates the user choices by performing a database query and then creating an array from the database results. The value of the `allDates` variable is set by modifying the query with the [`toDistinct()`](/guide/database-queries.md#finishing-with-query-methods) query method. This query method returns an array with all the `publishedAt` values across all the blog pieces, with each value only appearing once. It then takes each full date, extracts just the year, and pushes that value to the `years` array, finally sorting the array before returning it. Additionally, in order to allow the user to remove the year filter and have blog articles from any year appear, the `years` array is defined with a first item that passes `null` as a value to the `finalize()` method.
 
 ``` javascript
 launder(value) {
@@ -712,7 +712,7 @@ In the `filters.html` file we will just look at the year filter markup since the
 {%- endmacro -%}
 ```
 
-In Nunjucks, macros act like methods, taking multiple arguments and returning some value. In this case, the macro takes the current page URL as the first argument, and an object containing the date (either year, month, or day) as the second. It uses these values to create a new URL by piping the current URL into the build filter. The [build filter](https://docs.apostrophecms.org/guide/template-filters.html#build-url-path-data) then appends the data from the passed object to the URL as query parameters. This then gets passed back to the hyperlink.
+In Nunjucks, macros act like methods, taking multiple arguments and returning some value. In this case, the macro takes the current page URL as the first argument, and an object containing the date (either year, month, or day) as the second. It uses these values to create a new URL by piping the current URL into the build filter. The [build filter](/guide/template-filters.md#build-url-path-data) then appends the data from the passed object to the URL as query parameters. This then gets passed back to the hyperlink.
 
 When the user then clicks on the link, the browser navigates to essentially the same page, but with the query parameter added. Apostrophe intercepts this query parameter, and it is passed to the `finalize()` method of our filters to populate the `data.pieces` object with only the documents that match the filter value. The loop in the `index.html` filter steps through each of the returned pieces to output the final markup on the page.
 

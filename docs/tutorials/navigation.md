@@ -329,7 +329,7 @@ Here we have commented out the `pagetreeNavigation` fragment, but you can of cou
 
 Breadcrumb navigation shows visitors the series of pages from the page they are on back to the home page or other major landing page. To add breadcrumbs to our pages we will use a similar technique as we used for automatically constructing our navigation from the page tree. In that case, we were using `data.home._children`. In this case, we will use a different object, `data.page._ancestors`. This provides an array of page objects, starting with the home page, continuing through the page tree and ending with the parent of the current page.
 
-The only caveat is if a visitor is on the [show page](https://docs.apostrophecms.org/guide/piece-pages.html#the-show-page-template) for a piece. In that case, the `data.page` object points at the index page for the piece, not the show page that the user is currently viewing. In this case, even though the individual review pieces don't have a page in the page tree, we can place them as children of the index page with a link. We can test if we are on a show page by checking if `data.piece` exists and change our markup output accordingly.
+The only caveat is if a visitor is on the [show page](/guide/piece-pages.md#the-show-page-template) for a piece. In that case, the `data.page` object points at the index page for the piece, not the show page that the user is currently viewing. In this case, even though the individual review pieces don't have a page in the page tree, we can place them as children of the index page with a link. We can test if we are on a show page by checking if `data.piece` exists and change our markup output accordingly.
 
 <AposCodeBlock>
 

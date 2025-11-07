@@ -93,7 +93,7 @@ Within the `options` argument object, passed after the `message` string, you can
 
 The value of the `type` property dictates the styling of the notification. In the example above the `success` type was used, but this property also accepts other values: `danger` for irrevocable actions like deleting a file, `error` for serious issues that need immediate attention, `warning` for situations that might require caution or are potentially problematic, and `info` for general notifications. If no type is specified, the default is set to `info`.
 
-The optional `icon` property takes the name of an already [registered icon](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons). This icon is displayed in the notification to the left of the message.
+The optional `icon` property takes the name of an already [registered icon](/reference/module-api/module-overview.md#icons). This icon is displayed in the notification to the left of the message.
 
 The `dismiss` property takes either a boolean or integer representing the time in seconds. By default, notifications need to be dismissed manually by the user. If this property is set to `true`, the notification will automatically disappear after 5 seconds. If passed an integer, the notification will disappear after that specified number of seconds.
 
@@ -101,7 +101,7 @@ The `classes` option can take an optional array of additional class names that s
 
 The `return` option takes a boolean and defaults to `false`. If set to true, invoking a notification returns an object containing the `noteId` property. The value of this property can be used to retrieve details about the notification from the `aposNotifications` collection of the database.
 
-The optional `buttons` property allows for the display of one or more buttons within the notification. It takes an array of objects with each having at least `label`, `name`, and `type` properties. Currently, the `type` property only takes `event` as a value. The `label` property takes an i18n string that will be displayed to the user. The `name` property takes the name of an event that will be emitted when the button is clicked. Modules can listen for this on the client-side using [`apos.bus.$on(<name-value>, callback);`](https://docs.apostrophecms.org/tutorials/admin-ui.html#adding-button-functionality). An optional `data` property can be used to pass an object to the module receiving the bus event. Clicking on a button will cause the notification to close.
+The optional `buttons` property allows for the display of one or more buttons within the notification. It takes an array of objects with each having at least `label`, `name`, and `type` properties. Currently, the `type` property only takes `event` as a value. The `label` property takes an i18n string that will be displayed to the user. The `name` property takes the name of an event that will be emitted when the button is clicked. Modules can listen for this on the client-side using [`apos.bus.$on(<name-value>, callback);`](/tutorials/admin-ui.md#adding-button-functionality). An optional `data` property can be used to pass an object to the module receiving the bus event. Clicking on a button will cause the notification to close.
 
 ### Example
 

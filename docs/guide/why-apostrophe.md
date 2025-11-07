@@ -50,7 +50,7 @@ Similarly, Apostrophe offers a widget-type "base class module" that can be exten
 
 ## **Flexible schemas**
 
-Apostrophe's [schemas](https://docs.apostrophecms.org/guide/content-schema.html) provide a way to define the fields that make up your content types in a single place. Schema field types include the usual choices, like strings, integers, floats, and booleans, but also array fields which can have their own schemas, and relationships that connect documents. This lets you take advantage of MongoDB's support for building nested documents.
+Apostrophe's [schemas](/guide/content-schema.md) provide a way to define the fields that make up your content types in a single place. Schema field types include the usual choices, like strings, integers, floats, and booleans, but also array fields which can have their own schemas, and relationships that connect documents. This lets you take advantage of MongoDB's support for building nested documents.
 
 ## **Smart media handling**
 
