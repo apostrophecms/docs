@@ -134,7 +134,7 @@ export default defineConfig({
     ]
   ],
   sitemap: {
-    hostname: 'https://docs.apostrophecms.org/',
+    hostname: 'https://apostrophecms.com/',
     transformItems: (items) => {
       items.forEach(page => {
         page.changefreq = 'monthly';
@@ -148,7 +148,7 @@ export default defineConfig({
     const { pageData } = context;
 
     const relativePath = pageData.relativePath;
-    const absolutePath = `https://docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
+    const absolutePath = `https://apostrophecms.com/${relativePath.replace('.md', '.html')}`;
 
     const head = [
       [
@@ -232,7 +232,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://docs.apostrophecms.org/images/og-docs-image.png'
+          content: 'https://apostrophecms.com/docs/images/og-docs-image.png'
         }
       ],
       [
@@ -260,7 +260,7 @@ export default defineConfig({
         'meta',
         {
           name: 'twitter:domain',
-          content: 'docs.apostrophecms.org'
+          content: 'apostrophecms.com'
         }
       ],
       [
@@ -288,7 +288,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://docs.apostrophecms.org/images/og-docs-image.png'
+          content: 'https://apostrophecms.com/docs/images/og-docs-image.png'
         }
       ],
       [
@@ -400,7 +400,7 @@ export default defineConfig({
       };
 
       if (pageData.frontmatter.featured_image) {
-        structuredData.image = `https://docs.apostrophecms.org${pageData.frontmatter.featured_image}`;
+        structuredData.image = `https://apostrophecms.com${pageData.frontmatter.featured_image}`;
       }
 
       head.push(['script', { type: 'application/ld+json' }, JSON.stringify(structuredData)]);

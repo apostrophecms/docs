@@ -114,7 +114,7 @@ export default () => {
   function openExternalURL() {
     // Create an accessible link element with appropriate attributes
     const link = document.createElement('a');
-    link.href = 'https://docs.apostrophecms.org';
+    link.href = 'https://apostrophecms.com';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.setAttribute('aria-label', 'Opening documentation in a new tab');

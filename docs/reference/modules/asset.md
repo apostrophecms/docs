@@ -188,7 +188,7 @@ module.exports = {
       debug: false,
       // Screens with icons
       // For adding icons, please refer to the icons documentation
-      // https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons
+      // https://apostrophecms.com/docs/module-api/module-overview.html#icons
       screens: {
         desktop: {
           label: 'apostrophe:breakpointPreviewDesktop',

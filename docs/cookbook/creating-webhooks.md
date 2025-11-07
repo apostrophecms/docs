@@ -15,7 +15,7 @@ handlers(self) {
       async sendWebhook(req, data) {
         // data sent by the afterPublish event includes the document data 
         // and whether it is being published for the first time
-        // https://docs.apostrophecms.org/reference/server-events.html#afterpublish
+        // https://apostrophecms.com/docs/reference/server-events.html#afterpublish
         if (!data.firstTime) {
           return;
         }

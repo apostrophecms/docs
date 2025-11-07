@@ -27,7 +27,7 @@ Widgets are the fundamental building blocks of content in ApostropheCMS. They al
 This tutorial is available in both text and video formats. The videos cover the key highlights, while this page provides additional details and references. Watch the videos for a guided introduction, then read on for deeper insights!
 :::
 
-This tutorial provides only a brief introduction to widget development in ApostropheCMS, but there's much more to explore. For comprehensive documentation on Apostrophe's field types, query syntax, and advanced widget features, visit the [core ApostropheCMS documentation](https://docs.apostrophecms.org).
+This tutorial provides only a brief introduction to widget development in ApostropheCMS, but there's much more to explore. For comprehensive documentation on Apostrophe's field types, query syntax, and advanced widget features, visit the [core ApostropheCMS documentation](https://apostrophecms.com/docs).
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/tC6vJwqYO8o?si=Inv-0eTcMhbpE-a_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -458,7 +458,7 @@ We aren't going to go through this file in detail. The one thing that you will n
 ```javascript
 const response = await fetch(`/api/v1/oembed?url=${encodeURIComponent(url)}`);
 ```
-If desired, you could create [custom API routes](https://docs.apostrophecms.org/reference/module-api/module-overview.html#restapiroutes-self) for any of your widgets or other web components to query in this manner. We will touch on this in the [Creating Pieces tutorial](/tutorials/astro/creating-pieces.html#approach-2-custom-api-routes) section.
+If desired, you could create [custom API routes](/reference/module-api/module-overview.html#restapiroutes-self) for any of your widgets or other web components to query in this manner. We will touch on this in the [Creating Pieces tutorial](/tutorials/astro/creating-pieces.md#approach-2-custom-api-routes) section.
 
 #### Loading the Web Component
 
