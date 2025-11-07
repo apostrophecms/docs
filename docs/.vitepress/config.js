@@ -22,6 +22,7 @@ export default defineConfig({
   description: 'Documentation for ApostropheCMS',
 
   ignoreDeadLinks: 'localhostLinks',
+  base: '/docs/',
   vite: {
     resolve: {
       alias: [
