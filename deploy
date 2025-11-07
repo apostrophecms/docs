@@ -29,8 +29,13 @@ fi
   git checkout $BRANCH
 ) &&
 rsync -a ./docs/.vitepress/dist/ ~/apostrophecms/apostrophecms-website/public/docs &&
-(git add -A . && git commit -m 'docs deployment' && git push) &&
-echo "Pushed to ${branch} of apostrophecms/apostrophecms-website, a deployment should ensue."
+(
+  cd ~/apostrophecms/apostrophecms-website &&
+  git add -A . &&
+  git commit -m 'docs deployment' &&
+  git push
+) &&
+echo "Pushed to $BRANCH of apostrophecms/apostrophecms-website, a deployment should ensue."
 
 #rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist static@static.apostrophecms.com:/opt/static/$FOLDER &&
 #echo "Synced up to $ENV"
