@@ -21,21 +21,8 @@ else
   exit 1
 fi
 
-# We "deploy" to a subdirectory of the website repo now -Tom
-(
-  cd ~/apostrophecms/apostrophecms-website &&
-  { test -z "$(git status --porcelain)" || { echo "Error: Git working directory is not clean in apostrophecms-website"; false; }; } &&
-  git pull &&
-  git checkout $BRANCH
-) &&
-rsync -a --delete ./docs/.vitepress/dist/ ~/apostrophecms/apostrophecms-website/public/docs &&
-(
-  cd ~/apostrophecms/apostrophecms-website &&
-  git add -A . &&
-  git commit -m 'docs deployment' &&
-  git push
-) &&
-echo "Pushed to $BRANCH of apostrophecms/apostrophecms-website, a deployment should ensue."
+npm run build &&
 
-#rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist static@static.apostrophecms.com:/opt/static/$FOLDER &&
-#echo "Synced up to $ENV"
+(tar -zcf - ./docs/.vitepress/dist | ssh static@static.apostrophecms.com "cat > /opt/static/static/$ENV-docs.tar.gz") &&
+
+echo "Now run: CLOUD=website-$ENV act redeploy"
