@@ -35,7 +35,7 @@ The article and author pieces in Apollo showcase different aspects of piece func
 - **Articles** are the primary content pieces (blog posts, news items) that form the bulk of your site's content
 - **Authors** demonstrate how pieces can create relationships between different content types
 
-Unlike widgets (which are managed within pages), pieces get their own dedicated management modals. This provides a more focused interface for managing collections of content with features like filtering, searching, and batch operations. In Apollo, the managers for "Articles" and "Authors" are grouped in the "Blog" section of the admin bar. You can learn more about grouping admin bar items in the [ApostropheCMS documentation](https://docs.apostrophecms.org/reference/modules/admin-bar.html#groups) and examine the implementation in `backend/modules/@apostrophecms/admin-bar/index.js`.
+Unlike widgets (which are managed within pages), pieces get their own dedicated management modals. This provides a more focused interface for managing collections of content with features like filtering, searching, and batch operations. In Apollo, the managers for "Articles" and "Authors" are grouped in the "Blog" section of the admin bar. You can learn more about grouping admin bar items in the [ApostropheCMS documentation](/reference/modules/admin-bar.md#groups) and examine the implementation in `backend/modules/@apostrophecms/admin-bar/index.js`.
 
 ## Examining the Article Piece Type
 
@@ -147,7 +147,7 @@ This piece type includes:
 - Relationships to other articles (`_related`)
 - Organizational grouping of fields through the `group` property
 
-The relationship between articles and authors demonstrates a key strength of pieces in ApostropheCMS. By specifying `withRelationships: [ '_articles' ]` in the `_author` field, we establish a bidirectional relationship where authors know which articles they've written and articles store who authored them. For more information on relationships in ApostropheCMS, refer to the [relationship field documentation](https://docs.apostrophecms.org/reference/field-types/relationship.html).
+The relationship between articles and authors demonstrates a key strength of pieces in ApostropheCMS. By specifying `withRelationships: [ '_articles' ]` in the `_author` field, we establish a bidirectional relationship where authors know which articles they've written and articles store who authored them. For more information on relationships in ApostropheCMS, refer to the [relationship field documentation](/reference/field-types/relationship.md).
 
 ## Displaying Pieces in Astro Templates
 

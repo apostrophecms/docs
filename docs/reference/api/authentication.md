@@ -113,7 +113,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](https://docs.apostrophecms.org/guide/custom-login-requirements.html) in our guide.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](/guide/custom-login-requirements.md) in our guide.
 
 ### End session
 
