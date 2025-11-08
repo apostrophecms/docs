@@ -25,6 +25,8 @@ const hostnames = {
   dev: ''
 };
 
+const base = '/docs/';
+
 const hostname = hostnames[process.env.ENV || 'dev' ];
 
 export default defineConfig({
@@ -32,7 +34,7 @@ export default defineConfig({
   description: 'Documentation for ApostropheCMS',
 
   ignoreDeadLinks: 'localhostLinks',
-  base: '/docs/',
+  base,
   vite: {
     resolve: {
       alias: [
@@ -144,9 +146,15 @@ export default defineConfig({
     ]
   ],
   sitemap: {
-    hostname,
+    // here a hostname is not optional, we want one to be
+    // generated for review even in dev
+    hostname: (hostname || 'http://localhost:4173'),
     transformItems: (items) => {
       items.forEach(page => {
+        // We need to add
+        // the base because vitepress doesn't do that automatically
+        // for sitemaps as of today
+        page.url = `${base}${page.url}`;
         page.changefreq = 'monthly';
       });
       return items;
