@@ -30,6 +30,14 @@ node app module-name:task-name --arguments
 
 When a task runs, Apostrophe fully initializes (connecting to the database, loading all modules, etc.) but doesn't start listening for web connections. This means you have complete access to all your module methods, database queries, and business logic.
 
+## Before Creating Custom Tasks
+
+ApostropheCMS includes several built-in tasks that may already solve your needs:
+
+- **Content generation**: All piece types have a basic [`generate` task](/reference/modules/piece-type.html#generate) built-in (`node app [piece-type-name]:generate --total=10`)
+- **CSV import/export**: The [Import/Export extension](https://apostrophecms.com/extensions/import-export) provides CSV export functionality
+- **Database operations and other built-in tasks**: Many core modules provide specialized tasks documented in their reference pages. For example, the [Express module](/reference/modules/express.html) and [Migration module](/reference/modules/migration.html) include tasks for their specific domains. Check the reference documentation for any module you're working with, and exploring the source code of core modules can also reveal useful task patterns and implementation techniques.
+
 ## Creating Your First Task
 
 Let's create a practical example: a task that generates sample article content for testing purposes. While ApostropheCMS already includes a basic version of this functionality for all piece types (`node app [piece-type-name]:generate --total=[integer]`), building our own version demonstrates the key concepts you'll use in any custom task.
@@ -298,7 +306,7 @@ node app article:generate news --total=5 --published=false
 
 Let's create two more advanced tasks that demonstrate additional patterns you'll commonly need:
 
-1. **Export task**: Demonstrates file system operations, CSV generation, query builders (like `sort()`), and the pattern of using different permission levels based on flags (`--published-only`).
+1. **Export task**: Demonstrates file system operations, JSON generation, query builders (like `sort()`), and the pattern of using different permission levels based on flags (`--published-only`).
 
 2. **Cleanup task**: Shows how to perform destructive operations safely with database deletion, MongoDB query operators (regex), and the critical dry-run pattern for previewing changes before executing them.
 
@@ -316,44 +324,51 @@ export default {
   tasks(self) {
     return {
       export: {
-        usage: 'Export articles to CSV.\nUsage: node app article:export --output=articles.csv --published-only',
+        usage: 'Export articles to JSON.\nUsage: node app article:export --output=articles.json --published-only',
         async task(argv) {
           // Use getAnonReq if --published-only flag is set
           const req = argv['published-only']
             ? self.apos.task.getAnonReq()
             : self.apos.task.getReq();
 
-          const outputPath = argv.output || 'articles.csv';
+          const outputPath = argv.output || 'articles.json';
 
           console.log('Fetching articles...');
           const articles = await self.find(req)
             .sort({ createdAt: -1 })
+            .project({
+              title: 1,
+              subtitle: 1,
+              slug: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              aposMode: 1
+            })
             .toArray();
 
-          console.log(`Found ${articles.length} articles. Creating CSV...`);
+          console.log(`Found ${articles.length} articles. Creating JSON export...`);
 
-          // Create CSV content
-          const headers = ['Title', 'Subtitle', 'Slug', 'Created', 'Modified', 'Status'];
-          const rows = articles.map(article => [
-            article.title,
-            article.subtitle || '',
-            article.slug,
-            new Date(article.createdAt).toISOString(),
-            new Date(article.updatedAt).toISOString(),
-            article.aposMode
-          ]);
-
-          // Format as CSV
-          const csvContent = [
-            headers.join(','),
-            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-          ].join('\n');
+          // Create the export object with metadata
+          const exportData = {
+            exportDate: new Date().toISOString(),
+            totalArticles: articles.length,
+            publishedOnly: argv['published-only'] || false,
+            articles: articles.map(article => ({
+              title: article.title,
+              subtitle: article.subtitle || '',
+              slug: article.slug,
+              createdAt: article.createdAt,
+              updatedAt: article.updatedAt,
+              status: article.aposMode
+            }))
+          };
 
           // Write to file
           const fullPath = path.join(process.cwd(), outputPath);
-          fs.writeFileSync(fullPath, csvContent);
+          fs.writeFileSync(fullPath, JSON.stringify(exportData, null, 2));
 
           console.log(`✓ Export complete! File saved to: ${fullPath}`);
+          console.log(`  Total articles exported: ${articles.length}`);
         }
       },
       cleanup: {
@@ -401,11 +416,11 @@ export default {
 Run these tasks like this:
 
 ```bash
-# Export all articles
-node app article:export --output=all-articles.csv
+# Export all articles to JSON
+node app article:export --output=all-articles.json
 
 # Export only published articles
-node app article:export --output=published.csv --published-only
+node app article:export --output=published.json --published-only
 
 # Preview what would be deleted (dry run)
 node app article:cleanup --dry-run
@@ -413,6 +428,9 @@ node app article:cleanup --dry-run
 # Actually delete the sample articles
 node app article:cleanup
 ```
+
+> [!NOTE]
+> **Why JSON instead of CSV?** JSON export is more robust for complex data structures and eliminates escaping concerns. For CSV export functionality, consider using the [Import/Export extension](https://apostrophecms.com/extensions/import-export) or a dedicated CSV library like `csv-stringify` if you need custom CSV generation.
 
 ## Best Practices for Command-Line Tasks
 
