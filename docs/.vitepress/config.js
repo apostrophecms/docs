@@ -17,11 +17,24 @@ const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
 const DEBUG_TRACKING = process.env.DEBUG_TRACKING || 'false';
 const ENV = process.env.ENV || 'production';
 
+// package.json sets ENV to one of these, otherwise we're doing local testing and
+// a domain + port in the URL will just be a pain in the butt -Tom
+const hostnames = {
+  staging: 'https://staging.apostrophecms.com',
+  production: 'https://apostrophecms.com',
+  dev: ''
+};
+
+const base = '/docs/';
+
+const hostname = hostnames[process.env.ENV || 'dev' ];
+
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for ApostropheCMS',
 
   ignoreDeadLinks: 'localhostLinks',
+  base,
   vite: {
     resolve: {
       alias: [
@@ -74,7 +87,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: '/images/favicon/favicon-32.png'
+        href: '/docs/images/favicon/favicon-32.png'
       }
     ],
     [
@@ -83,7 +96,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '128x128',
-        href: '/images/favicon/favicon-128.png'
+        href: '/docs/images/favicon/favicon-128.png'
       }
     ],
     [
@@ -92,7 +105,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        href: '/images/favicon/favicon-192.png'
+        href: '/docs/images/favicon/favicon-192.png'
       }
     ],
     [
@@ -101,7 +114,7 @@ export default defineConfig({
         rel: 'shortcut icon',
         type: 'image/png',
         sizes: '196x196',
-        href: '/images/favicon/favicon-196.png'
+        href: '/docs/images/favicon/favicon-196.png'
       }
     ],
     [
@@ -110,7 +123,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '152x152',
-        href: '/images/favicon/favicon-152.png'
+        href: '/docs/images/favicon/favicon-152.png'
       }
     ],
     [
@@ -119,7 +132,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '167x167',
-        href: '/images/favicon/favicon-167.png'
+        href: '/docs/images/favicon/favicon-167.png'
       }
     ],
     [
@@ -128,14 +141,20 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '180x180',
-        href: '/images/favicon/favicon-180.png'
+        href: '/docs/images/favicon/favicon-180.png'
       }
     ]
   ],
   sitemap: {
-    hostname: 'https://docs.apostrophecms.org/',
+    // here a hostname is not optional, we want one to be
+    // generated for review even in dev
+    hostname: (hostname || 'http://localhost:4173'),
     transformItems: (items) => {
       items.forEach(page => {
+        // We need to add
+        // the base because vitepress doesn't do that automatically
+        // for sitemaps as of today
+        page.url = `${base}${page.url}`;
         page.changefreq = 'monthly';
       });
       return items;
@@ -147,7 +166,7 @@ export default defineConfig({
     const { pageData } = context;
 
     const relativePath = pageData.relativePath;
-    const absolutePath = `https://docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
+    const absolutePath = `${hostname}/docs/${relativePath.replace('.md', '.html')}`;
 
     const head = [
       [
@@ -231,7 +250,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://docs.apostrophecms.org/images/og-docs-image.png'
+          content: '/docs/images/og-docs-image.png'
         }
       ],
       [
@@ -259,7 +278,7 @@ export default defineConfig({
         'meta',
         {
           name: 'twitter:domain',
-          content: 'docs.apostrophecms.org'
+          content: 'apostrophecms.com'
         }
       ],
       [
@@ -287,7 +306,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://docs.apostrophecms.org/images/og-docs-image.png'
+          content: '/docs/images/og-docs-image.png'
         }
       ],
       [
@@ -399,7 +418,7 @@ export default defineConfig({
       };
 
       if (pageData.frontmatter.featured_image) {
-        structuredData.image = `https://docs.apostrophecms.org${pageData.frontmatter.featured_image}`;
+        structuredData.image = `${hostname}${pageData.frontmatter.featured_image}`;
       }
 
       head.push(['script', { type: 'application/ld+json' }, JSON.stringify(structuredData)]);

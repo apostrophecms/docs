@@ -117,7 +117,7 @@ Used to add multiple modules from a single npm module. Takes an object with two 
 
 ### `icons`
 
-The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](https://docs.apostrophecms.org/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](https://docs.apostrophecms.org/guide/areas-and-widgets.html#widget-preview-options).
+The icons in Apostrophe come from the `vue-material-design-icons` npm package, version 4.12.1. We have pinned to this version because the names of Material Design icons are not always consistent from version to version. A number of these icons are registered by the [`@apostrophecms/asset/lib/globalicons.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) and can be used directly in your project, for example in the `icon` option of your [widget module](/reference/module-api/module-options.html#options-for-widget-modules) or as a `previewIcon` in your [widget preview](/guide/areas-and-widgets.md#widget-preview-options).
 
 Any of the additional almost 6,000 icons from this package can easily be registered for use through the `icons` setting object. While we have a [list](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) of the currently available icons, this list may grow in the future,  but it won't shrink and no names will change, absent force majeure. To easily confirm that the desired icon is on the list:
 
@@ -754,7 +754,7 @@ Each of these function sections takes the module, as `self`, as an argument. Thi
 
 | Function name | Description |
 | ------- | ------- |
-| [`methods`](#methods-self) | Add new methods and override base class methods |
+| [`methods`](#methods) | Add new methods and override base class methods |
 | [`extendMethods`](#extendmethods-self) | Extend the functionality of base class methods |
 | [`components`](#components-self) | Configure asynchronous template components |
 | [`extendComponents`](#extendcomponents-self) | Extend base class template components |
@@ -880,7 +880,7 @@ modules/product/index.js
 #### `extendMethods(self)`
 
 <!-- TODO: Link to module reference section to find existing methods. -->
-Add to the functionality of a method inherited from the base class. This must return an object of functions, similar to [`methods`](#methods-self).
+Add to the functionality of a method inherited from the base class. This must return an object of functions, similar to [`methods`](#methods).
 
 Methods included should take a `_super` argument, followed by the normal arguments of the method being extended. If the original method took only a `req` argument, the extending method should take the arguments `_super, req`.
 

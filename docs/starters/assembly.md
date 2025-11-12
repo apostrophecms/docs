@@ -37,7 +37,7 @@ To test-drive the project in development, make sure you have Apostrophe's usual 
 * MongoDB (5.0 or better, we recommend 6.0)
 * NodeJS (18.x or better, latest long term support release recommended)
 
-For more information see the Apostrophe [Getting Started Tutorial](https://docs.apostrophecms.org/getting-started/setting-up-your-environment.html).
+For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 
 ## Getting started
 
@@ -238,7 +238,7 @@ Right now we have a bare-bones example. Let's look at where to put our code to c
 
 ### Where Does My Apostrophe Project Code Go?
 
-> If you are not already familiar with single-site Apostrophe development, we strongly recommend that you [read the ApostropheCMS documentation](https://docs.apostrophecms.org/) as a starting point.
+> If you are not already familiar with single-site Apostrophe development, we strongly recommend that you [read the ApostropheCMS documentation](https://apostrophecms.com/docs) as a starting point.
 
 In a typical single-site Apostrophe project, modules are configured in `app.js`. In a multisite project, you'll find that `app.js` is instead reserved for top-level configuration that applies to all sites.
 
@@ -306,7 +306,7 @@ For example:
 
 #### Example webpack extensions
 
-The `theme-default` and `theme-demo` modules modify the base webpack build using the [`webpack` property](https://docs.apostrophecms.org/guide/webpack.html#extending-webpack-configuration) to incorporate SCSS variables for colors and fonts. This is included to demonstrate how to set up centralized theme management with global variables in one place. They also both add a function for converting font sizes from `px` to `rem`. While this is a useful function that is used in several of the `theme-default` stylesheets, it primarily serves to illustrate how SCSS functions can be added to your project. A similar approach would be used to add in any SCSS mixins that subsequent stylesheets utilize.
+The `theme-default` and `theme-demo` modules modify the base webpack build using the [`webpack` property](/guide/webpack.md#extending-webpack-configuration) to incorporate SCSS variables for colors and fonts. This is included to demonstrate how to set up centralized theme management with global variables in one place. They also both add a function for converting font sizes from `px` to `rem`. While this is a useful function that is used in several of the `theme-default` stylesheets, it primarily serves to illustrate how SCSS functions can be added to your project. A similar approach would be used to add in any SCSS mixins that subsequent stylesheets utilize.
 
 The two theme modules accomplish this extension in slightly different ways. The `theme-default` extension adds all the variables and the function into a template literal block within the `additionalData` property. If you continue to use the `theme-default` module in your project and want to use the included project-level widgets, you need to keep and potentially edit this template literal block since the styling of the widgets depends on them.
 
@@ -346,10 +346,10 @@ All the styling for the supplied widgets, except for the partials added in the c
 ### `accordion-widget`
 The `accordion-widget` implements an accordion element powered by the [`accordion-js` npm package](https://www.npmjs.com/package/accordion-js). You can read about additional configuration options in the documentation of that package. The module consists of a main `index.js` file with the content schema fields, plus a `views` folder that contains a `widget.html` file with the Nunjucks markup for the accordion.
 
-Finally, there is the `ui/src` folder that contains the `index.scss` stylesheet and the `index.js` file that contains the JavaScript that is delivered to the frontend and powers the accordion using a [widget player](https://docs.apostrophecms.org/guide/custom-widgets.html#client-side-javascript-for-widgets). Any custom widgets that require client-side code should be structured in this same way. Data is passed from the schema fields to the browser for use in the player script by adding it to a data attributes in the template.
+Finally, there is the `ui/src` folder that contains the `index.scss` stylesheet and the `index.js` file that contains the JavaScript that is delivered to the frontend and powers the accordion using a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets). Any custom widgets that require client-side code should be structured in this same way. Data is passed from the schema fields to the browser for use in the player script by adding it to a data attributes in the template.
 
 ### `card-widget`
-The `card-widget` creates a simple card with optional image and text. The card can be made directly clickable, or can have links and buttons added. The schema fields for these elements are provided by the `lib/schema/link.js` file, which serves as a model for implementing reusable parts of widgets. These same schema fields are reused in the `hero` and `link` widgets and can be used in your custom project widgets. The markup for the links is imported into the `card-widget` template from the `sites/views/fragments/link.html` file using the [`rendercall` helper](https://docs.apostrophecms.org/guide/fragments.html#inserting-markup-with-rendercall). This is present in a simpler form in the `links-widget`. Again, all your custom modules (not just widgets) can utilize fragments to replicate similar areas of markup in this same way.
+The `card-widget` creates a simple card with optional image and text. The card can be made directly clickable, or can have links and buttons added. The schema fields for these elements are provided by the `lib/schema/link.js` file, which serves as a model for implementing reusable parts of widgets. These same schema fields are reused in the `hero` and `link` widgets and can be used in your custom project widgets. The markup for the links is imported into the `card-widget` template from the `sites/views/fragments/link.html` file using the [`rendercall` helper](/guide/fragments.md#inserting-markup-with-rendercall). This is present in a simpler form in the `links-widget`. Again, all your custom modules (not just widgets) can utilize fragments to replicate similar areas of markup in this same way.
 
 ### `column-widget`
 The `column-widget` implements one method of adding a user-selected number of columns to a page. It uses a select field and conditional fields that restrict the number of columns based on the value of the select. Each column has an area with widgets for the `link`, `card`, and `accordion` basic widgets, plus the core `rich-text`, `image`, and `video` widgets. These are added through a shared configuration object that defines the available widgets for each column. The first column additionally adds the basic `slideshow` widget.
@@ -373,7 +373,7 @@ This starter kit has the `@apostrophecms-pro/multisite-dashboard` extension inst
 
 The dashboard site can be extended much like the regular sites. Dashboard development is very similar to regular site development, except that modules live in `dashboard/modules`, what normally resides in `app.js` lives in `dashboard/index.js`, and so on.
 
-The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](https://docs.apostrophecms.org/guide/modules.html) for extending any package at project level.
+The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](/guide/modules.md) for extending any package at project level.
 
 The `site` schema field values get passed to the individual sites in the `site` object. This is what is used to set the theme configuration in the `sites/index.js` file. The starter kit is also adding the value of the `theme` schema field to the `apos.options` object.
 
@@ -403,7 +403,7 @@ module.exports = function (site) {
       },
       ...
 ```
-You can also elect to add them to the `apos.options` object, as is shown above example for the `site.theme`. This can then be accessed in any module function with access to `self` using `self.apos.options.<property>`. If you need that value in your templates you can use the [`templateData` module option](https://docs.apostrophecms.org/reference/module-api/module-options.html#templatedata).
+You can also elect to add them to the `apos.options` object, as is shown above example for the `site.theme`. This can then be accessed in any module function with access to `self` using `self.apos.options.<property>`. If you need that value in your templates you can use the [`templateData` module option](/reference/module-api/module-options.md#templatedata).
 ### Allowing dashboard admins to pass configuration to sites
 
 You can add custom schema fields to `sites` and those fields are available on the `site` object passed to `sites/index.js`, and so they can be passed on as part of the configuration of modules.
@@ -448,9 +448,9 @@ Apostrophe will complete asset builds for each theme, as well as running any nec
 
 ## Profiling with OpenTelemetry
 
-ApostropheCMS supports profiling with OpenTelemetry. There is an [article in the documentation](https://docs.apostrophecms.org/cookbook/opentelemetry.html) covering the use of OpenTelemetry in general. Launching Apostrophe Assembly with OpenTelemetry support is slightly different. However for your convenience, `app.js` and `telemetry.js` are already set up appropriately in this project.
+ApostropheCMS supports profiling with OpenTelemetry. There is an [article in the documentation](/cookbook/opentelemetry.md) covering the use of OpenTelemetry in general. Launching Apostrophe Assembly with OpenTelemetry support is slightly different. However for your convenience, `app.js` and `telemetry.js` are already set up appropriately in this project.
 
-To launch in your local development environment with OpenTelemetry logging to Jaeger, first [launch Jaeger according to the instructions in our documentation](https://docs.apostrophecms.org/cookbook/opentelemetry.html). Then start your Apostrophe Assembly project like this:
+To launch in your local development environment with OpenTelemetry logging to Jaeger, first [launch Jaeger according to the instructions in our documentation](/cookbook/opentelemetry.md). Then start your Apostrophe Assembly project like this:
 
 ```
 APOS_OPENTELEMETRY=1 npm run dev

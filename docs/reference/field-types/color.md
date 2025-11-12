@@ -1,6 +1,6 @@
 # `color`
 
-`color` fields provides the end user with a color picker interface. They also validate submitted values using [the TinyColor utility](https://github.com/bgrins/TinyColor#isvalid). Colors are saved as strings in [8 digit hex code](https://drafts.csswg.org/css-color/#hex-notation), or `#rrggbbaa`, format.
+`color` fields provides the end user with a color picker interface. They also validate submitted values using [the TinyColor utility](https://github.com/bgrins/TinyColor?tab=readme-ov-file#isvalid). Colors are saved as strings in [8 digit hex code](https://drafts.csswg.org/css-color/#hex-notation), or `#rrggbbaa`, format.
 
 <!-- TODO: Add vue-color options config documentation once supported. -->
 

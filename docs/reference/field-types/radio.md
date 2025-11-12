@@ -111,7 +111,7 @@ The `choices` setting in `checkboxes`, `radio`, or `select` fields configures th
 
 What if the choices aren't known in advance or are dependent on the value of another schema field? Then you can fetch them dynamically.
 
-First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass the name of the method you'll implement on the server side as a string ending in `()`. e.g. `choices: 'getChoices()'` — **do not** pass a function.
+First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods). Pass the name of the method you'll implement on the server side as a string ending in `()`. e.g. `choices: 'getChoices()'` — **do not** pass a function.
 
 Second, implement that method in your module so that it takes `(req, data, following)` arguments and return an array of choices in the usual format. You may use an async function, or return a promise that will resolve to the array. That means you can reach out to APIs using modules like `axios` or `node-fetch`, or make Apostrophe database queries.
 

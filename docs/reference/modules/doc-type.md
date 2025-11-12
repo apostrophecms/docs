@@ -78,7 +78,7 @@ Returns an array with the names of all doc type schema fields present in the `in
 
 ### `async find(req, criteria, builders)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-database-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
@@ -90,7 +90,7 @@ The `find()` method initiates a database query. Learn more about initiating quer
 
 Returns a query that finds documents the current user (based on the `req` request object) can edit. Unlike `find()`, this query defaults to including docs in the archive.
 
-`criteria` is a MongoDB criteria object as in `find()`. The `builders` argument should be an object of query builders, in the same style as the [module option of the same name](#builders).
+`criteria` is a MongoDB criteria object as in `find()`. The `builders` argument is a convenient way to apply many [query builder methods](http://localhost:4173/docs/guide/database-queries.html#using-query-builders) without making chained method calls. Note that the `builders` argument is assumed to be trustworthy, e.g. coming from developer-configured options. To invoke builders with untrusted user input, chain the `.applyBuilders(builders)` method after `findForEditing` instead.
 
 ### `async findOneForEditing(req, criteria, builders)`
 
@@ -98,7 +98,7 @@ Returns a query that finds documents the current user (based on the `req` reques
 
 ### `inferIdLocaleAndMode(req, _id)`
 
-This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md##inferidlocaleandmode-req-id). If the doc type is a piece type that is not localized, this will simply return the `_id`.
+This method is a wrapper for the `@apostrophecms/i18n` module [method of the same name](/reference/modules/i18n.md#inferidlocaleandmode-req-id). If the doc type is a piece type that is not localized, this will simply return the `_id`.
 
 ### `async isModified(req, doc)`
 

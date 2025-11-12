@@ -137,7 +137,7 @@ The `root` and `try_files` statements let nginx serve static files directly, for
 the best speed; if the URL isn't a static file, it is passed to Apostrophe. `expires 7d` allows the browser to cache the static files, for performance.
 :::
 
-1. You'll want to **add SSL for HTTPS connections**, too. For that, follow the LetsEncrypt [Certbot documentation](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx.html). Certbot will make the necessary nginx configuration changes for you.
+1. You'll want to **add SSL for HTTPS connections**, too. For that, follow the LetsEncrypt [Certbot documentation](https://certbot.eff.org/instructions?ws=nginx&os=snap). Certbot will make the necessary nginx configuration changes for you.
 
 2. Now instruct `nginx` to restart:
 

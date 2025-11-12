@@ -67,7 +67,7 @@ export default {
 > The `tooltip` property uses a namespaced localization key (`myProject:openDocs`) to support multiple languages in the admin UI. To set up translations for admin interface elements like tooltips, button labels, and schema field labels, see the guide on [localizing schema field labels](/guide/localization/static.html#localizing-schema-field-labels).
  
 > [!TIP]
-> The `book-open` icon isn't already registered as an ApostropheCMS icon, but is in the version of the [vue-material-design-icons](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) that is present in core. You can register the new icon using the top-level `icons` configuration property. To do so, you pass the name you want to use, in this case `book-open`, as a key and the icon name in the package as value. You can read more [here](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons).
+> The `book-open` icon isn't already registered as an ApostropheCMS icon, but is in the version of the [vue-material-design-icons](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd) that is present in core. You can register the new icon using the top-level `icons` configuration property. To do so, you pass the name you want to use, in this case `book-open`, as a key and the icon name in the package as value. You can read more [here](/reference/module-api/module-overview.md#icons).
 
 This method call registers a new button in the admin bar. The parameters are:
 
@@ -114,7 +114,7 @@ export default () => {
   function openExternalURL() {
     // Create an accessible link element with appropriate attributes
     const link = document.createElement('a');
-    link.href = 'https://docs.apostrophecms.org';
+    link.href = 'https://apostrophecms.com';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.setAttribute('aria-label', 'Opening documentation in a new tab');
@@ -147,4 +147,4 @@ For more complex integrations with external services, consider exploring deeper 
 
 **Related Resources:**
 - [ApostropheCMS 4.x Admin-bar Module Documentation](/reference/modules/admin-bar.md)
-- [Integrating a Third-Party Support Desk](/tutorials/adding-a-support-desk-button.html)
+- [Integrating a Third-Party Support Desk](/tutorials/adding-a-support-desk-button.md)

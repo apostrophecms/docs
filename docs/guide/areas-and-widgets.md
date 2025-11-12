@@ -206,7 +206,7 @@ module, and would not find it.
 
 #### `previewIcon`: when you prefer an icon to an image
 
-The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](/reference/module-api/module-options.md#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
 ## Adding placeholder content to widgets
 
@@ -325,7 +325,7 @@ main: {
 Learn more about rich text options in [the section on core widgets](/guide/core-widgets.md).
 :::
 
-In other situations, you may need to **pass the widget *template* options that only apply to a specific context**. One example of this is the [`sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.
+In other situations, you may need to **pass the widget *template* options that only apply to a specific context**. One example of this is the [`sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#sizes) for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.
 
 These can be added in an object after the area tag arguments using the `with` keyword.
 

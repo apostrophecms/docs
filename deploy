@@ -2,7 +2,7 @@
 
 if [ -z "$ENV" ]; then
   echo "💁‍♀️ Usage: ENV=staging npm run deploy"
-  echo "(or as appropriate)"
+  echo "(or prod, NOT production, must match act)"
   echo
   rm -rf ./dist
   exit 1
@@ -11,17 +11,18 @@ fi
 if [ $ENV == "staging" ]
 then
   FOLDER=docs-staging
-elif [ $ENV == "production" ]
-then
-  FOLDER=docs
-# Support our typical syntax
+  BRANCH=develop
 elif [ $ENV == "prod" ]
 then
   FOLDER=docs
+  BRANCH=main
 else
   echo "🤷‍♀️ Target unknown"
   exit 1
 fi
 
-rsync -av --delete --exclude '.git' --exclude '**/node_modules' ./docs/.vitepress/dist static@static.apostrophecms.com:/opt/static/$FOLDER &&
-echo "Synced up to $ENV"
+npm run build &&
+
+(tar -C ./docs/.vitepress/dist -zcf - . | ssh static@static.apostrophecms.com "cat > /opt/static/static/$ENV-docs.tar.gz") &&
+
+echo "Now run: CLOUD=website-$ENV act redeploy"

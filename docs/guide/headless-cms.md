@@ -205,5 +205,5 @@ plugin provides a bridge that allows Astro to act as an "external front end" for
 [Gatsby](https://gatsbyjs.com/) is a static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
 
 ::: info
-Direct GraphQL support is on the product roadmap for Apostrophe. If you are interested in that feature, [please indicate that on the product roadmap card](https://portal.productboard.com/apostrophecms/1-product-roadmap/c/44-graphql-api) so we can properly prioritize it.
+Direct GraphQL support is on the product roadmap for Apostrophe. If you are interested in that feature, [please indicate that on the product roadmap card](https://roadmap.apostrophecms.com/roadmap?id=86628443-cf29-49ca-a6a5-8ef899b37fe2) so we can properly prioritize it.
 :::
