@@ -250,7 +250,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: '/docs/images/og-docs-image.png'
+          content: `${hostname}/docs/images/og-docs-image.png`
         }
       ],
       [
@@ -306,7 +306,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: '/docs/images/og-docs-image.png'
+          content: `${hostname}/docs/images/og-docs-image.png`
         }
       ],
       [
