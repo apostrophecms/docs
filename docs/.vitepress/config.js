@@ -15,13 +15,13 @@ import {
 
 const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
 const DEBUG_TRACKING = process.env.DEBUG_TRACKING || 'false';
-const ENV = process.env.ENV || 'production';
+const ENV = process.env.ENV || 'prod';
 
 // package.json sets ENV to one of these, otherwise we're doing local testing and
 // a domain + port in the URL will just be a pain in the butt -Tom
 const hostnames = {
   staging: 'https://staging.apostrophecms.com',
-  production: 'https://apostrophecms.com',
+  prod: 'https://apostrophecms.com',
   dev: ''
 };
 
