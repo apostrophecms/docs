@@ -627,7 +627,9 @@ module.exports = {
         label: 'Reset',
         messages: {
           progress: 'Resetting {{ type }}...',
-          completed: 'Reset {{ count }} {{ type }}.'
+          completed: 'Reset {{ count }} {{ type }}.',
+          completedWithFailures: 'Reset {{ count }} {{ type }} ({{ bad }} of {{ total }} failed).',
+          failed: 'Resetting {{ type }} failed.'
         },
         // This assumes that the module added this in the `icons` configuration.
         icon: 'recycle-icon',
