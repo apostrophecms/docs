@@ -24,7 +24,9 @@ module.exports = {
         icon: 'recycle-icon',
         messages: {
           progress: 'Resetting {{ type }}...',
-          completed: 'Reset {{ count }} {{ type }}.'
+          completed: 'Reset {{ count }} {{ type }}.',
+          completedWithFailures: 'Reset {{ count }} {{ type }} ({{ bad }} of {{ total }} failed).',
+          failed: 'Resetting {{ type }} failed.',
         },
         if: {
           archived: false
@@ -65,11 +67,13 @@ The `icon` setting is the primary visible interface when the operation is not in
 ```javascript
 messages: {
   progress: 'Resetting {{ type }}...',
-  completed: 'Reset {{ count }} {{ type }}.'
+  completed: 'Reset {{ count }} {{ type }}.',
+  completedWithFailures: 'Reset {{ count }} {{ type }} ({{ bad }} of {{ total }} failed).',
+  failed: 'Resetting {{ type }} failed.',
 },
 ```
 
-The `messages` object properties are used in notifications that appear to tell the editor what is happening behind the scenes. The `progress` message appears when the operation begins and the `completed` messages appears when it is done.
+The `messages` object properties are used in notifications that appear to tell the editor what is happening behind the scenes. The `progress` message appears when the operation begins and the `completed` messages appears when it is done. The `completedWithFailures` and `failed` messages are optional. The `completedWithFailures` message appears when it is done, but it contains some failures. The `failed` message appears when it is done and it has failed entirely.
 
 They both can use the `type` interpolation key, which Apostrophe replaces with the piece type label. The `completed` message can also include a `count` interpolation key, which is replaced by the number of pieces that were updated.
 
