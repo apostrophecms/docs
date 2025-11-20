@@ -433,7 +433,10 @@ For even more control, you can create multiple layout widget types, each extendi
 export default {
   extend: '@apostrophecms/layout-widget',
   options: {
-    label: 'Hero Layout'
+    label: 'Hero Layout',
+    columns: 9,
+    minSpan: 1,
+    defaultSpan: 3
   }
 };
 ```
@@ -443,6 +446,8 @@ export default {
 </template>
 
 </AposCodeBlock>
+
+This will create a layout with 3 areas, each spanning 3 CSS grid columns.
 
 <AposCodeBlock>
 
@@ -500,7 +505,6 @@ content: {
 <template v-slot:caption>
   modules/landing-page/index.js
 </template>
-
 </AposCodeBlock>
 
 This creates a page with three sections: a hero layout with specific column content, a rich text widget, and a standard layout widget with its own default column configuration.

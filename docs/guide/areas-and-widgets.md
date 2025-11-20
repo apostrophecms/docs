@@ -86,7 +86,7 @@ introduction: {
 
 ## Adding default widgets to areas
 
-To solve the "blank page" problem and help editors get started with content creation, you can configure areas to include default widgets when a new document is created. This is particularly useful when combined with the [layout widget](#layout-widget-beta) to provide editors with a pre-structured content framework.
+To solve the "blank page" problem and help editors get started with content creation, you can configure areas to include default widgets when a new document is created. This is particularly useful when combined with the [layout widget](#layout-widget) to provide editors with a pre-structured content framework.
 
 The `def` feature is designed for **simple, straightforward default layouts** that work well for all new documents of a particular type. For more sophisticated needs—such as offering editors a library of pre-designed sections they can choose from, or when different pages need different starting layouts—consider using the [Section Template Library extension](https://apostrophecms.com/extensions/section-template-library) instead.
 
