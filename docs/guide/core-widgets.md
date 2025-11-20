@@ -8,7 +8,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 | [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
 | [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
 | [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
-| [File](#file-widget) | `@apostrophecms/file` | Display a downloadable file |
+| [File](#file-widget) | `@apostrophecms/file` | Display a downloadable file link |
 | [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
 
 ## Layout widget (BETA)
