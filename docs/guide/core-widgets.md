@@ -8,6 +8,7 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 | [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
 | [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
 | [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
+| [File](#file-widget) | `@apostrophecms/file` | Display a downloadable file |
 | [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
 
 ## Layout widget (BETA)
@@ -1235,6 +1236,63 @@ export default {
 </template>
 </AposCodeBlock>
 
+## File widget
+
+The file widget allows content editors to select and display a downloadable file from the media library. When editors add this widget to a page, they can choose any file that has been uploaded to the `@apostrophecms/file` piece type, or upload and create a new file piece.
+
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/file': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+The widget uses a relationship field to connect to files in the media library. By default, it requires exactly one file to be selected before the widget can be saved.
+
+### Customizing the file relationship
+
+The file widget's relationship field can be configured using standard relationship field options. For example, you might want to allow multiple files or make the file selection optional:
+
+<AposCodeBlock>
+
+``` javascript
+export default {
+  fields: {
+    add: {
+      _file: {
+        type: 'relationship',
+        label: 'apostrophe:file',
+        max: 3,
+        required: true,
+        withType: '@apostrophecms/file'
+      }
+    }
+  }
+};
+
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/file-widget/index.js
+</template>
+</AposCodeBlock>
+
+You can also modify other relationship field properties like `required`, though removing the requirement may result in an empty widget if no file is selected.
+
+
 ## HTML widget
 
 **Or: How to get access to the editing interface when embedded HTML breaks it.**
@@ -1270,8 +1328,8 @@ There is a safety mechanism in case things do go wrong. If embedded HTML breaks 
 https://example.net/broken-page?safemode=1
 ```
 
-
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
+
 
 ## Enabling real-time preview for widgets
 
