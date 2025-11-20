@@ -4,16 +4,13 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 | Common name/label | Widget reference | What is it? |
 | ------ | ------ | ------ |
-| [Layout (beta)](#layout-widget-beta) | `@apostrophecms/layout-widget` | Create responsive grid-based layouts with configurable columns |
+| [Layout](#layout-widget) | `@apostrophecms/layout-widget` | Create responsive grid-based layouts with configurable columns |
 | [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
 | [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
 | [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
 | [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
 
-## Layout widget (BETA)
-
-> [!WARNING]
-> **This widget is currently in BETA**. Bugs and rough edges may still be found. The API and configuration options are subject to change in future releases, but a migration path will be provided if this occcurs. Use with caution in production environments.
+## Layout widget
 
 ![The layout widget after first addition to the page](../images/basic-layout-selection.png)
 
@@ -293,6 +290,242 @@ export default {
   modules/@apostrophecms/layout-column-widget/index.js
 </template>
 </AposCodeBlock>
+
+
+### Creating default layouts with pre-populated content
+
+The layout widget works with the `def` field to create simple default page structures. This helps solve the "blank page" problem by providing editors with a starting layout containing pre-populated widgets.
+
+>[!NOTE]
+> The `def` feature is designed for **simple, consistent default layouts** that work well for all new documents of a particular type. For more sophisticated scenarios—such as offering editors a library of pre-designed sections to choose from—consider using the [Section Template Library extension](https://apostrophecms.com/extensions/section-template-library), which provides a more powerful and flexible approach to reusable layouts.
+
+#### Basic default layout structure
+
+Default content for layout columns is configured in the layout column widget itself, not at the page level. This allows you to define what widgets appear inside each column when a layout is added:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {}
+          }
+        },
+        def: [
+          ['@apostrophecms/image', '@apostrophecms/rich-text'],
+          ['@apostrophecms/image']
+        ]
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/layout-column-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+With this configuration, whenever a layout widget is added to a page, it will automatically create two columns (the default) with pre-populated content:
+- **First column**: An image widget followed by a rich text widget
+- **Second column**: A single image widget
+
+#### Adding layout widgets by default to pages
+
+You can also configure pages to start with a layout widget (or multiple widgets) by using `def` at the page level:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Landing Page'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/layout': {},
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
+        },
+        def: [
+          '@apostrophecms/layout'
+        ]
+      }
+    },
+    group: {
+      content: {
+        label: 'Page content',
+        fields: ['content']
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+This creates a new landing page with a layout widget already added. The layout widget will use the default column configuration from your `@apostrophecms/layout-column-widget` setup.
+
+#### Creating complex default page structures
+
+You can create more sophisticated default page layouts by combining different widgets in the page-level `def`:
+
+<AposCodeBlock>
+
+``` js
+content: {
+  type: 'area',
+  options: {
+    widgets: {
+      '@apostrophecms/layout': {},
+      '@apostrophecms/rich-text': {},
+      '@apostrophecms/image': {}
+    }
+  },
+  def: [
+    '@apostrophecms/image',
+    '@apostrophecms/layout',
+    '@apostrophecms/rich-text',
+    '@apostrophecms/layout'
+  ]
+}
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+This creates a page with:
+1. An image widget at the top
+2. A layout widget (with its configured default columns)
+3. A rich text widget
+4. Another layout widget (with its configured default columns)
+
+#### Using different layout widgets with different defaults
+
+For even more control, you can create multiple layout widget types, each extending the base layout widget with different column configurations:
+
+<AposCodeBlock>
+
+``` js
+// First layout widget type with specific defaults
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Hero Layout'
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/hero-layout-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+``` js
+// Configure its column widget with specific defaults
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
+        },
+        def: [
+          ['@apostrophecms/image', '@apostrophecms/rich-text', '@apostrophecms/rich-text']
+        ]
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/hero-layout-column-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+Then use different layout widget types on your page:
+
+<AposCodeBlock>
+
+``` js
+content: {
+  type: 'area',
+  options: {
+    widgets: {
+      'hero-layout': {},
+      '@apostrophecms/layout': {},
+      '@apostrophecms/rich-text': {}
+    }
+  },
+  def: [
+    'hero-layout',
+    '@apostrophecms/rich-text',
+    '@apostrophecms/layout'
+  ]
+}
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+This creates a page with three sections: a hero layout with specific column content, a rich text widget, and a standard layout widget with its own default column configuration.
+
+#### How default layouts work
+
+Understanding where to configure `def` is key:
+
+1. **Layout column widget level** (`@apostrophecms/layout-column-widget/index.js`):
+   - Configure `def` on the `content` area field
+   - Defines what widgets appear inside columns when any layout widget is added
+   - Uses nested arrays where each array represents one column
+   - Column content can be a string (single widget) or an array (multiple widgets)
+
+2. **Page/piece level** (e.g., `landing-page/index.js`):
+   - Configure `def` on the page's area field
+   - Defines which widgets appear when a new page/piece is created
+   - Can include layout widgets, which will then use their configured column defaults
+   - Can mix different widget types in sequence
+
+>[!IMPORTANT]
+> The number of columns created is determined by the layout widget's default configuration, typically 2 columns. If you provide more arrays in the column widget's `def` than the default number of columns, the extra arrays will be ignored.
+
+>[!TIP]
+> When configuring `def` in a layout column widget, make sure the widgets you include are also listed in the `options.widgets` configuration. Otherwise, editors won't be able to add additional widgets of those types later.
 
 ### Best practices for nested layouts
 
