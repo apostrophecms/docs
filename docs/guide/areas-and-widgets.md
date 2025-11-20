@@ -84,6 +84,73 @@ introduction: {
 }
 ```
 
+## Adding default widgets to areas
+
+To solve the "blank page" problem and help editors get started with content creation, you can configure areas to include default widgets when a new document is created. This is particularly useful when combined with the [layout widget](#layout-widget) to provide editors with a pre-structured content framework.
+
+The `def` feature is designed for **simple, straightforward default layouts** that work well for all new documents of a particular type. For more sophisticated needs—such as offering editors a library of pre-designed sections they can choose from, or when different pages need different starting layouts—consider using the [Section Template Library extension](https://apostrophecms.com/extensions/section-template-library) instead.
+
+### Basic default widgets
+
+The `def` field accepts an array of widget type names that will be automatically added to the area when a new document is created:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Landing Page'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {},
+            '@apostrophecms/layout': {}
+          }
+        },
+        def: [
+          '@apostrophecms/image',
+          '@apostrophecms/rich-text',
+          '@apostrophecms/rich-text',
+          '@apostrophecms/video'
+        ]
+      }
+    },
+    group: {
+      content: {
+        label: 'Page content',
+        fields: ['content']
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+In this example, when an editor creates a new landing page, the `content` area will automatically include four widgets: an image widget, two rich text widgets, and a video widget, in that order. Each widget will be instantiated with its default properties.
+
+> [!TIP]
+> To learn more about adding default widgets into layout widgets on your page check out the [Core Widgets documentation](/guide/core-widgets.html#creating-default-layouts-with-pre-populated-content).
+
+### Widget compatibility notes
+
+Not all widgets may work smoothly as defaults. When choosing widgets to include in a `def` configuration:
+
+- **Best choices**: Widgets that work well with empty or default content (e.g., `@apostrophecms/rich-text`, `@apostrophecms/image`, `@apostrophecms/video`)
+- **Consider carefully**: Widgets that require specific configuration or selections to function properly
+- **Test thoroughly**: Always test your default widget configuration to ensure it provides a good editing experience
+
 ## Expanded widget preview menu configuration
  To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This context menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons.
 
