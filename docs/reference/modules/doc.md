@@ -97,10 +97,6 @@ Returns an object containing:
 
 Determines which locales exist for the given document `_id`. Returns an array of objects with `_id` and `aposLocale` properties for each locale version found. If the user does not have `view-draft` permission, only published versions are returned.
 
-### `getManager(type)`
-
-Returns the module managing the specified document type. For instance, `self.getManager('article')` returns the module for the article piece type.
-
 ### `deduplicateWidgetIds(doc)`
 
 Ensures all widgets within a document have unique `_id` values. If duplicate or missing widget IDs are found, new unique IDs are generated. This method walks through all areas in the document to check widget IDs.
