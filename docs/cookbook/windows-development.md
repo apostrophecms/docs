@@ -3,11 +3,27 @@ next:
   text: 'Code Organization - Modules'
   link: '/guide/modules.html'
 ---
-# Windows development environment
+# Windows Development with WSL 2 (Optional)
+
+::: info 📌 Multiple Windows Development Options
+
+This guide covers setup using Windows Subsystem for Linux (WSL 2). If you prefer to develop directly on Windows using Git Bash and NVM for Windows, see our main [development setup guide](/guide/development-setup.md) instead. Both approaches are fully supported.
+:::
+
+## Why Choose WSL 2?
+
+WSL 2 provides a Linux environment within Windows that closely matches typical production deployment environments. Benefits include:
+
+- Similar environment to Linux production servers
+- Better compatibility with some native Node modules
+- More predictable behavior with tools like `npm link`
+- Easier to follow Linux-oriented documentation and tutorials
+
+If these benefits align with your workflow, follow this guide for complete WSL 2 setup instructions.
 
 ## Installing Windows Subsystem for Linux
 
-In the end, Node.js is almost always deployed to Linux in production — even when hosting with Microsoft Azure. We need a development environment that closely matches that, and Microsoft provides a great one. So we'll start by installing WSL (Windows Subsystem for Linux). WSL allows us to run many Linux applications without change on any up-to-date Windows 10 or Windows 11 system. Crucially, we can follow most Linux- and Mac-oriented ApostropheCMS documentation without change. There are just a few things to note, which we'll cover here.
+We'll start by installing WSL (Windows Subsystem for Linux). WSL allows you to run Linux applications without change on any up-to-date Windows 10 or Windows 11 system.
 
 ::: warning
 We recommend that you use WSL2. If you have WSL1, here are [Microsoft's upgrade instructions.](https://docs.microsoft.com/en-us/windows/wsl/install#upgrade-version-from-wsl-1-to-wsl-2) As described in that article, you may need to take care of several steps including a kernel update and enabling virtualization in your BIOS. The correct steps to enable virtualization depend on your machine.
@@ -23,7 +39,9 @@ Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt
 From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
 :::
 
-Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little utility that lets us run any version of Node.js we want without fussing with operating system packages. The correct command for installation changes over time, so [follow the official nvm installation guide](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating). **Do not** follow nvm installation guides meant for the Windows command prompt. We want the plain vanilla instructions.
+## Installing Node.js and npm
+
+Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little utility that lets us run any version of Node.js we want without fussing with operating system packages. The correct command for installation changes over time, so [follow the official nvm installation guide](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating). **Do not** follow nvm installation guides meant for the Windows command prompt. We want the plain vanilla Linux instructions.
 
 ::: warning
 You will need to exit the Ubuntu 22.04 window and open a new one after you complete the `nvm` installation step above. Otherwise, the `nvm install` command in the next step will cause a Command Not Found error.
@@ -45,14 +63,15 @@ nvm use 18
 If this produces a "command not found" error, you most likely did not install `nvm` yet, or you did not restart your Ubuntu 22.04 window after installing `nvm`.
 :::
 
+## Installing MongoDB
+
 Now we'll need to provide a connection to a MongoDB instance. We can either use Atlas, create a Docker container to serve our database by following these [instructions](/guide/dockerized-mongodb.md), or install the MongoDB community server.
 
 ::: info
 Follow these instructions to install the community server locally. If using Atlas or Docker, skip to the next [section](/cookbook/windows-development.md#installing-apostrophecms).
 :::
 
-While MongoDB is not officially supported on WSL,
-the regular Linux install commands work fine for development purposes.
+While MongoDB is not officially supported on WSL, the regular Linux install commands work fine for development purposes.
 
 Because we'll be running several commands as root, we'll use `sudo bash` to switch to the root user first:
 
@@ -68,10 +87,9 @@ exit
 
 These commands will install MongoDB 6.x.
 
-When that command completes, possibly with a harmless warning or two, we're ready to
-set up a data folder and launch MongoDB.
+When that command completes, possibly with a harmless warning or two, we're ready to set up a data folder and launch MongoDB.
 
-## Creating a data folder for MongoDB
+### Creating a data folder for MongoDB
 
 MongoDB needs a place to store your database, and the default is a system folder. For development purposes, we want to leave system folders alone. So let's create our own place for it:
 
@@ -79,7 +97,7 @@ MongoDB needs a place to store your database, and the default is a system folder
 mkdir -p ~/mongodb-data/6.0
 ```
 
-## Launching MongoDB (every time you start work)
+### Launching MongoDB (every time you start work)
 
 Now we're ready to launch MongoDB. We'll do this at the start of every session of work with ApostropheCMS:
 
@@ -91,7 +109,7 @@ mongod --dbpath=/home/apostrophe/mongodb-data/6.0
 Since `--dbpath` doesn't understand `~` as a shortcut for "my home directory" in WSL2, we've used the full path to our home directory here. In this case, we chose the username `apostrophe` when we set up Ubuntu 22.04. If you're not sure what username you created when you installed Ubuntu 22.04, type `echo $HOME` to find out.
 :::
 
-You'll see quite a bit of output, and the command prompt should **not** return. It should just keep running — and that's exactly what we want. You should **leave it running in this window for as long as you're working with ApostropheCMS, and open another, separate Ubuntu Window** to continue your work.
+You'll see quite a bit of output, and the command prompt should **not** return. It should just keep running — and that's exactly what we want. You should **leave it running in this window for as long as you're working with ApostropheCMS, and open another, separate Ubuntu Window** to continue your work.
 
 ::: warning
 If the command prompt does return, and you see a message like `fatal assertion`, then `mongod` was unable to start. Most likely you previously tried to run MongoDB in another way, and you need to fix a permissions problem and try again, like this:
@@ -120,29 +138,42 @@ start-mongo
 ```
 :::
 
-#### Working in WSL
+## Working in WSL: Best Practices
 
 When developing ApostropheCMS and Node.js projects in WSL, it's crucial to choose the right location for your project files. Follow these best practices:
 
-1. **Use the Linux filesystem**: Create and work on your projects within your WSL home directory (e.g., `/home/yourusername/`). This approach offers several benefits:
-   - Optimal performance for operations like `npm install`, `git` operations, and asset rebuilding
-   - Consistent line-ending format (LF), avoiding potential issues with mixed line endings
-   - Proper case-sensitivity, matching the behavior of most production environments
-   - Correct file permissions, preventing potential problems with script execution and file access
+### 1. Use the Linux filesystem
 
-2. **Avoid Windows-mounted drives**: While it's possible to access Windows drives (e.g., `C:` or `D:`) through `/mnt/c` or `/mnt/d` in WSL, working directly from these locations can significantly slow down development tasks.
+Create and work on your projects within your WSL home directory (e.g., `/home/yourusername/`). This approach offers several benefits:
 
-3. **Starting in the right place**: When beginning a new project or working on an existing one:
-   - Open your WSL terminal
-   - Navigate to your home directory: `cd ~`
-   - Create or access your project folder from here
+- Optimal performance for operations like `npm install`, `git` operations, and asset rebuilding
+- Consistent line-ending format (LF), avoiding potential issues with mixed line endings
+- Proper case-sensitivity, matching the behavior of most production environments
+- Correct file permissions, preventing potential problems with script execution and file access
 
-4. **Using Visual Studio Code**: If you're using VS Code:
-   - Navigate to your project folder in the WSL terminal
-   - Type `code .` to open VS Code with the correct WSL context
-   - VS Code will handle the integration between Windows and WSL
+### 2. Avoid Windows-mounted drives
 
-5. **Accessing Windows files when needed**: You can still access your Windows files at `/mnt/c/`, `/mnt/d/`, etc., but use this for referencing files, not as your primary development location.
+While it's possible to access Windows drives (e.g., `C:` or `D:`) through `/mnt/c` or `/mnt/d` in WSL, working directly from these locations can significantly slow down development tasks.
+
+### 3. Starting in the right place
+
+When beginning a new project or working on an existing one:
+
+- Open your WSL terminal
+- Navigate to your home directory: `cd ~`
+- Create or access your project folder from here
+
+### 4. Using Visual Studio Code
+
+If you're using VS Code:
+
+- Navigate to your project folder in the WSL terminal
+- Type `code .` to open VS Code with the correct WSL context
+- VS Code will handle the integration between Windows and WSL
+
+### 5. Accessing Windows files when needed
+
+You can still access your Windows files at `/mnt/c/`, `/mnt/d/`, etc., but use this for referencing files, not as your primary development location.
 
 ## Installing ApostropheCMS
 
@@ -154,8 +185,12 @@ nvm use 18
 
 Now you're ready to use the current stable version of Node.js in this shell.
 
-And from here, we can [follow the regular ApostropheCMS setup guide, just like MacOS and Linux users do](/guide/setting-up.md). **You can skip the part about requirements, we already have MongoDB and Node.js.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
+And from here, we can [follow the regular ApostropheCMS setup guide](/guide/development-setup.md#installing-the-apostrophe-cli). **You can skip the requirements section, since we already have MongoDB and Node.js installed.** Everything else is the same — just remember to keep `mongod` running and do your work inside the Ubuntu shell prompt, and you'll be good to go.
 
 ::: warning
 One more quick reminder: be sure to **leave `mongod` running in a separate Ubuntu window** while you work with Apostrophe.
 :::
+
+## Next Steps
+
+Continue with the main [development setup guide](/guide/development-setup.md#creating-a-project) to create your first ApostropheCMS project.
