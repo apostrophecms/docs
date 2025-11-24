@@ -13,7 +13,7 @@ videoList:
 ::: tip Howdy! 👋🏻
 This documentation is available in textual and video forms. Watch the video for your operating system, or continue reading if you prefer. Of course, you can also do both!
 
-**Note:** The video tutorials show setup using WSL on Windows. We now support direct Windows development as well - see the text documentation below for all options. Updated videos coming soon!
+**Note:** The second video tutorial shows setup for Linux OS and WSL 2 on Windows OS. We now support direct Windows development as well - see the text documentation below for all options. Updated videos coming soon!
 :::
 
 <iframe src="https://www.youtube.com/embed/nTjDATerqEg?si=ItkK3gz4-CJmI1WI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -45,7 +45,7 @@ Both approaches are fully supported. Choose based on your preference and workflo
 
 Let's get started with what you will need to have installed on your machine to run a project locally:
 
-### 1. Node.js 18+/ npm
+### 1. Node.js 22+/ npm
 
 Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. While you can download and install these directly from https://nodejs.org, we highly encourage using a Node Version Manager to allow you to switch easily between Node and npm versions.
 
@@ -58,9 +58,9 @@ Use NVM for Windows. Installation instructions are available [here](https://gith
 Once installed for any operating system, you can switch between different versions of Node and npm:
 
 ```bash
-$ nvm install 18
+$ nvm install 22
 # and
-$ nvm use 18
+$ nvm use 22
 ```
 
 ### 2. MongoDB 6.0+
@@ -80,7 +80,7 @@ export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mon
 
 For offline local development, you can use Docker to host the server. You can follow our instructions [here](/guide/dockerized-mongodb.md) and then skip to the next [section](/guide/development-setup.md#installing-the-apostrophe-cli). By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The Docker tutorial sets the MongoDB container up to use this port, so no changes are needed.
 
-**Option 3: MongoDB Community Edition **
+**Option 3: MongoDB Community Edition**
 
 The final option, also for local development, is to install the MongoDB Community Edition server. As with the Docker container, the Community Edition server uses port 27017 and Apostrophe will connect to the MongoDB instance without any additional changes.
 

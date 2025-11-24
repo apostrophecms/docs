@@ -50,13 +50,13 @@ You will need to exit the Ubuntu 22.04 window and open a new one after you compl
 Now, install and start Node.js 18.x with this command:
 
 ```bash
-nvm install 18
+nvm install 22
 ```
 
 In the future, you can just type:
 
 ```bash
-nvm use 18
+nvm use 22
 ```
 
 ::: warning
@@ -180,7 +180,7 @@ You can still access your Windows files at `/mnt/c/`, `/mnt/d/`, etc., but use t
 Now we're ready to install the Apostrophe CLI (Command Line Interface)! To get started, **open a second Ubuntu 22.04 window**, and in that Window type:
 
 ```bash
-nvm use 18
+nvm use 22
 ```
 
 Now you're ready to use the current stable version of Node.js in this shell.
