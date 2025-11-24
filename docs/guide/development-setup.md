@@ -12,28 +12,50 @@ videoList:
 
 ::: tip Howdy! 👋🏻
 This documentation is available in textual and video forms. Watch the video for your operating system, or continue reading if you prefer. Of course, you can also do both!
+
+**Note:** The video tutorials show setup using WSL on Windows. We now support direct Windows development as well - see the text documentation below for all options. Updated videos coming soon!
 :::
 
 <iframe src="https://www.youtube.com/embed/nTjDATerqEg?si=ItkK3gz4-CJmI1WI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <iframe src="https://www.youtube.com/embed/Ep_FvRt8thI?si=XEThrEvtaNyTdKo7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Overview
-This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. While these steps will work directly for Mac OS and many Linux distributions, Windows OS users will need to [install WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) first. **Importantly**, for both WSL2 and other Linux users we recommend checking to make sure that the Linux distribution you are installing or using is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](/guide/dockerized-mongodb.md), which is OS agnostic.
+This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. ApostropheCMS development works on Windows, macOS, and Linux. **Importantly**, for Linux users we recommend checking to make sure that your Linux distribution is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](/guide/dockerized-mongodb.md), which is OS agnostic.
+
+::: info 📌 Windows Development Options
+Windows developers have two options:
+
+**Direct Windows Development (Git Bash + NVM for Windows)**
+- Works directly on Windows with Git Bash as your terminal
+- Quick to set up and familiar if you're used to Windows
+- All instructions on this page apply unless specifically noted
+- We strongly recommend using Git Bash - npm does not work out of the box in PowerShell (this is not an ApostropheCMS issue, but a general npm limitation on Windows). You can pursue PowerShell if you strongly prefer it, but Git Bash ensures the best compatibility.
+
+**Windows Subsystem for Linux (WSL 2)**
+- Provides a Linux environment within Windows
+- More similar to typical production server environments
+- May have better compatibility with some native Node modules
+- More predictable behavior with `npm link` and shell scripts
+- [Installation guide](https://learn.microsoft.com/en-us/windows/wsl/install)
+
+Both approaches are fully supported. Choose based on your preference and workflow.
+:::
 
 ## Requirements
 
 Let's get started with what you will need to have installed on your machine to run a project locally:
 
-::: info 📌 For Windows OS users, we only support development in the WSL 2 environment or another virtual Linux environment. All the additional instructions on this page should be followed from the WSL 2 prompt, not the Windows command or Powershell prompt. If you are having difficulties, there is further [guidance in the documentation](/cookbook/windows-development.html#installing-windows-subsystem-for-linux) that contains additional troubleshooting instructions for the entire install including WSL 2, Node.js, npm, and MongoDB.
-:::
+### 1. Node.js 18+/ npm
 
-### 1. Node.js 18+/ npm<br>
+Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. While you can download and install these directly from https://nodejs.org, we highly encourage using a Node Version Manager to allow you to switch easily between Node and npm versions.
 
-Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. You can download and install these at https://nodejs.org. However, we (and indeed Microsoft) highly encourage the use of NVM to allow you to switch easily between Node and npm versions. You can find the installation instructions [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating).
+**For macOS, Linux, and WSL:**
+Use NVM (Node Version Manager). You can find the installation instructions [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating).
 
-⚠️ NVM is only available for Linux / Mac OS / Windows WSL.
+**For Windows (native):**
+Use NVM for Windows. Installation instructions are available [here](https://github.com/coreybutler/nvm-windows#installation--upgrades).
 
-Once installed, you can switch between different versions of Node and npm by using
+Once installed for any operating system, you can switch between different versions of Node and npm:
 
 ```bash
 $ nvm install 18
@@ -41,11 +63,11 @@ $ nvm install 18
 $ nvm use 18
 ```
 
-See the `nvm` page for more options.
-
-### 2. MongoDB 6.0+<br>
+### 2. MongoDB 6.0+
 
 You can make a MongoDB instance available to your project in three ways:
+
+**Option 1: MongoDB Atlas**
 
 MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
 
@@ -54,18 +76,27 @@ For example:
 export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
-For offline local development, is to use Docker to host the server. You can follow our instructions [here](/guide/dockerized-mongodb.md) and then skip to the next [section](/guide/development-setup.md#installing-the-apostrophe-cli). By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The Docker tutorial sets the MongoDB container up to use this port, so no changes are needed.
+**Option 2: Docker**
 
-The final option, also for local development, is to install the MongoDB community edition server. As with the Docker container, the community edition server uses port 27017 and Apostrophe will connect to the MongoDB instance without any additional changes.
+For offline local development, you can use Docker to host the server. You can follow our instructions [here](/guide/dockerized-mongodb.md) and then skip to the next [section](/guide/development-setup.md#installing-the-apostrophe-cli). By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The Docker tutorial sets the MongoDB container up to use this port, so no changes are needed.
+
+**Option 3: MongoDB Community Edition **
+
+The final option, also for local development, is to install the MongoDB Community Edition server. As with the Docker container, the Community Edition server uses port 27017 and Apostrophe will connect to the MongoDB instance without any additional changes.
 
 **The following steps are only required if you intend to develop on a locally hosted MongoDB instance.**
 
-Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS. Again, Windows users should install from within WSL2 and follow the instructions for their Linux distribution.
+Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS.
+
+- **Windows users**: Follow the [Windows installation guide](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-windows/)
+- **macOS users**: Follow the [macOS installation guide](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-os-x/)
+- **Linux users**: Follow the guide for your specific distribution
+- **WSL users**: Install from within WSL and follow the instructions for your Linux distribution
 
 ::: info 📌 When using Ubuntu 22.04, the only currently supported self-hosted MongoDB version is 6.04 or newer. If your production environment requires that you use an earlier version of MongoDB for development, we advise you to use Ubuntu 20.04.
 :::
 
-In addition to installing MongoDB Community Edition, there are options in the instructions for restarting MongoDB following a system reboot. You can opt to either follow these instructions or manually start mongoDB each time you reboot.
+In addition to installing MongoDB Community Edition, there are options in the instructions for restarting MongoDB following a system reboot. You can opt to either follow these instructions or manually start MongoDB each time you reboot.
 
 To check for successful installation of these tools, try the following commands:
 
@@ -77,7 +108,6 @@ node -v && npm -v
 # This will display your MongoDB version, if installed successfully.
 mongod --version
 ```
-
 
 ### Installing the Apostrophe CLI
 There is an [official CLI](https://github.com/apostrophecms/cli) for quickly setting up starter code for your Apostrophe project. Once in a project, the CLI can also help add new module code with a single command so you can focus on the aspects that are unique to your project rather than copying or remembering boilerplate.
@@ -119,7 +149,7 @@ apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluste
 Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
 `
 
-The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section. 
+The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section.
 
 #### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
 
