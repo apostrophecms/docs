@@ -31,7 +31,7 @@ We recommend that you use WSL2. If you have WSL1, here are [Microsoft's upgrade 
 If you have never installed WSL before, WSL2 will be the default. The rest of this article assumes a first-time install of WSL2.
 :::
 
-First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular we strongly recommend that you [install Ubuntu 22.04 LTS, which can also be done from the Windows app store](https://apps.microsoft.com/store/detail/ubuntu-2004/9N6SVWS3RX71?hl=en-us&gl=US). This method was tested for this article. Newer versions of Ubuntu might not support everything covered here, and 22.04 is supported without charge until 2027.
+First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular, we strongly recommend that you [install Ubuntu 22.04 LTS, which can also be done from the Windows app store](https://apps.microsoft.com/store/detail/ubuntu-2004/9N6SVWS3RX71?hl=en-us&gl=US). This method was tested for this article. Newer versions of Ubuntu might not support everything covered here, and 22.04 is supported without charge until 2027.
 
 Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl ~`.
 
@@ -73,20 +73,23 @@ Follow these instructions to install the community server locally. If using Atla
 
 While MongoDB is not officially supported on WSL, the regular Linux install commands work fine for development purposes.
 
-Because we'll be running several commands as root, we'll use `sudo bash` to switch to the root user first:
-
+First, install the prerequisites if they're not already available:
 ```bash
-sudo bash
-wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc |  gpg --dearmor | sudo tee /usr/share/keyrings/mongodb.gpg > /dev/null
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-apt update
-apt install mongodb-org
-# Stop being root! It's much safer not to be root all the time
-exit
+sudo apt-get install gnupg curl
 ```
 
-These commands will install MongoDB 6.x.
+Now we'll import the MongoDB public GPG key and set up the repository:
+```bash
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+  sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+  --dearmor
 
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+```
+These commands will install MongoDB 8.0.
 When that command completes, possibly with a harmless warning or two, we're ready to set up a data folder and launch MongoDB.
 
 ### Creating a data folder for MongoDB
@@ -94,7 +97,7 @@ When that command completes, possibly with a harmless warning or two, we're read
 MongoDB needs a place to store your database, and the default is a system folder. For development purposes, we want to leave system folders alone. So let's create our own place for it:
 
 ```bash
-mkdir -p ~/mongodb-data/6.0
+mkdir -p ~/mongodb-data/8.0
 ```
 
 ### Launching MongoDB (every time you start work)
@@ -102,7 +105,7 @@ mkdir -p ~/mongodb-data/6.0
 Now we're ready to launch MongoDB. We'll do this at the start of every session of work with ApostropheCMS:
 
 ```bash
-mongod --dbpath=/home/apostrophe/mongodb-data/6.0
+mongod --dbpath=/home/apostrophe/mongodb-data/8.0
 ```
 
 ::: warning
@@ -116,19 +119,19 @@ If the command prompt does return, and you see a message like `fatal assertion`,
 
 ```bash
 sudo rm /tmp/mongodb-27017.sock
-mongod --dbpath=/home/apostrophe/mongodb-data/6.0
+mongod --dbpath=/home/apostrophe/mongodb-data/8.0
 ```
 
 You should only have to do this once to clean up the mess. In the future, **just remember: don't use `sudo`, you don't need it and it only makes a mess.** If there's an exception we'll explicitly show that in our tutorials.
 
-Another possibility is that you tried to write `--dbpath=~/mongodb-data/6.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
+Another possibility is that you tried to write `--dbpath=~/mongodb-data/8.0`. Again, you'll need to substitute your home directory name manually for the `~`. Use `echo $HOME` to find your home directory.
 :::
 
 ::: info
 If typing this every time seems like a pain, try adding this line to your `.bashrc` file:
 
 ```bash
-alias start-mongo="mongod --dbpath=/home/apostrophe/mongodb-data/6.0"
+alias start-mongo="mongod --dbpath=/home/apostrophe/mongodb-data/8.0"
 ```
 
 Save and close the file, restart your shell, and you can just type:

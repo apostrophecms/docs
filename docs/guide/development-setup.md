@@ -20,13 +20,13 @@ This documentation is available in textual and video forms. Watch the video for 
 <iframe src="https://www.youtube.com/embed/Ep_FvRt8thI?si=XEThrEvtaNyTdKo7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Overview
-This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. ApostropheCMS development works on Windows, macOS, and Linux. **Importantly**, for Linux users we recommend checking to make sure that your Linux distribution is supported by the [MongoDB Community Edition](https://www.mongodb.com/docs/v6.0/administration/install-on-linux/). Alternatively, you can also elect to install and use Docker for running the [MongoDB server](/guide/dockerized-mongodb.md), which is OS agnostic.
+This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. ApostropheCMS development works on Windows, macOS, and Linux.
 
 ::: info 📌 Windows Development Options
 Windows developers have two options:
 
 **Direct Windows Development (Git Bash + NVM for Windows)**
-- Works directly on Windows with Git Bash as your terminal
+- Works directly on Windows with Git Bash (included with [Git for Windows]((https://git-scm.com/download/win))) as your terminal
 - Quick to set up and familiar if you're used to Windows
 - All instructions on this page apply unless specifically noted
 - We strongly recommend using Git Bash - npm does not work out of the box in PowerShell (this is not an ApostropheCMS issue, but a general npm limitation on Windows). You can pursue PowerShell if you strongly prefer it, but Git Bash ensures the best compatibility.
@@ -63,7 +63,7 @@ $ nvm install 22
 $ nvm use 22
 ```
 
-### 2. MongoDB 6.0+
+### 2. MongoDB 8.0+
 
 You can make a MongoDB instance available to your project in three ways:
 
@@ -80,20 +80,22 @@ export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mon
 
 For offline local development, you can use Docker to host the server. You can follow our instructions [here](/guide/dockerized-mongodb.md) and then skip to the next [section](/guide/development-setup.md#installing-the-apostrophe-cli). By default, Apostrophe attempts to connect to the database using the connection string `mongodb://localhost:27017/<project-shortName>` where the `shortName` is set in the project `app.js` file. The Docker tutorial sets the MongoDB container up to use this port, so no changes are needed.
 
-**Option 3: MongoDB Community Edition**
+**Option 3: MongoDB Community Edition (Local Installation)**
 
 The final option, also for local development, is to install the MongoDB Community Edition server. As with the Docker container, the Community Edition server uses port 27017 and Apostrophe will connect to the MongoDB instance without any additional changes.
 
 **The following steps are only required if you intend to develop on a locally hosted MongoDB instance.**
 
-Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v6.0/administration/install-community/) on the MongoDB website for your OS.
+Installation of the MongoDB Community Edition is slightly different for each OS. We advise that you follow the [instructions](https://www.mongodb.com/docs/v8.0/administration/install-community/) on the MongoDB website for your OS.
 
-- **Windows users**: Follow the [Windows installation guide](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-windows/)
-- **macOS users**: Follow the [macOS installation guide](https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-os-x/)
-- **Linux users**: Follow the guide for your specific distribution
-- **WSL users**: Install from within WSL and follow the instructions for your Linux distribution
+For Windows users developing directly on Windows (not using WSL), the MongoDB Community Edition installer provides a straightforward graphical installation process that's as simple as using Atlas.
 
-::: info 📌 When using Ubuntu 22.04, the only currently supported self-hosted MongoDB version is 6.04 or newer. If your production environment requires that you use an earlier version of MongoDB for development, we advise you to use Ubuntu 20.04.
+- **Windows users**: Follow the [Windows installation guide](https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-windows/)
+- **macOS users**: Follow the [macOS installation guide](https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-os-x/)
+- **Linux users**: Follow the guide for your [specific distribution](https://www.mongodb.com/docs/v8.0/installation/#mongodb-installation-tutorials)
+- **WSL users**: Install from within WSL and follow the [Ubuntu installation guide](https://www.mongodb.com/docs/v8.0/tutorial/install-mongodb-on-ubuntu/)
+
+::: info 📌 When using Ubuntu 22.04, the minimum supported MongoDB version is 8.0. If your production environment requires that you use an earlier version of MongoDB for development, we advise you to use Ubuntu 20.04.
 :::
 
 In addition to installing MongoDB Community Edition, there are options in the instructions for restarting MongoDB following a system reboot. You can opt to either follow these instructions or manually start MongoDB each time you reboot.
@@ -166,7 +168,10 @@ Open the `app.js` file in the root project directory. Find the `shortName` setti
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'apos-app', // 👈
   modules: {
   // ...
@@ -201,7 +206,7 @@ node app @apostrophecms/user:add my-user admin
 ::: tip
 * When using MongoDB Atlas, it's a good practice to enclose your entire connection string in quotes to prevent any issues with special characters. Also, use percent-encoding for special characters in your password.
 
-* Consider exporting your APOS_MONGODB_URI environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
+* Consider exporting your `APOS_MONGODB_URI` environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
 :::
 
 ### Finishing touches
@@ -211,7 +216,7 @@ You should also update the [session secret for Express.js](https://github.com/ex
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     session: {
       // If this still says `undefined`, set a real secret!
