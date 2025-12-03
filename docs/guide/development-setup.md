@@ -26,7 +26,7 @@ This article covers the first steps to get started. We're going to make sure you
 Windows developers have two options:
 
 **Direct Windows Development (Git Bash + NVM for Windows)**
-- Works directly on Windows with Git Bash (included with [Git for Windows]((https://git-scm.com/download/win))) as your terminal
+- Works directly on Windows with Git Bash (included with [Git for Windows](https://git-scm.com/download/win)) as your terminal
 - Quick to set up and familiar if you're used to Windows
 - All instructions on this page apply unless specifically noted
 - We strongly recommend using Git Bash - npm does not work out of the box in PowerShell (this is not an ApostropheCMS issue, but a general npm limitation on Windows). You can pursue PowerShell if you strongly prefer it, but Git Bash ensures the best compatibility.
