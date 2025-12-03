@@ -39,7 +39,7 @@ Add the following to your `package.json` to enable ESM for your project:
 Update your app.js configuration to use ESM syntax:
 
 ```javascript
-// Before
+// Before (CommonJS)
 require('apostrophe')({
   shortName: 'my-project',
   baseUrl: 'http://localhost:3000',
@@ -49,7 +49,7 @@ require('apostrophe')({
   // ... other configuration
 });
 
-// After
+// After (ESM)
 import apostrophe from 'apostrophe';
 
 apostrophe ({
@@ -65,23 +65,70 @@ apostrophe ({
 
 The addition of `root: import.meta` is crucial for ESM support. This property helps ApostropheCMS correctly resolve file paths in an ESM context and enables features like HMR with Vite.
 
-### 3. Update Import Statements
+### 3. Update Module Exports
+
+ApostropheCMS requires every module's `index.js` to provide a **default export** when using ESM. Modules can export either objects or functions.
+
+```js
+// Before (CommonJS)
+module.exports = {
+  // module definition
+};
+
+// After (ESM)
+export default {
+  // module definition
+};
+```
+
+#### Function-style exports
+
+If your module uses a factory function:
+
+```js
+// Before (Common JS)
+module.exports = function(self, options) {
+  return {
+    // module functions
+  };
+};
+
+// After (ESM)
+export default function(self, options) {
+  return {
+    // module functions
+  };
+}
+```
+
+#### Important
+
+Apostrophe requires a **default export**.
+Do **not** convert modules to named exports like:
+
+```js
+export const article = { ... };
+```
+
+Apostrophe will not load modules using named exports.
+
+### 4. Update Import Statements
 
 #### For Node Modules:
 ```javascript
-// Before
+// Before (Common JS)
 const express = require('express');
 
-// After
+// After (ESM)
 import express from 'express';
 ```
 
 #### For Local Files:
 ```javascript
-// Before
+// Before (CommonJS)
 const myModule = require('./my-module');
 
-// After
+// After (ESM)
 import myModule from './my-module.js';  // Note: .js extension is required
 ```
 
@@ -90,11 +137,11 @@ import myModule from './my-module.js';  // Note: .js extension is required
 ### Module Imports
 
 ```javascript
-// Before
+// Before (CommonJS)
 const { myModule } = require('@my/module');
 const { existsSync } = require('fs');
 
-// After
+// After (ESM)
 import { myModule } from '@my/module';
 import { existsSync } from 'fs';
 ```
@@ -102,11 +149,11 @@ import { existsSync } from 'fs';
 ### Local Module Imports
 
 ```javascript
-// Before
+// Before (CommonJS)
 const myWidget = require('./modules/my-widget');
 const config = require('./config/index');
 
-// After
+// After (ESM)
 import myWidget from './modules/my-widget.js';
 import config from './config/index.js';
 ```
@@ -138,10 +185,10 @@ const __dirname = dirname(__filename);
 If you need to dynamically import modules:
 
 ```javascript
-// Before
+// Before (CommonJS)
 const module = require(`./modules/${moduleName}`);
 
-// After
+// After (ESM)
 const module = await import(`./modules/${moduleName}.js`);
 ```
 
@@ -168,4 +215,4 @@ async function loadTranslations(locale) {
 
 ---
 
-**Note**: While converting to ESM is recommended for new projects and updates, existing projects using CommonJS will continue to work. Choose the best time for your team to make this transition.
+**Note**: While converting to ESM is recommended for new projects and updates, existing projects using CommonJS will continue to work, you just won't get the HMR benefits. Choose the best time for your team to make this transition.
