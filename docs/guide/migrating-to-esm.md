@@ -81,35 +81,6 @@ export default {
 };
 ```
 
-#### Function-style exports
-
-If your module uses a factory function:
-
-```js
-// Before (Common JS)
-module.exports = function(self, options) {
-  return {
-    // module functions
-  };
-};
-
-// After (ESM)
-export default function(self, options) {
-  return {
-    // module functions
-  };
-}
-```
-
-#### Important
-
-Apostrophe requires a **default export**.
-Do **not** convert modules to named exports like:
-
-```js
-export const article = { ... };
-```
-
 Apostrophe will not load modules using named exports.
 
 ### 4. Update Import Statements
