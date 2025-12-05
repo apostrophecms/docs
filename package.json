@@ -22,7 +22,7 @@
     "jsdom": "^22.1.0",
     "marked": "^12.0.2",
     "socket.io-client": "^4.7.5",
-    "swagger-ui-dist": "^5.22.0",
+    "swagger-ui-dist": "^5.30.3",
     "uuid": "^10.0.0",
     "vitepress-plugin-pagefind": "^0.2.4",
     "vue": "^3.3.4",

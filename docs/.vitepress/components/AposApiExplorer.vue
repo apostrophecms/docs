@@ -6,8 +6,9 @@
 import { onMounted } from 'vue'
 
 onMounted(async () => {
-  const SwaggerUI = (await import('swagger-ui-dist/swagger-ui-bundle.js')).default
-  
+  const SwaggerUI = (await import('swagger-ui-dist/swagger-ui-es-bundle.js')).default
+  await import('swagger-ui-dist/swagger-ui.css')
+
   SwaggerUI({
     dom_id: '#swagger-ui',
     url: '/apostrophecms-openapi.yaml',
