@@ -11,7 +11,7 @@ An instance of the `uploadfs` module is available through `self.apos.uploadfs`. 
 These are only selected options. For additional options, see the [documentation](https://www.npmjs.com/package/uploadfs) for the `uploadfs` npm package. While the `uploadfs` module handles image manipulation, these image-related options are configured mostly by the `attachment` module and will be covered by the reference page for that module.
 :::
 
-The `uploadfs` module storage options can be configured in several ways. For the Amazon S3 service you can set the most common options through [environment variables](#environmentvariables). Options that are common to both attachments and assets can be configured through the `uploadfs` property within the module `options` in `modules/@apostrophecms/uploadfs/index.js`. For less common asset storage use cases, like alternative CDN usage for attachments and assets, additional configuration can be passed in the same manner through the `modules/@apostrophe/asset/index.js` file.
+The `uploadfs` module storage options can be configured in several ways. For the Amazon S3 service you can set the most common options through [environment variables](#environment-variables). Options that are common to both attachments and assets can be configured through the `uploadfs` property within the module `options` in `modules/@apostrophecms/uploadfs/index.js`. For less common asset storage use cases, like alternative CDN usage for attachments and assets, additional configuration can be passed in the same manner through the `modules/@apostrophe/asset/index.js` file.
 
 <AposCodeBlock>
 
@@ -97,7 +97,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `disabledFileKey`
-This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions which will lead to problems syncing content with `rsync` or similiar commands. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access. It is recommended that this option be used from the start of the project, but the module exposes a method, [migrateToDisabledFileKey](#migratetodisabledfilekey), to switch later if desired.
+This property takes a string (longer is better) and provides an alternative way to make uploaded assets disabled for access when using local storage. Explicitly preventing web access using the `disable` method blocks local file system access by modifying the file permissions which will lead to problems syncing content with `rsync` or similiar commands. This can be circumvented by using a string passed to the `disabledFileKey` property. This value is used with the filename to create an HMAC key hash that is appended to the filename. This is typically sufficient to obfuscate the file name and prevent access. It is recommended that this option be used from the start of the project, but the module exposes a method, [migrateToDisabledFileKey](#migratetodisabledfilekey-callback), to switch later if desired.
 
 ### `uploadsPath`
 By default, this is set to the `/public/uploads` directory at the root of your project by the `@apostrophecms/uploadfs` module. If desired, you can reassign this to a different directory.
@@ -126,7 +126,7 @@ The options listed below are ApostropheCMS specific. Any AWS S3-specific options
 | [`token`](#token) | String  | Provides an optional `sessionToken`. |
 | [`bucketObjectsACL`](#bucketobjectsacl) | `private` or `read-only` | Can be optionally set to `private` to prevent public download of the asset. |
 
-Also see the (environment variables)[#environmentvariables], which are often sufficient to select and configure S3 without any options in the code.
+Also see the (environment variables)[#environment-variables], which are often sufficient to select and configure S3 without any options in the code.
 
 ### Minimal S3 Example
 <AposCodeBlock>
@@ -162,7 +162,7 @@ The `agent` property takes either `http.Agent` or `https.Agent`. This value will
 The `contentTypes` property is populated by default with an object taken from the [`contentTypes.js`](https://github.com/apostrophecms/uploadfs/blob/main/lib/storage/contentTypes.js) file of the module. This object has all valid project file extensions as properties and their mimetype as value. Any object supplied to the `contentTypes` is merged with the existing default object.
 
 ### `endpoint`
-The `endpoint` option allows setting of an endpoint to which to send requests. For the AWS S3 service it is constructed from the `region` option. However, this option allows for custom URLs for other non-AWS S3-compatible storage services, like DigitalOcean or Linode. This can also be set using an [environment variable](#environmentvariables).
+The `endpoint` option allows setting of an endpoint to which to send requests. For the AWS S3 service it is constructed from the `region` option. However, this option allows for custom URLs for other non-AWS S3-compatible storage services, like DigitalOcean or Linode. This can also be set using an [environment variable](#environment-variables).
 
 ### `noGzipContentTypes`
 By default, an array of MIME types that should not be gzip compressed is loaded from the `/lib/storage/noGzipContentTypes.js` file in the `uploadfs` npm module. If you pass an array through the `noGzipContentTypes` option it will replace this default list. 
@@ -171,13 +171,13 @@ By default, an array of MIME types that should not be gzip compressed is loaded 
 Adding an array of MIME types to the `addNoGzipContentTypes` will result in merging of those MIME types with the existing default array of types that should not be compressed.
 
 ### `region`
-The `region` option is used to pass a specific AWS S3 region to build the endpoint. The allowed values are listed in the [official documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html). If you are using a third party S3 provider like DigitalOcean, you should specify `endpoint` instead. This can also be set using an [environment variable](#environmentvariables).
+The `region` option is used to pass a specific AWS S3 region to build the endpoint. The allowed values are listed in the [official documentation](https://docs.aws.amazon.com/general/latest/gr/s3.html). If you are using a third party S3 provider like DigitalOcean, you should specify `endpoint` instead. This can also be set using an [environment variable](#environment-variables).
 
 ### `secret`
-The `secret` option is used to pass the value of the `secretAccessKey` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials. This can also be set using an [environment variable](#environmentvariables).
+The `secret` option is used to pass the value of the `secretAccessKey` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials. This can also be set using an [environment variable](#environment-variables).
 
 ### `key`
-The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials. This can also be set using an [environment variable](#environmentvariables).
+The `key` option is used to pass the value of the `accessKeyId` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials. This can also be set using an [environment variable](#environment-variables).
 
 ### `token`
 The `token` option is used to pass the value of the optional `sessionToken` to the `AWS.Credentials()` credentials object. See the [official documentation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#constructor_details) for alternative ways to present the credentials.
@@ -200,7 +200,7 @@ See the [Azure documentation](https://docs.microsoft.com/en-us/rest/api/storages
 | `exposedHeaders` | Array | Configures the exposure or the CORS response headers. |
 | `key` | String | Required. Sets the access key. |
 | `maxAgeInSeconds` | Integer | Sets the maximum amount of time the browser should cache the preflight OPTIONS request. |
-| [`replicateClusters`](#replicateClusters) | Array |Array of objects to replicate content across a cluster. |
+| [`replicateClusters`](#replicateclusters) | Array |Array of objects to replicate content across a cluster. |
 
 ### Minimal Azure Example
 <AposCodeBlock>

@@ -325,8 +325,8 @@ onMounted(() => {
   }
 
   const websocketURLs = {
-    'docs-staging.apos.dev': 'https://chatbot-staging.apos.dev',
-    'docs.apostrophecms.org': 'https://chatbot.apos.dev'
+    'staging.apostrophecms.com': 'https://chatbot-staging.apos.dev',
+    'apostrophecms.com': 'https://chatbot.apos.dev'
   };
 
   // Get the current hostname

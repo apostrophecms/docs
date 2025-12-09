@@ -9,7 +9,7 @@ Why customize the CMS UI? Tailoring the admin interface can streamline workflows
 ::: warning
 * Altering the UI should be done rarely and carefully. When possible, add new functionality like custom schema field types and custom manager view columns. Avoid overriding components entirely unless absolutely necessary.
 * Overriding a UI component prevents the project from benefiting from future UI improvements and bug fixes related to that component.
-* Make sure there is not a better way to achieve the desired goal. This includes [asking for help in Discord](https://chat.apostrophecms.org) and [requesting](https://portal.productboard.com/apostrophecms/1-product-roadmap/tabs/1-under-consideration) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
+* Make sure there is not a better way to achieve the desired goal. This includes [asking for help in Discord](https://chat.apostrophecms.org) and [requesting](https://roadmap.apostrophecms.com/roadmap) or [contributing](https://github.com/apostrophecms/apostrophe/blob/main/CONTRIBUTING.md#apostrophecms-contribution-guide) new features for the core.
 * Apostrophe version 3.x used Vue 2.x to power the Admin UI components. With newer versions of Apostrophe, those same components are powered by Vue.js 3.x. We have taken care to include as much backward compatibility as possible, but custom components added in earlier versions of Apostrophe may need modification.
 :::
 
@@ -217,7 +217,7 @@ the component name** if your intent is to override.
 :::
 
 ::: warning
-Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
+Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-custom-admin-ui-when-we-make-changes), above.
 :::
 
 ### Components with a "logic mixin" are safer and easier to override
@@ -344,7 +344,7 @@ To remove the version number, change the contents of that final `transition` ele
 ```
 
 ::: warning
-Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-ui-when-we-make-changes), above.
+Not seeing your changes take effect in development? Make sure you read [rebuilding the UI when you make changes](#rebuilding-the-custom-admin-ui-when-we-make-changes), above.
 :::
 
 ## Overriding standard Vue.js components through configuration in ApostropheCMS

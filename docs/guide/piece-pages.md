@@ -97,7 +97,7 @@ Once those template files exist, you would **add this to the `app.js` configurat
 <AposCodeBlock>
 
 ```javascript
-module.export = {
+module.exports = {
   options: {
     types: [
       // 👇 Adding our new page type
@@ -191,7 +191,7 @@ The `data` object properties unique to index pages are:
 }, data.url) }}
 ```
 
-By default, index pages will include up to *ten* pieces on `data.pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-2) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
+By default, index pages will include up to *ten* pieces on `data.pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-1) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
 
 Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager macro is a special template using the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature. This particular macro accepts two arguments:
 

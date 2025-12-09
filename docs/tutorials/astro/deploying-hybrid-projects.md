@@ -36,7 +36,7 @@ Regardless of your deployment method, you'll need:
 - Environment variables properly configured
 - Asset storage solution like AWS S3 or a persistent folder that doesn't get erased during each deployment (for uploaded images/files)
 
-If you prefer, we can handle all of those details for you via our [Managed Hosting](https://apostrohecms.com/hosting).
+If you prefer, we can handle all of those details for you via our [Managed Hosting](https://apostrophecms.com/hosting).
 
 ## Configuring Astro for Production
 
@@ -183,7 +183,7 @@ There are several guides for other [deployment options](/guide/hosting.html) and
 
 ### Frontend (Astro) Deployment
 
-Your Astro frontend can be deployed to any service, including our [managed hosting](https://www.apostrophecms/hosting), that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend' folder as the root for your Astro deployment.
+Your Astro frontend can be deployed to any service, including our [managed hosting](https://apostrophecms.com/hosting), that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend' folder as the root for your Astro deployment.
 
 #### Common Frontend Hosting Options
 

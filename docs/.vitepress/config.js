@@ -15,13 +15,26 @@ import {
 
 const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID || 'testing';
 const DEBUG_TRACKING = process.env.DEBUG_TRACKING || 'false';
-const ENV = process.env.ENV || 'production';
+const ENV = process.env.ENV || 'prod';
+
+// package.json sets ENV to one of these, otherwise we're doing local testing and
+// a domain + port in the URL will just be a pain in the butt -Tom
+const hostnames = {
+  staging: 'https://staging.apostrophecms.com',
+  prod: 'https://apostrophecms.com',
+  dev: ''
+};
+
+const base = '/docs/';
+
+const hostname = hostnames[process.env.ENV || 'dev' ];
 
 export default defineConfig({
   title: 'ApostropheCMS',
   description: 'Documentation for ApostropheCMS',
 
   ignoreDeadLinks: 'localhostLinks',
+  base,
   vite: {
     resolve: {
       alias: [
@@ -59,33 +72,6 @@ export default defineConfig({
     }
   },
   head: [
-    // Microsoft Clarity tag script
-    [
-      'script',
-      {},
-      `
-      (function(c,l,a,r,i,t,y){ c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)}; t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i; y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y); })(window, document, "clarity", "script", "emium5rsl8");
-    `
-    ],
-    // Google Analytics Tag manager script 1
-    [
-      'script',
-      {
-        async: true,
-        src: 'https://www.googletagmanager.com/gtag/js?id=G-T1M7W6BWMD'
-      }
-    ],
-    // Google Analytics Tag manager script 2
-    [
-      'script',
-      {},
-      `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T1M7W6BWMD');
-    `
-    ],
     // Umami tracking code
     [
       'script',
@@ -101,7 +87,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '32x32',
-        href: '/images/favicon/favicon-32.png'
+        href: '/docs/images/favicon/favicon-32.png'
       }
     ],
     [
@@ -110,7 +96,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '128x128',
-        href: '/images/favicon/favicon-128.png'
+        href: '/docs/images/favicon/favicon-128.png'
       }
     ],
     [
@@ -119,7 +105,7 @@ export default defineConfig({
         rel: 'icon',
         type: 'image/png',
         sizes: '192x192',
-        href: '/images/favicon/favicon-192.png'
+        href: '/docs/images/favicon/favicon-192.png'
       }
     ],
     [
@@ -128,7 +114,7 @@ export default defineConfig({
         rel: 'shortcut icon',
         type: 'image/png',
         sizes: '196x196',
-        href: '/images/favicon/favicon-196.png'
+        href: '/docs/images/favicon/favicon-196.png'
       }
     ],
     [
@@ -137,7 +123,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '152x152',
-        href: '/images/favicon/favicon-152.png'
+        href: '/docs/images/favicon/favicon-152.png'
       }
     ],
     [
@@ -146,7 +132,7 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '167x167',
-        href: '/images/favicon/favicon-167.png'
+        href: '/docs/images/favicon/favicon-167.png'
       }
     ],
     [
@@ -155,14 +141,20 @@ export default defineConfig({
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '180x180',
-        href: '/images/favicon/favicon-180.png'
+        href: '/docs/images/favicon/favicon-180.png'
       }
     ]
   ],
   sitemap: {
-    hostname: 'https://v3.docs.apostrophecms.org/',
+    // here a hostname is not optional, we want one to be
+    // generated for review even in dev
+    hostname: (hostname || 'http://localhost:4173'),
     transformItems: (items) => {
       items.forEach(page => {
+        // We need to add
+        // the base because vitepress doesn't do that automatically
+        // for sitemaps as of today
+        page.url = `${base}${page.url}`;
         page.changefreq = 'monthly';
       });
       return items;
@@ -171,11 +163,12 @@ export default defineConfig({
   transformHead: async (context) => {
     const docText = await parseContent(context.content);
     const description = await processText(docText);
+    const { pageData } = context;
 
-    const relativePath = context.pageData.relativePath;
-    const absolutePath = `https://v3.docs.apostrophecms.org/${relativePath.replace('.md', '.html')}`;
+    const relativePath = pageData.relativePath;
+    const absolutePath = `${hostname}/docs/${relativePath.replace('.md', '.html')}`;
 
-    const returnedArray = [
+    const head = [
       [
         'meta',
         {
@@ -193,8 +186,57 @@ export default defineConfig({
       [
         'meta',
         {
+          property: 'og:locale',
+          content: 'en_US'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'author',
+          content: 'ApostropheCMS Team'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:site',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'twitter:creator',
+          content: '@apostrophecms'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1.0'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'theme-color',
+          content: '#ffffff'
+        }
+      ],
+      [
+        'meta',
+        {
+          name: 'apple-mobile-web-app-capable',
+          content: 'yes'
+        }
+      ],
+      [
+        'meta',
+        {
           property: 'og:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -208,7 +250,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:image',
-          content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
+          content: `${hostname}/docs/images/og-docs-image.png`
         }
       ],
       [
@@ -236,7 +278,7 @@ export default defineConfig({
         'meta',
         {
           name: 'twitter:domain',
-          content: 'v3.docs.apostrophecms.org'
+          content: 'apostrophecms.com'
         }
       ],
       [
@@ -250,7 +292,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:title',
-          content: context.pageData.title
+          content: pageData.title
         }
       ],
       [
@@ -264,11 +306,125 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:image',
-          content: 'https://v3.docs.apostrophecms.org/images/og-docs-image.png'
+          content: `${hostname}/docs/images/og-docs-image.png`
+        }
+      ],
+      [
+        'meta',
+        {
+          property: 'og:site_name',
+          content: 'ApostropheCMS Documentation'
         }
       ]
     ];
-    return returnedArray;
+
+    // Basic SEO meta tags from frontmatter
+    if (pageData.frontmatter.description) {
+      head.push(['meta', {
+        name: 'description',
+        content: pageData.frontmatter.description
+      }]);
+    }
+
+    // Keywords from structured tags (new object format)
+    if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+      const tagValues = Object.values(pageData.frontmatter.tags).filter(Boolean);
+      if (tagValues.length > 0) {
+        head.push(['meta', {
+          name: 'keywords',
+          content: tagValues.join(', ')
+        }]);
+      }
+    }
+
+    // Article-specific meta tags
+    if (pageData.frontmatter.date) {
+      head.push(['meta', {
+        property: 'article:published_time',
+        content: pageData.frontmatter.date
+      }]);
+    }
+
+    if (pageData.frontmatter.lastmod) {
+      head.push(['meta', {
+        property: 'article:modified_time',
+        content: pageData.frontmatter.lastmod
+      }]);
+    }
+
+    if (pageData.frontmatter.author) {
+      head.push(['meta', {
+        property: 'article:author',
+        content: pageData.frontmatter.author
+      }]);
+    }
+
+    // Categories for article tagging
+    if (pageData.frontmatter.categories && Array.isArray(pageData.frontmatter.categories)) {
+      pageData.frontmatter.categories.forEach(category => {
+        head.push(['meta', {
+          property: 'article:section',
+          content: category
+        }]);
+      });
+    }
+
+    // Tags for article tagging (structured tags - new object format)
+    if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+      Object.values(pageData.frontmatter.tags).filter(Boolean).forEach(tag => {
+        head.push(['meta', {
+          property: 'article:tag',
+          content: tag
+        }]);
+      });
+    }
+
+    // Canonical URL
+    const canonicalUrl = pageData.frontmatter.canonical || absolutePath;
+    head.push(['link', {
+      rel: 'canonical',
+      href: canonicalUrl
+    }]);
+
+    // Structured data for tutorials
+    if (pageData.frontmatter.categories?.includes('Tutorials')) {
+      // Handle keywords for structured data
+      let keywordsString = '';
+      if (pageData.frontmatter.tags && typeof pageData.frontmatter.tags === 'object' && !Array.isArray(pageData.frontmatter.tags)) {
+        keywordsString = Object.values(pageData.frontmatter.tags).filter(Boolean).join(', ');
+      } else if (pageData.frontmatter.tags && Array.isArray(pageData.frontmatter.tags)) {
+        keywordsString = pageData.frontmatter.tags.join(', ');
+      }
+
+      const structuredData = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: pageData.title,
+        description: pageData.frontmatter.description || description,
+        author: {
+          '@type': 'Organization',
+          name: pageData.frontmatter.author || 'ApostropheCMS Team'
+        },
+        datePublished: pageData.frontmatter.date,
+        dateModified: pageData.frontmatter.lastmod || pageData.frontmatter.date,
+        keywords: keywordsString,
+        programmingLanguage: 'JavaScript',
+        operatingSystem: 'Cross-platform',
+        applicationCategory: 'Web Development',
+        about: {
+          '@type': 'SoftwareApplication',
+          name: 'ApostropheCMS'
+        }
+      };
+
+      if (pageData.frontmatter.featured_image) {
+        structuredData.image = `${hostname}${pageData.frontmatter.featured_image}`;
+      }
+
+      head.push(['script', { type: 'application/ld+json' }, JSON.stringify(structuredData)]);
+    }
+
+    return head;
   },
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
@@ -295,7 +451,7 @@ export default defineConfig({
           markup: '```',
           map: null
         };
-        return defaultFence([tempToken], 0, options, env, slf)
+        return defaultFence([tempToken], 0, options, env, slf);
       };
 
       md.renderer.rules.fence = (tokens, idx, options, env, slf) => {
@@ -307,7 +463,7 @@ export default defineConfig({
           return defaultFence(tokens, idx, options, env, slf);
         }
 
-        if ([ 'js', 'javascript', 'ts' ].includes(lang)) {
+        if (['js', 'javascript', 'ts'].includes(lang)) {
           let cjsCode, esmCode;
 
           if (format === 'cjs') {

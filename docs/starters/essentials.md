@@ -18,7 +18,7 @@ To test-drive the project in development, make sure you have Apostrophe's usual 
 * MongoDB (5.x or better, we recommend 6.x or better) or an Atlas account
 * NodeJS (18.x or better)
 
-For more information see the Apostrophe [Getting Started Tutorial](https://docs.apostrophecms.org/getting-started/setting-up-your-environment.html).
+For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 ## Getting started
 
 This Starter Kit, also known as a boilerplate project, serves as a template for initiating new projects and can be installed in two main ways:
@@ -61,4 +61,4 @@ This boilerplate is designed so you can install and start running it right away.
 
 ## You really want the docs
 
-Right now, [all the juicy info is in the ApostropheCMS docs](https://docs.apostrophecms.org), so head over there and start reading! This boilerplate project is a fun introduction to the UI, but you'll want to know more to really try it out.
+Right now, [all the juicy info is in the ApostropheCMS docs](https://apostrophecms.com/docs), so head over there and start reading! This boilerplate project is a fun introduction to the UI, but you'll want to know more to really try it out.

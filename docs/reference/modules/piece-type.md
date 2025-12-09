@@ -296,7 +296,7 @@ This module is meant as a base class for more specific content modules. As such,
 
 ### `async find(req, criteria, builders)`
 
-The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-data-query). This method takes three arguments:
+The `find()` method initiates a database query. Learn more about initiating queries [in the database query guide](/guide/database-queries.md#initiating-the-database-query). This method takes three arguments:
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |

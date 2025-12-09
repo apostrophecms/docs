@@ -36,6 +36,7 @@ biography: {
 |[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
 |[`following`](#following) | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.|
+|[`followingIgnore`](#followingignore) | Boolean/Array | n/a | Controls which `following` values should be ignored when auto-generating field content. |
 |`help` | String | n/a | Help text for the content editor |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
@@ -64,6 +65,30 @@ This option should be set to the name of a field or an array of field names that
 If an array of fields is passed, the value of each will be concatenated in the order they are passed in the array.
 
 If this field is nested in an `array` or `object` field and is following a field in the parent object, then the name of the field should be prefixed with a `<`, e.g. `following: '<title'`. This hoisting also works if the field is following a field in the parent object from a grand-child `array` or `object` that is nested within a child `array` or `object` using `<<`. This pattern can be extended for additional levels of nesting.
+
+
+### followingIgnore
+The `followingIgnore` option controls which `following` values should be ignored when auto-generating this field's content. This is useful when you want to follow some fields but exclude others from affecting the field's value.
+
+**Boolean usage:**
+- `followingIgnore: true` - Ignores all `following` values. This effectively disables the `following` behavior for generation of field values.
+
+**Array usage:**
+- `followingIgnore: ['fieldName1', 'fieldName2']` - Ignores only the specified field names from the `following` array
+
+```javascript
+metaDescription: {
+  label: 'Meta Description',
+  type: 'string',
+  following: ['title', 'featured'],
+  followingIgnore: ['featured'],
+  if: {
+    featured: true
+  }
+}
+```
+
+In this example, the `metaDescription` field generates its value from the `title` schema field, but only appears when the `featured` schema field is `true`.
 
 ## `sortify`
 

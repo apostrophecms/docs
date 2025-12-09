@@ -72,7 +72,7 @@ const finalTools = {
   }
 };
 ```
-Next, we are enhancing the `tools` object, which holds settings for all the tools that can be added to the editor's toolbar. First, we use the spread operator to retain the existing tools in the object. Then, we introduce a new property, `characterCount`. This is the name you add to the rich-text-widget `toolbar` array to enable this tool, as detailed in the [ApostropheCMS documentation](https://docs.apostrophecms.org/guide/core-widgets.html#rich-text-widget). The `characterCount` property has an object with two properties.  The `component` property specifies the name of the Vue component (minus its file extension) that generates the user interface modal. This modal appears when the toolbar button is clicked. You'll find the component file in the `characterCount/ui/apos/components` directory. The `label` property determines the text displayed to the user in the button on the toolbar.
+Next, we are enhancing the `tools` object, which holds settings for all the tools that can be added to the editor's toolbar. First, we use the spread operator to retain the existing tools in the object. Then, we introduce a new property, `characterCount`. This is the name you add to the rich-text-widget `toolbar` array to enable this tool, as detailed in the [ApostropheCMS documentation](/guide/core-widgets.md#rich-text-widget). The `characterCount` property has an object with two properties.  The `component` property specifies the name of the Vue component (minus its file extension) that generates the user interface modal. This modal appears when the toolbar button is clicked. You'll find the component file in the `characterCount/ui/apos/components` directory. The `label` property determines the text displayed to the user in the button on the toolbar.
 
 ```javascript
 const finalInsert = {
@@ -85,7 +85,7 @@ const finalInsert = {
   }
 };
 ```
-The next block of code adds to the `insertMenu` object. This object contains properties for all the items that can be added to the insert menu. Again, we spread the original object and then add our new property. This time we are passing a `label` and `icon` in the `characterCount` object to be displayed in the menu item. Of note, the [icon has already been registered](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons), so we don't have to do it in this module. Once again, the `component` property passes the name of the Vue component file located in the `characterCount/ui/apos/components/` folder.
+The next block of code adds to the `insertMenu` object. This object contains properties for all the items that can be added to the insert menu. Again, we spread the original object and then add our new property. This time we are passing a `label` and `icon` in the `characterCount` object to be displayed in the menu item. Of note, the [icon has already been registered](/reference/module-api/module-overview.md#icons), so we don't have to do it in this module. Once again, the `component` property passes the name of the Vue component file located in the `characterCount/ui/apos/components/` folder.
 
 ```javascript
 const finalData = {
@@ -239,7 +239,7 @@ Finally, at the end of this modal markup we use an apostrophe component within a
 <AposButton type="rich-text" @click="takeAction" :class="{ 'apos-is-active': buttonActive }" :label="tool.label" :modifiers="['no-border', 'no-motion']" />
 ```
 
-At the very top of the template, there is another `AposButton` component. This is the button that will be displayed to the user on the rich-text editor toolbar. The `@click` directive binds the `takeAction()` method to the button. As we will explore, this method toggles the `active` prop to then cause the modal markup to be added through the `v-if` directive that we covered. In this example, we are only passing in a label for the button. We could also choose to pass an icon. If you want to add icons in your own extensions, please examine the [code for the `link` toolbar item](https://github.com/apostrophecms/apostrophe/blob/87860e7a2f85395c847bb156ecc0a586d7317eeb/modules/%40apostrophecms/rich-text-widget/ui/apos/components/AposTiptapLink.vue#L3).
+At the very top of the template, there is another `AposButton` component. This is the button that will be displayed to the user on the rich-text editor toolbar. The `@click` directive binds the `takeAction()` method to the button. As we will explore, this method toggles the `active` prop to then cause the modal markup to be added through the `v-if` directive that we covered. In this example, we are only passing in a label for the button. We could also choose to pass an icon. If you want to add icons in your own extensions, please examine the [code for the `link` toolbar item](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/rich-text-widget/ui/apos/components/AposTiptapLink.vue).
 
 #### The `script`
 

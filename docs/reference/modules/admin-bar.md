@@ -117,7 +117,7 @@ If the `contextUtility` property is set to `true`, the button will be displayed 
 
 #### `icon`
 
- For proper display when setting `contextUtility` to true, a property of `icon` set to the value of an existing icon must also be passed. More can be read about icons [here](https://docs.apostrophecms.org/reference/module-api/module-overview.html#icons). A list of the icons imported automatically by Apostrophe can be found in the [‘asset’ module in the ‘globalIcos.js’ file’ within the ‘lib’ folder](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js).
+ For proper display when setting `contextUtility` to true, a property of `icon` set to the value of an existing icon must also be passed. More can be read about icons [here](/reference/module-api/module-overview.md#icons). A list of the icons imported automatically by Apostrophe can be found in the [‘asset’ module in the ‘globalIcos.js’ file’ within the ‘lib’ folder](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js).
 
 #### `toggle`
 

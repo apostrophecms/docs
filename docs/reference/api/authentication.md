@@ -113,7 +113,7 @@ const response = await fetch('http://example.net/api/v1/@apostrophecms/login/log
 
 ### Response
 
-A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](https://docs.apostrophecms.org/guide/custom-login-requirements.html) in our guide.
+A successful response will return a session cookie via the `Set-Cookie` header, which should be automatically honored in the browser context. In case of an error, an appropriate HTTP status code is returned. For more information about custom log-in requirements, see the documentation [here](/guide/custom-login-requirements.md) in our guide.
 
 ### End session
 
@@ -205,3 +205,76 @@ module.exports = {
 This does not grant guest users access to anything the public could not see if it
 was being accessed as part of an ordinary website page. For instance, this does not
 mean that guests can view drafts.
+
+## Getting current user information
+
+After authentication, you can retrieve information about the currently logged-in user by making a request to the `/api/v1/@apostrophecms/login/whoami` endpoint.
+
+### Usage
+
+**With API key (header):**
+```javascript
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/whoami', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'ApiKey your-api-key-here',
+    'Content-Type': 'application/json'
+  }
+});
+const user = await response.json();
+```
+
+**With API key (query parameter):**
+```javascript
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/whoami?apikey=your-api-key-here', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+const user = await response.json();
+```
+
+**With bearer token:**
+```javascript
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/whoami', {
+  method: 'POST', // Recommended
+  headers: {
+    'Authorization': 'Bearer your-token-here',
+    'Content-Type': 'application/json'
+  }
+});
+const user = await response.json();
+```
+
+**With session cookie:**
+```javascript
+const response = await fetch('http://example.net/api/v1/@apostrophecms/login/whoami', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  credentials: 'include' // Include session cookies
+});
+const user = await response.json();
+```
+
+### Response
+
+Returns a JSON object containing user information based on configured fields:
+
+```json
+{
+  "_id": "user123",
+  "username": "john-doe",
+  "title": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+### Error handling
+
+- Returns a 404 status code for unauthenticated requests
+- No user information is returned if the user is not logged in
+
+The specific fields returned can be configured in the `@apostrophecms/login` module. See the [login module documentation](/reference/modules/login.html) for configuration options.

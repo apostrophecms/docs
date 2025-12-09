@@ -4,14 +4,749 @@ Apostrophe comes with some content widgets you can use in areas right away. See 
 
 | Common name/label | Widget reference | What is it? |
 | ------ | ------ | ------ |
+| [Layout](#layout-widget) | `@apostrophecms/layout-widget` | Create responsive grid-based layouts with configurable columns |
 | [Rich text](#rich-text-widget) | `@apostrophecms/rich-text` | A space to enter text and allow formatting (e.g., bolding, links) |
 | [Image](#image-widget) | `@apostrophecms/image` | A single image supporting alt text and responsive behavior |
 | [Video](#video-widget) | `@apostrophecms/video` | Embed a video from most video hosts by entering its URL |
+| [File](#file-widget) | `@apostrophecms/file` | Display a downloadable file link |
 | [Raw HTML](#html-widget) | `@apostrophecms/html` | Allow entering HTML directly (see security notes below) |
+
+## Layout widget
+
+![The layout widget after first addition to the page](../images/basic-layout-selection.png)
+
+The layout widget provides a powerful CSS grid-based layout system for creating responsive column-based designs. Editors can add the layout widget to a page and then directly add, remove, and resize columns in-context without leaving the page. This provides precise control over column positioning, spanning, and responsive behavior across different screen sizes.
+
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/layout': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+### How it works
+
+The layout widget creates a CSS grid container with a configurable number of grid columns (default 12). By default, two layout-column widgets (`@apostrophecms/layout-column-widget`) are added when the layout widget is first placed on a page. Editors can then add or remove columns in-context. Each column has its own area for widget addition and can:
+- Span multiple grid columns
+- Be positioned precisely on the grid
+- Adjust its visibility at different breakpoints (desktop, tablet, mobile)
+- Apply custom alignment (horizontal and vertical)
+
+### Editor experience
+
+The layout widget provides a specialized editing interface that separates layout management from content editing. This two-mode approach gives editors precise control over their grid structure while keeping content editing straightforward.
+
+#### Editing modes
+
+When a layout widget is selected on the page, the breadcrumb area at the top displays two mode-switching buttons:
+
+- **Edit Content** (left button) - Add and edit widgets within existing columns
+- **Edit Columns** (right button) - Modify the grid structure by adding, removing, resizing, and repositioning columns
+
+Toggle between these modes depending on whether you need to work with content or adjust the layout structure.
+
+#### Edit Content mode
+
+![Layout widget with the "Edit content" button selected and widget menu open](../images/layout-content-editing.png)
+
+In Edit Content mode, the interface behaves like a standard Apostrophe area with a few key differences:
+
+- Each column displays its standard widget controls (add, edit, move, etc.)
+- You can add any configured widget type to each column's content area
+- The grid structure remains locked - you cannot resize or reposition columns
+- This mode is ideal for editors who need to work with content without accidentally modifying the layout
+
+**Common tasks in Edit Content mode:**
+- Adding rich text, images, videos, or custom widgets to columns
+- Editing existing widget content
+- Reordering widgets within a column
+- Removing widgets from columns
+
+#### Edit Columns mode
+
+![The layout widget with the "Edit columns" button selected](../images/layout-column-editing.png)
+
+Edit Columns mode unlocks the full power of the layout system, allowing you to manipulate the grid structure itself. Each column displays a set of controls and supports multiple interaction methods.
+
+##### Column controls
+
+Each column displays three icons in its upper-left corner:
+
+1. **Move handle** (drag icon) - Click and drag to reposition the column on the grid
+2. **Settings** (cog icon) - Opens the Column Settings dialog
+3. **Delete** (trash icon) - Removes the column from the layout
+
+##### Resizing columns
+
+![Resizing columns in the layout widget using the side handles](../images/layout-column-resize.png)
+
+Columns can be resized horizontally using the drag handles that appear on the left and right edges of each column on hover:
+
+1. **Hover over a column edge** - Resize handles appear at hover location
+2. **Click and hold a handle** - The underlying grid structure becomes visible, showing column tracks and gaps
+3. **Drag horizontally** - The column edge will snap to the nearest grid column line
+4. **Release** - The column resizes to span the new width
+
+**Resizing behavior:**
+- Columns respect the configured `minSpan` setting (default: 2 columns)
+- Columns cannot resize beyond the grid boundaries
+- Columns can only be resized to the edge of adjacent columns
+- The grid visualization disappears when you release the handle
+
+**Visual feedback during resize:**
+- Semi-transparent grid column indicators appear
+- Gap indicators show the spacing between grid tracks
+- The resizing column is highlighted
+- Invalid resize positions are prevented automatically
+
+##### Adding new columns
+
+![When there is enough space, a plus will apper in the layout widget to allow addition of another column](../images/layout-add-column.png)
+
+The layout widget intelligently detects when there's space available for a new column:
+
+1. **Create space** - Resize existing columns or remove columns to create available space
+2. **Watch for the plus icon** - When the available space equals or exceeds the `minSpan` setting, a plus icon (➕) appears in the available space
+3. **Click the plus icon** - A new column is added at the `defaultSpan` width
+4. **Position the column** - Use the move handle to reposition if needed
+
+**Column addition requirements:**
+- Available space must be at least `minSpan` columns wide (default: 2 columns)
+- New columns are created at `defaultSpan` width (default: 6 columns)
+- Maximum number of columns is limited by the grid's total `columns` setting
+
+##### Repositioning columns
+
+![You can drag-and-drop the layout columns by directly interacting with the column or the drag icon](../images/layout-column-drag.png)
+
+There are two methods for moving columns:
+
+**Method 1: Body drag**
+
+1. Click and hold anywhere on the column (except the move handle)
+2. Drag the column over another column until it visually shifts
+3. Release to exchange positions
+
+**Method 2: Icon drag (drag via move handle)**
+
+1. Click and hold the **move icon** in the upper-left corner
+2. Drag the column to a new position
+3. The grid visualization appears showing column tracks
+4. Release to place the column
+
+*Smart positioning behavior:*
+
+When you drag over another column, the system intelligently decides whether to **nudge** or **swap**:
+
+- **If there's enough grid space**: Adjacent columns are "nudged" over to make room for your column at the new position
+- **If there isn't enough space**: Columns swap positions instead
+
+> [!TIP]
+> The swapping will occur when there is more than 40% overlap between the columns. This means that sometimes there will be more room to nudge the existing column, but the columns will swap anyway. If you want a column to nudge more than one or two grid columns, it is better to drag them separately.
+
+This smart behavior means you don't have to worry about whether there's room - the layout automatically adapts:
+- Dragging left or right with available space → neighbors shift to accommodate
+- Dragging when grid is tight → clean position swap
+- The grid visualization helps you see available space while dragging
+
+##### Column Settings dialog
+
+![The column settings dialog contains toggles and dropdowns for visibility and content orientation](../images/layout-column-settings.png)
+
+When in Edit Columns mode, click the settings icon (cog) on any column to open the Column Settings dialog, which provides options for:
+
+**Responsive visibility controls**
+
+- **Show on Tablet** - Toggle to show or hide this column at tablet viewport widths (configurable, default: 1024px and below)
+- **Show on Mobile** - Toggle to show or hide this column at mobile viewport widths (configurable, default: 600px and below)
+
+*Responsive behavior notes:*
+- Columns are automatically visible at desktop widths
+- Tablet and mobile visibility are independent settings
+- Hidden columns still exist in the content but are not rendered
+- Use these settings to create responsive layouts that adapt to smaller screens
+
+**Content alignment controls**
+
+- **Horizontal Alignment (justify)** - Controls how content aligns horizontally within the column. Options: `start`, `end`, `center`, `stretch`. Default: `stretch` (or the widget's `defaultCellHorizontalAlignment` setting)
+- **Vertical Alignment (align)** - Controls how content aligns vertically within the column. Options: `start`, `end`, `center`, `stretch`. Default: `stretch` (or the widget's `defaultCellVerticalAlignment` setting)
+
+*Alignment behavior notes:*
+- These settings apply to the column's content area, not the column itself
+- `stretch` (default) makes content fill the available space
+- Alignment is applied via CSS Grid's `justify-self` and `align-self` properties
+- Changes preview in real-time as you adjust settings
+
+##### Deleting columns
+
+![The layout widget with the "Edit columns" button selected and the configuration icons displayed](../images/layout-column-editing.png)
+
+To remove a column from the layout:
+
+1. Click the trash icon in the upper-left corner of the column
+2. Confirm the deletion if prompted
+3. The column and all its content are removed
+4. Adjacent columns are left untouched
+
+> [!IMPORTANT]
+> **Deleting a column also deletes all widgets within that column**. This action can be undone using **Ctrl/Cmd + Z**.
+
+#### Keyboard shortcuts
+
+While in Edit Columns mode, several keyboard shortcuts enhance your workflow:
+
+- **Escape** - Close the Column Settings dialog
+- **Ctrl/Cmd + Z** - Undo the last column operation (resize, move, add, delete)
+
+### Basic configuration
+
+The layout widget comes with sensible defaults but can be customized through various options:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        columns: 12,          // Total number of grid columns
+        minSpan: 2,           // Minimum columns a cell can span
+        defaultSpan: 6,       // Default span when adding new columns
+        gap: '1.5rem',        // Gap between grid items
+        mobile: {
+          breakpoint: 600     // Mobile breakpoint in pixels
+        },
+        tablet: {
+          breakpoint: 1024    // Tablet breakpoint in pixels
+        },
+        defaultCellHorizontalAlignment: null,  // Default horizontal alignment
+        defaultCellVerticalAlignment: null     // Default vertical alignment
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+### Configuration options
+
+| Option | Type | Default | Description |
+| ------ | ---- | ------- | ----------- |
+| `columns` | `Integer` | `12` | Total number of CSS grid columns in the grid template (minimum 2). This does not control how many layout-column widgets are added to the page. |
+| `minSpan` | `Integer` | `2` | Minimum number of columns a cell can span |
+| `defaultSpan` | `Integer` | `6` | Default number of columns for new cells |
+| `gap` | `String` | `'1.5rem'` | CSS gap value between grid items |
+| `mobile.breakpoint` | `Integer` | `600` | Mobile breakpoint in pixels |
+| `tablet.breakpoint` | `Integer` | `1024` | Tablet breakpoint in pixels |
+| `defaultCellHorizontalAlignment` | `String` | `null` | Default horizontal alignment (`'start'`, `'end'`, `'center'`, `'stretch'`) |
+| `defaultCellVerticalAlignment` | `String` | `null` | Default vertical alignment (`'start'`, `'end'`, `'center'`, `'stretch'`) |
+| `injectStyles` | `Boolean` | `true` | Automatically inject layout styles |
+| `minifyStyles` | `Boolean` | `true` | Minify injected CSS |
+
+> [!NOTE]
+> The `columns` option defines the CSS grid template columns for layout calculations, not the number of layout-column widgets on the page. When a layout widget is first added, two layout-column widgets are created by default. Editors can add or remove columns in-context as needed. The `minSpan` option controls the minimum number of grid columns each layout-column widget can span.
+
+### Configuring allowed widgets in columns
+
+By default, layout columns contain the core rich text, image, and video widgets. You can customize this by extending the `@apostrophecms/layout-column-widget`:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {},
+            'custom-content': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/@apostrophecms/layout-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+
+### Creating default layouts with pre-populated content
+
+The layout widget works with the `def` field to create simple default page structures. This helps solve the "blank page" problem by providing editors with a starting layout containing pre-populated widgets.
+
+>[!NOTE]
+> The `def` feature is designed for **simple, consistent default layouts** that work well for all new documents of a particular type. For more sophisticated scenarios—such as offering editors a library of pre-designed sections to choose from—consider using the [Section Template Library extension](https://apostrophecms.com/extensions/section-template-library), which provides a more powerful and flexible approach to reusable layouts.
+
+#### Basic default layout structure
+
+Default content for layout columns is configured in the layout column widget itself, not at the page level. This allows you to define what widgets appear inside each column when a layout is added:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {}
+          }
+        },
+        def: [
+          ['@apostrophecms/image', '@apostrophecms/rich-text'],
+          ['@apostrophecms/image']
+        ]
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/layout-column-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+With this configuration, whenever a layout widget is added to a page, it will automatically create two columns (the default) with pre-populated content:
+- **First column**: An image widget followed by a rich text widget
+- **Second column**: A single image widget
+
+#### Adding layout widgets by default to pages
+
+You can also configure pages to start with a layout widget (or multiple widgets) by using `def` at the page level:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Landing Page'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/layout': {},
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
+        },
+        def: [
+          '@apostrophecms/layout'
+        ]
+      }
+    },
+    group: {
+      content: {
+        label: 'Page content',
+        fields: ['content']
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+This creates a new landing page with a layout widget already added. The layout widget will use the default column configuration from your `@apostrophecms/layout-column-widget` setup.
+
+#### Creating complex default page structures
+
+You can create more sophisticated default page layouts by combining different widgets in the page-level `def`:
+
+<AposCodeBlock>
+
+``` js
+content: {
+  type: 'area',
+  options: {
+    widgets: {
+      '@apostrophecms/layout': {},
+      '@apostrophecms/rich-text': {},
+      '@apostrophecms/image': {}
+    }
+  },
+  def: [
+    '@apostrophecms/image',
+    '@apostrophecms/layout',
+    '@apostrophecms/rich-text',
+    '@apostrophecms/layout'
+  ]
+}
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+This creates a page with:
+1. An image widget at the top
+2. A layout widget (with its configured default columns)
+3. A rich text widget
+4. Another layout widget (with its configured default columns)
+
+#### Using different layout widgets with different defaults
+
+For even more control, you can create multiple layout widget types, each extending the base layout widget with different column configurations:
+
+<AposCodeBlock>
+
+``` js
+// First layout widget type with specific defaults
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Hero Layout',
+    columns: 9,
+    minSpan: 1,
+    defaultSpan: 3
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/hero-layout-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+This will create a layout with 3 areas, each spanning 3 CSS grid columns.
+
+<AposCodeBlock>
+
+``` js
+// Configure its column widget with specific defaults
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {}
+          }
+        },
+        def: [
+          ['@apostrophecms/image', '@apostrophecms/rich-text', '@apostrophecms/rich-text']
+        ]
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/hero-layout-column-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+Then use different layout widget types on your page:
+
+<AposCodeBlock>
+
+``` js
+content: {
+  type: 'area',
+  options: {
+    widgets: {
+      'hero-layout': {},
+      '@apostrophecms/layout': {},
+      '@apostrophecms/rich-text': {}
+    }
+  },
+  def: [
+    'hero-layout',
+    '@apostrophecms/rich-text',
+    '@apostrophecms/layout'
+  ]
+}
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+</AposCodeBlock>
+
+This creates a page with three sections: a hero layout with specific column content, a rich text widget, and a standard layout widget with its own default column configuration.
+
+#### How default layouts work
+
+Understanding where to configure `def` is key:
+
+1. **Layout column widget level** (`@apostrophecms/layout-column-widget/index.js`):
+   - Configure `def` on the `content` area field
+   - Defines what widgets appear inside columns when any layout widget is added
+   - Uses nested arrays where each array represents one column
+   - Column content can be a string (single widget) or an array (multiple widgets)
+
+2. **Page/piece level** (e.g., `landing-page/index.js`):
+   - Configure `def` on the page's area field
+   - Defines which widgets appear when a new page/piece is created
+   - Can include layout widgets, which will then use their configured column defaults
+   - Can mix different widget types in sequence
+
+>[!IMPORTANT]
+> The number of columns created is determined by the layout widget's default configuration, typically 2 columns. If you provide more arrays in the column widget's `def` than the default number of columns, the extra arrays will be ignored.
+
+>[!TIP]
+> When configuring `def` in a layout column widget, make sure the widgets you include are also listed in the `options.widgets` configuration. Otherwise, editors won't be able to add additional widgets of those types later.
+
+### Best practices for nested layouts
+
+> [!IMPORTANT]
+> **We do not recommend infinite nesting of layout widgets**. While it's technically possible to add layout widgets inside column content areas, this can lead to complex, difficult-to-maintain content structures and potential performance issues.
+
+#### Recommended approach: Extend for nested layouts with controlled depth
+
+Instead of allowing infinite nesting, the recommended pattern is to create a nested layout widget that uses custom column widgets which only allow content widgets (not additional layout widgets). This gives editors one level of nesting while preventing complexity:
+
+First, create a custom column widget that only accepts content widgets:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  options: {
+    label: 'Nested Layout Column'
+  },
+  fields: {
+      add: {
+        content: {
+          type: 'area',
+          options: {
+            widgets: {
+              '@apostrophecms/rich-text': {},
+              '@apostrophecms/image': {},
+              '@apostrophecms/video': {},
+              'custom-content': {}
+            }
+          }
+        }
+      }
+    };
+  }
+};
+```
+<template v-slot:caption>
+  modules/nested-layout-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+Then create a nested layout widget that uses these custom columns:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Nested Layout',
+    icon: 'view-grid-icon',
+    columns: 6,
+    minSpan: 1,
+    defaultSpan: 2
+  },
+  fields: {
+    add: {
+      columns: {
+        type: 'area',
+        options: {
+          widgets: {
+            'nested-layout-column': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/nested-layout-widget/index.js
+</template>
+</AposCodeBlock>
+
+Finally, add this new `nested-layout-widget` to any areas, with or without the base `@apostrophecms/layout-widget` and other content widgets.
+
+This pattern allows editors to use the main layout widget (12 columns) and place a nested layout widget (6 columns) inside it, but the nested layout's columns can only contain content widgets, preventing infinite nesting.
+
+### Creating custom column widgets
+
+You can also create custom column widgets that extend the base column widget with different content options or restrictions:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-column-widget',
+  options: {
+    label: 'Specialized Content Column'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {
+              toolbar: [ 'bold', 'italic', 'link' ]
+            }
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/specialized-content-column-widget/index.js
+</template>
+</AposCodeBlock>
+
+Then configure your layout widget to use the custom column widget:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  extend: '@apostrophecms/layout-widget',
+  options: {
+    label: 'Custom Layout'
+  },
+  fields: {
+    add: {
+      columns: {
+        type: 'area',
+        options: {
+          widgets: {
+            'nested-column': {},
+            'specialized-content-column': {}
+          }
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  modules/custom-layout-widget/index.js
+</template>
+</AposCodeBlock>
+
+### Troubleshooting: content stretches, overlaps, or vanishes inside Layout
+
+If a widget or custom component behaves strangely **only after** you place it in a Layout column (stretches to full height, overlaps content below, or disappears at some breakpoints), the cause is almost always legacy CSS inside that component, not the grid itself. CSS Grid’s default for items is `justify-self: stretch` and `align-self: stretch`. That’s normal — and usually harmless — unless a child has old percentage-height or positioning tricks.
+
+#### Fast diagnosis
+
+1. **Toggle alignment for just that cell**
+   In **Edit Columns → Column Settings**, set **Horizontal** and **Vertical** alignment to **start**. If the bug vanishes, your child had rules that don’t tolerate stretching. (You can keep “start” for this one column or fix the child CSS.)
+
+2. **Remove legacy percentage heights**
+   In DevTools, look for `height: 100%`, or `min-height` with percentages on the component or its immediate wrappers. Delete them temporarily. If the bug disappears, replace those with modern equivalents (see below).
+
+3. **Check positioning & overflow**
+   Look for `position: absolute` without a positioned ancestor, `overflow: visible` paired with large negative margins, or `width: 100vw`. Any of these can jump outside a column and overlap neighbors.
+
+### Common legacy patterns → modern fixes
+
+| Legacy pattern                                            | Why it breaks in grid                                                                                                | Safer modern replacement                                                                                                                                               |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `height: XX%` on cards, iframes, wrappers | Percent heights need a *definite* parent height; grid columns are auto-height by default → weird stretching/overflow | Remove it. Prefer `height: auto`. If you need aspect locking, use `aspect-ratio` (e.g. `aspect-ratio: 16/9`) or intrinsic sizing with `max-width: 100%; height: auto;` |
+| “Equal height” hacks (from pre-grid times)                | Conflicts with grid’s track sizing & `stretch`                                                                       | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%`                                     |
+| `position: absolute` children                             | Without `position: relative` on the column content wrapper, they escape and overlap                                  | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }`                                                           |
+| Full-viewport widths (`width: 100vw`)                     | Ignores grid gutters and column width → overflow                                                                     | Use `width: 100%` within columns; the grid defines the width                                                                                                           |
+| Sticky headers in a column                                | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness                                | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor                                                                          |
+| Big negative margins                                      | Can visually overrun grid gaps/rows                                                                                  | Prefer padding on the parent, or use smaller translations with `transform`                                                                                             |
+
+#### Quick CSS safety net (scoped)
+
+If lots of legacy components are in play, add a minimal reset **scoped to your project’s card/components**, not to Apostrophe’s core classes:
+
+```css
+/* Example: scope to your design system cards */
+.card, .tile, .widget-root {
+  height: auto;
+  min-height: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.card img, .card video, .card iframe {
+  max-width: 100%;
+  height: auto;
+}
+```
+
+> Tip: If just one column needs “non-stretch” behavior by default, open the column’s **Settings** and set **Horizontal/Vertical** alignment to **start** for that column only.
+
+#### Project-level mitigation (defaults)
+
+If you know many legacy widgets won’t like stretching, set Layout’s defaults to “start” alignment project-wide:
+
+```js
+// app.js (or your module config)
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        // existing options…
+        defaultCellHorizontalAlignment: 'start',
+        defaultCellVerticalAlignment: 'start'
+      }
+    }
+  }
+};
+```
+
+This flips the default from `stretch` to `start`, while editors can still choose `stretch` per column when appropriate.
 
 ## Rich text widget
 
 The rich text widget provides a space for entering and editing formatted text. Editors can update its content directly in-context.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LmVOzjKW13s?si=P3NxaJTFqwUBxK5I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`color`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field.
 
@@ -226,33 +961,63 @@ To override the defaults you must provide a new configuration object **at the `@
 {
   toolbar: [
     'styles',
+    '|',
     'bold',
     'italic',
     'strike',
+    'underline',
+    'subscript',
+    'superscript',
+    'blockquote',
+    '|',
+    'alignLeft',
+    'alignCenter',
+    'alignRight',
+    'image',
+    'horizontalRule',
     'link',
+    'anchor',
     'bulletList',
     'orderedList',
-    'blockquote'
+    'color'
   ],
   styles: [
+    // you may also use a `class` property with these
     {
       tag: 'p',
-      label: 'Paragraph (P)'
+      label: 'apostrophe:richTextParagraph'
+    },
+    {
+      tag: 'h1',
+      label: 'apostrophe:richTextH1'
     },
     {
       tag: 'h2',
-      label: 'Heading 2 (H2)'
+      label: 'apostrophe:richTextH2'
     },
     {
       tag: 'h3',
-      label: 'Heading 3 (H3)'
+      label: 'apostrophe:richTextH3'
     },
     {
       tag: 'h4',
-      label: 'Heading 4 (H4)'
+      label: 'apostrophe:richTextH4'
+    },
+    {
+      tag: 'h5',
+      label: 'apostrophe:richTextH5'
+    },
+    {
+      tag: 'h6',
+      label: 'apostrophe:richTextH6'
     }
+  ],
+  insert: [
+    'image',
+    'table',
+    'importTable'
   ]
-},
+}
 ```
 
 If you prefer, you can configure only one of the two sections (`toolbar` or `styles`), and keep the default configuration for the other.
@@ -315,7 +1080,7 @@ Spaces in the syntax between the symbol and any text in the table are required, 
 
 If you choose to enable the `image` toolbar option, which allows images to
 appear inline in text, you will usually want to also add it to the `insert` option so
-that the user can easily insert a brand new image without selecting text first.
+that the user can easily insert a brand-new image without selecting text first.
 
 In addition, you will likely want to configure the `imageStyles` option
 of the `@apostrophecms/rich-text-widget` module, in order to specify CSS classes
@@ -349,7 +1114,7 @@ the user is allowed to select for the image:
 
 </AposCodeBlock>
 
-Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element.
+Apostrophe will apply the specified classes to a `figure` element that will contain an `img` element and a `figcaption` element. You can also choose to add a link to your image. Like text links, by default images can be linked to URLs or internal pages. See the [next section](#allowing-links-to-specific-piece-types) for expanding that capability to linking with specific piece-type show pages.
 Note that writing CSS styles for those classes to suit your needs is up to you. `image-float-left` does not ship with Apostrophe,
 it is just an example.
 
@@ -412,7 +1177,7 @@ modules/@apostrophecms/rich-text-widget/i18n/myNamespace/en.json
 
 ## Image widget
 
-The image widget supports displaying a single image, including its alt text. It also uses the image variants that Apostrophe generates to responsively load image files based on the active viewport width.
+The image widget displays a single image with full caption and linking support. Images are wrapped in semantic figure elements, allowing you to add optional captions beneath each image. The widget also supports adding links to external URLs, internal pages, or any piece-type show page (using the [`linkWithType` option](#allowing-image-links-to-specific-piece-types)). Apostrophe automatically generates responsive image variants to optimize loading across different screen sizes.
 
 <!-- TODO: Link to info about uploading media regarding multiple image versions, instead of explaining here, when available. -->
 
@@ -435,6 +1200,26 @@ fields: {
     modules/@apostrophecms/home-page/index.js
   </template>
 </AposCodeBlock>
+
+### Styling
+By default, image widgets output a `figure` element with an optional `figcaption` when a caption is added. An inline style of `margin: 0` is applied to the `figure` by default to reduce unwanted spacing. If you prefer to handle all styling in your own CSS, you can disable the default inline styles by setting `inlineStyles: false` and adding your own `className` in the widget configuration, either in a project level module or per-area:
+
+<AposCodeBlock>
+
+``` js
+export default {
+  options: {
+    inlineStyles: false,
+    className: 'image-class'
+  }
+}
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/image-widget/index.js
+  </template>
+</AposCodeBlock>
+
+The `className` string will be appended with `__wrapper` on the `figure` element and `__caption` on the `figcaption` element.
 
 ### Specifying a minimum size
 
@@ -489,7 +1274,7 @@ A fixed ratio for all devices doesn't work for all designs. If your responsive d
 ### Customizing responsive image sizes {#srcset}
 
 <!-- TODO: link to attachment module srcset method when reference is available. -->
-The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) value.
+The image widget's default `srcset` attribute for responsive behavior assumes the image is roughly the same width as the viewport. This will help reduce download times even if the display size is smaller, but you can make responsive loading more accurate by providing [the `sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#sizes) value.
 
 This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets.md#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
@@ -556,20 +1341,20 @@ modules/@apostrophecms/image-widget/index.js
 </AposCodeBlock>
 
 ### Adding a `loading` attribute
-You can elect to add a `loading` attribute to your image markup by passing the `loadingType` option to either the project-level image widget configuration or within the area widget configuration. This [attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-loading) can take values of `lazy` or `eager` to alter when the image is loaded onto the page. As with the `size` option, setting this option in the area widget configuration will override the value added to project-level options.
+You can elect to add a `loading` attribute to your image markup by passing the `loadingType` option to either the project-level image widget configuration or within the area widget configuration. This [attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#loading) can take values of `lazy` or `eager` to alter when the image is loaded onto the page. As with the `size` option, setting this option in the area widget configuration will override the value added to project-level options.
 
 <AposCodeBlock>
 
-``` js
+``` javascript
 export default {
   options: {
     loadingType: 'lazy'
   }
 }
 ```
-<template v-slot:caption>
-modules/@apostrophecms/image-widget/index.js
-</template>
+  <template v-slot:caption>
+    modules/@apostrophecms/image-widget/index.js
+  </template>
 </AposCodeBlock>
 
 ### Adding a placeholder image
@@ -623,6 +1408,25 @@ prefix, Apostrophe would look for the file in the core Apostrophe npm
 module, and would not find it.
 :::
 
+### Allowing image links to specific piece-types
+
+By default, the image widget allows you to add links to URLs or internal pages. The `linkWithType` option allows you to add links to any `piece-type` show page. Simply pass an array with the name of each desired `piece-type`. If you want to maintain linking to internal pages, also add `@apostrophecms/any-page-type` to your array. Note that you don't need to change this setting if you just want to link to the main index page for a piece type.
+
+<AposCodeBlock>
+
+``` javascript
+export default {
+  options: {
+    linkWithType: [ '@apostrophecms/any-page-type', 'article' ]
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/image-widget/index.js
+</template>
+</AposCodeBlock>
+
 ## Video widget
 
 The core video widget accepts a video URL and fetches the embed code to display it. Most major video hosts are supported by default.
@@ -669,6 +1473,63 @@ export default {
 </template>
 </AposCodeBlock>
 
+## File widget
+
+The file widget allows content editors to select and display a downloadable file from the media library. When editors add this widget to a page, they can choose any file that has been uploaded to the `@apostrophecms/file` piece type, or upload and create a new file piece.
+
+<AposCodeBlock>
+
+``` js
+fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/file': {}
+          }
+        }
+      }
+// remainder of fields
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/home-page/index.js
+  </template>
+</AposCodeBlock>
+
+The widget uses a relationship field to connect to files in the media library. By default, it requires exactly one file to be selected before the widget can be saved.
+
+### Customizing the file relationship
+
+The file widget's relationship field can be configured using standard relationship field options. For example, you might want to allow multiple files or make the file selection optional:
+
+<AposCodeBlock>
+
+``` javascript
+export default {
+  fields: {
+    add: {
+      _file: {
+        type: 'relationship',
+        label: 'apostrophe:file',
+        max: 3,
+        required: true,
+        withType: '@apostrophecms/file'
+      }
+    }
+  }
+};
+
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/file-widget/index.js
+</template>
+</AposCodeBlock>
+
+You can also modify other relationship field properties like `required`, though removing the requirement may result in an empty widget if no file is selected.
+
+
 ## HTML widget
 
 **Or: How to get access to the editing interface when embedded HTML breaks it.**
@@ -704,8 +1565,8 @@ There is a safety mechanism in case things do go wrong. If embedded HTML breaks 
 https://example.net/broken-page?safemode=1
 ```
 
-
 To do that, access the page with `?safemode=1` at the end of the URL. Then you will be able to edit the widget and remove the offending content.
+
 
 ## Enabling real-time preview for widgets
 

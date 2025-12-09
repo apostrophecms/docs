@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "* Make sure you are not already running 'npm run dev' or 'npm run serve'"
+echo "* Make sure you have installed muffet (brew install muffet)"
+echo
+read -p "Press Enter to continue..."
+
+npm run build &&
+concurrently --kill-others 'npm run preview' 'wait-on tcp:4173 && muffet -b 65536 http://localhost:4173/docs/ --timeout 10 -e 'a3-vitepress-docs/issues' -e 'example.com' -e 'localhost:16686' -e 'localhost:3000' -e 'localhost:4321' -e authToken --max-connections-per-host=10'

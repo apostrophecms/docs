@@ -198,7 +198,7 @@ This is a core module option, but you can add your own configuration by giving i
 <AposCodeBlock>
 
 ```javascript
-module.export = {
+module.exports = {
   options: {
     types: [
       // 👇 Adding our new page type

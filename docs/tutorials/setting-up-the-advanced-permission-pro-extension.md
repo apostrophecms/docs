@@ -24,7 +24,7 @@ The name of the npm package of the Advanced Permission module is `@apostrophecms
 
 The requirements for setting up the Advanced Permission module are:
 
-- **An Apostrophe 3+ application**: If you don’t already have one, make sure you meet the requirements and then follow the instructions in the [development setup guide](https://docs.apostrophecms.org/guide/setting-up.html).
+- **An Apostrophe 3+ application**: If you don’t already have one, make sure you meet the requirements and then follow the instructions in the [development setup guide](/guide/setting-up.md).
 - **An Apostrophe Pro or Apostrophe Assembly subscription**: To gain access to the Advanced Permission module, you first need to join [Apostrophe Pro](https://apostrophecms.com/pro) or [Apostrophe Assembly](https://apostrophecms.com/assembly). 
 ## Installing the Advanced Permission Module
 
@@ -102,7 +102,7 @@ When launching `npm install`, the production environment will now be able to ins
 
 ## Enable the Module in Apostrophe
 
-Enable the Advanced Permission extension by adding the following two modules to the `[app.js](https://docs.apostrophecms.org/tutorials/code-organization.html#app-js)` file:
+Enable the Advanced Permission extension by adding the following two modules to the `[app.js](/tutorials/code-organization.md#app-js)` file:
 
 <AposCodeBlock>
 
@@ -129,13 +129,13 @@ require('apostrophe')({
 To use Advanced Permission in a multisite project, you can add the two modules outlined above to both the `site/index.js` and `dashboard/index.js` files. Adding the modules to the two files will enable the Pro extension for both the dashboard and all individual sites. It’s also possible to enable the extension only for the dashboard on individual sites. Before starting to use the Advanced Permission module in the dashboard, make sure the `privateDashboards` feature is set to `false`. This setting won’t affect individual sites.
 :::
 
-On the first run of your project after enabling the Advanced Permission module, some database migrations will automatically occur. These create a group for each role found in existing users and link them to the group corresponding to their `[role](https://docs.apostrophecms.org/guide/users.html#user-roles)` field.
+On the first run of your project after enabling the Advanced Permission module, some database migrations will automatically occur. These create a group for each role found in existing users and link them to the group corresponding to their `[role](/guide/users.md#user-roles)` field.
 
 After adding the Advanced Permission extension, a “Groups” item will appear in the top left menu in the admin bar.
 
 ## Adding Custom Permissions
 
-In addition to the *Create*, *Edit*, *Delete*, and *Publish* core permissions, new custom permissions can be defined through the `permissions` object in a piece-type `index.js` file for an individual piece or in `[@apostrophecms/page-type/index.js](https://docs.apostrophecms.org/reference/modules/page-type.html#apostrophecms-page-type)` for all pages. You can’t define custom permissions in individual page types.
+In addition to the *Create*, *Edit*, *Delete*, and *Publish* core permissions, new custom permissions can be defined through the `permissions` object in a piece-type `index.js` file for an individual piece or in `[@apostrophecms/page-type/index.js](/reference/modules/page-type.md#apostrophecms-page-type)` for all pages. You can’t define custom permissions in individual page types.
 
 Much like the `fields` object, the `permissions` object takes an `add` property. This accepts permission properties with objects having the following three properties:
 
@@ -169,7 +169,7 @@ module.exports = {
 </AposCodeBlock>
 
 ::: tip
-By using `permissions` in an Apostrophe core module at the project level, you can add a new custom permission to multiple document types. For example, extending the `[@apostrophecms/piece-type](https://docs.apostrophecms.org/reference/modules/piece-type.html#apostrophecms-piece-type)` module with the `permissions` object would add the custom permissions to all pieces.
+By using `permissions` in an Apostrophe core module at the project level, you can add a new custom permission to multiple document types. For example, extending the `[@apostrophecms/piece-type](/reference/modules/piece-type.md#apostrophecms-piece-type)` module with the `permissions` object would add the custom permissions to all pieces.
 :::
 
 `**editPermission**`**: Limiting Access to a Single Field**

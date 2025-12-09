@@ -4,6 +4,11 @@ The `@apostrophecms/attachment` module manages all media file uploading. Once up
 
 For attachments meant to be included in the media or file libraries, metadata and organization those media are primarily managed through the respective `@apostrophecms/image` and `@apostrophecms/file` piece types. See the [pieces REST API documentation](./pieces.md) for additional information.
 
+> [!TIP]
+> **Handling Large Query Strings**
+>
+> When working with large sets of media (such as batch operations on hundreds of files), you may encounter query string length limitations. ApostropheCMS 4.x includes middleware that allows you to convert GET requests with large query strings to POST requests using the `__aposGetWithQuery` property. See the [POST-as-GET middleware guide](#post-as-get-middleware) below for details.
+
 ## Endpoints
 
 | Method | Path | Description | Auth required |
@@ -130,4 +135,91 @@ A `GET` request for an image or file is generally a normal [piece type `GET` req
 - `POST /api/v1/@apostrophecms/image`
 - `POST /api/v1/@apostrophecms/file`
 
-A `POST` request for an image or file is generally a normal [piece type `POST` request](./pieces.md#get-api-v1-piece-name-id). In addition to the typical piece document properties, it must also include an `attachment` property, containing the attachment object returned from [an attachment upload request](#post-api-v1-apostrophecms-attachment-upload).
+A `POST` request for an image or file is generally a normal [piece type `POST` request](./pieces.md#get-api-v1-piece-name-id). However, creating a new image or file piece requires a **two-step process**:
+
+1. **Upload the file**: First, use the [`/api/v1/@apostrophecms/attachment/upload`](#post-api-v1-apostrophecms-attachment-upload) endpoint to upload the actual file and receive an attachment object.
+
+2. **Create the piece**: Then, use the image or file `POST` endpoint to create the piece document, including the attachment object in the request body.
+
+The `POST` request body must include an `attachment` property containing the complete attachment object returned from the upload request. In addition to the typical piece document properties, this creates the metadata and organization structure needed for the media library.
+
+### Example: Creating a new image piece
+
+```javascript
+// Step 1: Upload the file
+const formData = new FormData();
+formData.append('file', imageFile);
+
+const attachmentResponse = await fetch('/api/v1/@apostrophecms/attachment/upload', {
+  method: 'POST',
+  body: formData
+});
+
+const attachment = await attachmentResponse.json();
+
+// Step 2: Create the image piece
+const imageResponse = await fetch('/api/v1/@apostrophecms/image', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    title: 'My Image',
+    alt: 'Description of my image',
+    attachment: attachment, // Include the complete attachment object
+    // ... other piece properties
+  })
+});
+
+const imageDocument = await imageResponse.json();
+```
+
+## POST-as-GET Middleware
+
+When working with large datasets in the media library (such as batch operations on hundreds of files), you may encounter query string length limitations that prevent standard `GET` requests from working properly. ApostropheCMS 4.x includes middleware that allows you to work around this limitation by converting `GET` requests with large query strings to `POST` requests.
+
+### How it works
+
+The middleware detects `POST` requests that contain a special `__aposGetWithQuery` property in the request body. When found, it:
+
+1. Changes the request method from `POST` to `GET`
+2. Moves the contents of `__aposGetWithQuery` to `req.query`
+3. Preserves any existing query parameters (like `aposMode` and `aposLocale`)
+4. Removes the request body
+
+This allows you to send large amounts of query data through the request body while maintaining the semantic meaning of a `GET` request.
+
+### Usage
+
+Instead of passing large query parameters in the query string:
+
+```javascript
+// This might fail with very large query strings
+const apiResponse = await apos.http.get('/api/v1/@apostrophecms/image', {
+  qs: {
+    ids: ['id1', 'id2', 'id3', /* ... hundreds more IDs ... */]
+  },
+  draft: true
+});
+```
+
+Use the POST-as-GET pattern:
+
+```javascript
+// This will work with large datasets
+const apiResponse = await apos.http.post('/api/v1/@apostrophecms/image', {
+  body: {
+    __aposGetWithQuery: {
+      ids: ['id1', 'id2', 'id3', /* ... hundreds more IDs ... */]
+    }
+  },
+  draft: true
+});
+```
+
+### Important notes
+
+- The original query string parameters are preserved and merged with the `__aposGetWithQuery` content
+- Options like `draft: true` passed to `apos.http.post()` are still transformed into query string parameters as normal
+- This middleware is particularly useful for batch operations in the media manager, such as applying tags to multiple selected images
+- The middleware is transparent to your application logic - the request is processed as a normal GET request after the conversion

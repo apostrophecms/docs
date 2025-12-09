@@ -36,7 +36,7 @@ To test-drive the project in development, make sure you have Apostrophe's usual 
 * MongoDB (5.x or better, we recommend 6.x or better)
 * NodeJS (18.x or better)
 
-For more information see the Apostrophe [Getting Started Tutorial](https://docs.apostrophecms.org/getting-started/setting-up-your-environment.html).
+For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 
 ## Getting Started
 The Pro Essentials starter kit can either be installed using the [Apostrophe CLI tool](https://apostrophecms.com/extensions/apos-cli) or you can navigate to the [official GitHub repository](https://github.com/apostrophecms/starter-kit-pro-essentials), fork the template into your own account, and clone it locally.
@@ -72,7 +72,7 @@ Enter a password when prompted.
 
 This document assumes familiarity with Apostrophe concepts. If you are not already familiar with
 single-site Apostrophe development, you should pause here and familiarize yourself with the
-[ApostropheCMS documentation](https://docs.apostrophecms.org/) as a starting point.
+[ApostropheCMS documentation](https://apostrophecms.com/docs/) as a starting point.
 
 ## First Steps: required before project startup
 
@@ -117,7 +117,7 @@ And log in with the admin account you created for the site. Then make some simpl
 Right now we have basic example templates in place. Let's look at where to put our code to customize the experience.
 
 > Again, if you are not already familiar with single-site Apostrophe development, you should pause here and
-[review the ApostropheCMS documentation](https://docs.apostrophecms.org/) as a starting point.
+[review the ApostropheCMS documentation](https://apostrophecms.com/docs) as a starting point.
 
 Just like in any single-site Apostrophe project, modules are configured in `app.js`, and module code lives
 in subdirectories of `modules/`.
@@ -186,8 +186,8 @@ database migrations before restarting with your newest code.
 ### Self-hosting
 
 Self-hosting is also an option if you have not chosen to host with us. We offer several how-to guides on this, such as
-[Ubuntu hosting setup](https://v3.docs.apostrophecms.org/cookbook/ubuntu-hosting.html) and
-[deploying Apostrophe in the cloud with Heroku](https://v3.docs.apostrophecms.org/cookbook/deploying-to-heroku.html). The main new element
+[Ubuntu hosting setup](/cookbook/ubuntu-hosting.md) and
+[deploying Apostrophe in the cloud with Heroku](/cookbook/deploying-to-heroku.md). The main new element
 with Apostrophe Pro is making sure that the `npm install` command has access to the `@apostrophecms-pro` modules during installation.
 
 Here is the simplest recipe to achieve that:
@@ -219,10 +219,10 @@ All the styling for the supplied widgets, except for the partials added in the c
 ### `accordion-widget`
 The `accordion-widget` implements an accordion element powered by the [`accordion-js` npm package](https://www.npmjs.com/package/accordion-js). You can read about additional configuration options in the documentation of that package. The module consists of a main `index.js` file with the content schema fields, plus a `views` folder that contains a `widget.html` file with the Nunjucks markup for the accordion.
 
-Finally, there is the `ui/src` folder that contains the `index.scss` stylesheet and the `index.js` file that contains the JavaScript that is delivered to the frontend and powers the accordion using a [widget player](https://docs.apostrophecms.org/guide/custom-widgets.html#client-side-javascript-for-widgets). Any custom widgets that require client-side code should be structured in this same way. Data is passed from the schema fields to the browser for use in the player script by adding it to a data attributes in the template.
+Finally, there is the `ui/src` folder that contains the `index.scss` stylesheet and the `index.js` file that contains the JavaScript that is delivered to the frontend and powers the accordion using a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets). Any custom widgets that require client-side code should be structured in this same way. Data is passed from the schema fields to the browser for use in the player script by adding it to a data attributes in the template.
 
 ### `card-widget`
-The `card-widget` creates a simple card with optional image and text. The card can be made directly clickable, or can have links and buttons added. The schema fields for these elements are provided by the `lib/schema/link.js` file, which serves as a model for implementing reusable parts of widgets. These same schema fields are reused in the `hero` and `link` widgets and can be used in your custom project widgets. The markup for the links is imported into the `card-widget` template from the `views/fragments/link.html` file using the [`rendercall` helper](https://docs.apostrophecms.org/guide/fragments.html#inserting-markup-with-rendercall). This is present in a simpler form in the `links-widget`. Again, all your custom modules (not just widgets) can utilize fragments to replicate similar areas of markup in this same way.
+The `card-widget` creates a simple card with optional image and text. The card can be made directly clickable, or can have links and buttons added. The schema fields for these elements are provided by the `lib/schema/link.js` file, which serves as a model for implementing reusable parts of widgets. These same schema fields are reused in the `hero` and `link` widgets and can be used in your custom project widgets. The markup for the links is imported into the `card-widget` template from the `views/fragments/link.html` file using the [`rendercall` helper](/guide/fragments.md#inserting-markup-with-rendercall). This is present in a simpler form in the `links-widget`. Again, all your custom modules (not just widgets) can utilize fragments to replicate similar areas of markup in this same way.
 
 ### `column-widget`
 The `column-widget` implements one method of adding a user-selected number of columns to a page. It uses a select field and conditional fields that restrict the number of columns based on the value of the select. Each column has an area with widgets for the `link`, `card`, and `accordion` basic widgets, plus the core `rich-text`, `image`, and `video` widgets. These are added through a shared configuration object that defines the available widgets for each column. The first column additionally adds the basic `slideshow` widget.

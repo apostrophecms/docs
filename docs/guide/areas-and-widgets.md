@@ -4,7 +4,7 @@
 
 ## Basic area configuration
 
-Like other fields, area fields are configured as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`. Every area requires a `widgets` option to configure the allowed widget types. This example includes three core widget types.
+Like other fields, area fields are configured as part of the [field schema](/guide/content-schema.md) for a page or piece type. The following example shows a landing page type with one area field named `main`. Every area requires a `widgets` option to configure the allowed widget types. This example includes four core widget types.
 
 <AposCodeBlock>
 
@@ -20,6 +20,7 @@ export default {
         type: 'area',
         options: {
           widgets: {
+            '@apostrophecms/layout': {},
             '@apostrophecms/rich-text': {},
             '@apostrophecms/image': {},
             '@apostrophecms/video': {}
@@ -44,7 +45,7 @@ export default {
 </AposCodeBlock>
 
 
-![The landing page main area with the menu open, showing available widgets](/images/area-in-context.jpg)
+![The landing page main area with the menu open, showing available widgets](../images/new-area-in-context.png)
 
 ### Leave `-widget` out of area configuration
 
@@ -59,6 +60,7 @@ main: {
   type: 'area',
   options: {
     widgets: {
+      '@apostrophecms/layout': {},
       '@apostrophecms/rich-text': {},
       '@apostrophecms/image': {},
       '@apostrophecms/video': {}
@@ -82,6 +84,73 @@ introduction: {
 }
 ```
 
+## Adding default widgets to areas
+
+To solve the "blank page" problem and help editors get started with content creation, you can configure areas to include default widgets when a new document is created. This is particularly useful when combined with the [layout widget](#layout-widget) to provide editors with a pre-structured content framework.
+
+The `def` feature is designed for **simple, straightforward default layouts** that work well for all new documents of a particular type. For more sophisticated needs—such as offering editors a library of pre-designed sections they can choose from, or when different pages need different starting layouts—consider using the [Section Template Library extension](https://apostrophecms.com/extensions/section-template-library) instead.
+
+### Basic default widgets
+
+The `def` field accepts an array of widget type names that will be automatically added to the area when a new document is created:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Landing Page'
+  },
+  fields: {
+    add: {
+      content: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {},
+            '@apostrophecms/layout': {}
+          }
+        },
+        def: [
+          '@apostrophecms/image',
+          '@apostrophecms/rich-text',
+          '@apostrophecms/rich-text',
+          '@apostrophecms/video'
+        ]
+      }
+    },
+    group: {
+      content: {
+        label: 'Page content',
+        fields: ['content']
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/landing-page/index.js
+</template>
+
+</AposCodeBlock>
+
+In this example, when an editor creates a new landing page, the `content` area will automatically include four widgets: an image widget, two rich text widgets, and a video widget, in that order. Each widget will be instantiated with its default properties.
+
+> [!TIP]
+> To learn more about adding default widgets into layout widgets on your page check out the [Core Widgets documentation](/guide/core-widgets.html#creating-default-layouts-with-pre-populated-content).
+
+### Widget compatibility notes
+
+Not all widgets may work smoothly as defaults. When choosing widgets to include in a `def` configuration:
+
+- **Best choices**: Widgets that work well with empty or default content (e.g., `@apostrophecms/rich-text`, `@apostrophecms/image`, `@apostrophecms/video`)
+- **Consider carefully**: Widgets that require specific configuration or selections to function properly
+- **Test thoroughly**: Always test your default widget configuration to ensure it provides a good editing experience
+
 ## Expanded widget preview menu configuration
  To enhance the editor experience, an expanded widget menu can be added instead of the basic menu. This context menu expands from the left side and provides a visual indicator for each widget in the area and support for organizing widgets into groups. These visual indicators can be preview images or icons.
 
@@ -102,6 +171,13 @@ export default {
         options: {
       👉🏻  expanded: true,
       👉🏻  groups: {
+            layout: {
+              label: 'Layout',
+              widgets: {
+                '@apostrophecms/layout': {}
+              },
+          👉🏻  columns: 2
+            },
             basic: {
               label: 'Basic',
               widgets: {
@@ -112,14 +188,14 @@ export default {
               },
           👉🏻  columns: 2
             },
-            layout: {
+            specialty: {
               label: 'Specialty',
               widgets: {
-                'two-column': {},
                 'hero': {},
+                'review': {},
                 '@apostrophecms/html': {}
               },
-              columns: 3
+          👉🏻  columns: 3
             }
           }
         }
@@ -141,7 +217,7 @@ export default {
 
 </AposCodeBlock>
 
-![Editing an area with the expanded widget preview open.](../images/widget-preview-menu.png)
+![Editing an area with the expanded widget preview open.](../images/new-widget-preview-menu.png)
 
  For the expanded widget preview menu, there are three settings to configure. The first option is `expanded` and takes a boolean to activate the expanded preview. This is required to activate the menu.
  
@@ -197,7 +273,7 @@ module, and would not find it.
 
 #### `previewIcon`: when you prefer an icon to an image
 
-The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](https://docs.apostrophecms.org/reference/module-api/module-options.html#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
+The final option is `previewIcon`. This option takes any icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js). Alternatively, additional Material Design Icons or icons from your own Vue files can be registered using the [`icons`](/reference/module-api/module-options.md#icon) property within the module. If it is present, the `icon` option will be used if no `previewIcon` option is set.
 
 ## Adding placeholder content to widgets
 
@@ -316,7 +392,7 @@ main: {
 Learn more about rich text options in [the section on core widgets](/guide/core-widgets.md).
 :::
 
-In other situations, you may need to **pass the widget *template* options that only apply to a specific context**. One example of this is the [`sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-sizes) for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.
+In other situations, you may need to **pass the widget *template* options that only apply to a specific context**. One example of this is the [`sizes` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#sizes) for the core image widget's `img` tag. Since that attribute tells browsers which file versions to use in a responsive image, it may be different when the image is a small thumbnail as opposed to when it is a larger featured photo.
 
 These can be added in an object after the area tag arguments using the `with` keyword.
 

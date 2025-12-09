@@ -17,7 +17,7 @@ This module populates the `req.data.global` object with content or settings that
 ## Options
 |  Property | Type | Description |
 |---|---|---|
-|`deferWidgetLoading` | Boolean | If set to `true`, any widget module with the option [`deferred: true`](https://v3.docs.apostrophecms.org/reference/modules/widget-type.html#deferred) will not be loaded until the end of loading the global doc. |
+|`deferWidgetLoading` | Boolean | If set to `true`, any widget module with the option [`deferred: true`](/reference/modules/widget-type.md#deferred) will not be loaded until the end of loading the global doc. |
 
 ### `deferWidgetLoading`
 

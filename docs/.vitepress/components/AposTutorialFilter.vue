@@ -49,7 +49,7 @@
               :seriesCount="pair[0].seriesCount"
               :title="pair[0].title"
               :content="pair[0].content"
-              :url="pair[0].url"
+              :url="withBase(pair[0].url)"
             />
           </template>
           <template #rightColumn>
@@ -62,7 +62,7 @@
               :seriesCount="pair[1].seriesCount"
               :title="pair[1].title"
               :content="pair[1].content"
-              :url="pair[1].url"
+              :url="withBase(pair[1].url)"
             />
           </template>
         </AposTwoColumns>
@@ -74,6 +74,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { data as tutorialData } from '../theme/tutorials.data.js'
+import { withBase } from 'vitepress'
 
 // Filter options
 const types = ref([])

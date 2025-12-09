@@ -5,6 +5,7 @@ A `radio` field allows a list of options where a user can select one value.
 ## Module field definition
 
 ```javascript
+
 // Configuring the `animalType` field in a module's `fields.add` subsection:
 animalType: {
   label: 'Type of animal',
@@ -34,6 +35,33 @@ animalType: {
 }
 ```
 
+```javascript
+
+// Configuring an alignment field using `buttons` presentation and icons
+alignment: {
+  label: 'Alignment',
+  type: 'radio',
+  buttons: true,
+  choices: [
+    {
+      tooltip: 'Left',
+      value: 'left',
+      icon: 'format-align-left-icon'
+    },
+    {
+      tooltip: 'Center',
+      value: 'center',
+      icon: 'format-align-center-icon'
+    },
+    {
+      tooltip: 'Right',
+      value: 'right',
+      icon: 'format-align-right-icon'
+    }
+  ]
+}
+```
+
 ## Settings
 
 ### Required
@@ -57,6 +85,7 @@ animalType: {
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
+|`buttons` | Boolean | `false` | If `true`, presents the radios as a set of buttons |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
@@ -74,13 +103,15 @@ The value(s) of the followed field(s) will be used to create an object with prop
 The `choices` setting in `checkboxes`, `radio`, or `select` fields configures the options that a user will see in the interface and the values that the server will allow in validation. The `choices` value is an array of objects with `label` and `value` properties, or a string ending with `()` representing a [`method(self)`](../module-api/module-overview#methods) in your module. See below for more [details](#choices).
 
 - `value` is used in the field's database value
-- `label` is the more human-readable version used in interfaces
+- `label` is the more human-readable version used in interfaces. Can be omitted when using the `buttons` presentation
+- `icon` (Optional) the name of an icon to pair with the choice
+- `tooltip` (Optional) a string that will appear as a tooltip on the choice
 
 ## Populating `choices` dynamically {#choices}
 
 What if the choices aren't known in advance or are dependent on the value of another schema field? Then you can fetch them dynamically.
 
-First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods-self). Pass the name of the method you'll implement on the server side as a string ending in `()`. e.g. `choices: 'getChoices()'` — **do not** pass a function.
+First, set the `choices` option to the name of a [method in your module](../module-api/module-overview.md#methods). Pass the name of the method you'll implement on the server side as a string ending in `()`. e.g. `choices: 'getChoices()'` — **do not** pass a function.
 
 Second, implement that method in your module so that it takes `(req, data, following)` arguments and return an array of choices in the usual format. You may use an async function, or return a promise that will resolve to the array. That means you can reach out to APIs using modules like `axios` or `node-fetch`, or make Apostrophe database queries.
 

@@ -1,6 +1,6 @@
 <template>
   <p>
-    <strong>Extends:</strong> <code>{{ module }}</code> <a href="/guide/modules.html#module-inheritance">ℹ️</a>
+    <strong>Extends:</strong> <code>{{ module }}</code> <a href="/docs/guide/modules.html#module-inheritance">ℹ️</a>
   </p>
 </template>
 
