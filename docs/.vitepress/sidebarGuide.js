@@ -222,7 +222,8 @@ const sidebarGuide = [
         icon: 'brain-circuit',
         text: 'REST API Reference',
         collapsed: true,
-        items: getItemRefs(['README'], '', 'reference', 'api')
+        link: 'reference/api/rest-api-reference.md',
+        items: getItemRefs(['README', 'rest-api-reference'], '', 'reference', 'api')
       },
       {
         icon: 'open-book',
