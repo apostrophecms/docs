@@ -190,7 +190,7 @@ The API Explorer shows you what each endpoint does, but for deeper understanding
 
 For testing against deployed sites or more advanced workflows:
 
-1. **Download**: Get our [OpenAPI specification](/openapi.yaml){download="apostrophecms-openapi.yaml"} or the [full repo](https://github.com/apostrophecms/apostrophecms-openapi).
+1. **Download**: Get our [OpenAPI specification](docs/apostrophecms-openapi.yaml){download="apostrophecms-openapi.yaml"} or the [full repo](https://github.com/apostrophecms/apostrophecms-openapi).
 2. **Import**: Load it into Postman, Insomnia, or similar tools if not using the repo
 3. **Configure**: Set your server URL and authentication token
     - Server URL (change `https://your-site.com` to your actual domain)
@@ -199,7 +199,7 @@ For testing against deployed sites or more advanced workflows:
 
 ## About This Reference
 
-This interactive documentation is generated from our [OpenAPI specification](/apostrophecms-openapi.yaml). You can:
+This interactive documentation is generated from our [OpenAPI specification](docs/apostrophecms-openapi.yaml){download="apostrophecms-openapi.yaml"}. You can:
 
 - **Test endpoints live**: Make real API calls to your locally running project (with authentication)
 - **View request/response examples**: See exactly what data to send and expect

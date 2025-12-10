@@ -11,7 +11,7 @@ onMounted(async () => {
 
   SwaggerUI({
     dom_id: '#swagger-ui',
-    url: '/apostrophecms-openapi.yaml',
+    url: '/docs/apostrophecms-openapi.yaml',
     presets: [
       SwaggerUI.presets.apis,
       SwaggerUI.presets.standalone
