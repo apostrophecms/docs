@@ -190,8 +190,20 @@ The API Explorer shows you what each endpoint does, but for deeper understanding
 
 For testing against deployed sites or more advanced workflows:
 
+> **Quick Start with Postman**
+>
+> Fork our pre-configured API collection to get started immediately:
+>
+> [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/27854768-e9cac689-f449-41e1-96be-cfbd56f418ee?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D27854768-e9cac689-f449-41e1-96be-cfbd56f418ee%26entityType%3Dcollection%26workspaceId%3D122a8a50-9d3a-4fd3-8898-298c3cbc4498)
+
+The Postman collection includes all endpoints with example requests and environment variables for easy configuration.
+
+**Manual Setup**
+
+Alternatively, download and configure manually:
+
 1. **Download**: Get our [OpenAPI specification](/openapi.yaml){download="apostrophecms-openapi.yaml"} or the [full repo](https://github.com/apostrophecms/apostrophecms-openapi).
-2. **Import**: Load it into Postman, Insomnia, or similar tools if not using the repo
+2. **Import**: Load it into your preferred API client (or use the repo locally)
 3. **Configure**: Set your server URL and authentication token
     - Server URL (change `https://your-site.com` to your actual domain)
     - Session cookie name (change `project-shortname.sid` to `yourproject.sid`)
