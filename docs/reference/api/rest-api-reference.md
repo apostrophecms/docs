@@ -155,6 +155,8 @@ For advanced workflows, download our complete OpenAPI 3.0 specification:
 
 > [!TIP]
 > If Postman is your tool of choice, fork our collection to get started quickly with pre-configured requests and authentication.
+>
+> **Note**: The OpenAPI specification and Postman collection cover the core ApostropheCMS API. As you add custom piece types to your project, you'll need to add corresponding endpoints. See the [Piece Type REST API documentation](/reference/api/pieces) for details on the endpoints available for your custom types.
 > [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/27854768-e9cac689-f449-41e1-96be-cfbd56f418ee?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D27854768-e9cac689-f449-41e1-96be-cfbd56f418ee%26entityType%3Dcollection%26workspaceId%3D122a8a50-9d3a-4fd3-8898-298c3cbc4498)
 
 ## Common Patterns

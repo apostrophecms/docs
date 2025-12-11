@@ -198,6 +198,9 @@ For testing against deployed sites or more advanced workflows:
 
 The Postman collection includes all endpoints with example requests and environment variables for easy configuration.
 
+> [!NOTE]
+> This collection covers the core ApostropheCMS API. As you add custom piece types to your project, you'll need to add corresponding endpoints to your forked collection. See the [Piece Type REST API documentation](/reference/api/pieces) for details on the endpoints available for your custom types.
+
 **Manual Setup**
 
 Alternatively, download and configure manually:
