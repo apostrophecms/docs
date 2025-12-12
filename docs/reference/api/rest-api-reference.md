@@ -151,7 +151,7 @@ For advanced workflows, download our complete OpenAPI 3.0 specification:
 - Integrate with AI coding assistants
 - Build custom tooling and automation
 
-[Download OpenAPI Spec](/apostrophecms-openapi.yaml){download="apostrophecms-openapi.yaml"}
+[Download OpenAPI Spec](docs/apostrophecms-openapi.yaml){download="apostrophecms-openapi.yaml"}
 
 > [!TIP]
 > If Postman is your tool of choice, fork our collection to get started quickly with pre-configured requests and authentication.

@@ -1,6 +1,6 @@
 <template>
   <span class="icon">
-    <InlineSvg :src="`/images/icons/${name}.svg`" />
+    <InlineSvg :src="`/docs/images/icons/${name}.svg`" />
   </span>
 </template>
 

@@ -214,7 +214,7 @@ Alternatively, download and configure manually:
 
 ## About This Reference
 
-This interactive documentation is generated from our [OpenAPI specification](/apostrophecms-openapi.yaml). You can:
+This interactive documentation is generated from our [OpenAPI specification](docs/apostrophecms-openapi.yaml){download="apostrophecms-openapi.yaml"}. You can:
 
 - **Test endpoints live**: Make real API calls to your locally running project (with authentication)
 - **View request/response examples**: See exactly what data to send and expect
