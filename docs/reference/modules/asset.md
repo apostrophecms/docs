@@ -8,22 +8,22 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-The `asset` module serves to organize, process, and output all project JavaScript and CSS assets during the build process. It also passes options for display of different breakpoints during development, accomplished by converting CSS assets to container queries. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are passed through the creation of a `modules/@apostrophecms/asset/index.js` file.
+The `asset` module serves to organize, process, and output all project JavaScript and CSS assets during the build process. It also passes options for display of different breakpoints during development, accomplished by converting CSS assets to container queries. In addition, it provides access to modify the project webpack configuration and exposes two CLI tasks for project building and webpack cache clearing. Options are typically passed through the creation of a `modules/@apostrophecms/asset/index.js` file. They can also be passed in `app.js`.
 
 ## Options
 
-|  Property | Type | Description | Configuration Location |
+|  Property | Type | Description |
 |---|---|---|---|
-| [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. | Both `app.js` and module `index.js` |
-| [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. | Both `app.js` and module `index.js` |
-| `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. | Both `app.js` and module index |
-| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. | Both `app.js` and module `index.js` |
-| [devSourceMap](#devsourcemap) | String or false | Overrides the devtool setting of webpack for the admin UI build. | Both `app.js` and module `index.js` |
-| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. | Both `app.js` and module `index.js` |
-| [`breakpointPreviewMode`](#breakpointPreviewMode) | object | Enables and sets screen sizes for mobile preview. | Both `app.js` and module `index.js` |
-| [`hmr`](#hmr) | String or Boolean | Controls Hot Module Replacement mode. Values: `'public'` (default), `'apos'`, or `false` | `app.js` only |
-| [`hmrPort`](#hmrport) | Number | Sets custom WebSocket server port for HMR. Defaults to ApostropheCMS server port. | `app.js` only |
-| [`productionSourceMaps`](#productionsourcemaps) | Boolean | If `true`, includes source maps in production builds. | `app.js` only |
+| [`refreshOnRestart`](#refreshonrestart) | Boolean | If set to `true`, the browser will refresh on Apostrophe app restart. |
+| [`watch`](#watch) | Boolean | If set to `false`, none of the UI assets will be watched to trigger a restart. |
+| `watchDebounceMs` | Integer | Time in milliseconds to wait before re-triggering a restart on asset change. |
+| [`uploadfs`](#uploadfs) | Object | Can be used to configure an `uploadfs` instance. |
+| [`rebundleModules`](#rebundlemodules) | Object | Used to direct project wide asset files into new bundles. |
+| [`breakpointPreviewMode`](#breakpointPreviewMode) | object | Enables and sets screen sizes for mobile preview. |
+| [`hmr`](#hmr) | String or Boolean | Controls Hot Module Replacement mode. Values: `'public'` (default), `'apos'`, or `false` |
+| [`hmrPort`](#hmrport) | Number | Sets custom WebSocket server port for HMR. Defaults to ApostropheCMS server port. |
+| [`productionSourceMaps`](#productionsourcemaps) | Boolean | If `true`, includes source maps in production builds. |
+| [`productionSourceMapsDir`](#productionsourcemapsdir) | String | Copies production sourcemaps to the directory specified. |
 
 ### `refreshOnRestart`
 
@@ -40,16 +40,19 @@ When the `APOS_UPLOADFS_ASSETS` environment variable is present, this optional p
 ### `devSourceMap`
 
 ::: warning Deprecated
-This option only applies when using webpack as your bundler. Source maps in development are automatically handled by Vite and cannot be configured. However, when using Vite you can elect to use the `productionSourceMaps` option to turn on the creation of production sourcemaps.
+
+This option is accepted for backwards compatibility and ignored since version `4.25.0`. Beginning with that release, the high quality `devtool: 'source-map'` is used consistently in webpack builds, and Vite has its own approach. For production builds dsee the `productionSourceMaps` option.
 :::
 
-For those who are familiar with webpack's `devtool` setting. This option can be used to override that setting when in a development environment. The default is to use `eval-source-map`, unless `@apostrophecms/security-headers` is active, in which case `false` is used to avoid a Content Security Policy error.
+### `productionSourceMaps`
 
-In our experience, settings other than `eval-source-map` result in associating errors with the wrong source file, but webpack experts are welcome to experiment.
+By default, source maps are not deployed in production. If you wish to enable this, set `productionSourceMaps: true`. This enables useful stack traces for production code in the browser console. This feature works with both webpack and Vite builds.
 
-A source map is not produced at all in a production or production-like environment.
+### `productionSourceMapsDir`
 
-This option currently applies only to the admin UI build, not the `ui/src` build.
+This option is only consulted if `productionSourceMaps: true` has already been set.
+
+If you wish to build production source maps for your asset bundles, but don't wish to deploy them for the public, use this option to specify a folder where ApostropheCMS should place them. The next step after that is up to you. Creating and/or clearing this folder is your responsibility. Most developers will not need this option.
 
 ### `rebundleModules`
 
