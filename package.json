@@ -13,7 +13,8 @@
     "deploy-staging": "UMAMI_WEBSITE_ID=7e078a27-082b-4e1b-bd8c-f964d2f4896d ENV=staging npm run deploy",
     "deploy-production": "UMAMI_WEBSITE_ID=626b2789-c45f-4be2-b159-c218d47d3d2f ENV=prod npm run deploy",
     "deploy-all": "npm run deploy-staging && npm run deploy-production",
-    "find-broken-links": "bash ./find-broken-links"
+    "find-broken-links": "bash ./find-broken-links",
+    "docs:llms-full": "node scripts/generate-llms-full.mjs"
   },
   "dependencies": {
     "body-scroll-lock": "^4.0.0-beta.0",
