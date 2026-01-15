@@ -96,6 +96,14 @@ const sidebarGuide = [
           { text: 'Custom Nunjucks Tags', link: 'reference/template-tags.md' },
         ]
       },
+      {
+        text: 'Styling',
+        collapsed: true,
+        items: [
+          { text: 'Global Styling', link: 'guide/global-styling.md' },
+          { text: 'Widget Styles', link: 'guide/widget-styles.md'}
+        ]
+      },
       { text: 'Headless', link: 'guide/headless-cms.md' },
       { text: 'Users and Roles', link: 'guide/users.md' },
       { text: 'Permissions and Workflow', link: 'guide/permissions-and-workflow.md' },
@@ -259,7 +267,6 @@ const sidebarGuide = [
       { text: 'Advanced Permissions', link: 'https://apostrophecms.com/extensions/advanced-permission' },
       { text: 'Document Versions', link: 'https://apostrophecms.com/extensions/document-version' },
       { text: 'Template Library', link: 'https://apostrophecms.com/extensions/template-library' },
-      { text: 'Palette Design Editor', link: 'https://apostrophecms.com/extensions/palette-3' },
       { text: 'Apostrophe Basics', link: 'https://apostrophecms.com/extensions/apostrophe-basics' },
       { text: 'Data Set', link: 'https://apostrophecms.com/extensions/data-set' },
       { text: 'Account Signup', link: 'https://apostrophecms.com/extensions/account-signup' },
