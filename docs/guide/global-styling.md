@@ -225,10 +225,6 @@ Wrap values in CSS functions or add additional text.
 <AposCodeBlock>
 
 ```javascript
-// Wrap color in rgb()
-valueTemplate: 'rgb(%VALUE%)'
-// Result: rgb(255, 0, 0)
-
 // Create box shadow with color
 valueTemplate: '0 4px 8px %VALUE%'
 // Result: 0 4px 8px rgba(0,0,0,0.3)
@@ -270,33 +266,12 @@ desktopSpacing: {
 
 </AposCodeBlock>
 
-### Complete field example
-
-Here's a field using multiple properties:
-
-<AposCodeBlock>
-
-```javascript
-heroSpacing: {
-  type: 'range',
-  label: 'Hero Section Spacing',
-  selector: ['.hero-header', '.hero-footer'],  // Multiple selectors
-  property: ['padding-top', 'padding-bottom'], // Multiple properties
-  min: 0,
-  max: 100,
-  step: 5,
-  def: 40,
-  unit: 'px',
-  mediaQuery: '(min-width: 768px)'  // Desktop only
-}
-```
-
-</AposCodeBlock>
-
 ## Understanding Selectors
 Global styles apply CSS to elements that already exist in your templates. The selector property targets your existing HTML markup—it doesn't create new elements.
 When you configure a style field like this:
+
 <AposCodeBlock>
+
 ```javascript
 backgroundColor: {
   type: 'color',
@@ -305,13 +280,15 @@ backgroundColor: {
   property: 'background-color'
 }
 ```
+
 </AposCodeBlock>
-The styles module generates CSS that targets the body element in your templates. If the selector doesn't match any elements, the style will have no visible effect.
+The styles module generates CSS that targets the `body` element in your templates. If the selector doesn't match any elements, the style will have no visible effect.
 
 **Finding good selectors**
 Look at your existing template markup to identify selectors:
 
 <AposCodeBlock>
+
 ```nunjucks
 {# layout.html #}
 <body>
@@ -716,36 +693,31 @@ extendMethods(self) {
 
 </AposCodeBlock>
 
-::: warning
-Presets must be registered inside the `registerPresets()` method before schema initialization. Attempting to register presets elsewhere will throw an error.
-:::
-
 ## Organizing the Interface
 
-The styles module uses **field groups** to control how styling controls are organized in the admin interface. Groups affect **only the UI layout**—they do not change how CSS is generated.
+The styles module uses **groups** to control how styling controls are organized in the admin interface. Grouping helps content creators work through large sets of design options by organizing related controls into sections. Groups affect **only the UI layout and navigation** — they do not change how CSS is generated.
 
-Grouping helps content creators navigate large sets of design options by organizing related controls into tabs and sections.
+> **Note:**
+> Unlike standard ApostropheCMS schemas, style controls are **not displayed automatically**.
+> Every control must be included in a group (either directly in `fields` or within a nested group), or it will not appear in the interface.
 
-### The grouping model
+The styles UI is built around **drill-in navigation**:
 
-The styles module supports **two levels of grouping**, plus an optional display modifier:
+1. Editors first see a **section menu** (a list of top-level groups)
+2. Selecting a section **drills in** to show that section’s controls
+3. Within a drilled-in section, controls can be organized into **additional groups**, or shown directly
 
-```
-styles.group
-├── Top-level groups → Tabs
-│   ├── Nested groups → Sections within a tab
-│   │   └── inline groups → Visually grouped controls (no navigation)
-```
+Groups can also be marked as `inline: true`, which means they render directly in place (no drill-in navigation).
 
-### Top-level groups (tabs)
+---
 
-Top-level groups are defined under `styles.group`. Each top-level group appears as a **tab** in the styles interface.
+### Top-level groups (sections)
 
-Use top-level groups to separate major categories such as colors, typography, layout, or effects.
+Top-level groups are defined under `styles.group`.
 
 <AposCodeBlock>
 
-```javascript
+```js
 styles: {
   add: {
     primaryColor: {
@@ -754,12 +726,15 @@ styles: {
       selector: ':root',
       property: '--primary-color'
     },
-    buttonSpacing: {
+    contentWidth: {
       type: 'range',
-      label: 'Button Spacing',
-      selector: '.btn',
-      property: 'margin',
-      unit: 'rem'
+      label: 'Content Width',
+      selector: '.container',
+      property: 'max-width',
+      min: 800,
+      max: 1400,
+      step: 50,
+      unit: 'px'
     }
   },
   group: {
@@ -769,7 +744,7 @@ styles: {
     },
     layout: {
       label: 'Layout',
-      fields: ['buttonSpacing']
+      fields: ['contentWidth']
     }
   }
 }
@@ -778,24 +753,148 @@ styles: {
 </AposCodeBlock>
 
 In this example:
-- **Branding** and **Layout** appear as separate tabs
-- Each tab contains the fields listed in its `fields` array
 
-### Nested groups (sections within tabs)
+* **Branding** and **Layout** appear in the top-level section menu
+* selecting a section drills in and displays the fields listed in `fields`
 
-When a tab contains many controls, you can add **nested groups** to organize fields into labeled sections *within* that tab.
+---
 
-Nested groups are defined using a `group` property inside a top-level group.
+### Nested groups (drill-in sections within a section)
+
+Nested groups are defined using the `group` property inside a top-level group.
+
+By default, nested groups behave like **drill-in sections**:
+
+* the group label is shown with a caret
+* selecting it drills into that subsection
+* the label becomes the section title above the controls
+
+This is useful when a single section contains too many fields to show at once.
+
+---
+
+### Mixing fields and nested groups in a section
+
+A top-level group can contain:
+
+* `fields` (controls shown directly in the drilled-in section), and
+* `group` (additional groups shown within the drilled-in section)
+
+This lets you put the most important controls directly in the section while still breaking up the rest.
 
 <AposCodeBlock>
 
-```javascript
+```js
 styles: {
   add: {
-    lineHeight: { type: 'range', label: 'Line Height' },
-    letterSpacing: { type: 'range', label: 'Letter Spacing' },
-    headingFont: { type: 'string', label: 'Heading Font' },
-    bodyFont: { type: 'string', label: 'Body Font' }
+    primaryColor: {
+      type: 'color',
+      label: 'Primary Color',
+      selector: ':root',
+      property: '--primary-color'
+    },
+    secondaryColor: {
+      type: 'color',
+      label: 'Secondary Color',
+      selector: ':root',
+      property: '--secondary-color'
+    },
+    headingFont: {
+      type: 'string',
+      label: 'Heading Font Family',
+      selector: ':root',
+      property: '--heading-font-family'
+    },
+    bodyFont: {
+      type: 'string',
+      label: 'Body Font Family',
+      selector: ':root',
+      property: '--body-font-family'
+    }
+  },
+  group: {
+    branding: {
+      label: 'Branding',
+
+      // fields shown immediately inside Branding
+      fields: ['primaryColor'],
+
+      // additional groups within Branding
+      group: {
+        colors: {
+          label: 'More Colors',
+          fields: ['secondaryColor']
+        },
+        typography: {
+          label: 'Typography',
+          fields: ['headingFont', 'bodyFont']
+        }
+      }
+    }
+  }
+}
+
+```
+
+</AposCodeBlock>
+
+In this example:
+
+* **Branding** appears in the section menu
+* when drilled in, **Primary Color** appears immediately
+* **More Colors** and **Fonts** appear as additional groups within the Branding section
+
+---
+
+### Inline groups (no drill-in navigation)
+
+A group can be made *inline* by adding `inline: true`.
+
+Inline groups render their controls directly in the current UI view:
+
+* no caret
+* no drill-in navigation
+* just a labeled visual grouping
+
+Inline groups can be used:
+
+* as a **top-level group**, or
+* as a **nested group** within a top-level group
+
+<AposCodeBlock>
+
+```js
+styles: {
+  add: {
+    lineHeight: {
+      type: 'range',
+      label: 'Line Height',
+      selector: 'body',
+      property: 'line-height',
+      min: 1.0,
+      max: 2.0,
+      step: 0.05
+    },
+    letterSpacing: {
+      type: 'range',
+      label: 'Letter Spacing',
+      selector: 'body',
+      property: 'letter-spacing',
+      min: -0.05,
+      max: 0.2,
+      step: 0.01,
+      unit: 'em'
+    },
+    paragraphSpacing: {
+      type: 'range',
+      label: 'Paragraph Spacing',
+      selector: 'p',
+      property: 'margin-bottom',
+      min: 0,
+      max: 2,
+      step: 0.1,
+      unit: 'rem'
+    }
   },
   group: {
     typography: {
@@ -803,74 +902,44 @@ styles: {
       group: {
         spacing: {
           label: 'Text Spacing',
-          fields: ['lineHeight', 'letterSpacing']
-        },
-        fonts: {
-          label: 'Fonts',
-          fields: ['headingFont', 'bodyFont']
+          inline: true,
+          fields: ['lineHeight', 'letterSpacing', 'paragraphSpacing']
         }
       }
     }
   }
 }
+
 ```
 
 </AposCodeBlock>
 
 In this example:
-- **Typography** is a tab
-- **Text Spacing** and **Fonts** are sections within that tab
-- Each section has its own heading and field list
 
-You can freely mix:
-- Nested groups
-- Direct fields (fields listed directly on the tab)
-- Presets and custom fields
+* **Typography** is selected from the top-level section menu
+* **Text Spacing** renders inline as a titled grouping inside Typography
+* all of its fields appear immediately
 
-### Inline groups (visual grouping only)
+---
 
-An **inline group** is a nested group that uses `inline: true`.
+## Nesting rules
 
-Inline groups **do not create navigation or collapsible sections**. Instead, they visually group related controls together under a small heading within the current section.
+Groups support **one level of nesting only**:
 
-<AposCodeBlock>
+* Top-level groups may include nested groups via `group`
+* Nested groups **cannot** contain additional groups
 
-```javascript
-group: {
-  typography: {
-    label: 'Typography',
-    group: {
-      spacing: {
-        label: 'Text Spacing',
-        inline: true,
-        fields: ['lineHeight', 'letterSpacing', 'paragraphSpacing']
-      }
-    }
-  }
-}
-```
+This means you can have:
 
-</AposCodeBlock>
+* section menu → top-level section
+* top-level section → nested group drill-in
 
-In this example:
-- **Text Spacing** appears as a simple titled grouping
-- The fields render inline within the surrounding layout
-- No new section or navigation element is created
+But not:
 
-Think of inline groups as a **visual hint**, not a structural division.
+* nested group → nested group → nested group
 
-Inline groups are useful when:
-- Fields are closely related
-- You want to avoid adding another visual section
-- Controls should feel lightweight and compact
+---
 
-### Key rules
-
-- **Top-level groups** create tabs
-- **Nested groups** create labeled sections inside a tab
-- **Inline groups** only affect visual layout, not navigation
-- Grouping affects **only the admin UI**, not CSS output
-- Grouping behavior in the styles module differs from standard ApostropheCMS schemas
 
 ## Advanced Topics
 
@@ -1025,29 +1094,5 @@ export default {
 </AposCodeBlock>
 
 ::: info
-For detailed information on custom rendering methods, parameters, and best practices, see the [Styles Module Technical Reference](#).
+For detailed information on custom rendering methods, parameters, and best practices, see the [Styles Module Technical Reference](/reference/modules/styles.md).
 :::
-
-## How It Works
-
-The styles module generates CSS from your field values and stores it in the global document for site-wide access.
-
-### Generation and storage flow
-
-1. **Content creator saves**: When editors save style changes in the admin interface
-2. **CSS generation**: The module processes field values through the schema to generate CSS
-3. **Global storage**: Generated CSS and body classes are stored in the `@apostrophecms/global` document:
-   - `stylesStylesheet` - The complete CSS string
-   - `stylesClasses` - Array of class names for the `<body>` element
-   - `stylesStylesheetVersion` - Cache-busting version identifier
-4. **Automatic delivery**: On every page request:
-   - CSS is injected via `<link>` tag (cached stylesheet) for guests
-   - CSS is injected via `<style>` tag (inline) for logged-in users who may use preview features
-   - Body classes are automatically added to the `<body>` element
-
-### Performance and caching
-
-- **Real-time preview**: Changes appear instantly during editing without page refresh
-- **Smart caching**: Generated stylesheets are cached with version identifiers for efficient delivery
-- **Minimal overhead**: CSS generation only occurs when style values change, not on every page request
-- **No template changes needed**: The module automatically handles injection

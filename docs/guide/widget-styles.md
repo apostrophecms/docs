@@ -4,7 +4,7 @@
 
 ## Configuration
 
-Widget styles are configured by adding a `styles` property to your widget's schema configuration, using the same `styles` cascade pattern as global styles. You define fields with types, labels, and properties—but these controls apply only to individual widget instances rather than site-wide.
+Widget styles are configured by adding a `styles` property to your widget's schema configuration, using the same `styles` cascade pattern as global styles. You define fields with types, labels, selectors, and properties—but these controls apply only to individual widget instances rather than site-wide.
 
 Add styles to any widget by including a `styles` property in the widget's `index.js`:
 
@@ -65,28 +65,9 @@ module.exports = {
 </AposCodeBlock>
 
 ::: info Permissions
-Widget styling permissions follow the widget's own edit permissions. If a user can edit a widget instance, they can modify its style settings.
+Widget styling permissions follow the widget's own edit permissions. If a user can edit a widget instance, they can modify its style settings. With the `@apostrophecms-pro/advanced-permissions` module installed you can add per-field permissions to limit styles to specific user groups.
 :::
 
-## How it works
-
-Widget styles function similarly to global styles but are scoped to individual widget instances. Developers add a `styles` property to their widget schema, and content creators can then adjust styling for each widget through controls in the widget editor modal.
-
-### For content creators
-
-1. Edit a widget instance
-2. Access style controls within the widget editor modal
-3. Adjust colors, spacing, and other properties configured by developers
-4. Changes apply only to that specific widget instance
-
-### For developers
-
-Widget styles are configured by adding a `styles` property to your widget's schema configuration:
-
-- Define which style properties are available for that widget type
-- Use the same field types and presets as global styles
-- Styles are automatically scoped to each widget instance
-- Generated CSS is injected inline with each widget
 
 ## Field types and properties
 
@@ -172,10 +153,6 @@ alignment: {
 }
 ```
 
-<template v-slot:caption>
-  Using class with select fields
-</template>
-
 </AposCodeBlock>
 
 **For `boolean` fields** - Use `class: 'class-name'` to add a specific class when true:
@@ -244,7 +221,7 @@ styles: {
 
 </AposCodeBlock>
 
-For complete documentation on field types and properties, see the [Global Styling documentation](#).
+For complete documentation on field types and properties, see the [Global Styling documentation](/guide/global-styling.md).
 
 ## Using presets
 
@@ -297,7 +274,7 @@ styles: {
 The `alignment` preset uses built-in CSS classes (`.apos-left`, `.apos-center`, `.apos-right`) that ship with ApostropheCMS core. These classes are available site-wide and can be overridden at project level if needed.
 :::
 
-For details on each preset's fields and configuration, see the [Global Styling documentation](#).
+For details on each preset's fields and configuration, see the [Global Styling documentation](/guide/global-styling.md).
 
 ## Object field limitations
 
@@ -402,6 +379,127 @@ Then use the template helpers in your widget template:
 </template>
 
 </AposCodeBlock>
+
+## Restricting style editing with Advanced Permission
+
+If you need to allow some users to edit widget content but not widget styles, you can use the [Advanced Permission module](https://github.com/apostrophecms/advanced-permission) to create granular access controls.
+
+::: info
+This requires the `@apostrophecms-pro/advanced-permission` module. For global styles, you can simply control edit access to the styles document itself through group permissions—no field-level permissions needed.
+:::
+
+### Setting up permission-restricted widget styles
+
+**1. Create a custom permission for your widget type:**
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'Hero Widget'
+  },
+  permissions: {
+    add: {
+      editStyles: {
+        label: 'Edit Widget Styles',
+        requires: 'edit'
+      }
+    }
+  },
+  // ... fields and styles configuration
+};
+```
+
+<template v-slot:caption>
+  modules/hero-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+**2. Add `editPermission` to each style field:**
+
+<AposCodeBlock>
+
+```javascript
+styles: {
+  add: {
+    backgroundColor: {
+      type: 'color',
+      label: 'Background Color',
+      property: 'background-color',
+      editPermission: {
+        action: 'editStyles',
+        type: 'hero-widget'
+      }
+    },
+    padding: {
+      preset: 'padding',
+      editPermission: {
+        action: 'editStyles',
+        type: 'hero-widget'
+      }
+    }
+  }
+}
+```
+
+<template v-slot:caption>
+  Adding editPermission to each field
+</template>
+
+</AposCodeBlock>
+
+**3. Configure groups with appropriate permissions:**
+
+- **Content Editors**: Grant `edit` permission only (can edit content, not styles)
+- **Design Editors**: Grant both `edit` and `editStyles` permissions (can edit everything)
+
+::: warning
+You must add `editPermission` to **every style field individually**. This includes fields within presets. The property cannot be set at the parent level and cascade down.
+:::
+
+### Reducing repetition
+
+For widgets with many style fields, create a helper function:
+
+<AposCodeBlock>
+
+```javascript
+function addStylePermission(styleConfig) {
+  return {
+    ...styleConfig,
+    editPermission: {
+      action: 'editStyles',
+      type: 'hero-widget'
+    }
+  };
+}
+
+export default {
+  // ... module configuration
+  styles: {
+    add: {
+      backgroundColor: addStylePermission({
+        type: 'color',
+        label: 'Background Color',
+        property: 'background-color'
+      }),
+      padding: addStylePermission({
+        preset: 'padding'
+      })
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  Helper function to reduce repetition
+</template>
+
+</AposCodeBlock>
+
 
 ## Differences from global styles
 

@@ -549,6 +549,66 @@ Object fields are supported but with these restrictions:
 - Presets cannot be used within object fields (since presets may themselves be object fields)
 - Object fields are primarily supported to enable multi-field presets like `border` and `boxShadow`
 
+Good catch! Looking at the migration task code, it does more than just rename the cascade. Let me provide the complete section with accurate details:
+
+---
+
+## Migrating from @apostrophecms-pro/palette
+
+**Critical: This is a manual migration, not automatic**
+
+Unlike most ApostropheCMS migrations that run automatically at startup, the Palette-to-Styles migration must be run manually via a command-line task.
+
+### Prerequisites
+
+1. **Keep Palette installed**: The `@apostrophecms-pro/palette` module **must remain in your project** until after the migration is complete. The migration task is part of Palette, not the core Styles module.
+
+2. **Backup your database**: This migration modifies database documents directly. Always backup before proceeding.
+
+3. **Review your configuration**: Examine your existing `modules/@apostrophecms-pro/palette/index.js` configuration to understand what will need to be moved.
+
+### Running the migration
+
+The migration task is located in `@apostrophecms-pro/palette/lib/tasks.js`. Run it with:
+
+```bash
+node app @apostrophecms-pro/palette:migrate-to-styles
+```
+
+### What the migration task does
+
+The migration task performs the following database-level changes:
+
+1. **Deletes existing `@apostrophecms/styles` documents** - Removes any existing Styles documents to avoid conflicts
+2. **Converts Palette documents to Styles documents** - Updates the document type from `@apostrophecms-pro/palette` to `@apostrophecms/styles`
+3. **Updates the global document** - Renames Palette-specific fields in the global document:
+   - `paletteStylesheet` → `stylesStylesheet`
+   - `paletteStylesheetVersion` → `stylesStylesheetVersion`
+
+**Important**: The migration task only handles database changes. Your configuration files and code must be updated manually (see below).
+
+### Post-migration steps
+
+After running the migration task, you must manually update your project:
+
+1. **Move configuration**: Copy your configuration from `modules/@apostrophecms-pro/palette/index.js` to `modules/@apostrophecms/styles/index.js`
+
+2. **Rename the cascade** (recommended): Change `fields:` to `styles:` in your configuration. While the legacy `fields` cascade still works for backward compatibility, the `styles` cascade is recommended to leverage the presets feature. **Do not mix both cascades** - attempting to use both `fields` and `styles` in the same configuration will cause an error.
+
+3. **Test thoroughly**:
+   - Verify all styles appear correctly in the admin interface
+   - Check that styles render properly on the front-end
+   - Test that editors can modify styles as expected
+
+4. **Remove Palette**: Only after confirming everything works:
+   - Remove `@apostrophecms-pro/palette` from your `package.json`
+   - Delete the `modules/@apostrophecms-pro/palette` folder
+   - Run `npm install` to clean up dependencies
+
+### Reference
+
+For implementation details, see the migration code in `@apostrophecms-pro/palette/lib/tasks.js`.
+
 ## Related documentation
 
 - [Global Styling](/guide/global-styling.md)
