@@ -173,6 +173,7 @@ These options configure the styles module behavior and should be set in `modules
 ### `serverRendered`
 
 When set to `true`, all CSS rendering (including preview during editing) goes through your custom `getStylesheet` method. This is required when implementing custom CSS generation logic.
+**This option is only available for global styles.** Widget styles are always rendered server-side for performance reasons.
 
 ```javascript
 module.exports = {
@@ -252,7 +253,7 @@ extendMethods(self) {
           }
         }
       });
-      
+
       // Or modify an existing preset
       const borderPreset = self.getPreset('border');
       borderPreset.fields.add.width.def = {
@@ -315,14 +316,14 @@ module.exports = {
       async getStylesheet(doc) {
         const schema = self.schema;
         let css = '';
-        
+
         // Custom CSS generation logic
         for (const field of schema) {
           if (doc[field.name] && field.selector && field.property) {
             css += `${field.selector} { ${field.property}: ${doc[field.name]}${field.unit || ''}; }\n`;
           }
         }
-        
+
         // Must return object with css and classes properties
         return {
           css,
@@ -534,7 +535,7 @@ When style changes are saved:
 
 The module automatically injects styles into every page:
 
-- **For guests:** `<link>` tag pointing to cached stylesheet endpoint
+- **For logged-out visitors:** `<link>` tag pointing to cached stylesheet endpoint
 - **For logged-in users:** `<style>` tag with inline CSS (to support preview features)
 - **Body classes:** Automatically added to `<body>` element via `@apostrophecms/page:beforeSend` handler
 

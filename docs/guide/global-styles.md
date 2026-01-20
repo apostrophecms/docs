@@ -4,7 +4,7 @@
 
 ## Configuration
 
-Global styles are configured in a project-level `modules/@apostrophecms/styles/index.js` using a styles cascade that works much like the schema fields cascade. You define fields with types, labels, and properties—but instead of creating form inputs for content, these fields create controls for CSS properties.
+Global styles are configured in a project-level `modules/@apostrophecms/styles/index.js` using a styles cascade that works much like the schema fields cascade. You define fields with types, labels, and properties — but instead of creating form inputs for content, these fields create controls for CSS properties.
 
 <AposCodeBlock>
 
@@ -57,7 +57,7 @@ export default {
 </AposCodeBlock>
 
 **Every field needs:**
-- `type` (or `preset`) - The control type: `color`, `range`, `string`, `select`, `box`, or a preset name
+- `type` (or `preset`) - The control type: `color`, `range`, `integr`, `float`, `string`, `select`, `box`, or a preset name
 - `label` - Display name in the interface
 - `selector` - CSS selector(s) to target
 - `property` - CSS property to modify
@@ -205,7 +205,7 @@ The `class` property is particularly useful for working with utility CSS framewo
 
 #### `unit`
 
-Append units to numeric values from `range` or `box` fields.
+Append units to numeric values from `range`, `integer`, `float` or `box` fields.
 
 <AposCodeBlock>
 
@@ -218,20 +218,34 @@ unit: 'em'   // Results in "2em"
 
 </AposCodeBlock>
 
-#### `valueTemplate`
+### `valueTemplate` (optional)
 
-Wrap values in CSS functions or add additional text.
+Compose CSS values by combining field values with fixed text or CSS syntax.
+
+**For single-value fields**, use `%VALUE%` as the placeholder:
 
 <AposCodeBlock>
 
 ```javascript
-// Create box shadow with color
-valueTemplate: '0 4px 8px %VALUE%'
-// Result: 0 4px 8px rgba(0,0,0,0.3)
+// Add fixed offset/blur values to a color field for box-shadow
+valueTemplate: '0 4px 8px %VALUE%' 
+// Results in "0 4px 8px rgba(0,0,0,0.3)"
 
-// URL function
-valueTemplate: 'url(%VALUE%)'
-// Result: url(image.jpg)
+// Add CSS calc() function around a numeric value
+valueTemplate: 'calc(100% - %VALUE%)'
+// Results in "calc(100% - 2rem)"
+```
+
+</AposCodeBlock>
+
+**For object fields**, reference subfield names directly:
+
+<AposCodeBlock>
+
+```javascript
+// Object field with subfields: x, y, blur, color
+valueTemplate: '%x% %y% %blur% %color%'
+// Results in "4px 4px 2px gray"
 ```
 
 </AposCodeBlock>
@@ -372,6 +386,45 @@ fontSize: {
 
 </AposCodeBlock>
 
+### `integer`
+
+Numeric input for whole numbers with optional min/max constraints.
+
+<AposCodeBlock>
+```javascript
+lineHeight: {
+  type: 'integer',
+  label: 'Line Height',
+  selector: 'body',
+  property: 'line-height',
+  min: 1,
+  max: 3,
+  def: 1
+}
+```
+
+</AposCodeBlock>
+
+### `float`
+
+Numeric input for decimal values with optional min/max constraints.
+
+<AposCodeBlock>
+```javascript
+letterSpacing: {
+  type: 'float',
+  label: 'Letter Spacing',
+  selector: 'body',
+  property: 'letter-spacing',
+  min: 0.5,
+  max: 2.0,
+  def: 1.0,
+  unit: 'px'
+}
+```
+
+</AposCodeBlock>
+
 ### `string`
 
 Text input for font names, custom values, and CSS strings.
@@ -443,7 +496,7 @@ Using other field types is not recommended and may result in unexpected behavior
 
 ## Using Presets
 
-Presets are pre-configured field combinations that provide common styling controls. They save time and ensure consistency. Presets should be passed in place of a `type` field. Pass in values for preset fields to override the defaults. For example, you can could add a `unit: 'rem'` field to a `preset: 'margin'` to override the default `px` unit.
+Presets are pre-configured field combinations that provide common styling controls. They save time and ensure consistency. Presets should be passed in place of a `type` property. Pass in values for preset fields to override the defaults. For example, you can could add a `unit: 'rem'` field to a `preset: 'margin'` to override the default `px` unit.
 
 ### Built-in presets
 
@@ -585,7 +638,7 @@ cardShadow: {
 
 ### Creating custom presets
 
-Create custom presets by extending the `registerPresets()` method:
+Create custom presets by extending the `registerPresets()` method in you project level `modules/@apostrophecms/styles/index.js`:
 
 <AposCodeBlock>
 
@@ -594,7 +647,7 @@ export default {
   extendMethods(self) {
     return {
       registerPresets(_super) {
-        _super();
+        _super(); // Must be present of all default presets will be lost
 
         // Define a custom preset
         self.setPreset('gradient', {
@@ -672,7 +725,7 @@ extendMethods(self) {
   return {
     registerPresets(_super) {
       _super();
-      
+
       // Get and modify an existing preset
       const borderPreset = self.getPreset('border');
       borderPreset.fields.add.width.def = {
@@ -978,7 +1031,7 @@ Then use the variable throughout your CSS:
 
 ### Object field limitations
 
-Object fields are supported in the styles module but cannot be nested within other object fields. This limitation exists because the styles module only iterates one level deep through object fields—it does not recursively process nested object structures.
+Object fields are supported in the styles module but cannot be nested within other object fields. This limitation exists because the styles module only iterates one level deep through object fields — it does not recursively process nested object structures.
 
 This means:
 

@@ -172,7 +172,7 @@ module.exports = {
 By using `permissions` in an Apostrophe core module at the project level, you can add a new custom permission to multiple document types. For example, extending the `[@apostrophecms/piece-type](/reference/modules/piece-type.md#apostrophecms-piece-type)` module with the `permissions` object would add the custom permissions to all pieces.
 :::
 
-`**editPermission**`**: Limiting Access to a Single Field**
+**`editPermission`**: Limiting Access to a Single Field**
 After defining a custom permission, you can assign it to a specific field of a piece type by using `editPermission`. This schema field property takes an object with the following two properties:
 
 - `action`: A string with the name of one of the built-in permissions (e.g., `'create'`) or a custom permission.

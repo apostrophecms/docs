@@ -100,7 +100,7 @@ const sidebarGuide = [
         text: 'Styling',
         collapsed: true,
         items: [
-          { text: 'Global Styling', link: 'guide/global-styling.md' },
+          { text: 'Global Styling', link: 'guide/global-styles.md' },
           { text: 'Widget Styles', link: 'guide/widget-styles.md'}
         ]
       },

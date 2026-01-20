@@ -71,13 +71,15 @@ Widget styling permissions follow the widget's own edit permissions. If a user c
 
 ## Field types and properties
 
-Widget styles support the same field types and essential properties as global styles:
+Widget styles support the [same field types and essential properties](/guide/global-styles.html#field-types) as global styles:
 
 ### Supported field types
 
 - **`box`**: Four-sided spacing controls for margins, padding, and border widths (top, right, bottom, left)
 - **`color`**: Color picker for backgrounds, text, borders
 - **`range`**: Slider controls for spacing, sizes, numeric values
+- **`integer`**: Numeric input for whole numbers with optional min/max constraints
+- **`float`**: Numeric input for decimal values with optional min/max constraints
 - **`string`**: Text input for font names, custom values
 - **`select`**: Dropdown menus for predefined options
 
@@ -221,7 +223,7 @@ styles: {
 
 </AposCodeBlock>
 
-For complete documentation on field types and properties, see the [Global Styling documentation](/guide/global-styling.md).
+For complete documentation on field types and properties, see the [Global Styling documentation](/guide/global-styles.md).
 
 ## Using presets
 
@@ -244,7 +246,7 @@ styles: {
     // Shorthand
     cardPadding: 'padding',
     cardMargin: 'margin',
-    
+
     // With customization
     cardBorder: {
       preset: 'border',
@@ -254,7 +256,7 @@ styles: {
       preset: 'boxShadow',
       selector: '.card-container'
     },
-    
+
     // Alignment preset includes built-in CSS classes
     contentAlign: {
       preset: 'alignment',
@@ -278,7 +280,7 @@ For details on each preset's fields and configuration, see the [Global Styling d
 
 ## Object field limitations
 
-Object fields are supported in widget styles but cannot be nested within other object fields. This limitation exists because the styles module only iterates one level deep through object fields—it does not recursively process nested object structures.
+Object fields are supported in widget styles but cannot be nested within other object fields. This limitation exists because the styles module only iterates one level deep through object fields — it does not recursively process nested object structures.
 
 This means:
 
@@ -385,7 +387,7 @@ Then use the template helpers in your widget template:
 If you need to allow some users to edit widget content but not widget styles, you can use the [Advanced Permission module](https://github.com/apostrophecms/advanced-permission) to create granular access controls.
 
 ::: info
-This requires the `@apostrophecms-pro/advanced-permission` module. For global styles, you can simply control edit access to the styles document itself through group permissions—no field-level permissions needed.
+This requires the `@apostrophecms-pro/advanced-permission` module. For global styles, you can simply control edit access to the styles document itself through group permissions — no field-level permissions needed.
 :::
 
 ### Setting up permission-restricted widget styles
@@ -518,64 +520,56 @@ Widget styles do not support field grouping. All widget style fields appear in a
 
 ## Best practices
 
-### Selector targeting
+### Use appropriate selectors
 
-Use class selectors that target elements within your widget template:
+Widget styles are automatically scoped to each widget instance. The `selector` property is **optional**:
+
+- **Without a selector**: Styles apply to the widget wrapper element itself
+- **With a selector**: Styles target nested elements within your widget template
 
 <AposCodeBlock>
 
 ```javascript
-// Good - targets elements within widget
 styles: {
   add: {
+    // No selector - applies to widget wrapper
+    wrapperBackground: {
+      type: 'color',
+      label: 'Background Color',
+      property: 'background-color'
+    },
+    // With selector - targets nested element
     titleColor: {
-      selector: '.widget-title',  // Exists in your template
-      property: 'color',
-      type: 'color'
+      type: 'color',
+      label: 'Title Color',
+      selector: '.widget-title',
+      property: 'color'
     }
   }
 }
 ```
 
-<template v-slot:caption>
-  Good selector practice
-</template>
-
 </AposCodeBlock>
 
-### Avoid global selectors
-
-Don't use selectors that would affect elements outside the widget:
+Avoid selectors that target elements outside your widget template - they won't match due to automatic scoping:
 
 <AposCodeBlock>
 
 ```javascript
-// Bad - too broad, would affect entire page if not scoped
-styles: {
-  add: {
-    textColor: {
-      selector: 'body',  // Don't do this in widgets
-      property: 'color',
-      type: 'color'
-    }
-  }
+// Bad - won't match anything
+textColor: {
+  selector: 'body',  // Becomes #widget-abc123 body (no match)
+  property: 'color',
+  type: 'color'
 }
 ```
 
-<template v-slot:caption>
-  Avoid global selectors
-</template>
-
 </AposCodeBlock>
-
-::: info
-While widget styles are automatically scoped to prevent affecting other widgets, overly broad selectors can still cause issues within the widget template itself.
-:::
 
 ### Performance considerations
 
 - Widget styles are generated for each instance, so they add to page size
-- For styles that should apply to all instances of a widget type, use regular CSS
+- For styles that should apply to all instances of a widget type, use global styles or regular CSS
 - Reserve widget styles for per-instance customization that content creators need
 
 ## When to use widget styles vs. global styles
