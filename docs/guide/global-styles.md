@@ -57,7 +57,7 @@ export default {
 </AposCodeBlock>
 
 **Every field needs:**
-- `type` (or `preset`) - The control type: `color`, `range`, `integr`, `float`, `string`, `select`, `box`, or a preset name
+- `type` (or `preset`) - The control type: `color`, `range`, `integer`, `float`, `string`, `select`, `box`, or a preset name
 - `label` - Display name in the interface
 - `selector` - CSS selector(s) to target
 - `property` - CSS property to modify

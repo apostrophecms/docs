@@ -173,7 +173,7 @@ These options configure the styles module behavior and should be set in `modules
 ### `serverRendered`
 
 When set to `true`, all CSS rendering (including preview during editing) goes through your custom `getStylesheet` method. This is required when implementing custom CSS generation logic.
-**This option is only available for global styles.** Widget styles are always rendered server-side for performance reasons.
+**This option is only available for global styles.** Widget styles are always rendered by our standardized logic for performance reasons.
 
 ```javascript
 module.exports = {
