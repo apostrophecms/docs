@@ -19,7 +19,7 @@ This module is the foundation of all other Apostrophe modules. It is not *direct
 
 The following methods belong to this module and may be useful in project-level code. As noted above, *they should be used via another module.* They cannot be directly called from this module as it is not instantiated.
 
-See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/module/index.js) for all methods that belong to this module.
+See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/module/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 ### `async render(req, template, data)`
@@ -48,7 +48,7 @@ This method triggers the `@apostrophecms/page` module to emit a [`beforeSend` ev
 
 ### `enableBrowserData(scene)`
 
-Call this method from a module's [initialization function](/reference/module-api/module-overview.md##initialization-function) if the module implements the [`getBrowserData()` method](#getbrowserdata-req). **This is only necessary for modules that do not already do this** (all doc type and widget type modules already do this). The data returned by `getBrowserData(req)` will then be available on `apos.modules['the-module-name']` in the browser.
+Call this method from a module's [initialization function](/reference/module-api/module-overview.md#initialization-function) if the module implements the [`getBrowserData()` method](#getbrowserdata-req). **This is only necessary for modules that do not already do this** (all doc type and widget type modules already do this). The data returned by `getBrowserData(req)` will then be available on `apos.modules['the-module-name']` in the browser.
 
 The `scene` argument is only needed if making the data available while logged-out. By default browser data is pushed only for the `apos` scene (the logged-in context), so the anonymous site visitor experience will include the extra data (except on the /login page and other pages that opt into the `apos` scene). If `scene` is set to `public` then the data is available to all visitors.
 

@@ -239,7 +239,7 @@ Finally, at the end of this modal markup we use an apostrophe component within a
 <AposButton type="rich-text" @click="takeAction" :class="{ 'apos-is-active': buttonActive }" :label="tool.label" :modifiers="['no-border', 'no-motion']" />
 ```
 
-At the very top of the template, there is another `AposButton` component. This is the button that will be displayed to the user on the rich-text editor toolbar. The `@click` directive binds the `takeAction()` method to the button. As we will explore, this method toggles the `active` prop to then cause the modal markup to be added through the `v-if` directive that we covered. In this example, we are only passing in a label for the button. We could also choose to pass an icon. If you want to add icons in your own extensions, please examine the [code for the `link` toolbar item](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/rich-text-widget/ui/apos/components/AposTiptapLink.vue).
+At the very top of the template, there is another `AposButton` component. This is the button that will be displayed to the user on the rich-text editor toolbar. The `@click` directive binds the `takeAction()` method to the button. As we will explore, this method toggles the `active` prop to then cause the modal markup to be added through the `v-if` directive that we covered. In this example, we are only passing in a label for the button. We could also choose to pass an icon. If you want to add icons in your own extensions, please examine the [code for the `link` toolbar item](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/rich-text-widget/ui/apos/components/AposTiptapLink.vue).
 
 #### The `script`
 

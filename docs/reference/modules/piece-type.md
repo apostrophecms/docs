@@ -16,7 +16,7 @@ The only reason to configure this module directly would be to apply the changes 
 |---|---|---|
 | [`autopublish`](#autopublish) | Boolean | Set to `true` to publish all saved edits immediately. |
 | [`cache`](#cache) | Object | Provides control over cache headers for the REST API. |
-| [`label`](#label-for-doc-types) | String | The human-readable label for the doc type. |
+| [`label`](#label) | String | The human-readable label for the doc type. |
 | [`localized`](#localized) | Boolean | Set to `false` to exclude the doc type in the locale system. |
 | [`perPage`](#perpage) | Integer | The number of pieces to include in a set of `GET` request results. |
 | [`pluralLabel`](#plurallabel) | String | The plural readable label for the piece type. |
@@ -289,7 +289,7 @@ modules/article/index.js
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-type/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/piece-type/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 This module is meant as a base class for more specific content modules. As such, the methods should be used from those content modules, not directly from this one.
@@ -399,7 +399,7 @@ The `insert()` method is used to add a new piece in server-side code. See the [g
 
 ### `async update(req, piece, options)`
 
-The `update()` is used to update data for an existing piece. Note that the second argument must be a *complete piece object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-content-documents) for more on this.
+The `update()` is used to update data for an existing piece. Note that the second argument must be a *complete piece object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-builders) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-content-documents) for more on this.
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |

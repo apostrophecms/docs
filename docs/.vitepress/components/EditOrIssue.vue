@@ -15,36 +15,18 @@
 <script>
 export const endingSlashRE = /\/$/;
 export const outboundRE = /^[a-z]+:/i;
-import { computed, onMounted, ref, watch } from 'vue';
-import { useData, onContentUpdated } from 'vitepress';
+import { computed } from 'vue';
+import { useData } from 'vitepress';
 
 export default {
   name: 'EditOrIssue',
   setup() {
-    const dataObject = useData()
-    const pageData = dataObject.page.value
-    const siteData = dataObject.site.value
-    const themeConfig = siteData.themeConfig
-
-    const relativePath = ref('')
-    const title = ref('')
-
-    onMounted(() => {
-      relativePath.value = pageData.relativePath
-      title.value = pageData.title
-    })
-
-    watch(
-    () => dataObject.page.value,
-    (newPageData, oldPageData) => {
-      relativePath.value = newPageData.relativePath;
-      title.value = newPageData.title;
-    },
-    { deep: true }
-  );
+    const { page, site } = useData()
+    const themeConfig = computed(() => site.value.themeConfig)
 
     const openIssueLink = computed(() => {
-      return `https://github.com/apostrophecms/a3-vitepress-docs/issues/new?assignees=&labels=OKR+3%3A+Content+Improvement%2C+docs-ipfs&template=documentation-issue.md&title=%5BDOCS+ISSUE%5D+Page:+${title.value}`;
+      const pageTitle = page.value.title || page.value.relativePath || 'Unknown';
+      return `https://github.com/apostrophecms/docs/issues/new?assignees=&labels=OKR+3%3A+Content+Improvement%2C+docs-ipfs&template=documentation-issue.md&title=${encodeURIComponent('[DOCS ISSUE] Page: ' + pageTitle)}`;
     })
 
     function createEditLink(docsRepo, docsDir, docsBranch, path) {
@@ -65,14 +47,14 @@ export default {
         docsDir = '',
         docsBranch = 'main',
         docsRepo
-      } = themeConfig
+      } = themeConfig.value
 
-      if (docsRepo && pageData.relativePath) {
+      if (docsRepo && page.value.relativePath) {
         return createEditLink(
           docsRepo,
           docsDir,
           docsBranch,
-          relativePath.value
+          page.value.relativePath
         )
       }
       return null
@@ -80,7 +62,7 @@ export default {
 
     const editLinkText = computed(() => {
       return (
-        siteData.editLinkText ||
+        site.value.editLinkText ||
         `Edit this page`
       )
     })

@@ -8,7 +8,7 @@ Apostrophe provides built-in REST end points for all [piece types](/reference/gl
 
 ### REST endpoints
 
-[Authentication](/reference/api/authentication.md) is required for all requests other than `GET` requests for pieces with defined [`publicApiProjection`](/reference/module-api/module-options.md#publicapiprojection).
+[Authentication](/reference/api/authentication.md) is required for all requests other than `GET` requests for pieces with defined [`publicApiProjection`](/reference/module-api/module-options.md#publicapiprojection-for-pieces).
 
 | Method | Path | Description |
 |---------|---------|---------|

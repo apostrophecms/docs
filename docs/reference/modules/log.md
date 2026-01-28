@@ -19,7 +19,7 @@ This module provides structured logging for Apostrophe projects. It intercepts t
 | [`filter`](#filter) | Object | Optional. Takes named objects that determine what log notices are emitted |
 
 ### `logger`
-The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()`. An example implementation of these methods can be found in the Apostrophe [`util/lib/logger.js` file](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/util/lib/logger.js). Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a third-party logging package as value.
+The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()`. An example implementation of these methods can be found in the Apostrophe [`util/lib/logger.js` file](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js). Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a third-party logging package as value.
 
 <AposCodeBlock>
 

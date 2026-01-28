@@ -41,7 +41,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Authentication"
       content="Learn about API keys, bearer tokens, and session cookies for authenticating your REST API requests."
-      url="/reference/api/authentication"
+      url="authentication"
       hideEffort="true"
     />
   </template>
@@ -50,7 +50,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Field Formats"
       content="Examples of how each field type appears in API responses, from simple strings to complex areas and relationships."
-      url="/reference/api/field-formats"
+      url="field-formats"
       hideEffort="true"
     />
   </template>
@@ -64,7 +64,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Piece Type REST API"
       content="Full CRUD operations for piece types with pagination, search, filtering, draft/publish workflows, and relationship queries."
-      url="/reference/api/pieces"
+      url="pieces"
       hideEffort="true"
     />
   </template>
@@ -73,7 +73,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Page Type REST API"
       content="Complete page management including tree navigation, publishing workflows, and page hierarchy operations."
-      url="/reference/api/pages"
+      url="pages"
       hideEffort="true"
     />
   </template>
@@ -85,7 +85,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Working with Rich Text"
       content="Handle rich text content including HTML filtering, inline images, and importing external content."
-      url="/reference/api/rich-text"
+      url="rich-text"
       hideEffort="true"
     />
   </template>
@@ -94,7 +94,7 @@ const articles = await response.json();
       detail-heading="API"
       title="Media REST Endpoints"
       content="Upload, crop, and manage media files through dedicated endpoints for images, files, and attachments."
-      url="/reference/api/media"
+      url="media"
       hideEffort="true"
     />
   </template>
@@ -108,7 +108,7 @@ const articles = await response.json();
       detail-heading="API"
       title="i18n REST Endpoints"
       content="Manage multilingual content with endpoints for locale information, cross-locale navigation, and document verification."
-      url="/reference/api/i18n"
+      url="i18n"
       hideEffort="true"
     />
   </template>

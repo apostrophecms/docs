@@ -195,7 +195,7 @@ These are all available in the browser on `apos.http`, e.g., `apos.http.get('/ap
 | [`patch`](#patch-url-options-callback) | Send a `PATCH` request. |
 | [`put`](#put-url-options-callback) | Send a `PUT` request. |
 | [`delete`](#delete-url-options-callback) | Send a `DELETE` request. |
-| [`remote`](#remotemet-hod-url-options-callback) | The HTTP request method that powers other request methods. |
+| [`remote`](#remote-method-url-options-callback) | The HTTP request method that powers other request methods. |
 | [`parseQuery`](#parsequery-query) | Parses a URL query string, returning an object of parameters. |
 | [`addQueryToUrl`](#addquerytourl-url-data) | Returns a URL with data object properties added as a query string. |
 

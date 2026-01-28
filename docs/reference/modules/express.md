@@ -96,7 +96,7 @@ Note that not every request ends in a route, as it is possible for middleware to
 
 ## Featured methods
 
-This module's methods are used to generate the Express app. Customization should be done using the options described above. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/express/index.js) for all methods that belong to this module.
+This module's methods are used to generate the Express app. Customization should be done using the options described above. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/express/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 ## Module tasks

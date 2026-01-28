@@ -612,5 +612,5 @@ For implementation details, see the migration code in `@apostrophecms-pro/palett
 
 ## Related documentation
 
-- [Global Styling](/guide/global-styling.md)
-- [Per-Widget Styling](/guide/widget-styling.md)
+- [Global Styling](/guide/global-styles.md)
+- [Per-Widget Styling](/guide/widget-styles.md)

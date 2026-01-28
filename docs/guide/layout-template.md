@@ -41,7 +41,7 @@ You might notice is that this does not have essential web page elements such as 
 {% extends data.outerLayout %}
 ```
 
-`data.outerLayout` is a reference to a lower level layout template from Apostrophe core that includes those critical HTML elements, markup required by Apostrophe, and the template block structure that project-level templates use. **The lowest-level templates in any project should extend this.** ([See that file on Github](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
+`data.outerLayout` is a reference to a lower level layout template from Apostrophe core that includes those critical HTML elements, markup required by Apostrophe, and the template block structure that project-level templates use. **The lowest-level templates in any project should extend this.** ([See that file on Github](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
 
 This layout template then includes two template blocks, **`beforeMain` and `afterMain`**, containing markup that wraps most page content.
 

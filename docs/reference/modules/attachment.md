@@ -18,7 +18,7 @@ This reference is unusual compared to other reference pages in that it documents
 |  Property | Type | Description |
 |---|---|---|
 | [`fileGroups`](#filegroups) | Array | Assigns uploaded files to either an 'image' or 'office' category to allow for upload and manipulation. |
-| [`addFileGroups`](#addFileGroups) | Array | Allows addition of extension(s) to existing groups or creation of new groups. |
+| [`addFileGroups`](#addfilegroups) | Array | Allows addition of extension(s) to existing groups or creation of new groups. |
 
 ### `fileGroups`
 
@@ -255,7 +255,7 @@ The `within` parameter is required and specifies the object to be searched. In g
 
 The `options` parameter is optional and takes an object with several potential properties.
 
-`options.group` takes the `name` of the specific [`fileGroup`](#filegroup) to be searched - usually either `images` or `office`. 
+`options.group` takes the `name` of the specific [fileGroup](#filegroups) to be searched - usually either `images` or `office`. 
 
 `options.extension` takes a single extension type as a non-prefixed string and filters the returned array to only include those types.
 
@@ -286,7 +286,7 @@ The `within` parameter is required and specifies the object to be searched. In g
 
 The `options` parameter is optional and takes an object with several potential properties.
 
-`options.group` takes the `name` of the specific [`fileGroup`](#filegroup) to be searched - usually either `images` or `office`. 
+`options.group` takes the `name` of the specific [`fileGroup`](#s) to be searched - usually either `images` or `office`. 
 
 `options.extension` takes a single extension type as a non-prefixed string and filters the returned array to only include those types.
 

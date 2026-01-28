@@ -410,7 +410,7 @@ This API route **Permanently deletes the page database document**. Moving pieces
 | Parameter | Example | Description |
 |----------|------|-------------|
 |`aposMode` | `?aposMode=draft` | Set to `draft` or `published` to delete a specific mode version of the piece. |
-|`aposLocale` | `?aposLocale=fr` | Set to [a valid locale](#TODO) to delete the piece document version for that locale. |
+|`aposLocale` | `?aposLocale=fr` | Set to a valid locale to delete the piece document version for that locale. |
 
 <!-- TODO: link to docs about locales and modes when available. -->
 <!-- Read more about [mode and locale parameters on single-document requests](/guide/rest-apis#locale-and-mode-in-single-document-requests). -->
@@ -529,8 +529,6 @@ The successful `POST` request returns the newly published document. See the [pag
 |`updatedAt` | Date | An [ISO date string](https://en.wikipedia.org/wiki/ISO_8601) of the document's last update date and time|
 |`visibility` | String | The visibility setting, controlling public availability|
 |Content properties | Variable | Additional properties specific to the piece type and its fields|
-
-**TODO:** Link to examples of each field's response format.
 
 ### Example
 

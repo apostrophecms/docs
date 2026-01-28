@@ -57,7 +57,7 @@ Unnamed errors are returned with the 500 error code, so it does not need to be r
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/http/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/http/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.http.addError()`.
