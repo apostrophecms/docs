@@ -39,7 +39,7 @@ module.exports = {
 The `page-type` module can expose multiple views, but by default serves the template located at `<module-name>/views/page.html`. Additional views can be exposed using the `dispatch()` method.
 
 ## Featured Methods:
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/tree/main/modules/%40apostrophecms/page-type) for all the methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/page-type/index.js) for all the methods that belong to this module.
 
 ### `dispatchAll()`
 The `dispatchAll()` method is a utility method for registering multiple `dispatch()` routes. It is invoked during project start-up by the `init` method of this module, so it provides a convenient method for managing and consolidating routing logic.

@@ -55,7 +55,7 @@ For example, the `@apostrophecms/image` module uses the `image-` slug prefix. Im
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/doc-type/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 This module is meant as a base class for more specific content modules. As such, the methods should be used from those content modules, not directly from this one.

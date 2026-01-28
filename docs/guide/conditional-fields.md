@@ -43,7 +43,7 @@ add: {
 
 ## MongoDB-style comparison operators
 
-For more flexible conditions, you can use [MongoDB-style comparison operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) instead of exact value matching. This allows for range checks, existence checks, and matching against multiple values.
+For more flexible conditions, you can use [MongoDB-style comparison operators](https://www.mongodb.com/docs/manual/reference/mql/query-predicates/comparison/#std-label-query-selectors-comparison) instead of exact value matching. This allows for range checks, existence checks, and matching against multiple values.
 
 ```javascript
 // A field schema's `add` configuration

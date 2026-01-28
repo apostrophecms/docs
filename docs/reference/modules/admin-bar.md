@@ -55,7 +55,7 @@ This will result in grouping those four core modules into a single dropdown menu
 
 ## Featured methods
 
-The following method belongs to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/admin-bar/index.js) for all methods that belong to this module.
+The following method belongs to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe/modules/%40apostrophecms/admin-bar) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.adminBar.add()`.
@@ -64,7 +64,7 @@ Because this module has an alias, you can call these from another module from th
 
 Add an item to the menu bar.
 
-The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`. A more complex example is contained within the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js).
+The `name` for the item must be unique within the menu bar to avoid conflicts. When the menu item is clicked, the `name` argument will be emitted on `apos.bus` as the value of an `admin-menu-click` event. If this item controls a specific modal, this will be caught by `TheAposModals` to display the correct modal. If this is the case, `name` should be the module name with a `:editor` or `:manager` suffix. For example, `@apostrophecms/global:editor`. A more complex example is contained within the [`@apostrophecms/login` module](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/login/ui/apos/apps/AposLogin.js).
 
 **Example**
 
@@ -117,7 +117,7 @@ If the `contextUtility` property is set to `true`, the button will be displayed 
 
 #### `icon`
 
- For proper display when setting `contextUtility` to true, a property of `icon` set to the value of an existing icon must also be passed. More can be read about icons [here](/reference/module-api/module-overview.md#icons). A list of the icons imported automatically by Apostrophe can be found in the [‘asset’ module in the ‘globalIcos.js’ file’ within the ‘lib’ folder](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js).
+ For proper display when setting `contextUtility` to true, a property of `icon` set to the value of an existing icon must also be passed. More can be read about icons [here](/reference/module-api/module-overview.md#icons). A list of the icons imported automatically by Apostrophe can be found in the [‘asset’ module in the ‘globalIcos.js’ file’ within the ‘lib’ folder](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/asset/lib/globalIcons.js).
 
 #### `toggle`
 
@@ -127,4 +127,4 @@ The `toggle` property is used in conjunction with `contextUtility`. If it set to
 The `tooltip` property can take either a string or an object. If `toggle` is falsy, then the value of `tooltip` is a string to display on hover. If `toggle` is truthy, then `tooltip` takes an object with two arguments, `activate` and `deactivate`. Both properties accept string values with the former being displayed for the activated state and the later the deactivated state.
 
 ### `getShowAdminBar(req)`
-This method determines whether the admin-bar should be displayed. At project level, this method should be extended in the `modules/@apostrophecms/admin-bar/index.js` file `extendMethods(self)` customization function and should return a boolean value. By default, it returns the value of `!!req.user`, which is true if a user is logged in. An example of how to use this method is shown in the [custom admin ui](/guide/custom-ui.html#toggling-the-admin-bar-visibility) section of the documentation.
+This method determines whether the admin-bar should be displayed. At project level, this method should be extended in the `modules/@apostrophecms/admin-bar/index.js` file `extendMethods(self)` customization function and should return a boolean value. By default, it returns the value of `!!req.user`, which is true if a user is logged in. An example of how to use this method is shown in the [custom admin ui](/guide/custom-ui.html#toggling-the-visibility-of-the-apostrophecms-admin-bar) section of the documentation.

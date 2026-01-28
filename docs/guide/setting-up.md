@@ -3,7 +3,7 @@ title: Redirecting...
 head:
   - - link
     - rel: canonical
-      href: /guide/development-setup.html
+      href: /docs/guide/development-setup.html
 ---
 
 <script setup>

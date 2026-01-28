@@ -36,7 +36,7 @@ Within the `beforeShow()` method we are gaining access to the `aposDocs` collect
 There are references to other core apostrophe collections that can be accessed in this same way through `self.apos.<xxx>.db`. For example, `self.apos.attachment.db` gives access to CRUD (Create, Read, Update, Delete) operations on the `aposAttachments` collection. Note that the reference uses the singular version of the name.
 :::
 
-Next, we are invoking a method of the MongoDB collection saying that we want to update one document within the database. You can read about other methods within the [MongoDB Node.js driver docs](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/).
+Next, we are invoking a method of the MongoDB collection saying that we want to update one document within the database. You can read about other methods within the [MongoDB docs](https://www.mongodb.com/docs/manual/crud/).
 
 We are passing two arguments to the MongoDB method. The first is a MongoDB criteria object which ensures our query only matches the document with the desired `_id`. MongoDB objects always have an `_id` property, a unique identifier that can always be used to find that specific document.
 

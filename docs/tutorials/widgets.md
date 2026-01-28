@@ -74,7 +74,7 @@ We are setting both the `icon` and optional `previewIcon` to the same icon. The 
 
 ### Registering an icon
 
-The icon being used in this module isn't currently registered by Apostrophe in the [`globalIcons.js`](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/asset/lib/globalIcons.js) file. The icon is available within the [`vue-material-design-icons` v4.12.1 package](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd), which is installed in our project. In order to use this icon within our module we need to add a new configuration property to our module's `index.js` file.
+The icon being used in this module isn't currently registered by Apostrophe in the [`globalIcons.js`](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/asset/lib/globalIcons.js) file. The icon is available within the [`vue-material-design-icons` v4.12.1 package](https://gist.github.com/BoDonkey/a28419ed8954b57931f80061e5e6a3dd), which is installed in our project. In order to use this icon within our module we need to add a new configuration property to our module's `index.js` file.
 
 ``` javascript
 // ...

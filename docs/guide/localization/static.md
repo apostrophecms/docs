@@ -247,7 +247,7 @@ To localize Apostrophe's existing user interface strings, we need to create JSON
 
 Note that separately installed npm modules may use other namespaces, which you can see in their source code. You can create subdirectories for these as well, again keeping these localizations separate from your project-level strings.
 
-In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
+In each JSON file, copy the contents of [the Apostrophe core l10n file](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/i18n/i18n/en.json) to get all the keys. You can then start translating each string.
 
 Of course, this can be a lot of work and would likely involve tracking down where strings are used for testing purposes. If you are interested in being part of translating the UI for a language that isn't supported yet, please contact us in [Discord](http://chat.apostrophecms.com) or at [help@apostrophecms.com](mailto:help@apostrophecms.com) so we can coordinate efforts and let the whole community benefit.
 

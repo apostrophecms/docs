@@ -46,7 +46,7 @@ info:
     email: support@apostrophecms.com
   license:
     name: MIT
-    url: https://github.com/apostrophecms/apostrophe/blob/main/LICENSE.md
+    url: https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/LICENSE.md
 
 externalDocs:
   description: Full Documentation

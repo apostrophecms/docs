@@ -48,7 +48,7 @@ module.exports = {
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/doc/index.js) for all methods that belong to this module.
 
 ### `find(req, criteria, builders)`
 

@@ -407,7 +407,7 @@ Apostrophe offers a context menu that can be used to carry out certain operation
 ![A custom context menu item 'My Menu Item' in the Piece Editor Modal](../images/ui-custom-context-menu.png)
 
 Custom context menu items can either:
-1. Open a modal dialog box that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
+1. Open a modal dialog box that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
 2. Emit an event that can be listened for elsewhere in your code using `apos.bus.$on()`
 
 It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, you can use the options described below to limit when they appear.
@@ -580,7 +580,7 @@ moduleIf: {
 
 Both support MongoDB-style operators like `$or`, `$and`, and `$ne`, as well as dot notation for nested properties.
 
-> **Warning:** Do not use core actions as your `action` property value. This would lead to unpredictable results and broken UI. You can find the core actions in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
+> **Warning:** Do not use core actions as your `action` property value. This would lead to unpredictable results and broken UI. You can find the core actions in the [AposDocContextMenu component logic props](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/doc-type/ui/apos/logic/AposDocContextMenu.js).
 
 ## Toggling the visibility of the ApostropheCMS admin-bar
 

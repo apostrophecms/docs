@@ -95,7 +95,7 @@ Option settings in this section apply to every module in Apostrophe.
 | [`alias`](#alias) | String | Configure an alias to more easily reference the module elsewhere. |
 | [`components`](#components) | Object | Configure custom UI Vue components to be used for the module. |
 | [`csrfExceptions`](#csrfexceptions) | Array | An array of route names in the module, or URLs starting with `/`, that should bypass CSRF protection. |
-| [`i18n`](#i18n) | Boolean/Object | Indicate that the module will include localization strings for the i18n module (with optional configuration). |
+| [`i18n`](/guide/localization/static.html) | Boolean/Object | Indicate that the module will include localization strings for the i18n module (with optional configuration). |
 | [`templateData`](#templatedata) | Object | Set data to be included on `req.data` for requests to this module.  |
 
 ### `alias`
@@ -176,7 +176,7 @@ modules/access/index.js
 
 ### `templateData`
 
-Similar to [`browser`](#browser), the `templateData` module option can be set to an object whose properties will be made available in templates of that module. Properties are attached directly to the `data` object in templates.
+The `templateData` module option can be set to an object whose properties will be made available in templates of that module. Properties are attached directly to the `data` object in templates.
 
 #### Example
 
@@ -402,7 +402,7 @@ Option settings in this section apply to all piece modules (those that extend `@
 
 Similar to `label` for all doc types, the `pluralLabel` option sets the string the user interface will use to describe a piece type in plural contexts. All page types are referred to as "Pages" in these contexts, but pieces should have unique labels (e.g., "Articles," or "Teams").
 
-If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
+If no `pluralLabel` value is provided, Apostrophe will append the `label` (whether set manually or generated [as described](#label-for-doc-types)), with "s", as is typical for English words. **Even in English this is often not correct, so `pluralLabel` should usually be defined explicitly.**
 
 #### Example
 
@@ -1099,7 +1099,7 @@ module.exports = {
 
 ### `icon`
 
-Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module settings reference](/reference/module-api/module-overview.md#icons) for how to make new icons available.
+Identify an icon to be used with a widget label in the area menu with the `icon` option. That icon must be included in the [list of globally available UI icons](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/asset/lib/globalIcons.js) or configured on the module in its `icons` section. See the [module settings reference](/reference/module-api/module-overview.md#icons) for how to make new icons available.
 
 #### Example
 
@@ -1186,7 +1186,7 @@ modules/@apostrophecms/rich-text-widget/index.js
 
 ### `defaultOptions`
 
-The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/rich-text-widget/index.js#L87). These can be overridden by setting `defaultOptions`. This configuration object can include any of the `toolbar`, `styles`, and `color` sub-options. Sub-options that are not included will fall back to the defaults.
+The rich text widget is configured by default with useful [rich text toolbar settings and styles](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/rich-text-widget/index.js#L149). These can be overridden by setting `defaultOptions`. This configuration object can include any of the `toolbar`, `styles`, and `color` sub-options. Sub-options that are not included will fall back to the defaults.
 
 `defaultOptions` can also be overridden in schema configuration where an area configures its rich text widgets. So a project can have site-wide defaults, but a specific area can have its own separate configuration.
 
@@ -1227,7 +1227,7 @@ The rich text editor toolbar tools (e.g., "bold," "link," and "underline" button
 ::: warning
 Using this option takes full responsibility for the configuration of the rich text editor tools. Use this with caution. If overriding, be sure to include _all_ rich text tools that you will use.
 
-If introducing an editor tool that is not included in core, you will need to create both the Vue component and, often, a [tiptap extension](https://tiptap.dev/docs/guide/extensions.html#installation).
+If introducing an editor tool that is not included in core, you will need to create both the Vue component and, often, a [tiptap extension](https://tiptap.dev/docs/guide/extensions.html).
 :::
 <!-- TODO: link to an RTE extension guide when available. -->
 

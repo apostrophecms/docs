@@ -26,7 +26,7 @@ Project-specific modules should not use the `@apostrophecms` namespace to avoid 
 #### Updated UI and module architecture
 
 - Most any user interface customizations based on the A2 jQuery code will no longer work.
-- [As noted on the migration overview page](/guide/migration/overview.md#other-notable-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
+- [As noted on the migration overview page](/guide/migration/overview.md#other-improvements), Apostrophe no longer provides jQuery, lodash, or Moment.js to browsers by default. If you need any of those libraries in the client you will need to provide them.
 - Due to the module architecture changes, all modules in an A2 project would need to be refactored when migrating to a newer version. Most configurations and methods will be reusable, but they will need to be rearranged. See the [module reference](/reference/module-api/module-overview.md) for details. Here are some highlights:
   - Module field schemas now use an object structure on the `fields` property. It has `add`, `remove`, and `group` subproperties to replace A2's `addFields`, `removeFields`, and `arrangeFields`.
   - `columns` (for piece manager UI columns) is structured similarly to `fields` with `add`, `remove`, and `order` subproperties. This replaces A2's `addColumns` property.
@@ -59,7 +59,7 @@ Project-specific modules should not use the `@apostrophecms` namespace to avoid 
 #### Other changes
 
 - Every page type will need a corresponding module (in A2 this was only necessary if the page had custom fields or functionality). Page templates live in the page type module rather than in the base page module.
-- In A2, relationships between two piece or page types were referred to as "joins." Now they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundamentally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter). [See the guide](/reference/field-types/relationship.md#using-a-relationship-in-templates) regarding for changes in template use.
+- In A2, relationships between two piece or page types were referred to as "joins." Now they are called "relationships." [The `relationship` field type](/reference/field-types/relationship.md) is fundamentally the same as the previous `joinByArray` and `joinByOne` fields (using a `max: 1` option to replicate the latter). [See the guide](/reference/field-types/relationship.md).
 - The `array` and `object` field types use [a new syntax for adding their field schemas](/reference/field-types/array.md#module-field-definition), matching the new module field schema syntax.
 - The `tags` field from A2 no longer exists. In most cases, we recommend replacing that by adding a piece type for categorization. The core `@apostrophecms/image-tag` and `@apostrophecms/file-tag` modules are examples of this.
 - Template helper methods need to be adjusted to use the singular form of their module aliases, e.g., `apos.attachments.url` to `apos.attachment.url`.

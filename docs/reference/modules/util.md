@@ -15,12 +15,12 @@ The `@apostrophecms/util` module contains utility methods and tools that do not 
 
 |  Property | Type | Description |
 |---|---|---|
-|`logger` | Function | Deprecated in favor of the new option exposed in the `@apostrophecms/logging` module. A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). |
+|`logger` | Function | Deprecated in favor of the new option exposed in the `@apostrophecms/logging` module. A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). |
 | `stackLimit` | Integer | Defaults to 50. This is the maximum size of the asynchronous stack, tracking active widget loaders, async components, and relationship loaders. |
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/util/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.util.log()`.
@@ -49,7 +49,7 @@ Logs a warning message. The default implementation wraps `console.warn` and pass
 
 #### `warnDev(msg)`
 
-Identical behavior to [`apos.util.warn`](#warn-string) except that the warning is not displayed if `process.env.NODE_ENV` is `production`. It will log the message every time it is called. See `warnDevOnce()` for a quieter version when messages may become repetitive.
+Identical behavior to [`apos.util.warn`](#warn-msg) except that the warning is not displayed if `process.env.NODE_ENV` is `production`. It will log the message every time it is called. See `warnDevOnce()` for a quieter version when messages may become repetitive.
 
 #### `warnDevOnce(name, msg)`
 

@@ -36,4 +36,4 @@ ApostropheCMS is content software for everyone in an organization. It helps team
 
 ## License
 
-ApostropheCMS is released under the [MIT License](https://github.com/apostrophecms/apostrophe/blob/main/LICENSE.md).
+ApostropheCMS is released under the [MIT License](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/LICENSE.md).

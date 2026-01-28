@@ -294,6 +294,6 @@ span.setStatus({ code: telemetry.api.SpanStatusCode.OK });
 span.end();
 ```
 
-You can inspect [the telemetry namespace exports here](https://github.com/apostrophecms/apostrophe/blob/main/lib/opentelemetry.js).
+You can inspect [the telemetry namespace exports here](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/lib/opentelemetry.js).
 
-An example of [an internal implementation is available here](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/module/lib/events.js#L29).
+An example of [an internal implementation is available here](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/module/lib/events.js#L29).

@@ -276,7 +276,7 @@ styles: {
 The `alignment` preset uses built-in CSS classes (`.apos-left`, `.apos-center`, `.apos-right`) that ship with ApostropheCMS core. These classes are available site-wide and can be overridden at project level if needed.
 :::
 
-For details on each preset's fields and configuration, see the [Global Styling documentation](/guide/global-styling.md).
+For details on each preset's fields and configuration, see the [Global Styling documentation](/guide/global-styles.md).
 
 ## Object field limitations
 

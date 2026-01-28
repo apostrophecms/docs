@@ -88,7 +88,7 @@ The Wasabi storage service has an expanded API that supports some features not f
 8) Download the credentials. You won't be able to get the secret again.
 9) Get the `APOS_S3_SECRET` and `APOS_S3_KEY` values from the file.
 
-If you didn't note the endpoint URL you can get it based on the region code (e.g. 'us-east-1') from this [page](https://wasabi-support.zendesk.com/hc/en-us/articles/360015106031-What-are-the-service-URLs-for-Wasabi-s-different-storage-regions-).
+If you didn't note the endpoint URL you can get it based on the region code (e.g. 'us-east-1') from this [page](https://docs.wasabi.com/docs/service-urls-for-wasabis-storage-regions).
 
 ### Wasabi security
 The files uploaded to the Wasabi bucket are publicly available right away without the need for any changes. However, if you click the menu to the right of the bucket name and select "Setting", it will bring up a page that allows you to alter permissions easily. See the [`uploadfs` documentation](/reference/modules/uploadfs.html#s3-storage-options) for more information and options.

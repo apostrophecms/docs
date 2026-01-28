@@ -333,7 +333,7 @@ module.exports = {
 * [Piece page type options](/reference/module-api/module-options.md#options-for-piece-page-types)
 
 ## Featured methods
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/piece-page-type/index.js) for all the modules that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/piece-page-type/index.js) for all the modules that belong to this module.
 
 ### `indexQuery(req)`
 This method should be overridden for a piece-type to call additional [query builders](/reference/query-builders.md#query-builders) when generating the index page.
@@ -348,7 +348,7 @@ This method is called before `indexPage`. Within the core module it does nothing
 This method is called before `showPage`. Within the core module it does nothing, so it can be easily overridden by supplying a new method in the `methods` section of the custom module. It is a convenient method to extend for manipulating the `req` being supplied to that page.
 
 ### `dispatchAll()`
-This method can be extended to override the default behavior of invoking `showPage` if the URL has an additional path after the base, e.g. `/blog/good-article`. As example, you could override to use `/:year/:month/:day/:slug` to invoke `self.showPage`. This should be used in conjunction with the [`buildUrl()`](#buildurl-req-page-piece)) method of this module. See [@apostrophecms/page-type](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/page-type/index.js) for more about what you can do with dispatch routes.
+This method can be extended to override the default behavior of invoking `showPage` if the URL has an additional path after the base, e.g. `/blog/good-article`. As example, you could override to use `/:year/:month/:day/:slug` to invoke `self.showPage`. This should be used in conjunction with the [`buildUrl()`](#buildurl-req-page-piece)) method of this module. See [@apostrophecms/page-type](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/piece-page-type/index.js) for more about what you can do with dispatch routes.
 
 ### `buildUrl(req, page, piece)`
 This method can be overridden to change the URLs that are generated as the `_url` property for individual pieces. Note that the [`dispatchAll`](#dispatchall) method often must also be overridden to ensure those URLs actually reach those pieces.

@@ -45,9 +45,9 @@ The `@apostrophecms/ui` module provides the foundation for customizing the admin
 
 Common customization options include:
 
-- [**Overriding standard components**](/guide/custom-ui.html#overriding-standard-vue-js-components-by-name) by placing files with the same name in project modules
+- [**Overriding standard components**](/guide/custom-ui.html#overriding-standard-vue-js-components-by-name-in-apostrophecms) by placing files with the same name in project modules
 - [**Adding custom field types**](/guide/custom-ui.html#registering-custom-field-types) to extend schema capabilities
-- [**Creating custom manager view columns**](/guide/custom-ui.html#adding-custom-columns-to-the-piece-type-manager) to display piece-specific data
+- [**Creating custom manager view columns**](/guide/custom-ui.html#adding-custom-columns-to-the-apostrophecms-piece-type-manager) to display piece-specific data
 - [**Defining custom context menu operations**](/guide/custom-ui.html#adding-custom-context-menu-items) for documents
 
 ## Theming

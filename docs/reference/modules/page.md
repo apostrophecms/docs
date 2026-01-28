@@ -341,7 +341,7 @@ modules/@apostrophecms/page/index.js
 
 ## Featured methods
 
-The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/modules/%40apostrophecms/page/index.js) for all methods that belong to this module.
+The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/page/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
 
 Because this module has an alias, you can call these from another module using the alias. For example, `self.apos.page.find()`.
@@ -380,7 +380,7 @@ The `insert()` method is used to add a new page. It requires specific arguments 
 
 ### `async update(req, page, options)`
 
-The `update()` method is used to update data for an existing page. Note that the second argument must be a *complete page object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-options) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-page-documents) for more on this.
+The `update()` method is used to update data for an existing page. Note that the second argument must be a *complete page object* to replace the existing one. You will typically use [`find()`](#async-find-req-criteria-builders) to get the existing document object, alter that, then pass it into this method. See the [guide for updating pages in code](/guide/database-insert-update.md#updating-page-documents) for more on this.
 
 | Property | Type | Description |
 | -------- | -------- | ----------- |
