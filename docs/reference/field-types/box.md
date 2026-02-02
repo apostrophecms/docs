@@ -66,6 +66,7 @@ There is also a helper function that will return a string of CSS rules.
 |-----------|-----------|-----------|-----------|
 |`help` | String | n/a | Help text for the content editor |
 |`def` | Object | <pre style='width: 170px; border-radius: 4px; padding: 3px 6px; background-color: var(--vp-code-bg);font-size: var(--vp-code-font-size); color: var(--vp-code-color);'><code>{<br/>&nbsp;top: null,<br />&nbsp;right: null,<br />&nbsp;bottom: null,<br />&nbsp;left: null<br />}</code></pre> | The default value. Must be an object with keys `top`, `right`, `bottom`, `left`. Each value must be a number |
+|`direction` | String | n/a | Sets the text direction for the field. Use `'ltr'` for left-to-right or `'rtl'` for right-to-left. Overrides the locale's default direction. See the [RTL language support guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for details. |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`if` | Object | `{}` | Conditions to meet before the field is active. [See the guide for details.](/guide/conditional-fields) |
 |`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |

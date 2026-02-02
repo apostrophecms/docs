@@ -33,7 +33,7 @@ contactInfo: {
 
 ### Required
 
-|  Property | Type | Default | Description |
+| Property | Type | Default | Description |
 |-----------|-----------|-----------|-----------|
 |`label` | String | n/a | Sets the visible label for the field in the UI |
 |`type` | String | n/a | Specifies the field type (`array` for this type) |
@@ -156,7 +156,7 @@ In this example, the third field will "switch" between the ice cream flavors and
 
 ### `whenEmpty`
 
-If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/modules/@apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](/reference/module-api/module-overview.md#icons).
+If no array items have been added and the array has `inline: true`, the `whenEmpty` setting supplies an object consisting of a `label` and `icon` that are displayed to the editor until items are added. The `label` property takes a localizable string, while the `icon` property takes an icon that has already been [registered](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/asset/lib/globalIcons.js) or is registered through a module [`icons` property](/reference/module-api/module-overview.md#icons).
  
 ```javascript
 {

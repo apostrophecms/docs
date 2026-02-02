@@ -35,6 +35,7 @@ biography: {
 |-----------|-----------|-----------|-----------|
 |[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
+|`direction` | String | n/a | Sets the text direction for the field. Use `'ltr'` for left-to-right or `'rtl'` for right-to-left. Overrides the locale's default direction. See the [RTL language support guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for details. |
 |[`following`](#following) | String/Array | n/a | The name of a field or an array of field names that will be used to automatically generate this field's value. If this field is edited to no longer match the fields it is following, it will stop responding to edits in those fields.|
 |[`followingIgnore`](#followingignore) | Boolean/Array | n/a | Controls which `following` values should be ignored when auto-generating field content. |
 |`help` | String | n/a | Help text for the content editor |

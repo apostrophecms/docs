@@ -91,6 +91,98 @@ So how does Apostrophe choose the best locale to use? In many cases it is clear.
 3. The URL matches the locale's configured `prefix` and the locale has no `hostname`.
 4. The locale is the default locale (when no other locale matches).
 
+## Right-to-Left (RTL) language support
+
+Apostrophe supports Right-to-Left (RTL) languages, allowing content editors to work comfortably with languages like Hebrew, Arabic, Farsi, and others. RTL support affects both the editing experience in the Apostrophe admin interface and the presentation of content on your website's frontend.
+
+### Configuring RTL locales
+
+To designate a locale as RTL, add the `direction: 'rtl'` property to the locale definition in the `@apostrophecms/i18n` module configuration.
+
+<AposCodeBlock>
+
+  ```javascript
+    module.exports = {
+      options: {
+        locales: {
+          en: {
+            label: 'English'
+          },
+          he: {
+            label: 'Hebrew',
+            direction: 'rtl'
+          },
+          ar: {
+            label: 'Arabic',
+            prefix: '/ar',
+            direction: 'rtl'
+          }
+        }
+      }
+    }
+  ```
+  <template v-slot:caption>
+    modules/@apostrophecms/i18n/index.js
+  </template>
+</AposCodeBlock>
+
+When an editor switches to an RTL locale, supported input fields (String, Password, URL, Email, Float, Integer, Date) will automatically adjust their text direction to RTL, making content entry more natural for RTL languages.
+
+::: info
+Slug fields use left-to-right (LTR) direction by default, regardless of the locale. This is often desirable since URLs are typically more compatible in LTR format.
+:::
+
+### Schema field direction overrides
+
+In some cases, you may need to override the text direction for specific fields regardless of the active locale. This is useful for fields that should always maintain a particular direction, such as:
+- Code snippets or technical identifiers (always LTR)
+- Phone numbers or postal codes (often LTR for consistency)
+- Fields in a specific language regardless of the page locale
+
+You can set the `direction` property directly on individual field definitions:
+
+<AposCodeBlock>
+
+  ```javascript
+  module.exports = {
+    extend: '@apostrophecms/piece-type',
+    fields: {
+      add: {
+        productCode: {
+          type: 'string',
+          label: 'Product Code',
+          direction: 'ltr' // Always LTR, even in RTL locales
+        },
+        arabicDescription: {
+          type: 'string',
+          label: 'Arabic Description',
+          direction: 'rtl' // Always RTL, even in LTR locales
+        }
+      }
+     
+     }
+  };
+  ```
+  <template v-slot:caption>
+    modules/product/index.js
+  </template>
+</AposCodeBlock>
+
+The `direction` property is supported on the following field types:
+- `string`
+- `slug`
+- `password`
+- `date`
+- `time`
+- `dateAndTime`
+- `float`
+- `integer`
+- `url`
+- `email`
+- `box`
+
+For information on using RTL locale data in templates, see the [static localization guide](static.md). For a complete reference of RTL-related configuration options, see the [`@apostrophecms/i18n` module reference](/reference/modules/i18n.md).
+
 ## The default locale
 
 The default locale is the locale used when no others match the URL better. It is typically the locale used by your website's primary audience. **If no locales are configured, Apostrophe will use `en` as the default locale name.**
