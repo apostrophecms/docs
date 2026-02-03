@@ -136,6 +136,10 @@ To designate a locale as RTL, add the `direction: 'rtl'` property to the locale 
 
 When an editor switches to an RTL locale, supported input fields (String, Password, URL, Slug, Email) will automatically adjust their text direction to RTL, making content entry more natural for RTL languages.
 
+::: info
+Slug fields use left-to-right (LTR) direction by default, regardless of the locale. This is often desirable since URLs are typically more compatible in LTR format.
+:::
+
 ### Schema field direction overrides
 
 In some cases, you may need to override the text direction for specific fields regardless of the active locale. This is useful for fields that should always maintain a particular direction, such as:
@@ -164,7 +168,7 @@ You can set the `direction` property directly on individual field definitions:
         }
       }
      }
-  };
+    };
   ```
   <template v-slot:caption>
     modules/product/index.js
