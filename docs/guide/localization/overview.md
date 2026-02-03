@@ -91,9 +91,17 @@ So how does Apostrophe choose the best locale to use? In many cases it is clear.
 3. The URL matches the locale's configured `prefix` and the locale has no `hostname`.
 4. The locale is the default locale (when no other locale matches).
 
-## Right-to-Left (RTL) language support
+### Right-to-Left (RTL) language support
 
-Apostrophe supports Right-to-Left (RTL) languages, allowing content editors to work comfortably with languages like Hebrew, Arabic, Farsi, and others. RTL support affects both the editing experience in the Apostrophe admin interface and the presentation of content on your website's frontend.
+Apostrophe supports Right-to-Left (RTL) languages, allowing content editors to work comfortably with languages like Hebrew, Arabic, Farsi, and others. RTL support currently affects:
+
+- **Frontend presentation**: Content on your website displays with proper RTL directionality
+- **Content editing fields**: Text input fields, rich text areas, and other content fields adapt to RTL when editing content in an RTL locale
+- **Admin UI framework**: The admin interface itself (menus, buttons, modals, etc.) remains in LTR direction, regardless of the content locale being edited
+
+::: info
+If you provide i18n translation strings for the admin UI in an RTL language, they will currently display in LTR direction. A fully RTL-aware admin interface is planned for future development but is not included in the current implementation.
+:::
 
 ### Configuring RTL locales
 
@@ -126,11 +134,7 @@ To designate a locale as RTL, add the `direction: 'rtl'` property to the locale 
   </template>
 </AposCodeBlock>
 
-When an editor switches to an RTL locale, supported input fields (String, Password, URL, Email, Float, Integer, Date) will automatically adjust their text direction to RTL, making content entry more natural for RTL languages.
-
-::: info
-Slug fields use left-to-right (LTR) direction by default, regardless of the locale. This is often desirable since URLs are typically more compatible in LTR format.
-:::
+When an editor switches to an RTL locale, supported input fields (String, Password, URL, Slug, Email) will automatically adjust their text direction to RTL, making content entry more natural for RTL languages.
 
 ### Schema field direction overrides
 
@@ -159,7 +163,6 @@ You can set the `direction` property directly on individual field definitions:
           direction: 'rtl' // Always RTL, even in LTR locales
         }
       }
-     
      }
   };
   ```

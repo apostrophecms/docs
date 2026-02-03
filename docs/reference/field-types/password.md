@@ -28,7 +28,7 @@ secret: {
 |-----------|-----------|-----------|------------|
 |[`autocomplete`](#autocomplete) | String | n/a | Sets the value of the `autocomplete` attribute on the field. |
 |`def` | String | n/a | The default value for the field |
-|`direction` | String | 'ltr' | Sets the text direction for the field. Use `'ltr'` for left-to-right or `'rtl'` for right-to-left. Overrides the locale's default direction. See the [RTL language support guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for details. |
+|`direction` | String | n/a | Sets the text direction for the field. Use `'ltr'` for left-to-right or `'rtl'` for right-to-left. Overrides the locale's default direction. See the [RTL language support guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for details. |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
