@@ -277,17 +277,17 @@ For individual widgets or components that need specific direction handling:
 
 ```astro
 ---
-// src/components/MyWidget.astro
+// src/components/CustomWidget.astro
 const { aposData } = Astro.props;
 const isRtl = aposData.i18n.direction === 'rtl';
 ---
 
-<section class:list={[ 'my-widget', { 'is-rtl': isRtl } ]}>
+<section class:list={[ 'custom-widget', { 'is-rtl': isRtl } ]}>
   <!-- Widget content -->
 </section>
 
 <style>
-  .my-widget.is-rtl {
+  .custom-widget.is-rtl {
     direction: rtl;
   }
 </style>

@@ -118,6 +118,7 @@ To designate a locale as RTL, add the `direction: 'rtl'` property to the locale 
           },
           he: {
             label: 'Hebrew',
+            prefix: '/he',
             direction: 'rtl'
           },
           ar: {
