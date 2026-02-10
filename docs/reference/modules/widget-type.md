@@ -140,7 +140,7 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`preview`](#preview) | Boolean | Allow for in-context preview during widget edit. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The Nunjucks template name to render. |
-| [`width`](#width) | String | Define the size of the widget modal. |
+| [`width`](#width) | String | Define the size of the widget modal. Defaults to `window`. Can also accept `one-third`, `two-thirds`, `half`, and `full` |
 | [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 
 ### `className`
@@ -219,7 +219,8 @@ The name of the template in the `views` folder of the module that should be rend
 ### `width`
 
 The size of the widget modal can be configured via this option:
-- `undefined` (default): the widget modal width is set to 540px.
+- `"window"` (default): the widget modal will be a floating window that be moved and resized.
+- `"one-third"`: the widget modal width is set to 540px.
 - `"half"`: the widget modal takes 50% of the screen.
 - `"two-thirds"`: the widget modal takes 66% of the screen.
 - `"full"`: the widget modal takes 100% of the screen.
@@ -230,8 +231,7 @@ No matter what, the widget modal width will take 100% of the screen for screens 
 
 ### `origin`
 
-Choose the side from where the widget modal will open:
-`left` or `right` (default).
+Choose the side from where the widget modal will open. If left unset (default) Apostrophe will make a best guess based on the position of the widget on the page. If the widget appears in the left half of the screen, the widget modal is positioned on the right, and vice-versa. Also accepts `left` or `right`.
 
 ## Related documentation
 

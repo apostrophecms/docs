@@ -51,9 +51,26 @@ contactInfo: {
 |`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`hidden` | Boolean | `false` | If `true`, the field is hidden |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value
+|`options` | Object | `{}` | Optional configuration, see below |
 
 <!-- TODO: The following settings are likely to return, but are not yet implemented. -->
 <!-- |contextual | Boolean | `false` | If `true`, it will prevent the field from appearing in the editor modal | -->
+
+### `options`
+
+Object fields have additional settings configured in an `options` object:
+
+#### `flat`
+
+**Type:** Boolean
+
+Setting `flat: true` will remove the visual nesting (left border, indentation) of sub properties within an object. Use in conjunction with `hideLabel` to give your object's schema the appearance of being discreet fields.
+
+#### `hideLabel`
+
+**Type:** Boolean
+
+Setting `hideLabel: true` will hide the top-level field label and begin the schema with the contents of the object. Use in conjunction with `flat` to give your object's schema the appearance of being discreet fields.
 
 ## Configuring the array field schema
 
