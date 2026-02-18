@@ -110,6 +110,39 @@ The Apostrophe user interface has a locale chooser for editors, but visitors to 
 
 `data.locale` is simple. It will render as the locale code for the active locale. So if you're in the English (`'en'`) locale, it will return `'en'`.
 
+### `data.i18n.direction`
+
+The `data.i18n` object includes a `direction` property that indicates the text direction of the current locale. This will be either `'ltr'` (left-to-right) or `'rtl'` (right-to-left), based on the locale's configuration.
+
+Apostrophe's default layouts automatically apply this to the `<html>` element. If you're using a custom layout, you can access it like this:
+
+<AposCodeBlock>
+
+  ``` nunjucks
+    {# In a page template or widget #}
+    <div class="my-component" dir="{{ data.i18n.direction }}">
+      {# Component content will flow in the correct direction #}
+    </div>
+  ```
+  <template v-slot:caption>
+    views/widget.html
+  </template>
+</AposCodeBlock>
+
+You can also use it for conditional logic:
+
+<AposCodeBlock>
+
+  ``` nunjucks
+    <div class="hero {% if data.i18n.direction == 'rtl' %}hero--rtl{% endif %}">
+      {# Hero content #}
+    </div>
+  ```
+  <template v-slot:caption>
+    views/layout.html
+  </template>
+</AposCodeBlock>
+
 ### `data.localizations`
 
 This property provides much more information. It will be an array of objects that include information about the current page context (or piece, when on a show page) in all the active locales. It will include special properties that can help build a locale switcher for visitors:
@@ -118,6 +151,7 @@ This property provides much more information. It will be an array of objects tha
 | ------- | ------- |
 | `locale` | The locale code (e.g., `'en'`, `'es'`) |
 | `label` | The configured label for the locale (e.g., "English", "Spanish") |
+| `direction` | The text direction for the locale: `'ltr'` or `'rtl'` |
 | `available` | A boolean value indicating whether the page has been added to this locale |
 | `current` | A boolean value indicating whether this is the currently displayed locale |
 | `_url` | An API route that will return the page's URL in the locale (if it exists there) |
@@ -140,6 +174,7 @@ Here is an example of `data.localizations` for the page from the screenshots abo
     _url: '/api/v1/@apostrophecms/page/cksqi1ye1000mof3rdgtmvn0y:es:draft/locale/en',
     locale: 'en',
     label: 'English',
+    direction: 'ltr',
     homePageUrl: 'http://localhost:3000/'
   },
   {
@@ -157,20 +192,20 @@ Here is an example of `data.localizations` for the page from the screenshots abo
     homePageUrl: 'http://localhost:3000/fr/'
   },
   {
-    _id: 'cksqi1ye1000mof3rdgtmvn0y:es:draft',
-    title: 'Página localizada 🇪🇸',
+    _id: 'cksqi1ye1000mof3rdgtmvn0y:he:draft',
+    title: 'עמוד מקומי 🇮🇱',
     slug: '/localized-page',
     type: 'default-page',
     visibility: 'public',
-    aposLocale: 'es:draft',
+    aposLocale: 'he:draft',
     aposMode: 'draft',
     available: true,
-    _url: '/api/v1/@apostrophecms/page/cksqi1ye1000mof3rdgtmvn0y:es:draft/locale/es',
-    current: true,
-    locale: 'es',
-    label: 'Spanish',
-    homePageUrl: 'http://localhost:3000/es/'
-  }
+    _url: '/api/v1/@apostrophecms/page/cksqi1ye1000mof3rdgtmvn0y:es:draft/locale/he',
+    locale: 'he',
+    label: 'Hebrew',
+    direction: 'rtl',
+    homePageUrl: 'http://localhost:3000/he/'
+  },
 ]
 ```
 
@@ -193,7 +228,7 @@ Here is an example of using the `data.localizations` array to generate a locale 
           not the current locale
         #}
         {% if localization._url and not localization.current %}
-          <a href="{{ localization._url or localization.homePageUrl }}">
+          <a href="{{ localization._url or localization.homePageUrl }}" dir="{{ localization.direction }}">
         {% endif %}
         {# Using both the label and the locale code #}
         {{ localization.label }} ({{ localization.locale }})
@@ -205,3 +240,86 @@ Here is an example of using the `data.localizations` array to generate a locale 
   </ul>
 </div>
 ```
+
+### RTL support in external frontends
+
+When using external frontends like Astro with the `@apostrophecms/apostrophe-astro` integration, RTL support is automatically handled by the `AposLayout` component.
+
+The locale direction is also available through the `aposData` prop if you need it for custom layouts or components:
+
+The most common approach is to set the direction on your page layout, typically on the `<html>` element:
+
+<AposCodeBlock>
+
+```astro
+---
+// src/layouts/Layout.astro
+const { aposData } = Astro.props;
+---
+
+<html lang={aposData.locale} dir={aposData.i18n.direction}>
+  <head>
+    <!-- head content -->
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+```
+<template v-slot:caption>
+  src/layouts/Layout.astro
+</template>
+</AposCodeBlock>
+
+For individual widgets or components that need specific direction handling:
+
+<AposCodeBlock>
+
+```astro
+---
+// src/components/CustomWidget.astro
+const { aposData } = Astro.props;
+const isRtl = aposData.i18n.direction === 'rtl';
+---
+
+<section class:list={[ 'custom-widget', { 'is-rtl': isRtl } ]}>
+  <!-- Widget content -->
+</section>
+
+<style>
+  .custom-widget.is-rtl {
+    direction: rtl;
+  }
+</style>
+```
+<template v-slot:caption>
+  src/components/MyWidget.astro
+</template>
+</AposCodeBlock>
+
+You can also access direction information when building locale switchers:
+
+<AposCodeBlock>
+
+```astro
+---
+const { aposData } = Astro.props;
+const localizations = aposData.localizations || [];
+---
+
+<nav class="locale-switcher">
+  {localizations.map((loc) => (
+    <a 
+      href={loc._url || loc.homePageUrl}
+      dir={loc.direction}
+      class:list={[ 'locale-link', { 'current': loc.current } ]}
+    >
+      {loc.label}
+    </a>
+  ))}
+</nav>
+```
+<template v-slot:caption>
+  src/components/LocaleSwitcher.astro
+</template>
+</AposCodeBlock>
