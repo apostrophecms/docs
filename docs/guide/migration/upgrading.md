@@ -1,9 +1,9 @@
 ---
 next: false
 ---
-# Migration from Apostrophe 2 to Apostrophe 4
+# Migration from Apostrophe 2 to Apostrophe 4 with AI
 
-While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 and now in the latest versions of Apostrophe, there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to the newest Apostrophe. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work](#migration-tools-and-process).
+While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 and now in the latest versions of Apostrophe, there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to the newest Apostrophe. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work with AI](#migration-tools-and-process).
 
 ## Breaking changes
 
@@ -97,7 +97,7 @@ Migrating an Apostrophe 2 codebase and data should be done with care, but there 
 
 While completely manual code migration is possible, the *Content* Upgrader tool is basically essential for data conversion. Writing custom data migrations would not be able to do many things differently from the official tool and there is very little to gain by doing so.
 
-The Content Upgrader tool does not change anything in the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in the newest verrsions ofApostrophe.
+The Content Upgrader tool does not change anything in the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in the newest versions of Apostrophe.
 
 Developers will install the Content Upgrader as a module **within the A2 project**. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
 
@@ -115,31 +115,10 @@ There are a few limitations in the Content Upgrader to understand before using i
 
 ### Code Upgrader
 
-The *Code* Upgrader tool supports upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**. It has two major roles in converting an A2 codebase to use the newer version of Apostrophe:
+The *Code* Upgrader extension supports upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**.
 
-1. It will lint an Apostrophe codebase for A2 syntax and structure that must change. This is its `lint` command.
-2. It will *make* many of those code changes for you. This is its `upgrade` command.
+This extension includes an AI Agent Skill (Claude Skill). The Agent Skill is now the recommended way to carry out the upgrade, as this is exactly where AI excels most. Developers using Claude Code and similar tools can complete over 90% of the migration work quickly, and we have also been successful in resolving remaining issues by directing Claude Code. The last 5% of the work usually involves attention to what is rendering on the page.
 
-Additionally, there is a `reset` command that can undo all uncommitted changes. Always use a new git branch during this process as well to have an additional way to roll back changes.
+The Code Upgrader extension also includes legacy tools for those who prefer not to use the Agent Skill. These tools have much more limited support for automatic upgrades, however the linting feature can be useful.
 
-One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for newer version use. This is important because additional changes (such as field name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care with final code changes to avoid affecting data compatibility.
-
-The Code Upgrader is installed globally in a Node environment (including developer environments) and run as a command line tool. **See the [Code Upgrader README](https://www.npmjs.com/package/@apostrophecms/code-upgrader) for full instructions.**
-
-::: info
-The Code Upgrader tool is currently published as an **alpha** release. It will lint most A2 features that need updating, but there are several features that it cannot automatically upgrade yet. The tool will never do 100% of the necessary code conversion, but we will continue adding feature support before it can be published as a full 1.0 release.
-
-We encourage developers to begin trying it on A2 projects and [provide feedback](https://github.com/apostrophecms/code-upgrader/issues/new) as we prepare for a stable release.
-:::
-
-#### Limitations
-
-Just as with the content tool, the Code Upgrader has some limitations to understand. While database structure is very predictable, code styles and patterns are not. Some A2 APIs and syntax are intentionally not touched to avoid making incorrect assumptions.
-
-- The tool is designed to operation on the majority of standard Apostrophe 2 codebases. Projects that generally follow patterns in official documentation and sample projects will have the best results. The tool will help on very custom projects (especially the linting mode), but more manual work will be always be needed to finish the work.
-- [Widget player code](/guide/custom-widgets.md#client-side-javascript-for-widgets) (client-side JavaScript) is not changed. The original widget player syntax relies on jQuery, which the newer versions of Apostrophe do not include. A2 "lean" players may be supported in the future.
-- [Areas](/reference/glossary.md#area) (and A2's "singletons") that are only defined in A2 template files, "anonymous areas," are not changed. In newer versions, all areas must be registered in a module's field schema, however, the complexity of area configuration (and limitations of template parsers) make them better converted manually.
-- [As mentioned above](#limitations) the image widget only supports a single image in newer versions. As in the content tool, these are converted to the equivalent updated version, but full slideshow conversion will need to be done manually.
-- As the tool is still in development, some features will eventually be supported in the automatic upgrade, but are not yet. We appreciate your patience during development.
-
-In many of these limitation cases the **`lint`** command will still alert you to the outdated code so you can find it and make changes manually.
+**See the [Code Upgrader README](https://www.apostrophecms.com/extensions/code-upgrader) for full instructions,** including how to install and use the Agent Skill.
