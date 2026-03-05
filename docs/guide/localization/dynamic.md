@@ -23,9 +23,9 @@ Localizing means that **we make a clone of the content for a new locale, then ma
 > **Handling Accents in Slugs**
 >By default, Apostrophe preserves accents and diacritical marks when generating slugs from page or piece titles. For example, a page titled "À propos de l'équipe" will have the slug `à-propos-de-l-équipe` with accents preserved.
 >
->If you prefer to strip accents from slugs for URL compatibility or SEO consistency, you can enable the `stripAccentsFromSlugs` option in the `@apostrophecms/i18n` module.
+>If you prefer to strip accents from slugs for URL compatibility or SEO consistency, you can enable the `stripUrlAccents` option in the `@apostrophecms/i18n` module.
 >
->With this option enabled, slugs will automatically have accents removed during generation (e.g., "À propos de l'équipe" becomes `a-propos-de-l-equipe`). If you enable this on an existing site with localized content, you can use the `strip-accents-from-slugs` task to update existing slugs. See the [i18n module reference](/reference/modules/i18n.md#strip-accents-from-slugs) for details.
+>With this option enabled, slugs will automatically have accents removed during generation (e.g., "À propos de l'équipe" becomes `a-propos-de-l-equipe`). If you enable this on an existing site with localized content, you can use the `strip-slug-accents` task to update existing slugs. See the [i18n module reference](/reference/modules/i18n.md#strip-slug-accents) for details.
 
 **Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Mandarin, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
 
