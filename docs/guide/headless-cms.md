@@ -200,6 +200,8 @@ As official platform-specific plugins are made available they will be added here
 [Astro](https://astro.build/) is a powerful framework for content-driven websites. The [apostrophe-astro](https://apostrophecms.com/extensions/astro-integration)
 plugin provides a bridge that allows Astro to act as an "external front end" for Apostrophe. Note that Astro allows sites to be built with any mix of React, Vue, SvelteJS and other frontend frameworks which is highly effective when combined with Apostrophe as a back end.
 
+Astro integrations can run in SSR mode or static build mode. In static mode, Apostrophe provides URL metadata that allows Astro to pre-render all relevant routes at build time. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html).
+
 ### Gatsby source plugin
 
 [Gatsby](https://gatsbyjs.com/) is a static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.

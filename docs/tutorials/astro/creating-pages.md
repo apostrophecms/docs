@@ -628,6 +628,8 @@ const clearFilter = setParameter(Astro.url, 'category', '');
 ---
 ```
 
+For static Astro output, prefer helper utilities from `@apostrophecms/apostrophe-astro/helpers` when generating piece index filter and pagination links, especially `buildPageUrl()` for pagination. This keeps your URLs compatible with both SSR query-string mode and static path-based mode. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html) for the full static pattern.
+
 #### Accessing Global Data
 ApostropheCMS provides a global document for site-wide settings and content. This is configured in your backend through the `@apostrophecms/global` module:
 

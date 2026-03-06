@@ -333,6 +333,11 @@ Next, let's look at how we can add client-side interactivity to widgets. The vid
 ## Adding Client-Side Interactivity to Widgets
 Astro provides several routes for adding JavaScript to the browser. This can take the form of public scripts loaded on every page, `<script>` tags in your components, and the addition of client-side framework components, e.g. Vue or React components. Let's explore the different approaches available for adding client-side interactivity to widgets in the ApostropheCMS + Astro environment, using examples from the Apollo project.
 
+::: warning Static build caveat
+Browser-side calls to Apostrophe routes such as `/api/v1/...` require a live backend at runtime. In a fully static deployment, move those calls to Astro server/frontmatter code during build (for example with `aposFetch`) and pass the result into the widget as props or `data-*` attributes.
+See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html) for the full static workflow.
+:::
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JEU2RdgqrIs?si=reRnkOBt_rTIpXTA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ### Web Components Approach

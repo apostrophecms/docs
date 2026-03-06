@@ -383,6 +383,8 @@ frontend/src/templates/ArticleIndexPage.astro
 
 Clicking on one of these filters will result in the backend populating the `aposData.pieces` with only those that match the filter value. So, you don't need any special markup, just the same markup you use to display all the unfiltered pieces.
 
+For newer Astro integrations, you can also use `aposData.filters` (from `req.data.filters`) which includes richer filter metadata and `_url` values for each choice. That shape is preferred for static builds because links can be rendered directly from choice URLs rather than manually assembling query parameters.
+
 #### 3. Pagination
 
 The template handles pagination in two parts:
@@ -407,6 +409,8 @@ frontend/src/templates/ArticleIndexPage.astro
 </AposCodeBlock>
 
 The `setParameter` helper from the `apostrophe-astro` package ensures that pagination URLs maintain other query parameters (like active filters) while changing only the page number.
+
+If you plan to support static output, use `buildPageUrl(aposData, pageNumber)` from `@apostrophecms/apostrophe-astro/helpers` for pagination links. It automatically handles both query-string URLs (SSR) and path-based URLs (static mode).
 
 Then it renders a pagination component if there's more than one page:
 

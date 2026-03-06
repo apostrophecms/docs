@@ -926,6 +926,10 @@ modules/article-page/index.js
 
 When the index page is served, configured filters will be represented on a `req.data.piecesFilters` object (`data.piecesFilters` in the template). If you include `counts: true` in a filter object, the number of pieces matching that filter are included on `req.data.piecesFilters` properties.
 
+In Astro and other headless frontends, `req.data.filters` is also available and may be preferable because it includes filter-level metadata plus direct `_url` links for each choice.
+
+If `@apostrophecms/url` is configured with `static: true`, generated filter and pagination links switch to path-based URLs rather than query-string URLs.
+
 #### Example
 
 <AposCodeBlock>

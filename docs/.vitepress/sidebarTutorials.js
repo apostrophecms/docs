@@ -44,6 +44,10 @@ const sidebarTutorials = [
       {
         text: 'Deploying With Astro',
         link: 'tutorials/astro/deploying-hybrid-projects.md'
+      },
+      {
+        text: 'Static Builds With Astro',
+        link: 'tutorials/astro/static-builds-with-apostrophe.md'
       }
     ]
   },

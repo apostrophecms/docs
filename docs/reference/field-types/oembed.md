@@ -58,6 +58,8 @@ Simplest usage could involve simply printing the thumbnail image (if available) 
 
 More likely, you will want to add the full embed code from the media source. This should be done in client-side JavaScript. Apostrophe provides an API route to get that.
 
+If your frontend is deployed as static files without a runtime Apostrophe backend, fetch oEmbed data during build/server render instead of from browser-side code.
+
 <!-- TODO: link to the oembed module's API route reference when available. -->
 Submit a `GET` request to `/api/v1/@apostrophecms/oembed/query` with the media URL as the `url` query parameter. A successful response will be an object with several properties to help place and style the embed, including an `html` property with the actual HTML markup to embed.
 

@@ -28,6 +28,10 @@ There are two main approaches to deploying your ApostropheCMS + Astro project:
    - More flexibility and control
    - Requires more configuration and coordination
 
+::: info Static output option
+If you are deploying a fully static Astro build (no Node.js Astro server in production), use [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html). That workflow changes Astro output mode, path generation, and attachment/literal-content handling.
+:::
+
 ## Prerequisites for Production Deployment
 
 Regardless of your deployment method, you'll need:

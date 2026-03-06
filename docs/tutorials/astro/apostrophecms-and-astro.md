@@ -9,7 +9,7 @@ next:
 title: "ApostropheCMS and Astro"
 detailHeading: "Astro"
 url: "/tutorials/astro/apostrophecms-and-astro.html"
-content: "ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
+content: "ApostropheCMS and Astro integrate through the `apostrophe-astro` extension. Learn who this integration is for and how teams use it to build modern websites."
 tags:
   topic: "Core Concepts"
   type: astro
@@ -67,7 +67,7 @@ If you get stuck:
 - Review the [Astro documentation](https://docs.astro.build)
 - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
 
-Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html).
+Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html). If your goal is static hosting, also review [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html).
 
 ## Want to learn more?
 Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:

@@ -21,7 +21,7 @@ Step-by-step tutorials that go beyond the technical explanations in our Guide or
     <AposCtaButton
       detail-heading="Astro"
       title="ApostropheCMS & Astro"
-      content="ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
+      content="ApostropheCMS and Astro integrate through the `apostrophe-astro` extension. Learn SSR and static-build workflows for modern content-driven sites."
       url="/docs/tutorials/astro/introducing-apollo.html"
       hideEffort="true"
     />

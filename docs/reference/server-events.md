@@ -1049,6 +1049,45 @@ Triggered just before the search index page is served, after the page's results 
   </template>
 </AposCodeBlock>
 
+## `@apostrophecms/url` events
+
+Events emitted by the `@apostrophecms/url` module.
+
+### `getAllUrlMetadata`
+
+Triggered when Apostrophe compiles URL metadata used by static build consumers.
+
+This event is commonly used by modules that need to add non-document URLs (for example generated CSS or text files) to static build outputs.
+
+#### Parameters
+
+- `req`: The active request
+- `results`: Shared array of URL metadata entries. Push your entries onto this array.
+- `options`: Object containing metadata controls, including `excludeTypes`
+
+<AposCodeBlock>
+
+  ```javascript
+  handlers(self, options) {
+    return {
+      '@apostrophecms/url:getAllUrlMetadata': {
+        addMyGeneratedFile(req, results) {
+          results.push({
+            url: '/my-generated-file.json',
+            contentType: 'application/json',
+            i18nId: 'my-module:generated-file',
+            sitemap: false
+          });
+        }
+      }
+    };
+  }
+  ```
+  <template v-slot:caption>
+    modules/my-module/index.js
+  </template>
+</AposCodeBlock>
+
 ## `@apostrophecms/template` events
 
 Events emitted by the `@apostrophecms/template` module.

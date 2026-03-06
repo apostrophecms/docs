@@ -429,6 +429,8 @@ These routes serve **global styles** only. Widget styles are generated and injec
 
 Serves the cached global stylesheet.
 
+In static build workflows, this stylesheet URL can be contributed as literal content through URL metadata so static frontends can fetch and write the generated CSS file during build.
+
 **Query parameters:**
 - `version` (String): Stylesheet version identifier for cache busting
 - `aposLocale` (String): Locale identifier (format: `locale:mode`)

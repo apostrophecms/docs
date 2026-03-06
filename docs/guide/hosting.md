@@ -32,6 +32,15 @@ Deployment processes will vary depending on the hosting environment, technical r
 3. If Apostrophe has been running on the server already, **stop the application process(es).**
 4. **Start (or restart) the application process(es).**
 
+## Deployment models with Astro frontends
+
+If you are pairing Apostrophe with Astro, there are two common production models:
+
+1. **SSR Astro + Apostrophe backend**: both services run in production.
+2. **Static Astro output + Apostrophe backend for authoring/build**: Astro deploys static files, while Apostrophe remains your authoring and build-time content source.
+
+For static Astro setup details, see [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html).
+
 ## Best practices
 
 ### Set the `NODE_ENV` variable for production
@@ -51,4 +60,3 @@ Apostrophe concatenates [project-level front end code](/guide/front-end-assets.m
 ## Hosting recipes
 
 The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/cookbook/index.md#hosting).
-

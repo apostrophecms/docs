@@ -122,6 +122,10 @@ These include:
 
 When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
 
+For headless and Astro integrations, `req.data.filters` is also available and is often preferred because it includes filter-level metadata and direct `_url` values on each choice.
+
+When `@apostrophecms/url` is configured with `static: true`, filter and pagination URLs become path-based rather than query-string based (for example `/articles/category/tech/page/2`).
+
 A simplified schema for a 'book' `piece-type`:
 <AposCodeBlock>
 
