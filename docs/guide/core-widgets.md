@@ -292,6 +292,98 @@ export default {
 </template>
 </AposCodeBlock>
 
+### Column widget display options
+
+The `@apostrophecms/layout-column-widget` has a few options that control how the Column Settings dialog presents responsive visibility information to editors.
+
+> [!NOTE]
+> These options affect the **help text displayed in the Column Settings dialog only**. They do not control the actual CSS breakpoints used to show or hide columns. Those are set via `mobile.breakpoint` and `tablet.breakpoint` on the parent `@apostrophecms/layout-widget`. If you change those values, update `labelBreakpoints` to match — there is no automatic link between them.
+
+#### Breakpoint help text
+
+By default, the Column Settings dialog shows help text beneath the "Show on Tablet" and "Show on Mobile" toggles that describe the pixel ranges each toggle applies to. The pixel values shown in that help text are controlled by the `labelBreakpoints` option:
+
+<AposCodeBlock>
+
+```js
+export default {
+  modules: {
+    '@apostrophecms/layout-column-widget': {
+      options: {
+        labelBreakpoints: {
+          mobile: 600,   // shown in mobile toggle help text
+          tablet: 900    // shown in tablet toggle help text
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+The default help strings use these values as interpolation targets:
+
+- **Tablet**: <span v-pre>"Greater than {{ mobile }}px, less than or equal to {{ tablet }}px"</span>
+- **Mobile**: <span v-pre>"Less than or equal to {{ mobile }}px"</span>
+
+These strings are i18n keys (`layoutTabletShowHelp` and `layoutMobileShowHelp`) and can be overridden in your project's `modules/@apostrophecms/i18n/i18n/en.json` and other language translation files if you need different wording.
+
+To disable the help text entirely, set `showBreakpointsHelp: false`:
+
+<AposCodeBlock>
+
+```js
+export default {
+  modules: {
+    '@apostrophecms/layout-column-widget': {
+      options: {
+        showBreakpointsHelp: false
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+#### Keeping breakpoint values in sync
+
+If you customize `mobile.breakpoint` or `tablet.breakpoint` on the layout widget, update `labelBreakpoints` to match so editors see accurate values in the Column Settings dialog:
+
+<AposCodeBlock>
+
+```js
+export default {
+  modules: {
+    '@apostrophecms/layout-widget': {
+      options: {
+        mobile: { breakpoint: 768 },
+        tablet: { breakpoint: 1200 }
+      }
+    },
+    '@apostrophecms/layout-column-widget': {
+      options: {
+        labelBreakpoints: {
+          mobile: 768,
+          tablet: 1200
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  app.js
+</template>
+</AposCodeBlock>
+
+> [!NOTE]
+> If you are working with an older project, you may see `breakpoints` (without the `label` prefix) used instead of `labelBreakpoints`. This is a deprecated alias that still works but should be updated.
 
 ### Creating default layouts with pre-populated content
 
