@@ -460,6 +460,10 @@ const response = await fetch(`/api/v1/oembed?url=${encodeURIComponent(url)}`);
 ```
 If desired, you could create [custom API routes](/reference/module-api/module-overview.html#restapiroutes-self) for any of your widgets or other web components to query in this manner. We will touch on this in the [Creating Pieces tutorial](/tutorials/astro/creating-pieces.md#approach-2-custom-api-routes) section.
 
+::: info Static builds
+Client-side API calls to ApostropheCMS routes like the one above will fail on a static site, since the backend is not available at runtime. If you are targeting a static build, data fetching needs to move to the Astro frontmatter at build time and be passed into the widget as props. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.html) for details.
+:::
+
 #### Loading the Web Component
 
 In the Apollo `[...slug].astro` file we are adding the web component script to the `startHead` slot:

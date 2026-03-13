@@ -22,7 +22,7 @@ Step-by-step tutorials that go beyond the technical explanations in our Guide or
       detail-heading="Astro"
       title="ApostropheCMS & Astro"
       content="ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
-      url="/docs/tutorials/astro/introducing-apollo.html"
+      url="/docs/tutorials/astro/apostrophecms-and-astro.html"
       hideEffort="true"
     />
   </template>
