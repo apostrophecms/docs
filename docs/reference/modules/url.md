@@ -16,7 +16,7 @@ Options are passed into the url module by creating a `modules/@apostrophecms/url
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| [`static`](#static) | Boolean | `false` | Enables static-friendly path-based URLs and URL metadata behavior for static site generation |
+| [`static`](#static) | Boolean | `false` | Switches filter and pagination URLs to path-based format, and enables URL metadata collection for static site generation when used with an external frontend such as Astro |
 
 ### `static`
 
@@ -27,7 +27,7 @@ Examples:
 - Query style (default): `/articles?category=tech&page=2`
 - Static style: `/articles/category/tech/page/2`
 
-This option also enables URL metadata collection used by static frontends to discover all pages that need to be generated, and activates the `GET /api/v1/@apostrophecms/url` endpoint consumed by the `apostrophe-astro` package during `astro build`.
+This option also enables URL metadata collection used by static frontends to discover all pages that need to be generated, and activates the `GET /api/v1/@apostrophecms/url` endpoint consumed by the `apostrophe-astro` package during `astro build`. Performance-intensive operations such as locale URL collection only run when a static build request is actually detected, not on every request.
 
 ::: warning
 `static: true` affects filter and pagination URL format for all frontends connected to the same backend. If you are running both an SSR editorial frontend and a static production build against the same ApostropheCMS instance, make sure your SSR templates use helpers that produce URLs compatible with either format.
@@ -74,7 +74,9 @@ export default apostrophe({
   </template>
 </AposCodeBlock>
 
-Regardless of which approach you use to set `static: true`, you should also set `staticBaseUrl` so that static URL generation has a known public origin to work from. It can be supplied via the `APOS_STATIC_BASE_URL` environment variable or at the top-level in the `app.js` file. The hard coded value can be used as a convenient fallback for local development and will be overridden by the variable during production deployment.
+If you are using `static: true` with an external frontend that performs static builds — for example, Astro with `APOS_BUILD=static` — you should also set `staticBaseUrl` so that URL generation has a known public origin to work from. It can be supplied via the `APOS_STATIC_BASE_URL` environment variable or at the top level of `app.js`. The hard-coded value serves as a convenient fallback for local development and is overridden by the environment variable during production deployment.
+
+Projects using `static: true` only for path-based filter and pagination URLs do not require `staticBaseUrl`.
 
 ## URL metadata for static builds
 
@@ -98,9 +100,9 @@ export default {
       '@apostrophecms/url:getAllUrlMetadata': {
         addGeneratedFile(req, results) {
           results.push({
-            url: '/my-generated-file.json',
+            url: '/custom-generated-file.json',
             contentType: 'application/json',
-            i18nId: 'my-module:generated-file',
+            i18nId: 'custom-module:generated-file',
             sitemap: false
           });
         }
@@ -110,7 +112,7 @@ export default {
 };
 ```
   <template v-slot:caption>
-    modules/my-module/index.js
+    modules/custom-module/index.js
   </template>
 </AposCodeBlock>
 
@@ -183,6 +185,10 @@ Because this module has an alias, you can call these from another module using t
 
 Builds a URL by merging new query parameters into an existing URL. This method is also available as the `build` filter in Nunjucks templates.
 
+::: warning
+`build` always produces query-string URLs and is not aware of the `static` option. For filter and pagination URLs in a static build context, use `getChoiceFilter` and `getPageFilter` instead.
+:::
+
 `url` is the base URL to modify. It may include an existing query string, which will be preserved and merged with the new parameters.
 
 `data` is an object whose properties become query parameters. A new value replaces any existing value for that property. Passing `undefined`, `null`, or `''` for a property removes it from the URL if present. Note that the number `0` does not remove a parameter.
@@ -228,6 +234,7 @@ Resolution order:
 |---|---|---|
 | `strict` | `false` | When `true` and in a static build context where `staticBaseUrl` is not set, falls back to `apos.baseUrl` rather than returning an empty string. Use when an absolute URL is required, such as for sitemap `<loc>` values |
 | `prefix` | `true` | When `true`, appends `apos.prefix` to the returned URL. Pass `false` to obtain only the origin without the prefix |
+| `relative` | `false` | When `true`, returns a relative, prefix-qualified URL. The `prefix` option and i18n locale hostnames are ignored in this case |
 
 ### `getChoiceFilter(name, value, page)`
 
