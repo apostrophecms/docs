@@ -12,6 +12,8 @@ This module manages the image library in Apostrophe. Images are [piece-type](/gu
 
 By default, images are autopublished, meaning saved changes are immediately live. This eliminates the need for editors to manage draft and published states for media while still preserving localization support.
 
+This module is often used together with the [`@apostrophecms/image-widget`](/reference/modules/widget-type.md) module, which displays images via a relationship field pointing to this piece type.
+
 ## Options
 
 |  Property | Type | Description |
@@ -126,7 +128,7 @@ Template helpers are methods available for use in template files. Because this m
 
 ### `first(within, options)`
 
-A convenience wrapper for [`apos.attachment.first()`](/reference/modules/attachment.md#first-within-options) that automatically filters for image attachments only (equivalent to passing `{ group: 'images' }` in the options). Returns the first image attachment found within the given document or area, or `undefined` if none is found.
+A convenience wrapper for [`apos.attachment.first()`](/reference/modules/attachment.md#first-within-options) that automatically filters for image attachments only (equivalent to passing `{ group: 'images' }` in the options). Returns the first image attachment found within the given document or area, or `null` if none is found.
 
 Content from the alt text, credit, and credit URL fields is returned in the `_alt`, `_credit`, and `_creditUrl` properties of the attachment object.
 
@@ -175,6 +177,8 @@ views/show.html
 Generates an HTML `srcset` attribute value for responsive images. This produces a comma-separated list of URLs at each configured image size along with their width descriptors, suitable for use in an `<img>` tag's `srcset` attribute.
 
 In most cases you do not need to pass `cropFields`. When images are used via `@apostrophecms/image-widget`, the cropping coordinates are stored in the widget's relationship fields and applied automatically. The `cropFields` parameter is available for advanced cases where you need to manually specify crop dimensions (an object with `top`, `left`, `width`, and `height` properties).
+
+Note that `svg` files are not sized so this function returns an empty string. It is important to offern the `src` attribute also for that reason.
 
 | Parameter | Type | Description |
 |---|---|---|
