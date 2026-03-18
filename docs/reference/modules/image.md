@@ -178,7 +178,7 @@ Generates an HTML `srcset` attribute value for responsive images. This produces 
 
 In most cases you do not need to pass `cropFields`. When images are used via `@apostrophecms/image-widget`, the cropping coordinates are stored in the widget's relationship fields and applied automatically. The `cropFields` parameter is available for advanced cases where you need to manually specify crop dimensions (an object with `top`, `left`, `width`, and `height` properties).
 
-Note that `svg` files are not sized so this function returns an empty string. It is important to offern the `src` attribute also for that reason.
+Note that `svg` files are not sized so this function returns an empty string. It is important to offer the `src` attribute also for that reason.
 
 | Parameter | Type | Description |
 |---|---|---|
