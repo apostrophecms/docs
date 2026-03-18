@@ -47,6 +47,8 @@ Defaults to `false`. When set to `true`, files are served at human-readable URLs
 
 The pretty URL route streams the file content from the underlying uploadfs storage, so the file is still stored in the same location. There is a slight performance penalty for using this option, as each request is proxied through the Node.js process rather than being served directly by the storage backend or CDN.
 
+As of 2026-03-18, this feature is temporarily incompatible with Astro static builds.
+
 #### Example
 
 <AposCodeBlock>
