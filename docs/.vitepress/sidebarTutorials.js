@@ -10,14 +10,37 @@ const sidebarTutorials = [
     collapsed: 'fixed',
     link: 'tutorials/introduction.md',
     items: [
-      { text: 'Organizing Your Code', link: 'tutorials/code-organization.md' },
-      { text: 'Creating Pages', link: 'tutorials/pages.md' },
-      { text: 'Adding CSS and JS Assets', link: 'tutorials/assets.md' },
-      { text: 'Creating Widgets', link: 'tutorials/widgets.md' },
-      { text: 'Creating Pieces', link: 'tutorials/pieces.md' },
-      { text: 'Building Navigation', link: 'tutorials/navigation.md' },
-      { text: 'Configuring the Admin Bar', link: 'tutorials/admin-ui.md' },
-      { text: 'Adding Extensions', link: 'tutorials/adding-extensions.md' }
+      {
+        text: 'Organizing Your Code',
+        link: 'tutorials/code-organization.md'
+      },
+      {
+        text: 'Creating Pages',
+        link: 'tutorials/pages.md'
+      },
+      {
+        text: 'Adding CSS and JS Assets', link: 'tutorials/assets.md'
+      },
+      {
+        text: 'Creating Widgets',
+        link: 'tutorials/widgets.md'
+      },
+      {
+        text: 'Creating Pieces',
+        link: 'tutorials/pieces.md'
+      },
+      {
+        text: 'Building Navigation',
+        link: 'tutorials/navigation.md'
+      },
+      {
+        text: 'Configuring the Admin Bar',
+        link: 'tutorials/admin-ui.md'
+      },
+      {
+        text: 'Adding Extensions',
+        link: 'tutorials/adding-extensions.md'
+      }
     ]
   },
   {
@@ -44,6 +67,14 @@ const sidebarTutorials = [
       {
         text: 'Deploying With Astro',
         link: 'tutorials/astro/deploying-hybrid-projects.md'
+      },
+      {
+        text: 'Static Builds with ApostropheCMS + Astro',
+        link: 'tutorials/astro/static-builds-with-apostrophecms-astro.md'
+      },
+      {
+        text: 'Full Static Deployment with Railway and Vercel',
+        link: 'tutorials/astro/full-apostrophecms-astro-static-deployment.md'
       }
     ]
   },

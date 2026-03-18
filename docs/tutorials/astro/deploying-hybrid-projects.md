@@ -296,6 +296,22 @@ If your frontend can't connect to the backend:
 If security headers aren't propagating properly, check your `includeResponseHeaders` configuration in the Astro config.
 
 
+## Detailed Deployment Guides
+
+The sections above cover the concepts and configuration common to all ApostropheCMS + Astro deployments. For more complete, step-by-step guidance, see the following guides:
+
+### Static Builds with ApostropheCMS + Astro
+
+If you want to generate a fully static frontend at build time — outputting plain HTML, CSS, and JS that can be deployed to any static hosting platform — this guide covers everything you need to configure on both the backend and frontend.
+
+[Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.html)
+
+### Full Static Deployment with Railway and Vercel
+
+A complete worked example of a two-tier deployment: ApostropheCMS on Railway as the backend, Astro SSR on Vercel as a always-on editorial environment, and a static production site triggered by a Vercel Deploy Hook. Covers environment variables, attachment storage, admin user creation, and a publish workflow that gives content managers deliberate control over what goes live.
+
+[ApostropheCMS + Astro: Full Static Deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.html)
+
 ## Conclusion
 
 Deploying an ApostropheCMS + Astro project requires careful consideration of how the two parts interact. Whether you choose unified deployment through Apostrophe Hosting or split your frontend and backend across specialized services, the key is ensuring they can communicate securely and efficiently.

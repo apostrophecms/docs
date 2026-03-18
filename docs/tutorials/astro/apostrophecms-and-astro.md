@@ -59,6 +59,32 @@ The tutorials in this section will guide you through building modern websites us
    - Strong security features
    - Efficient development workflow
 
+## How These Tutorials Are Organized
+
+This section is divided into two paths. You don't need to complete one before starting the other, but if you are new to the integration the build series is the best place to start.
+
+### Path 1: Build a Site
+
+A step-by-step series that walks you through the Apollo theme — a complete, production-ready ApostropheCMS + Astro project. You'll learn how the two systems connect, how to create pages, widgets, and pieces, and how the in-context editing experience works in practice.
+
+<AposCtaButton
+  detail-heading="Series"
+  title="Start with the Apollo Theme"
+  content="Set up your development environment, explore core concepts, and learn the fundamental patterns for building with ApostropheCMS and Astro."
+  url="introducing-apollo.html"
+/>
+
+### Path 2: Deploy Your Project
+
+Guides covering how to get your ApostropheCMS + Astro project live — from a general overview of deployment options to a complete walkthrough of a two-tier SSR + static deployment workflow.
+
+<AposCtaButton
+  detail-heading="Guides"
+  title="Deployment Overview and Guides"
+  content="Understand your deployment options, configure static builds, and follow a complete worked example using Railway and Vercel."
+  url="deploying-hybrid-projects.html"
+/>
+
 ### Getting Help
 
 If you get stuck:
@@ -66,8 +92,6 @@ If you get stuck:
 - Check the [ApostropheCMS documentation](https://apostrophecms.com/docs)
 - Review the [Astro documentation](https://docs.astro.build)
 - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
-
-Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html).
 
 ## Want to learn more?
 Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:

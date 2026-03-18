@@ -102,6 +102,10 @@ export default defineConfig({
 ```
 The key parts of this Astro configuration file are the specification of server-side rendering using `output: "server"`, usage of the `node` adapter, and `integration` of the `apostrophe` extension. The `aposHost` setting tells Astro where to find your ApostropheCMS server, defaulting to `localhost:3000` in development. This gets set by an environment variable during deployment. Within the extension configuration, we specify where the template and widget components for mapping to ApostropheCMS documents should be located - we'll cover this mapping system in detail later. We also configure which headers should be passed between the servers: `includeResponseHeaders` preserves important security and caching headers from ApostropheCMS responses, while `excludeRequestHeaders` lets you block specific headers from being forwarded (useful when hosting the frontend and backend on different servers where the host header might cause conflicts). Finally, the `vite.ssr.noExternal` setting ensures the integration can properly handle virtual URLs during server-side rendering.
 
+::: info Static builds
+The configuration above sets up an SSR project, which is the default for this tutorial series. If you want to generate a fully static site at build time instead, both `astro.config.mjs` and `[...slug].astro` require additional configuration. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.html) for details.
+:::
+
 ## Development Environment Set Up
 
 Before diving into the ApostropheCMS and Astro integration, let's set up your development environment. The requirements for ApostropheCMS and Astro largely overlap, so you can look at our [ApostropheCMS guides to setting up your environment](/guide/development-setup.html).
