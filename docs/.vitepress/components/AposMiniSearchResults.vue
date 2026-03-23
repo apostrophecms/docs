@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, watch, shallowRef, nextTick,  markRaw, createApp } from 'vue'
+import { ref, watch, shallowRef, nextTick, markRaw, createApp } from 'vue'
 import MiniSearch from 'minisearch'
 import localSearchIndex from '@localSearchIndex'
 import { LRUCache } from 'vitepress/dist/client/theme-default/support/lru'
@@ -67,6 +67,9 @@ import { useRouter, useData, dataSymbol } from 'vitepress'
 import { debouncedWatch, onKeyStroke, computedAsync } from '@vueuse/core'
 import { pathToFile } from 'vitepress/dist/client/app/utils'
 import { escapeRegExp } from 'vitepress/dist/client/shared'
+
+const MIN_SEARCH_QUERY_LENGTH = 3
+const SEARCH_DEBOUNCE_MS = 350
 
 const props = defineProps({
   filterText: String,
@@ -119,21 +122,6 @@ const searchIndex = computedAsync(async () => {
   }
 })
 
-watch(
-  () => props.filterText,
-  (newFilter) => {
-    if (searchIndex.value && newFilter !== undefined) {
-      if (newFilter) {
-        results.value = searchIndex.value.search(newFilter)
-      } else {
-        results.value = []
-      }
-      emit('update:resultsLength', results.value.length)
-      localEnableNoResults.value = !results.value.length
-    }
-  }
-)
-
 const mark = computedAsync(async () => {
   if (!resultsEl.value) return
   return markRaw(new Mark(resultsEl.value))
@@ -156,11 +144,21 @@ debouncedWatch(
 
     if (!index) return
 
+    const query = filterTextValue?.trim() || ''
+
+    if (query.length < MIN_SEARCH_QUERY_LENGTH) {
+      results.value = []
+      localEnableNoResults.value = false
+      emit('update:resultsLength', 0)
+      return
+    }
+
     // Search
     results.value = index
-      .search(filterTextValue)
+      .search(query)
       .slice(0, 16)
     localEnableNoResults.value = !results.value.length
+    emit('update:resultsLength', results.value.length)
 
     // Highlighting
     const mods = showDetailedListValue
@@ -243,7 +241,7 @@ debouncedWatch(
     // FIXME: without this whole page scrolls to the bottom
     resultsEl.value?.firstElementChild?.scrollIntoView({ block: 'start' })
   },
-  { debounce: 200, immediate: true }
+  { debounce: SEARCH_DEBOUNCE_MS, immediate: true }
 )
 
 async function fetchExcerpt(id) {
