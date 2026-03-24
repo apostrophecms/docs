@@ -550,8 +550,6 @@ Object fields are supported but with these restrictions:
 - Presets cannot be used within object fields (since presets may themselves be object fields)
 - Object fields are primarily supported to enable multi-field presets like `border` and `boxShadow`
 
-Good catch! Looking at the migration task code, it does more than just rename the cascade. Let me provide the complete section with accurate details:
-
 ---
 
 ## Migrating from @apostrophecms-pro/palette
