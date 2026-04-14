@@ -84,7 +84,24 @@ export APOS_DB_URI=postgres://localhost:5432/apos_demo
 
 Because the three URI formats are fully interchangeable, you can experiment with different backends on the same codebase by changing `APOS_DB_URI` alone. Each URI targets an independent database — there is no automatic migration between them.
 
-To migrate content between backends, use the `apos-db-dump` and `apos-db-restore` tools shipped with `@apostrophecms/db-connect`. They produce and consume a portable JSONL format that works across all three adapters. See the [db-connect dump/restore documentation](https://github.com/apostrophecms/apostrophe/blob/postgres/packages/db-connect/docs/dump-restore.md) for details.
+To migrate content between backends, use the `apos-db-dump` and `apos-db-restore` tools shipped with `@apostrophecms/db-connect`. They produce and consume a portable JSONL format that works across all three adapters.
+
+Because `@apostrophecms/db-connect` is already a transitive dependency of every Apostrophe project, the simplest way to run these tools is from inside your project directory with `npx` — no global install required:
+
+```bash
+cd /path/to/your/apostrophe/project
+npx apos-db-dump mongodb://localhost:27017/mydb --output=backup.jsonl
+npx apos-db-restore postgres://localhost:5432/mydb --input=backup.jsonl
+```
+
+If you prefer them on your `PATH` for use across many projects, install globally instead:
+
+```bash
+npm install -g @apostrophecms/db-connect
+apos-db-dump mongodb://localhost:27017/mydb --output=backup.jsonl
+```
+
+See the [db-connect dump/restore documentation](https://github.com/apostrophecms/apostrophe/blob/postgres/packages/db-connect/docs/dump-restore.md) for the full set of options, including piping dump output straight into restore for cross-backend migration.
 
 ## Multi-tenant PostgreSQL with the multisite module
 
