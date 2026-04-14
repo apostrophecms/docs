@@ -1,0 +1,489 @@
+diff --git a/docs/guide/headless-cms.md b/docs/guide/headless-cms.md
+index e0b74dd..1b29167 100644
+--- a/docs/guide/headless-cms.md
++++ b/docs/guide/headless-cms.md
+@@ -200,6 +200,8 @@ As official platform-specific plugins are made available they will be added here
+ [Astro](https://astro.build/) is a powerful framework for content-driven websites. The [apostrophe-astro](https://apostrophecms.com/extensions/astro-integration)
+ plugin provides a bridge that allows Astro to act as an "external front end" for Apostrophe. Note that Astro allows sites to be built with any mix of React, Vue, SvelteJS and other frontend frameworks which is highly effective when combined with Apostrophe as a back end.
+ 
++Astro integrations can run in SSR mode or static build mode. In static mode, Apostrophe provides URL metadata that allows Astro to pre-render all relevant routes at build time. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html).
++
+ ### Gatsby source plugin
+ 
+ [Gatsby](https://gatsbyjs.com/) is a static site generator using React. The [Apostrophe source plugin](https://www.npmjs.com/package/gatsby-source-apostrophe) bridges the gap between the REST APIs and the GraphQL query language that Gatsby uses.
+diff --git a/docs/guide/hosting.md b/docs/guide/hosting.md
+index 9ee259f..9546e5b 100644
+--- a/docs/guide/hosting.md
++++ b/docs/guide/hosting.md
+@@ -32,6 +32,15 @@ Deployment processes will vary depending on the hosting environment, technical r
+ 3. If Apostrophe has been running on the server already, **stop the application process(es).**
+ 4. **Start (or restart) the application process(es).**
+ 
++## Deployment models with Astro frontends
++
++If you are pairing Apostrophe with Astro, there are two common production models:
++
++1. **SSR Astro + Apostrophe backend**: both services run in production.
++2. **Static Astro output + Apostrophe backend for authoring/build**: Astro deploys static files, while Apostrophe remains your authoring and build-time content source.
++
++For static Astro setup details, see [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html).
++
+ ## Best practices
+ 
+ ### Set the `NODE_ENV` variable for production
+@@ -51,4 +60,3 @@ Apostrophe concatenates [project-level front end code](/guide/front-end-assets.m
+ ## Hosting recipes
+ 
+ The information here applies to most all hosting platforms. Implementation will vary depending on the platform. To help get started on specific platforms, [we provide hosting recipes for popular options](/cookbook/index.md#hosting).
+-
+diff --git a/docs/guide/localization/dynamic.md b/docs/guide/localization/dynamic.md
+index 25927e9..d9f5db8 100644
+--- a/docs/guide/localization/dynamic.md
++++ b/docs/guide/localization/dynamic.md
+@@ -23,9 +23,9 @@ Localizing means that **we make a clone of the content for a new locale, then ma
+ > **Handling Accents in Slugs**
+ >By default, Apostrophe preserves accents and diacritical marks when generating slugs from page or piece titles. For example, a page titled "À propos de l'équipe" will have the slug `à-propos-de-l-équipe` with accents preserved.
+ >
+->If you prefer to strip accents from slugs for URL compatibility or SEO consistency, you can enable the `stripUrlAccents` option in the `@apostrophecms/i18n` module.
++>If you prefer to strip accents from slugs for URL compatibility or SEO consistency, you can enable the `stripAccentsFromSlugs` option in the `@apostrophecms/i18n` module.
+ >
+->With this option enabled, slugs will automatically have accents removed during generation (e.g., "À propos de l'équipe" becomes `a-propos-de-l-equipe`). If you enable this on an existing site with localized content, you can use the `strip-slug-accents` task to update existing slugs. See the [i18n module reference](/reference/modules/i18n.md#strip-slug-accents) for details.
++>With this option enabled, slugs will automatically have accents removed during generation (e.g., "À propos de l'équipe" becomes `a-propos-de-l-equipe`). If you enable this on an existing site with localized content, you can use the `strip-accents-from-slugs` task to update existing slugs. See the [i18n module reference](/reference/modules/i18n.md#strip-accents-from-slugs) for details.
+ 
+ **Each page or piece in Apostrophe is initially created for only one locale.** Sometimes we don't go any further. It may not be necessary to localize a page about Canadian office holidays into Mandarin, for example. If the page or piece should be available in more locales, *then* we localize it. The only exceptions are [parked pages](/reference/module-api/module-options.md#park) and piece types with the `replicate: true` option.
+ 
+diff --git a/docs/guide/migration/upgrading.md b/docs/guide/migration/upgrading.md
+index 58d32ca..17bf63f 100644
+--- a/docs/guide/migration/upgrading.md
++++ b/docs/guide/migration/upgrading.md
+@@ -1,9 +1,9 @@
+ ---
+ next: false
+ ---
+-# Migration from Apostrophe 2 to Apostrophe 4 with AI
++# Migration from Apostrophe 2 to Apostrophe 4
+ 
+-While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 and now in the latest versions of Apostrophe, there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to the newest Apostrophe. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work with AI](#migration-tools-and-process).
++While many foundational patterns from Apostrophe 2 (A2) were maintained in Apostrophe 3 and now in the latest versions of Apostrophe, there are significant breaking changes to both the database document structure and site-building APIs. This guide will summarize those and cover how to begin upgrading website and standalone module projects from A2 to the newest Apostrophe. Importantly, it will also introduce [tools for developers to automate most of the necessary migration work](#migration-tools-and-process).
+ 
+ ## Breaking changes
+ 
+@@ -97,7 +97,7 @@ Migrating an Apostrophe 2 codebase and data should be done with care, but there
+ 
+ While completely manual code migration is possible, the *Content* Upgrader tool is basically essential for data conversion. Writing custom data migrations would not be able to do many things differently from the official tool and there is very little to gain by doing so.
+ 
+-The Content Upgrader tool does not change anything in the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in the newest versions of Apostrophe.
++The Content Upgrader tool does not change anything in the original Apostrophe 2 database. Instead, it reads that original database and creates a *new database* using a name the developer provides. That new database will contain the original data, converted for use in the newest verrsions ofApostrophe.
+ 
+ Developers will install the Content Upgrader as a module **within the A2 project**. This allows it to access schemas and other important project information. **See the [Content Upgrader README](https://www.npmjs.com/package/@apostrophecms/content-upgrader) for full instructions.**
+ 
+@@ -115,10 +115,31 @@ There are a few limitations in the Content Upgrader to understand before using i
+ 
+ ### Code Upgrader
+ 
+-The *Code* Upgrader extension supports upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**.
++The *Code* Upgrader tool supports upgrading codebases for **full Apostrophe projects** (websites) and **installable modules**. It has two major roles in converting an A2 codebase to use the newer version of Apostrophe:
+ 
+-This extension includes an AI Agent Skill (Claude Skill). The Agent Skill is now the recommended way to carry out the upgrade, as this is exactly where AI excels most. Developers using Claude Code and similar tools can complete over 90% of the migration work quickly, and we have also been successful in resolving remaining issues by directing Claude Code. The last 5% of the work usually involves attention to what is rendering on the page.
++1. It will lint an Apostrophe codebase for A2 syntax and structure that must change. This is its `lint` command.
++2. It will *make* many of those code changes for you. This is its `upgrade` command.
+ 
+-The Code Upgrader extension also includes legacy tools for those who prefer not to use the Agent Skill. These tools have much more limited support for automatic upgrades, however the linting feature can be useful.
++Additionally, there is a `reset` command that can undo all uncommitted changes. Always use a new git branch during this process as well to have an additional way to roll back changes.
+ 
+-**See the [Code Upgrader README](https://www.apostrophecms.com/extensions/code-upgrader) for full instructions,** including how to install and use the Agent Skill.
++One reason we recommend using this tool to execute changes on a full project is that it will make minimal code adjustments for newer version use. This is important because additional changes (such as field name changes), could unnecessarily break compatibility with the [upgraded database](#content-upgrader). After running the automatic code upgrade, take care with final code changes to avoid affecting data compatibility.
++
++The Code Upgrader is installed globally in a Node environment (including developer environments) and run as a command line tool. **See the [Code Upgrader README](https://www.npmjs.com/package/@apostrophecms/code-upgrader) for full instructions.**
++
++::: info
++The Code Upgrader tool is currently published as an **alpha** release. It will lint most A2 features that need updating, but there are several features that it cannot automatically upgrade yet. The tool will never do 100% of the necessary code conversion, but we will continue adding feature support before it can be published as a full 1.0 release.
++
++We encourage developers to begin trying it on A2 projects and [provide feedback](https://github.com/apostrophecms/code-upgrader/issues/new) as we prepare for a stable release.
++:::
++
++#### Limitations
++
++Just as with the content tool, the Code Upgrader has some limitations to understand. While database structure is very predictable, code styles and patterns are not. Some A2 APIs and syntax are intentionally not touched to avoid making incorrect assumptions.
++
++- The tool is designed to operation on the majority of standard Apostrophe 2 codebases. Projects that generally follow patterns in official documentation and sample projects will have the best results. The tool will help on very custom projects (especially the linting mode), but more manual work will be always be needed to finish the work.
++- [Widget player code](/guide/custom-widgets.md#client-side-javascript-for-widgets) (client-side JavaScript) is not changed. The original widget player syntax relies on jQuery, which the newer versions of Apostrophe do not include. A2 "lean" players may be supported in the future.
++- [Areas](/reference/glossary.md#area) (and A2's "singletons") that are only defined in A2 template files, "anonymous areas," are not changed. In newer versions, all areas must be registered in a module's field schema, however, the complexity of area configuration (and limitations of template parsers) make them better converted manually.
++- [As mentioned above](#limitations) the image widget only supports a single image in newer versions. As in the content tool, these are converted to the equivalent updated version, but full slideshow conversion will need to be done manually.
++- As the tool is still in development, some features will eventually be supported in the automatic upgrade, but are not yet. We appreciate your patience during development.
++
++In many of these limitation cases the **`lint`** command will still alert you to the outdated code so you can find it and make changes manually.
+diff --git a/docs/reference/field-types/oembed.md b/docs/reference/field-types/oembed.md
+index d121791..5e60d98 100644
+--- a/docs/reference/field-types/oembed.md
++++ b/docs/reference/field-types/oembed.md
+@@ -58,6 +58,8 @@ Simplest usage could involve simply printing the thumbnail image (if available)
+ 
+ More likely, you will want to add the full embed code from the media source. This should be done in client-side JavaScript. Apostrophe provides an API route to get that.
+ 
++If your frontend is deployed as static files without a runtime Apostrophe backend, fetch oEmbed data during build/server render instead of from browser-side code.
++
+ <!-- TODO: link to the oembed module's API route reference when available. -->
+ Submit a `GET` request to `/api/v1/@apostrophecms/oembed/query` with the media URL as the `url` query parameter. A successful response will be an object with several properties to help place and style the embed, including an `html` property with the actual HTML markup to embed.
+ 
+diff --git a/docs/reference/module-api/module-options.md b/docs/reference/module-api/module-options.md
+index 026f55a..7c04090 100644
+--- a/docs/reference/module-api/module-options.md
++++ b/docs/reference/module-api/module-options.md
+@@ -926,6 +926,10 @@ modules/article-page/index.js
+ 
+ When the index page is served, configured filters will be represented on a `req.data.piecesFilters` object (`data.piecesFilters` in the template). If you include `counts: true` in a filter object, the number of pieces matching that filter are included on `req.data.piecesFilters` properties.
+ 
++In Astro and other headless frontends, `req.data.filters` is also available and may be preferable because it includes filter-level metadata plus direct `_url` links for each choice.
++
++If `@apostrophecms/url` is configured with `static: true`, generated filter and pagination links switch to path-based URLs rather than query-string URLs.
++
+ #### Example
+ 
+ <AposCodeBlock>
+diff --git a/docs/reference/modules/i18n.md b/docs/reference/modules/i18n.md
+index ee4073c..9ce8fbf 100644
+--- a/docs/reference/modules/i18n.md
++++ b/docs/reference/modules/i18n.md
+@@ -23,7 +23,7 @@ The module makes an instance of the [i18next](https://npmjs.org/package/i18next)
+ |`redirectToFirstLocale` | Boolean | If enabled, and all locales matching the currently requested hostname have a prefix defined, it will redirect to the locale defined first. If the request does not match any explicit hostname assigned to locales, redirects to the first locale that does not have a configured hostname. |
+ | [`adminLocales`](#adminlocales) | Array | The locales that can be selected by the users for the admin UI |
+ | `defaultAdminLocale` | String | Optionally takes the locale key for the default Admin UI language. If not present, it will default to match the locale language. Overridden by the user preferences. |
+-| `stripUrlAccents` | Boolean | If set to true, accents and diacritical marks will be automatically removed from slugs when they are generated. For example, "café" becomes "cafe". Defaults to false to maintain backward compatibility. This setting affects all new slugs created after it is enabled. |
++| `stripAccentsFromSlugs` | Boolean | If set to true, accents and diacritical marks will be automatically removed from slugs when they are generated. For example, "café" becomes "cafe". Defaults to false to maintain backward compatibility. This setting affects all new slugs created after it is enabled. |
+ 
+ ### `locales`
+ 
+@@ -69,11 +69,11 @@ Other notes:
+         },
+         'en-CA': {
+           label: 'Canada (English)',
+-          prefix: '/ca-en'
++          prefix: '/ca/en'
+         },
+         'fr-CA': {
+           label: 'Canada (French)',
+-          prefix: '/ca-fr'
++          prefix: '/ca/fr'
+         },
+         'es-MX': {
+           label: 'Mexico',
+@@ -90,8 +90,8 @@ Other notes:
+ 
+ With `redirectToFirstLocale` option enabled.
+ 
+-In the following example, _**every** locale has a prefix_ so if we request the base URL of the site without a locale prefix (`/en` or `/us-en`) in the URL, the first locale will be taken into account (`en`) and we will be redirected to `/en`.  
+-Same thing if we request `example.ca` with no locale prefix, we will be redirected to `/ca-en` as it is the first locale configured with that hostname.
++In the following example, _**every** locale has a prefix_ so if we request the base URL of the site without a locale prefix (`/en` or `/us/en`) in the URL, the first locale will be taken into account (`en`) and we will be redirected to `/en`.  
++Same thing if we request `example.ca` with no locale prefix, we will be redirected to `/ca/en` as it is the first locale configured with that hostname.
+ 
+ <AposCodeBlock>
+ 
+@@ -107,16 +107,16 @@ Same thing if we request `example.ca` with no locale prefix, we will be redirect
+         },
+         'en-US': {
+           label: 'English',
+-          prefix: '/us-en'
++          prefix: '/us/en'
+         },
+         'en-CA': {
+           label: 'Canada (English)',
+-          prefix: '/ca-en',
++          prefix: '/ca/en',
+           hostname: 'example.ca'
+         },
+         'fr-CA': {
+           label: 'Canada (French)',
+-          prefix: '/ca-fr',
++          prefix: '/ca/fr',
+           hostname: 'example.ca'
+         }
+       }
+@@ -287,16 +287,22 @@ The `rename-locale` command moves all content from one locale name to another, u
+ 
+ Usage: `node app @apostrophecms/i18n:rename-locale --old=de-DE --new=de-de --keep=de-de`
+ 
+-### `strip-slug-accents`
++### `strip-accents-from-slugs`
+ 
+-The `strip-slug-accents` command removes accents and diacritical marks from all existing slugs in the database. This is useful when you enable the `stripUrlAccents` option and want to update slugs that were created before the option was turned on.
++The `strip-accents-from-slugs` command removes accents and diacritical marks from all existing slugs in the database. This is useful when you enable the `stripAccentsFromSlugs` option and want to update slugs that were created before the option was turned on.
+ 
+-**Important:** This task will modify slugs across all content types and locales. Make sure to back up your database before running it.
++By default, the task runs in "dry run" mode, showing you what changes would be made without actually modifying the database. To apply the changes, add the `--live` flag.
+ 
+-Usage example:
++**Important:** This task will modify slugs across all content types and locales. Make sure to back up your database before running it with the `--live` flag.
++
++Usage examples:
+ 
+ ```bash
+-node app @apostrophecms/i18n:strip-slug-accents
++# Preview what changes would be made (safe, no modifications)
++node app @apostrophecms/i18n:strip-accents-from-slugs
++
++# Actually apply the changes to the database
++node app @apostrophecms/i18n:strip-accents-from-slugs --live
+ ```
+ 
+-The task will display each slug that is changed, showing the before and after values.
+\ No newline at end of file
++The task will display each slug that would be changed (or is being changed in live mode), showing the before and after values.
+\ No newline at end of file
+diff --git a/docs/reference/modules/piece-page-type.md b/docs/reference/modules/piece-page-type.md
+index 616a0df..aaccb36 100644
+--- a/docs/reference/modules/piece-page-type.md
++++ b/docs/reference/modules/piece-page-type.md
+@@ -122,6 +122,10 @@ These include:
+ 
+ When the index page is served, filter data will be returned in the `req.data.piecesFilters` object (`data.piecesFilters` in the template). This object consists of an array for each configured filter. That array contains objects with `value` and `label` properties for every `piece-type` that matches the filter. Passing filter values back to the index page as query string parameters will filter the results accordingly. If `counts: true` is included for the filter query, each object in the array will also have a `count` property with the number of matching pieces.
+ 
++For headless and Astro integrations, `req.data.filters` is also available and is often preferred because it includes filter-level metadata and direct `_url` values on each choice.
++
++When `@apostrophecms/url` is configured with `static: true`, filter and pagination URLs become path-based rather than query-string based (for example `/articles/category/tech/page/2`).
++
+ A simplified schema for a 'book' `piece-type`:
+ <AposCodeBlock>
+ 
+diff --git a/docs/reference/modules/styles.md b/docs/reference/modules/styles.md
+index 012fd4f..2b75fd8 100644
+--- a/docs/reference/modules/styles.md
++++ b/docs/reference/modules/styles.md
+@@ -429,6 +429,8 @@ These routes serve **global styles** only. Widget styles are generated and injec
+ 
+ Serves the cached global stylesheet.
+ 
++In static build workflows, this stylesheet URL can be contributed as literal content through URL metadata so static frontends can fetch and write the generated CSS file during build.
++
+ **Query parameters:**
+ - `version` (String): Stylesheet version identifier for cache busting
+ - `aposLocale` (String): Locale identifier (format: `locale:mode`)
+@@ -613,4 +615,4 @@ For implementation details, see the migration code in `@apostrophecms-pro/palett
+ ## Related documentation
+ 
+ - [Global Styling](/guide/global-styles.md)
+-- [Per-Widget Styling](/guide/widget-styles.md)
+\ No newline at end of file
++- [Per-Widget Styling](/guide/widget-styles.md)
+diff --git a/docs/reference/server-events.md b/docs/reference/server-events.md
+index d6a2fca..8adf935 100644
+--- a/docs/reference/server-events.md
++++ b/docs/reference/server-events.md
+@@ -1049,6 +1049,45 @@ Triggered just before the search index page is served, after the page's results
+   </template>
+ </AposCodeBlock>
+ 
++## `@apostrophecms/url` events
++
++Events emitted by the `@apostrophecms/url` module.
++
++### `getAllUrlMetadata`
++
++Triggered when Apostrophe compiles URL metadata used by static build consumers.
++
++This event is commonly used by modules that need to add non-document URLs (for example generated CSS or text files) to static build outputs.
++
++#### Parameters
++
++- `req`: The active request
++- `results`: Shared array of URL metadata entries. Push your entries onto this array.
++- `options`: Object containing metadata controls, including `excludeTypes`
++
++<AposCodeBlock>
++
++  ```javascript
++  handlers(self, options) {
++    return {
++      '@apostrophecms/url:getAllUrlMetadata': {
++        addMyGeneratedFile(req, results) {
++          results.push({
++            url: '/my-generated-file.json',
++            contentType: 'application/json',
++            i18nId: 'my-module:generated-file',
++            sitemap: false
++          });
++        }
++      }
++    };
++  }
++  ```
++  <template v-slot:caption>
++    modules/my-module/index.js
++  </template>
++</AposCodeBlock>
++
+ ## `@apostrophecms/template` events
+ 
+ Events emitted by the `@apostrophecms/template` module.
+diff --git a/docs/tutorials/astro/apostrophecms-and-astro.md b/docs/tutorials/astro/apostrophecms-and-astro.md
+index ba60886..4159fee 100644
+--- a/docs/tutorials/astro/apostrophecms-and-astro.md
++++ b/docs/tutorials/astro/apostrophecms-and-astro.md
+@@ -4,12 +4,12 @@ videoList:
+     title: 'Apollo Overview'
+     link: '#want-to-learn-more'
+ next:
+-  text: 'Introducing Apollo'
+-  link: '/tutorials/astro/introducing-apollo.html'
++  text: 'Deployment Overview'
++  link: '/tutorials/astro/deployment-overview.html'
+ title: "ApostropheCMS and Astro"
+ detailHeading: "Astro"
+ url: "/tutorials/astro/apostrophecms-and-astro.html"
+-content: "ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
++content: "ApostropheCMS and Astro integrate through the `apostrophe-astro` extension. Learn who this integration is for and how teams use it to build modern websites."
+ tags:
+   topic: "Core Concepts"
+   type: astro
+@@ -23,6 +23,9 @@ excludeFromFilters: true
+ 
+ The tutorials in this section will guide you through building modern websites using ApostropheCMS as your content management system with Astro powering your frontend. This combination offers powerful advantages for different types of developers:
+ 
++> [!NOTE]
++> This Astro section is a teaching track. Some tutorials use Apollo as an example project, but deployment guidance is theme-agnostic and starts at [Deployment Overview](/tutorials/astro/deployment-overview.html).
++
+ ### Who Is This For?
+ 
+ **Astro Developers**
+@@ -67,8 +70,8 @@ If you get stuck:
+ - Review the [Astro documentation](https://docs.astro.build)
+ - Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
+ 
+-Ready to start building? Begin with our [introduction to Apollo and core concepts tutorial](/tutorials/astro/introducing-apollo.html).
++Ready to start building? If your immediate goal is deployment, begin with [Deployment Overview](/tutorials/astro/deployment-overview.html). If your goal is static hosting, also review [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html). If you want to follow our theme-based teaching path, start with [Introducing Apollo](/tutorials/astro/introducing-apollo.html).
+ 
+ ## Want to learn more?
+ Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:
+-<iframe width="560" height="315" src="https://www.youtube.com/embed/8HczFSLFDno?si=tHxIhDTdOboNyIPN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+\ No newline at end of file
++<iframe width="560" height="315" src="https://www.youtube.com/embed/8HczFSLFDno?si=tHxIhDTdOboNyIPN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+diff --git a/docs/tutorials/astro/creating-pages.md b/docs/tutorials/astro/creating-pages.md
+index 8b23e18..eceb532 100644
+--- a/docs/tutorials/astro/creating-pages.md
++++ b/docs/tutorials/astro/creating-pages.md
+@@ -628,6 +628,8 @@ const clearFilter = setParameter(Astro.url, 'category', '');
+ ---
+ ```
+ 
++For static Astro output, prefer helper utilities from `@apostrophecms/apostrophe-astro/helpers` when generating piece index filter and pagination links, especially `buildPageUrl()` for pagination. This keeps your URLs compatible with both SSR query-string mode and static path-based mode. See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html) for the full static pattern.
++
+ #### Accessing Global Data
+ ApostropheCMS provides a global document for site-wide settings and content. This is configured in your backend through the `@apostrophecms/global` module:
+ 
+@@ -745,4 +747,4 @@ For detailed examples of these patterns in action, explore the Apollo theme's so
+ - The article page layouts in `frontend/src/layouts/article-layouts/`
+ - The global header and footer components
+ 
+-With our understanding of how pages work in an ApostropheCMS + Astro project, we can now turn our attention to another crucial component: widgets. These modular building blocks provide the actual content and functionality within your page areas, and mastering their creation is essential for building flexible, editor-friendly websites.
+\ No newline at end of file
++With our understanding of how pages work in an ApostropheCMS + Astro project, we can now turn our attention to another crucial component: widgets. These modular building blocks provide the actual content and functionality within your page areas, and mastering their creation is essential for building flexible, editor-friendly websites.
+diff --git a/docs/tutorials/astro/creating-pieces.md b/docs/tutorials/astro/creating-pieces.md
+index 343edcc..e766709 100644
+--- a/docs/tutorials/astro/creating-pieces.md
++++ b/docs/tutorials/astro/creating-pieces.md
+@@ -383,6 +383,8 @@ frontend/src/templates/ArticleIndexPage.astro
+ 
+ Clicking on one of these filters will result in the backend populating the `aposData.pieces` with only those that match the filter value. So, you don't need any special markup, just the same markup you use to display all the unfiltered pieces.
+ 
++For newer Astro integrations, you can also use `aposData.filters` (from `req.data.filters`) which includes richer filter metadata and `_url` values for each choice. That shape is preferred for static builds because links can be rendered directly from choice URLs rather than manually assembling query parameters.
++
+ #### 3. Pagination
+ 
+ The template handles pagination in two parts:
+@@ -408,6 +410,8 @@ frontend/src/templates/ArticleIndexPage.astro
+ 
+ The `setParameter` helper from the `apostrophe-astro` package ensures that pagination URLs maintain other query parameters (like active filters) while changing only the page number.
+ 
++If you plan to support static output, use `buildPageUrl(aposData, pageNumber)` from `@apostrophecms/apostrophe-astro/helpers` for pagination links. It automatically handles both query-string URLs (SSR) and path-based URLs (static mode).
++
+ Then it renders a pagination component if there's more than one page:
+ 
+ <AposCodeBlock>
+diff --git a/docs/tutorials/astro/creating-widgets.md b/docs/tutorials/astro/creating-widgets.md
+index 245e3fa..3385824 100644
+--- a/docs/tutorials/astro/creating-widgets.md
++++ b/docs/tutorials/astro/creating-widgets.md
+@@ -333,6 +333,11 @@ Next, let's look at how we can add client-side interactivity to widgets. The vid
+ ## Adding Client-Side Interactivity to Widgets
+ Astro provides several routes for adding JavaScript to the browser. This can take the form of public scripts loaded on every page, `<script>` tags in your components, and the addition of client-side framework components, e.g. Vue or React components. Let's explore the different approaches available for adding client-side interactivity to widgets in the ApostropheCMS + Astro environment, using examples from the Apollo project.
+ 
++::: warning Static build caveat
++Browser-side calls to Apostrophe routes such as `/api/v1/...` require a live backend at runtime. In a fully static deployment, move those calls to Astro server/frontmatter code during build (for example with `aposFetch`) and pass the result into the widget as props or `data-*` attributes.
++See [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html) for the full static workflow.
++:::
++
+ <iframe width="560" height="315" src="https://www.youtube.com/embed/JEU2RdgqrIs?si=reRnkOBt_rTIpXTA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+ 
+ ### Web Components Approach
+@@ -1023,4 +1028,4 @@ While widgets handle modular content and layouts, pieces in ApostropheCMS serve
+ - Implementing piece widgets
+ - Handling piece data in Astro templates
+ 
+-Pieces complement widgets by providing reusable content that can be displayed across your site in various contexts. Understanding both systems gives you powerful tools for building flexible, content-rich websites.
+\ No newline at end of file
++Pieces complement widgets by providing reusable content that can be displayed across your site in various contexts. Understanding both systems gives you powerful tools for building flexible, content-rich websites.
+diff --git a/docs/tutorials/astro/deploying-hybrid-projects.md b/docs/tutorials/astro/deploying-hybrid-projects.md
+index f2ec749..c3d69ed 100644
+--- a/docs/tutorials/astro/deploying-hybrid-projects.md
++++ b/docs/tutorials/astro/deploying-hybrid-projects.md
+@@ -7,12 +7,15 @@ tags:
+   topic: "Core Concepts"
+   type: astro
+   effort: beginner
+-order: 6
++order: 8
+ excludeFromFilters: true
+ ---
+ # Deploying ApostropheCMS + Astro Projects
+ 
+-Now that you've built your site with ApostropheCMS and Astro, it's time to deploy it for the world to see. The Apollo project's dual-repository structure (backend + frontend) offers flexibility but also requires special considerations for deployment.
++> [!TIP]
++> Start with [Deployment Overview](/tutorials/astro/deployment-overview.html) if you have not chosen between static and server-capable deployment yet.
++
++Now that you've built your site with ApostropheCMS and Astro, it's time to deploy it for the world to see. A split frontend/backend structure offers flexibility but also requires special considerations for deployment.
+ 
+ ## Understanding Deployment Options
+ 
+@@ -28,6 +31,10 @@ There are two main approaches to deploying your ApostropheCMS + Astro project:
+    - More flexibility and control
+    - Requires more configuration and coordination
+ 
++::: info Static output option
++If you are deploying a fully static Astro build (no Node.js Astro server in production), use [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophe.html). That workflow changes Astro output mode, path generation, and attachment/literal-content handling.
++:::
++
+ ## Prerequisites for Production Deployment
+ 
+ Regardless of your deployment method, you'll need:
+@@ -303,4 +310,7 @@ Deploying an ApostropheCMS + Astro project requires careful consideration of how
+ For further assistance, consider:
+ - Joining the [ApostropheCMS Discord community](http://chat.apostrophecms.org)
+ - Consulting the [Astro deployment documentation](https://docs.astro.build/en/guides/deploy/)
+-- Reaching out to the Apostrophe team for hosting solutions
+\ No newline at end of file
++- Reaching out to the Apostrophe team for hosting solutions
++- Reviewing [Environment Variables by Host](/tutorials/astro/environment-variables-by-host.html)
++- Running the [Post-Deploy Checklist](/tutorials/astro/post-deploy-checklist.html)
++- Using [Deployment Troubleshooting](/tutorials/astro/deployment-troubleshooting.html) for failures
+diff --git a/docs/tutorials/index.md b/docs/tutorials/index.md
+index 6875b67..916595e 100644
+--- a/docs/tutorials/index.md
++++ b/docs/tutorials/index.md
+@@ -21,8 +21,8 @@ Step-by-step tutorials that go beyond the technical explanations in our Guide or
+     <AposCtaButton
+       detail-heading="Astro"
+       title="ApostropheCMS & Astro"
+-      content="ApostropheCMS and Astro work seamlessly together through the `apostrophe-astro` extension. Learn who this integration is for and what makes it a powerful choice for building modern websites."
+-      url="/docs/tutorials/astro/introducing-apollo.html"
++      content="ApostropheCMS and Astro integrate through the `apostrophe-astro` extension. Learn SSR and static-build workflows for modern content-driven sites."
++      url="/docs/tutorials/astro/"
+       hideEffort="true"
+     />
+   </template>
+@@ -46,4 +46,4 @@ Step-by-step tutorials that go beyond the technical explanations in our Guide or
+       hideEffort="true"
+     />
+   </template>
+-</AposTwoColumns>
+\ No newline at end of file
++</AposTwoColumns>
