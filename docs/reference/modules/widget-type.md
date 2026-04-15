@@ -142,6 +142,7 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`template`](#template) | String | The Nunjucks template name to render. |
 | [`width`](#width) | String | Define the size of the widget modal. Defaults to `window`. Can also accept `one-third`, `two-thirds`, `half`, and `full` |
 | [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
+| `hideSingleTab` | Boolean | If `true` and an editing modal only has a single tab, that tab will be hidden. |
 
 ### `className`
 
