@@ -27,7 +27,8 @@ The only reason to configure this module directly would be to apply the changes 
 | `showArchive` | Boolean | Set to `false` to disable UI related to archiving pieces of that type. |
 | `showDiscardDraft` | Boolean | Set to `false` to disable UI related to discarding draft pieces of that type. |
 | `showDismissSubmission` | Boolean | Set to `false` to disable UI related to dismissing draft submissions for pieces of that type. |
-| `singleton` | Boolean | Set to `true` to ensure that no one can create a new piece of that type. The global doc module uses this, as only one should ever exist. |
+| `singleton` | Boolean | Ensures no one can create a new piece of that type. You should use `singletonAuto: true` in almost all cases. |
+| `singletonAuto` | Boolean | Auto-creates and ensures there is only one and only one document of this type (per locale). |
 | [`sort`](#sort) | Object | The value for a piece type's default sort order query builder. |
 
 ### `autopublish`
@@ -242,6 +243,20 @@ module.exports = {
 modules/article/index.js
 </template>
 </AposCodeBlock>
+
+### `singleton`
+
+If set to `true`, the UI is adjusted to hide any means to create a second instance of this type, and the REST API backend prevents this as well.
+Set automatically for you if you set `singletonAuto: true`. We strongly recommend using `singletonAuto: true` instead, unless you need to
+handle insertion of the initial piece in a way that `singletonAuto` cannot accommodate.
+
+### `singletonAuto`
+
+If set to `true`, ApostropheCMS will automatically insert one and only one instance of this type if missing at startup. If `localized` is not `false`, there
+will be one and only one instance per locale and mode (one `draft` and one `published` instance per locale).
+
+The user will not be permitted to insert a create instance of this type, and the REST API backend prevents this as well. When the piece is inserted
+for the first time `self.newInstance()` is invoked in the usual way. Useful for types like `@apostrophecms/global` and `@apostrophecms/style`.
 
 ### `sort`
 
