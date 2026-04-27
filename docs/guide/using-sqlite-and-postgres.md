@@ -103,19 +103,35 @@ apos-db-dump mongodb://localhost:27017/mydb --output=backup.jsonl
 
 See the [db-connect dump/restore documentation](https://github.com/apostrophecms/apostrophe/blob/postgres/packages/db-connect/docs/dump-restore.md) for the full set of options, including piping dump output straight into restore for cross-backend migration.
 
-## Multi-tenant PostgreSQL with the multisite module
+## Multi-tenant deployments with the multisite module
 
-If you are using the [multisite module](https://apostrophecms.com/extensions/multisite-2) to host many Apostrophe sites from a single codebase, PostgreSQL is supported through a dedicated `multipostgres://` protocol. It maps each site to its own **schema** inside a single shared PostgreSQL database, rather than provisioning a separate database per site:
+If you are using the [multisite module](https://apostrophecms.com/extensions/multisite-2) to host many Apostrophe sites from a single codebase, MongoDB, SQLite, and PostgreSQL are all supported. Two things differ from a single-site project:
+
+- Multisite reads its connection URI from the `DB_URI` environment variable (or the `dbUri` option), **not** `APOS_DB_URI`.
+- Database, file, and schema names are derived from multisite's `shortNamePrefix` option (default `multisite-`). Each hosted site uses `<shortNamePrefix><siteId>`, and the dashboard uses `<shortNamePrefix>dashboard`. Because the dashboard is the one tenant guaranteed to exist, the convention is to point `DB_URI` at it:
 
 ```bash
-export DB_URI=multipostgres://user:password@localhost:5432/shareddb-dashboard
+# MongoDB (default)
+export DB_URI=mongodb://localhost:27017/multisite-dashboard
+
+# SQLite — the file's basename must equal <shortNamePrefix>dashboard
+export DB_URI=sqlite:///var/lib/apostrophe/multisite-dashboard.db
+
+# PostgreSQL — use multipostgres://, not postgres://, see below
+export DB_URI=multipostgres://user:password@localhost:5432/multisite-dashboard
 ```
 
-A `multipostgres://` URI must include both a database name and a schema name, separated by the **last hyphen** in the path. Ending the URI with `-dashboard` is a good choice because multisite always has a dashboard site, so that schema is guaranteed to exist. Multisite derives each tenant site's schema name from this template, substituting the site's short name for `dashboard` at runtime.
+If you change `shortNamePrefix` from the default, change every URI to match (e.g. `myapp-` → `myapp-dashboard`, `myapp-dashboard.db`).
 
-Each tenant's tables live in their own schema inside `shareddb`, isolating tenants while keeping operations — backups, monitoring, connection pooling — pointed at a single database. This is usually the right shape for a PostgreSQL-backed multisite deployment; managing hundreds of separate databases is rarely practical.
+### Why `multipostgres://` and not `postgres://`?
 
-Everything else about multisite configuration is unchanged. Refer to the [multisite extension page](https://apostrophecms.com/extensions/multisite-2) for installation and tenant-management documentation.
+`multipostgres://` maps each site to its own **schema** inside a single shared PostgreSQL database, rather than provisioning a separate database per site. This matters because most managed PostgreSQL services (RDS, Cloud SQL, Neon, Supabase) bill, provision, and limit you per database, so a database-per-tenant model is rarely practical.
+
+A `multipostgres://` URI must include both a database name and a schema name, separated by the **last hyphen** in the path. In `multipostgres://.../multisite-dashboard`, `multisite` is the real PostgreSQL database name and `dashboard` is the schema for the dashboard site. The portion before the last hyphen must equal `shortNamePrefix` with the trailing hyphen removed; multisite substitutes each tenant's short name for `dashboard` when accessing per-site schemas at runtime.
+
+Plain `postgres://` is supported for single-tenant Apostrophe projects but is **not** appropriate for multisite.
+
+Refer to the [multisite extension page](https://apostrophecms.com/extensions/multisite-2) for installation and tenant-management documentation.
 
 ## Compatibility notes
 
