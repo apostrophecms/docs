@@ -13,6 +13,7 @@ const sidebarGuide = [
       { text: 'Development Setup', link: 'guide/development-setup.md' },
       { text: 'Windows Development', link: 'cookbook/windows-development.md' },
       { text: 'Dockerized MongoDB', link: 'guide/dockerized-mongodb.md' },
+      { text: 'Using SQLite or PostgreSQL', link: 'guide/using-sqlite-and-postgres.md' },
       {
         text: 'Migrating',
         collapsed: true,
