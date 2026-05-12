@@ -101,7 +101,7 @@ npm install -g @apostrophecms/db-connect
 apos-db-dump mongodb://localhost:27017/mydb --output=backup.jsonl
 ```
 
-See the [db-connect dump/restore documentation](https://github.com/apostrophecms/apostrophe/blob/postgres/packages/db-connect/docs/dump-restore.md) for the full set of options, including piping dump output straight into restore for cross-backend migration.
+See the [db-connect dump/restore documentation](https://github.com/apostrophecms/apostrophe/blob/main/packages/db-connect/docs/dump-restore.md) for the full set of options, including piping dump output straight into restore for cross-backend migration.
 
 ## Multi-tenant deployments with the multisite module
 
@@ -135,6 +135,6 @@ Refer to the [multisite extension page](https://apostrophecms.com/extensions/mul
 
 ## Compatibility notes
 
-All three adapters are provided by the [`@apostrophecms/db-connect`](https://github.com/apostrophecms/apostrophe/tree/postgres/packages/db-connect) module. `db-connect` implements a large subset of the MongoDB API — enough to support ApostropheCMS core and the extensions and patterns it relies on — but it does **not** attempt to cover 100% of the MongoDB API surface. Application code that sticks to the queries, cursors, aggregations, and index definitions Apostrophe itself uses will work across all three backends; code that reaches for less-common MongoDB features (obscure aggregation stages, server-side JavaScript, change streams, geospatial operators, and so on) may not.
+All three adapters are provided by the [`@apostrophecms/db-connect`](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect#apostrophecmsdb-connect) module. `db-connect` implements a large subset of the MongoDB API — enough to support ApostropheCMS core and the extensions and patterns it relies on — but it does **not** attempt to cover 100% of the MongoDB API surface. Application code that sticks to the queries, cursors, aggregations, and index definitions Apostrophe itself uses will work across all three backends; code that reaches for less-common MongoDB features (obscure aggregation stages, server-side JavaScript, change streams, geospatial operators, and so on) may not.
 
-If you are writing modules intended to run across MongoDB, PostgreSQL, and SQLite, treat the db-connect API as authoritative rather than the full MongoDB driver API. See the [`db-connect` README](https://github.com/apostrophecms/apostrophe/blob/postgres/packages/db-connect/README.md) for the complete list of supported query operators, cursor methods, aggregation stages, and connection-URL formats, and the [db-connect docs folder](https://github.com/apostrophecms/apostrophe/tree/postgres/packages/db-connect/docs) for deeper material on the dump/restore format and adapter internals.
+If you are writing modules intended to run across MongoDB, PostgreSQL, and SQLite, treat the db-connect API as authoritative rather than the full MongoDB driver API. See the [`db-connect` README](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect#apostrophecmsdb-connect) for the complete list of supported query operators, cursor methods, aggregation stages, and connection-URL formats, and the [db-connect docs folder](https://github.com/apostrophecms/apostrophe/tree/postgres/packages/db-connect/docs) for deeper material on the dump/restore format and adapter internals.
