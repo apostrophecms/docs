@@ -330,7 +330,7 @@ A JSX template can render an `<Area>`, a `<Component>`, or a `<Template>` whose 
 Declare the template function `async` only when it needs to fetch data before rendering, for example by calling an external API. The [async component pattern](/guide/async-components.md) is often a cleaner place for that fetch, since it separates data-loading from markup.
 
 ::: info
-This rendering model is not streaming. There is no React Suspense equivalent: the whole page is rendered, all pending pieces are awaited, and the response is sent in one piece. If your application needs partial hydration, streaming, or browser-side reactivity for components, our standard front-end pipeline (Vite, web components, HTMX) or a dedicated Astro project remain the right tools.
+This rendering model is not streaming. There is no React Suspense equivalent: the whole page is rendered, all pending pieces are awaited, and the response is sent in one piece. For many applications, this is enough, especially when combined with HTMX, web components and our standard [front end pipeline](./front-end-assets.md). If you need more, we recommend an [Apostrophe Astro](../tutorials/astro/apostrophecms-and-astro.md) hybrid project.
 :::
 
 ## `import`, `require`, and inline components
