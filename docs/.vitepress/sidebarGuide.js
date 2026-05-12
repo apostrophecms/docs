@@ -94,6 +94,7 @@ const sidebarGuide = [
           { text: 'Template Filters', link: 'guide/template-filters.md' },
           { text: 'Template Fragments', link: 'guide/fragments.md' },
           { text: 'Async Components', link: 'guide/async-components.md' },
+          { text: 'JSX Templates', link: 'guide/jsx-templates.md' },
           { text: 'Custom Nunjucks Tags', link: 'reference/template-tags.md' },
         ]
       },
