@@ -264,11 +264,11 @@ export default {
 
 ### Controlling the layout gap
 
-There are two ways to expose the layout widget's CSS `gap` to editors. Choose one approach per project — they are mutually exclusive.
+There are two ways to expose the layout widget's CSS `gap` to editors. Choose one approach per project — they are mutually exclusive. In both cases, the editor control appears on the layout widget itself (in the Global Styles menu or the layout widget's Styles menu), not on individual columns.
 
 #### Option 1: Site-wide gap (global styles)
 
-Add the built-in `layoutGap` preset to your global styles configuration:
+Add the built-in `layoutGap` preset to your [global styles configuration](/reference/modules/styles):
 
 <AposCodeBlock>
 
@@ -844,14 +844,14 @@ If a widget or custom component behaves strangely **only after** you place it in
 
 ### Common legacy patterns → modern fixes
 
-| Legacy pattern | Why it breaks in grid | Safer modern replacement |
-| --- | --- | --- |
+| Legacy pattern                                            | Why it breaks in grid                                                                                                | Safer modern replacement                                                                                                                                               |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `height: XX%` on cards, iframes, wrappers | Percent heights need a *definite* parent height; grid columns are auto-height by default → weird stretching/overflow | Remove it. Prefer `height: auto`. If you need aspect locking, use `aspect-ratio` (e.g. `aspect-ratio: 16/9`) or intrinsic sizing with `max-width: 100%; height: auto;` |
-| “Equal height” hacks (from pre-grid times) | Conflicts with grid’s track sizing & `stretch` | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%` |
-| `position: absolute` children | Without `position: relative` on the column content wrapper, they escape and overlap | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }` |
-| Full-viewport widths (`width: 100vw`) | Ignores grid gutters and column width → overflow | Use `width: 100%` within columns; the grid defines the width |
-| Sticky headers in a column | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor |
-| Big negative margins | Can visually overrun grid gaps/rows | Prefer padding on the parent, or use smaller translations with `transform` |
+| “Equal height” hacks (from pre-grid times)                | Conflicts with grid’s track sizing & `stretch`                                                                       | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%`                                     |
+| `position: absolute` children                             | Without `position: relative` on the column content wrapper, they escape and overlap                                  | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }`                                                           |
+| Full-viewport widths (`width: 100vw`)                     | Ignores grid gutters and column width → overflow                                                                     | Use `width: 100%` within columns; the grid defines the width                                                                                                           |
+| Sticky headers in a column                                | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness                                | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor                                                                          |
+| Big negative margins                                      | Can visually overrun grid gaps/rows                                                                                  | Prefer padding on the parent, or use smaller translations with `transform`                                                                                             |
 
 #### Quick CSS safety net (scoped)
 
