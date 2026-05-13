@@ -83,3 +83,104 @@ Note that:
 * The optional `imageTags` sub-property accepts an array `_id`s from existing `@apostrophecms/image-tag` pieces that will be applied to any image(s) imported during the process. These tags will be added to the imported images in the media library.
 
 * The rich text widget still must specify the `image` control in its `toolbar` and/or `insert` options or the images will be filtered out.
+
+#### Restricting inline image hostnames
+
+Starting with version 4.30.0, inline images are only fetched during import if they are served from a hostname listed in the `imageImportAllowedHostnames` option of the `@apostrophecms/rich-text-widget` module. Images from any other hostname are silently skipped.
+
+Configure the allowlist in your module options:
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    imageImportAllowedHostnames: [
+      'myoldsite.com',
+      'assets.myoldsite.com'
+    ]
+  }
+};
+```
+
+The `baseUrl` option is used only to resolve relative `img src` URLs. The resulting hostname must still appear in `imageImportAllowedHostnames` for the image to be fetched.
+
+### oEmbed allowlist and endpoints
+
+Two options control which external services are permitted as oEmbed sources: `minimumAllowlist` and `minimumEndpoints`.
+
+#### `minimumAllowlist`
+
+An array of hostnames permitted as oEmbed sources. Apostrophe's default extends the `oembetter` suggested allowlist with `wufoo`, `infogram`, and `slideshare`:
+
+```javascript
+[
+  'youtube.com',
+  'youtu.be',
+  'dailymotion.com',
+  'flickr.com',
+  'vimeo.com',
+  'soundcloud.com',
+  'twitter.com',
+  'x.com',
+  'wufoo.com',
+  'infogram.com',
+  'slideshare.net'
+]
+```
+
+#### `minimumEndpoints`
+
+An array of objects mapping domains to their oEmbed API endpoint URLs. Apostrophe's default matches the `oembetter` suggested endpoints:
+
+```javascript
+[
+  {
+    domain: 'vimeo.com',
+    endpoint: 'https://vimeo.com/api/oembed.json'
+  },
+  {
+    domain: 'youtube.com',
+    endpoint: 'https://www.youtube.com/oembed'
+  },
+  {
+    domain: 'youtu.be',
+    endpoint: 'https://www.youtube.com/oembed'
+  },
+  {
+    domain: 'twitter.com',
+    endpoint: 'https://publish.twitter.com/oembed'
+  },
+  {
+    domain: 'x.com',
+    endpoint: 'https://publish.twitter.com/oembed'
+  }
+]
+```
+
+To add support for additional oEmbed providers, set both options explicitly in your module configuration, including any defaults you want to preserve:
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    minimumAllowlist: [
+      'youtube.com',
+      'youtu.be',
+      'vimeo.com',
+      // ... other defaults ...
+      'myservice.com'
+    ],
+    minimumEndpoints: [
+      // ... default endpoints ...
+      {
+        domain: 'myservice.com',
+        endpoint: 'https://myservice.com/api/oembed'
+      }
+    ]
+  }
+};
+```
+
+::: tip
+`minimumAllowlist` uses a lowercase `l` — this matches the option name in the module source.
+:::
