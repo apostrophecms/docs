@@ -517,6 +517,21 @@ The styles module includes several standard presets defined in `lib/presets.js`:
   - `color` (color): Shadow color
 - All fields except `active` use conditional display (`if: { active: true }`)
 
+### `layoutGap`
+- Type: `range`
+- Range: 0–64px
+- Default: 24px
+- Property: `--apos-layout-gap` (CSS custom property)
+- Selector: `:root`
+
+Controls the site-wide spacing between layout sections. The value is set as the `--apos-layout-gap` CSS custom property on `:root`, making it available throughout the stylesheet via `var(--apos-layout-gap)`.
+
+This preset includes a `layoutGapDefault: true` marker, which the core uses internally to identify the canonical layout gap field. This enables features like area gap controls that sync with the site-wide default.
+
+::: info
+`layoutGap` is intended for global styles only. It targets `:root` with a CSS custom property and has no meaningful effect when used as a widget style.
+:::
+
 ## Storage and delivery
 
 This section describes how **global styles** are stored and delivered. Widget styles are stored with each widget instance and injected inline.
