@@ -287,7 +287,7 @@ export default {
 </template>
 </AposCodeBlock>
 
-This sets the `--apos-layout-gap` CSS custom property on `:root` (default 24px), controlling the gap for all layout widgets at once.
+The style key must be `layoutGap` exactly, live preview editing depends on this specific name. This sets the `--apos-layout-gap` CSS custom property on `:root` (default 24px), controlling the gap for all layout widgets at once.
 
 #### Option 2: Per-instance gap (widget styles)
 
@@ -322,6 +322,8 @@ export default {
   modules/layout-widget/index.js
 </template>
 </AposCodeBlock>
+
+The style key must be `gap` exactly, live preview editing depends on this specific name.
 
 ### Configuring allowed widgets in columns
 
