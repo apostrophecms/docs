@@ -262,6 +262,67 @@ export default {
 > [!NOTE]
 > The `columns` option defines the CSS grid template columns for layout calculations, not the number of layout-column widgets on the page. When a layout widget is first added, two layout-column widgets are created by default. Editors can add or remove columns in-context as needed. The `minSpan` option controls the minimum number of grid columns each layout-column widget can span.
 
+### Controlling the layout gap
+
+There are two ways to expose the layout widget's CSS `gap` to editors. Choose one approach per project — they are mutually exclusive.
+
+#### Option 1: Site-wide gap (global styles)
+
+Add the built-in `layoutGap` preset to your global styles configuration:
+
+<AposCodeBlock>
+
+```js
+export default {
+  styles: {
+    add: {
+      layoutGap: 'layoutGap'
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/styles/index.js
+</template>
+</AposCodeBlock>
+
+This sets the `--apos-layout-gap` CSS custom property on `:root` (default 24px), controlling the gap for all layout widgets at once.
+
+#### Option 2: Per-instance gap (widget styles)
+
+To let editors set a different gap on each layout widget instance, add a `gap` style field to a project-level layout widget module:
+
+<AposCodeBlock>
+
+```js
+export default {
+  options: {
+    label: 'project:layout',
+    description: 'project:layoutDescription',
+    previewImage: 'svg',
+    className: 'widget'
+  },
+  styles: {
+    add: {
+      gap: {
+        label: 'apostrophe:styleLayoutGap',
+        type: 'range',
+        min: 0,
+        max: 64,
+        unit: 'px',
+        property: 'gap'
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/layout-widget/index.js
+</template>
+</AposCodeBlock>
+
 ### Configuring allowed widgets in columns
 
 By default, layout columns contain the core rich text, image, and video widgets. You can customize this by extending the `@apostrophecms/layout-column-widget`:
@@ -783,14 +844,14 @@ If a widget or custom component behaves strangely **only after** you place it in
 
 ### Common legacy patterns → modern fixes
 
-| Legacy pattern                                            | Why it breaks in grid                                                                                                | Safer modern replacement                                                                                                                                               |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Legacy pattern | Why it breaks in grid | Safer modern replacement |
+| --- | --- | --- |
 | `height: XX%` on cards, iframes, wrappers | Percent heights need a *definite* parent height; grid columns are auto-height by default → weird stretching/overflow | Remove it. Prefer `height: auto`. If you need aspect locking, use `aspect-ratio` (e.g. `aspect-ratio: 16/9`) or intrinsic sizing with `max-width: 100%; height: auto;` |
-| “Equal height” hacks (from pre-grid times)                | Conflicts with grid’s track sizing & `stretch`                                                                       | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%`                                     |
-| `position: absolute` children                             | Without `position: relative` on the column content wrapper, they escape and overlap                                  | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }`                                                           |
-| Full-viewport widths (`width: 100vw`)                     | Ignores grid gutters and column width → overflow                                                                     | Use `width: 100%` within columns; the grid defines the width                                                                                                           |
-| Sticky headers in a column                                | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness                                | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor                                                                          |
-| Big negative margins                                      | Can visually overrun grid gaps/rows                                                                                  | Prefer padding on the parent, or use smaller translations with `transform`                                                                                             |
+| “Equal height” hacks (from pre-grid times) | Conflicts with grid’s track sizing & `stretch` | Let the grid do its job. If you truly need equal heights, use consistent content or an explicit `min-height` in `px`/`rem`—not `%` |
+| `position: absolute` children | Without `position: relative` on the column content wrapper, they escape and overlap | Add a positioned container: `.your-card { position: relative; } .your-card__badge { position: absolute; … }` |
+| Full-viewport widths (`width: 100vw`) | Ignores grid gutters and column width → overflow | Use `width: 100%` within columns; the grid defines the width |
+| Sticky headers in a column | `align-self: stretch` makes sticky math weird; parent overflow can disable stickiness | Set `align-self: start` for the column’s content; ensure no `overflow` on the sticky ancestor |
+| Big negative margins | Can visually overrun grid gaps/rows | Prefer padding on the parent, or use smaller translations with `transform` |
 
 #### Quick CSS safety net (scoped)
 
