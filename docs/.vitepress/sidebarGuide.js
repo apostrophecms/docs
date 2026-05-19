@@ -256,6 +256,10 @@ const sidebarGuide = [
       {
         text: ' Pro Assembly Starter Kit',
         link: 'starters/assembly.md'
+      },
+      {
+        text: 'Standalone Architecture Guide',
+        link: 'guide/standalone-architecture.md'
       }
     ]
   },
