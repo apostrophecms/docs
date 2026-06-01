@@ -83,3 +83,23 @@ Note that:
 * The optional `imageTags` sub-property accepts an array `_id`s from existing `@apostrophecms/image-tag` pieces that will be applied to any image(s) imported during the process. These tags will be added to the imported images in the media library.
 
 * The rich text widget still must specify the `image` control in its `toolbar` and/or `insert` options or the images will be filtered out.
+
+#### Restricting inline image hostnames
+
+Starting with version 4.30.0, inline images are only fetched during import if they are served from a hostname listed in the `imageImportAllowedHostnames` option of the `@apostrophecms/rich-text-widget` module. Images from any other hostname are silently skipped.
+
+Configure the allowlist in your module options:
+
+```javascript
+// modules/@apostrophecms/rich-text-widget/index.js
+module.exports = {
+  options: {
+    imageImportAllowedHostnames: [
+      'myoldsite.com',
+      'assets.myoldsite.com'
+    ]
+  }
+};
+```
+
+The `baseUrl` option is used only to resolve relative `img src` URLs. The resulting hostname must still appear in `imageImportAllowedHostnames` for the image to be fetched.

@@ -196,7 +196,10 @@ export function transpileToCJS(code) {
     cjsCode = cjsCode.replace(/export\s+class\s+(\w+)/g, 'exports.$1 = class');
 
     // Transform imports
-    cjsCode = cjsCode.replace(/import\s+(\w+)\s+from\s+['"]([^'"]+)['"];?/g, 'const $1 = require(\'$2\');');
+    cjsCode = cjsCode.replace(
+      /import\s+(\w+)\s+from\s+['"]([^'"]+)['"];?\s*(?:with\s*\{[^}]*\})?;?/g,
+      'const $1 = require(\'$2\');'
+    );
 
     // Handle named imports
     cjsCode = cjsCode.replace(
