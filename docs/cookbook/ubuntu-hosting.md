@@ -4,17 +4,17 @@
 
 We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many services to use for hosting an Ubuntu VPS and the rest of the recipe is platform-agnostic.
 
-1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 20.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
+1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 24.04 LTS** ("OS Only") instance. While you may be able to get started with 1GB of RAM, we recommend at least 2GB for practical use.
    - There is a step on this first page to select or add an SSH key to connect securely from your computer. Follow Lightsail's directions to do this.
 2. Complete any additional configurations you want, then **create the instance**. Once the instance is created, click on it to continue configuration.
 3. On the "Networking" tab, you should see that the SSH and HTTP ports are already open. In addition, **open the HTTPS port** by clicking "Add rule" and selecting "HTTPS." You need this for `https://` connections.
    - Wait a couple minutes even after it says it's ready, to be sure it will accept your SSH connection.
 4. SSH to your server's `ubuntu` account, according to the Lightsail instructions. This account has `sudo` privileges so you can take care of tasks that require root access.
-5. **Install MongoDB Community Edition.**  Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
+5. **Install MongoDB Community Edition.**  Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://www.mongodb.com/docs/manual/administration/install-community/?linux-distribution=ubuntu&linux-package=default&operating-system=linux&search-linux=with-search-linux).
    - **Be sure not to miss the command `sudo systemctl enable mongod`** which ensures it starts up on every reboot.
-   - Don't use an Ubuntu package for this since they may be outdated.
-6. **Install Node.js 18.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 18.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-   - Again, it's best to not use an Ubuntu package for this.
+   - Don't use an official Ubuntu package for this since they are old and unsupported. Follow MongoDB's instructions linked above.
+6. **Install Node.js 24.x or a newer LTS release.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 24.x on Ubuntu](https://nodesource.com/products/distributions).
+   - Again, do not use an official Ubuntu package for this. They are out of date and unsupported.
 7. **Install nginx.** This one is up to date in nginx, so it's one line:
 
 ```sh
@@ -67,31 +67,43 @@ You can do this series of steps each time you want to add a new site to the VPS.
 :::
 
 1. If you didn't already, SSH to the `ubuntu` user on your server (the last step of the previous section). Then run `sudo su - nodeapps` to switch users.
-2. **Deploy the Apostrophe site code to the VPS.** We'll use the Apostrophe essentials starter kit project as an example.
-   - We'll `git clone` a project in the home directory as a simple way to deploy it. You may use a CI/CD tool or some other method for regular deployments. You will also likely want to put the code in another location (e.g., `/var/www`).
+2. **Deploy the Apostrophe site code to the VPS.** We'll use the Apostrophe public demo starter kit project as an example.
+   - We'll `git clone` a project in the home directory as a simple way to deploy it. You may prefer to use a CI/CD tool or some other method for regular deployments. You will also likely want to put the code in another location (e.g., `/home/nodeapps/var/www`).
 
 ```sh
-git clone https://github.com/apostrophecms/starter-kit-essentials
+git clone https://github.com/apostrophecms/public-demo
 
-cd starter-kit-essentials
+cd public-demo
 
 npm install
 ```
 
 3. **Build production front end assets** (including the Apostrophe user interface code):
 
-```sh
+```bash
 npm run build
-# This script in the starter kit is an alias for the Apostrophe task
-# `NODE_ENV=production node app @apostrophecms/asset:build`
+```
+
+::: note
+If your project doesn't have our standard `build` script in `scripts` in `package.json`, set it to:
+
+```bash
+NODE_ENV=production node app @apostrophecms/asset:build
 ```
 
 4. **Now we instruct `pm2` to launch the site and to keep it running.** Substitute the shortname of your own project for `starter-kit-essentials` below.
 
 ```sh
-pm2 --name=starter-kit-essentials start npm -- run serve
+pm2 --name=public-demo start npm -- run serve
 pm2 save
 # The second command saves our `pm2` configuration for future reboots.
+```
+
+::: note
+If your project doesn't have our standard `serve` script in `scripts` in `package.json`, set it to:
+
+```bash
+NODE_ENV=production node app
 ```
 
 At this point Apostrophe is running on port `3000`. We need to configure nginx as a proxy server to handle HTTP and HTTPS connections on port `80` and `443` and forward them.
@@ -145,8 +157,7 @@ the best speed; if the URL isn't a static file, it is passed to Apostrophe. `exp
 sudo systemctl reload nginx
 ```
 
-**Your site should be up!** Visit `http://your.host.name` to see it. If you didn't add it to your DNS yet, or it hasn't propagated, you won't be able to reach it yet.
-<!-- You can try `http://your.server.ip.address` until DNS is set up. -->
+**Your site should be up!** Visit `https://your.host.name` to see it. If you didn't add it to your DNS yet, or it hasn't propagated, or you haven't configured a certificate with `certbot` then you won't be able to reach it yet.
 
 ## Working on the site after deployment
 
@@ -183,27 +194,23 @@ git pull
 2. Now that we have the code updated, we will install any new or updated npm packages, build new production assets, and run any new database migrations:
 
 ```sh
-npm install && npm run build && node app @apostrophecms/migration:migrate
+npm install && npm run build && npm run migrate
 ```
-
-::: tip
-In projects based on the `starter-kit-essentials` code starter, the `npm run release` script takes care of all of this in one command. If your codebase does not include that script you will need to run each command directly.
-:::
 
 3. Instruct `pm2` to restart the site:
 
 ```sh
-pm2 restart starter-kit-essentials
+pm2 restart public-demo
 ```
 
-Your site will restart after a few seconds. You can check the process logs with `pm2 logs starter-kit-essentials` to see whether it has started up yet.
+Your site will restart after a few seconds. You can check the process logs with `pm2 logs public-demo` to see whether it has started up yet.
 
 ### Viewing the Node.js console
 
 Your site's console log messages are available from `pm2`:
 
 ```sh
-pm2 logs starter-kit-essentials
+pm2 logs public-demo
 ```
 
 ## Recommended enhancements
