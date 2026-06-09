@@ -11,6 +11,7 @@ const sidebarGuide = [
       { text: 'Technical Overview', link: 'guide/technical-overview.md' },
       { text: 'Core Concepts', link: 'guide/core-concepts.md' },
       { text: 'Development Setup', link: 'guide/development-setup.md' },
+      { text: 'Installing MongoDB', link: 'guide/installing-mongodb-locally.md' },
       { text: 'Windows Development', link: 'cookbook/windows-development.md' },
       { text: 'Dockerized MongoDB', link: 'guide/dockerized-mongodb.md' },
       {
@@ -174,6 +175,8 @@ const sidebarGuide = [
       { text: 'Ubuntu', link: 'cookbook/ubuntu-hosting.md' },
       { text: 'Heroku', link: 'cookbook/deploying-to-heroku.md' },
       { text: 'Amazon S3', link: 'cookbook/using-s3-storage.md' },
+      { text: 'Choosing a Database', link: 'guide/choosing-a-database.md' },
+      { text: 'Using SQLite and PostgreSQL', link: 'guide/using-sqlite-and-postgres.md' }
     ]
   },
   {
