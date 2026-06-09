@@ -465,6 +465,28 @@ const sidebarGuide = [
     ]
   },
   {
+    text: 'CLI Starters',
+    collapsed: true,
+    items: [
+      {
+        text: 'Essentials',
+        link: 'guide/apostrophe-standalone-essentials-overview.md'
+      },
+      {
+        text: 'Public Demo',
+        link: 'guide/apostrophe-demo-overview.md'
+      },
+      {
+        text: 'Astro Essentials',
+        link: 'guide/astro-essentials-overview.md'
+      },
+      {
+        text: 'Astro Public Demo',
+        link: 'guide/astro-demo-overview.md'
+      }
+    ]
+  },
+  {
     text: 'Pro Extensions',
     collapsed: false,
     items: [
