@@ -59,17 +59,17 @@ Let's get started converting this template to an Apostrophe project!
 
 ## Creating a new project
 
-If you don't already have the apostrophe CLI installed, follow the instructions [here](/guide/setting-up.md#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
+Make sure you are in the directory where you want to create your new project folder and run the following command:
 
 <AposCodeBlock>
 
 ``` sh
-apos create template-app
+npm create apostrophe@latest
 ```
 
 </AposCodeBlock>
 
-The CLI app will create the new project and an admin user. At the end of the installation, it will ask for an administrator password - make sure to remember this password for login.
+The CLI app will walk you through a series of steps that clones the appropriate repo and configures the project. First it will ask for a project name - this tutorial uses `apos-template`, but you can choose your own. Next, select the standalone project template and the essentials starting point - we will be adding our own widgets and content. For ease of installation you can select to use an SQLite database, since it doesn't require having a server for MongoDB or PostgreSQL running. Finally, add an email or username for your sites first admin user. Make sure to remember this password for login.
 
 ## Adding Bootstrap and project styling
 
