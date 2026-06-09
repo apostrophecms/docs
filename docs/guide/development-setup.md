@@ -63,9 +63,11 @@ $ nvm install 22
 $ nvm use 22
 ```
 
-### 2. MongoDB 8.0+
+### 2. Database
 
-You can make a MongoDB instance available to your project in three ways:
+ApostropheCMS supports MongoDB, SQLite, and PostgreSQL. MongoDB is the default and is what most production projects use. SQLite requires no server at all — the installer creates a local file — and is a convenient option for local development. PostgreSQL is available when you want to consolidate on existing infrastructure. For setup details on the non-MongoDB options, see [Using SQLite or PostgreSQL](/guide/using-sqlite-and-postgres.html).
+
+If you are going with MongoDB (the default), you can make a MongoDB instance available to your project in three ways:
 
 **Option 1: MongoDB Atlas**
 
@@ -124,44 +126,50 @@ Install the CLI globally through npm.
 
 ## Creating a project
 
-If you are not using Atlas, make sure your local server has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for your initial admin user.
+The easiest way to get started is the `npm create apostrophe` installer. It clones a starter kit, wires up your database, installs dependencies, and creates an admin user — so a fresh Apostrophe project is running in minutes.
 
-The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
+```bash
+npm create apostrophe@latest
+```
 
-``` bash
+The interactive flow will ask for a project name, which starter kit to use (including the [Essentials](/starters/essentials.html) kit), and your preferred database. Once it completes, follow the prompts to start your site.
+
+::: info 📌 npm is required for the installer
+`npm create apostrophe` requires **npm**. Running it under pnpm or yarn is rejected up front. You can switch to pnpm or yarn within your project after setup — see [Using pnpm](/guide/using-pnpm.html).
+:::
+
+If you are using MongoDB or PostgreSQL, make sure your database server is running before you start the installer — it must be reachable when the installer tries to connect. If you choose SQLite, no server is needed; the installer creates a local file.
+
+### CI / unattended install
+
+To create a project without any prompts — useful in CI or scripting — pass `--unattended`:
+
+```bash
+npm create apostrophe@latest -- --unattended \
+  --project-name=my-site --password=secret --telemetry=off
+```
+
+::: tip
+Everything after `--` is forwarded to the installer; npm swallows args without it. Run `-- --help` any time for the full flag list.
+:::
+
+### Using the Apostrophe CLI instead
+
+If you have the `@apostrophecms/cli` installed globally, `apos create` still works and delegates to the same installer:
+
+```bash
 apos create apos-app
 ```
 
-This will install the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit.
+### Manual setup (without the installer)
 
-::: tip
-💡 To install other starter kits, pass the `--starter` flag, along with the short name of one of our [starter kits](https://github.com/orgs/apostrophecms/repositories?q=starter-kit&type=all&language=&sort=). For example:
-
-``` bash
-apos create apos-app --starter=ecommerce
-```
-:::
-
-If you are using a MongoDB Atlas instance, add the `--mongodb-uri` flag, along with the URL of your Atlas instance. It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters. For example:
-
-``` bash
-apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR_PROJECT_NAME?retryWrites=true&w=majority"
-```
-
-Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
-`
-
-The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section.
-
-#### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
-
-To get started quickly without the CLI, clone the starter repository:
+If you prefer to set things up manually, clone the starter repository directly:
 
 ```bash
 git clone https://github.com/apostrophecms/starter-kit-essentials apos-app
+cd apos-app
+npm install
 ```
-
-If you want to change the project directory name, please do so. We will continue referring to `apos-app`.
 
 Open the `app.js` file in the root project directory. Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
 
@@ -181,13 +189,7 @@ app.js
 </template>
 </AposCodeBlock>
 
-Excellent! Back in your terminal, we'll install dependencies:
-
-```bash
-npm install
-```
-
-Before starting up you'll need to create an admin-level user, either in your Atlas instance or local database, so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
+Before starting up you'll need to create an admin-level user so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
 
 Atlas Database
 ```bash
@@ -209,9 +211,9 @@ node app @apostrophecms/user:add my-user admin
 * Consider exporting your `APOS_MONGODB_URI` environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
 :::
 
-### Finishing touches
+### Finishing touches (manual setup only)
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session?tab=readme-ov-file#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+When using the installer, the session secret and other project scaffolding are handled automatically. For a manual clone, you should also update the [session secret for Express.js](https://github.com/expressjs/session?tab=readme-ov-file#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
 
 <AposCodeBlock>
 

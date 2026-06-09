@@ -6,43 +6,37 @@ next: false
 
 ## Requirements For Development On Your Computer
 
-### Operating System: Mac, Linux, or Virtual Linux
+### Operating System
 
-**Your local development environment must be either MacOS or Linux.** If your development computer runs Windows, we recommend development on
-Windows Subsystem for Linux (WSL). Microsoft recommends WSL for Node.js development.
+ApostropheCMS development works on Windows, macOS, and Linux. Windows users can develop natively using Git Bash, though Microsoft recommends WSL for Node.js development. See the [Development Setup guide](/guide/development-setup.md) for details on both Windows approaches.
 
 ### Software Installation Requirements
 
 To test-drive the project in development, make sure you have Apostrophe's usual dependencies on your local machine:
 
-* MongoDB (5.x or better, we recommend 6.x or better) or an Atlas account
-* NodeJS (18.x or better)
+* MongoDB 8.0+, SQLite, or PostgreSQL 14+ (see [Using SQLite or PostgreSQL](/guide/using-sqlite-and-postgres.html))
+* NodeJS 22+
 
 For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 ## Getting started
 
 This Starter Kit, also known as a boilerplate project, serves as a template for initiating new projects and can be installed in two main ways:
 
-1. **Using Our CLI Tool**: Run our [CLI tool](https://github.com/apostrophecms/cli) to clone this template locally, install its dependencies, and set up an initial admin user. You accomplish this using:
-   
-   `apos create <my-project-name>`
-> Note that if you are connecting to an MongoDB Atlas instance you should add your connection string to the `APOS_MONGODB_URI` environment variable first. Use:
+1. **Using `npm create apostrophe@latest`**: Run the interactive installer, which clones this template, installs dependencies, wires up your database, and creates an admin user:
 
-  ``` sh
-  export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
-  ```
+   ```bash
+   npm create apostrophe@latest
+   ```
 
-2. **Manual Setup**: Manually `git clone` this repository and install its dependencies using `npm install`. Then add an initial admin user with `node app @apostrophecms/user:add admin admin`. Again, if using a MongoDB Atlas instance set the `APOS_MONGODB_URI` environment variable first using:
+   Select **Essentials** when prompted to choose a starter kit. The installer supports MongoDB, SQLite, and PostgreSQL — choose whichever suits your setup, and it will prompt you for a connection string. MongoDB and PostgreSQL require a running server or hosted solution (such as MongoDB Atlas or a managed PostgreSQL service) to be reachable when the installer runs. SQLite requires no server. See [Using SQLite or PostgreSQL](/guide/using-sqlite-and-postgres.html) if you want a non-MongoDB backend.
 
-``` sh
-export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
-```
+   If you have the `@apostrophecms/cli` installed globally, `apos create <my-project-name>` also works and delegates to the same installer.
 
-For those who need to create multiple projects with additional base modules, consider [forking this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) into your organizational or personal GitHub account. Customize it to fit your needs. To use your customized template, run the following CLI command:
+2. **Manual Setup**: Manually `git clone` this repository and install its dependencies using `npm install`. Then add an initial admin user with `node app @apostrophecms/user:add admin admin`. Set the `APOS_DB_URI` environment variable to point at your database before running the app:
 
-  `apos create <project-name> --starter=<repo-name>`
-
-Here, `<repo-name>` should be the URL of your forked repository, excluding the `https://github.com/` part.
+   ```sh
+   export APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
+   ```
 
 **Note: This template is NOT designed to be installed into an existing project.**
 
