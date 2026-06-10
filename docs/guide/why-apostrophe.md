@@ -24,11 +24,11 @@ It boasts a large and active community of developers, contributing to a rich eco
 
 Apostrophe's built-in webpack allows developers to utilize the latest JavaScript features and CSS preprocessors, aligning with Apostrophe's emphasis on modern, efficient development. By using Vue, Apostrophe offers a unified, JavaScript-centric development environment, furthering the goal of "no context switching" and enabling developers to focus on what matters most: building great web experiences.
 
-### **MongoDB: JavaScript in the database layer**
+### **JavaScript in the database layer**
 
-Apostrophe takes this goal of "no context switching" all the way to the database layer. Rather than a relational database such as Postgres or MySQL, Apostrophe is built on MongoDB, which has a query language directly based on JavaScript objects. This means there are no code injection attacks. But it also means the developer doesn't have to switch mental gears between two languages when making a database query.
+Apostrophe takes this goal of "no context switching" all the way to the database layer. The ApostropheCMS database query and update APIs provide a query language directly based on JavaScript objects, inherently protecting against code injection attacks by ensuring values cannot be passed without appropriate escaping. This also means the developer doesn't have to switch mental gears between two languages when making a database query.
 
-Apostrophe's own built-in query builder uses chainable methods, similar to ORMs (Object-Relational Mappers) you may have used, to build queries while automatically taking care of fundamentals like choosing the right type of document and enforcing permissions. However, the door is open to including [MongoDB queries](https://docs.mongodb.com/manual/tutorial/query-documents/) to filter data as you see fit.
+Apostrophe's own built-in query builder uses chainable methods, similar to ORMs (Object-Relational Mappers) you may have used, to build queries while automatically taking care of fundamentals like choosing the right type of document and enforcing permissions. And if you choose to use MongoDB as your database, the door is open to including [MongoDB queries](https://docs.mongodb.com/manual/tutorial/query-documents/) to filter data as you see fit. For those who prefer SQLite or PostgreSQL, a [compatible API layer is provided](./using-sqlite-and-postgres.md) covering all of the functionality needed for the CMS. Write code once, run on any of the three supported databases.
 
 ## **Performance**
 
@@ -60,7 +60,7 @@ This is why Apostrophe has built-in features to scale images to a set of suitabl
 
 ## **Scalability**
 
-Not all CMSes are designed to scale up smoothly for the largest audiences. While Apostrophe starts out configured for simple development and production environments, Apostrophe's [uploadfs](https://github.com/apostrophecms/uploadfs?tab=readme-ov-file#readme) module already includes support for storing media with Amazon Web Services, Azure, or Google Cloud Storage. With the addition of a [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/) cloud database, Apostrophe becomes "stateless," allowing you to load-balance as many instances as you need for a high-traffic site.
+Not all CMSes are designed to scale up smoothly for the largest audiences. While Apostrophe starts out configured for simple development and production environments, Apostrophe's [uploadfs](https://github.com/apostrophecms/uploadfs?tab=readme-ov-file#readme) module already includes support for storing media with Amazon Web Services, Azure, or Google Cloud Storage. With the addition of a [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/) or PostgreSQL managed database, Apostrophe becomes "stateless," allowing you to load-balance as many instances as you need for a high-traffic site.
 
 ## **Better for your content creators**
 

@@ -27,6 +27,10 @@ const sidebarGuide = [
         link: 'guide/development-setup.md'
       },
       {
+        text: 'Choosing a Database',
+        link: 'guide/choosing-a-database.md'
+      },
+      {
         text: 'Windows Development',
         link: 'cookbook/windows-development.md'
       },
@@ -378,6 +382,14 @@ const sidebarGuide = [
       {
         text: 'Amazon S3',
         link: 'cookbook/using-s3-storage.md'
+      },
+      {
+        text: 'Installing MongoDB Locally',
+        link: 'guide/installing-mongodb-locally.md'
+      },
+      {
+        text: 'Using SQLite and PostgreSQL',
+        link: 'guide/using-sqlite-and-postgres.md'
       }
     ]
   },
