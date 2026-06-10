@@ -10,6 +10,16 @@ JSX templates are a server-side rendering option. They do **not** imply React: t
 
 JSX interoperates with Nunjucks in one direction: a `.jsx` template can extend or include a `.html` template (with block overrides where appropriate), but a `.html` template cannot extend or include a `.jsx` template. In practice this means you migrate a project from the leaves up, converting individual page and widget templates to JSX while keeping `layout.html` and the core Nunjucks templates in place. See [Migration order](#migration-order) for the rules.
 
+::: info
+Right now, the easiest way to get a peek at a working project with JSX templates is:
+```bash
+git clone https://github.com/apostrophecms/public-demo public-demo-jsx
+cd public-demo-jsx
+git checkout jsx
+npm install
+npm run dev
+:::
+
 ## File location and naming
 
 JSX templates live in the same `views/` directories as Nunjucks templates, and Apostrophe finds them with the same lookup rules:
