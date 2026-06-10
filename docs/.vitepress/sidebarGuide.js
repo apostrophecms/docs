@@ -194,6 +194,10 @@ const sidebarGuide = [
             link: 'guide/async-components.md'
           },
           {
+            text: 'JSX Templates',
+            link: 'guide/jsx-templates.md'
+          },
+          {
             text: 'Custom Nunjucks Tags',
             link: 'reference/template-tags.md'
           }
