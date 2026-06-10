@@ -5,7 +5,7 @@
 The initial steps of this guide will assume that you will be hosting your database, project, and uploaded assets on the same server. The second part will outline steps for configuring to use the AWS S3 service for hosting assets. Finally, the third portion will provide guidance for using the MongoDB Atlas multi-cloud database.
 
 ::: warning
-Avoid using the Node.js packages provided by your Linux distribution (e.g. via `apt` on Ubuntu/Debian), as these are often outdated and may not work correctly with ApostropheCMS. Always install Node.js directly from [nodejs.org](https://nodejs.org) or use a version manager like [nvm](https://github.com/nvm-sh/nvm).
+Notice that we rely on a Docker base image specifically for Node.js here. That's the best path forward. If you use a `RUN apt-get` step in Debian or Ubuntu, you will likely get an outdated, unsupported version of Node.js. Also, note that Node.js base images already depend on Debian by default, so you can easily incorporate other Debian packages if you need them.
 :::
 
 ## Creating the image
