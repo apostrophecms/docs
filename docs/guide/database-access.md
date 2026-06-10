@@ -7,6 +7,10 @@ A good example is updating one document property, like a "view counter" of a blo
 
 Here is an example of how to do that in a piece. We will override the `beforeShow()` method of the `@apostrophecms/piece-page-type`. This method lets us make modifications just before the `show.html` of the associated `@apostrophe/piece-page-type` is displayed to the user.
 
+::: tip
+If you are [using SQLite or PostgreSQL](./using-sqlite-and-postgres.md), be aware that while `db-connect` is compatible with a large subset of the MongoDB API, it does not cover everything. For more information, See the [`db-connect` README](https://github.com/apostrophecms/apostrophe/blob/main/packages/db-connect/README.md).
+:::
+
 <AposCodeBlock>
 
 ```javascript

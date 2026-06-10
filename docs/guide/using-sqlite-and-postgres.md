@@ -5,11 +5,7 @@ ApostropheCMS has historically required MongoDB, and MongoDB remains the default
 This guide is intended for developers who already know *why* they want to use SQLite or PostgreSQL — for example, to avoid running a database server entirely in local development by using SQLite, or to consolidate on an existing PostgreSQL infrastructure. It does not try to convince you to switch. If you are happy with MongoDB, there is no reason to change.
 
 ::: info
-A future version of the Apostrophe CLI will prompt for your preferred database when creating a new project. Until that lands, the simplest way to try a non-MongoDB backend is to clone the public demo and point it at a different database by setting one environment variable.
-:::
-
-::: warning Pre-merge note (remove before publication)
-All links to the `@apostrophecms/db-connect` module on this page currently point to the `postgres` branch of `apostrophecms/apostrophe` for QA convenience. Before this page is published, every `…/blob/postgres/packages/db-connect/…` and `…/tree/postgres/packages/db-connect/…` URL on this page must be re-pointed to `main`.
+The Apostrophe CLI will prompt for your preferred database when creating a new project. For existing projects, you can try non-MongoDB backends by setting one environment variable.
 :::
 
 ## Prerequisites
@@ -80,6 +76,20 @@ export PGPASSWORD=...
 export APOS_DB_URI=postgres://localhost:5432/apos_demo
 ```
 
+## Changing your default adapter
+
+By default, if you do not set `APOS_DB_URI` or `APOS_MONGODB_URI`, apostrophecms defaults to `mongodb://localhost:27017/your-shortName-here`.
+
+For local development, if you always use `sqlite` or `postgres`, you can optionally set the `APOS_DEFAULT_ADAPTER` environment variable to `sqlite` or `postgres` to get the same effect with your preferred database.
+
+If you set `APOS_DEFAULT_ADAPTER` to `sqlite`, then a `shortName` setting of `my-project` will point to the `sqlite://data/my-project.sqlite`, which refers to the `data/my-project.sqlite` file in your project. Make sure you add the file to `.gitignore` and be aware that if your project folder is removed, the database is gone too.
+
+If you set `APOS_DEFAULT_ADAPTER` to `postgres`, then a `shortName` setting of `my-project` will point to `postgres://localhost:5432/my-project`.
+
+If you choose this approach it is best to be consistent about it, e.g. set it in your `.bashrc` or `.zshrc` file.
+
+For multisite projects, this technique is not currently supported. Use `DB_URI` as described above.
+
 ## Switching a project between backends
 
 Because the three URI formats are fully interchangeable, you can experiment with different backends on the same codebase by changing `APOS_DB_URI` alone. Each URI targets an independent database — there is no automatic migration between them.
@@ -135,6 +145,6 @@ Refer to the [multisite extension page](https://apostrophecms.com/extensions/mul
 
 ## Compatibility notes
 
-All three adapters are provided by the [`@apostrophecms/db-connect`](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect#apostrophecmsdb-connect) module. `db-connect` implements a large subset of the MongoDB API — enough to support ApostropheCMS core and the extensions and patterns it relies on — but it does **not** attempt to cover 100% of the MongoDB API surface. Application code that sticks to the queries, cursors, aggregations, and index definitions Apostrophe itself uses will work across all three backends; code that reaches for less-common MongoDB features (obscure aggregation stages, server-side JavaScript, change streams, geospatial operators, and so on) may not.
+All three adapters are provided by the [`@apostrophecms/db-connect`](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect) module. `db-connect` implements a large subset of the MongoDB API — enough to support ApostropheCMS core and the extensions and patterns it relies on — but it does **not** attempt to cover 100% of the MongoDB API surface. Application code that sticks to the queries, cursors, aggregations, and index definitions Apostrophe itself uses will work across all three backends; code that reaches for less-common MongoDB features (obscure aggregation stages, server-side JavaScript, change streams, geospatial operators, and so on) may not.
 
-If you are writing modules intended to run across MongoDB, PostgreSQL, and SQLite, treat the db-connect API as authoritative rather than the full MongoDB driver API. See the [`db-connect` README](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect#apostrophecmsdb-connect) for the complete list of supported query operators, cursor methods, aggregation stages, and connection-URL formats, and the [db-connect docs folder](https://github.com/apostrophecms/apostrophe/tree/postgres/packages/db-connect/docs) for deeper material on the dump/restore format and adapter internals.
+If you are writing modules intended to run across MongoDB, PostgreSQL, and SQLite, treat the db-connect API as authoritative rather than the full MongoDB driver API. See the [`db-connect` README](https://github.com/apostrophecms/apostrophe/blob/main/packages/db-connect/README.md) for the complete list of supported query operators, cursor methods, aggregation stages, and connection-URL formats, and the [db-connect docs folder](https://github.com/apostrophecms/apostrophe/tree/main/packages/db-connect/docs) for deeper material on the dump/restore format and adapter internals.

@@ -402,7 +402,7 @@ For our custom schema field, we are utilizing two helper components from the `@a
 
 The only one that we might want to change the value of is `:error`. It can take values of either `"null"` or `"effectiveError"`. If you are making a component that has multiple schema fields and set `:error` to "null", errors will only be shown for the individual fields, not the top-level component. Setting it to "effectiveError" will show errors in the individual fields, as well as the entire custom schema field. It is a judgment call to determine which will result in a better user experience.
 
-:::note
+::: note
 As a guide for selecting error type, the Apostrophe `array` and `object` fields use `:error="null"`. This provides clear guidance on which field is in error, without a second error message being displayed for the entire component. You may want to change this if your custom field has a requirement such as `min: 1`.
 :::
 

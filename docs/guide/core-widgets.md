@@ -262,6 +262,69 @@ export default {
 > [!NOTE]
 > The `columns` option defines the CSS grid template columns for layout calculations, not the number of layout-column widgets on the page. When a layout widget is first added, two layout-column widgets are created by default. Editors can add or remove columns in-context as needed. The `minSpan` option controls the minimum number of grid columns each layout-column widget can span.
 
+### Controlling the layout gap
+
+There are two ways to expose the layout widget's CSS `gap` to editors. Choose one approach per project — they are mutually exclusive. In both cases, the editor control appears on the layout widget itself (in the Global Styles menu or the layout widget's Styles menu), not on individual columns.
+
+#### Option 1: Site-wide gap (global styles)
+
+Add the built-in `layoutGap` preset to your [global styles configuration](/reference/modules/styles):
+
+<AposCodeBlock>
+
+```js
+export default {
+  styles: {
+    add: {
+      layoutGap: 'layoutGap'
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/@apostrophecms/styles/index.js
+</template>
+</AposCodeBlock>
+
+The style key must be `layoutGap` exactly, live preview editing depends on this specific name. This sets the `--apos-layout-gap` CSS custom property on `:root` (default 24px), controlling the gap for all layout widgets at once.
+
+#### Option 2: Per-instance gap (widget styles)
+
+To let editors set a different gap on each layout widget instance, add a `gap` style field to a project-level layout widget module:
+
+<AposCodeBlock>
+
+```js
+export default {
+  options: {
+    label: 'project:layout',
+    description: 'project:layoutDescription',
+    previewImage: 'svg',
+    className: 'widget'
+  },
+  styles: {
+    add: {
+      gap: {
+        label: 'apostrophe:styleLayoutGap',
+        type: 'range',
+        min: 0,
+        max: 64,
+        unit: 'px',
+        property: 'gap'
+      }
+    }
+  }
+};
+```
+
+<template v-slot:caption>
+  modules/layout-widget/index.js
+</template>
+</AposCodeBlock>
+
+The style key must be `gap` exactly, live preview editing depends on this specific name.
+
 ### Configuring allowed widgets in columns
 
 By default, layout columns contain the core rich text, image, and video widgets. You can customize this by extending the `@apostrophecms/layout-column-widget`:
