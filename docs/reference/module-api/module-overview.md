@@ -573,6 +573,8 @@ modules/article/index.js
 </template>
 </AposCodeBlock>
 
+Note that `.[0]` is neither needed nor supported. Just write `.0`.
+
 #### `remove`
 
 An array of column names from the base class module to remove.
