@@ -68,14 +68,6 @@ npm run dev
 
 On first run, Apostrophe creates the tables and indexes it needs inside that database. It does not touch other databases or schemas on the same server.
 
-If you prefer not to embed credentials in the URI, PostgreSQL's standard environment variables (`PGUSER`, `PGPASSWORD`, `PGHOST`, `PGPORT`) are honored:
-
-```bash
-export PGUSER=apos
-export PGPASSWORD=...
-export APOS_DB_URI=postgres://localhost:5432/apos_demo
-```
-
 ## Changing your default adapter
 
 By default, if you do not set `APOS_DB_URI` or `APOS_MONGODB_URI`, apostrophecms defaults to `mongodb://localhost:27017/your-shortName-here`.
