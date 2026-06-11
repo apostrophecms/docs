@@ -196,8 +196,26 @@ columns: {
   }
 }
 ```
+
 By default, the piece manager displays the piece title and the date the piece was last edited. Like the `filters` object, the `columns` object allows for the addition or removal of columns based on the schema fields of the module. In this case we are electing to display the category of the review to the right of the 'Last Edited' column in the piece manager.
 
+#### Displaying sub-properties as columns
+
+Sub-properties can be displayed as columns, using dot notation.
+
+For instance, to display the title of the first author piece in a `relationship` field, you might write:
+
+``` javascript
+columns: {
+  add: {
+    '_author.0.title': {
+      label: 'Author'
+    },
+  }
+}
+```
+
+Note that dot notation does not require or support the use of brackets for array indexes. Just write `.0`.
 
 #### Localizing the UI
 ![Screenshot of the UI for adding a new review piece localized to German](../images/sec2-5-review-localization.png)
