@@ -549,6 +549,32 @@ modules/article/index.js
 </template>
 </AposCodeBlock>
 
+Dot notation may also be used to display subproperties, for instance:
+
+<AposCodeBlock>
+
+```javascript
+module.exports = {
+  extend: '@apostrophecms/piece-type',
+  columns: {
+    // 👇 Adds a column showing when the article was published.
+    add: {
+      // Display the name of the first selected author via an
+      // _author relationship field
+      '_author.0.title': {
+        label: 'Author'
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+</AposCodeBlock>
+
+Note that `.[0]` is neither needed nor supported. Just write `.0`.
+
 #### `remove`
 
 An array of column names from the base class module to remove.
