@@ -140,6 +140,10 @@ const sidebarTutorials = [
         link: '/tutorials/responsive-widget-visibility.md'
       },
       {
+        text: 'Adding a Background Video',
+        link: 'tutorials/adding-a-background-video-to-a-widget.md'
+      },
+      {
         text: 'Composing Custom Fields',
         link: 'tutorials/reusing-standard-fields.md'
       },
