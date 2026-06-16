@@ -1,6 +1,6 @@
 # Astro Essentials Starter Architecture Guide
 
-This guide explains the key patterns and conventions in the ApostropheCMS + Astro Essentials starter. It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
+This guide explains the key patterns and conventions in the ApostropheCMS + Astro [Essentials starter](https://github.com/apostrophecms/combined-astro-starter-kit). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
 
 The sections below cover the patterns you encounter in the first hour of working in the codebase: the bridge package, the component registry, area fields, and image rendering.
 
@@ -46,12 +46,36 @@ There is no filename-based auto-discovery in the Astro Essentials starter — yo
 - `frontend/src/templates/index.js` — maps page type names to Astro components
 - `frontend/src/widgets/index.js` — maps widget names to Astro components
 
-**The key-matching rule is strict: the key must match the widget's `type` as stored in the database — not necessarily the backend module name.** A missing or wrong key logs a `console.error` on the server and renders a blank area in the browser — no crash, but the widget simply disappears. Two common mistakes: omitting the `@apostrophecms/` scope prefix on built-in modules (e.g. `'rich-text'` instead of `'@apostrophecms/rich-text'` in the widget registry, or `'home-page'` instead of `'@apostrophecms/home-page'` in the template registry), and including the `-widget` suffix that ApostropheCMS strips from module names (e.g. `'button-widget'` instead of `'button'`).
+**The key-matching rule is strict: the key must match the widget's `type` as stored in the database — not necessarily the backend module name.** A missing or wrong key logs a `console.error` on the server and renders a blank area in the browser — no crash, but the widget simply disappears.
+
+The two most common mistakes:
+
+```js
+// ✗ Wrong — missing @apostrophecms/ prefix; -widget suffix not stripped
+const widgetComponents = {
+  'rich-text': RichTextWidget,   // will silently fail — needs @apostrophecms/ prefix
+  'image': ImageWidget,          // will silently fail — needs @apostrophecms/ prefix
+  'button-widget': ButtonWidget, // will silently fail — ApostropheCMS strips -widget
+};
+
+// ✓ Correct
+const widgetComponents = {
+  '@apostrophecms/rich-text': RichTextWidget,
+  '@apostrophecms/image': ImageWidget,
+  'button': ButtonWidget, // module name without -widget suffix
+};
+```
 
 The starter includes one piece type — the built-in `@apostrophecms/blog` module. Its index and show pages use a scoped key format with a colon suffix:
 
 ```js
 // frontend/src/templates/index.js
+import HomePage from '../templates/HomePage.astro';
+import DefaultPage from '../templates/DefaultPage.astro';
+import BlogIndexPage from '../templates/BlogIndexPage.astro';
+import BlogShowPage from '../templates/BlogShowPage.astro';
+import NotFoundPage from '../templates/NotFoundPage.astro';
+
 const templateComponents = {
   '@apostrophecms/home-page': HomePage,
   'default-page': DefaultPage,
@@ -69,15 +93,19 @@ The widget registry includes the core ApostropheCMS content and layout widgets:
 
 ```js
 // frontend/src/widgets/index.js
+import RichTextWidget from '../widgets/RichTextWidget.astro';
+import ImageWidget from '../widgets/ImageWidget.astro';
+import VideoWidget from '../widgets/VideoWidget.astro';
+import LayoutWidget from '@apostrophecms/apostrophe-astro/widgets/AposLayout.astro';
+import LayoutColumnWidget from '@apostrophecms/apostrophe-astro/widgets/AposLayoutColumn.astro';
+
 const widgetComponents = {
   '@apostrophecms/rich-text': RichTextWidget,
   '@apostrophecms/image': ImageWidget,
   '@apostrophecms/video': VideoWidget,
-  '@apostrophecms/file': FileWidget,
   '@apostrophecms/layout': LayoutWidget,
   '@apostrophecms/layout-column': LayoutColumnWidget,
-  'nested-layout-widget': NestedLayoutWidget,
-  'nested-column-widget': NestedLayoutColumnWidget,
+  // ... additional widgets
 };
 ```
 
@@ -87,9 +115,10 @@ Layout and layout-column are core ApostropheCMS widgets, delivered via the bridg
 
 An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The Astro component's only job is to hand the populated area data to `<AposArea>` and let it handle the rest.
 
-**Backend schema** (`backend/modules/default-page/index.js`):
+**Backend schema:**
 
 ```js
+// backend/modules/default-page/index.js
 export default {
   extend: '@apostrophecms/page-type',
   fields: {
@@ -110,10 +139,11 @@ export default {
 };
 ```
 
-**Astro counterpart** (`frontend/src/templates/DefaultPage.astro`):
+**Astro counterpart:**
 
 ```astro
 ---
+// frontend/src/templates/DefaultPage.astro
 // AposArea renders a CMS-editable widget sequence. The matching field is defined in the backend schema.
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 const { page } = Astro.props;
@@ -192,7 +222,7 @@ Pass `imageObj` (the first element of the `_image` array) to all five helpers �
 
 **The `_` prefix.** Any field whose name starts with `_` is a relationship field that Apostrophe resolves at request time. These always come back as arrays, even when the schema says `max: 1`. Use optional chaining and `[0]` consistently: `widget._image?.[0]`, `post._author?.[0]?.title`.
 
-**`backend/lib/` utilities.** `lib/area.js` exports the widget configuration for area fields — import it rather than defining widget lists inline in each schema.
+**`backend/lib/` utilities.** `backend/lib/area.js` exports the widget configuration for area fields — import it rather than defining widget lists inline in each schema.
 
 **i18n.** The Essentials starter uses plain string labels by default. If you add project-level localization later, schema labels can use a namespace such as `project:` with matching translation files under an i18n module.
 

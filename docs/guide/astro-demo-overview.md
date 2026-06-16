@@ -1,6 +1,6 @@
-# Astro Starter Architecture Guide
+# Astro Public Demo Starter Architecture Guide
 
-This guide explains the key patterns and conventions in the ApostropheCMS + Astro starter. It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
+This guide explains the key patterns and conventions in the ApostropheCMS + Astro [Public Demo starter](https://github.com/apostrophecms/combined-astro-starter-kit). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
 
 The sections below cover the patterns you encounter in the first hour of working in the codebase: the bridge package, the component registry, area fields, link resolution, and image rendering.
 
@@ -54,9 +54,10 @@ The same rule applies in `frontend/src/templates/index.js` for page types. Scope
 
 An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The Astro component's only job is to hand the populated area data to `<AposArea>` and let it handle the rest.
 
-**Backend schema** (`backend/modules/default-page/index.js`):
+**Backend schema:**
 
 ```js
+// backend/modules/default-page/index.js
 import { fullConfigExpandedGroups } from '../../lib/area.js';
 
 export default {
@@ -75,10 +76,11 @@ export default {
 };
 ```
 
-**Astro counterpart** (`frontend/src/templates/DefaultPage.astro`):
+**Astro counterpart:**
 
 ```astro
 ---
+// frontend/src/templates/DefaultPage.astro
 // AposArea renders a CMS-editable widget sequence. The matching field is defined in the backend schema.
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 const { page } = Astro.props;
