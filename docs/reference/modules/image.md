@@ -20,6 +20,7 @@ This module is often used together with the [`@apostrophecms/image-widget`](/ref
 |---|---|---|
 | [`insertViaUpload`](#insertviaupload) | Boolean | Defaults to `true`. Enables uploading images directly from the manager modal. |
 | [`perPage`](#perpage) | Integer | Defaults to `50`. The number of images fetched per batch via infinite scroll in the manager modal. |
+| `tagPickerPerPage` | Integer | Defaults to `400`. The number of tags to load into the tag popover at once. Increase for sites with a large number of tags. |
 | [`searchable`](#searchable) | Boolean | Defaults to `false`. Images are excluded from search results by default. |
 | [`slugPrefix`](#slugprefix) | String | Defaults to `'image-'`. Prefix applied to image slugs. |
 | [`sort`](#sort) | Object | Defaults to `{ createdAt: -1 }`. Sort order for the image library. |
