@@ -1,6 +1,6 @@
-# Standalone Essentials Starter Architecture Guide
+# Essentials Starter Architecture Guide
 
-This guide explains the key patterns and conventions in the ApostropheCMS standalone Essentials starter. It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the framework works before extending the starter.
+This guide explains the key patterns and conventions in the ApostropheCMS [Essentials starter](https://github.com/apostrophecms/starter-kit-essentials). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the framework works before extending the starter.
 
 The sections below cover the patterns you encounter in the first hour of working in the codebase: template discovery, the inheritance chain, the data object, area fields, and image rendering.
 
@@ -18,24 +18,27 @@ Templates are discovered automatically by filename — there is no registry to u
 
 | Template | Path |
 |---|---|
-| Widget | `modules/{name}/views/widget.html` or `.jsx` |
-| Regular page | `modules/{name}/views/page.html` or `.jsx` |
-| Piece index | `modules/{name}/views/index.html` or `.jsx` |
-| Piece show | `modules/{name}/views/show.html` or `.jsx` |
+| Widget | `modules/{module-name}/views/widget.html` or `.jsx` |
+| Regular page | `modules/{module-name}/views/page.html` or `.jsx` |
+| Piece index | `modules/{module-name}/views/index.html` or `.jsx` |
+| Piece show | `modules/{module-name}/views/show.html` or `.jsx` |
 
-**One-direction rule:** a `.jsx` template can extend or include a `.html` layout using `<Extend>` or `<Template>`. A `.html` template cannot extend or include a `.jsx` template — convert from the leaves up when migrating.
+> **Note:** A `.jsx` template can extend or include a `.html` layout using `<Extend>` or `<Template>`. A `.html` template cannot extend or include a `.jsx` template — convert from the leaves up when migrating.
 
 ## Template Inheritance
 
-Every page template slots its content into a shared outer shell via `{% extends %}`. The chain has three levels:
+Every page and piece template slots its content into a shared outer shell via `{% extends %}`. The chain has four levels:
 
 ```
 data.outerLayout  (Apostrophe's HTML shell — do not edit)
   └── views/layout.html  (site header, nav, footer — edit here for site-wide changes)
-        └── modules/{page-type}/views/page.html  (page content)
+        ├── modules/{page-type}/views/page.html  (regular page content)
+        └── modules/{piece-page}/views/
+              ├── index.html  (paginated piece index)
+              └── show.html   (individual piece detail)
 ```
 
-`views/layout.html` is where most structural customization lives: the nav, header, and footer all live there. When you add a piece type, its `index.html` and `show.html` each extend `views/layout.html` independently — as siblings, not children, of `page.html`.
+`views/layout.html` is where most structural customization lives: the nav, header, and footer all live there. `index.html` and `show.html` each extend `views/layout.html` independently — they are siblings, not children, of `page.html`.
 
 A regular page template overrides the `main` block and extends the layout:
 
@@ -67,9 +70,10 @@ ApostropheCMS populates a `data` object available in every Nunjucks template. In
 
 An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The template's only job is to output the `{% area %}` tag pointing to that field.
 
-**Backend schema** (`modules/default-page/index.js`):
+**Backend schema:**
 
 ```js
+// modules/default-page/index.js
 export default {
   extend: '@apostrophecms/page-type',
   fields: {
@@ -90,9 +94,10 @@ export default {
 };
 ```
 
-**Nunjucks template** (`modules/default-page/views/page.html`):
+**Nunjucks template:**
 
 ```nunjucks
+{# modules/default-page/views/page.html #}
 {% block main %}
   {# {% area doc, 'fieldName' %} renders a CMS-editable widget sequence stored in that field.
      In edit mode, editors see the widget picker here; in view mode, widgets render normally. #}
@@ -103,6 +108,8 @@ export default {
 ApostropheCMS wraps the area in editing controls in edit mode; in view mode it renders the widget templates directly.
 
 `lib/area.js` exports a default reusable configuration object for areas that need the core content widgets but not layout widgets. Import it to keep additional area definitions consistent rather than repeating widget lists inline.
+
+> **Note:** `lib/area.js` is a convenience file, not core ApostropheCMS magic. Feel free to modify it, add more configurations, or ignore it entirely and define widget lists inline — whatever fits your project.
 
 ## Image Helpers
 
@@ -127,7 +134,29 @@ ApostropheCMS solves this with a two-step helper pattern. **Never access `_image
 {% endif %}
 ```
 
-Available size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-third'`, `'one-sixth'`.
+Default size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-third'`, `'one-sixth'`.
+
+The equivalent in JSX:
+
+```jsx
+// modules/my-image-widget/views/widget.jsx
+export default function MyImageWidget({ widget, apos }) {
+  const attachment = apos.image.first(widget._image);
+  const url = attachment && apos.attachment.url(attachment, { size: 'full' });
+
+  if (!url) return null;
+
+  return (
+    <img
+      src={url}
+      width={apos.attachment.getWidth(attachment)}
+      height={apos.attachment.getHeight(attachment)}
+      srcSet={apos.image.srcset(attachment)}
+      alt={widget.imageAlt || ''}
+    />
+  );
+}
+```
 
 ## Conventions
 
@@ -145,3 +174,13 @@ Available size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-t
 **Styling.** Global Styles control site-wide design tokens (colors, spacing, typography) through the admin UI. Widget Styles provide per-instance CSS controls declared in a widget's `styles` property — they let editors change the look of individual widget placements without touching code. The two systems are complementary, not alternatives.
 
 For deeper coverage of any of these topics, see the [ApostropheCMS documentation](https://docs.apostrophecms.org).
+
+## Next Steps
+
+Start the development server with:
+
+```sh
+npm run dev
+```
+
+This launches both the ApostropheCMS backend and the asset build watcher. The admin UI is available at `/login`. From there, log in and start editing pages, adding widgets, and exploring the schema-driven content model described above.

@@ -1,6 +1,6 @@
-# Standalone Starter Architecture Guide
+# Public Demo Starter Architecture Guide
 
-This guide explains the key patterns and conventions in the ApostropheCMS standalone starter. It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the framework works before extending the starter.
+This guide explains the key patterns and conventions in the ApostropheCMS [Public Demo starter](https://github.com/apostrophecms/public-demo). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the framework works before extending the starter.
 
 The sections below cover the patterns you encounter in the first hour of working in the codebase: template discovery, the inheritance chain, the data object, area fields, link resolution, image rendering, and helper functions.
 
@@ -18,12 +18,12 @@ Templates are discovered automatically by filename — there is no registry to u
 
 | Template | Path |
 |---|---|
-| Widget | `modules/{name}/views/widget.html` or `.jsx` |
-| Regular page | `modules/{name}/views/page.html` or `.jsx` |
-| Piece index | `modules/{name}/views/index.html` or `.jsx` |
-| Piece show | `modules/{name}/views/show.html` or `.jsx` |
+| Widget | `modules/{module-name}/views/widget.html` or `.jsx` |
+| Regular page | `modules/{module-name}/views/page.html` or `.jsx` |
+| Piece index | `modules/{module-name}/views/index.html` or `.jsx` |
+| Piece show | `modules/{module-name}/views/show.html` or `.jsx` |
 
-**One-direction rule:** a `.jsx` template can extend or include a `.html` layout using `<Extend>` or `<Template>`. A `.html` template cannot extend or include a `.jsx` template — convert from the leaves up when migrating.
+> **Note:** A `.jsx` template can extend or include a `.html` layout using `<Extend>` or `<Template>`. A `.html` template cannot extend or include a `.jsx` template — convert from the leaves up when migrating.
 
 ## Template Inheritance
 
@@ -69,9 +69,10 @@ ApostropheCMS populates a `data` object available in every Nunjucks template. In
 
 An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The template's only job is to output the `{% area %}` tag pointing to that field.
 
-**Backend schema** (`modules/default-page/index.js`):
+**Backend schema:**
 
 ```js
+// modules/default-page/index.js
 import { fullConfigExpandedGroups } from '../../lib/area.js';
 
 export default {
@@ -90,9 +91,10 @@ export default {
 };
 ```
 
-**Nunjucks template** (`modules/default-page/views/page.html`):
+**Nunjucks template:**
 
 ```nunjucks
+{# modules/default-page/views/page.html #}
 {% block main %}
   {# {% area doc, 'fieldName' %} renders a CMS-editable widget sequence stored in that field.
      In edit mode, editors see the widget picker here; in view mode, widgets render normally. #}
@@ -116,7 +118,7 @@ fields: {
 }
 ```
 
-The `modules/helper/index.js` module centralizes resolution so templates never navigate `_linkPage[0]._url` by hand. Call `apos.helper.linkPath()` from any Nunjucks template:
+The `modules/helper/index.js` module centralizes resolution so templates never navigate `_linkPage[0]._url` by hand. `apos.helper.linkPath()` is a convenience method — call it from any Nunjucks template:
 
 ```nunjucks
 {# apos.helper.linkPath() resolves any link object to a URL string —
@@ -126,7 +128,7 @@ The `modules/helper/index.js` module centralizes resolution so templates never n
 
 ## Nunjucks Macros
 
-Reusable HTML fragments that accept arguments are written as Nunjucks macros and imported where needed. The `views/link.html` macro is the canonical example — it renders an `<a>` tag with the correct class, `href`, and `target` from any link object:
+Reusable HTML fragments that accept arguments are written as [Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) and imported where needed. The `views/link.html` macro is the canonical example — it renders an `<a>` tag with the correct class, `href`, and `target` from any link object:
 
 ```nunjucks
 {% import 'link.html' as link %}
@@ -164,7 +166,7 @@ ApostropheCMS solves this with a two-step helper pattern. **Never access `_image
 {% endif %}
 ```
 
-Available size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-third'`, `'one-sixth'`.
+Default size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-third'`, `'one-sixth'`.
 
 
 ## Conventions
