@@ -517,6 +517,22 @@ The styles module includes several standard presets defined in `lib/presets.js`:
   - `color` (color): Shadow color
 - All fields except `active` use conditional display (`if: { active: true }`)
 
+### `background`
+- Type: `object` (multi-field preset) with `customType: 'background'`
+- Property: `--preset-bg` (CSS custom property)
+- Fields:
+  - `enabled` (boolean): Enable/disable background
+  - `backgroundType` (select): `color`, `gradient`, or `image` (shown when `enabled: true`)
+  - `color` (color): Solid background color (shown when type is `color`)
+  - `gradientStart` (color): Gradient start color, default `#000000` (shown when type is `gradient`)
+  - `gradientEnd` (color): Gradient end color, default `#ffffff` (shown when type is `gradient`)
+  - `gradientAngle` (range): 0–360°, step 5, default 180 (shown when type is `gradient`)
+  - `_image` (relationship): Image from `@apostrophecms/image`, max 1 (shown when type is `image`)
+  - `overlay` (boolean): Enable a color overlay over the image, default `false` (shown when type is `image`)
+  - `overlayColor` (color): Overlay color, default `#000000` (shown when `overlay: true`)
+  - `overlayOpacity` (range): Overlay opacity 0–100, default 50 (shown when `overlay: true`)
+- All fields except `enabled` use conditional display (`if: { enabled: true }`)
+
 ### `layoutGap`
 - Type: `range`
 - Range: 0–64px
