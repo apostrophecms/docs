@@ -53,6 +53,10 @@ const sidebarGuide = [
           {
             text: 'Upgrade From Apostrophe 3',
             link: 'guide/migration/upgrading-3-to-4.md'
+          },
+          {
+            text: 'Upgrade apostrophe-astro to v1.13',
+            link: 'guide/migration/upgrading-apostrophe-astro.md'
           }
         ]
       }
