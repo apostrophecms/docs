@@ -57,7 +57,7 @@ const sidebarGuide = [
         ]
       },
       {
-        text: "Using AI Effectively",
+        text: 'Using AI Effectively',
         link: 'guide/using-ai-effectively.md'
       }
     ]
