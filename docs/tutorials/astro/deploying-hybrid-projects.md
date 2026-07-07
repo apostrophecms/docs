@@ -32,7 +32,7 @@ There are two main approaches to deploying your ApostropheCMS + Astro project:
 
 Regardless of your deployment method, you'll need:
 
-- A MongoDB database - Atlas or host-specific
+- A database - MongoDB is the default, but SQLite or PostgreSQL can be used instead. See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html)
 - Environment variables properly configured
 - Asset storage solution like AWS S3 or a persistent folder that doesn't get erased during each deployment (for uploaded images/files)
 
@@ -146,7 +146,7 @@ For more control or to leverage specific platform features, you can deploy the b
 Your ApostropheCMS backend requires:
 
 - Node.js environment (v18 or better, at least v20 recommended)
-- MongoDB database connection
+- A database connection - MongoDB by default, or SQLite/PostgreSQL via the `@apostrophecms/db-connect` adapter (see [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html))
 - Asset storage solution (S3 or equivalent cloud storage)
 
 #### Common Backend Hosting Options
@@ -172,13 +172,15 @@ Your ApostropheCMS backend requires:
 4. Set environment variables:
    ```
    NODE_ENV=production
-   APOS_MONGODB_URI=your_mongodb_connection_string
+   APOS_DB_URI=your_database_connection_string
    APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key
    APOS_S3_BUCKET=your-bucket-name
    APOS_S3_SECRET=your-s3-secret
    APOS_S3_KEY=your-s3-key
    APOS_S3_REGION=your-chosen-region
    ```
+   `APOS_DB_URI` accepts a `mongodb://`, `sqlite://`, or `postgres://` connection string, so it works regardless of which database you choose. (The older `APOS_MONGODB_URI` variable still works for MongoDB but is kept only for backward compatibility — prefer `APOS_DB_URI` going forward.) See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for connection string formats.
+
 There are several guides for other [deployment options](/guide/hosting.html) and configuring [storage services](/cookbook/using-s3-storage.html) in the main ApostropheCMS documentation.
 
 ### Frontend (Astro) Deployment
@@ -190,7 +192,7 @@ Your Astro frontend can be deployed to any service, including our [managed hosti
 1. **ApostropheCMS**
   - Hosts the combined Astro + ApostropheCMS monorepo in one step
   - Zero latency when Astro communicates with ApostropheCMS
-  - Configures MongoDB and S3 automatically
+  - Configures your database and S3 storage automatically
   - Provides `APOS_EXTERNAL_FRONTEND_KEY` automatically
 
 2. **Netlify**
@@ -246,9 +248,14 @@ You can also use a `netlify.toml` file at the root of your project for configura
 #### Backend Environment Variables
 
 ```bash
-# Required
+# Required - APOS_DB_URI accepts mongodb://, sqlite://, or postgres://
+# connection strings, so it's the recommended variable regardless of
+# which database you use. See "Using SQLite or PostgreSQL Instead of
+# MongoDB" in the main documentation for connection string formats.
+# (APOS_MONGODB_URI still works for MongoDB but is kept only for
+# backward compatibility.)
 NODE_ENV=production
-APOS_MONGODB_URI=your_mongodb_connection_string
+APOS_DB_URI=your_database_connection_string
 APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key
 
 # For cloud asset storage (e.g., AWS S3)
@@ -260,6 +267,8 @@ APOS_S3_REGION=your-chosen-region
 # For identifying releases (if not using Git-based deployment)
 APOS_RELEASE_ID=unique-random-string
 ```
+
+See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for full details on switching databases, including the `multipostgres://` format for multisite deployments.
 
 #### Frontend Environment Variables
 
