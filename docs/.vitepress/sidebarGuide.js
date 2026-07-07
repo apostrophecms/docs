@@ -31,6 +31,10 @@ const sidebarGuide = [
         link: 'guide/choosing-a-database.md'
       },
       {
+        text: 'npm v12 and Install Scripts',
+        link: 'guide/npm-v12-install-scripts.md'
+      },
+      {
         text: 'Windows Development',
         link: 'cookbook/windows-development.md'
       },
