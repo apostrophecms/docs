@@ -2,7 +2,7 @@
 
 AI coding tools have a working knowledge of ApostropheCMS. The framework is well-documented, open source, and has a public GitHub history. This is enough that tools like Claude, ChatGPT, Copilot, Codex, or Cursor can often explain core concepts, describe how the module system works, or outline the difference between pieces and widgets without much help.
 
-Where things get harder is project-specific context. An AI tool has no awareness of your module structure, your schema conventions, which widgets your project uses, or whether your project is using ESM or CommonJS. It also has less training depth on ApostropheCMS than it does on higher-traffic tools and frameworks, which means it can get subtly wrong on specifics, like the exact property name for a relationship field, the right namespace for a core module, or how your project renders templates.
+Where things get harder is project-specific context. An AI tool has no awareness of your module structure, your schema conventions, which widgets your project uses, or whether your project is using ESM or CommonJS. It also has less training depth on ApostropheCMS than it does on higher-traffic tools and frameworks, which means it can get the specifics subtly wrong, like the exact property name for a relationship field, the right namespace for a core module, or how your project renders templates.
 
 These are not always obvious errors. They are the kind that produce code that looks right until you have spent an hour wondering why a custom option is not being set correctly, why a relationship only includes some of the fields you expected, or why a generated widget does not appear where it should.
 
@@ -20,7 +20,13 @@ Chat interfaces are well-suited to answering architecture and implementation que
 
 The tradeoff is that in-project tools can act on more than you intended. They may modify files you did not expect, chain multiple actions together, or make reasonable-looking changes based on the wrong assumption.
 
-**Recommendation:** Use chat interfaces for planning, architecture questions, and explanations. Use an in-project agentic tool such as Claude Code, Codex, or Cursor for implementation work. Keep human review at the git boundary: inspect the diff, run the project’s checks, and commit the work yourself.
+**Recommendation:** Use an in-project agentic tool as your primary workflow for both planning and implementation. For example, Claude Code’s plan mode (covered below) lets the tool read your full project and propose changes before touching any files, so the planning use case that once required a chat interface is now well-served inside the project itself. Keep human review at the git boundary: inspect the diff, run the project’s checks, and commit the work yourself.
+
+Chat interfaces remain useful for open-ended exploration — thinking through an approach without committing to one, discussing architecture across multiple possible directions, or working within a team policy that keeps AI tools from writing to the codebase directly. For day-to-day implementation work, an in-project tool with full project context will consistently outperform a chat session.
+
+::: tip
+For serious AI-accelerated development, a paid account is worth it. Free-tier models are typically limited to the chat interface and are more likely to produce shallow, incomplete, or incorrect answers for framework-specific work. A Pro account in the $20/month range gives you access to more capable models and the in-project tools covered in this guide.
+:::
 
 ## Give AI tools persistent project context
 
@@ -41,17 +47,29 @@ For an ApostropheCMS project, useful things to include are:
 
 A developer working with the agent, for example, can then ask "create a new piece type for events" without specifying all of the above because the project instruction file has already told the tool how the project is organized.
 
-This is especially important in ApostropheCMS because two projects can organize the same feature differently. One project might define shared schema fields in helper files, another might keep all fields in the module, and another might use JSX templates instead of Nunjucks. Asking the AI to inspect nearby modules first helps it follow the project instead of generating a generic ApostropheCMS example.
+This is especially important in ApostropheCMS because two projects can organize the same feature differently. One project might define shared schema fields in helper files, another might keep all fields in the module, and another might use JSX templates instead of Nunjucks. More capable models will often inspect nearby modules automatically before generating code, but making it explicit in your project instructions ensures consistent behavior across tools and model tiers.
 
-For new projects, start with the ApostropheCMS CLI whenever possible (`npm create apostrophe@latest`). The CLI can create both traditional ApostropheCMS projects and Astro-based projects from official starter kits, giving you a structure that matches the documentation and examples. For Astro projects, this is especially helpful because the generated project already includes the expected frontend/backend split, Astro integration setup, template and widget mappings, and visual editing patterns. That helps both developers and AI tools find the right files, follow expected conventions, and avoid inventing project structure.
+For new projects, start with the ApostropheCMS CLI whenever possible (`npm create apostrophe@latest`), unless you are forking or building from a preexisting project of your own. The CLI can create both traditional ApostropheCMS projects and Astro-based projects from official starter kits, giving you a structure that matches the documentation and examples. For Astro projects, this is especially helpful because the generated project already includes the expected frontend/backend split, Astro integration setup, template and widget mappings, and visual editing patterns. That helps both developers and AI tools find the right files, follow expected conventions, and avoid inventing project structure.
 
 ::: tip
-The ApostropheCMS docs themselves are a useful starting point for what to include. Linking to relevant guide pages in your context file gives AI tools a reliable reference for Apostrophe-specific patterns.
+The ApostropheCMS docs themselves are a useful starting point for what to include. Linking to the [ApostropheCMS docs homepage](https://apostrophecms.com/docs/) as well as any relevant guide pages in your context file gives AI tools a reliable reference for Apostrophe-specific patterns.
 :::
 
 ## Working effectively with in-project tools
 
 In-project tools like Claude Code, Codex, and Cursor are most useful when you treat them as tools that can work across a project, not just code generators. Instead of asking for an isolated function or snippet, you can ask them to inspect the existing project, identify the files involved, follow nearby conventions, make coordinated changes, and run checks against the result.
+
+### Use plan mode before making changes
+
+For anything beyond a small edit, start in plan mode. Claude Code will read the relevant files and propose exactly what it intends to change — without touching anything on disk — so you can review and adjust the plan before any edits happen.
+
+```bash
+claude --permission-mode plan
+```
+
+You can also press `Shift+Tab` mid-session to toggle into plan mode at any point. Once you approve the plan, the tool proceeds with the edits. This is especially valuable for tasks that span multiple files, like adding a new piece type with a matching template and widget registration, where an unchecked assumption early in the process can cause problems throughout.
+
+See [Plan mode](https://code.claude.com/docs/en/common-workflows#plan-before-editing) in the Claude Code docs for details on approving and editing the plan.
 
 ### Let the AI read before it writes
 
@@ -97,16 +115,16 @@ This can help identify issues that look like syntax errors but are actually modu
 
 AI-generated code can look plausible while still being wrong for ApostropheCMS or for your specific project. When reviewing output, watch for issues like:
 
-- using older ApostropheCMS patterns from previous major versions
+- using older ApostropheCMS v2.x patterns
 - confusing piece types, page types, and widgets
-- forgetting to register a new module in the project configuration
+- forgetting to register a new module in the app.js
 - placing widget templates in the wrong location
 - inventing schema field options that are not part of the ApostropheCMS schema API
 - projecting a relationship field without including the related fields needed for rendering
 - generating Nunjucks examples for a JSX project, or JSX examples for a Nunjucks project
 - treating ApostropheCMS like a generic Express app instead of using its module system
 
-These are good reasons to keep the ApostropheCMS docs, project-specific conventions, and nearby working examples in the tool's context.
+These are good reasons to keep the ApostropheCMS docs, project-specific conventions, and nearby working examples in the tool's context. With an in-project agentic tool, the project itself is always present and the actual files and conventions provide ongoing context that a chat session has to reconstruct each time.
 
 ### Ask the AI to verify framework details against the docs
 
@@ -118,6 +136,10 @@ Example prompt:
 
 > Check the ApostropheCMS docs for the available toolbar options for the `@apostrophecms/rich-text` widget. Before making the change, provide a link to the docs page you used. Then update the body area in `modules/article/index.js` to use a standard toolbar set that matches the current docs.
 
+### Debug visually with Playwright
+
+Claude Code and similar tools can go beyond reading and editing files — they can also install packages and interact with a running site. One effective pattern for debugging is to have the tool install the [Playwright](https://playwright.dev/) browser automation library and use it to inspect the site directly: navigating pages, logging in as a user, triggering actions, and observing the results. This is particularly useful for issues that only appear in the browser or require authenticated state to reproduce, where reading the code alone won't reveal the problem.
+
 ## Use the Astro integration docs for headless frontend work
 
 When an ApostropheCMS project uses Astro as the frontend, the best reference for AI tools is usually the `@apostrophecms/apostrophe-astro` integration documentation, not the REST API spec.
@@ -125,6 +147,8 @@ When an ApostropheCMS project uses Astro as the frontend, the best reference for
 The integration is designed so ApostropheCMS manages content, URLs, editing, media, permissions, and page data, while Astro handles frontend rendering. In a typical Astro integration project, you do not manually fetch each content type from the REST API for normal page rendering. Instead, the catch-all Astro route uses `aposPageFetch(Astro.request)` to retrieve the current page data, then `AposLayout`, `AposTemplate`, and `AposArea` render the mapped Astro components.
 
 That distinction matters when prompting AI tools. If the tool assumes the project is a generic headless frontend, it may generate unnecessary API calls, duplicate routing logic, or bypass the visual editing integration. For most page, template, widget, and layout work, ask it to follow the Astro integration patterns instead.
+
+For Astro integration projects, launch your agentic tool from the monorepo root rather than from inside either subdirectory. With both the ApostropheCMS backend and Astro frontend visible from the start, the tool picks up a significant amount of project context before you give it any specific guidance.
 
 Example prompt:
 
@@ -207,5 +231,7 @@ Before accepting a change, check that:
 - any new module is registered correctly
 - related templates, helpers, or frontend components were updated only where needed
 - linting, tests, or build checks pass when available
+
+A common pattern is to decline permission when Claude Code or similar tools ask to run git commands on their own. Keeping that step for yourself creates a natural review point: running `git diff` before committing gives you a clear view of everything that changed across the project, which is often the fastest way to catch an unexpected modification before it lands in version control.
 
 AI tools are most useful when they help you move faster through work you still understand. If you cannot explain the change, ask the tool to walk through it before you accept it.
