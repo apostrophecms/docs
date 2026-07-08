@@ -144,21 +144,27 @@ function ErrorState({ city, message }) {
 export default async function({ widget }, { apos }) {
   const { city, units = 'metric' } = widget;
   const apiKey = process.env.OPENWEATHERMAP_API_KEY;
+  const cacheKey = `${city}:${units}`;
 
-  // Fetch live weather data. Because this function is async, we can await
-  // here just like any other JavaScript — no async component wrapper needed.
-  let weather;
-  try {
-    const url =
-      'https://api.openweathermap.org/data/2.5/weather?' +
-      new URLSearchParams({ q: city, units, appid: apiKey });
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error(`OpenWeatherMap returned ${res.status}`);
+  // Check the cache before hitting the API. Because this function is async,
+  // we can await here just like any other JavaScript — no async component
+  // wrapper needed.
+  let weather = await apos.cache.get('weather', cacheKey);
+
+  if (!weather) {
+    try {
+      const url =
+        'https://api.openweathermap.org/data/2.5/weather?' +
+        new URLSearchParams({ q: city, units, appid: apiKey });
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error(`OpenWeatherMap returned ${res.status}`);
+      }
+      weather = await res.json();
+      await apos.cache.set('weather', cacheKey, weather, 600);
+    } catch (err) {
+      return <ErrorState city={city} message={err.message} />;
     }
-    weather = await res.json();
-  } catch (err) {
-    return <ErrorState city={city} message={err.message} />;
   }
 
   const unitLabel = { metric: '°C', imperial: '°F', standard: 'K' }[units];
@@ -206,6 +212,8 @@ modules/weather-conditions-widget/views/widget.jsx
 Let's step through the main highlights of the code.
 
 **The `async` keyword on the export function** is all it takes to unlock `await` inside a template. There is no async component to register in `index.js` like you would do with a Nunjucks template, no `beforeSend` hook to write, and no data-passing mechanism to thread through. The function fetches data, handles errors, and returns markup — in one place.
+
+**The cache is checked before the API call** using `apos.cache.get('weather', cacheKey)`. A weather API call on every page request is fine for low-traffic pages, but busier ones should avoid depending on an external API for every render. If a cached value exists, `weather` is populated and the `fetch` block is skipped entirely; otherwise the template fetches fresh data and stores it with `apos.cache.set('weather', cacheKey, weather, 600)`, expiring after 600 seconds (10 minutes). The cache key includes both `city` and `units` so different widget configurations don't collide.
 
 **`StatBlock` and `ErrorState` are plain JSX functions** defined at the top of the same file. They work exactly like React function components but they run on the server and produce strings. This inline approach works well for small, single-use partials. For reusable components, you have two alternatives: a standard JavaScript `import` if the component lives in its own file and doesn't need name-based resolution, or Apostrophe's `<Template name="…">` tag if you need cross-module lookup or Nunjucks-parity.
 
@@ -410,8 +418,6 @@ If your project's ESLint configuration predates JSX support, inline components s
 Add a `.jsx`-specific override that enables JSX parsing and `jsx-uses-vars`, or disable `no-unused-vars` for these template files. For a one-off fix, you can also add `// eslint-disable-next-line no-unused-vars` above an inline component.
 
 ## Going further
-
-**Caching** — This tutorial fetches fresh data on every page request to keep the example focused. In production, cache the response so page rendering does not depend on an external API call for every request. The `apos.cache` API is available in the template via the `apos` argument: `await apos.cache.get('weather', city)` / `await apos.cache.set('weather', city, data, 600)`.
 
 **Error boundaries** — The `ErrorState` component above renders an informative message if the fetch fails. For production, consider logging the error in the `catch` block, before returning `ErrorState`, through `apos.util.error` so it appears in your server logs: `apos.util.error('weather fetch failed', err)`.
 
