@@ -148,8 +148,12 @@ const sidebarTutorials = [
         link: 'tutorials/reusing-standard-fields.md'
       },
       {
-        text: 'Building a JSX Widget',
+        text: 'Building a Client-side JSX Widget',
         link: 'tutorials/using-jsx-in-apostrophe.md'
+      },
+      {
+        text: 'Building a Server-side JSX Widget',
+        link: 'tutorials/server-side-jsx.md'
       },
       {
         text: 'Local Extension Development',
