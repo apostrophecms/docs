@@ -417,4 +417,6 @@ Add a `.jsx`-specific override that enables JSX parsing and `jsx-uses-vars`, or 
 
 **Multiple fetches** — Because the template is an `async` function, you can `await Promise.all([…])` to fetch data from multiple sources in parallel before rendering.
 
+**SEO** — Building the weather widget both front-end and back-end makes a great side-by-side example. Current weather doesn't usually matter for SEO, so either approach works fine here. But when the content you're rendering does matter for search, server-side JSX has a real edge over browser-side React: search engines index it immediately since it's already in the HTML, and some AI chatbot crawlers may not execute client-side JavaScript at all.
+
 **Migrating the rest of the project** — Once all `page.html` files that extend `layout.html` have been converted to `.jsx`, you can rename `layout.html` to `layout.jsx` and use JSX's `children` prop pattern instead of named `{% block %}` overrides. The [`jsx-templates` guide](/guide/jsx-templates.html) covers this top-down migration path in full.
