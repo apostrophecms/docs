@@ -217,7 +217,7 @@ Let's step through the main highlights of the code.
 
 **`StatBlock` and `ErrorState` are plain JSX functions** defined at the top of the same file. They work exactly like React function components but they run on the server and produce strings. This inline approach works well for small, single-use partials. For reusable components, you have two alternatives: a standard JavaScript `import` if the component lives in its own file and doesn't need name-based resolution, or Apostrophe's `<Template name="…">` tag if you need cross-module lookup or Nunjucks-parity.
 
-**Class attributes use `class`**, not `className`. Server-side JSX does not target the React DOM, so there is no reason to use the React alias. Write standard HTML attributes.
+**Class attributes can use `class` or `className`**. `className` is supported due to its familiarity for React developers, but you may also use `class` directly.
 
 **The `apos` object is available** as the second argument to the exported template function if you need it — call any module method, run a database query, or use `apos.http` for authenticated internal requests. This template doesn't need it, but the pattern scales. Note that inline sub-components like `StatBlock` and `ErrorState` don't receive it automatically — they only get whatever props you pass them.
 
