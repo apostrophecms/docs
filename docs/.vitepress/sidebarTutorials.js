@@ -149,7 +149,7 @@ const sidebarTutorials = [
       },
       {
         text: 'Building a JSX Widget',
-        link: 'tutorials/using-jsx-in-apostrophe.md'
+        link: 'tutorials/using-react-in-apostrophecms.md'
       },
       {
         text: 'Local Extension Development',

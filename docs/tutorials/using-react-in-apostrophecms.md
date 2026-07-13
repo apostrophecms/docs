@@ -2,23 +2,23 @@
 
 next: false
 prev: false
-title: "Using JSX in Apostrophe with Vite"
+title: "Using React for interactive components in ApostropheCMS with Vite"
 detailHeading: "Tutorial"
-url: "/tutorials/using-jsx-in-apostrophe.html"
-content: "Learn how to use JSX and React for an interactive browser-side component in ApostropheCMS, including how to extend the Vite build and connect React to a widget player."
+url: "/tutorials/using-react-in-apostrophecms.html"
+content: "Learn how to use React for an interactive browser-side component in ApostropheCMS, including how to extend the Vite build and connect React to a widget player."
 tags:
 topic: "Advanced Techniques"
 type: tutorial
 effort: advanced
 ----------------
 
-# Using JSX in Apostrophe with Vite
+# Using React for interactive components in ApostropheCMS with Vite
 
 ApostropheCMS supports several ways to create and enhance the interface of a page.
 
-For new server-rendered pages and widgets, we encourage using JSX templates in place of Nunjucks. These `.jsx` templates run on the server and produce the HTML sent to the browser.
+For new server-rendered pages and widgets, we encourage [using JSX templates](/guide/jsx-templates.html) in place of Nunjucks. These `.jsx` templates run on the server and produce the HTML sent to the browser.
 
-For focused browser-side behavior, many widgets only need ApostropheCMS's built-in widget player system. A widget player can respond to user events, fetch data, update the DOM, and reinitialize correctly during in-context editing without requiring a browser framework.
+For focused browser-side behavior, many widgets only need ApostropheCMS's built-in [widget player system](/guide/custom-widgets.html#client-side-javascript-for-widgets). A widget player can respond to user events, fetch data, update the DOM, and reinitialize correctly during in-context editing without requiring a browser framework.
 
 This tutorial covers a third pattern: using JSX with React to create a more substantial browser-side interface. We will build a weather widget that lets an editor choose a default city, then allows visitors to search for other cities without reloading the page. Vite will process the React application and its imported assets, while an ApostropheCMS widget player will initialize it in the browser. The code for this widget is based on a basic React tutorial that you can find [here](https://github.com/ayushkul/react-weather-app).
 
