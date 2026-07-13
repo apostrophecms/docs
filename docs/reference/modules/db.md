@@ -16,7 +16,7 @@ This module establishes `apos.db`, the database object used throughout Apostroph
 
 |  Property | Type | Description |
 |---|---|---|
-|`uri` | String | The database connection URI. May use the `mongodb://`, `sqlite://`, or `postgres://` protocol. See the [MongoDB URI documentation](https://docs.mongodb.com/manual/reference/connection-string/) for the MongoDB format. |
+|`uri` | String | The database connection URI. May use the `mongodb://`, `sqlite://`, `postgres://`, or `multipostgres` protocol. See the [database usage](docs/guide/using-sqlite-and-postgres.html) and [MongoDB URI documentation](https://docs.mongodb.com/manual/reference/connection-string/) for the MongoDB format. |
 |`defaultAdapter` | String | Which adapter to use when building a URI from `host`/`port`/`name`/etc. rather than supplying `uri` directly. One of `mongodb`, `sqlite`, `postgres`, or `multipostgres`. Defaults to `mongodb`. Can also be set via the `APOS_DEFAULT_DB_ADAPTER` environment variable. |
 |`connect` | Object | If present, this object is passed on as options to the adapter's "connect" method, along with the uri. For MongoDB, see the [MongoDB connect settings documentation](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/). |
 |`adapters` | Array | An array of custom adapters, each providing `name`, `connect(uri, options)`, and `protocols` properties. `name` may match a core adapter name (such as `postgres` or `mongodb`) to override it. `connect` must resolve to a client object supporting a sufficient subset of the MongoDB driver API. |
@@ -46,14 +46,6 @@ When neither `uri` nor a URI-related environment variable is set, `defaultAdapte
 
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/db/index.js) for all methods that belong to this module.
 <!-- Some are used within the module and would just create noise here. -->
-
-Because this module has an alias, you can call these from another module from the alias path. For example, `self.apos.db.connectToDb()`.
-
-### `connectToDb()`
-
-Open the database connection using the appropriate adapter for the configured URI (or one built from `host`, `port`, `name`, etc.), and set `apos.db` and `apos.dbClient`. One default we override for MongoDB: if the connection is lost, we keep attempting to reconnect forever. This is sensible behavior for a persistent process that requires a database in order to operate.
-
-If you need to change the way database connections are made, override `connectToDb` in your project. In many cases it is easier to just use the `client` option.
 
 ### `connectToAdapter(uri, options)`
 
