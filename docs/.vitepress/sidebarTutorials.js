@@ -152,6 +152,10 @@ const sidebarTutorials = [
         link: 'tutorials/using-react-in-apostrophecms.md'
       },
       {
+        text: 'Building a Server-side JSX Widget',
+        link: 'tutorials/server-side-jsx.md'
+      },
+      {
         text: 'Local Extension Development',
         link: 'tutorials/local-extension-development.md'
       },
