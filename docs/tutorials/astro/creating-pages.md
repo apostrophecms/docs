@@ -618,7 +618,7 @@ When building interactive pages, you'll often need to work with query parameters
 
 ```astro
 ---
-import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
+import { aposSetQueryParameter as setParameter } from '@apostrophecms/apostrophe-astro/helpers/universal';
 
 // Add or update a parameter
 const filterUrl = setParameter(Astro.url, 'category', 'news');

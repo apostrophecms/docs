@@ -157,7 +157,7 @@ The `apostrophe-astro` package provides a `getAllStaticPaths()` helper that call
 
 ```astro
 ---
-import { getAllStaticPaths } from '@apostrophecms/apostrophe-astro/lib/static.js';
+import { getAllStaticPaths, getAposHost } from '@apostrophecms/apostrophe-astro/helpers/server';
 import { getAposHost } from '@apostrophecms/apostrophe-astro/helpers';
 import aposPageFetch from '@apostrophecms/apostrophe-astro/lib/aposPageFetch.js';
 
