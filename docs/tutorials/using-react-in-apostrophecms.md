@@ -24,7 +24,7 @@ This tutorial covers a third pattern: using JSX with React to create a more subs
 
 The same weather widget could be built with a widget player alone. We are using React because it gives us a compact but complete example with multiple UI components, shared state, asynchronous data, and several parts of the interface that update in response to that state.
 
-For a version of the same widget where the editor chooses the city and the weather is rendered entirely on the server, see the companion tutorial [Building a weather widget with server-side JSX](/tutorials/jsx-server-weather-widget.html). You can also learn more about using JSX instead of Nunjucks in the [JSX templates guide](/guide/jsx-templates.md).
+For a version of the same widget where the editor chooses the city and the weather is rendered entirely on the server, see the companion tutorial [Building a weather widget with server-side JSX](/tutorials/server-side-jsx.html). You can also learn more about using JSX instead of Nunjucks in the [JSX templates guide](/guide/jsx-templates.md).
 
 ## What we're building
 
@@ -985,4 +985,4 @@ The weather application also illustrates where browser-side React fits alongside
 
 For new server-rendered pages and widgets, we encourage using ApostropheCMS JSX templates instead of Nunjucks. For focused browser-side interactions, the built-in widget player system is often all you need. When an interface grows into several components with shared state and state-driven rendering, a framework such as React can provide a more manageable structure.
 
-To compare server-side and browser-side JSX directly, see the companion tutorial [Building a weather widget with server-side JSX](/tutorials/jsx-server-weather-widget.html). Both tutorials build versions of the same widget, making it easier to see where server-side JSX templates end and a browser-side React application begins.
+To compare server-side and browser-side JSX directly, see the companion tutorial [Building a weather widget with server-side JSX](/tutorials/server-side-jsx.html). Both tutorials build versions of the same widget, making it easier to see where server-side JSX templates end and a browser-side React application begins.
