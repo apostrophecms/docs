@@ -16,7 +16,7 @@ This module establishes `apos.db`, the database object used throughout Apostroph
 
 |  Property | Type | Description |
 |---|---|---|
-|`uri` | String | The database connection URI. May use the `mongodb://`, `sqlite://`, `postgres://`, or `multipostgres` protocol. See the [database usage](docs/guide/using-sqlite-and-postgres.html) and [MongoDB URI documentation](https://docs.mongodb.com/manual/reference/connection-string/) for the MongoDB format. |
+|`uri` | String | The database connection URI. May use the `mongodb://`, `sqlite://`, `postgres://`, or `multipostgres` protocol. See the [database usage](/guide/using-sqlite-and-postgres.html) and [MongoDB URI documentation](https://docs.mongodb.com/manual/reference/connection-string/) for the MongoDB format. |
 |`defaultAdapter` | String | Which adapter to use when building a URI from `host`/`port`/`name`/etc. rather than supplying `uri` directly. One of `mongodb`, `sqlite`, `postgres`, or `multipostgres`. Defaults to `mongodb`. Can also be set via the `APOS_DEFAULT_DB_ADAPTER` environment variable. |
 |`connect` | Object | If present, this object is passed on as options to the adapter's "connect" method, along with the uri. For MongoDB, see the [MongoDB connect settings documentation](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/). |
 |`adapters` | Array | An array of custom adapters, each providing `name`, `connect(uri, options)`, and `protocols` properties. `name` may match a core adapter name (such as `postgres` or `mongodb`) to override it. `connect` must resolve to a client object supporting a sufficient subset of the MongoDB driver API. |

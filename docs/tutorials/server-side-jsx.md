@@ -21,7 +21,7 @@ This tutorial focuses on three capabilities that make server-side JSX particular
 2. **Composing markup from inline sub-components** defined in the same file, treating the template as a real JavaScript module
 3. **Extending an existing Nunjucks layout from a JSX page template** via `<Extend>`, so you can migrate page by page instead of all at once
 
-If you've read the [browser-side React weather widget tutorial](/tutorials/using-jsx-in-apostrophe.html), you'll recognize the example, it's the same weather widget. The contrast is the point: that tutorial needed changes to the project Vite configuration, a widget player, `createRoot`, and a proxy API route to render the same weather data. This one does the same rendering in a single `.jsx` file with no client JavaScript at all.
+If you've read the [browser-side React weather widget tutorial](/tutorials/using-react-in-apostrophecms.html), you'll recognize the example, it's the same weather widget. The contrast is the point: that tutorial needed changes to the project Vite configuration, a widget player, `createRoot`, and a proxy API route to render the same weather data. This one does the same rendering in a single `.jsx` file with no client JavaScript at all.
 
 ::: info When to use each approach
 Use **server-side JSX templates** (this tutorial) when your widget renders content that does not need to change after the page loads. The output is static HTML with nothing running in the browser.
