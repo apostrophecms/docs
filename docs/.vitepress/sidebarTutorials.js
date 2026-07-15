@@ -148,8 +148,8 @@ const sidebarTutorials = [
         link: 'tutorials/reusing-standard-fields.md'
       },
       {
-        text: 'Building a Client-side JSX Widget',
-        link: 'tutorials/using-jsx-in-apostrophe.md'
+        text: 'Using React in ApostroheCMS',
+        link: 'tutorials/using-react-in-apostrophecms.md'
       },
       {
         text: 'Building a Server-side JSX Widget',
