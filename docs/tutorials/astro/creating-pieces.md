@@ -193,7 +193,7 @@ The `ArticleIndexPage.astro` template demonstrates several important concepts fo
 
 ```astro
 ---
-import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
+import { aposSetQueryParameter as setParameter } from '@apostrophecms/apostrophe-astro/helpers/universal';
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 
 import Pagination from '../components/Pagination.astro';

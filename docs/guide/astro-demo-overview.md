@@ -110,7 +110,7 @@ const target = opensInNewTab(widget.linkTarget) ? '_blank' : null;
 
 Rendering an image requires one extra step: `_image` is a relationship to image *documents*, not a URL. Each image document contains an attachment object with size variants, crop dimensions, and focal point data. Navigating that structure manually is fragile — it will break if internal field names change, and it won't handle cropped images correctly.
 
-The `@apostrophecms/apostrophe-astro` package solves this by exporting five utility functions from `lib/attachment.js` that read the image object correctly in every case. **Never navigate `widget._image[0].attachment` manually — always use these helpers.** All five accept `null` safely, so they will not throw if an editor has not yet selected an image.
+The `@apostrophecms/apostrophe-astro` package solves this by exporting five utility functions from `helpers/universal` that read the image object correctly in every case. **Never navigate `widget._image[0].attachment` manually — always use these helpers.** All five accept `null` safely, so they will not throw if an editor has not yet selected an image.
 
 | Function | Returns |
 |---|---|
@@ -131,7 +131,7 @@ import {
   getFocalPoint,
   getWidth,
   getHeight,
-} from '@apostrophecms/apostrophe-astro/lib/attachment.js';
+} from '@apostrophecms/apostrophe-astro/helpers/universal';
 
 const { widget } = Astro.props;
 
