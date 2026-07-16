@@ -197,7 +197,7 @@ export function transpileToCJS(code) {
 
     // Transform imports
     cjsCode = cjsCode.replace(
-      /import\s+(\w+)\s+from\s+['"]([^'"]+)['"];?\s*(?:with\s*\{[^}]*\})?;?/g,
+      /import\s+(\w+)\s+from\s+['"]([^'"]+)['"];?(?:\s*with\s*\{[^}]*\})?;?/g,
       'const $1 = require(\'$2\');'
     );
 
