@@ -39,7 +39,15 @@ followed by
 ```
 npm run preview
 ```
-Note that the build version is *less* tolerant of errors in your markdown files, so it is important to do this step before deployment. 
+Note that the build version is *less* tolerant of errors in your markdown files, so it is important to do this step before deployment.
+
+`package.json` pins `rollup` to `4.52.4` via `overrides`. Rollup `>=4.53` has a parser
+regression ([rollup/rollup#6176](https://github.com/rollup/rollup/issues/6176)) that panics on
+`swagger-ui-dist`'s prebuilt ES bundle (used by the API Explorer) during `vitepress build`. If
+you see a build fail with `called 'Option::unwrap()' on a 'None' value` mentioning
+`swagger-ui-dist`, delete `node_modules` and `package-lock.json` and run `npm install` again to
+pick up the pin. Remove the override once Rollup ships a fix and this repo's `vitepress`/`vite`
+versions are updated past it.
 
 For deployment (requires credentials of course), you can select to deploy to staging, production, or both. For deployment to staging only, for example, you would use
 
@@ -57,6 +65,10 @@ For deployment to both,
 ```
 npm run deploy-all
 ```
+
+`npm run build` (and therefore each `npm run deploy-*` variant) also builds the site's
+Pagefind search index as a final step. See [SEARCH.md](./SEARCH.md) for how search — including
+the merged search across this site and apostrophecms.com — works and how to test it locally.
 
 ### 2. Editing content
 

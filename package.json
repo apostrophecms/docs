@@ -4,8 +4,9 @@
     "dev": "npm run docs:dev",
     "docs:dev": "vitepress dev docs",
     "update-version": "echo '{\"version\":\"'$(date +%s)'\"}' > docs/public/version.json",
-    "build": "npm run update-version && npm run docs:build",
+    "build": "npm run update-version && npm run docs:build && npm run build:search-index",
     "docs:build": "vitepress build docs",
+    "build:search-index": "node ./scripts/build-search-index.mjs",
     "preview": "npm run docs:preview",
     "docs:preview": "vitepress preview docs",
     "test": "npx eslint .",
@@ -13,7 +14,8 @@
     "deploy-staging": "UMAMI_WEBSITE_ID=7e078a27-082b-4e1b-bd8c-f964d2f4896d ENV=staging npm run deploy",
     "deploy-production": "UMAMI_WEBSITE_ID=626b2789-c45f-4be2-b159-c218d47d3d2f ENV=prod npm run deploy",
     "deploy-all": "npm run deploy-staging && npm run deploy-production",
-    "find-broken-links": "bash ./find-broken-links"
+    "find-broken-links": "bash ./find-broken-links",
+    "test:multisite-search": "node scripts/local-multisite-proxy.mjs"
   },
   "dependencies": {
     "body-scroll-lock": "^4.0.0-beta.0",
@@ -21,12 +23,13 @@
     "concurrently": "^9.2.1",
     "globby": "^14.1.0",
     "gray-matter": "^4.0.3",
+    "highlight.js": "^11.11.1",
     "jsdom": "^22.1.0",
     "marked": "^12.0.2",
     "socket.io-client": "^4.7.5",
     "swagger-ui-dist": "^5.30.3",
     "uuid": "^10.0.0",
-    "vitepress-plugin-pagefind": "^0.2.4",
+    "pagefind": "^1.5.2",
     "vue": "^3.3.4",
     "vue-inline-svg": "^3.1.2",
     "vue-router": "^4.2.3",
@@ -46,7 +49,9 @@
     "stylelint": "^15.10.3",
     "stylelint-config-apostrophe": "^3.0.0",
     "stylelint-plugin-stylus": "^0.18.0",
-    "vitepress": "^1.0.0",
-    "vitepress-plugin-search": "1.0.4-alpha.22"
+    "vitepress": "^1.0.0"
+  },
+  "overrides": {
+    "rollup": "4.52.4"
   }
 }
