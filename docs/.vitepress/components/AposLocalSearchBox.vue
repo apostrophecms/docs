@@ -27,7 +27,7 @@
           </div>
         </form>
 
-        <MiniSearchResults v-if="searchType === 'MiniSearch'" :filterText="filterText" :enableNoResults="enableNoResults" :showDetailedList="showDetailedList" @update:resultsLength="updateResultsLength" @close="$emit('close')" />
+        <PagefindResults v-if="searchType === 'MiniSearch'" :filterText="filterText" :enableNoResults="enableNoResults" :showDetailedList="showDetailedList" @update:resultsLength="updateResultsLength" @close="$emit('close')" />
         <AISearchResults v-else :filterText="filterText" :enableNoResults="enableNoResults" @close="$emit('close')" />
 
         <div class="search-keyboard-shortcuts">
@@ -58,7 +58,10 @@
 
 <script setup>
 import { ref, computed, provide, onMounted, nextTick } from 'vue'
-import MiniSearchResults from './AposMiniSearchResults.vue'
+// Note: the 'MiniSearch' searchType key name is kept as-is (rather than renamed to
+// 'Pagefind') so existing visitors' `vitepress:search-type` sessionStorage values keep
+// working across the migration; only the underlying results component changed.
+import PagefindResults from './AposPagefindResults.vue'
 import AISearchResults from './AposAISearchResults.vue'
 import { useLocalStorage, useSessionStorage } from '@vueuse/core'
 import { createSearchTranslate } from 'vitepress/dist/client/theme-default/support/translation'
