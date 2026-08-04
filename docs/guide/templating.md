@@ -1,6 +1,10 @@
 # Working with templates
 
-Templates are where code and content turn into web pages people can actually see and use. Apostrophe templates use the Nunjucks templating language and generally look like normal HTML markup with special tags and variables sprinkled throughout to render data.
+Templates are where code and content turn into web pages people can actually see and use. Apostrophe templates are most commonly written in the Nunjucks templating language, looking like normal HTML markup with special tags and variables sprinkled throughout to render data, though Apostrophe also supports writing templates as JSX.
+
+::: tip
+JSX templates run on the server with no client-side JavaScript required. Nunjucks remains the default in our starter kits, but we're gradually expanding our documentation to show JSX examples alongside Nunjucks. See the [JSX templates](/guide/jsx-templates.html) guide to get started.
+:::
 
 Template files go in `views` directories, either as module subdirectories or at the project root.
 
