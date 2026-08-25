@@ -44,16 +44,20 @@ Once the global doc is configured with fields, it will be added to the admin bar
 
 **Templates always have direct access to the global doc as `data.global`.** The Github URL field could be used in a template as a property of that doc:
 
-``` nunjucks
-{% extends data.outerLayout %}
-
-{% block afterMain %}
-  <footer>
-    {% if data.global.githubUrl %}
-      <a href="{{ data.global.githubUrl }}">Our Github organization</a>
-    {% endif %}
-  </footer>
-{% endblock %}
+``` jsx
+export default function({ global }, { Extend }) {
+  return (
+    <Extend templateName="outerLayoutBase"
+      afterMain={
+        <footer>
+          {global.githubUrl && (
+            <a href={global.githubUrl}>Our Github organization</a>
+          )}
+        </footer>
+      }
+    />
+  );
+}
 ```
 
 ::: warning

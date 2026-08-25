@@ -151,11 +151,11 @@ module.exports = {
 
 <AposCodeBlock>
 
-``` nunjucks
+``` jsx
 <h1>A new article has been added to the site</h1>
 <p>Here is the blurb</p>
-{{ data.piece.title }}
-{% area data.piece, 'blurb' %}
+{piece.title}
+<Area doc={piece} name="blurb" />
 ```
 
 <template v-slot:caption>

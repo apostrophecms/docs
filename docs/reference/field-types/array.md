@@ -178,12 +178,12 @@ Array schema configuration differs from module schema configuration in that _arr
 
 ## Use in templates
 
-Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
+Use JavaScript's [`Array.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) to loop over arrays. This is the most common way to traverse the `array` field data and sub-fields.
 
-```nunjucks
+```jsx
 <ul>
-{% for contact in data.piece.contactInfo %}
-  <li>{{ contact.city }}: {{ contact.email }}</li>
-{% endfor %}
+  {piece.contactInfo.map(contact => (
+    <li>{contact.city}: {contact.email}</li>
+  ))}
 </ul>
 ```

@@ -1,4 +1,22 @@
-# Template filters
+# Template filters (Nunjucks)
+
+::: info
+Filters are a **Nunjucks** feature. [JSX templates](/guide/jsx-templates.md) have no filter mechanism — they are real JavaScript, so transformations are ordinary function calls, and the `apos` object passed as the second argument gives you the same modules the filters wrap.
+
+Nunjucks remains fully supported, so this page describes current, working functionality. If you are migrating a template to JSX, the table below covers the common cases.
+
+| Nunjucks filter | In a JSX template |
+| --------------- | ----------------- |
+| `build(...)` | Call `apos.url.build(url, path, data)` directly |
+| `escape` (`e`) | Not needed. JSX auto-escapes interpolated values, and Apostrophe data is already escaped |
+| `safe` | `<div dangerouslySetInnerHTML={{ __html: value }} />` — see [Auto-escaping and raw HTML](/guide/jsx-templates.md#auto-escaping-and-raw-html) |
+| `nlbr` | Split and map instead of emitting raw HTML: `{text.split('\n').map(line => <>{line}<br /></>)}` |
+| `date(format)` | `import` and call `dayjs` directly in the template |
+
+`clonePermanent`, `css`, `json`, `jsonAttribute`, `merge`, `nlp`, `query`, and `striptags` do not have JSX equivalents yet. Keep those templates in Nunjucks for now.
+
+Custom filters registered with `addFilter()` are likewise Nunjucks-only. In JSX, import the function and call it.
+:::
 
 ## Nunjucks supplied filters
 

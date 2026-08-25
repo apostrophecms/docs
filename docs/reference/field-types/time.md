@@ -46,6 +46,6 @@ If you do not set `def: null` or `required: true`, the time defaults to the curr
 
 Times are stored, and will print, in the `HH:MM:SS` format.
 
-```nunjucks
-{{ data.piece.eventTime }}
+```jsx
+{piece.eventTime}
 ```

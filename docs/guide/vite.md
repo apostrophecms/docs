@@ -422,7 +422,7 @@ In most cases, any **server** options shouldn't be touched in the Vite config. F
 
 ### Conditional Code Injection
 
-When building UI components, you may want certain elements to appear only during development or when HMR is active. ApostropheCMS's Nunjucks components system makes this easy to manage.
+When building UI components, you may want certain elements to appear only during development or when HMR is active. ApostropheCMS's async components system makes this easy to manage.
 
 ### Component Setup
 
@@ -430,15 +430,15 @@ First, create your component template:
 
 <AposCodeBlock>
 
-```njk
-<div class="dev-tools">
-  <!-- Your development-only UI here -->
-  <div class="dev-tools__status">HMR Active</div>
-  <div class="dev-tools__reload">Force Refresh</div>
+```jsx
+<div className="dev-tools">
+  {/* Your development-only UI here */}
+  <div className="dev-tools__status">HMR Active</div>
+  <div className="dev-tools__reload">Force Refresh</div>
 </div>
 ```
   <template v-slot:caption>
-    modules/devTools/views/devTools.html
+    modules/devTools/views/devTools.jsx
   </template>
 
 </AposCodeBlock>

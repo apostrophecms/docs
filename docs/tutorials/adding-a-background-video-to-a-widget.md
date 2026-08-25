@@ -189,25 +189,29 @@ Pull the related piece out of the array, and render a `<video>` element only whe
 
 <AposCodeBlock>
 
-```nunjucks
-{% set backgroundVideo = widget._backgroundVideo[0] %}
+```jsx
+export default function({ widget }, { apos, Area }) {
+  const backgroundVideo = widget._backgroundVideo[0];
 
-<div class="widget hero-widget">
-  {% if backgroundVideo and backgroundVideo.video %}
-    <video
-      class="hero-widget__video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-      src="{{ apos.attachment.url(backgroundVideo.video) }}"
-    ></video>
-  {% endif %}
-  <div class="hero-widget__content">
-    {% area widget, 'content' %}
-  </div>
-</div>
+  return (
+    <div className="widget hero-widget">
+      {backgroundVideo?.video && (
+        <video
+          className="hero-widget__video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          src={apos.attachment.url(backgroundVideo.video)}
+        ></video>
+      )}
+      <div className="hero-widget__content">
+        <Area doc={widget} name="content" />
+      </div>
+    </div>
+  );
+}
 ```
   <template v-slot:caption>
     modules/hero-widget/views/widget.html

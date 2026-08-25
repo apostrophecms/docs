@@ -100,9 +100,9 @@ Don't forget to also enable the module in `app.js`, like any other module.
 
 <AposCodeBlock>
 
-``` nunjucks
-<h1 class="contextual-heading" style="width: {{ data.widget.width }}%">
-  {{ data.widget.heading }}
+``` jsx
+<h1 className="contextual-heading" style={{ width: `${widget.width}%` }}>
+  {widget.heading}
 </h1>
 ```
   <template v-slot:caption>
