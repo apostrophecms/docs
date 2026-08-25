@@ -47,13 +47,12 @@ video: {
 
 Simplest usage could involve simply printing the thumbnail image (if available) and linking to the media:
 
-```nunjucks
-{% if data.piece.video and data.piece.video.thumbnail %}
-  {% set video = data.piece.video %}
-  <a href="{{ video.url }}">
-    <img src="{{ video.thumbnail }}" alt="{{ video.title }}">
+```jsx
+{piece.video?.thumbnail && (
+  <a href={piece.video.url}>
+    <img src={piece.video.thumbnail} alt={piece.video.title} />
   </a>
-{% endif %}
+)}
 ```
 
 More likely, you will want to add the full embed code from the media source. This should be done in client-side JavaScript. Apostrophe provides an API route to get that.

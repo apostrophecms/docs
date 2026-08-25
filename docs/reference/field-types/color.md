@@ -165,8 +165,8 @@ false
 
 ## Use in templates
 
-```nunjucks
-<button style="background-color: {{ data.piece.themeColor or '#639' }}">
+```jsx
+<button style={{ backgroundColor: piece.themeColor || '#639' }}>
   Enhance
 </button>
 ```

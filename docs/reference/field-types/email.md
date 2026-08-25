@@ -38,6 +38,6 @@ workEmail: {
 
 ## Use in templates
 
-``` nunjucks
-Email: {{ data.piece.workEmail }}
+``` jsx
+Email: {piece.workEmail}
 ```

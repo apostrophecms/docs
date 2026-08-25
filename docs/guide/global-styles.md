@@ -303,16 +303,16 @@ Look at your existing template markup to identify selectors:
 
 <AposCodeBlock>
 
-```nunjucks
-{# layout.html #}
+```jsx
+{/* layout.jsx */}
 <body>
-  <header class="site-header">
-    <div class="container">
-      <nav class="main-nav">...</nav>
+  <header className="site-header">
+    <div className="container">
+      <nav className="main-nav">...</nav>
     </div>
   </header>
-  <main class="site-content">
-    <div class="container">...</div>
+  <main className="site-content">
+    <div className="container">...</div>
   </main>
 </body>
 ```

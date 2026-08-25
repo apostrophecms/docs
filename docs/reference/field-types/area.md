@@ -216,21 +216,21 @@ If you configure an area to use the expanded preview menu you can further custom
 Use the `area` template tag with arguments for the context and the name of the area field in that context:
 
 ```
-{% area context, area-name %}
+<Area doc={context} name="area-name" />
 ```
 
 The "context" may be a page, piece, widget, or [array field](/reference/field-types/array.md) item, as referenced in the template. All configuration from the field definition is applied automatically from the relevant schema configuration.
 
-```nunjucks
-<!-- Inserting the `main` area field for a page. -->
+```jsx
+{/* Inserting the `main` area field for a page. */}
 <section>
-  {% area data.page, 'main' %}
+  <Area doc={page} name="main" />
 </section>
-<!-- Inserting the `photo` area field for array items. -->
+{/* Inserting the `photo` area field for array items. */}
 <div>
-  {% for item in data.page.photos %}
-    {% area item, 'photo' %}
-  {% endfor %}
+  {page.photos.map(item => (
+    <Area doc={item} name="photo" />
+  ))}
 </div>
 ```
 

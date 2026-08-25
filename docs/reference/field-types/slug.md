@@ -118,6 +118,6 @@ In this example, the `customSlug` field will:
 
 If adding a new field with the `slug` type, it is most likely not going to be used in templates, but it is allowed as a string value.
 
-```nunjucks
-{{ data.piece.projectSlug }}
+```jsx
+{piece.projectSlug}
 ```

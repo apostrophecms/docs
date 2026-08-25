@@ -354,14 +354,14 @@ This feature enhances the in-context editing experience by providing immediate v
 
 Areas have a special template tag to add them in template markup. It requires passing two arguments: the area's context and the area name.
 
-``` nunjucks
-{% area context, 'name' %}
+``` jsx
+<Area doc={context} name="name" />
 ```
 
 The **context** refers to the data object that the area field belongs to. This could be a page, a piece, or a widget. In the landing page example above, the `main` area belongs to a landing page. In that case, the context would be that page's data object in the template: `data.page`.
 
-``` nunjucks
-{% area data.page, 'main' %}
+``` jsx
+<Area doc={page} name="main" />
 ```
 
 The template tag knows to use the area data on `data.page.main`, check for the widgets allowed in that area, and render the area using the correct widget templates.
@@ -398,12 +398,16 @@ These can be added in an object after the area tag arguments using the `with` ke
 
 <AposCodeBlock>
 
-``` nunjucks
-{% area data.page, 'main' with {
-  '@apostrophecms/image': {
-    sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
-  }
-} %}
+``` jsx
+<Area
+  doc={page}
+  name="main"
+  contextOptions={{
+    '@apostrophecms/image': {
+      sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
+    }
+  }}
+/>
 ```
 
 <template v-slot:caption>
@@ -414,8 +418,8 @@ These can be added in an object after the area tag arguments using the `with` ke
 
 The object following `with` should include keys matching widget type names, without the `-widget` suffix (e.g., the `@apostrophecms/image`). The context template will pass those options into the proper widget template as `data.contextOptions`. In the example above, the core image widget template, *and only that template*, would be able to use the data as:
 
-``` nunjucks
-{{ data.contextOptions.sizes }}
+``` jsx
+{contextOptions.sizes}
 ```
 
 Any context options for widget types not allowed in the area are ignored.

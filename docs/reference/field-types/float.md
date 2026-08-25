@@ -43,6 +43,6 @@ gpa: {
 
 ## Use in templates
 
-```nunjucks
-GPA: {{ data.piece.gpa }}
+```jsx
+GPA: {piece.gpa}
 ```

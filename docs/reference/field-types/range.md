@@ -45,11 +45,11 @@ fontSize: {
 
 ## Use in templates
 
-```nunjucks
-{{ data.widget.fontSize }}
+```jsx
+{widget.fontSize}
 
-{# data.widget.fontSize is a number #}
-<h2 style="font-size: {{ data.widget.fontSize }}px;">
+{/* widget.fontSize is a number */}
+<h2 style={{ fontSize: `${widget.fontSize}px` }}>
   Hello, world
 </h2>
 ```

@@ -82,10 +82,9 @@ Object schema configuration differs from module schema configuration in that _ob
 
 You can access the fields of the object as sub-properties.
 
-```nunjucks
+```jsx
 <p>
-{% set address = data.piece.address %}
-{{ address.street }}<br />
-{{ address.city }}, {{ address.state }}
+  {piece.address.street}<br />
+  {piece.address.city}, {piece.address.state}
 </p>
 ```

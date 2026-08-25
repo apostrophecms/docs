@@ -1004,8 +1004,8 @@ Using in a template:
 
 <AposCodeBlock>
 
-```nunjucks
-{{ apos.product.formatPrice(data.piece) }}
+```jsx
+{apos.product.formatPrice(piece)}
 ```
 <template v-slot:caption>
 modules/product-page/views/show.html

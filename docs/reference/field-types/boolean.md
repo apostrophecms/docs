@@ -56,11 +56,10 @@ showRelatedArticles: {
 
 ## Use in templates
 
-```nunjucks
-<!-- To print the value: -->
-{{ data.piece.isSpecial }}
-<!-- or use it in a conditional: -->
-<button class="{% if data.piece.isSpecial %}is-special{% endif %}">
+Use the field as a condition to decide whether to apply a class:
+
+```jsx
+<button className={piece.isSpecial ? 'is-special' : undefined}>
   Engage
 </button>
 ```

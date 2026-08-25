@@ -151,7 +151,7 @@ export default function MyImageWidget({ widget, apos }) {
       src={url}
       width={apos.attachment.getWidth(attachment)}
       height={apos.attachment.getHeight(attachment)}
-      srcset={apos.image.srcset(attachment)}
+      srcSet={apos.image.srcset(attachment)}
       alt={widget.imageAlt || ''}
     />
   );

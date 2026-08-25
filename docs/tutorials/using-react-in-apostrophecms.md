@@ -273,11 +273,11 @@ The server-rendered markup for this widget is intentionally small. Its job is to
 
 <AposCodeBlock>
 
-```nunjucks
+```jsx
 <section data-react-weather-widget>
   <div
     id="react-weather-root"
-    data-default-city="{{ data.widget.defaultCity or '' }}"
+    data-default-city={widget.defaultCity || ''}
   ></div>
 </section>
 ```
