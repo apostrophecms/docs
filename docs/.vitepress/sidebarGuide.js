@@ -63,6 +63,10 @@ const sidebarGuide = [
             link: 'guide/migration/upgrading-apostrophe-astro.md'
           }
         ]
+      },
+      {
+        text: 'Using AI Effectively',
+        link: 'guide/using-ai-effectively.md'
       }
     ]
   },
