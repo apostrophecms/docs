@@ -12,17 +12,15 @@ This guide covers how to close that gap by giving AI tools the context they need
 
 There are two broad categories of AI coding tools, and they behave very differently for code assistance.
 
-**Chat interfaces** (Claude.ai, ChatGPT, etc.) start each conversation without awareness of your project. By default, every session starts cold, but most chat interfaces let you upload files directly or create persistent projects where you can attach your source tree, documentation, or selected project files. If you use a chat interface, best practice is to take advantage of these features.
+**In-project agentic tools** (Claude Code, Codex, Cursor, etc.) run directly inside your project directory. They can read, write, and edit your actual files — creating new modules in the right location, modifying existing schemas without overwriting surrounding code, and running project commands to verify output. Because they work with your real codebase rather than a copied snippet, they stay in sync with changes you make and can handle multi-file tasks. This is the workflow we recommend for ApostropheCMS development.
 
-Chat interfaces are well-suited to answering architecture and implementation questions, helping you reason through the right solution before writing it yourself, or reviewing a focused set of files without letting an AI tool touch your project directly.
+The tradeoff is that in-project tools can act on more than you intended. They may modify files you did not expect, chain multiple actions together, or make reasonable-looking changes based on the wrong assumption. Plan mode and a human review step at the git boundary address most of this, and both are covered below.
 
-**In-project agentic tools** (Claude Code, Codex, Cursor, etc.) run directly inside your project directory. They can read, write, and edit your actual files — creating new modules in the right location, modifying existing schemas without overwriting surrounding code, and running project commands to verify output. Because they work with your real codebase rather than a copied snippet, they can stay in sync with changes you make and can handle multi-file tasks.
+**Chat interfaces** (Claude.ai, ChatGPT, etc.) start each conversation without awareness of your project. By default, every session starts cold. Most chat interfaces let you upload files or create persistent projects where you can attach your source tree, documentation, or selected project files, and if you work this way you should take advantage of those features. But that context will always be out of date unless you keep feeding it more, which is the problem in-project agentic tools were invented to solve.
 
-The tradeoff is that in-project tools can act on more than you intended. They may modify files you did not expect, chain multiple actions together, or make reasonable-looking changes based on the wrong assumption.
+**Recommendation:** Use an in-project agentic tool as your primary workflow for both planning and implementation. Claude Code’s plan mode (covered below) lets the tool read your full project and propose changes before touching any files, so the architecture and planning work that once called for a chat interface is now better served inside the project itself, where the tool can actually read the code it is reasoning about. Keep human review at the git boundary: inspect the diff, run the project’s checks, and commit the work yourself.
 
-**Recommendation:** Use an in-project agentic tool as your primary workflow for both planning and implementation. For example, Claude Code’s plan mode (covered below) lets the tool read your full project and propose changes before touching any files, so the planning use case that once required a chat interface is now well-served inside the project itself. Keep human review at the git boundary: inspect the diff, run the project’s checks, and commit the work yourself.
-
-Chat interfaces remain useful for open-ended exploration — thinking through an approach without committing to one, discussing architecture across multiple possible directions, or working within a team policy that keeps AI tools from writing to the codebase directly. For day-to-day implementation work, an in-project tool with full project context will consistently outperform a chat session.
+Unless something prevents you from sharing your full project with an agentic tool, it will nearly always give you better results. Reach for a chat interface when something does stop you: a client or employer policy that keeps AI tools out of the codebase, code you are not permitted to share, or early open-ended thinking you want to do away from the project entirely.
 
 ::: tip
 For serious AI-accelerated development, a paid account is worth it. Free-tier models are typically limited to the chat interface and are more likely to produce shallow, incomplete, or incorrect answers for framework-specific work. A Pro account in the $20/month range gives you access to more capable models and the in-project tools covered in this guide.
@@ -46,6 +44,8 @@ For an ApostropheCMS project, useful things to include are:
 - Links to relevant internal docs or architecture notes
 
 A developer working with the agent, for example, can then ask "create a new piece type for events" without specifying all of the above because the project instruction file has already told the tool how the project is organized.
+
+You do not have to write all of this before you start. An agentic tool picks up much of it from the project itself, so a practical approach is to begin working right away and add to your instruction file only where the tool guessed wrong. That saves your effort up front and avoids spending tokens restating context the tool could have inferred.
 
 This is especially important in ApostropheCMS because two projects can organize the same feature differently. One project might define shared schema fields in helper files, another might keep all fields in the module, and another might use JSX templates instead of Nunjucks. More capable models will often inspect nearby modules automatically before generating code, but making it explicit in your project instructions ensures consistent behavior across tools and model tiers.
 
@@ -91,7 +91,7 @@ The tool can inspect the project, locate the likely module and template files, a
 
 ### Verify generated code in context
 
-Ask the AI to check its work against related files. If it generates a new widget, ask it to also verify that the widget is registered in `app.js` or `app.mjs` and that the template file is in the right location, such as `modules/[widget-name]/views/widget.html` for a Nunjucks widget.
+Ask the AI to check its work against related files. If it generates a new widget, ask it to also verify that the widget is registered in `app.js` and that the template file is in the right location, such as `modules/[widget-name]/views/widget.html` for a widget with Nunjucks templates.
 
 > After creating the widget, check that it's registered in the modules configuration
 > in app.js and that a basic widget.html template exists at the correct path.
@@ -146,7 +146,7 @@ When an ApostropheCMS project uses Astro as the frontend, the best reference for
 
 The integration is designed so ApostropheCMS manages content, URLs, editing, media, permissions, and page data, while Astro handles frontend rendering. In a typical Astro integration project, you do not manually fetch each content type from the REST API for normal page rendering. Instead, the catch-all Astro route uses `aposPageFetch(Astro.request)` to retrieve the current page data, then `AposLayout`, `AposTemplate`, and `AposArea` render the mapped Astro components.
 
-That distinction matters when prompting AI tools. If the tool assumes the project is a generic headless frontend, it may generate unnecessary API calls, duplicate routing logic, or bypass the visual editing integration. For most page, template, widget, and layout work, ask it to follow the Astro integration patterns instead.
+That distinction matters when prompting AI tools. In practice an agentic tool working inside an existing project usually follows the patterns it finds there, but a tool that treats the project as a generic headless frontend may generate unnecessary API calls, duplicate routing logic, or bypass the visual editing integration. For most page, template, widget, and layout work, ask it to follow the Astro integration patterns instead.
 
 For Astro integration projects, launch your agentic tool from the monorepo root rather than from inside either subdirectory. With both the ApostropheCMS backend and Astro frontend visible from the start, the tool picks up a significant amount of project context before you give it any specific guidance.
 
@@ -180,14 +180,8 @@ For headless Astro projects, include details like these in your project instruct
 
 - which directory contains the ApostropheCMS backend
 - which directory contains the Astro frontend
-- how the frontend connects to ApostropheCMS
-- whether the project uses `@apostrophecms/apostrophe-astro`
-- where `aposPageFetch`, `AposTemplate`, and `AposArea` are used
-- where `templatesMapping` and `widgetsMapping` are defined
-- where Astro routes, layouts, and components live
-- which content types are rendered by Astro
-- which files control visual editing integration
 - which commands start the backend, the frontend, or both together
+- any project convention that departs from the standard integration patterns
 
 Example project instruction:
 
