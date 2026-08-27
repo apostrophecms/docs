@@ -22,6 +22,7 @@ cd public-demo-jsx
 git checkout jsx
 npm install
 npm run dev
+```
 :::
 
 ## File location and naming
@@ -192,6 +193,108 @@ If the template itself expects a prop literally named `name`, use `templateName`
 
 `name` is forwarded to the rendered template as a prop only when `templateName` is also present. `templateName` is never forwarded.
 
+## What does not carry over from React
+
+JSX here is a syntax for producing HTML on the server. The runtime walks your returned tree once and serializes it to a string — there is no component lifecycle, no reconciler, and no client-side runtime. Most React knowledge transfers, but the following do not, and none of them raise an error. They produce wrong markup silently.
+
+### Attribute names are mostly passed through verbatim
+
+Three groups are translated:
+
+| Written | Rendered |
+| --- | --- |
+| `className` | `class` |
+| `htmlFor` | `for` |
+| SVG camelCase properties — `strokeWidth`, `fillRule`, `clipPath`, `xlinkHref`, … | `stroke-width`, `fill-rule`, `clip-path`, `xlink:href`, … |
+
+Everything else reaches the HTML exactly as you typed it. `data-*` and `aria-*` attributes pass through unchanged, which is what you want. But React's wider alias table is not implemented, so these do **not** become their HTML equivalents:
+
+```jsx
+<img srcSet={srcset} />
+```
+
+```jsx
+<meta httpEquiv="refresh" />
+```
+
+Write the HTML attribute name instead:
+
+```jsx
+<img srcset={srcset} />
+```
+
+```jsx
+<meta http-equiv="refresh" />
+```
+
+`srcSet` is a special case worth calling out: it appears to work, because HTML parsing is case-insensitive about attribute names. Write `srcset` anyway — the casing is meaningless here and it misleads the next reader.
+
+React's form conventions are likewise absent. Use the real HTML attributes:
+
+```jsx
+<input value={piece.title} checked={piece.featured} />
+```
+
+### Event handler props do not work
+
+There is no event system and no hydration. A function passed as a prop is stringified into the attribute value:
+
+```jsx
+<button onClick={handleClick}>Save</button>
+```
+
+Attach behavior from browser-side JavaScript instead, targeting the element by class or data attribute:
+
+```jsx
+<button className="save-button" data-piece-id={piece._id}>Save</button>
+```
+
+A lowercase inline `onclick="…"` **string** still works, because it passes through verbatim like any other attribute. That is ordinary HTML, not React — leave existing `onclick` attributes lowercase when converting a template rather than "tidying" them into `onClick`.
+
+### `style` takes a string, not an object
+
+```jsx
+<div style={{ color: 'red' }} />
+```
+
+renders `style="[object Object]"`. Pass a string instead:
+
+```jsx
+<div style="color: red" />
+```
+
+### `false`, `null`, and `undefined` remove the attribute entirely
+
+Any prop whose value is `false`, `null`, or `undefined` is omitted. A value of `true` renders the bare attribute. This matches HTML's boolean attributes and is usually what you want:
+
+```jsx
+<input disabled={!canEdit} />
+```
+
+It differs from React for `aria-*`, where the string `"false"` is meaningful and an absent attribute is not the same thing:
+
+```jsx
+<div aria-hidden={false} />
+```
+
+drops the attribute entirely. Pass the string yourself:
+
+```jsx
+<div aria-hidden={String(isHidden)} />
+```
+
+### Non-string values are coerced, not validated
+
+An object used as a child renders as `[object Object]` rather than raising an error. Void elements given children serialize as malformed markup — `<img>…</img>` — instead of being rejected. The runtime will not catch these for you.
+
+### Absent entirely
+
+Hooks, state, context, refs, portals, hydration, class components, `memo`, and `forwardRef` do not exist. `key` and `ref` props are accepted and silently discarded — they exist in React to help the client-side reconciler, and there is no reconciler here. Don't bother adding them.
+
+::: info
+The useful mental model is **HTML written with JSX syntax**, plus function components and Apostrophe's async template helpers — not server-rendered React.
+:::
+
 ## Extending templates
 
 JSX has no concept of named blocks. Markup the parent should render is passed in as **props**, including the implicit `children` prop made up of markup between the opening and closing tags, matching React conventions.
@@ -299,12 +402,16 @@ modules/default-page/views/page.jsx
 </AposCodeBlock>
 
 ::: info
-`<Template>` and `<Extend>` differ only when the target is a `.html` file:
+`<Template>` and `<Extend>` differ only when the target resolves to a Nunjucks file:
 
-- `<Template templateName="layout.html" foo={…} />` is **include semantics**: `foo` arrives in `data.foo` and `{% block %}` declarations in `layout.html` are not overridden.
-- `<Extend templateName="layout.html" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in `layout.html`.
+- `<Template templateName="layout" foo={…} />` is **include semantics**: `foo` arrives in `data.foo` and `{% block %}` declarations in the target are not overridden.
+- `<Extend templateName="layout" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in the target.
 
 When the target is a `.jsx` file, both behave identically (props are the data argument, markup between tags is `children`). Use whichever name reads better in context.
+:::
+
+::: warning
+Write `templateName` **without a file extension**. Apostrophe strips a known extension and then searches `.jsx`, `.njk`, `.html` in that order, so `templateName="layout.html"` does *not* pin the target to the Nunjucks file — it still resolves `layout.jsx` first if one exists. The extension reads as a guarantee it does not provide.
 :::
 
 ## Migration order
