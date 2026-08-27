@@ -378,10 +378,10 @@ export default function ({ widget }) {
             newlines instead — this keeps the text escaped, so there is no
             need for the `safe` filter's counterpart either. */}
         {widget.detail.split('\n').map((line, i) => (
-          <span key={i}>
+          <>
+            {i > 0 && <br />}
             {line}
-            <br />
-          </span>
+          </>
         ))}
       </div>
     </section>
