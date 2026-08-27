@@ -206,6 +206,10 @@ const sidebarGuide = [
             link: 'guide/jsx-templates.md'
           },
           {
+            text: 'Nunjucks Templates',
+            link: 'guide/nunjucks-templates.md'
+          },
+          {
             text: 'Custom Nunjucks Tags',
             link: 'reference/template-tags.md'
           }

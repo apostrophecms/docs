@@ -10,6 +10,10 @@ JSX templates are a server-side rendering option. They do **not** imply React: t
 
 JSX interoperates with Nunjucks in one direction: a `.jsx` template can extend or include a `.html` template (with block overrides where appropriate), but a `.html` template cannot extend or include a `.jsx` template. In practice this means you migrate a project from the leaves up, converting individual page and widget templates to JSX while keeping `layout.html` and the core Nunjucks templates in place. See [Migration order](#migration-order) for the rules.
 
+::: tip Converting an existing project?
+[Migrating templates with an AI assistant](/guide/jsx-migration-assistant.md) provides instructions you can copy into your project's `CLAUDE.md` or `AGENTS.md`, so a coding assistant follows the rules on this page instead of guessing at them.
+:::
+
 ::: info
 Right now, the easiest way to get a peek at a working project with JSX templates is:
 ```bash
@@ -316,6 +320,10 @@ That asymmetry determines how to migrate a project. Two orderings work; the hybr
 **Top-down in one cut: convert a whole inheritance chain together.** Once every `page.html` that extends `layout.html` is gone (either deleted or converted to `.jsx`), you can rename `layout.html` to `layout.jsx`. The new `layout.jsx` extends the core outer layout with `<Extend templateName="outerLayoutBase" … />`.
 
 **Hybrid: don't.** Don't leave any `.html` template extending a `.jsx` template. That combination cannot work.
+
+::: tip
+If you are using a coding assistant for the conversion, [Migrating templates with an AI assistant](/guide/jsx-migration-assistant.md) provides instructions you can copy into your project's `CLAUDE.md` or `AGENTS.md`, covering the ordering rules above along with the JSX behavior that most often trips up assistants.
+:::
 
 ::: info
 Core's `outerLayoutBase.html` will remain Nunjucks for the foreseeable future, because every existing project's `layout.html` extends it via `{% extends data.outerLayout %}`. A fully-JSX project typically ends up with a `.jsx` layout that extends the core Nunjucks outer layout through `<Extend>`. This is the intended steady state, not a limitation.
