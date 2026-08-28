@@ -82,35 +82,42 @@ We can add functionality to the default home page type by adding a configuration
 
 Each page type requires a template. The only exception to that rule is if a page type extends another page type that already has a template.
 
-Page templates are added in a `views` directory for the page type as `page.html`. The template for the previous example's default page would be `modules/default-page/views/page.html`. A very simple page template for the Default page might look like this:
+Page templates are added in a `views` directory for the page type as `page.jsx`. The template for the previous example's default page would be `modules/default-page/views/page.jsx`. A very simple page template for the Default page might look like this:
 <!-- TODO: Consider adding a file tree component when available. -->
 
-``` nunjucks
-{# modules/default-page/views/page.html #}
-{% extends "layout.html" %}
-
-{% block main %}
-  <header>
-    <h1>{{ data.page.title }}</h1>
-    {% if data.page.subtitle %}
-      <p>{{ data.page.subtitle }}</p>
-    {% endif %}
-  </header>
-  {% area data.page, 'main' %}
-{% endblock %}
+```jsx
+/* modules/default-page/views/page.jsx */
+export default function({ page }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <header>
+            <h1>{page.title}</h1>
+            {page.subtitle && <p>{page.subtitle}</p>}
+          </header>
+          <Area doc={page} name="main" />
+        </>
+      }
+    />
+  );
+}
 ```
 
 There are a number of things at work here.
 
 ### The template is extending a `layout.html` template
 
-``` nunjucks
-{% extends "layout.html" %}
+```jsx
+<Extend templateName="layout" main={mainContent} />
 ```
 
 `layout.html` is a base level template [used in official Apostrophe essentials starter kit](https://github.com/apostrophecms/starter-kit-essentials/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
 
-The layout template might look something like this:
+`<Extend>` works against a Nunjucks target, so a JSX page template can extend an existing `layout.html` unchanged. Each prop you pass replaces the `{% block %}` of the same name — `main={…}` above fills the layout's `main` block. This is the recommended way to migrate: convert page templates one at a time and leave the layout as it is.
+
+The layout template might look something like this. It is shown in Nunjucks because that is what the starter kit ships, and because a JSX page template extends it perfectly well as it stands:
 
 ``` nunjucks
 {% extends data.outerLayout %}
@@ -136,48 +143,47 @@ The layout template might look something like this:
 {% endblock %}
 ```
 
-### We are inserting page template markup in a template block
+Note how `beforeMain` opens the `<div>` and `<main>` tags that `afterMain` closes. Nunjucks blocks are textual, so a tag may be opened in one and closed in another. JSX cannot express that — every element must balance inside a single expression — so a layout rewritten in JSX takes the page body as `children` and wraps it, rather than splitting a wrapper across blocks. This is one reason the layout is a good candidate to leave in Nunjucks while page templates move to JSX.
 
-``` nunjucks
-{% block main %}
-{% endblock %}
+### We are inserting page template markup in a named block
+
+```jsx
+<Extend templateName="layout" main={mainContent} />
 ```
 
-Apostrophe uses the Nunjucks template language, which has a [block system](https://mozilla.github.io/nunjucks/templating.html#block) for injecting markup into lower-level templates. The block system involves placing a `block` tag in the root-level template file, then using those blocks in higher-level templates to insert markup. Since we used the `main` block here it will overwrite the layout template's `main` block.
+The layout declares named blocks, and a page template fills them. In JSX each block is a **prop passed to `<Extend>`**, and the prop name is the block name — so `main={…}` overwrites the layout template's `main` block. Because a block's content is a prop rather than a tag pair, it must be a single expression: wrap multiple elements in a fragment (`<>…</>`), as the example above does.
 
-### Page data is on `data.page`
+### Page data is the first argument
 
-``` nunjucks
-{{ data.page.title }}
+```jsx
+{page.title}
 ```
 
-Templates have access to a `data` object containing information about the Apostrophe application and current context data. In page templates, `data.page` contains data for the active page. For our Default page, that includes the title, subtitle, "main" area, and lots of other information.
+Templates have access to the same data that Nunjucks templates reach through `data`. It arrives as the **first argument of the exported function**, so destructure the properties you need rather than reaching through a `data` object. In page templates, `page` contains data for the active page — for our Default page, that includes the title, subtitle, "main" area, and lots of other information.
 
-Naming specific properties in the double brackets syntax, `{{}}`, prints them in the template.
+Naming specific properties inside curly braces, `{}`, prints them in the template.
 
-``` nunjucks
-{% if data.page.subtitle %}
-  <p>{{ data.page.subtitle }}</p>
-{% endif %}
+```jsx
+{page.subtitle && <p>{page.subtitle}</p>}
 ```
 
-Nunjucks offers additional tags, including the [`{% if %}` conditional tag](https://mozilla.github.io/nunjucks/templating.html#if), to help work with data in templates.
+Conditionals are ordinary JavaScript. `&&` renders the right-hand side only when the left is truthy, and a ternary covers if/else. See [Conditionals](/guide/jsx-templates.md#conditionals) for the full set of idioms.
 
 ::: tip
 If you want to know what is available in a template object, you can log it in your terminal using the template method `apos.log()`. This looks like:
 
-``` nunjucks
-{{ apos.log(data.page) }}
+```jsx
+{apos.log(page)}
 ```
 :::
 
-### The widget area is added using the `area` tag
+### The widget area is added using the `Area` component
 
-``` nunjucks
-{% area data.page, 'main' %}
+```jsx
+<Area doc={page} name="main" />
 ```
 
-This is a special tag in Apostrophe used to let editors add and manage content widgets to the page. After the `area` tag name, we pass the tag the field's context, which is our page, followed by the field name. We [configured it in the `index.js` file](#creating-a-page-type) to use two widget types. While editing the page, the user will have access to a menu to add widgets of those types.
+`Area` is one of the helpers on the second argument of the template function. It lets editors add and manage content widgets on the page. Pass the field's context as `doc`, which is our page, and the field name as `name`. We [configured it in the `index.js` file](#creating-a-page-type) to use two widget types. While editing the page, the user will have access to a menu to add widgets of those types.
 
 ![A page with the area menu opened](/images/page-area.jpg)
 
@@ -235,16 +241,30 @@ Pages can be organized into a page tree hierarchy while adding them or through t
 
 Apostrophe templates have data available to add navigation based on the page tree. This includes:
 
-| Data object | What is it? |
-| ------ | ------ |
-| `data.home` | Home page data. It is similar to the data on `data.page`, but always references the home page. |
-| `data.home._children` | Page data for pages one level below the home page in the page tree. |
-| `data.page._ancestors` | Page data for the ancestors of the active page, starting with the home page. |
-| `data.page._children` | Page data for pages one level *below* the active page. |
+| Data property | Nunjucks | What is it? |
+| ------ | ------ | ------ |
+| `home` | `data.home` | Home page data. It is similar to the data on `page`, but always references the home page. |
+| `home._children` | `data.home._children` | Page data for pages one level below the home page in the page tree. |
+| `page._ancestors` | `data.page._ancestors` | Page data for the ancestors of the active page, starting with the home page. |
+| `page._children` | `data.page._children` | Page data for pages one level *below* the active page. |
 
-By default, one level of children are available on each ancestor, as well as on the home page and `data.page`.
+By default, one level of children are available on each ancestor, as well as on the home page and `page`.
 
-With that available data, we could construct navigation for the website header using the Nunjucks `{% for %}` loop tag. The `layout.html` `beforeMain` block could look like:
+With that available data, we could construct navigation for the website header. In JSX this is a `.map()` over the children:
+
+```jsx
+<nav>
+  <ul>
+    {home._children.map((child) => (
+      <li>
+        <a href={child._url}>{child.title}</a>
+      </li>
+    ))}
+  </ul>
+</nav>
+```
+
+In the starter kit's Nunjucks layout, the same navigation uses a `{% for %}` loop inside the `beforeMain` block:
 
 ``` nunjucks
 {# views/layout.html #}

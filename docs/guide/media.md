@@ -211,6 +211,10 @@ When the relationship field has the `max: 1` limit, or when we only want the fir
 export default function({ piece }, { apos }) {
   const imageObject = apos.attachment.first(piece._image);
 
+  if (!imageObject) {
+    return null;
+  }
+
   return (
     <img src={apos.attachment.url(imageObject)} alt={imageObject._alt} />
   );

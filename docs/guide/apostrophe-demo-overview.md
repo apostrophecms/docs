@@ -10,7 +10,7 @@ The sections below cover the patterns you encounter in the first hour of working
 
 This starter is a single unified application: ApostropheCMS handles content modeling, the admin editing UI, server-side rendering, and asset serving in one Node.js/Express process. There is no separate frontend server. When a request arrives, ApostropheCMS selects the matching template, populates it with content data, and returns the rendered HTML directly.
 
-Templates can be written in [JSX](/guide/jsx-templates.md) (`.jsx`) or Nunjucks (`.html`). JSX is the recommended choice for new work; Nunjucks remains fully supported, and the two coexist in the same project. If both exist for the same template, `.jsx` wins.
+Templates can be written in [JSX](/guide/jsx-templates.md) (`.jsx`) or Nunjucks (`.html`). JSX is the recommended choice for new work; Nunjucks remains fully supported, and the two coexist in the same project. Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 ## Template Discovery
 
