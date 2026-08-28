@@ -70,7 +70,7 @@ The most important templates blocks from that core layout template are:
 | `afterMain` | A block after the `main` content block. Usually used for the website footer. |
 | `extraBody` | A block at the end of the `body` tag. |
 
-The layout template and any page, index page, or show page template could use these blocks to overwrite them or add to them ([using the `super()` tag](/guide/templating.md#the-super-tag)).
+The layout template and any page, index page, or show page template could use these blocks to overwrite them or add to them ([using the `super()` tag](/guide/nunjucks-templates.md#the-super-tag)).
 
 ::: info NOTES
 The `beforeMain`, `main`, and `afterMain` blocks are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside those blocks will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related JavaScript belongs in a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets).

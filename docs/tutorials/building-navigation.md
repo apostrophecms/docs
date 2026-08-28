@@ -29,28 +29,28 @@ The Apostrophe demo site is a small example of common page tree structure. Under
 
 ![Screenshot of the Apostrophe demo page structure in the page manager UI](/images/recipes/demo-page-tree.png)
 
-Apostrophe templates have access to this page tree using `data.home._children`, an array of top-level page data objects. Templates also have access to the children of the page a visitor is on, but since we're focused on the main site navigation, we want to use the home page's children. Home page children do not change as visitors move around the website.
+Apostrophe templates have access to this page tree using `home._children`, an array of top-level page data objects. Templates also have access to the children of the page a visitor is on, but since we're focused on the main site navigation, we want to use the home page's children. Home page children do not change as visitors move around the website.
 
-As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tree-navigation), we can loop over `data.home._children` and print the pages' URLs and titles in a list. Once you add some classes and CSS, this can work great as site navigation. And since it is based on the page tree structure **it will automatically stay up to date as editors update page content**.
+As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tree-navigation), we can map over `home._children` and print the pages' URLs and titles in a list. Once you add some classes and CSS, this can work great as site navigation. And since it is based on the page tree structure **it will automatically stay up to date as editors update page content**.
 
 <AposCodeBlock>
 
-  ``` nunjucks
+  ```jsx
   <header>
     <nav>
       <ul>
-        {# 👇 Referencing `data.home._children` and looping over them. #}
-        {% for page in data.home._children %}
+        {/* 👇 Referencing `home._children` and looping over them. */}
+        {home._children.map((child) => (
           <li>
-            <a href="{{ page._url }}">{{ page.title }}</a>
+            <a href={child._url}>{child.title}</a>
           </li>
-        {% endfor %}
+        ))}
       </ul>
     </nav>
   </header>
   ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>
 
@@ -104,7 +104,7 @@ For example, **to include two levels of pages in template ancestor data** we wou
 </AposCodeBlock>
 
 ::: info
-If using the `depth: 2` builder option, the each page in the `data.home._children` array will include their own `_children` array with any child pages, if they have any.
+If using the `depth: 2` builder option, each page in the `home._children` array will include its own `_children` array with any child pages, if they have any.
 :::
 
 By default the page data object includes all properties from the database document. We can **limit that returned data** (for a minor speed improvement and clearer logging). One good approach to this is to set `areas: false` and `relationships: false` to remove area and relationship field data, which can get large.
@@ -272,36 +272,45 @@ The final step is to turn the array data from this into template markup. We will
 
 <AposCodeBlock>
 
-  ``` nunjucks
+  ```jsx
   <header>
     <nav>
       <ul>
-        {# 👇 Referencing the global doc `primaryNav` property #}
-        {% for item in data.global.primaryNav %}
-          <li>
-            {% set path = '' %}
-            {% set pageTitle = '' %}
-            {% set selectedClass = '' %}
-            {% if item.type === 'page' and item._page and item._page[0] %}
-              {% set path = item._page[0]._url %}
-              {% set pageTitle = item._page[0].title %}
-              {% if data.page.title == pageTitle %}
-                {% set selectedClass = 'selected' %}
-              {% endif %}
-            {% elif item.type === 'custom' %}
-              {% set path = item.customUrl %}
-            {% endif %}
-            <a href="{{ path }}" class="{{ selectedClass }}"
-              {% if item.target[0] === '_blank' %} target="_blank" {% endif %}
-            >{{ item.label or pageTitle }}</a>
-          </li>
-        {% endfor %}
+        {/* 👇 Referencing the global doc `primaryNav` property */}
+        {global.primaryNav.map((item) => {
+          let path = '';
+          let pageTitle = '';
+          let selectedClass = '';
+
+          if (item.type === 'page' && item._page && item._page[0]) {
+            path = item._page[0]._url;
+            pageTitle = item._page[0].title;
+
+            if (page.title === pageTitle) {
+              selectedClass = 'selected';
+            }
+          } else if (item.type === 'custom') {
+            path = item.customUrl;
+          }
+
+          return (
+            <li>
+              <a
+                href={path}
+                className={selectedClass}
+                target={item.target[0] === '_blank' ? '_blank' : null}
+              >
+                {item.label || pageTitle}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   </header>
   ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>
 
@@ -309,36 +318,40 @@ In addition to adding more link types to the schema, the template example can be
 
 ## Constructing breadcrumb navigation
 
-Breadcrumb navigation shows visitors the series of pages from the page they are on back to the home page. It could end with some other major landing page, but our example will lead back to the home page. To add bread crumbs to a page we use very similar techniques to those shown above for a website's primary navigation. Instead of using `data.home`, we use `data.page._ancestors`.
+Breadcrumb navigation shows visitors the series of pages from the page they are on back to the home page. It could end with some other major landing page, but our example will lead back to the home page. To add bread crumbs to a page we use very similar techniques to those shown above for a website's primary navigation. Instead of using `home`, we use `page._ancestors`.
 
 **What is breadcrumb navigation, really?** If we think through the pieces of breadcrumb nav, we are looking at: *A series of links, usually starting with the home page, proceeding through the page tree, down to the page we are on.*
 
-`data.page._ancestors` perfectly matches this goal. It is an array of page objects, starting with the home page, continuing through the page tree and ending with the parent of the rendered page. Perfect! To turn that into a breadcrumb navigation, we simply need to **loop through `data.page._ancestors`, add a link for each ancestor**.
+`page._ancestors` perfectly matches this goal. It is an array of page objects, starting with the home page, continuing through the page tree and ending with the parent of the rendered page. Perfect! To turn that into a breadcrumb navigation, we simply need to **map over `page._ancestors`, adding a link for each ancestor**.
 
-The only tricky part comes at the end. If a visitor is on a piece's [show page](/guide/piece-pages.md#the-show-page-template), then `data.page` will actually be the index page. If `data.piece` exists (indicating we're rendering a show page), we will link to the index page (`data.page`) in the breadcrumbs, otherwise we'll simply print the current page's title.
+The only tricky part comes at the end. If a visitor is on a piece's [show page](/guide/piece-pages.md#the-show-page-template), then `page` will actually be the index page. If `piece` exists (indicating we're rendering a show page), we will link to the index page (`page`) in the breadcrumbs, otherwise we'll simply print the current page's title.
 
 <AposCodeBlock>
 
-  ``` nunjucks
-  {# Breadcrumb trail to the current page or piece. Not on the home page #}
-  {% if data.page and data.page._ancestors.length %}
-    <nav class="breadcrumb">
-      {# Loop over the ancestors. #}
-      {% for page in data.page._ancestors %}
-        <a href="{{ page._url }}">{{ page.title }}</a> ➡
-      {% endfor %}
-      {% if data.piece %}
-        {# We're rendering a show page. #}
-        <a href="{{ data.page._url }}">{{ data.page.title }}</a>  ➡
-        <span>{{ data.piece.title }}</span>
-      {% else %}
-        {# We're rendering a normal page. #}
-        <span>{{ data.page.title }}</span>
-      {% endif %}
+  ```jsx
+  {/* Breadcrumb trail to the current page or piece. Not on the home page */}
+  {page && page._ancestors.length > 0 && (
+    <nav className="breadcrumb">
+      {/* Loop over the ancestors. */}
+      {page._ancestors.map((ancestor) => (
+        <>
+          <a href={ancestor._url}>{ancestor.title}</a> ➡
+        </>
+      ))}
+      {piece ? (
+        <>
+          {/* We're rendering a show page. */}
+          <a href={page._url}>{page.title}</a> ➡
+          <span>{piece.title}</span>
+        </>
+      ) : (
+        /* We're rendering a normal page. */
+        <span>{page.title}</span>
+      )}
     </nav>
-  {% endif %}
+  )}
   ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>

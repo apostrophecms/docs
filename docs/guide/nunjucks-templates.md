@@ -193,7 +193,11 @@ modules/@apostrophecms/home-page/views/page.html
 </AposCodeBlock>
 
 ::: warning
-`super()` has no JSX equivalent. A template relying on it is usually best left in Nunjucks — JSX templates can extend a Nunjucks layout, so this does not block migrating the rest of a project.
+`super()` has no JSX equivalent, and one is not planned. Blocks are inheritance; JSX props are composition, and a prop cannot carry the parent's version of itself.
+
+The migration is not to find a replacement but to **make the block additive**, so nothing needs to call `super()` in the first place — the parent renders the shared part itself and exposes a finer block, or slot, for what the child adds. See [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super) for both the target shape and the transitional one.
+
+Leaving such a template in Nunjucks remains a valid fallback — JSX templates can extend a Nunjucks layout, so it never blocks migrating the rest of a project.
 :::
 
 ### Including templates

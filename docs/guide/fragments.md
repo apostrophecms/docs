@@ -1,4 +1,23 @@
-# Template fragments
+# Template fragments (Nunjucks)
+
+::: info
+Fragments are a **Nunjucks** feature. [JSX templates](/guide/jsx-templates.md) have no fragment mechanism, and do not need one.
+
+Fragments exist because a Nunjucks *macro* cannot contain asynchronous tags like `{% area %}` or an async component. A JSX template is real JavaScript, so a plain function component can already do that work — which means macros and fragments collapse into the same thing there.
+
+Nunjucks remains fully supported, so this page describes current, working functionality. If you are migrating a template to JSX, these are the equivalents:
+
+| In a Nunjucks fragment | In a JSX template |
+| ---------------------- | ----------------- |
+| `{% fragment name() %}` … `{% endfragment %}` | An ordinary function component |
+| `{% render name() %}` | `<Name />` |
+| Fragment arguments | Props |
+| `{% import 'fragments/file.html' as x %}` | An `import` statement |
+| `{% import 'module-name:file.html' %}` | `<Template name="module-name:file" />` |
+| `rendercaller()` and `{% rendercall %}` | The implicit `children` prop |
+
+See [`import`, `require`, and inline components](/guide/jsx-templates.md#import-require-and-inline-components) for the component pattern, and [Extending templates](/guide/jsx-templates.md#extending-templates) for how `children` works.
+:::
 
 We will often find that template code is reused across multiple files or that it simply gets overly complicated for a single file. **Template fragments** help solve this by splitting template code into smaller, managable pieces that can be used in other templates.
 
@@ -72,7 +91,7 @@ It is possible to pass the entire `data` object into a fragment as an argument. 
 
 ## Importing fragments across files
 
-The examples above simply render the fragments by name since they were defined in the same file. That can be useful sometimes, but it is more common to define fragments in different files from where they are used. This works very similarly to how template files are [extended or included](/guide/templating.md#referencing-templates-across-modules) across files. In this case, we use the `{% import %}` tag.
+The examples above simply render the fragments by name since they were defined in the same file. That can be useful sometimes, but it is more common to define fragments in different files from where they are used. This works very similarly to how template files are [extended or included](/guide/nunjucks-templates.md#referencing-templates-across-modules) across files. In this case, we use the `{% import %}` tag.
 
 ### Importing within the same module or the root `views` directory
 
