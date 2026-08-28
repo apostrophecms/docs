@@ -10,7 +10,7 @@ The sections below cover the patterns you encounter in the first hour of working
 
 This starter is a single unified application: ApostropheCMS handles content modeling, the admin editing UI, server-side rendering, and asset serving in one Node.js/Express process. There is no separate frontend server. When a request arrives, ApostropheCMS selects the matching template, populates it with content data, and returns the rendered HTML directly.
 
-Templates can be written in Nunjucks (`.html`) or JSX (`.jsx`); both are fully supported and can coexist in the same project. If both exist for the same template, `.jsx` wins.
+Templates can be written in Nunjucks (`.html`) or JSX (`.jsx`); both are fully supported and can coexist in the same project. Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 ## Template Discovery
 
@@ -52,6 +52,25 @@ A regular page template overrides the `main` block and extends the layout:
     {% area data.page, 'main' %}
   </section>
 {% endblock %}
+```
+
+The equivalent in JSX. Each `{% block %}` becomes a prop on `<Extend>`, and `<Extend>` works against the Nunjucks `layout.html` unchanged:
+
+```jsx
+/* modules/default-page/views/page.jsx */
+export default function({ page }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <section className="bp-content">
+          <h1>{page.title}</h1>
+          <Area doc={page} name="main" />
+        </section>
+      }
+    />
+  );
+}
 ```
 
 ## Template Data
@@ -105,6 +124,21 @@ export default {
 {% endblock %}
 ```
 
+**JSX template:**
+
+```jsx
+/* modules/default-page/views/page.jsx */
+<Extend
+  templateName="layout"
+  main={
+    /* <Area doc={} name="" /> renders a CMS-editable widget sequence stored in
+       that field. In edit mode, editors see the widget picker here; in view
+       mode, widgets render normally. */
+    <Area doc={page} name="main" />
+  }
+/>
+```
+
 ApostropheCMS wraps the area in editing controls in edit mode; in view mode it renders the widget templates directly.
 
 `lib/area.js` exports a default reusable configuration object for areas that need the core content widgets but not layout widgets. Import it to keep additional area definitions consistent rather than repeating widget lists inline.
@@ -140,7 +174,7 @@ The equivalent in JSX:
 
 ```jsx
 // modules/my-image-widget/views/widget.jsx
-export default function MyImageWidget({ widget, apos }) {
+export default function MyImageWidget({ widget }, { apos }) {
   const attachment = apos.image.first(widget._image);
   const url = attachment && apos.attachment.url(attachment, { size: 'full' });
 
@@ -165,6 +199,12 @@ export default function MyImageWidget({ widget, apos }) {
 ```nunjucks
 {% if article._author.length %}{{ article._author[0].title }}{% endif %}
 {% set attachment = apos.image.first(data.widget._image) %}
+```
+
+The same in JSX. Compare against `> 0` rather than relying on the length itself — `{article._author.length && …}` renders a literal `0` when the array is empty:
+
+```jsx
+{article._author.length > 0 && article._author[0].title}
 ```
 
 **`lib/` utilities.** `lib/area.js` exports a reusable widget configuration for area fields that use the core content widgets. Import it when that shared widget list fits the editorial context.

@@ -308,6 +308,10 @@ export default function({ page }, { apos }) {
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
 
+  if (!image) {
+    return null;
+  }
+
   return <img src={image._urls['one-third']} />;
 }
 ```
@@ -328,6 +332,10 @@ export default function({ page }, { apos }) {
     return null;
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
   const focalPoint = apos.attachment.focalPointToObjectPosition(image);
   // focalPoint === '20% 20%'
 
@@ -355,6 +363,10 @@ export default function({ page }, { apos }) {
     return null;
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
   const focalPoint = apos.attachment.getFocalPoint(image);
   // focalPoint === { x: 20, y: 20 }
 
@@ -382,6 +394,10 @@ export default function({ page }, { apos }) {
     return null;
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
   const imageHeight = apos.attachment.getHeight(image);
 
   return <img src={image._urls['one-third']} height={imageHeight} />;
@@ -403,6 +419,10 @@ export default function({ page }, { apos }) {
     return null;
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
   const imageWidth = apos.attachment.getWidth(image);
 
   return <img src={image._urls['one-third']} width={imageWidth} />;
@@ -425,7 +445,7 @@ export default function({ page }, { apos }) {
   }
   const image = apos.attachment.first(page._people, { group: 'images' });
 
-  if (!apos.attachment.hasFocalPoint(image)) {
+  if (!image || !apos.attachment.hasFocalPoint(image)) {
     return null;
   }
   const focalPoint = apos.attachment.focalPointToObjectPosition(image);

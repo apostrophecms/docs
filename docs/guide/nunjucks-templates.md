@@ -23,7 +23,7 @@ Apostrophe finds templates by filename, with no registry to update:
 | Piece index | `modules/{module-name}/views/index.html` |
 | Piece show | `modules/{module-name}/views/show.html` |
 
-When both `page.html` and `page.jsx` exist for the same module, the `.jsx` version wins.
+When both `page.html` and `page.jsx` exist in the *same* views folder, the `.jsx` version wins. Across folders it is the override chain that decides — a nearer folder's `.html` beats a parent module's `.jsx`. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 ## Template data
 
