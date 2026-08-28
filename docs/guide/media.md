@@ -42,15 +42,15 @@ module.exports = {
 
 ### Using an image widget in templates
 
-If presenting an image using the image widget and its template, the process is not different from rendering any other area in a template. Use the `area` template tag, including the context reference and the area field name.
+If presenting an image using the image widget and its template, the process is not different from rendering any other area in a template. Use the `Area` component, including the context reference and the area field name.
 
 <AposCodeBlock>
 
-``` nunjucks
-{% area data.piece, 'photo' %}
+```jsx
+<Area doc={piece} name="photo" />
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -95,13 +95,15 @@ For non-image attachments, simply pass the attachment object into the method.
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set fileUrl = apos.attachment.url(data.piece.fileUpload) %}
+```jsx
+export default function({ piece }, { apos }) {
+  const fileUrl = apos.attachment.url(piece.fileUpload);
 
-<a href="{{ fileUrl }}">Download</a>
+  return <a href={fileUrl}>Download</a>;
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -110,30 +112,42 @@ For image attachments, doing the same thing will return the URL for the `full` i
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set imgUrl = apos.attachment.url(data.piece.photoUpload, {
-  size: 'one-third'
-}) %}
+```jsx
+export default function({ piece }, { apos }) {
+  const imgUrl = apos.attachment.url(piece.photoUpload, {
+    size: 'one-third'
+  });
 
-<img src="{{ imgUrl }}" alt="" />
+  return <img src={imgUrl} alt="" />;
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
 
 [Responsive images](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images) are very important for cross-device support these days. Getting each image size to populate the `srcset` attribute for an image would get repetitive very quickly even using the `apos.attachment.url()` method. For that, there is a dedicated `apos.image.srcset()` method. Pass in the attachment object as an argument and it will return a `srcset` value with all sizes included.
 
+Write the attribute as `srcset`, not React's `srcSet`. Apostrophe's JSX templates pass attribute names through to HTML unchanged apart from `className` and `htmlFor`.
+
 <AposCodeBlock>
 
-``` nunjucks
-{% set srcset = apos.image.srcset(data.piece.photoUpload) %}
+```jsx
+export default function({ piece }, { apos }) {
+  const srcset = apos.image.srcset(piece.photoUpload);
 
-<img srcset="{{ srcset }}" src="{{ apos.attachment.url(data.piece.photoUpload) }}" alt="" />
+  return (
+    <img
+      srcset={srcset}
+      src={apos.attachment.url(piece.photoUpload)}
+      alt=""
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -174,15 +188,17 @@ Since relationship fields can accept multiple values (e.g., connecting multiple 
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set filesObject = apos.attachment.all(data.piece._files) %}
+```jsx
+export default function({ piece }, { apos }) {
+  const filesObject = apos.attachment.all(piece._files);
 
-{% for file in filesObject %}
-  <a src="{{ apos.attachment.url(file) }}">Download file</a>
-{% endfor %}
+  return filesObject.map((file) => (
+    <a href={apos.attachment.url(file)}>Download file</a>
+  ));
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -191,13 +207,17 @@ When the relationship field has the `max: 1` limit, or when we only want the fir
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set imageObject = apos.attachment.first(data.piece._image) %}
+```jsx
+export default function({ piece }, { apos }) {
+  const imageObject = apos.attachment.first(piece._image);
 
-<img src="{{ apos.attachment.url(imageObject) }}" alt="{{ imageObject._alt }}" />
+  return (
+    <img src={apos.attachment.url(imageObject)} alt={imageObject._alt} />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -207,29 +227,36 @@ When working with images, additional helpers are available. As an example, see t
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set attachment = apos.image.first(data.widget._image) %}
+```jsx
+export default function({ widget, options }, { apos }) {
+  const attachment = apos.image.first(widget._image);
 
-{% if attachment %}
-  <img
-    {# Modern browsers, best when used with a "sizes" attribute #}
-    srcset="{{ apos.image.srcset(attachment) }}"
-    {# Legacy browsers #}
-    src="{{ apos.attachment.url(attachment, { size: data.options.size or 'full' }) }}"
-    {# image.first attaches this property of the image piece for you #}
-    alt="{{ attachment._alt or '' }}"
-    {# Effective width and height (takes cropping into account) #}
-    width="{{ apos.attachment.getWidth(attachment) }}"
-    height="{{ apos.attachment.getHeight(attachment) }}"
-    {# Responsive design: make sure an editor-chosen focal point remains visible #}
-    {% if apos.attachment.hasFocalPoint(attachment) %}
-      style="object-position: {{ apos.attachment.focalPointToObjectPosition(attachment) }}"
-    {%- endif -%}
-  />
-{% endif %}
+  if (!attachment) {
+    return null;
+  }
+
+  return (
+    <img
+      /* Modern browsers, best when used with a "sizes" attribute */
+      srcset={apos.image.srcset(attachment)}
+      /* Legacy browsers */
+      src={apos.attachment.url(attachment, { size: options.size || 'full' })}
+      /* image.first attaches this property of the image piece for you */
+      alt={attachment._alt || ''}
+      /* Effective width and height (takes cropping into account) */
+      width={apos.attachment.getWidth(attachment)}
+      height={apos.attachment.getHeight(attachment)}
+      /* Responsive design: keep an editor-chosen focal point visible. A null
+         value omits the attribute entirely, so no guard is needed. */
+      style={apos.attachment.hasFocalPoint(attachment)
+        ? `object-position: ${apos.attachment.focalPointToObjectPosition(attachment)}`
+        : null}
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/show.html
+    modules/@apostrophecms/image-widget/views/widget.jsx
   </template>
 </AposCodeBlock>
 

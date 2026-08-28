@@ -53,22 +53,26 @@ This example demonstrates adding an image.
 
 <AposCodeBlock>
 
-``` nunjucks
-<section data-custom-widget>
-  <h1>Custom Widget</h1>
-  {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
-  <img
-    src="{{ data.manager.options.placeholderUrl }}"
-    alt="{{ __t('nameSpace:imagePlaceholder') }}"
-    class="custom-widget-placeholder"
-  />
-  {% else %}
-    <!-- markup displayed after the user edits the widget -->
-  {% endif %}
-</section>
+```jsx
+export default function({ widget, manager }, { __t }) {
+  return (
+    <section data-custom-widget>
+      <h1>Custom Widget</h1>
+      {widget.aposPlaceholder && manager.options.placeholderUrl ? (
+        <img
+          src={manager.options.placeholderUrl}
+          alt={__t('nameSpace:imagePlaceholder')}
+          className="custom-widget-placeholder"
+        />
+      ) : (
+        <>{/* markup displayed after the user edits the widget */}</>
+      )}
+    </section>
+  );
+}
 ```
 <template v-slot:caption>
-  modules/custom-widget/views/widget.html
+  modules/custom-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>
@@ -77,21 +81,25 @@ This example demonstrates adding a self-hosted video.
 
 <AposCodeBlock>
 
-``` nunjucks
-<section data-custom-widget>
-  <!-- For videos uploaded to the `public` folder -->
-  {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
-    <video controls width="250">
-      <source src="{{ data.manager.options.placeholderUrl }}" type="video/mp4" />
-    </video>
-  {% else %}
-    <!-- markup displayed after the user edits the widget -->
-  {% endif %}
-</section>
+```jsx
+export default function({ widget, manager }) {
+  return (
+    <section data-custom-widget>
+      {/* For videos uploaded to the `public` folder */}
+      {widget.aposPlaceholder && manager.options.placeholderUrl ? (
+        <video controls width="250">
+          <source src={manager.options.placeholderUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <>{/* markup displayed after the user edits the widget */}</>
+      )}
+    </section>
+  );
+}
 ```
 
 <template v-slot:caption>
-  modules/custom-widget/views/widget.html
+  modules/custom-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>
