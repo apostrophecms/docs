@@ -8,15 +8,14 @@ Writing template files is how we turn data into HTML to display in browsers (or 
 
 In the template, an async component looks like this:
 
-``` nunjucks
-{% component 'product:newest' with { max: 3 } %}
+```jsx
+<Component module="product" name="newest" max={3} />
 ```
 
-- The `{% component %}` tag indicates that we are working with an async component.
-- `'product:newest'` tells the template two things:
-  1. The component is defined in the `product` module.
-  2. Its name is `newest`, which is used as the component function name as well as its template partial filename.
-- `with { max: 3 }` is an options object that will be passed to the component function. It's not required, but can allow for varied use in different contexts.
+- The `Component` helper indicates that we are working with an async component. It comes from the second argument of the template function, alongside `Area`, `Extend`, and `Template`.
+- `module="product"` says the component is defined in the `product` module.
+- `name="newest"` is used as the component function name as well as its template partial filename.
+- Any remaining props — here `max={3}` — are passed to the component function as its options object. They are not required, but they allow for varied use in different contexts.
 
 With that one line, the template rendering will know to find the component definition, execute the component function asynchronously, and render the appropriate template partial. That's a lot of benefit for one line of template code.
 
@@ -85,29 +84,37 @@ module.exports = {
 
 The database request is asynchronous (as you can tell since it is an `async` function and uses `await` while making the request). This is the kind of thing that would otherwise cause trouble for a template.
 
-Since the name of the component function is `newest`, our template partial for it will be in the `product` module as `newest.html`.
+Since the name of the component function is `newest`, our template partial for it will be in the `product` module as `newest.jsx`.
 
 <AposCodeBlock>
 
-``` nunjucks
-<h2>Newest products</h2>
-<ul>
-  {% for product in data.products %}
-    <li><a href="{{ product._url }}">{{ product.title }}</li>
-  {% endfor %}
-</ul>
+```jsx
+export default function({ products }) {
+  return (
+    <>
+      <h2>Newest products</h2>
+      <ul>
+        {products.map((product) => (
+          <li>
+            <a href={product._url}>{product.title}</a>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/product/views/newest.html
+    modules/product/views/newest.jsx
   </template>
 </AposCodeBlock>
 
-`data.products` in this template is the information we returned in the component function. From there, this is a normal template. The resulting markup is rendered along with the original template that used the `{% component %}` tag.
+The `products` property destructured in this template is the information we returned in the component function. From there, this is a normal template. The resulting markup is rendered along with the original template that used `<Component>`.
 
 ::: info
 Async components have many uses. One of the most common is to support reuse in different contexts. For instance, the home page may always use the `newest` component at a fixed point in the page template. A products widget might also use it to show the newest products anywhere editors want to show the information.
 
-Inside Apostrophe, async components are used to implement the `{% area %}` tag.
+Inside Apostrophe, async components are used to implement areas.
 :::
 
 ::: warning

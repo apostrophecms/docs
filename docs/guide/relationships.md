@@ -45,16 +45,23 @@ module.exports = {
 
 </AposCodeBlock>
 
-``` nunjucks
-{# modules/article-page/views/show.html #}
-{% extends "layout.html" %}
-
-{% block main %}
-  <h1>{{ data.piece.title }}</h1>
-  <section>
-    {% area data.piece, 'body' %}
-  </section>
-{% endblock %}
+```jsx
+/* modules/article-page/views/show.jsx */
+export default function({ piece }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h1>{piece.title}</h1>
+          <section>
+            <Area doc={piece} name="body" />
+          </section>
+        </>
+      }
+    />
+  );
+}
 ```
 
 ::: info
@@ -186,23 +193,25 @@ Relationship fields can be referenced in templates like any other field as a pro
 
 A blog article show page template may include this code snippet:
 
-``` nunjucks
-{# modules/article-page/views/show.html #}
-<p>Topics:</p>
-<ul>
-  {% for topic in data.piece._topics %}
-    <li>{{ topic.title }}</li>
-  {% endfor %}
-</ul>
+```jsx
+/* modules/article-page/views/show.jsx */
+<>
+  <p>Topics:</p>
+  <ul>
+    {piece._topics.map((topic) => (
+      <li>{topic.title}</li>
+    ))}
+  </ul>
+</>
 ```
 
-Since the data is fetched in an array, we use the `{% for %}` tag to loop it. **If there is a maximum of one connected doc**, you could reference it directly using the array index:
+Since the data is fetched in an array, we use `.map()` to loop it. **If there is a maximum of one connected doc**, you could reference it directly using the array index:
 
-``` nunjucks
-{# modules/article-page/views/show.html #}
-{% if data.piece._topics.length > 0 %}
-  <p>Topic: {{ data.piece._topics[0] }}</p>
-{% endif %}
+```jsx
+/* modules/article-page/views/show.jsx */
+{piece._topics.length > 0 && (
+  <p>Topic: {piece._topics[0].title}</p>
+)}
 ```
 
 ::: warning
@@ -245,14 +254,16 @@ This field is identifying the connected doc type with the `withType` setting, th
 
 With this field in place, you could display connected articles in a topics show page the same way you displayed article topics above.
 
-``` nunjucks
-{# modules/topic-page/views/show.html #}
-<p>Articles:</p>
-<ul>
-  {% for article in data.piece._articles %}
-    <li>{{ article.title }}</li>
-  {% endfor %}
-</ul>
+```jsx
+/* modules/topic-page/views/show.jsx */
+<>
+  <p>Articles:</p>
+  <ul>
+    {piece._articles.map((article) => (
+      <li>{article.title}</li>
+    ))}
+  </ul>
+</>
 ```
 
 
@@ -328,13 +339,20 @@ Once this is added, editors can select an "Edit Relationship" option from the co
 
 Once a relationship with fields has been populated, we can access it, for instance from a template, using the `_fields` property of each related document:
 
-```nunjucks
-<h3>Members of Team {{ data.piece.title }}</h3>
-<ul>
-{% for person in data.piece._people %}
-  <li><a href="{{ person._url }}">{{ person.title }} ({{ person._fields.teamRole }})</a></li>
-{% endfor %}
+```jsx
+<>
+  <h3>Members of Team {piece.title}</h3>
+  <ul>
+    {piece._people.map((person) => (
+      <li>
+        <a href={person._url}>
+          {person.title} ({person._fields.teamRole})
+        </a>
+      </li>
+    ))}
+  </ul>
+</>
 ```
 
-Notice that within each element of the `data.piece._people` array, we can access `person._fields.teamRole`.
+Notice that within each element of the `piece._people` array, we can access `person._fields.teamRole`.
 This information is not about the person or the team in general — it is specific to the relationship between the two.
