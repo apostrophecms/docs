@@ -1,6 +1,6 @@
 # JSX templates
 
-Apostrophe page, widget, and component templates can be written in **JSX** as an alternative to [Nunjucks](/guide/templating.md). For developers already comfortable with React or another JSX-aware framework, this means modern editor support, real JavaScript control flow, and accurate error reporting with source maps, without standing up a separate front-end project.
+Apostrophe page, widget, and component templates can be written in **JSX** as an alternative to [Nunjucks](/guide/nunjucks-templates.md). For developers already comfortable with React or another JSX-aware framework, this means modern editor support, real JavaScript control flow, and accurate error reporting with source maps, without standing up a separate front-end project.
 
 ::: info
 This guide assumes you have written JSX before. It focuses on the Apostrophe-specific equivalents of Nunjucks features rather than on JSX itself.
@@ -414,6 +414,105 @@ When the target is a `.jsx` file, both behave identically (props are the data ar
 Write `templateName` **without a file extension**. Apostrophe strips a known extension and then searches `.jsx`, `.njk`, `.html` in that order, so `templateName="layout.html"` does *not* pin the target to the Nunjucks file — it still resolves `layout.jsx` first if one exists. The extension reads as a guarantee it does not provide.
 :::
 
+## Coming from blocks and `super()`
+
+Nunjucks lets a child override a block and call `{{ super() }}` inside it to render the parent's original content, then add to it:
+
+``` nunjucks
+{% block beforeMain %}
+  {{ super() }}
+  {% render header.headerArea(data.page) %}
+{% endblock %}
+```
+
+**There is no JSX equivalent, and none is planned.** Blocks are inheritance: a block is an overridable method, so `super()` is just a method call. Props are composition: a prop is a value the child computes and hands to the parent, and a value has no superclass. Every component-oriented framework works this way — React, Vue, Svelte and Web Components all treat default slot content as fallback only, with no way to invoke it from an override.
+
+So the migration is not to replace `super()`. It is to **make the block additive**, so nothing needs to call it.
+
+### The target shape: the layout owns what is shared
+
+Give the parent the invariant part and let it expose a slot for what varies:
+
+<AposCodeBlock>
+
+```jsx
+export default function({ beforeMain, children }, { Template }) {
+  return (
+    <Template templateName="outerLayoutBase"
+      beforeMain={
+        <>
+          <Navigation />
+          {beforeMain}
+        </>
+      }
+      main={<main className="mb-4">{children}</main>}
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+views/layout.jsx
+</template>
+</AposCodeBlock>
+
+A page now passes only its own header, and never learns what the navigation is — which was the point of the original `super()` call:
+
+```jsx
+<Extend templateName="layout" beforeMain={<Header page={page} />} />
+```
+
+### The transitional shape: the layout is still Nunjucks
+
+While the layout remains `.html`, get the same effect by **nesting a finer block inside the coarse one**. The outer block keeps the shared markup; children override only the inner one:
+
+<AposCodeBlock>
+
+``` nunjucks
+{% block beforeMain %}
+  {% render navigation.navigationArea() %}
+  {% block pageHeader %}{% endblock %}
+{% endblock %}
+```
+
+<template v-slot:caption>
+views/layout.html
+</template>
+</AposCodeBlock>
+
+Note this is *nesting*, not moving the markup out of the block — a template that uses `{% extends %}` can only contribute through blocks, so there is no "outside" available to it.
+
+::: warning
+Subdividing a block changes the parent's contract. Any Nunjucks child still overriding the **outer** block will drop or duplicate the shared markup, so convert those children first.
+:::
+
+### When you cannot edit the parent
+
+Hoist the parent's default into a component named after **the block**, not after its current contents, and let the parent's block body contain nothing else:
+
+```jsx
+// Right: names the block's default, so later changes to it still reach the child
+<Extend
+  templateName="layout"
+  beforeMain={<><BeforeMainDefault /><Header page={page} /></>}
+/>;
+
+// Wrong: names today's contents, and silently stops tracking the layout tomorrow
+<Extend
+  templateName="layout"
+  beforeMain={<><SiteNav /><Header page={page} /></>}
+/>;
+```
+
+### What to watch for
+
+- **Scope does not travel.** `super()` runs in the parent's context and can see variables set above it in the layout. A component evaluates in the child's scope, so pass those in as props. This is the most common cause of a conversion that looks right and renders wrong.
+- **Omitting the default fails silently.** Pass `beforeMain={<Header />}` alone and the navigation simply disappears — no error, and the page still renders.
+- **A function prop will not work.** `beforeMain={(Default) => <><Default /><Header /></>}` looks like a React render prop, but props here are values the parent renders, not callbacks it invokes.
+- **An intermediate template does not help.** Inserting a `base-with-nav` template between the layout and the pages recreates the identical constraint one level down.
+
+Composition also buys you things `super()` could not: place your content *before* the shared markup, include it conditionally, or pass it props.
+
 ## Migration order
 
 JSX and Nunjucks coexist freely in the same project, but there is one hard rule:
@@ -480,6 +579,41 @@ export default function({ product }) {
 ```
 
 This is in addition to `<Template name="...">`, which exists for parity with Nunjucks's string-based lookup and to support Apostrophe's `module:file` cross-module syntax. Use direct `import` when the partial is co-located and you do not need name-based resolution; use `<Template>` when you do.
+
+### Coming from macros and fragments
+
+Nunjucks offers two ways to package reusable markup, and **both become function components here**.
+
+A [macro](/guide/nunjucks-templates.md#macros) is a reusable block of markup that cannot run asynchronous code. A [fragment](/guide/fragments.md) is Apostrophe's answer to that limitation — the same idea, but able to contain `{% area %}` and async components. JSX templates are real JavaScript, so a function component can already do async work. The distinction the two features existed to draw does not apply, and there is no separate construct to learn.
+
+| Nunjucks | JSX |
+| -------- | --- |
+| `{% macro x() %}` or `{% fragment x() %}` | `function X() { … }` |
+| `{% render x() %}` | `<X />` |
+| Arguments | Props |
+| `{% import 'fragments/file.html' as f %}` | `import X from './file.jsx'` |
+| `{% import 'module-name:file.html' %}` | `<Template name="module-name:file" />` |
+| `rendercaller()` / `{% rendercall %}` | The implicit `children` prop |
+
+Markup passed between a component's tags arrives as `children`, which is the direct equivalent of `rendercaller()`:
+
+```jsx
+function Highlighter({ children }) {
+  return <aside className="highlight">{children}</aside>;
+}
+
+export default function({ page }) {
+  return (
+    <Highlighter>
+      Fun fact: {page.funFact}
+    </Highlighter>
+  );
+}
+```
+
+::: warning
+A macro or fragment and every template that imports it must convert **together**. The moment `file.html` becomes `file.jsx`, any remaining `.html` template importing it breaks — Nunjucks cannot load a JSX template. Count the importers before you start. See [Migration order](#migration-order).
+:::
 
 ## Widget templates
 

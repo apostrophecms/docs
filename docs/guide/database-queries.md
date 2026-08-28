@@ -61,11 +61,11 @@ For context, this is what it would look like to invoke this async component in a
 
 <AposCodeBlock>
 
-  ``` nunjucks
-  {% component 'product:latest' with { productId: data.piece._id } %}
+  ```jsx
+  <Component module="product" name="latest" productId={piece._id} />
   ```
   <template v-slot:caption>
-    modules/product-page/views/show.html
+    modules/product-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
