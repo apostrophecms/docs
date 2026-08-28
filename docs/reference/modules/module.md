@@ -24,15 +24,15 @@ See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/pack
 
 ### `async render(req, template, data)`
 
-Returns rendered HTML for a template with the data provided. You must pass `req`, a request object, as the first argument. The `template` argument should be the name of a template file in the module's `views` directory. If the `template` argument has no file extension Apostrophe will look for an `.html` or `.njk` file.
+Returns rendered HTML for a template with the data provided. You must pass `req`, a request object, as the first argument. The `template` argument should be the name of a template file in the module's `views` directory. If the `template` argument has no file extension, Apostrophe walks the module's view-folder override chain. Within each folder, it prefers a `.jsx` template, then `.njk`, then `.html`; a template in a nearer override folder wins regardless of extension.
 
-All properties of `data` can be used in Nunjucks templates as properties of the `data` object. This argument may be omitted to include no additional data.
+All properties of `data` are available to the template. In a JSX template they arrive as the first argument of the exported function; in a Nunjucks template they are properties of the `data` object. This argument may be omitted to include no additional data.
 
 ### `async renderString(req, string, data)`
 
-Returns rendered HTML for a Nunjucks-style string with the data provided. You must pass `req`, a request object, as the first argument. The `string` argument will be used as the template itself for rendering (not the template filename).
+Returns rendered HTML for a Nunjucks template supplied directly as a string rather than as a filename. You must pass `req`, a request object, as the first argument; the `string` argument is the Nunjucks template source itself, not a template filename.
 
-All properties of `data` can be used in Nunjucks templates as properties of the `data` object. This argument may be omitted to include no additional data.
+`renderString()` does not render JSX. JSX templates are loaded as modules from a module's `views` directory, so they must be saved as `.jsx` files and rendered by name with [`render()`](#async-render-req-template-data). The optional `data` argument provides properties on the template's `data` object.
 
 ### `async send(req, template, data)`
 
@@ -40,7 +40,7 @@ The `send()` method renders a template with data as with the [`render()`](#async
 
 ### `async sendPage(req, template, data)`
 
-Similar to the [`send()`](#async-send-req-template-data) method, this renders a template and sends the rendered HTML as a response to the request (`req`). Where `send()` is used to render general template files, `sendPage()` is specifically used to render and send *full pages* for Apostrophe projects. Page templates should extend the outer layout template &ndash; either directly (`{% extends data.outerLayout %}`) or by extending a template that does so.
+Similar to the [`send()`](#async-send-req-template-data) method, this renders a template and sends the rendered HTML as a response to the request (`req`). Where `send()` is used to render general template files, `sendPage()` is specifically used to render and send *full pages* for Apostrophe projects. Page templates should extend the outer layout template &ndash; either directly (`<Extend templateName={outerLayout} … />`) or by extending a template that does so.
 
 Templates rendered and sent with this method have full access to all template [data properties](/guide/template-data.md) appropriate for the related module. The template is also wrapped with the proper layout file (`'@apostrophecms/template:outerLayout.html'` by default), including the full `head` tag.
 

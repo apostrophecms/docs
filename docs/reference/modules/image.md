@@ -139,14 +139,21 @@ Content from the alt text, credit, and credit URL fields is returned in the `_al
 
 <AposCodeBlock>
 
-```nunjucks
-{% set image = apos.image.first(data.piece) %}
-{% if image %}
-  <img src="{{ apos.attachment.url(image, { size: 'full' }) }}" alt="{{ image._alt }}">
-{% endif %}
+```jsx
+export default function({ piece }, { apos }) {
+  const image = apos.image.first(piece);
+
+  if (!image) {
+    return null;
+  }
+
+  return (
+    <img src={apos.attachment.url(image, { size: 'full' })} alt={image._alt} />
+  );
+}
 ```
 <template v-slot:caption>
-views/show.html
+views/show.jsx
 </template>
 </AposCodeBlock>
 
@@ -161,14 +168,20 @@ A convenience wrapper for [`apos.attachment.all()`](/reference/modules/attachmen
 
 <AposCodeBlock>
 
-```nunjucks
-{% set images = apos.image.all(data.piece) %}
-{% for image in images %}
-  <img src="{{ apos.attachment.url(image, { size: 'one-third' }) }}" alt="{{ image._alt }}">
-{% endfor %}
+```jsx
+export default function({ piece }, { apos }) {
+  const images = apos.image.all(piece);
+
+  return images.map((image) => (
+    <img
+      src={apos.attachment.url(image, { size: 'one-third' })}
+      alt={image._alt}
+    />
+  ));
+}
 ```
 <template v-slot:caption>
-views/show.html
+views/show.jsx
 </template>
 </AposCodeBlock>
 
@@ -185,21 +198,30 @@ Note that `svg` files are not sized so this function returns an empty string. It
 | `attachment` | Object | **Required.** An image attachment object. |
 | `cropFields` | Object | Optional. Crop dimensions (`top`, `left`, `width`, `height`). Typically not needed as crop data is applied automatically through image widget relationships. |
 
+Write the attribute as `srcset`, not React's `srcSet`. Apostrophe's JSX templates pass attribute names through to HTML unchanged apart from `className` and `htmlFor`, so the HTML spelling is the correct one here.
+
 <AposCodeBlock>
 
-```nunjucks
-{% set image = apos.image.first(data.piece) %}
-{% if image %}
-  <img
-    src="{{ apos.attachment.url(image, { size: 'full' }) }}"
-    srcset="{{ apos.image.srcset(image) }}"
-    sizes="(max-width: 600px) 100vw, 50vw"
-    alt="{{ image._alt }}"
-  >
-{% endif %}
+```jsx
+export default function({ piece }, { apos }) {
+  const image = apos.image.first(piece);
+
+  if (!image) {
+    return null;
+  }
+
+  return (
+    <img
+      src={apos.attachment.url(image, { size: 'full' })}
+      srcset={apos.image.srcset(image)}
+      sizes="(max-width: 600px) 100vw, 50vw"
+      alt={image._alt}
+    />
+  );
+}
 ```
 <template v-slot:caption>
-views/show.html
+views/show.jsx
 </template>
 </AposCodeBlock>
 

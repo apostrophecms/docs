@@ -16,24 +16,38 @@ Any index page is searchable using the `search` query parameter. This parameter 
 
 <AposCodeBlock>
 
-```nunjucks
-<form action="" method="GET">
-  <input type="text" name="search" placeholder="Search here..." value="{{ data.query.search | safe }}" />
-  <button type="submit">Search</button>
-  {% if data.query.search %}
-    <button type="button" onclick="window.location.href='{{ data.url | build({search: null}) }}'">Clear Search</button>
-  {% endif %}
-</form>
+```jsx
+export default function({ query, url }, { apos }) {
+  return (
+    <form action="" method="GET">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search here..."
+        value={query.search}
+      />
+      <button type="submit">Search</button>
+      {query.search && (
+        <button
+          type="button"
+          onclick={`window.location.href='${apos.url.build(url, { search: null })}'`}
+        >
+          Clear Search
+        </button>
+      )}
+    </form>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article-page/views/index.html
+    modules/article-page/views/index.jsx
   </template>
 
 </AposCodeBlock>
 
-This example implements a search box that can be integrated into an `index.html` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `data.query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the Apostrophe-supplied Nunjucks [`build()` filter](/guide/template-filters.md#build-url-path-data) to manipulate the query parameters.
+This example implements a search box that can be integrated into an `index.jsx` file. This box utilizes the `search` parameter to refine the page's content, showing only the items that correspond to the search term entered by the user. As written, this will clear all of the existing query parameters that have been added to the URL. You would have to further parse the `query` object to retain existing parameters. The empty `action` attribute of the form element will, by default, direct the form submission to the current URL. The button to clear the search query takes advantage of the Apostrophe-supplied [`apos.url.build()`](/reference/modules/url.md) helper to manipulate the query parameters.
 
-Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `_author` relationship schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.html` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
+Most schema fields of a piece can also be used to filter content using query parameters. For instance, you could filter by an `_author` relationship schema field to retrieve a list of all articles authored by Bob Smith using `https://my-website.com/article-page?author=bob+smith`. This example and the previous one demonstrate how to filter the pieces delivered to an `index.jsx` page by manipulating the URL, but you can also use the schema fields or other custom queries within the `piecesFilters` option, as described below, to create structured filtering options.
 
 ## Options
 
@@ -85,7 +99,7 @@ module.exports = {
 </AposCodeBlock>
 
 ### `perPage`
-The `perPage` option should be set to an integer and specifies the number of pieces displayed per page for the `index.html` page before pagination is offered. It is set to 10 items per page by default.
+The `perPage` option should be set to an integer and specifies the number of pieces displayed per page for the `index.jsx` page before pagination is offered. It is set to 10 items per page by default.
 
 <AposCodeBlock>
 
@@ -178,7 +192,7 @@ module.exports = {
   </template>
 </AposCodeBlock>
 
-An example of the `data.piecesFilters` object delivered to the 'book-page' `index.html` template:
+An example of the `data.piecesFilters` object delivered to the 'book-page' `index.jsx` template:
 <AposCodeBlock>
 
 ```
@@ -229,39 +243,64 @@ Example usage of the `data.piecesFilter`:
 
 <AposCodeBlock>
 
-```nunjucks
-{% extends "layout.html" %}
+```jsx
+export default function(
+  { query, url, piecesFilters, pieces },
+  { apos, Extend }
+) {
+  const authors = piecesFilters.author;
+  const genres = piecesFilters.genre;
 
-{%- macro here(url, changes) -%}
-  {{ url | build({
-    author: data.query.author,
-    genre: data.query.genre
-  }, changes) }}
-{%- endmacro -%}
+  // Rebuild the current URL, preserving the filters already applied.
+  const here = (changes) => apos.url.build(url, {
+    author: query.author,
+    genre: query.genre
+  }, changes);
 
-{% set authors = data.piecesFilters.author %}
-{% set genres = data.piecesFilters.genre %}
-
-{% block main%}
-<h3>Authors</h3>
-<ul>
-  {% for author in authors %}
-    <li><a style="{{ 'font-style: italic' if data.query.author == author.value }}" href="{{ here(data.url, {author: author.value}) }}">{{ author.label }}</a></li>
-  {% endfor %}
-</ul>
-<h3>Genres</h3>
-<ul>
-  {% for genre in genres %}
-    <li><a style="{{ 'font-style: italic' if data.query.genre == genre.value }}" href="{{ here(data.url, {genre: genre.value}) }}">{{ genre.label }} has {{ genre.count }} entries</a></li>
-  {% endfor %}
-</ul>
-{% for piece in data.pieces %}
-  <p><strong>{{ piece.title }}</strong> ({{ piece.genre }}) by {{ piece._author[0].name }} </p>
-{% endfor %}
-{% endblock %}
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h3>Authors</h3>
+          <ul>
+            {authors.map((author) => (
+              <li>
+                <a
+                  style={query.author === author.value ? 'font-style: italic' : null}
+                  href={here({ author: author.value })}
+                >
+                  {author.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <h3>Genres</h3>
+          <ul>
+            {genres.map((genre) => (
+              <li>
+                <a
+                  style={query.genre === genre.value ? 'font-style: italic' : null}
+                  href={here({ genre: genre.value })}
+                >
+                  {genre.label} has {genre.count} entries
+                </a>
+              </li>
+            ))}
+          </ul>
+          {pieces.map((piece) => (
+            <p>
+              <strong>{piece.title}</strong> ({piece.genre}) by {piece._author[0].name}
+            </p>
+          ))}
+        </>
+      }
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/book-page/views/index.html
+    modules/book-page/views/index.jsx
   </template>
 
 </AposCodeBlock>
