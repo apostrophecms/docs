@@ -164,24 +164,23 @@ Generate responsive CSS classes based on editor selections, keeping the template
 
 <AposCodeBlock>
 
-```nunjucks
-{% set responsiveClasses = [] %}
-{% if data.widget.hideOnMobile %}
-  {% set responsiveClasses = (responsiveClasses.push('hide-mobile'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnTablet %}
-  {% set responsiveClasses = (responsiveClasses.push('hide-tablet'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnDesktop %}
-  {% set responsiveClasses = (responsiveClasses.push('hide-desktop'), responsiveClasses) %}
-{% endif %}
+```jsx
+export default function({ widget }) {
+  const responsiveClasses = [
+    widget.hideOnMobile && 'hide-mobile',
+    widget.hideOnTablet && 'hide-tablet',
+    widget.hideOnDesktop && 'hide-desktop'
+  ].filter(Boolean).join(' ');
 
-<section class="hero-banner {{ responsiveClasses | join(' ') }}"
-  <!-- widget content -->
-</section>
+  return (
+    <section className={`hero-banner ${responsiveClasses}`}>
+      {/* widget content */}
+    </section>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/hero-banner/views/widget.html
+    modules/hero-banner/views/widget.jsx
   </template>
 </AposCodeBlock>
 
@@ -228,13 +227,13 @@ This approach simplifies the template significantly since the field value is alr
 
 <AposCodeBlock>
 
-```nunjucks
-<section class="hero-banner {{ data.widget.hideOn | join(' ') }}"
-  <!-- widget content -->
+```jsx
+<section className={`hero-banner ${widget.hideOn.join(' ')}`}>
+  {/* widget content */}
 </section>
 ```
   <template v-slot:caption>
-    modules/hero-banner/views/widget.html (Alternative template)
+    modules/hero-banner/views/widget.jsx (Alternative template)
   </template>
 </AposCodeBlock>
 
@@ -352,12 +351,14 @@ Group all responsive visibility utilities in a single file to minimize redundanc
 
 Avoid generating responsive CSS as inline styles in widget templates. This creates performance problems and prevents effective caching:
 
-```nunjucks
-{# ❌ DON'T: Inline responsive styles #}
-<div style="@media screen and (max-width: 768px) { display: none; }">
-  
-{# ✅ DO: Use CSS classes #}
-<div class="hide-mobile">
+```jsx
+<>
+  {/* ❌ DON'T: Inline responsive styles */}
+  <div style="@media screen and (max-width: 768px) { display: none; }">…</div>
+
+  {/* ✅ DO: Use CSS classes */}
+  <div className="hide-mobile">…</div>
+</>
 ```
 
 ## Framework Integration
@@ -368,24 +369,23 @@ If your project uses Tailwind CSS, leverage its responsive utilities instead of 
 
 <AposCodeBlock>
 
-```nunjucks
-{% set responsiveClasses = [] %}
-{% if data.widget.hideOnMobile %}
-  {% set responsiveClasses = (responsiveClasses.push('hidden md:block'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnTablet %}
-  {% set responsiveClasses = (responsiveClasses.push('md:hidden lg:block'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnDesktop %}
-  {% set responsiveClasses = (responsiveClasses.push('lg:hidden'), responsiveClasses) %}
-{% endif %}
+```jsx
+export default function({ widget }) {
+  const responsiveClasses = [
+    widget.hideOnMobile && 'hidden md:block',
+    widget.hideOnTablet && 'md:hidden lg:block',
+    widget.hideOnDesktop && 'lg:hidden'
+  ].filter(Boolean).join(' ');
 
-<section class="hero-banner {{ responsiveClasses | join(' ') }}">
-  <!-- widget content -->
-</section>
+  return (
+    <section className={`hero-banner ${responsiveClasses}`}>
+      {/* widget content */}
+    </section>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/hero-banner/views/widget.html (Tailwind version)
+    modules/hero-banner/views/widget.jsx (Tailwind version)
   </template>
 </AposCodeBlock>
 
@@ -395,24 +395,23 @@ For Bootstrap projects, use its responsive display utilities:
 
 <AposCodeBlock>
 
-```nunjucks
-{% set responsiveClasses = [] %}
-{% if data.widget.hideOnMobile %}
-  {% set responsiveClasses = (responsiveClasses.push('d-none d-md-block'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnTablet %}
-  {% set responsiveClasses = (responsiveClasses.push('d-md-none d-lg-block'), responsiveClasses) %}
-{% endif %}
-{% if data.widget.hideOnDesktop %}
-  {% set responsiveClasses = (responsiveClasses.push('d-lg-none'), responsiveClasses) %}
-{% endif %}
+```jsx
+export default function({ widget }) {
+  const responsiveClasses = [
+    widget.hideOnMobile && 'd-none d-md-block',
+    widget.hideOnTablet && 'd-md-none d-lg-block',
+    widget.hideOnDesktop && 'd-lg-none'
+  ].filter(Boolean).join(' ');
 
-<section class="hero-banner {{ responsiveClasses | join(' ') }}">
-  <!-- widget content -->
-</section>
+  return (
+    <section className={`hero-banner ${responsiveClasses}`}>
+      {/* widget content */}
+    </section>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/hero-banner/views/widget.html (Bootstrap version)
+    modules/hero-banner/views/widget.jsx (Bootstrap version)
   </template>
 </AposCodeBlock>
 
