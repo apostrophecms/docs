@@ -165,7 +165,7 @@ React-flavored attributes like `key` and `ref` are accepted but ignored. They ex
 <Component module="product" name="newest" max={3} />
 ```
 
-The component function defined in `modules/product/index.js` is invoked exactly as before. Apostrophe locates its template (`.jsx` first, then `.html`) using the same rules as Nunjucks.
+The component function defined in `modules/product/index.js` is invoked exactly as before, and Apostrophe locates its template using the same resolution rules as Nunjucks — see [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 Because JSX templates can run `async` code on their own (calling any method of any Apostrophe module directly), many components that previously existed only to expose async data to a template are no longer strictly necessary. They remain useful when you want a named, reusable separation of concerns.
 

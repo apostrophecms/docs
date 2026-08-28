@@ -139,7 +139,7 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`neverLoadSelf`](#neverloadself) | Boolean | The widget should never recursively load itself. |
 | [`preview`](#preview) | Boolean | Allow for in-context preview during widget edit. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
-| [`template`](#template) | String | The Nunjucks template name to render. |
+| [`template`](#template) | String | The template name to render. |
 | [`width`](#width) | String | Define the size of the widget modal. Defaults to `window`. Can also accept `one-third`, `two-thirds`, `half`, and `full` |
 | [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 | `hideSingleTab` | Boolean | If `true` and an editing modal only has a single tab, that tab will be hidden. |
@@ -150,18 +150,20 @@ All of the core widget type modules of Apostrophe, such as `@apostrophecms/image
 
 Custom widgets have no default template, but may choose to support the same pattern:
 
-``` nunjucks
-{# in a custom widget.html file #}
+```jsx
+/* in a custom widget.jsx file */
+export default function({ options, manager }) {
+  const className = options.className || manager.options.className;
 
-{% if data.options.className %}
-  {% set className = data.options.className %}
-{% elif data.manager.options.className %}
-  {% set className = data.manager.options.className %}
-{% endif %}
-<div {% if className %} class="{{ className }}"{% endif %}>
-  ...
-</div>
+  return (
+    <div className={className}>
+      ...
+    </div>
+  );
+}
 ```
+
+There is no need to guard the attribute the way the Nunjucks version did. A prop whose value is `null` or `undefined` is omitted from the rendered element entirely, so an unset `className` produces a bare `<div>`.
 
 ### `components`
 
@@ -262,7 +264,7 @@ extendMethods(self) {
 
 ### `async output(req, widget, options, _with)`
 
-Apostrophe invokes this method to render the widget. In most cases it is best to provide a `widget.html` template and rely on the default implementation of this method. However it is possible to override this method to render a widget in an entirely different way. The method must return a string of markup already marked as safe. If a custom implementation does not use Nunjucks then it may be returned as safe with the following code:
+Apostrophe invokes this method to render the widget. In most cases it is best to provide a `widget.jsx` template and rely on the default implementation of this method. However it is possible to override this method to render a widget in an entirely different way. The method must return a string of markup already marked as safe. If a custom implementation builds its markup without a template then it may be returned as safe with the following code:
 
 ``` js
 return self.apos.template.safe(string);
@@ -344,7 +346,7 @@ Custom reimplementations that do not have any special optimizations for more tha
 
 There is no return value. The related documents are attached to the widget objects via temporary properties (properties whose names start with `_`, which tells Apostrophe that they should not be stored back to the database at save time).
 
-As an alternative, consider invoking [async components](../../guide/async-components.md) from `widget.html`. Async components are easier to understand and will run only if the template elects to call them in a particular case, which can sometimes be more efficient.
+As an alternative, consider invoking [async components](../../guide/async-components.md) from `widget.jsx`. Async components are easier to understand and will run only if the template elects to call them in a particular case, which can sometimes be more efficient.
 
 ## Module tasks
 
