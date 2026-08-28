@@ -131,43 +131,61 @@ Your templates need to handle both cases. Check if the value starts with `--` to
 
 <AposCodeBlock>
 
-```nunjucks
-<div class="article-card" 
-     style="background-color: {% if data.piece.backgroundColor.startsWith('--') %}var({{ data.piece.backgroundColor }}){% else %}{{ data.piece.backgroundColor }}{% endif %};">
-  <h2 style="color: {% if data.piece.accentColor.startsWith('--') %}var({{ data.piece.accentColor }}){% else %}{{ data.piece.accentColor }}{% endif %};">
-    {{ data.piece.title }}
-  </h2>
-  <p>{{ data.piece.content }}</p>
-</div>
+```jsx
+export default function({ piece }) {
+  return (
+    <div
+      className="article-card"
+      style={`background-color: ${
+        piece.backgroundColor.startsWith('--')
+          ? `var(${piece.backgroundColor})`
+          : piece.backgroundColor
+      };`}
+    >
+      <h2
+        style={`color: ${
+          piece.accentColor.startsWith('--')
+            ? `var(${piece.accentColor})`
+            : piece.accentColor
+        };`}
+      >
+        {piece.title}
+      </h2>
+      <p>{piece.content}</p>
+    </div>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article/views/show.html
+    modules/article/views/show.jsx
   </template>
 </AposCodeBlock>
 
-For cleaner templates, you can create a macro to handle this logic:
+For cleaner templates, pull that logic into a helper function. This is what a Nunjucks macro becomes in JSX — a macro that computes a *value* rather than markup is just an ordinary function:
 
 <AposCodeBlock>
 
-```nunjucks
-{# Create a reusable macro for color values #}
-{% macro colorValue(color) %}
-  {%- if color and color.startsWith('--') -%}
-    var({{ color }})
-  {%- else -%}
-    {{ color }}
-  {%- endif -%}
-{% endmacro %}
+```jsx
+// A reusable helper for color values
+const colorValue = (color) =>
+  color && color.startsWith('--') ? `var(${color})` : color;
 
-<div class="article-card" style="background-color: {{ colorValue(data.piece.backgroundColor) }};">
-  <h2 style="color: {{ colorValue(data.piece.accentColor) }};">
-    {{ data.piece.title }}
-  </h2>
-  <p>{{ data.piece.content }}</p>
-</div>
+export default function({ piece }) {
+  return (
+    <div
+      className="article-card"
+      style={`background-color: ${colorValue(piece.backgroundColor)};`}
+    >
+      <h2 style={`color: ${colorValue(piece.accentColor)};`}>
+        {piece.title}
+      </h2>
+      <p>{piece.content}</p>
+    </div>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/article/views/show.html
+    modules/article/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -353,7 +371,7 @@ While the centralized configuration approach works great for developer-defined b
 
 When combined with CSS variables, Palette allows content managers to safely update brand colors site-wide without code changes or manually republishing content.
 
-You brand colors config file remains the same, exporting an array of either the values alone, or the named values. Your Nunjucks template and schema fields using the `brandColorValues` also remain the same.
+You brand colors config file remains the same, exporting an array of either the values alone, or the named values. Your template and schema fields using the `brandColorValues` also remain the same.
 
 In the Palette configuration, you add a field for each CSS variable you want to set with `:root` as the `selector`:
 
