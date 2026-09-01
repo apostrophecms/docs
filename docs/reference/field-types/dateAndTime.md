@@ -45,3 +45,13 @@ To print them in the format of your choice pass a [momentjs/datejs compliant for
 ```nunjucks
 {{ data.piece.eventDateAndTime | date("dddd, MMMM Do YYYY, h:mm:ss a") }}
 ```
+
+In a JSX template, import `dayjs` and call it directly — there's no filter mechanism. See [Template filters](/guide/template-filters.md) for the full filter-to-JSX mapping.
+
+```jsx
+import dayjs from 'dayjs';
+
+// ...
+
+{dayjs(piece.eventDateAndTime).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+```

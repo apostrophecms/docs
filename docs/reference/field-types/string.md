@@ -116,3 +116,17 @@ The Nunjucks [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) t
   {{ data.piece.biography | striptags(true) | escape | nl2br }}
 </p>
 ```
+
+In a JSX template, escaping is automatic — JSX escapes every interpolated value — so only tag-stripping and the line-break split need writing out explicitly:
+
+```jsx
+<>
+  <h2>{piece.dogName}</h2>
+  <p>
+    {piece.biography
+      .replace(/(<([^>]+)>)/ig, '')
+      .split('\n')
+      .map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)}
+  </p>
+</>
+```
