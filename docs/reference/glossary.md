@@ -75,7 +75,7 @@ Areas are inserted into your templates using the [`area` template tag](/guide/ar
 
 ### Template
 
-Apostrophe renders webpages and components of pages, such as widgets, using either of two template languages: [JSX](/guide/jsx-templates.md), real JavaScript with inline markup, or the [Nunjucks template language](https://mozilla.github.io/nunjucks/), which shares a syntax with the Jinja and Twig languages popular in the Python and PHP worlds, respectively. The two interoperate, and a project can mix them or migrate between them incrementally.
+Apostrophe renders webpages and components of pages, such as widgets, using [JSX](/guide/jsx-templates.md) — real JavaScript with inline markup, and the recommended choice for new projects and templates. Apostrophe also supports the [Nunjucks template language](https://mozilla.github.io/nunjucks/), which shares a syntax with the Jinja and Twig languages popular in the Python and PHP worlds, respectively. A JSX template can extend or include a Nunjucks one, so an existing Nunjucks project can convert to JSX incrementally, template by template.
 
 ### Block
 
