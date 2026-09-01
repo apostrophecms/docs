@@ -343,22 +343,59 @@ Then use the template helpers in your widget template:
 
 </AposCodeBlock>
 
-### Template helpers
+In a JSX widget template, reach for the same logic as plain `apos.styles` module methods rather than the `apos.styles.render/elements/attributes` Nunjucks helpers — the helpers are thin wrappers over these for use inside Nunjucks specifically:
 
-**`apos.styles.render(widget)`**
+<AposCodeBlock>
+
+```jsx
+export default function({ widget }, { apos }) {
+  const styles = apos.styles.prepareWidgetStyles(widget);
+
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{
+        __html: apos.styles.getWidgetElements(styles)
+      }} />
+      <article {...apos.styles.getWidgetAttributes(
+        styles,
+        { class: 'my-custom-class' },
+        { asObject: true }
+      )}>
+        <h2>{widget.title}</h2>
+        {/* widget content */}
+      </article>
+    </>
+  );
+}
+```
+
+<template v-slot:caption>
+  modules/custom-widget/views/widget.jsx
+</template>
+
+</AposCodeBlock>
+
+::: warning
+`getWidgetAttributes()`'s return object uses literal HTML attribute names (`class`, `style`), not JSX names (`className`). Spread it as-is — don't also pass `className` on the same element, or you'll emit two `class` attributes. The same applies to `additionalAttributes`: pass `{ class: '...' }`, not `{ className: '...' }`, or the merge silently misses it.
+:::
+
+### Template helpers (Nunjucks) / module methods (JSX)
+
+**`apos.styles.render(widget)`** (Nunjucks) / **`apos.styles.prepareWidgetStyles(widget)`** (JSX)
 - Prepares styles for the widget
 - Returns a styles object for use with other helpers
 
-**`apos.styles.elements(styles)`**
+**`apos.styles.elements(styles)`** (Nunjucks) / **`apos.styles.getWidgetElements(styles)`** (JSX)
 - Generates the `<style>` tag with scoped CSS
 - Must be called before using the styles
+- In JSX, insert the result with `dangerouslySetInnerHTML` since it's a raw HTML string
 
-**`apos.styles.attributes(styles, additionalAttributes, options)`**
+**`apos.styles.attributes(styles, additionalAttributes, options)`** (Nunjucks) / **`apos.styles.getWidgetAttributes(styles, additionalAttributes, options)`** (JSX)
 - Generates HTML attributes for the widget wrapper
 - Merges style classes and inline styles with any additional attributes
-- `additionalAttributes` (optional): Object with additional HTML attributes
+- `additionalAttributes` (optional): Object with additional HTML attributes, keyed by HTML attribute name (`class`, not `className`)
 - `options` (optional): 
-  - `asObject: true` - Return attributes as object instead of string
+  - `asObject: true` - Return attributes as a plain object instead of a string. In JSX this is the form you want, so it can be spread directly onto an element: `{...apos.styles.getWidgetAttributes(styles, {}, { asObject: true })}`
 
 <AposCodeBlock>
 
@@ -378,6 +415,27 @@ Then use the template helpers in your widget template:
 
 <template v-slot:caption>
   Example template helper usage
+</template>
+
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```jsx
+<>
+  {/* Basic usage */}
+  <div {...apos.styles.getWidgetAttributes(styles, {}, { asObject: true })}></div>
+
+  {/* With additional attributes */}
+  <article {...apos.styles.getWidgetAttributes(styles, {
+    class: 'fancy-article',
+    'data-category': 'featured'
+  }, { asObject: true })}></article>
+</>
+```
+
+<template v-slot:caption>
+  Example module method usage
 </template>
 
 </AposCodeBlock>
