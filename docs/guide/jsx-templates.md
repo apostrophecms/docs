@@ -422,7 +422,7 @@ Write `templateName` **without a file extension**. Apostrophe strips a known ext
 
 ## Coming from blocks and `super()`
 
-Nunjucks lets a child override a block and call `{{ super() }}` inside it to render the parent's original content, then add to it:
+Nunjucks lets a child override a block and call <span v-pre>`{{ super() }}`</span> inside it to render the parent's original content, then add to it:
 
 ``` nunjucks
 {% block beforeMain %}

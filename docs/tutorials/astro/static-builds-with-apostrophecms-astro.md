@@ -227,7 +227,7 @@ If you followed the [Creating Pieces](/tutorials/astro/creating-pieces.html) tut
 
 For filter links, prefer `aposData.filters` (derived from `req.data.filters`) over the legacy `aposData.piecesFilters` pattern where possible. This provides filter metadata and pre-built URLs that are consistent with how static paths are generated.
 
-Note that static mode only supports a single active filter at a time. Combined filters will not have pre-rendered paths and will return 404s. See the note in [Backend Configuration](#3-configure-piece-filters-for-static-generation) above.
+Note that static mode only supports a single active filter at a time. Combined filters will not have pre-rendered paths and will return 404s. See the note in [Backend Configuration](#_3-configure-piece-filters-for-static-generation) above.
 
 For pagination, use the `buildPageUrl` helper rather than manually constructing URLs with query parameters. In SSR mode pagination uses query strings; in static mode it uses path segments. The helper handles both cases transparently.
 

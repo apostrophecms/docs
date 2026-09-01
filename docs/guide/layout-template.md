@@ -80,3 +80,66 @@ The `beforeMain`, `main`, and `afterMain` blocks are inside the section that Apo
 **RTL language support:** The `outerLayout` template automatically applies the correct text direction (`dir` attribute) to the `<html>` element based on your locale configuration. See the [localization guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for more information.
 
 :::
+
+## Writing a layout in JSX
+
+A layout can be written as `views/layout.jsx` instead. The block-based shape above doesn't translate directly — a JSX layout doesn't override `outerLayoutBase`'s blocks piecemeal, it renders the whole invariant part itself and exposes props for what each page needs to supply. This also resolves a case the Nunjucks version above can't express cleanly: `beforeMain` and `afterMain` open and close a single `<div>` across two separate blocks, which has no equivalent when there's no block system — a JSX layout renders that wrapping `<div>` in one place, as one component.
+
+<AposCodeBlock>
+
+```jsx
+function Header({ user }) {
+  return (
+    <header>
+      <img src="/images/logo.png" alt="Organization logo" />
+      <nav></nav>
+      {!user && <a href="/login">Login</a>}
+    </header>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bp-footer">
+      <p>© Apostrophe Technology, Inc.</p>
+    </footer>
+  );
+}
+
+export default function(data, { Extend }) {
+  return (
+    <Extend
+      templateName={data.outerLayout}
+      title={data.title}
+      main={
+        <div>
+          <Header user={data.user} />
+          <main>{data.main}</main>
+          <Footer />
+        </div>
+      }
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+views/layout.jsx
+</template>
+</AposCodeBlock>
+
+A page template then extends it and passes only its own content as `main` — it never needs to know what the header or footer render, which is what the Nunjucks version's `super()` calls would otherwise be for:
+
+```jsx
+<Extend templateName="layout" main={<PageContent page={page} />} />
+```
+
+::: tip
+`data` is deliberately not destructured in the layout above. A page template's own props — `title`, `main` — arrive as this template's `data`, so `data.main` here is the page's content prop, not something from the page document itself.
+:::
+
+See [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super) for the general pattern this follows, including the transitional shape for a project converting one page at a time while `layout.html` is still Nunjucks.
+
+::: warning
+Converting a project's layout to JSX only works one direction: a `.jsx` layout can be extended by both `.jsx` and `.html` pages, but a `.html` template can never extend a `.jsx` layout. Any core-provided Nunjucks template that extends the project's layout by name — `@apostrophecms/page`'s `notFound.html` is the one every project has — needs a project-level `.jsx` shadow with the same name, or it will throw instead of rendering once the layout itself is JSX.
+:::

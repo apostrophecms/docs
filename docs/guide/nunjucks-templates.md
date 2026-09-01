@@ -38,7 +38,7 @@ Apostrophe populates a `data` object available in every Nunjucks template:
 | `data.widget` | The current widget document (widget templates only) |
 | `data.user` | The logged-in user, if any |
 
-Output a value with `{{ }}`:
+Output a value with <span v-pre>`{{ }}`</span>:
 
 ``` nunjucks
 <h1>{{ data.page.title }}</h1>
@@ -52,7 +52,7 @@ Values are HTML-escaped by default. To render trusted markup unescaped, use the 
 
 ## Core syntax
 
-Nunjucks statements use `{% %}`, output uses `{{ }}`, and comments use `{# #}`.
+Nunjucks statements use `{% %}`, output uses <span v-pre>`{{ }}`</span>, and comments use `{# #}`.
 
 ``` nunjucks
 {# A comment — not rendered #}
