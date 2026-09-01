@@ -28,12 +28,16 @@ This distinguishes your `public` folder from any assets that might be provided b
 It's usually simpler to just put your public assets in a module specific to your project, rather than a project-level configuration of a core one.
 :::
 
-## Asset paths in Nunjucks templates
+## Asset paths in templates
 
-In Nunjucks templates we can convert asset paths to URs by calling the `apos.asset.url` helper function. Again, the rendered template will include the complete asset URL:
+In both JSX and Nunjucks templates we can convert asset paths to URLs by calling the `apos.asset.url` method. Again, the rendered template will include the complete asset URL:
 
-``` jsx
+```jsx
 {apos.asset.url('/modules/custom-module/images/bg.png')}
+```
+
+```nunjucks
+{{ apos.asset.url('/modules/custom-module/images/bg.png') }}
 ```
 
 ## Asset paths in front end JavaScript

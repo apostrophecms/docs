@@ -118,9 +118,9 @@ For each self-hosted placeholder, the initialization function should call the `d
 
 If electing to add multiple placeholders to a single page, as soon as the user makes any edits, all placeholder content will be removed from the page because `aposPlaceholder` is only checked once to determine if the widget has been edited.
 
-### Altering the Nunjucks template for custom placeholders
+### Altering the widget template for custom placeholders
 
-The template will still have access to `data.widget.aposPlaceholder` to determine if the widget has been edited and remove placeholder content. The URL for the placeholder can be accessed using `data.manager.options.<name>Url`. For example, `data.manager.options.customOneUrl` or `data.manager.options.videoOneUrl`. This will be available for each `<name>Image` and `<name>Url` option in the module.
+The template will still have access to the widget's `aposPlaceholder` property to determine if the widget has been edited and remove placeholder content — `data.widget.aposPlaceholder` in Nunjucks, or the destructured `widget.aposPlaceholder` in JSX. The URL for the placeholder can be accessed using `<name>Url` on the widget manager's options — `data.manager.options.<name>Url` in Nunjucks, or the destructured `manager.options.<name>Url` in JSX, since `manager` arrives on the same data object as `widget`. For example, `customOneUrl` or `videoOneUrl`. This will be available for each `<name>Image` and `<name>Url` option in the module.
 
 The same conditional block that was used for a single basic placeholder should be used for each custom placeholder added to the template.
 
