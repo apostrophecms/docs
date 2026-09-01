@@ -21,9 +21,9 @@ In an Apostrophe project, pages provide a way to show static content, as well as
 While the focus of this tutorial is demonstrating how to add pages to your project, we will also be diving a little deeper into some key concepts. These concepts apply universally in Apostrophe projects. As a result, this tutorial won't be code-heavy but is crucial in fully understanding how to develop with Apostrophe.
 
 ## Getting Started
-In our project, we are first going to create our home page by modifying the Essentials starter kit `home-page` module. At this point, you should already have created a new project using the Apostrophe CLI tool as outlined in the [Code Organization](/tutorials/code-organization.html) tutorial. As a reminder, if you have the CLI tool installed, navigate in your terminal to the directory where you want to create your new project. Then issue the command:
+In our project, we are first going to create our home page by modifying the Essentials starter kit `home-page` module. At this point, you should already have created a new project as outlined in the [Code Organization](/tutorials/code-organization.html) tutorial. As a reminder, navigate in your terminal to the directory where you want to create your new project, then issue the command:
 
-`apos create onboarding-project --starter=essentials`
+`npm create apostrophe@latest onboarding-project`
 
 This will create a new directory named `onboarding-project` and clone the files from the `starter-kit-essentials` repo. It will also run `npm install`, add your project name to the `package.json` file, and register a new user with the username `admin` and the password of your choice.
 

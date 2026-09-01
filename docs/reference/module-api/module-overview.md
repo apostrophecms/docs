@@ -1008,7 +1008,7 @@ Using in a template:
 {apos.product.formatPrice(piece)}
 ```
 <template v-slot:caption>
-modules/product-page/views/show.html
+modules/product-page/views/show.jsx
 </template>
 </AposCodeBlock>
 

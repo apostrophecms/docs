@@ -159,7 +159,7 @@ module.exports = {
 ```
 
 <template v-slot:caption>
-  /modules/article/views/email.html
+  /modules/article/views/email.jsx
 </template>
 
 </AposCodeBlock>

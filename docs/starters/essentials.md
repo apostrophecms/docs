@@ -23,10 +23,10 @@ For more information see the Apostrophe [Getting Started Tutorial](/guide/develo
 
 This Starter Kit, also known as a boilerplate project, serves as a template for initiating new projects and can be installed in two main ways:
 
-1. **Using Our CLI Tool**: Run our [CLI tool](https://github.com/apostrophecms/cli) to clone this template locally, install its dependencies, and set up an initial admin user. You accomplish this using:
+1. **Using `npm create`**: This clones the template locally, installs its dependencies, and sets up an initial admin user. You accomplish this using:
    
-   `apos create <my-project-name>`
-> Note that if you are connecting to an MongoDB Atlas instance you should add your connection string to the `APOS_MONGODB_URI` environment variable first. Use:
+   `npm create apostrophe@latest <my-project-name>`
+> Note that if you are connecting to an MongoDB Atlas instance you should add your connection string to the `APOS_DB_URI` environment variable first. Use:
 
   ``` sh
   export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
@@ -38,11 +38,11 @@ This Starter Kit, also known as a boilerplate project, serves as a template for 
 export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
-For those who need to create multiple projects with additional base modules, consider [forking this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) into your organizational or personal GitHub account. Customize it to fit your needs. To use your customized template, run the following CLI command:
+For those who need to create multiple projects with additional base modules, consider [forking this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) into your organizational or personal GitHub account. Customize it to fit your needs, then clone it directly:
 
-  `apos create <project-name> --starter=<repo-name>`
+  `git clone https://github.com/<your-account>/<repo-name> <project-name>`
 
-Here, `<repo-name>` should be the URL of your forked repository, excluding the `https://github.com/` part.
+After cloning, set `shortName` in `app.js` and `name` in `package.json` to your project name, run `npm install`, and add an admin user with `node app @apostrophecms/user:add admin admin`.
 
 **Note: This template is NOT designed to be installed into an existing project.**
 

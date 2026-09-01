@@ -198,7 +198,7 @@ For example, we might have a select field on a `product` piece type to identify 
   }
   ```
   <template v-slot:caption>
-    modules/product-page/views/show.html
+    modules/product/index.js
   </template>
 </AposCodeBlock>
 

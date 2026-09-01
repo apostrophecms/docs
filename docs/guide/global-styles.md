@@ -317,7 +317,7 @@ Look at your existing template markup to identify selectors:
 </body>
 ```
 <template v-slot:caption>
-  views/layout.html
+  views/layout.jsx
 </template>
 </AposCodeBlock>
 Based on this markup, these selectors would work:
