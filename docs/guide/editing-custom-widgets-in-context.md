@@ -106,7 +106,7 @@ Don't forget to also enable the module in `app.js`, like any other module.
 </h1>
 ```
   <template v-slot:caption>
-    modules/hero-widget/views/widget.html
+    modules/hero-widget/views/widget.jsx
   </template>
 </AposCodeBlock>
 

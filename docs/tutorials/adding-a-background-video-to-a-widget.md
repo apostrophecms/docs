@@ -214,7 +214,7 @@ export default function({ widget }, { apos, Area }) {
 }
 ```
   <template v-slot:caption>
-    modules/hero-widget/views/widget.html
+    modules/hero-widget/views/widget.jsx
   </template>
 </AposCodeBlock>
 

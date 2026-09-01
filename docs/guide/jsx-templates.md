@@ -207,6 +207,12 @@ Three groups are translated:
 | `htmlFor` | `for` |
 | SVG camelCase properties — `strokeWidth`, `fillRule`, `clipPath`, `xlinkHref`, … | `stroke-width`, `fill-rule`, `clip-path`, `xlink:href`, … |
 
+**Write `className`, not `class`.** It is one of only three names the runtime translates, so it is supported behaviour rather than a React alias that happens to survive — and it is what the examples throughout this documentation use. Plain `class` also reaches the HTML intact, but consistency matters more than the two saved characters, and the two forms do not mix:
+
+::: danger
+Never put both on the same element. The runtime translates `className` and passes `class` through, so `<div class="a" className="b">` emits **two** `class` attributes and browsers keep only the first.
+:::
+
 Everything else reaches the HTML exactly as you typed it. `data-*` and `aria-*` attributes pass through unchanged, which is what you want. But React's wider alias table is not implemented, so these do **not** become their HTML equivalents:
 
 ```jsx

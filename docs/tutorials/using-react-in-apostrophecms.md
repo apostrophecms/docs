@@ -88,6 +88,8 @@ apos add widget react-weather-widget --player
 
 The `--player` flag is important because this widget needs browser-side JavaScript to initialize the React application.
 
+`apos add` scaffolds its template as Nunjucks, so rename the generated `views/*.html` to `.jsx` and write it as a function component — see the [CLI note](/guide/development-setup.md#installing-the-apostrophe-cli).
+
 Next, register the new module in `app.js`.
 
 <AposCodeBlock>
@@ -283,7 +285,7 @@ The server-rendered markup for this widget is intentionally small. Its job is to
 ```
 
 <template v-slot:caption>
-modules/react-weather-widget/views/widget.html
+modules/react-weather-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>
@@ -943,9 +945,13 @@ connects the insertion point to the `reactRefresh()` component function and its 
 
 That template contains the browser-side setup required by React Fast Refresh:
 
+::: info
+This template stays Nunjucks even in a JSX-first project. It's a Vite dev-server shim, not a page or widget template, and `apos.asset.devServerUrl()` is evaluated once as inline `<script>` text — there's no markup composition here for JSX to simplify.
+:::
+
 <AposCodeBlock>
 
-```html
+```nunjucks
 <script type="module">
   import RefreshRuntime from '{{ apos.asset.devServerUrl("/@react-refresh") }}'
 

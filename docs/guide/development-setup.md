@@ -72,12 +72,18 @@ If you're not sure, don't worry about it. You'll pick SQLite below when you crea
 :::
 
 ### Installing the Apostrophe CLI
-There is an [official CLI](https://github.com/apostrophecms/cli) for quickly setting up starter code for your Apostrophe project. Once in a project, the CLI can also help add new module code with a single command so you can focus on the aspects that are unique to your project rather than copying or remembering boilerplate.
 
-The CLI is **not required** to work with Apostrophe, but it makes developing with Apostrophe faster and takes care of the more repetitive tasks during development. This is especially true when creating a new project.
+New projects are created with `npm create apostrophe@latest`, described in [Creating a project](#creating-a-project) below — no separate install needed.
 
-Install the CLI globally through npm.
+The [official CLI](https://github.com/apostrophecms/cli) is a separate, optional tool for scaffolding **modules** inside an existing project, so you can focus on what is unique to your project rather than retyping boilerplate. Install it globally through npm:
+
 `npm install --location=global @apostrophecms/cli`
+
+It is **not required** to work with Apostrophe.
+
+::: warning
+`apos add` scaffolds its templates as **Nunjucks** — you will get a `views/widget.html` or `views/page.html`. New projects should use [JSX templates](/guide/jsx-templates.md), so rename the generated file to `.jsx` and rewrite it as a function component before going further. Everything else the command generates — the module folder, `index.js`, and its registration — is unaffected.
+:::
 
 ::: info 📌 You can review more information about the Apostrophe CLI in the doc [here](https://www.npmjs.com/package/@apostrophecms/cli)
 :::
@@ -86,34 +92,26 @@ Install the CLI globally through npm.
 
 If you are not using Atlas, make sure your local server has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for your initial admin user.
 
-The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
+The easiest way to get started with Apostrophe is to use one of the official starter kit projects. Go into your normal projects directory and run:
 
 ``` bash
-apos create apos-app
+npm create apostrophe@latest apos-app
 ```
 
-This will install the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit.
+This walks you through an interactive menu — choose a starter kit, name the project, and pick a database. The default is the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit.
 
-::: tip
-💡 To install other starter kits, pass the `--starter` flag, along with the short name of one of our [starter kits](https://github.com/orgs/apostrophecms/repositories?q=starter-kit&type=all&language=&sort=). For example:
-
-``` bash
-apos create apos-app --starter=ecommerce
-```
-:::
-
-If you are using a MongoDB Atlas instance, add the `--mongodb-uri` flag, along with the URL of your Atlas instance. It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters. For example:
+If you are using a MongoDB Atlas instance, supply the connection string in the `APOS_DB_URI` environment variable rather than as a flag. Enclose it in quotes and percent-encode any special characters:
 
 ``` bash
-apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR_PROJECT_NAME?retryWrites=true&w=majority"
+APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR_PROJECT_NAME?retryWrites=true&w=majority" npm create apostrophe@latest apos-app
 ```
 
 Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
 `
 
-The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section.
+This takes care of installing dependencies and walks you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section.
 
-#### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
+#### *If you would rather set the project up by hand*, or want to see what the above does for you, continue on.
 
 To get started quickly without the CLI, clone the starter repository:
 

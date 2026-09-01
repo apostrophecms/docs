@@ -67,17 +67,17 @@ Let's get started converting this template to an Apostrophe project!
 
 ## Creating a new project
 
-If you don't already have the apostrophe CLI installed, follow the instructions [here](/guide/development-setup.html#installing-the-apostrophe-cli). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
+Create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
 
 <AposCodeBlock>
 
 ``` sh
-apos create template-app
+npm create apostrophe@latest template-app
 ```
 
 </AposCodeBlock>
 
-The CLI app will create the new project and an admin user. At the end of the installation, it will ask for an administrator password - make sure to remember this password for login.
+This will create the new project and an admin user. At the end of the installation, it will ask for an administrator password - make sure to remember this password for login.
 
 ## Adding Bootstrap and project styling
 
@@ -710,6 +710,8 @@ The last two pages from the template are blog index and article pages. We could 
 ``` sh
 apos add piece blog --page
 ```
+
+The CLI scaffolds its templates as Nunjucks, so rename the generated `index.html` and `show.html` to `index.jsx` and `show.jsx` — we rewrite both as function components below anyway.
 
 Once we have these added to our project we need to modify the `app.js` file to include both.
 

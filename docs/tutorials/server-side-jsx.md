@@ -47,6 +47,8 @@ apos add widget weather-conditions
 
 No `--player` flag is needed since there is no browser-side JavaScript for this widget.
 
+`apos add` scaffolds its template as Nunjucks, so rename the generated `views/*.html` to `.jsx` and write it as a function component — see the [CLI note](/guide/development-setup.md#installing-the-apostrophe-cli).
+
 Register it in `app.js`:
 
 <AposCodeBlock>
@@ -123,18 +125,18 @@ Create `modules/weather-conditions-widget/views/widget.jsx`. This is the whole w
 
 function StatBlock({ label, value }) {
   return (
-    <div class="weather-stat">
-      <span class="weather-stat__value">{value}</span>
-      <span class="weather-stat__label">{label}</span>
+    <div className="weather-stat">
+      <span className="weather-stat__value">{value}</span>
+      <span className="weather-stat__label">{label}</span>
     </div>
   );
 }
 
 function ErrorState({ city, message }) {
   return (
-    <div class="weather-widget weather-widget--error">
+    <div className="weather-widget weather-widget--error">
       <p>Could not load weather for <strong>{city}</strong>.</p>
-      <p class="weather-widget__error-detail">{message}</p>
+      <p className="weather-widget__error-detail">{message}</p>
     </div>
   );
 }
@@ -174,13 +176,13 @@ export default async function({ widget }, { apos }) {
   const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
 
   return (
-    <div class="weather-widget">
-      <div class="weather-widget__header">
-        <p class="weather-widget__city">
+    <div className="weather-widget">
+      <div className="weather-widget__header">
+        <p className="weather-widget__city">
           {weather.name}, {weather.sys.country}
         </p>
         <img
-          class="weather-widget__icon"
+          className="weather-widget__icon"
           src={iconUrl}
           alt=""
           width="80"
@@ -188,12 +190,12 @@ export default async function({ widget }, { apos }) {
         />
       </div>
 
-      <p class="weather-widget__temp">
+      <p className="weather-widget__temp">
         {temp}{unitLabel}
-        <span class="weather-widget__description">{description}</span>
+        <span className="weather-widget__description">{description}</span>
       </p>
 
-      <div class="weather-widget__stats">
+      <div className="weather-widget__stats">
         <StatBlock label="Humidity" value={`${weather.main.humidity}%`} />
         <StatBlock label="Wind" value={`${weather.wind.speed} m/s`} />
         <StatBlock label="Pressure" value={`${weather.main.pressure} hPa`} />
@@ -217,7 +219,7 @@ Let's step through the main highlights of the code.
 
 **`StatBlock` and `ErrorState` are plain JSX functions** defined at the top of the same file. They work exactly like React function components but they run on the server and produce strings. This inline approach works well for small, single-use partials. For reusable components, you have two alternatives: a standard JavaScript `import` if the component lives in its own file and doesn't need name-based resolution, or Apostrophe's `<Template name="…">` tag if you need cross-module lookup or Nunjucks-parity.
 
-**Class attributes can use `class` or `className`**. `className` is supported due to its familiarity for React developers, but you may also use `class` directly.
+**Class attributes use `className`**. The runtime translates it to `class`, and it is one of only three names it translates. Plain `class` also reaches the HTML intact, but these docs use `className` throughout — and the two must never appear on the same element, which would emit two `class` attributes. See [Attribute names are mostly passed through verbatim](/guide/jsx-templates.md#attribute-names-are-mostly-passed-through-verbatim).
 
 **The `apos` object is available** as the second argument to the exported template function if you need it — call any module method, run a database query, or use `apos.http` for authenticated internal requests. This template doesn't need it, but the pattern scales. Note that inline sub-components like `StatBlock` and `ErrorState` don't receive it automatically — they only get whatever props you pass them.
 

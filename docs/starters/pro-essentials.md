@@ -39,15 +39,15 @@ To test-drive the project in development, make sure you have Apostrophe's usual 
 For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 
 ## Getting Started
-The Pro Essentials starter kit can either be installed using the [Apostrophe CLI tool](https://apostrophecms.com/extensions/apos-cli) or you can navigate to the [official GitHub repository](https://github.com/apostrophecms/starter-kit-pro-essentials), fork the template into your own account, and clone it locally.
+The Pro Essentials starter kit can either be installed with `npm create apostrophe@latest` or you can navigate to the [official GitHub repository](https://github.com/apostrophecms/starter-kit-pro-essentials), fork the template into your own account, and clone it locally.
 
 ---
-### Installing with the CLI tool
+### Installing with `npm create`
 
-To install with the [CLI tool](https://apostrophecms.com/extensions/apos-cli), use the `--starter` flag to specify this kit:
+Run the interactive project creator and choose the Pro Essentials kit from the menu:
 
 ```sh
-apos create my-project --starter=pro-essentials
+npm create apostrophe@latest my-project
 ```
 ---
 ### To install from GitHub:
@@ -85,7 +85,7 @@ your MongoDB database by default in local development. Do not use punctuation ot
 
 This name should be unique among your projects.
 
-Note that the CLI tool will automatically change this to the project name you used for installation.
+Note that `npm create apostrophe@latest` will automatically change this to the project name you used for installation.
 
 ### Disabled File Key
 

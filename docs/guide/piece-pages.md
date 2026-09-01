@@ -83,6 +83,8 @@ When using the [official CLI](/guide/development-setup.md#installing-the-apostro
 ```bash
 apos add piece article --page
 ```
+
+It scaffolds the templates as Nunjucks, so rename the generated `index.html` and `show.html` to `.jsx` and write them as function components — see the [CLI note](/guide/development-setup.md#installing-the-apostrophe-cli).
 :::
 
 | Template file name | What is it? |

@@ -411,7 +411,7 @@ These can be added in an object after the area tag arguments using the `with` ke
 ```
 
 <template v-slot:caption>
-  modules/landing-page/views/page.html
+  modules/landing-page/views/page.jsx
 </template>
 
 </AposCodeBlock>
