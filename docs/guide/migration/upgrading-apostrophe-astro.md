@@ -1,6 +1,6 @@
 ---
 prev:
-  text: 'Upgrade From Apostrophe 3'
+  text: 'Upgrade From ApostropheCMS 3'
   link: '/guide/migration/upgrading-3-to-4.html'
 next: false
 ---

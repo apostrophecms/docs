@@ -1,10 +1,10 @@
 ---
-title: Code Cookbook
+title: ApostropheCMS Code Cookbook
 prev: false
 next: false
 ---
 
-# Apostrophe code cookbook
+# ApostropheCMS code cookbook
 
 Welcome to the cookbook. These code recipes show how to execute specific tasks, from hosting setup to commonly used module configurations. For more general information about Apostrophe configuration and concepts see [the main documentation](../guide/introduction).
 

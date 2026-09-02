@@ -1,4 +1,4 @@
-# Sending email from your Apostrophe project
+# Sending email from your ApostropheCMS project
 
 Any module in Apostrophe can send email by calling its own [`self.email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
 

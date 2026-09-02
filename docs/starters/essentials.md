@@ -2,7 +2,7 @@
 prev: false
 next: false
 ---
-# Apostrophe Essentials Starter Kit
+# ApostropheCMS Essentials Starter Kit
 
 ## Requirements For Development On Your Computer
 

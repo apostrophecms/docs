@@ -74,7 +74,7 @@ Nunjucks statements use `{% %}`, output uses <span v-pre>`{{ }}`</span>, and com
 
 The [official Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) covers the full language — conditionals, loops, variables, comparison and math operators, and more.
 
-## Apostrophe template tags
+## ApostropheCMS template tags
 
 Beyond the Nunjucks language, Apostrophe adds tags of its own. The most common:
 

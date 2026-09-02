@@ -2,7 +2,7 @@
 prev: false
 next: false
 ---
-# Apostrophe Assembly Essentials Starter Kit
+# ApostropheCMS Assembly Essentials Starter Kit
 
 ::: info
 This page provides detailed information about a Pro module, accessible with an Apostrophe Pro subscription. If you haven't subscribed yet, explore our [Apostrophe Workspaces](https://app.apostrophecms.com/login) to discover the benefits of a subscription. For further details or inquiries, feel free to [contact us](https://apostrophecms.com/contact-us) or visit our [pricing page](https://apostrophecms.com/pricing).
@@ -195,7 +195,7 @@ Now try creating `company2` and `company3`. Notice that while the code is the sa
 
 > If you access these sites while logged out, you won't see your content edits unless you have used the "Commit" button to make them live.
 
-## Scheduling tasks with Apostrophe Assembly hosting
+## Scheduling tasks with ApostropheCMS Assembly hosting
 
 To schedule tasks much like you would with `cron` in a single-server environment, add a new `tasks` option to `app.js` when configuring `@apostrophecms/multisite`. This option is top-level, it's a peer of the `sites` and `dashboard` options.
 
