@@ -151,7 +151,7 @@ apostrophe({
 Now give the widget a relationship to the new piece type so editors can choose a clip. We cap it at one with `max: 1`.
 
 > [!NOTE]
-> This recipe uses a hero widget as its example. If you don't already have one, crib from the hero widget in the ApostropheCMS public demo: [`apostrophecms/public-demo/modules/hero-widget`](https://github.com/apostrophecms/public-demo/tree/main/modules/hero-widget). Its `index.js` and `views/widget.html` are the starting point that the snippets below extend.
+> This recipe uses a hero widget as its example. If you don't already have one, crib from the hero widget in the ApostropheCMS public demo: [`apostrophecms/public-demo/modules/hero-widget`](https://github.com/apostrophecms/public-demo/tree/main/modules/hero-widget). Its `index.js` and view template are the starting point that the snippets below extend, shown here in JSX (`views/widget.jsx`) — check which templating language the branch you clone uses.
 
 <AposCodeBlock>
 

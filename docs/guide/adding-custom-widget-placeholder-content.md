@@ -41,13 +41,13 @@ module.exports = {
 You can bypass the call to `determineBestAsetUrl()` for your images or videos stored in the `public` folder and instead pass the path to the asset using `placeholderUrl` in place of `placeholderImage`. This is discouraged because errors can be made in this path. It is better to let Apostrophe figure this out for you.
 :::
 
-### Altering the widget.html file
+### Altering the widget template
 
-The specific alteration of the `widget.html` template will depend on the type of placeholder content being delivered. Irrespective of file type, the template will have access to `data.widget.aposPlaceholder` and `data.manager.options.placeholderUrl` to populate the markup. 
+The specific alteration of the widget template will depend on the type of placeholder content being delivered. Irrespective of file type, the template will have access to the widget's `aposPlaceholder` property and the manager's `placeholderUrl` option to populate the markup — `data.widget.aposPlaceholder` and `data.manager.options.placeholderUrl` in Nunjucks, or the destructured `widget.aposPlaceholder` and `manager.options.placeholderUrl` in JSX, since `manager` arrives on the same data object as `widget`.
 
-The first, `data.widget.aposPlaceholder`, allows for confirmation that the placeholder should be displayed. This will return `true` when the widget is first added and return `false` once the widget has been edited.
+The first, `aposPlaceholder`, allows for confirmation that the placeholder should be displayed. This will return `true` when the widget is first added and return `false` once the widget has been edited.
 
-The second, `data.manager.options.placeholderUrl`, will contain the path to the content placeholder asset. If you set the `placeholderImage`, this will either be the path computed by the call to `determineBestAssetUrl()`. Otherwise, it will be the URL passed directly through the `placeholderUrl` option.
+The second, `placeholderUrl`, will contain the path to the content placeholder asset. If you set the `placeholderImage`, this will either be the path computed by the call to `determineBestAssetUrl()`. Otherwise, it will be the URL passed directly through the `placeholderUrl` option.
 
 This example demonstrates adding an image.
 
@@ -108,7 +108,7 @@ export default function({ widget, manager }) {
 Your placeholder content should be added to the `public` folder of the custom widget. It should be named `placeholder.extension`, where the extension matches the extension passed into the `placeholderImage` option. In the first example above, the file should be `modules/custom-widget/public/placeholder.png`.
 
 ## Adding a placeholder with a custom name
-In some cases, a widget might need to have more than a single piece of placeholder content, or you might want to give the placeholder content a different name than `placeholder.extension`. In this case, once again you need to modify the main module options, the Nunjuck template, and the contents of the public folder.
+In some cases, a widget might need to have more than a single piece of placeholder content, or you might want to give the placeholder content a different name than `placeholder.extension`. In this case, once again you need to modify the main module options, the widget template, and the contents of the public folder.
 
 ### Altering the `index.js` file for custom placeholders
 

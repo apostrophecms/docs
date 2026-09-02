@@ -31,16 +31,16 @@ Every page and piece template slots its content into a shared outer shell via `<
 
 ```
 data.outerLayout  (Apostrophe's HTML shell — do not edit)
-  └── views/layout.html  (site header, nav, footer — edit here for site-wide changes)
+  └── views/layout.jsx  (site header, nav, footer — edit here for site-wide changes)
         ├── modules/{page-type}/views/page.jsx  (regular page content)
         └── modules/{piece-page}/views/
               ├── index.jsx  (paginated piece index)
               └── show.jsx   (individual piece detail)
 ```
 
-`views/layout.html` is where most structural customization lives: the nav, header, and footer all live there. It stays Nunjucks under the recommended bottom-up migration order — JSX page templates extend it through `<Extend>` without it needing to change. `index.jsx` and `show.jsx` each extend `views/layout.html` independently — they are siblings, not children, of `page.jsx`.
+`views/layout.jsx` is where most structural customization lives: the nav, header, and footer all live there. It extends `data.outerLayout` directly through `<Extend>`, so there's no intermediate Nunjucks layout in this demo — the layout itself is JSX, following the target-state pattern described in [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx). `index.jsx` and `show.jsx` each extend `views/layout.jsx` independently — they are siblings, not children, of `page.jsx`.
 
-A regular page template overrides the `main` block and extends the layout. Each prop passed to `<Extend>` maps to a `{% block %}` of the same name in the Nunjucks target:
+A regular page template extends the layout and supplies its content as the `main` prop — `layout.jsx` declared that prop, so this is composition, not block overriding:
 
 ```jsx
 // modules/default-page/views/page.jsx

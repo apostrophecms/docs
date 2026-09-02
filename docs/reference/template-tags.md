@@ -2,15 +2,30 @@
 
 Apostrophe template tags add additional functionality to templates, such as inserting widget areas, async components, and template fragments. The tags described below are specific to Apostrophe, though they use the standard Nunjucks syntax: `{% tagName %}`. See standard tags in the [Nunjucks reference](https://mozilla.github.io/nunjucks/templating.html#tags).
 
+::: info
+Tags are a **Nunjucks** feature — JSX has no tag syntax at all, since it's real JavaScript. Every tag below has a JSX equivalent, though:
+
+| Nunjucks tag | In a JSX template |
+| --- | --- |
+| [`area`](#area) | `<Area doc={page} name="main" />` — see [Areas](/guide/jsx-templates.md#areas) |
+| [`component`](#component) | `<Component module="product" name="newest" max={3} />` — see [Async components](/guide/jsx-templates.md#async-components) |
+| [`fragment`](#fragment-render-and-rendercall) | A plain function component — see the [fragments-to-components mapping](/guide/fragments.md) |
+| [`render`](#fragment-render-and-rendercall) | Call the component as a JSX element, e.g. `<Button text="Click me" action="send" />` |
+| [`rendercall`](#fragment-render-and-rendercall) | Same as `render`, passing content as `children` instead of a `rendercaller()` slot |
+| [`widget`](#widget) | `<Widget widget={widget} options={options} with={contextOptions} />` — like the tag itself, rarely needed outside core's own area-rendering template |
+
+Nunjucks remains fully supported, so the reference below describes current, working functionality.
+:::
+
 If a template tag takes multiple arguments they will be comma-separated. Additional context data may be included after a `with` keyword. See `area` below for examples of both.
 
 | Tag name | Description | Self-closing |
 | -------- | ----------- | ------------ |
 | [`area`](#area) | Insert a [widget area](/guide/areas-and-widgets.md) | Yes |
 | [`component`](#component) | Insert an [async component](/guide/async-components.md) | Yes |
-| [`fragment`](#fragment) | Declare a [template fragment](/guide/fragments.md) | No |
-| [`render`](#render) | Insert a basic template fragment | Yes |
-| [`rendercall`](#rendercall) | Insert a template fragment that includes a `rendercaller` slot | No |
+| [`fragment`](#fragment-render-and-rendercall) | Declare a [template fragment](/guide/fragments.md) | No |
+| [`render`](#fragment-render-and-rendercall) | Insert a basic template fragment | Yes |
+| [`rendercall`](#fragment-render-and-rendercall) | Insert a template fragment that includes a `rendercaller` slot | No |
 | [`widget`](#widget) | Used in the core area template to render individual widgets | Yes |
 
 
@@ -82,94 +97,19 @@ The primary argument is a combination of the name of a module and the name of an
 
 The data argument, following the `with` keyword, is available in the async component template as `data`. It can be any data type, however it is a best practice to use an object with subproperties.
 
-## `fragment`
+## `fragment`, `render`, and `rendercall`
 
-Template fragments let us reuse template markup across a codebase, whether standard synchronous or [async code](/guide/async-components.md). The `fragment` tag *declares* a template fragment that will be inserted elsewhere with [`render`](#render) or [`rendercall`](#rendercall). See the [template fragments guide](/guide/fragments.md) for more on using this feature.
+These three tags work together to declare and use **template fragments** — reusable template markup, including markup that needs to run [async code](/guide/async-components.md) such as an `area` tag. `fragment` *declares* a fragment (closed with `endfragment`); `render` inserts one; `rendercall` inserts one while also passing markup into a `rendercaller()` slot inside it (closed with `endrendercall`).
 
-This tag must be closed with an `endfragment` tag.
-
-### Usage
-
-``` nunjucks
-{% fragment name(parameters) %}
-  {# Fragment markup #}
-{% endfragment %}
-```
-
-**Examples:**
-``` nunjucks
+```nunjucks
 {% fragment button(text, action, options = {}) %}
-  <button class="o-button {{ options.class }}" data-action="{{ action }}">
-    {{ text }}
-  </button>
+  <button class="o-button {{ options.class }}" data-action="{{ action }}">{{ text }}</button>
 {% endfragment %}
-```
 
-``` nunjucks
-{% fragment card(data = {}) %}
-  <section class="o-card">
-    <h2>{{ data.heading }}</h2>
-    <div>
-      {# `rendercaller` connects to the `rendercall` tag below. #}
-      {{ rendercaller() }}
-    </div>
-  </section>
-{% endfragment %}
-```
-
-### Arguments
-
-#### `name(parameters)`
-
-The fragment name used to reference it in `render` and `rendercall` tags. It should be written like a function with parentheses. The parentheses may include parameter names if needed. Parameters should be separated by commas and may optionally include a default value assignment.
-
-## `render`
-
-The `render` tag is used to insert a [fragment](/guide/fragments.md) in a template.
-
-### Usage
-
-``` nunjucks
-{% render name(arguments) %}
-```
-
-**Example:**
-``` nunjucks
 {% render button('Click me', 'send', { class: 'is-blue' }) %}
 ```
 
-### Arguments
-
-#### `name(arguments)`
-
-The name of the fragment to render. It may include a source reference [if the fragment was imported](/guide/fragments.md#importing-fragments-across-files) (e.g., `source.button()`). The parentheses following the name may take arguments to pass into the fragment.
-
-## `rendercall`
-
-Similar to `render`, `rendercall` tag is used to insert a fragment in a template. `rendercall` is used when [injecting markup into a fragment as well](/guide/fragments.md#inserting-markup-with-rendercall). The markup inside this tag is added in a fragment where it has a `rendercaller()` call.
-
-This tag must be closed with an `endrendercall` tag.
-
-### Usage
-
-``` nunjucks
-{% rendercall name(arguments) %}
-{% endrendercall %}
-```
-
-**Example:**
-``` nunjucks
-{% rendercall card({ heading: 'Featured image' }) %}
-  {% area data.widget, 'photo' %}
-{% endrendercall %}
-
-```
-
-### Arguments
-
-#### `name(arguments)`
-
-The name of the fragment to render. It may include a source reference [if the fragment was imported](/guide/fragments.md#importing-fragments-across-files) (e.g., `source.card()`). The parentheses following the name may take arguments to pass into the fragment.
+See the [template fragments guide](/guide/fragments.md) for the full syntax, argument defaults, importing fragments across files, and `rendercall`'s markup-passing pattern — it covers all three tags in depth and this page won't duplicate it.
 
 ## widget
 
