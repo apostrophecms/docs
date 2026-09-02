@@ -13,7 +13,7 @@ Why customize the CMS UI? Tailoring the admin interface can streamline workflows
 * Apostrophe version 3.x used Vue 2.x to power the Admin UI components. With newer versions of Apostrophe, those same components are powered by Vue.js 3.x. We have taken care to include as much backward compatibility as possible, but custom components added in earlier versions of Apostrophe may need modification.
 :::
 
-## Apostrophe admin UI file structure
+## ApostropheCMS admin UI file structure
 
 Apostrophe's admin UI is implemented with Vue.js. It is built from many `.vue` files across various Apostrophe modules. These are typically found in Apostrophe core, but they can be anywhere in the project. This means that we can introduce our own Vue components to the admin UI just by adding `.vue` files to the `ui/apos/components` subdirectory of any Apostrophe module. As explained below, it is also possible to override existing components by supplying a component with the same name.
 

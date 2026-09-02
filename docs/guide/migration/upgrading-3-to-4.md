@@ -1,10 +1,10 @@
 ---
 next: 
-  text: 'Upgrading from A2 to A4'
-  link: '/guide/migration/upgrading.html'
+  text: 'Upgrade apostrophe-astro to v1.13'
+  link: '/guide/migration/upgrading-apostrophe-astro.html'
 ---
 
-# Migration from Apostrophe 3 to Apostrophe 4
+# Migration from ApostropheCMS 3 to ApostropheCMS 4
 
 ## Introduction
 

@@ -245,7 +245,7 @@ Avoid using namespaces that begin with `apos`. The core team uses namespaces tha
 As a reminder, namespacing is primarily necessary for *installable modules* and not for project-level localization.
 :::
 
-## Localizing the Apostrophe user interface
+## Localizing the ApostropheCMS user interface
 
 ### Core UI localization
 

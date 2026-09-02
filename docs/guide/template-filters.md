@@ -43,9 +43,9 @@ The order of filters can be significant, as they are applied sequentially to the
 
 :::
 
-## Apostrophe supplied filters
+## ApostropheCMS supplied filters
 
-Several custom filters and filter sets (multiple, sequential filters) are used in Apostrophe templating. Rather than remembering each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. The most common of these are described in the [alphabetical filter reference](/guide/template-filters.html#alphabetical-apostrophe-filter-reference).
+Several custom filters and filter sets (multiple, sequential filters) are used in Apostrophe templating. Rather than remembering each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. The most common of these are described in the [alphabetical filter reference](/guide/template-filters.html#alphabetical-apostrophecms-filter-reference).
 
 ## Custom template filters
 
@@ -118,7 +118,7 @@ To use this new filter you would simply pipe your data to the filter from within
   </template>
 </AposCodeBlock>
 
-## Alphabetical Apostrophe filter reference
+## Alphabetical ApostropheCMS filter reference
 
 ### `| build(url, path, data...)`
 

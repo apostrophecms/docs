@@ -1,4 +1,4 @@
-# Using Apostrophe as a headless CMS
+# Using ApostropheCMS as a headless CMS
 
 Apostrophe is fully featured as a traditional CMS. It is also immediately ready for use as a headless CMS. There are many scenarios where Apostrophe works well in a decoupled architecture, including:
 

@@ -1,9 +1,9 @@
-# Deploying Apostrophe in the Cloud with Heroku
+# Deploying ApostropheCMS in the Cloud with Heroku
 
 There are many cloud hosting services, but they all present the same challenges. For example, separate servers often don't share a single filesystem. The database usually needs its own scalable cloud hosting. And performing tasks like minifying assets is often best done in your development environment, minimizing what has to be done in production.
 
 
-## Deploying Apostrophe to Heroku
+## Deploying ApostropheCMS to Heroku
 
 [Heroku](http://heroku.com) is a great starting point for cloud hosting because it is simple to set up, but all of the cloud's challenges come into play. What we learn by deploying to Heroku can be applied equally to Amazon EC2, Microsoft Azure, and other cloud hosting services.
 

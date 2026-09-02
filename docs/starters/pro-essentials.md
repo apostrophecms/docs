@@ -3,7 +3,7 @@
 prev: false
 next: false
 ---
-# Apostrophe Pro Essentials Starter Kit
+# ApostropheCMS Pro Essentials Starter Kit
 
 ::: info
 This page provides detailed information about a Pro module, accessible with an Apostrophe Pro subscription. If you haven't subscribed yet, explore our [Apostrophe Workspaces](https://app.apostrophecms.com/login) to discover the benefits of a subscription. For further details or inquiries, feel free to [contact us](https://apostrophecms.com/contact-us) or visit our [pricing page](https://apostrophecms.com/pricing).

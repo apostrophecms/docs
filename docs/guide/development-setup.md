@@ -85,7 +85,7 @@ It is **not required** to work with Apostrophe.
 `apos add` scaffolds its templates as **Nunjucks** — you will get a `views/widget.html` or `views/page.html`. New projects should use [JSX templates](/guide/jsx-templates.md), so rename the generated file to `.jsx` and rewrite it as a function component before going further. Everything else the command generates — the module folder, `index.js`, and its registration — is unaffected.
 :::
 
-::: info 📌 You can review more information about the Apostrophe CLI in the doc [here](https://www.npmjs.com/package/@apostrophecms/cli)
+::: info 📌 You can review more information about the Apostrophe CLI in the doc [here](https://apostrophecms.com/extensions/cli)
 :::
 
 ## Creating a project
@@ -95,7 +95,7 @@ If you are not using Atlas, make sure your local server has been started before 
 The easiest way to get started with Apostrophe is to use one of the official starter kit projects. Go into your normal projects directory and run:
 
 ``` bash
-npm create apostrophe@latest apos-app
+npm create apostrophe@latest
 ```
 
 This walks you through an interactive menu — choose a starter kit, name the project, and pick a database. The default is the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit.

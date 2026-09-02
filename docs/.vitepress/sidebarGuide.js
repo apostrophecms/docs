@@ -11,7 +11,7 @@ const sidebarGuide = [
         link: 'guide/introduction.md'
       },
       {
-        text: 'Why Apostrophe',
+        text: 'Why ApostropheCMS',
         link: 'guide/why-apostrophe.md'
       },
       {
@@ -51,11 +51,11 @@ const sidebarGuide = [
             link: 'guide/migration/overview.md'
           },
           {
-            text: 'Upgrade From Apostrophe 2',
+            text: 'Upgrade From ApostropheCMS 2',
             link: 'guide/migration/upgrading.md'
           },
           {
-            text: 'Upgrade From Apostrophe 3',
+            text: 'Upgrade From ApostropheCMS 3',
             link: 'guide/migration/upgrading-3-to-4.md'
           },
           {
