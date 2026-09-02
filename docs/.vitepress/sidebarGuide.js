@@ -483,24 +483,6 @@ const sidebarGuide = [
     collapsed: false,
     items: [
       {
-        text: 'Essentials Starter Kit',
-        link: 'starters/essentials.md'
-      },
-      {
-        text: 'Pro Essentials Starter Kit',
-        link: 'starters/pro-essentials.md'
-      },
-      {
-        text: ' Pro Assembly Starter Kit',
-        link: 'starters/assembly.md'
-      }
-    ]
-  },
-  {
-    text: 'CLI Starters',
-    collapsed: true,
-    items: [
-      {
         text: 'Essentials',
         link: 'guide/apostrophe-standalone-essentials-overview.md'
       },
@@ -515,6 +497,10 @@ const sidebarGuide = [
       {
         text: 'Astro Public Demo',
         link: 'guide/astro-demo-overview.md'
+      },
+      {
+        text: 'Pro Assembly Starter Kit',
+        link: 'starters/assembly.md'
       }
     ]
   },
