@@ -107,17 +107,43 @@ export default function({ page }, { Area, Extend }) {
 
 There are a number of things at work here.
 
-### The template is extending a `layout.html` template
+### The template is extending a layout template
 
 ```jsx
 <Extend templateName="layout" main={mainContent} />
 ```
 
-`layout.html` is a base level template [used in official Apostrophe essentials starter kit](https://github.com/apostrophecms/starter-kit-essentials/blob/main/views/layout.html) and placed in `views/layout.html`. It is used to add markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout.html` template from Apostrophe core, but provides a layer to customize the page wrapper while not overwriting `outerLayout.html`.
+`layout.jsx` (or `layout.html` in a project still on Nunjucks — the two are interchangeable targets for `<Extend>`) is a base-level template placed in `views/`. It adds markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout` template from Apostrophe core, but provides a layer to customize the page wrapper without overwriting `outerLayoutBase.html`.
 
-`<Extend>` works against a Nunjucks target, so a JSX page template can extend an existing `layout.html` unchanged. Each prop you pass replaces the `{% block %}` of the same name — `main={…}` above fills the layout's `main` block. This is the recommended way to migrate: convert page templates one at a time and leave the layout as it is.
+Each prop passed to `<Extend>` fills a slot the layout exposes — `main={…}` above provides the page's content. This is the recommended way to migrate an existing project: convert page templates to JSX one at a time; a JSX page template extends an existing Nunjucks `layout.html` unchanged, no layout changes required first.
 
-The layout template might look something like this. It is shown in Nunjucks because that is what the starter kit ships, and because a JSX page template extends it perfectly well as it stands:
+A JSX layout renders its own invariant markup and exposes a single slot for the page body, rather than splitting a wrapper across separate regions:
+
+<AposCodeBlock>
+
+```jsx
+export default function(data, { Extend }) {
+  return (
+    <Extend
+      templateName={data.outerLayout}
+      main={
+        <div>
+          <header>{/* Page header code: logo, navigation, etc. */}</header>
+          <main>{data.main}</main>
+          <footer>{/* Page footer code: contact information, secondary navigation, etc. */}</footer>
+        </div>
+      }
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+views/layout.jsx
+</template>
+</AposCodeBlock>
+
+For the full walkthrough — including the transitional shape while a layout is still Nunjucks, and a trap worth knowing about before converting one — see [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx). The Nunjucks equivalent, for reference:
 
 ``` nunjucks
 {% extends data.outerLayout %}
@@ -143,7 +169,7 @@ The layout template might look something like this. It is shown in Nunjucks beca
 {% endblock %}
 ```
 
-Note how `beforeMain` opens the `<div>` and `<main>` tags that `afterMain` closes. Nunjucks blocks are textual, so a tag may be opened in one and closed in another. JSX cannot express that — every element must balance inside a single expression — so a layout rewritten in JSX takes the page body as `children` and wraps it, rather than splitting a wrapper across blocks. This is one reason the layout is a good candidate to leave in Nunjucks while page templates move to JSX.
+Note how `beforeMain` opens the `<div>` and `<main>` tags that `afterMain` closes — Nunjucks blocks are textual, so a tag may be opened in one block and closed in another. JSX has no equivalent to reopen a tag block-by-block, but it doesn't need one: the JSX layout above sidesteps the problem entirely by rendering the whole wrapper in one place and taking the page body as a single `main` slot.
 
 ### We are inserting page template markup in a named block
 
@@ -264,7 +290,7 @@ With that available data, we could construct navigation for the website header. 
 </nav>
 ```
 
-In the starter kit's Nunjucks layout, the same navigation uses a `{% for %}` loop inside the `beforeMain` block:
+In a Nunjucks layout, the same navigation uses a `{% for %}` loop inside the `beforeMain` block:
 
 ``` nunjucks
 {# views/layout.html #}

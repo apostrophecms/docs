@@ -3,6 +3,12 @@ excludeFromFilters: true
 ---
 # Overview of ApostropheCMS code organization
 
+::: warning Still Nunjucks — JSX conversion pending
+This tutorial series builds a project from the [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) repo, which still uses Nunjucks templates. That repo hasn't been converted to JSX yet, so this series will too, once it is. The Nunjucks shown here is fully supported and works as written — but if you're starting a new project today, see [JSX templates](/guide/jsx-templates.md) for the currently recommended approach.
+
+**If you're following along by running `npm create apostrophe@latest` below** rather than cloning `apostrophe-onboarding-project` directly: the Essentials starter kit it installs is scheduled to convert to JSX on its own, separate timeline. Once that lands, a freshly created project will use JSX from the start and won't match this series' `.html` file names and Nunjucks syntax. If that happens before this series is rewritten, clone [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) and check out the matching `sec2-*` branch instead, so your code matches what's on the page.
+:::
+
 <iframe src="https://www.youtube.com/embed/yd9HV5JNqLw?si=kCgnQ6cV4noHzJJV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ::: tip Howdy! 👋🏻
