@@ -43,7 +43,7 @@ For more information see the Apostrophe [Getting Started Tutorial](/guide/develo
 
 **We recommend installing this project by cloning it locally and then pushing it to a repository in your own account. The Apostrophe CLI is not currently intended for multisite projects**
 
-1) Navigate to the [Starter Kit](https://github.com/apostrophecms/starter-kit-pro-essentials) repository and clone it locally, or navigate to the directory where you want your project installed and type:
+1) Navigate to the [Starter Kit](https://github.com/apostrophecms/starter-kit-assembly-essentials) repository and clone it locally, or navigate to the directory where you want your project installed and type:
 
 ```sh
 git clone https://github.com/apostrophecms/starter-kit-assembly-essentials.git your-new-project-name
