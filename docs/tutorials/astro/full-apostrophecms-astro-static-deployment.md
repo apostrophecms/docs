@@ -125,7 +125,7 @@ In the Railway dashboard, open your backend service and go to **Variables**. Add
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret — must match the Vercel frontend | `a-long-random-string` |
 | `APOS_BASE_URL` | Astro staging frontend URL (set after Part 2) | `https://your-project.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
-| `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | <span v-pre>`${{RAILWAY_GIT_COMMIT_SHA}}`</span> |
+| `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | `${{RAILWAY_GIT_COMMIT_SHA}}` |
 | `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://your-project-production.vercel.app` |
 
 > **`APOS_EXTERNAL_FRONT_KEY`:** Generate a long random string for this value. It authenticates the Astro frontend with ApostropheCMS. Both Railway and Vercel must use the exact same value or requests will be rejected. Treat it like a password.

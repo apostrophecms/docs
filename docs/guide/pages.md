@@ -276,18 +276,32 @@ Apostrophe templates have data available to add navigation based on the page tre
 
 By default, one level of children are available on each ancestor, as well as on the home page and `page`.
 
-With that available data, we could construct navigation for the website header. In JSX this is a `.map()` over the children:
+With that available data, we could construct navigation for the website header. In JSX this is a `.map()` over the children — and `home` arrives the same way `page` does, as a property of the data object passed to every template, layout included:
 
 ```jsx
-<nav>
-  <ul>
-    {home._children.map((child) => (
-      <li>
-        <a href={child._url}>{child.title}</a>
-      </li>
-    ))}
-  </ul>
-</nav>
+export default function({ home, main }, { Extend }) {
+  return (
+    <Extend
+      templateName="outerLayoutBase"
+      main={
+        <div>
+          <header>
+            <nav>
+              <ul>
+                {home._children.map((child) => (
+                  <li>
+                    <a href={child._url}>{child.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </header>
+          <main>{main}</main>
+        </div>
+      }
+    />
+  );
+}
 ```
 
 In a Nunjucks layout, the same navigation uses a `{% for %}` loop inside the `beforeMain` block:
