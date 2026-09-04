@@ -10,6 +10,12 @@ excludeFromFilters: true
 ---
 # Page Creation
 
+::: warning Still Nunjucks — JSX conversion pending
+This tutorial series builds a project from the [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) repo, which still uses Nunjucks templates. That repo hasn't been converted to JSX yet, so this series will too, once it is. The Nunjucks shown here is fully supported and works as written — but if you're starting a new project today, see [JSX templates](/guide/jsx-templates.md) for the currently recommended approach.
+
+**If you created your project with `npm create apostrophe@latest`** (as this page's own instructions say) rather than cloning `apostrophe-onboarding-project` directly: the Essentials starter kit it installs is scheduled to convert to JSX on its own, separate timeline. Once that lands, a freshly created project will use JSX from the start and won't match this page's `.html` file names and Nunjucks syntax. If that happens before this series is rewritten, clone [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) and check out the matching `sec2-*` branch instead, so your code matches what's on the page.
+:::
+
 <iframe src="https://www.youtube.com/embed/3Ojv9v36zfk?si=X7ZVJ7RzK5v1TTit" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ::: tip Howdy! 👋🏻
@@ -21,9 +27,9 @@ In an Apostrophe project, pages provide a way to show static content, as well as
 While the focus of this tutorial is demonstrating how to add pages to your project, we will also be diving a little deeper into some key concepts. These concepts apply universally in Apostrophe projects. As a result, this tutorial won't be code-heavy but is crucial in fully understanding how to develop with Apostrophe.
 
 ## Getting Started
-In our project, we are first going to create our home page by modifying the Essentials starter kit `home-page` module. At this point, you should already have created a new project using the Apostrophe CLI tool as outlined in the [Code Organization](/tutorials/code-organization.html) tutorial. As a reminder, if you have the CLI tool installed, navigate in your terminal to the directory where you want to create your new project. Then issue the command:
+In our project, we are first going to create our home page by modifying the Essentials starter kit `home-page` module. At this point, you should already have created a new project as outlined in the [Code Organization](/tutorials/code-organization.html) tutorial. As a reminder, navigate in your terminal to the directory where you want to create your new project, then issue the command:
 
-`apos create onboarding-project --starter=essentials`
+`npm create apostrophe@latest onboarding-project`
 
 This will create a new directory named `onboarding-project` and clone the files from the `starter-kit-essentials` repo. It will also run `npm install`, add your project name to the `package.json` file, and register a new user with the username `admin` and the password of your choice.
 
@@ -442,7 +448,7 @@ Depending on the document type of the module, the template has a lot of addition
 ::: v-pre
  When creating a new template, sometimes it is handy to see exactly what is being passed to the template for debugging purposes. Apostrophe exposes several helpers, including `apos.log`. In this case, you could use it to output the `data.page` object to the console, using `{{ apos.log('this is the page data', data.page)}}`. This is essentially like using `console.log('message', variable)` in JavaScript. This information will show up in the server console, not the browser console, since the page is rendered server-side.
  
- An alternative to this is using `<script> console.log({{ page.data | json}})</script>`. This will pipe the log output to the browser console since the script will be run on the client-side. This is useful for parsing through large objects or using other console methods. Note the use of `| json` within the interpreted expression. This is saying that the `page.data` should be piped to the Nunjucks `json` filter. Filters in Nunjucks apply a function to any template data and are used to sanitize or modify the input that is piped to them. In this case, the `json` filter will properly escape data into a json string for output in a script tag. There are several [Nunjucks-](https://mozilla.github.io/nunjucks/templating.html#filters) and [Apostrophe-supplied](/guide/template-filters.html#apostrophe-supplied-filters) filters, plus you can create [custom filters](/guide/template-filters.md#custom-template-filters). We will explore this further in a future tutorial.
+ An alternative to this is using `<script> console.log({{ page.data | json}})</script>`. This will pipe the log output to the browser console since the script will be run on the client-side. This is useful for parsing through large objects or using other console methods. Note the use of `| json` within the interpreted expression. This is saying that the `page.data` should be piped to the Nunjucks `json` filter. Filters in Nunjucks apply a function to any template data and are used to sanitize or modify the input that is piped to them. In this case, the `json` filter will properly escape data into a json string for output in a script tag. There are several [Nunjucks-](https://mozilla.github.io/nunjucks/templating.html#filters) and [Apostrophe-supplied](/guide/template-filters.html#apostrophecms-supplied-filters) filters, plus you can create [custom filters](/guide/template-filters.md#custom-template-filters). We will explore this further in a future tutorial.
 :::
 
 ## Using fragments

@@ -156,7 +156,7 @@ apollo/
 
 ### Initial Setup
 
-1. Clone the Apollo repository - optionally you can give your project a custom name, but note, you will also need to [change the ApostropheCMS shortname](/guide/development-setup.html#if-you-don-t-want-to-use-the-cli-or-if-you-want-to-see-other-things-it-does-for-you-continue-on) in the `app.js` file if you want your database name to match:
+1. Clone the Apollo repository - optionally you can give your project a custom name, but note, you will also need to [change the ApostropheCMS shortname](/guide/development-setup.md#if-you-would-rather-set-the-project-up-by-hand-or-want-to-see-what-the-above-does-for-you-continue-on) in the `app.js` file if you want your database name to match:
     ```bash
     git clone https://github.com/apostrophecms/apollo
     cd apollo

@@ -144,7 +144,7 @@ dispatchAll() {
 </AposCodeBlock>
 
 #### Fetching the breed list
-The first `dispatch()` method has a pattern of `/`. This means that it will match the base slug for each page of this type. So, if your page has a slug of `dogs`, it will match, `https://mysite.com/dogs`. When a user makes a request to this page, this method will intercept the rquest and make a call to the `fetchAndCacheData()` method. It will pass the namespace `breedData` and the key `all` to check for cached data. The returned data will be added to the `req` object as `data.breed` for retrieval in our template. Finally, the modified `req` will be passed to the `setTemplate()` helper method to designate that the `breedList.html` template from the module `views` folder should be rendered in the browser.
+The first `dispatch()` method has a pattern of `/`. This means that it will match the base slug for each page of this type. So, if your page has a slug of `dogs`, it will match, `https://mysite.com/dogs`. When a user makes a request to this page, this method will intercept the rquest and make a call to the `fetchAndCacheData()` method. It will pass the namespace `breedData` and the key `all` to check for cached data. The returned data will be added to the `req` object as `data.breed` for retrieval in our template. Finally, the modified `req` will be passed to the `setTemplate()` helper method to designate that the `breedList.jsx` template from the module `views` folder should be rendered in the browser.
 
 #### Fetching the breed images
 Looking at the [breed list returned by the API](https://dog.ceo/dog-api/documentation/), we can see that for some of the breeds, there are multiple varieties, while for others there is only a single. This means that we need to come up with a strategy to provide routes for both. The second `dispatch()` method has a more complicated pattern, `/:breed/:variety?` to deal with this situation. It will match the base slug for the page, plus at least one additional dynamic parameter that specifies the breed and an optional parameter for the variety as indicated by the appended question mark. So this pattern would match both `https://mysite.com/dogs/pug` and `https://mysite.com/dogs/bulldog/boston`.
@@ -157,85 +157,109 @@ self.dispatch('/:breed/:variety', async req => { ... })
 ```
 Separation of the routes makes sense when the handling of the dynamic parameters differs significantly.
 
-The handler in this case is also a little more complicated in order to construct the correct endpoint for whether there is a variety included or not. The returned data is again added to the `req` object and then used to designate that the `breedImages.html` template should be rendered in the browser.
+The handler in this case is also a little more complicated in order to construct the correct endpoint for whether there is a variety included or not. The returned data is again added to the `req` object and then used to designate that the `breedImages.jsx` template should be rendered in the browser.
 
 ## Creating the template files
 Now that we have set up our dispatch routes, we need to create the templates that will be used for each route. To keep the tutorial simple, we will only cover the parts of the templates that are specific to dealing with data returned by the dispatch callbacks. However, these templates also have some custom styling to create a lightbox for the images and allow the user to return to the list of all breeds.
 
-### The `breedList.html` template
-Create a `views` folder in your custom module and add a `breedList.html` file inside. This is the file that will display a list of all our breeds returned by the API. Add the following code:
+### The `breedList.jsx` template
+Create a `views` folder in your custom module and add a `breedList.jsx` file inside. This is the file that will display a list of all our breeds returned by the API. Add the following code:
 
 <AposCodeBlock>
 
-```nunjucks
-{% extends 'layout.html' %}
+```jsx
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-{% block main %}
-  <h1>Dog Breeds</h1>
-  <div class="divider"></div>
-  <div class="breed-columns">
-    {% for breed, varieties in data.breeds %}
-      <div class="breed-column">
-        <h2>{{ breed | capitalize }}</h2>
-        {% if varieties and varieties.length > 0 %}
-          <ul>
-            {% for variety in varieties %}
-              <li>
-                <a href="{{ data.page._url }}/{{ breed }}/{{ variety }}">{{ variety | capitalize }} {{ breed | capitalize }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          <a href="{{ data.page._url }}/{{ breed }}">{{ breed | capitalize }}</a>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-{% endblock %}
+export default function({ page, breeds }, { Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h1>Dog Breeds</h1>
+          <div className="divider"></div>
+          <div className="breed-columns">
+            {Object.entries(breeds).map(([ breed, varieties ]) => (
+              <div className="breed-column">
+                <h2>{capitalize(breed)}</h2>
+                {varieties && varieties.length > 0 ? (
+                  <ul>
+                    {varieties.map((variety) => (
+                      <li>
+                        <a href={`${page._url}/${breed}/${variety}`}>
+                          {capitalize(variety)} {capitalize(breed)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <a href={`${page._url}/${breed}`}>{capitalize(breed)}</a>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      }
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/dog-page/views/breedList.html
+    modules/dog-page/views/breedList.jsx
   </template>
 
 </AposCodeBlock>
 
-This template is a straightforward Nunjucks template. It retrieves the API data from the `data` object. For each breed, it creates a block of markup with either a single link if there is a single variety, or multiple links if there is more than one. We will use CSS to arrange these blocks of code into a responsive grid. The links themselves will create the pattern for our second `dispatch()` method, either `/:breed` or `/:breed/:variety`.
+This is a straightforward JSX template. It destructures the API data from its first argument. For each breed, it creates a block of markup with either a single link if there is a single variety, or multiple links if there is more than one. We will use CSS to arrange these blocks of code into a responsive grid. The links themselves will create the pattern for our second `dispatch()` method, either `/:breed` or `/:breed/:variety`.
 
-### The `breedImage.html` template
-To display the breed images to the user we need a separate template that parses all of the image links passed back from the API. Create a `breedImage.html` file in the `views` folder of your module and add the following:
+### The `breedImage.jsx` template
+To display the breed images to the user we need a separate template that parses all of the image links passed back from the API. Create a `breedImage.jsx` file in the `views` folder of your module and add the following:
 
 <AposCodeBlock>
 
-```nunjucks
-{% extends 'layout.html' %}
+```jsx
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-{% block main %}
-<h1>Dog Breed Gallery</h1>
-<h2>Images of {{data.breed | capitalize}}</h2>
-<div class="image-grid">
-  {% for imageUrl in data.images %}
-  <a href="#img{{ loop.index }}" class="image-container">
-    <img src="{{ imageUrl }}" alt="Dog image" />
-  </a>
-  <div id="img{{ loop.index }}" class="lightbox">
-    <div class="lightbox-content">
-      <a href="#close" class="close">&times;</a>
-        <img src="{{ imageUrl }}" />
-        <p>Image {{ loop.index }}</p>
-    </div>
-  </div>
-  {% endfor %}
-</div>
-<a href="{{ data.page._url }}" role="button" class="back-to-list-button">Back to Breed List</a>
-{% endblock %}
+export default function({ page, breed, images }, { Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h1>Dog Breed Gallery</h1>
+          <h2>Images of {capitalize(breed)}</h2>
+          <div className="image-grid">
+            {images.map((imageUrl, i) => (
+              <>
+                <a href={`#img${i + 1}`} className="image-container">
+                  <img src={imageUrl} alt="Dog image" />
+                </a>
+                <div id={`img${i + 1}`} className="lightbox">
+                  <div className="lightbox-content">
+                    <a href="#close" className="close">&times;</a>
+                    <img src={imageUrl} />
+                    <p>Image {i + 1}</p>
+                  </div>
+                </div>
+              </>
+            ))}
+          </div>
+          <a href={page._url} role="button" className="back-to-list-button">
+            Back to Breed List
+          </a>
+        </>
+      }
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    modules/dog-page/views/breedImages.html
+    modules/dog-page/views/breedImages.jsx
   </template>
 
 </AposCodeBlock>
 
-Again, this is a straightforward Nunjucks template. We are using a loop to display each of the images sent back from the API. To allow for lightbox functionality when the user clicks an image, we have enclosed each in a link with a `href` created from the `loop.index`. We have also created a div with an `id` constructed from this same index.
+Again, this is a straightforward JSX template. We map over the images sent back from the API. To allow for lightbox functionality when the user clicks an image, we have enclosed each in a link with a `href` built from the map index. We have also created a div with an `id` constructed from that same index. Note that `.map()` gives a zero-based index, so we add one to match the one-based numbering Nunjucks `loop.index` produced.
 
 Finally, since clicking on an image to open a lightbox will alter the browser history and the functionality of the back button, we are providing a button to go back to the breed list. Individual breed pages, like `/dogs/pug`, aren't stored in the database but are dynamically generated. As such, navigating to one of these breed-specific pages is still technically a request for the parent `/dogs` page, so the URL for the breed list page will be contained in `data.page._url`.
 

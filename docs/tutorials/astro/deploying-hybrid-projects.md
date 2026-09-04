@@ -120,7 +120,7 @@ export default defineConfig({
    - Uncomment `excludeRequestHeaders: ['host']` to prevent hostname conflicts
 
 
-## Deploying with Apostrophe Hosting
+## Deploying with ApostropheCMS Hosting
 
 Apostrophe offers a straightforward hosting solution specifically designed for ApostropheCMS projects, including those with Astro frontends.
 

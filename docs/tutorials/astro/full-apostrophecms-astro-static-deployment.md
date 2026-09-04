@@ -130,7 +130,7 @@ In the Railway dashboard, open your backend service and go to **Variables**. Add
 
 > **`APOS_EXTERNAL_FRONT_KEY`:** Generate a long random string for this value. It authenticates the Astro frontend with ApostropheCMS. Both Railway and Vercel must use the exact same value or requests will be rejected. Treat it like a password.
 
-> **`APOS_RELEASE_ID`:** Setting this to `${{RAILWAY_GIT_COMMIT_SHA}}` uses Railway's built-in reference variable to automatically generate a unique value from the git commit hash on every deploy. This is preferable to a static random string, which would remain the same across redeployments.
+> **`APOS_RELEASE_ID`:** Setting this to <span v-pre>`${{RAILWAY_GIT_COMMIT_SHA}}`</span> uses Railway's built-in reference variable to automatically generate a unique value from the git commit hash on every deploy. This is preferable to a static random string, which would remain the same across redeployments.
 
 > **`APOS_BASE_URL` and `APOS_STATIC_BASE_URL` — chicken-and-egg:** Both of these point to Vercel URLs that do not exist yet. `APOS_BASE_URL` requires the staging URL from Part 2, and `APOS_STATIC_BASE_URL` requires the production URL from Part 3. Set the other three variables now and come back to add these after each project is deployed.
 
@@ -473,7 +473,7 @@ Then confirm the following:
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret (must match frontend) | `a-long-random-string` |
 | `APOS_BASE_URL` | Astro staging frontend URL | `https://your-project.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
-| `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | `${{RAILWAY_GIT_COMMIT_SHA}}` |
+| `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | <span v-pre>`${{RAILWAY_GIT_COMMIT_SHA}}`</span> |
 | `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://your-project-production.vercel.app` |
 
 ### Astro Frontend — Staging (Vercel Project A)

@@ -14,39 +14,47 @@ That section of our show page template might look like this:
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    {# More article template stuff above ⤴ #}
-    <section>
-      <h2>Related articles</h2> {# 👈 We need to localize this. #}
-      <ul>
-        {% for post in data.piece._related %}
-          <li><a href="{{ post._url }}">{{ post.title }}</a></li>
-        {% endfor %}
-      </ul>
-    </section>
+  ```jsx
+  export default function({ piece }) {
+    /* More article template stuff above ⤴ */
+    return (
+      <section>
+        <h2>Related articles</h2> {/* 👈 We need to localize this. */}
+        <ul>
+          {piece._related.map((post) => (
+            <li><a href={post._url}>{post.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
   ```
   <template v-slot:caption>
-    /modules/article-page/views/show.html
+    /modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
-Localizing that string is as easy as wrapping it in a template helper: `__t()`. Make sure the string passed to the helper is in quotes and any matching quotes in the string are escaped (e.g., `__t('Gritty\'s friends')`).
+Localizing that string is as easy as wrapping it in a template helper: `__t()`. It arrives on the second argument of the template function, alongside `apos` and the `Area`/`Extend`/`Template` helpers. Make sure the string passed to the helper is in quotes and any matching quotes in the string are escaped (e.g., `__t('Gritty\'s friends')`).
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    {# More article template stuff above ⤴ #}
-    <section>
-      <h2>{{ __t('Related articles') }}</h2> {# 🎉 It's localized! #}
-      <ul>
-        {% for post in data.piece._related %}
-          <li><a href="{{ post._url }}">{{ post.title }}</a></li>
-        {% endfor %}
-      </ul>
-    </section>
+  ```jsx
+  export default function({ piece }, { __t }) {
+    /* More article template stuff above ⤴ */
+    return (
+      <section>
+        <h2>{__t('Related articles')}</h2> {/* 🎉 It's localized! */}
+        <ul>
+          {piece._related.map((post) => (
+            <li><a href={post._url}>{post.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
   ```
   <template v-slot:caption>
-    /modules/article-page/views/show.html
+    /modules/article-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -54,8 +62,8 @@ In that example, we passed the actual text to the localization helper. This has 
 
 Our other option is to use a **localization key that is different from the original text**. Taking our example, that heading tag might instead look like:
 
-``` nunjucks
-<h2>{{ __t('relatedArticles') }}</h2>
+```jsx
+<h2>{__t('relatedArticles')}</h2>
 ```
 
 This method is better if your team prefers to maintain all hard-coded strings in the same way across locales (treating the default locale the same as others). Using the original text as the key, as in our previous example, might be better so that translators can see the original text alongside their translations in the JSON files. It mostly depends how you prefer to work. The important thing is to be consistent.
@@ -110,13 +118,13 @@ Template example:
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    {{ __t('Contact the {{ city }} office', {
-      city: data.piece.city
-    }) }}
+  ```jsx
+  {__t('Contact the {{ city }} office', {
+    city: piece.city
+  })}
   ```
   <template v-slot:caption>
-    /modules/office-page/views/show.html
+    /modules/office-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -136,13 +144,13 @@ The arguments would look essentially identical in server-side or a UI file, usin
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    {{ __t('contactOffice', {
-      city: data.piece.city
-    }) }}
+  ```jsx
+  {__t('contactOffice', {
+    city: piece.city
+  })}
   ```
   <template v-slot:caption>
-    /modules/office-page/views/show.html
+    /modules/office-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -225,8 +233,8 @@ Although you can set the `i18n.ns` option of the module instead to define the na
 
 Then when you use the localization keys in template files (or elsewhere), start each key with the namespace:
 
-``` nunjucks
-<h2>__t('ourTeam:relatedArticles')</h2>
+```jsx
+<h2>{__t('ourTeam:relatedArticles')}</h2>
 ```
 
 Apostrophe will then treat keys with the namespace differently from the same key without the namespace (`ourTeam:relatedArticles` vs. `relatedArticles`). If someone uses the version *without* the namespace it will not overwrite the version *with* the namespace.
@@ -237,7 +245,7 @@ Avoid using namespaces that begin with `apos`. The core team uses namespaces tha
 As a reminder, namespacing is primarily necessary for *installable modules* and not for project-level localization.
 :::
 
-## Localizing the Apostrophe user interface
+## Localizing the ApostropheCMS user interface
 
 ### Core UI localization
 

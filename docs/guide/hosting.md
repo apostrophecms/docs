@@ -1,4 +1,4 @@
-# Hosting Apostrophe in production
+# Hosting ApostropheCMS in production
 
 ## Server requirements
 

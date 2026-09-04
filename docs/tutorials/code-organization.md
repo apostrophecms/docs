@@ -1,7 +1,13 @@
 ---
 excludeFromFilters: true
 ---
-# Overview of Apostrophe code organization
+# Overview of ApostropheCMS code organization
+
+::: warning Still Nunjucks — JSX conversion pending
+This tutorial series builds a project from the [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) repo, which still uses Nunjucks templates. That repo hasn't been converted to JSX yet, so this series will too, once it is. The Nunjucks shown here is fully supported and works as written — but if you're starting a new project today, see [JSX templates](/guide/jsx-templates.md) for the currently recommended approach.
+
+**If you're following along by running `npm create apostrophe@latest` below** rather than cloning `apostrophe-onboarding-project` directly: the Essentials starter kit it installs is scheduled to convert to JSX on its own, separate timeline. Once that lands, a freshly created project will use JSX from the start and won't match this series' `.html` file names and Nunjucks syntax. If that happens before this series is rewritten, clone [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) and check out the matching `sec2-*` branch instead, so your code matches what's on the page.
+:::
 
 <iframe src="https://www.youtube.com/embed/yd9HV5JNqLw?si=kCgnQ6cV4noHzJJV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -13,15 +19,15 @@ In this tutorial, we'll initialize our project with the Apostrophe Command Line 
 
 ## Creating our project
 
-We're going to assume that you have already set your development environment up and installed the CLI tool. To create a new project, simply open your terminal (for Windows, make sure to open the terminal in WSL) and navigate to the location where you want to install your project. Then issue the command:
+We're going to assume that you have already set your development environment up. To create a new project, simply open your terminal (for Windows, make sure to open the terminal in WSL) and navigate to the location where you want to install your project. Then issue the command:
 
 ```sh
-apos create onboarding-project --starter=essentials
+npm create apostrophe@latest onboarding-project
 ```
 
-You can give the project whatever name you desire in place of 'onboarding-project', just make sure that all projects using the same MongoDB instance have a unique name, as this will also be used as the database name where all of our project collections will be stored. With this command, we are specifying the `essentials` starter kit by using the optional `--starter` flag. If this flag is left off, the Essentials starter kit will be installed by default. You can explore our [website](https://apostrophecms.com/starter-kits) for additional starter kits.
+You can give the project whatever name you desire in place of 'onboarding-project', just make sure that all projects using the same MongoDB instance have a unique name, as this will also be used as the database name where all of our project collections will be stored. The command walks you through an interactive menu where you choose a starter kit; pick **Essentials** for this tutorial. You can explore our [website](https://apostrophecms.com/starter-kits) for additional starter kits.
 
-The CLI tool will create a new folder with the name of the project containing a number of files and folders, including an `app.js` file with the name of the project added as the `shortName`, and a `package.json` file for installing all the project dependencies. Then it will perform a package install.
+It will create a new folder with the name of the project containing a number of files and folders, including an `app.js` file with the name of the project added as the `shortName`, and a `package.json` file for installing all the project dependencies. Then it will perform a package install.
 
 After installation is complete, it will issue a command line task to add a user with `admin` permissions and ask for a password.
 
@@ -40,7 +46,7 @@ node app @apostrophecms/user:add <user-name> <user-role>
 ![screenshot of the Apostrophe boilerplate directory structure](../images/sec2-1b-directory.png)
 
 ### `app.js`
-At the root level of your project is the `app.js` file. This file is used to register any modules that are being used in the project. It can also be used to initialize other services that should be started when the project spins up, for example, [site telemetry](/cookbook/opentelemetry.html). You can pass some configuration options, like class names for core widgets, but most options should be passed in the individual module files. At the top of the file there is a `shortname` property. Again, this determines the database name that will be used and should be unique within a MongoDB instance to avoid overwriting another project's content. If you use our CLI this shortname is automatically set to the name you pass as an argument to the `apos create` command. If you elect to clone a project from a repo, you will need to change this manually.
+At the root level of your project is the `app.js` file. This file is used to register any modules that are being used in the project. It can also be used to initialize other services that should be started when the project spins up, for example, [site telemetry](/cookbook/opentelemetry.html). You can pass some configuration options, like class names for core widgets, but most options should be passed in the individual module files. At the top of the file there is a `shortname` property. Again, this determines the database name that will be used and should be unique within a MongoDB instance to avoid overwriting another project's content. If you use `npm create apostrophe@latest` this shortname is automatically set to the project name you supply. If you elect to clone a project from a repo, you will need to change this manually.
 
 ### `views`
 Also at the root of your project is the `views` folder. This folder contains the main page layout file, `layout.html`, that you extend within your other page modules. We will get into the details of this in the ["Creating Pages"](/tutorials/pages.html) tutorial. This folder can also be used for project-wide template "fragments". We will be using fragments to construct both the header and footer sections of our page.

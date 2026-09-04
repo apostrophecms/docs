@@ -91,27 +91,36 @@ ApostropheCMS uses CSS variables for consistent styling across the admin UI. The
 
 ApostropheCMS has a built-in dark mode theme that can be activated by adding the class `apos-theme-dark` to either the body element or the admin-bar wrapper, as [detailed below](#creating-custom-themes).
 
-To activate dark mode through the standard ApostropheCMS Nunjucks layout, use the `bodyClass` block in your template:
+To activate dark mode, set the `bodyClass` block on the outer layout from your project layout:
 
 <AposCodeBlock>
 
-```nunjucks
-{% extends "layout.html" %}
-
-{% block bodyClass %}apos-theme-dark{% endblock %}
+```jsx
+<Extend templateName={outerLayout} bodyClass="apos-theme-dark" />
 ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>
 
 ::: tip
-If you need to add dark mode while keeping any existing body classes added to this same block use:
+To add dark mode while keeping body classes that page templates pass in, compose the string rather than replacing it. The layout receives whatever the page supplied as its own `bodyClass` prop:
+
+```jsx
+<Extend
+  templateName={outerLayout}
+  bodyClass={`${bodyClass || ''} apos-theme-dark`}
+/>
+```
+
+This is the general pattern for adding to an inherited block — see [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super).
+:::
+
+In a Nunjucks layout the same block is used directly, and `super()` preserves any existing classes:
 
 ```nunjucks
 {% block bodyClass %}{{ super() }} apos-theme-dark{% endblock %}
 ```
-:::
 
 You can implement a front-end UI toggle between the default light theme and the dark theme by adding and removing the `apos-theme-dark` class.
 

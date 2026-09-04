@@ -191,8 +191,9 @@ This configuration setting should be passed to the `@apostrophecms/attachment` m
         height: 350
       }
     }
-  ```
-  
+  }
+```
+
 Additional sizes can be added through an object composed of size objects containing `name`, `width`, and `height` properties. This object is passed as value to the `add` key of `imageSizes`. Default sizes can be removed by passing an array containing their names to the `remove` key of `imageSizes`.
 
 ::: info
@@ -265,17 +266,21 @@ The `options` parameter is optional and takes an object with several potential p
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set images = apos.attachment.all(data.page._people, { group: 'images' }) %}
-  {% for selfie in images %}
-    <img src="{{ selfie._urls['one-third'] }}">
-  {% endfor %}
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const images = apos.attachment.all(page._people, { group: 'images' });
+
+  return images.map((selfie) => (
+    <img src={selfie._urls['one-third']} />
+  ));
+}
 ```
 
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -296,14 +301,22 @@ The `options` parameter is optional and takes an object with several potential p
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-   <img src="{{ image._urls['one-third'] }}">
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
+
+  return <img src={image._urls['one-third']} />;
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -313,16 +326,29 @@ If the attachment has a focal point defined, this helper will return the focal p
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-  {% set focalPoint = apos.attachment.focalPointToObjectPosition(image) %}
-   // focal point = '20% 20%'  
-  <img src="{{ image._urls['one-third'] }}" style="object-position: {{ focalPoint }};">
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
+  const focalPoint = apos.attachment.focalPointToObjectPosition(image);
+  // focalPoint === '20% 20%'
+
+  return (
+    <img
+      src={image._urls['one-third']}
+      style={`object-position: ${focalPoint};`}
+    />
+  );
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -331,16 +357,29 @@ If the attachment has a focal point defined, this helper will return an object c
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-  {% set focalPoint = apos.attachment.getFocalPoint(image) %}
-   // focal point = '{ x: 20, y: 20 }'  
-  <img src="{{ image._urls['one-third'] }}" style="object-position: left {{ focalPoint.x }}% top {{ focalPoint.y }}%;">
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
+  const focalPoint = apos.attachment.getFocalPoint(image);
+  // focalPoint === { x: 20, y: 20 }
+
+  return (
+    <img
+      src={image._urls['one-third']}
+      style={`object-position: left ${focalPoint.x}% top ${focalPoint.y}%;`}
+    />
+  );
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -349,14 +388,23 @@ Returns either the original size attachment height, or the cropped height if the
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-  {% set imageHeight = apos.attachment.getHeight(image) %}  <img src="{{ image._urls['one-third'] }}" height="{{ imageHeight }}" >
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
+  const imageHeight = apos.attachment.getHeight(image);
+
+  return <img src={image._urls['one-third']} height={imageHeight} />;
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -365,15 +413,23 @@ Returns either the original size attachment width or the cropped width if the im
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-  {% set imageWidth = apos.attachment.getWidth(image) %}
-  <img src="{{ image._urls['one-third'] }}" width="{{ imageWidth }}" >
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image) {
+    return null;
+  }
+  const imageWidth = apos.attachment.getWidth(image);
+
+  return <img src={image._urls['one-third']} width={imageWidth} />;
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 
@@ -382,17 +438,28 @@ Returns `true` if the image attachment associated with the document has a focal 
 
 <AposCodeBlock>
 
-``` nunjucks
-{% if data.page._people %}
-  {% set image = apos.attachment.first(data.page._people, { group: 'images' }) %}
-  {% if hasFocalPoint(image) %}
-    {% set focalPoint = apos.attachment.focalPointToObjectPosition(image) %}
-    <img src="{{ image._urls['one-third'] }}" style="object-position: {{ focalPoint }};">
-  {% endif %}
-{% endif %}
+```jsx
+export default function({ page }, { apos }) {
+  if (!page._people) {
+    return null;
+  }
+  const image = apos.attachment.first(page._people, { group: 'images' });
+
+  if (!image || !apos.attachment.hasFocalPoint(image)) {
+    return null;
+  }
+  const focalPoint = apos.attachment.focalPointToObjectPosition(image);
+
+  return (
+    <img
+      src={image._urls['one-third']}
+      style={`object-position: ${focalPoint};`}
+    />
+  );
+}
 ```
 <template v-slot:caption>
-  modules/default-page/views/page.html
+  modules/default-page/views/page.jsx
   </template>
 </AposCodeBlock>
 

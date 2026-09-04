@@ -83,12 +83,14 @@ When using the [official CLI](/guide/development-setup.md#installing-the-apostro
 ```bash
 apos add piece article --page
 ```
+
+It scaffolds the templates as Nunjucks, so rename the generated `index.html` and `show.html` to `.jsx` and write them as function components — see the [CLI note](/guide/development-setup.md#installing-the-apostrophe-cli).
 :::
 
 | Template file name | What is it? |
 | ------------------ | ----------- |
-| `index.html` | Template for listing pieces (the **"index page**) |
-| `show.html` | Template to display an individual piece (a **"show page"**) |
+| `index.jsx` | Template for listing pieces (the **"index page**) |
+| `show.jsx` | Template to display an individual piece (a **"show page"**) |
 
 We'll review each template's features next.
 
@@ -129,46 +131,57 @@ You've reviewed the [page type guide](/guide/pages.md), right? The sections belo
 
 Index page templates look very similar to other page templates.
 
-``` nunjucks
-{# modules/article-page/views/index.html #}
+```jsx
+/* modules/article-page/views/index.jsx */
+import Pager from './pager.jsx';
 
-{% extends "layout.html" %}
-{% import '@apostrophecms/pager:macros.html' as pager with context %}
+export default function(
+  { page, pieces, currentPage, totalPages, url },
+  { Extend }
+) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h1>{page.title}</h1>
 
-{% block main %}
-  <h1>{{ data.page.title }}</h1>
+          {pieces.map((article) => (
+            <article>
+              <h2>
+                <a href={article._url}>{article.title}</a>
+              </h2>
+            </article>
+          ))}
 
-  {% for article in data.pieces %}
-    <article>
-      <h2>
-        <a href="{{ article._url }}">{{ article.title }}</a>
-      </h2>
-    </article>
-  {% endfor %}
-
-  {{ pager.render({
-    page: data.currentPage,
-    total: data.totalPages,
-    class: 'blog-pager'
-  }, data.url) }}
-{% endblock %}
+          <Pager
+            page={currentPage}
+            total={totalPages}
+            url={url}
+            className="blog-pager"
+          />
+        </>
+      }
+    />
+  );
+}
 ```
 
 ### `data.pieces` and other unique `data` properties
 
-The first new thing here is the `import` statement, but we'll get back to that. Let's talk about the **loop over `data.pieces`**.
+The first new thing here is the `Pager` import, but we'll get back to that. Let's talk about the **loop over `pieces`**.
 
-``` nunjucks
-{% for article in data.pieces %}
+```jsx
+{pieces.map((article) => (
   <article>
     <h2>
-      <a href="{{ article._url }}">{{ article.title }}</a>
+      <a href={article._url}>{article.title}</a>
     </h2>
   </article>
-{% endfor %}
+))}
 ```
 
-Index page templates have access to `data.pieces`, which is an array of piece docs. Since it's an array, we use the [Nunjucks `for` tag](https://mozilla.github.io/nunjucks/templating.html#for) to loop over the pieces.
+Index page templates have access to `pieces`, which is an array of piece docs. Since it's an array, we use `.map()` to loop over the pieces.
 
 The `data` object properties unique to index pages are:
 
@@ -181,33 +194,105 @@ The `data` object properties unique to index pages are:
 
 ### Pagination
 
-``` nunjucks
-{% import '@apostrophecms/pager:macros.html' as pager with context %}
+By default, index pages will include up to *ten* pieces on `pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-1) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
 
-{{ pager.render({
-  page: data.currentPage,
-  total: data.totalPages,
-  class: 'blog-pager'
-}, data.url) }}
-```
+The `@apostrophecms/pager` module supplies the arithmetic for basic, unstyled pagination through three [helper methods](/reference/modules/pager.md#helpers). They return plain data — an array of page numbers and two booleans — so you write the markup yourself as an ordinary component:
 
-By default, index pages will include up to *ten* pieces on `data.pieces` at a time. **You can change the number of pieces in each page of results** by setting [the `perPage` option](/reference/module-api/module-options.md#perpage-1) on the module. The data passed to templates will update, so you don't need to make any other adjustments.
+<AposCodeBlock>
 
-Apostrophe's pager macro adds basic, unstyled pagination to view more. The pager macro is a special template using the [Nunjucks macro](https://mozilla.github.io/nunjucks/templating.html#macro) feature. This particular macro accepts two arguments:
+```jsx
+export default function(
+  { page, total, url, className },
+  { apos, helpers, __t }
+) {
+  if (!(page > 1 || total > 1)) {
+    return null;
+  }
 
-1. an object with the `currentPage` and `totalPages` values, described above, as well as an optional CSS class for the pager wrapper
-```javascript
-{
-  page: data.currentPage,
-  total: data.totalPages,
-  class: 'my-pager-class' // Optional
+  // Normalize `shown` before calling any of the three helpers. They do not
+  // default it themselves, and an undefined `shown` makes both gap checks
+  // return false.
+  const options = { page, total, shown: 5 };
+
+  const pages = helpers.pager.pageRange(options);
+  const showHeadGap = helpers.pager.showHeadGap(options);
+  const showTailGap = helpers.pager.showTailGap(options);
+
+  const itemClass = className ? `${className}__item` : '';
+  const gapClass = className ? `${className}__gap` : '';
+
+  function Gap() {
+    // Decorative: the surrounding numbers already imply the skipped pages.
+    // Must be the string 'true' — see the note below.
+    return <span className={gapClass} aria-hidden="true">…</span>;
+  }
+
+  function Page({ number }) {
+    const active = number === page;
+    const classes = [
+      itemClass,
+      number === 1 && 'is-first',
+      number === total && 'is-last',
+      active && 'is-active'
+    ].filter(Boolean).join(' ');
+
+    return (
+      <span className={classes} aria-current={active ? 'page' : null}>
+        {active
+          ? number
+          : (
+            <a
+              href={apos.url.build(url, { page: number })}
+              aria-label={__t('Page {{ number }}', { number })}
+            >
+              {number}
+            </a>
+          )}
+      </span>
+    );
+  }
+
+  return (
+    <nav className={className} aria-label={__t('Pagination')}>
+      <Page number={1} />
+      {showHeadGap && <Gap />}
+      {pages.map((number) => <Page number={number} />)}
+      {showTailGap && <Gap />}
+      {total > 1 && <Page number={total} />}
+    </nav>
+  );
 }
 ```
-2. the page URL, `data.url`
+
+<template v-slot:caption>
+  modules/article-page/views/pager.jsx
+</template>
+</AposCodeBlock>
+
+The three helpers are reached through **`helpers.pager`**, the template-helper object supplied as part of the second argument — not through `apos.pager`, which is the module instance and does not expose them directly. `apos.url.build()` builds each page's URL.
+
+`shown` controls how many interior page numbers appear, not counting the separately rendered first and last pages.
+
+### Accessibility notes
+
+Pagination is easy to render in a way that looks right but tells assistive technology nothing. Four details in the example above are doing that work:
+
+- **`<nav aria-label>`** makes the block a navigation landmark that can be jumped to directly. The label distinguishes it from other navigation on the page.
+- **`aria-current="page"`** marks the active page. Without it, the current page is signalled only by a CSS class and by not being a link — neither of which a screen reader conveys. It would simply announce a bare number.
+- **`aria-label` on each link** gives "Page 4" instead of "4". This matters when someone lists the page's links, a common way to navigate, where bare digits carry no meaning.
+- **`aria-hidden="true"` on the ellipses** keeps decorative punctuation from being read aloud.
+
+::: warning
+Write `aria-hidden="true"` as a **string**, not `aria-hidden={true}`. A prop set to `true` renders as a bare attribute, which serializes as `aria-hidden=""` — not the same as `"true"`, and generally treated as *not* hidden. See [Attribute names are mostly passed through verbatim](/guide/jsx-templates.md#what-does-not-carry-over-from-react).
+
+`aria-current={active ? 'page' : null}` is safe for the opposite reason: a `null` prop omits the attribute entirely, which is what you want on the inactive pages.
+:::
+
+The example keeps the `<span>` structure of the original Nunjucks pager macro so that existing pager styles continue to apply. If you are writing fresh CSS, wrapping the items in an `<ol>`/`<li>` is the more conventional pattern and lets screen readers announce the number of pages.
 
 ## The show page template
 
-Show pages are the web pages for individual pieces, rendered from `show.html` templates. Instead of `data.page`, the template uses `data.piece` to access the piece data.
+Show pages are the web pages for individual pieces, rendered from `show.jsx` templates. Instead of `page`, the template uses `piece` to access the piece data.
 
 Assuming our `article` piece type example has a single `body` area, it could look like this:
 
@@ -248,16 +333,23 @@ Assuming our `article` piece type example has a single `body` area, it could loo
 
 </AposCodeBlock>
 
-``` nunjucks
-{# modules/article-page/views/show.html #}
-{% extends "layout.html" %}
-
-{% block main %}
-  <h1>{{ data.piece.title }}</h1>
-  <section>
-    {% area data.piece, 'body' %}
-  </section>
-{% endblock %}
+```jsx
+/* modules/article-page/views/show.jsx */
+export default function({ piece }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <>
+          <h1>{piece.title}</h1>
+          <section>
+            <Area doc={piece} name="body" />
+          </section>
+        </>
+      }
+    />
+  );
+}
 ```
 
 There are some other special data available in show page templates:

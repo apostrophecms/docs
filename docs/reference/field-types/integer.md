@@ -44,14 +44,14 @@ rating: {
 
 ## Use in templates
 
-This example uses a Nunjucks [for tag](https://mozilla.github.io/nunjucks/templating.html#for) and [range function](https://mozilla.github.io/nunjucks/templating.html#range-start-stop-step).
+This example uses [`Array.from()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from) to repeat markup a set number of times.
 
-```nunjucks
-{{ data.piece.rating }}
+```jsx
+{piece.rating}
 
-{# data.piece.stars is a number #}
+{/* piece.stars is a number */}
 Rating:
-{% for i in range(1, data.piece.stars) -%}
-  ⭐️
-{%- endfor %}
+{Array.from({ length: piece.stars }, (_, i) => (
+  <span>⭐️</span>
+))}
 ```

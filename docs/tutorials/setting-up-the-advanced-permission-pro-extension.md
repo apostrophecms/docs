@@ -100,7 +100,7 @@ export NPM_TOKEN="<YOUR_NPM_GRANULAR_TOKEN>"
 
 When launching `npm install`, the production environment will now be able to install the `"@apostrophecms-pro/doc-template-library"` dependency in `package.json`.
 
-## Enable the Module in Apostrophe
+## Enable the Module in ApostropheCMS
 
 Enable the Advanced Permission extension by adding the following two modules to the `[app.js](/tutorials/code-organization.md#app-js)` file:
 

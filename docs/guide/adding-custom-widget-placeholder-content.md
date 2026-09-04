@@ -41,34 +41,38 @@ module.exports = {
 You can bypass the call to `determineBestAsetUrl()` for your images or videos stored in the `public` folder and instead pass the path to the asset using `placeholderUrl` in place of `placeholderImage`. This is discouraged because errors can be made in this path. It is better to let Apostrophe figure this out for you.
 :::
 
-### Altering the widget.html file
+### Altering the widget template
 
-The specific alteration of the `widget.html` template will depend on the type of placeholder content being delivered. Irrespective of file type, the template will have access to `data.widget.aposPlaceholder` and `data.manager.options.placeholderUrl` to populate the markup. 
+The specific alteration of the widget template will depend on the type of placeholder content being delivered. Irrespective of file type, the template will have access to the widget's `aposPlaceholder` property and the manager's `placeholderUrl` option to populate the markup — `data.widget.aposPlaceholder` and `data.manager.options.placeholderUrl` in Nunjucks, or the destructured `widget.aposPlaceholder` and `manager.options.placeholderUrl` in JSX, since `manager` arrives on the same data object as `widget`.
 
-The first, `data.widget.aposPlaceholder`, allows for confirmation that the placeholder should be displayed. This will return `true` when the widget is first added and return `false` once the widget has been edited.
+The first, `aposPlaceholder`, allows for confirmation that the placeholder should be displayed. This will return `true` when the widget is first added and return `false` once the widget has been edited.
 
-The second, `data.manager.options.placeholderUrl`, will contain the path to the content placeholder asset. If you set the `placeholderImage`, this will either be the path computed by the call to `determineBestAssetUrl()`. Otherwise, it will be the URL passed directly through the `placeholderUrl` option.
+The second, `placeholderUrl`, will contain the path to the content placeholder asset. If you set the `placeholderImage`, this will either be the path computed by the call to `determineBestAssetUrl()`. Otherwise, it will be the URL passed directly through the `placeholderUrl` option.
 
 This example demonstrates adding an image.
 
 <AposCodeBlock>
 
-``` nunjucks
-<section data-custom-widget>
-  <h1>Custom Widget</h1>
-  {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
-  <img
-    src="{{ data.manager.options.placeholderUrl }}"
-    alt="{{ __t('nameSpace:imagePlaceholder') }}"
-    class="custom-widget-placeholder"
-  />
-  {% else %}
-    <!-- markup displayed after the user edits the widget -->
-  {% endif %}
-</section>
+```jsx
+export default function({ widget, manager }, { __t }) {
+  return (
+    <section data-custom-widget>
+      <h1>Custom Widget</h1>
+      {widget.aposPlaceholder && manager.options.placeholderUrl ? (
+        <img
+          src={manager.options.placeholderUrl}
+          alt={__t('nameSpace:imagePlaceholder')}
+          className="custom-widget-placeholder"
+        />
+      ) : (
+        <>{/* markup displayed after the user edits the widget */}</>
+      )}
+    </section>
+  );
+}
 ```
 <template v-slot:caption>
-  modules/custom-widget/views/widget.html
+  modules/custom-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>
@@ -77,21 +81,25 @@ This example demonstrates adding a self-hosted video.
 
 <AposCodeBlock>
 
-``` nunjucks
-<section data-custom-widget>
-  <!-- For videos uploaded to the `public` folder -->
-  {% if data.widget.aposPlaceholder and data.manager.options.placeholderUrl %}
-    <video controls width="250">
-      <source src="{{ data.manager.options.placeholderUrl }}" type="video/mp4" />
-    </video>
-  {% else %}
-    <!-- markup displayed after the user edits the widget -->
-  {% endif %}
-</section>
+```jsx
+export default function({ widget, manager }) {
+  return (
+    <section data-custom-widget>
+      {/* For videos uploaded to the `public` folder */}
+      {widget.aposPlaceholder && manager.options.placeholderUrl ? (
+        <video controls width="250">
+          <source src={manager.options.placeholderUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <>{/* markup displayed after the user edits the widget */}</>
+      )}
+    </section>
+  );
+}
 ```
 
 <template v-slot:caption>
-  modules/custom-widget/views/widget.html
+  modules/custom-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>
@@ -100,7 +108,7 @@ This example demonstrates adding a self-hosted video.
 Your placeholder content should be added to the `public` folder of the custom widget. It should be named `placeholder.extension`, where the extension matches the extension passed into the `placeholderImage` option. In the first example above, the file should be `modules/custom-widget/public/placeholder.png`.
 
 ## Adding a placeholder with a custom name
-In some cases, a widget might need to have more than a single piece of placeholder content, or you might want to give the placeholder content a different name than `placeholder.extension`. In this case, once again you need to modify the main module options, the Nunjuck template, and the contents of the public folder.
+In some cases, a widget might need to have more than a single piece of placeholder content, or you might want to give the placeholder content a different name than `placeholder.extension`. In this case, once again you need to modify the main module options, the widget template, and the contents of the public folder.
 
 ### Altering the `index.js` file for custom placeholders
 
@@ -110,9 +118,9 @@ For each self-hosted placeholder, the initialization function should call the `d
 
 If electing to add multiple placeholders to a single page, as soon as the user makes any edits, all placeholder content will be removed from the page because `aposPlaceholder` is only checked once to determine if the widget has been edited.
 
-### Altering the Nunjucks template for custom placeholders
+### Altering the widget template for custom placeholders
 
-The template will still have access to `data.widget.aposPlaceholder` to determine if the widget has been edited and remove placeholder content. The URL for the placeholder can be accessed using `data.manager.options.<name>Url`. For example, `data.manager.options.customOneUrl` or `data.manager.options.videoOneUrl`. This will be available for each `<name>Image` and `<name>Url` option in the module.
+The template will still have access to the widget's `aposPlaceholder` property to determine if the widget has been edited and remove placeholder content — `data.widget.aposPlaceholder` in Nunjucks, or the destructured `widget.aposPlaceholder` in JSX. The URL for the placeholder can be accessed using `<name>Url` on the widget manager's options — `data.manager.options.<name>Url` in Nunjucks, or the destructured `manager.options.<name>Url` in JSX, since `manager` arrives on the same data object as `widget`. For example, `customOneUrl` or `videoOneUrl`. This will be available for each `<name>Image` and `<name>Url` option in the module.
 
 The same conditional block that was used for a single basic placeholder should be used for each custom placeholder added to the template.
 

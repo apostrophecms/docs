@@ -75,11 +75,11 @@ Areas are inserted into your templates using the [`area` template tag](/guide/ar
 
 ### Template
 
-Apostrophe uses the [Nunjucks template language](https://mozilla.github.io/nunjucks/) to render webpages and components of pages, such as widgets and [blocks](#block). Nunjucks shares a syntax with the Jinja and Twig languages which are popular in the Python and PHP worlds, respectively.
+Apostrophe renders webpages and components of pages, such as widgets, using [JSX](/guide/jsx-templates.md) — real JavaScript with inline markup, and the recommended choice for new projects and templates. Apostrophe also supports the [Nunjucks template language](https://mozilla.github.io/nunjucks/), which shares a syntax with the Jinja and Twig languages popular in the Python and PHP worlds, respectively. A JSX template can extend or include a Nunjucks one, so an existing Nunjucks project can convert to JSX incrementally, template by template.
 
 ### Block
 
-In Nunjucks templates, [a block is a section of a template that can be overridden in a template that extends it](https://mozilla.github.io/nunjucks/templating.html#block). This is a useful technique in page templates when paired with [template inheritance](https://mozilla.github.io/nunjucks/templating.html#template-inheritance).
+In Nunjucks templates, [a block is a section of a template that can be overridden in a template that extends it](https://mozilla.github.io/nunjucks/templating.html#block). This is a useful technique in page templates when paired with [template inheritance](https://mozilla.github.io/nunjucks/templating.html#template-inheritance). JSX has no block system — a JSX template composes instead, passing content as props. See [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super) for the mapping between the two approaches.
 
 ### Schema
 

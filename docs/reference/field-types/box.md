@@ -27,11 +27,11 @@ The UI of the box field allows you to edit all values uniformly or each individu
 ## Use in templates
 The value of a box field is always an object with `top`, `right`, `bottom`, `left` properties. All property values are stored as numbers, any omitted values are made  `null`. You can pull out each value in your template like
 
-```nunjucks
+```jsx
 <button
-  {% if data.piece.margin.left %}
-    style="margin-left: {{ data.piece.margin.left }}px;"
-  {% endif %}
+  style={piece.margin.left
+    ? { marginLeft: `${piece.margin.left}px` }
+    : undefined}
 >
   I might have a left margin
 </button>
@@ -46,8 +46,8 @@ There is also a helper function that will return a string of CSS rules.
 |`property` | String | n/a | The CSS property to assign values |
 |`unit` | String | 'px' | The CSS unit |
 
-```nunjucks
-<button style="{{ apos.boxField.toCss( data.piece.margin, 'margin', 'em') }}">
+```jsx
+<button style={apos.boxField.toCss(piece.margin, 'margin', 'em')}>
   I might have margins
 </button>
 ```

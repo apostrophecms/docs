@@ -1,7 +1,7 @@
 ---
 next:
-  text: 'Code Organization - Modules'
-  link: '/guide/modules.html'
+  text: 'Creating a project'
+  link: '/guide/development-setup.html#creating-a-project'
 ---
 # Windows Development with WSL 2 (Optional)
 

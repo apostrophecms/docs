@@ -202,9 +202,8 @@ You might use that value as a fallback for user-editable fields.
 
 <AposCodeBlock>
 
-``` nunjucks
-{% set bgColor = data.widget.color or data.defaultColor %}
-<h2 style="background-color: {{ bgColor }}">
+``` jsx
+<h2 style={{ backgroundColor: widget.color || defaultColor }}>
   Title Here
 </h2>
 ```

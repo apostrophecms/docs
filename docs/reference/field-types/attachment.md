@@ -63,7 +63,7 @@ The most common helper method for attachments in templates is `apos.attachments.
 
 <!-- TODO: Link to the attachment module for other helpers. -->
 
-```nunjucks
-<!-- `data.piece.resume` is an attachment object -->
-<a href="{{ apos.attachment.url(data.piece.resume) }}">Download</a>
+```jsx
+{/* `piece.resume` is an attachment object */}
+<a href={apos.attachment.url(piece.resume)}>Download</a>
 ```

@@ -1,10 +1,15 @@
 # Working with templates
 
-Templates are where code and content turn into web pages people can actually see and use. Apostrophe templates are most commonly written in the Nunjucks templating language, looking like normal HTML markup with special tags and variables sprinkled throughout to render data, though Apostrophe also supports writing templates as JSX.
+Templates are where code and content turn into web pages people can actually see and use.
 
-::: tip
-JSX templates run on the server with no client-side JavaScript required. Nunjucks remains the default in our starter kits, but we're gradually expanding our documentation to show JSX examples alongside Nunjucks. See the [JSX templates](/guide/jsx-templates.html) guide to get started.
-:::
+Apostrophe supports two template languages, and a single project can use both at once:
+
+- **[JSX templates](/guide/jsx-templates.md)** — the recommended choice for new work. A template is a JavaScript module exporting a function that returns markup. It runs entirely on the server; no client-side JavaScript is involved and there is no React runtime.
+- **[Nunjucks templates](/guide/nunjucks-templates.md)** — HTML with tags and variables sprinkled through it. Fully supported, and what existing projects and the starter kits use today.
+
+A `.jsx` template can extend or include a `.html` one, so you can move a project across a file at a time. The reverse does not work — a Nunjucks template cannot extend a JSX one — which is why migrations run from the leaves up. See [migration order](/guide/jsx-templates.md#migration-order).
+
+## Where templates live
 
 Template files go in `views` directories, either as module subdirectories or at the project root.
 
@@ -12,160 +17,25 @@ Template files go in `views` directories, either as module subdirectories or at 
 
 The root `views` directory will usually contain [a layout template](/guide/layout-template.md) and often [fragment templates](/guide/fragments.md). Templates in modules' `views` directories will usually be used only for their respective modules. [Widget](/guide/custom-widgets.md#widget-templates), [page](/guide/pages.md#page-template-essentials), and [piece page](/guide/piece-pages.md#the-index-page-template) templates are the main examples of that.
 
+When you name a template without an extension, Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
+
 ## How templates work together
 
-To paraphrase [John Donne](https://en.wikipedia.org/wiki/John_Donne), no template is an island. Templates will always be used as a system. We do this with the **`extends`**, **`include`**, and **[`import`](/guide/fragments.md)** tags.
+To paraphrase [John Donne](https://en.wikipedia.org/wiki/John_Donne), no template is an island. Templates are always used as a system, composed three ways:
 
-### Extending templates
+| | What it does | JSX | Nunjucks |
+| --- | --- | --- | --- |
+| **Extending** | A template inherits another and replaces named blocks of it | [`<Extend>`](/guide/jsx-templates.md#extending-templates) | [`{% extends %}`](/guide/nunjucks-templates.md#extending-templates) |
+| **Including** | One template is pulled *into* another | [`<Template>`](/guide/jsx-templates.md#including-another-template) | [`{% include %}`](/guide/nunjucks-templates.md#including-templates) |
+| **Cross-module references** | Naming a template that belongs to a different module, as `module-name:file` | [`<Template name="…">`](/guide/jsx-templates.md#including-another-template) | [`{% extends "module:file.html" %}`](/guide/nunjucks-templates.md#referencing-templates-across-modules) |
 
-When you use the `{% extends %}` tag in a template, it will inherit all of the markup and template blocks of the template it is extending. Any template blocks used in the *extending* template will replace matching blocks in the *extended* template.
+The composition model is the same in both languages. What differs is the syntax: a Nunjucks template declares `{% block %}` regions that a child overrides by name, while a JSX template passes those same named regions as **props**, so a block's content is an expression rather than a tag pair.
 
-For example, the layout template will often be structured like this:
+Almost every page template extends a layout, which in turn extends Apostrophe's core outer layout. See the [layout template](/guide/layout-template.md) guide for how that chain fits together.
 
-``` nunjucks
-{# views/layout.html #}
-{% extends data.outerLayout %}
+## Further reading
 
-{% block beforeMain %}
-  {# Page header markup and the main content area opening tag... #}
-{% endblock %}
-
-{% block main %}{% endblock %}
-
-{% block afterMain %}
-  {# The main content area closing tag and page footer... #}
-{% endblock %}
-```
-
-Individual page type templates will extend that layout:
-
-<AposCodeBlock>
-
-``` nunjucks
-{% extends "layout.html" %}{# 👈 Our template extension #}
-
-{% block main %}
-  {% area data.page, 'mainContent' %}
-{% endblock %}
-```
-<template v-slot:caption>
-modules/default-page/views/page.html
-</template>
-</AposCodeBlock>
-
-`page.html` *inherits* all of the markup and template blocks of `layout.html`. When it uses the `main` block, that *replaces* only the matching block from `layout.html`.
-
-::: info
-You may have noticed that the layout template above also extends another template. `data.outerLayout` is a core, base level template. See the [layout template](/guide/layout-template.md) guide for more on that.
-:::
-
-#### The `super()` tag
-
-**You can also *add to* template block content, rather than completely replace it.** To do this, include a `super()` render tag at the beginning of a block. `super()` will render as the contents of the inherited block.
-
-For example, this may be in your layout file:
-
-<AposCodeBlock>
-
-``` nunjucks
-{% block main %}
-<h1>{{ data.piece.title or data.page.title }}</h1>
-{% endblock main %}
-```
-<template v-slot:caption>
-modules/default-page/views/page.html
-</template>
-</AposCodeBlock>
-
-In my home page template I could extend the layout template and use `super()` to include that `h1` tag before new content markup:
-
-<AposCodeBlock>
-
-``` nunjucks
-{% block main %}
-  {{ super() }} {# 👈 That will render the <h1> tag above #}
-  <div>
-    {# ... additional home page content #}
-  </div>
-{% endblock %}
-```
-<template v-slot:caption>
-modules/@apostrophecms/home-page/views/page.html
-</template>
-</AposCodeBlock>
-
-See another example [in the Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html#template-inheritance).
-
-### Including templates
-
-The `{% include %}` template tag pulls one template *into* another template. This can be useful to break large template files into pieces. For example, you might write your site footer in a template file: `views/footer.html`. The layout template could include that like so:
-
-<AposCodeBlock>
-
-``` nunjucks
-{% block afterMain %}
-  </main> {# Closing tag for the main block #}
-  {% include "footer.html" %}
-{% endblock %}
-```
-<template v-slot:caption>
-views/layout.html
-</template>
-</AposCodeBlock>
-
-That footer template would render as part of the layout template.
-
-See more about including templates [in the Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html#include).
-
-### Referencing templates across modules
-
-The `include` and `extends` tags in the examples above name "global templates," which are in the root `views` directory. As such, we can simply reference by file name: e.g., `{% extends "layout.html" %}` or `{% include "footer.html" %}`. You could do the same thing if both templates were in the *same* module directory (both in our `modules/default-page/views` directory).
-
-In some cases, **we will need to extend or include a template file that belongs to a separate module**. In that case, we need to provide additional information so Apostrophe can find that template.
-
-For example, we may have a default page type that includes a sidebar we want to use in other page types:
-
-<AposCodeBlock>
-
-``` nunjucks
-{% extends "layout.html" %}
-
-{% block main %}
-  {# 👇 Sidebar that we'll reuse. #}
-  <aside>
-    {# Sidebar content... #}
-  <aside />
-  {# 👇 Content area that we'll replace. #}
-  {% block content %}
-    {% area data.page, 'main' %}
-  {% endblock %}
-{% endblock %}
-```
-<template v-slot:caption>
-modules/default-page/views/page.html
-</template>
-</AposCodeBlock>
-
-Let's extend it in a contact page type to reuse that sidebar. We will only replace the `content` block. To do this, the `{% extend %}` tag must include the name of the default page module:
-
-``` nunjucks
-{% extends "default-page:page.html" %}
-
-{% block content %}
-  <h1>Contact info</h1>
-  {# Contact information... #}
-{% endblock %}
-```
-
-`{% extends "default-page:page.html" %}` tells Apostrophe that we are using the `page.html` template file that belongs to the `default-page` module. The same pattern applies when using the `include` tag.
-
-::: tip
-The Nunjucks templating language includes many tags and tools you can use in Apostrophe templates. These include:
-
-- Adding conditional checks
-- Looping over arrays
-- Declaring variables
-- Comparison and math operators
-
-See the official [Nunjucks templating documentation](https://mozilla.github.io/nunjucks/templating.html) to see what is available.
-:::
+- [JSX templates](/guide/jsx-templates.md) — syntax, the Nunjucks-to-JSX cheat sheet, and what does not carry over from React
+- [Nunjucks templates](/guide/nunjucks-templates.md) — syntax, tags, filters, macros, and `super()`
+- [Template data](/guide/template-data.md) — what is available inside a template
+- [Areas and widgets](/guide/areas-and-widgets.md) — rendering editable content

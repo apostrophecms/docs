@@ -1,9 +1,9 @@
-# Deploying Apostrophe in the Cloud with Heroku
+# Deploying ApostropheCMS in the Cloud with Heroku
 
 There are many cloud hosting services, but they all present the same challenges. For example, separate servers often don't share a single filesystem. The database usually needs its own scalable cloud hosting. And performing tasks like minifying assets is often best done in your development environment, minimizing what has to be done in production.
 
 
-## Deploying Apostrophe to Heroku
+## Deploying ApostropheCMS to Heroku
 
 [Heroku](http://heroku.com) is a great starting point for cloud hosting because it is simple to set up, but all of the cloud's challenges come into play. What we learn by deploying to Heroku can be applied equally to Amazon EC2, Microsoft Azure, and other cloud hosting services.
 
@@ -12,10 +12,10 @@ To reduce costs for this how-to, we'll be using free services from Amazon Web Se
 ## Before you begin
 
 ### Create the project (or use your own)
-First, build an Apostrophe site! See the [setting up page](../guide/development-setup.md) to get started with the installation of the CLI. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
+First, build an Apostrophe site! See the [setting up page](../guide/development-setup.md) to get started. We will create a project called `heroku-tut`. Alternatively, you can use an existing Apostrophe site by simply skipping this step.
 
 ```bash
-$ apos create heroku-tut
+$ npm create apostrophe@latest heroku-tut
 ```
 ### Commit to Git
 After creation, the project needs to be committed to a Git repository. If you don't already have Git installed on your system, you can learn about installation at the [official site](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).

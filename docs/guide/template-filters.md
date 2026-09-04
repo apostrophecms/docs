@@ -1,4 +1,28 @@
-# Template filters
+# Template filters (Nunjucks)
+
+::: info
+Filters are a **Nunjucks** feature. [JSX templates](/guide/jsx-templates.md) have no filter mechanism — they are real JavaScript, so transformations are ordinary function calls, and the `apos` object passed as the second argument gives you the same modules the filters wrap.
+
+Nunjucks remains fully supported, so this page describes current, working functionality. If you are migrating a template to JSX, the table below covers the common cases.
+
+| Nunjucks filter | In a JSX template |
+| --------------- | ----------------- |
+| `build(...)` | Call `apos.url.build(url, path, data)` directly |
+| `escape` (`e`) | Not needed. JSX auto-escapes interpolated values, and Apostrophe data is already escaped |
+| `safe` | <span v-pre>`<div dangerouslySetInnerHTML={{ __html: value }} />`</span> — see [Auto-escaping and raw HTML](/guide/jsx-templates.md#auto-escaping-and-raw-html) |
+| `nlbr` | Split and map instead of emitting raw HTML: `{text.split('\n').map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)}` |
+| `nlp` | Same shape as `nlbr`, wrapping in `<p>` instead: `{text.split('\n').map((line, i) => <p key={i}>{line}</p>)}` |
+| `date(format)` | `import` and call `dayjs` directly in the template |
+| `css` | Call `apos.util.cssName(s)` directly — the filter is a thin wrapper around this same method |
+| `clonePermanent` | Call `apos.util.clonePermanent(o, keepScalars)` directly, same reason |
+| `merge` | Plain JS: `{ ...a, ...b }` or `Object.assign({}, a, b)` |
+| `json` | `apos.template.jsonForHtml(data)` returns the same script-tag-safe JSON string the filter did. Embed it with <span v-pre>`<script dangerouslySetInnerHTML={{ __html: apos.template.jsonForHtml(data) }} />`</span> — no `safe()` call needed, that was Nunjucks-only |
+| `jsonAttribute` | **Not needed at all.** JSX escapes every attribute value automatically before serializing it, which is exactly what this filter did by hand for Nunjucks. Just write `data-foo={JSON.stringify(data)}` — reapplying the filter's manual escaping on top would double-escape it |
+| `query` | `qs.stringify(data)` — `qs` isn't exposed as an Apostrophe helper, but it's the same npm package Apostrophe uses internally; add it as a direct dependency of your project and import it. `URLSearchParams` covers simple flat objects but not `qs`'s bracket notation for nested values |
+| `striptags` | No built-in needed — inline the same regex the filter uses: `data.replace(/(<([^>]+)>)/ig, '')` |
+
+Custom filters registered with `addFilter()` are likewise Nunjucks-only. In JSX, import the function and call it.
+:::
 
 ## Nunjucks supplied filters
 
@@ -19,9 +43,9 @@ The order of filters can be significant, as they are applied sequentially to the
 
 :::
 
-## Apostrophe supplied filters
+## ApostropheCMS supplied filters
 
-Several custom filters and filter sets (multiple, sequential filters) are used in Apostrophe templating. Rather than remembering each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. The most common of these are described in the [alphabetical filter reference](/guide/template-filters.html#alphabetical-apostrophe-filter-reference).
+Several custom filters and filter sets (multiple, sequential filters) are used in Apostrophe templating. Rather than remembering each filter and the correct order, apostrophe exposes them automatically to the templates. In addition, Apostrophe also adds multiple "helper functions" which do not use the `| foo` filter syntax. The most common of these are described in the [alphabetical filter reference](/guide/template-filters.html#alphabetical-apostrophecms-filter-reference).
 
 ## Custom template filters
 
@@ -94,7 +118,7 @@ To use this new filter you would simply pipe your data to the filter from within
   </template>
 </AposCodeBlock>
 
-## Alphabetical Apostrophe filter reference
+## Alphabetical ApostropheCMS filter reference
 
 ### `| build(url, path, data...)`
 
