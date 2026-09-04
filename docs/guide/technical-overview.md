@@ -8,7 +8,7 @@ In brief, the main technologies behind Apostrophe are:
 
 - [Node.js](https://nodejs.org): **Popular server-side JavaScript runtime.** We originally chose Node.js to achieve a fully-JavaScript development experience for developers. It has continued to improve over time, delivering high performance and powerful features we can use.
 - [Express](https://npmjs.org/package/express): **Un-opinionated Node.js web framework.** Express is the most widely used web framework for Node.js. Because it is simple, un-opinionated, and well-known, it was straightforward to extend it to suit Apostrophe's needs.
-- [MongoDB](https://www.mongodb.com): **Secure, document-based database engine.** We chose MongoDB for its fluent JavaScript-based API, its safety from "SQL injection"—style attacks, its developer-friendliness, and its support for documents with varying schemas in the same collection.
+- [MongoDB](https://www.mongodb.com): **Document-based database engine.** The `db-connect` layer provides a fluent JavaScript-based API across all three supported databases, so choose MongoDB primarily if you need MongoDB-specific query features beyond what `db-connect` covers. [PostgreSQL](https://www.postgresql.org) is just as capable at scale and a great choice for a fully open-source stack, while [SQLite](https://www.sqlite.org) is ideal for evaluating Apostrophe or running smaller sites with zero setup. See [Choosing a Database](/guide/choosing-a-database.md) for more detail.
 - [Nunjucks](https://mozilla.github.io/nunjucks/): **Richly featured template language for JavaScript.** Nunjucks provides tons of features, extensibility, and a syntax nearly identical to Twig, Jinja, and other Django-inspired templating languages.
 
 ## Directory structure
