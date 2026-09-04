@@ -36,8 +36,6 @@
     "wait-on": "^9.0.1"
   },
   "devDependencies": {
-    "axios": "^1.7.2",
-    "cheerio": "^1.0.0-rc.12",
     "eslint": "^8.48.0",
     "eslint-config-apostrophe": "^4.1.0",
     "eslint-config-standard": "^17.1.0",
