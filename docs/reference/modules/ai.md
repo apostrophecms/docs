@@ -119,6 +119,41 @@ APOS_AI_MOCK=1 npm run dev
 
 Everything lives under the `@apostrophecms/ai` module's options. Options are flat: tunables are scalars, and `providers`, `effort` and `image` are configuration data.
 
+Like any Apostrophe module, it can be configured in either of the usual two places — inside `modules` in `app.js`, or in a project-level module file. The snippets below show just the module entry; both of these put it in context:
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 👇 The module entry the snippets below show
+    '@apostrophecms/ai': {
+      options: { /* … */ }
+    }
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: { /* … */ }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/ai/index.js
+  </template>
+</AposCodeBlock>
+
 | Property | Type | Default | Description |
 |---|---|---|---|
 | [`providers`](#providers) | object | `{}` | The services that exist in this project. |

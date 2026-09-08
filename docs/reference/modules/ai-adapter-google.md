@@ -26,13 +26,22 @@ export APOS_GEMINI_KEY=...
 <AposCodeBlock>
 
 ```javascript
-'@apostrophecms/ai': {
-  options: {
-    providers: {
-      google: {}
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 👇 The engine, with one provider entry naming this adapter
+    '@apostrophecms/ai': {
+      options: {
+        providers: {
+          google: {}
+        }
+      }
     }
   }
-}
+});
 ```
   <template v-slot:caption>
     app.js

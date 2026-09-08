@@ -6,9 +6,19 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-The adapter for the Chat Completions dialect — the ecosystem's de facto wire standard. It registers itself at startup and is configured in core's `defaults.js` — there is nothing to install and nothing to add to `app.js`.
+**Use this adapter to run Apostrophe's AI features against a service other than Anthropic, OpenAI or Google** — including a model running on your own hardware.
 
-This is the universal adapter. Point it at any Chat Completions host — a gateway, an aggregator, a local runtime — and describe the service in a provider entry. No adapter code, no module, no subclass.
+| Reach for it when the AI service is… | For example |
+|---|---|
+| A hosted provider Apostrophe ships no adapter for | Groq, Mistral, OpenRouter |
+| A model running locally, on your machine or your own server | Ollama, vLLM |
+| A gateway or proxy in front of several services | anything presenting one endpoint for many models |
+
+There is nothing to install for any of these, and no code to write. They all adopted OpenAI's Chat Completions format, which became the one almost every service implements — so a single adapter, pointed at a different address, talks to any of them. You describe the service in a provider entry: its address, which environment variable holds its key, and what models it offers. See [A new provider with no code at all](#a-new-provider-with-no-code-at-all).
+
+**If your service is OpenAI itself, use [`@apostrophecms/ai-adapter-openai`](/reference/modules/ai-adapter-openai.md) instead.** Both adapters can talk to OpenAI, but they are not equivalent there; the comparison below explains why.
+
+Like the other adapters, this one registers itself at startup and is configured in core's `defaults.js` — there is nothing to add to `app.js` to make it exist.
 
 ## Related documentation
 
@@ -19,20 +29,12 @@ This is the universal adapter. Point it at any Chat Completions host — a gatew
 
 | | |
 |---|---|
-| **Adapter name** | `openai-compatible` |
+| **Adapter name** | `openai-compatible` — the value a provider entry's `adapter` names |
 | **Label** | OpenAI Completions |
 | **Default env key** | `APOS_OPENAI_KEY` |
 | **Capabilities** | `text`, `tools`, `structured`, `imageInput`, `caching`, `image` |
 
-Default effort table as shipped: `low` → `gpt-5.6-luna`, `medium` → `gpt-5.6-terra`, `high` → `gpt-5.6-sol` — the `high` row carries no `reasoning`, because the native service rejects it beside tools in this dialect.
-
-All three text models declare a 1,050,000 context window, a `maxOutputTokens` of 128,000, and the reasoning vocabulary `none`, `low`, `medium`, `high`, `xhigh`, `max`.
-
-Image models declared: `gpt-image-2` (seven ratios) and `gpt-image-1` (`1:1`, `3:2`, `2:3` only) — shared with the [`openai`](/reference/modules/ai-adapter-openai.md#image-generation) adapter, since the Images API is independent of the chat dialect.
-
-::: info
-Model lineups move with provider releases. Those rows are what this version of the adapter declares, not a permanent contract — and they describe OpenAI, the adapter's *native* service. For the live answer in a running project, call [`apos.ai.modelCatalog()`](/reference/modules/ai.md#modelcatalog).
-:::
+The label, key and capabilities above are this adapter's **defaults**, describing OpenAI — the service it points at when nothing tells it otherwise. An entry for any other service overrides them, which is what the next two sections are about.
 
 ## `openai` or `openai-compatible`?
 
@@ -55,28 +57,37 @@ If an aliased entry is the default provider and declares no effort rows, the def
 <AposCodeBlock>
 
 ```javascript
-'@apostrophecms/ai': {
-  options: {
-    provider: 'groq',
-    providers: {
-      groq: {
-        adapter: 'openai-compatible',
-        baseUrl: 'https://api.groq.com/openai/v1',
-        envKey: 'GROQ_API_KEY',
-        capabilities: { image: false },
-        models: {
-          'llama-3.3-70b-versatile': { label: 'Llama 3.3 70B', contextWindow: 128000, maxOutputTokens: 32768 },
-          'llama-3.1-8b-instant': { label: 'Llama 3.1 8B', contextWindow: 128000, maxOutputTokens: 8192 }
-        },
-        effort: {
-          low: { model: 'llama-3.1-8b-instant' },
-          medium: { model: 'llama-3.3-70b-versatile' },
-          high: { model: 'llama-3.3-70b-versatile' }
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 👇 An aliased entry: the name is yours, `adapter` names this module
+    '@apostrophecms/ai': {
+      options: {
+        provider: 'groq',
+        providers: {
+          groq: {
+            adapter: 'openai-compatible',
+            baseUrl: 'https://api.groq.com/openai/v1',
+            envKey: 'GROQ_API_KEY',
+            capabilities: { image: false },
+            models: {
+              'llama-3.3-70b-versatile': { label: 'Llama 3.3 70B', contextWindow: 128000, maxOutputTokens: 32768 },
+              'llama-3.1-8b-instant': { label: 'Llama 3.1 8B', contextWindow: 128000, maxOutputTokens: 8192 }
+            },
+            effort: {
+              low: { model: 'llama-3.1-8b-instant' },
+              medium: { model: 'llama-3.3-70b-versatile' },
+              high: { model: 'llama-3.3-70b-versatile' }
+            }
+          }
         }
       }
     }
   }
-}
+});
 ```
   <template v-slot:caption>
     app.js
@@ -142,6 +153,28 @@ effort: {
 Milliseconds one request to the service may take. A timeout is a *retryable* failure: it normalizes to `aiRetry` with `kind: 'timeout'`, and the engine's [retry policy](/reference/modules/ai.md#error-codes) decides what happens next. Worth raising for a local runtime on modest hardware.
 
 Note that this is a module option, so it applies to every provider entry using this adapter.
+
+## Models and effort
+
+This section describes what the adapter declares **for OpenAI**, its native service. An aliased entry — Groq, Ollama, anything from the section above — supplies its own models and effort rows, and none of the following applies to it.
+
+::: info
+Model lineups move with provider releases. These are what this version of the adapter declares, not a permanent contract. For the live answer in a running project, call [`apos.ai.modelCatalog()`](/reference/modules/ai.md#modelcatalog).
+:::
+
+Default effort table as shipped:
+
+| Level | Model | Reasoning |
+|---|---|---|
+| `low` | `gpt-5.6-luna` | — |
+| `medium` | `gpt-5.6-terra` | — |
+| `high` | `gpt-5.6-sol` | — |
+
+The `high` row carries no `reasoning`, unlike the [`openai`](/reference/modules/ai-adapter-openai.md) adapter's — the native service rejects reasoning beside tools in this dialect.
+
+All three text models declare a 1,050,000 context window, a `maxOutputTokens` of 128,000, and the reasoning vocabulary `none`, `low`, `medium`, `high`, `xhigh`, `max`.
+
+Image models declared: `gpt-image-2` (seven ratios) and `gpt-image-1` (`1:1`, `3:2`, `2:3` only) — shared with the [`openai`](/reference/modules/ai-adapter-openai.md#image-generation) adapter, since the Images API is independent of the chat dialect.
 
 ## Adjusting the adapter
 

@@ -26,13 +26,22 @@ export APOS_OPENAI_KEY=sk-...
 <AposCodeBlock>
 
 ```javascript
-'@apostrophecms/ai': {
-  options: {
-    providers: {
-      openai: {}
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 👇 The engine, with one provider entry naming this adapter
+    '@apostrophecms/ai': {
+      options: {
+        providers: {
+          openai: {}
+        }
+      }
     }
   }
-}
+});
 ```
   <template v-slot:caption>
     app.js

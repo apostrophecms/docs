@@ -26,13 +26,22 @@ export APOS_ANTHROPIC_KEY=sk-ant-...
 <AposCodeBlock>
 
 ```javascript
-'@apostrophecms/ai': {
-  options: {
-    providers: {
-      anthropic: {}
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 👇 The engine, with one provider entry naming this adapter
+    '@apostrophecms/ai': {
+      options: {
+        providers: {
+          anthropic: {}
+        }
+      }
     }
   }
-}
+});
 ```
   <template v-slot:caption>
     app.js
@@ -100,7 +109,13 @@ Milliseconds one request to the service may take. A timeout is a *retryable* fai
 
 ### `version`
 
-The value sent in the `anthropic-version` header. Change it to move to a newer API revision without waiting on a core release.
+The value sent in the `anthropic-version` header — Anthropic's own dated API contract, not a model version and not an Apostrophe version. It is required on every request, and `2023-06-01` is the current one. See [Anthropic's versioning documentation](https://docs.claude.com/en/api/versioning) for the available values and their deprecation status.
+
+**Its main use is pinning.** If a future Apostrophe release ships a newer default, this option lets a project stay on the contract it was built and tested against until it is ready to move — so which API version you send stays a deployment decision rather than a side effect of upgrading the CMS.
+
+::: warning
+The version fixes the request and response *shape* this adapter translates to and from, and [`buildBody` and `parseResponse`](#adjusting-the-adapter) are written against the shipped default's contract. Setting a version whose contract differs may mean overriding those seams too — in either direction, whether you are pinning back or moving ahead.
+:::
 
 ### `thinkingBudgets`
 
@@ -112,14 +127,80 @@ Maps a `reasoning` level onto an absolute thinking token budget, for the models 
 
 ### `adaptiveModels`
 
-Which models treat `reasoning` as an *effort level* rather than a token budget. Both kinds accept a reasoning setting; the option decides how it is expressed on the wire.
+A list of model names, nothing more:
 
-| | `reasoning` means | Sent as |
-|---|---|---|
-| **Adaptive** (in this list) | One of `low`, `medium`, `high`, `xhigh`, `max` | `thinking: { type: 'adaptive' }` plus an effort level — the model decides when and how deeply to think |
-| **Everything else** | A key of [`thinkingBudgets`](#thinkingbudgets) | An absolute `budget_tokens` |
+```javascript
+adaptiveModels: [ 'claude-opus-5', 'claude-sonnet-5' ]
+```
 
-An adaptive model rejects a token budget outright, which is why the two paths exist. Extend the list when the provider ships a new adaptive model ahead of your Apostrophe version — otherwise its `reasoning` is sent as a budget and refused.
+Claude models fall into two groups when you ask them to think harder.
+
+- **Newer models manage their own thinking.** You say how much effort you want — `low`, `medium`, `high`, `xhigh` or `max` — and the model decides how deeply to go. Anthropic calls these *adaptive*.
+- **Older models need a number.** You have to tell them how many tokens they may spend thinking, which is what [`thinkingBudgets`](#thinkingbudgets) supplies.
+
+Ask for the wrong one and Anthropic rejects the request, so the adapter has to know which group a model belongs to before it can send anything. This list is how it knows. Names in it are treated as the first group; everything else as the second.
+
+#### When you would change it
+
+Only when you configure a model that the shipped list has never heard of. The default covers the models Apostrophe ships with, so most projects never touch this.
+
+Say Anthropic releases Opus 6 and you want to use it before Apostrophe ships support. That takes two edits in two different places, and both are needed:
+
+1. Describe the model and route to it, on the **provider entry**.
+2. Add its name to this list, on the **adapter module**.
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'my-project',
+  modules: {
+    // 1. Describe the model, and send the `high` level to it
+    '@apostrophecms/ai': {
+      options: {
+        providers: {
+          anthropic: {
+            models: {
+              'claude-opus-6': {
+                label: 'Opus 6',
+                contextWindow: 1000000,
+                maxOutputTokens: 64000
+              }
+            },
+            effort: {
+              high: { model: 'claude-opus-6', reasoning: 'xhigh' }
+            }
+          }
+        }
+      }
+    },
+    // 2. Say that it manages its own thinking. Keep the models that
+    //    were already in the list — see the warning below
+    '@apostrophecms/ai-adapter-anthropic': {
+      options: {
+        adaptiveModels: [ 'claude-opus-5', 'claude-sonnet-5', 'claude-opus-6' ]
+      }
+    }
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+Do only the first step and every call to Opus 6 is refused, because the adapter would be giving a token budget to a model that does not take one.
+
+::: warning
+This list replaces the shipped one — it does not add to it. Writing `adaptiveModels: [ 'claude-opus-6' ]` on its own would quietly break Opus 5 and Sonnet 5, which are no longer in the list. Always include the names that were already there.
+:::
+
+::: info
+Listing `reasoning` values in a model's [metadata](#models-and-effort) does *not* put it in this group. That metadata only labels pickers in the UI. This list is the setting that changes how the model is called.
+:::
 
 ## Models and effort
 
@@ -151,7 +232,7 @@ Declared model metadata:
 
 The `reasoning` column tracks [`adaptiveModels`](#adaptivemodels): the two adaptive models take effort levels, the rest take budget names. Both are read back by [`apos.ai.modelCatalog()`](/reference/modules/ai.md#modelcatalog) for building pickers, and neither is enforced by the engine — the provider still rejects what it rejects.
 
-To use a model newer than your Apostrophe version, describe it on the provider entry and point an effort row at it. No adapter change is needed:
+To use a model newer than your Apostrophe version, describe it on the provider entry and point an effort row at it:
 
 ```javascript
 providers: {
@@ -161,7 +242,7 @@ providers: {
         label: 'Opus 6',
         contextWindow: 1000000,
         maxOutputTokens: 64000,
-        reasoning: [ 'low', 'medium', 'high', 'max' ]
+        reasoning: [ 'low', 'medium', 'high', 'xhigh', 'max' ]
       }
     },
     effort: {
@@ -170,6 +251,10 @@ providers: {
   }
 }
 ```
+
+::: warning
+If the new model is an adaptive one, this is only half the job — it must also be added to [`adaptiveModels`](#adaptivemodels), or the adapter sends it a token budget and the provider refuses every call. The `reasoning` values above are metadata for pickers; they do not affect what is sent.
+:::
 
 ## Adjusting the adapter
 
