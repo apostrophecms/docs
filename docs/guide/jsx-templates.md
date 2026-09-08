@@ -26,7 +26,7 @@ JSX templates live in the same `views/` directories as Nunjucks templates, and A
 
 ```
 modules/default-page/views/page.jsx
-modules/two-column-widget/views/widget.jsx
+modules/feature-card-widget/views/widget.jsx
 modules/blog/views/newest.jsx
 views/layout.jsx
 ```
@@ -373,21 +373,32 @@ Widget templates work the same way as page templates: a default-exported functio
 <AposCodeBlock>
 
 ```jsx
-export default function({ widget, contextOptions }, { Area }) {
+export default function({ widget, contextOptions }, { apos, Area }) {
+  const attachment = apos.image.first(widget._image);
   return (
-    <section className="two-column">
-      <div className="col">
-        <Area doc={widget} name="columnOne" />
+    <section className="feature-card">
+      {attachment && (
+        <img
+          className="feature-card__image"
+          src={apos.attachment.url(attachment, { size: 'full' })}
+          alt={widget._image[0].alt || ''}
+        />
+      )}
+      <h2 className="feature-card__title">{widget.title}</h2>
+      <div className="feature-card__body">
+        <Area doc={widget} name="body" />
       </div>
-      <div className="col">
-        <Area doc={widget} name="columnTwo" />
-      </div>
+      {widget.link && (
+        <a className="feature-card__link" href={widget.link}>
+          {widget.linkLabel || 'Learn more'}
+        </a>
+      )}
     </section>
   );
 }
 ```
 <template v-slot:caption>
-modules/two-column-widget/views/widget.jsx
+modules/feature-card-widget/views/widget.jsx
 </template>
 
 </AposCodeBlock>

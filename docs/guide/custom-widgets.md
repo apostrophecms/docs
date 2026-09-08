@@ -6,50 +6,55 @@ Creating new widget options in addition to the [core widgets](/guide/core-widget
 
 Adding a new widget type involves creating a new module that extends the `@apostrophecms/widget-type` module. It also requires a template to render the editor input. The module configuration file will include a [field schema](/guide/content-schema.md) with the appropriate fields.
 
-We will use the example of a two column **"layout widget."** It is a fairly common and relatively simple use case that allows editors to visually align content in a row. This version of a layout widget consists of two areas next to one another. Each will allow either rich text and image widgets nested inside.
+We will use the example of a **"feature card" widget**. It is a common and relatively simple use case: a headline, a linked image, and a body that editors can fill with nested widgets. It shows off the two things most custom widgets need — a mix of schema field types, and a sub-area that can hold other widgets.
+
+::: info
+If you are looking for a way to place content in columns, you do not need a custom widget. Apostrophe ships a grid-based [layout widget](/guide/core-widgets.md#layout-widget) that lets editors add, remove, and resize columns in context.
+:::
 
 First create the module configuration file, extend the core widget type module, and add a widget label for editors. If you do not add a label, Apostrophe will attempt to generate one for the UI based on the module's name.
 
-**The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This two-column widget is named `two-column-widget`.
-
-::: tip
-Generate the starter code using the [official CLI](/guide/development-setup.md#installing-the-apostrophe-cli) with the command:
-
-```bash
-apos add widget two-column
-```
-:::
+**The module's name must end in `-widget`.** It is a convention that supports core business logic around widgets and can help keep project code organized. This feature card widget is named `feature-card-widget`.
 
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
-    label: 'Two column'
+    label: 'Feature card'
   },
   // 👇 The widget type's field schema
   fields: {
     add: {
-      // 👇 The first column area
-      columnOne: {
-        type: 'area',
-        label: 'Column One',
-        options: {
-          widgets: {
-            '@apostrophecms/rich-text': {},
-            '@apostrophecms/image': {}
-          }
-        }
+      title: {
+        type: 'string',
+        label: 'Title',
+        required: true
       },
-      // 👇 The second column area
-      columnTwo: {
+      // 👇 A relationship to a piece of the core image type
+      _image: {
+        type: 'relationship',
+        label: 'Image',
+        withType: '@apostrophecms/image',
+        max: 1
+      },
+      link: {
+        type: 'url',
+        label: 'Link URL'
+      },
+      linkLabel: {
+        type: 'string',
+        label: 'Link Label'
+      },
+      // 👇 A sub-area, so editors can nest other widgets inside this one
+      body: {
         type: 'area',
-        label: 'Column Two',
+        label: 'Body',
         options: {
           widgets: {
             '@apostrophecms/rich-text': {},
-            '@apostrophecms/image': {}
+            '@apostrophecms/video': {}
           }
         }
       }
@@ -59,7 +64,7 @@ module.exports = {
 
 ```
 <template v-slot:caption>
-modules/two-column-widget/index.js
+modules/feature-card-widget/index.js
 </template>
 
 </AposCodeBlock>
@@ -69,10 +74,13 @@ You can then add this module to the `app.js` file to instantiate it.
 <AposCodeBlock>
 
 ``` js
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-website',
   modules: {
-    'two-column-widget': {}
+    'feature-card-widget': {}
   }
 });
 ```
@@ -129,7 +137,7 @@ Much like the core widgets, you can add placeholder content for many of the fiel
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Custom Widget',
@@ -251,47 +259,66 @@ This approach allows you to implement complex validation rules that can access t
 
 ## Widget templates
 
-Before using the new widget type, it needs a template file, `widget.html`, in the module's `views` directory. A simple template for the two column widget might look like:
+Before using the new widget type, it needs a template file, `widget.jsx`, in the module's `views` directory. A simple template for the feature card widget might look like:
 
 <AposCodeBlock>
 
-``` nunjucks
-<section class="two-col">
-  <div class="two-col__column">
-    {% area data.widget, 'columnOne' %}
-  </div>
-  <div class="two-col__column">
-    {% area data.widget, 'columnTwo' %}
-  </div>
-</section>
+``` jsx
+export default function ({ widget }, { apos, Area }) {
+  /* Relationship fields always come back as arrays. `apos.image.first`
+     safely returns the first attachment, or nothing at all. */
+  const attachment = apos.image.first(widget._image);
+
+  return (
+    <section className="feature-card">
+      {attachment && (
+        <img
+          className="feature-card__image"
+          src={apos.attachment.url(attachment, { size: 'full' })}
+          alt={widget._image[0].alt || ''}
+        />
+      )}
+      <h2 className="feature-card__title">{widget.title}</h2>
+      {/* 👇 The sub-area renders whatever widgets the editor nested inside */}
+      <div className="feature-card__body">
+        <Area doc={widget} name="body" />
+      </div>
+      {widget.link && (
+        <a className="feature-card__link" href={widget.link}>
+          {widget.linkLabel || 'Learn more'}
+        </a>
+      )}
+    </section>
+  );
+}
 ```
 <template v-slot:caption>
-modules/two-column-widget/views/widget.html
+modules/feature-card-widget/views/widget.jsx
 </template>
 </AposCodeBlock>
 
-**Widget field values are available on `data.widget` in templates.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available on `data.contextOptions`.
+**Widget field values arrive as the `widget` property of the template's first argument.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available as `contextOptions`. See the [JSX templates guide](/guide/jsx-templates.md) for the full set of helpers, and [Nunjucks templating](/guide/templating.md) if you prefer to write `widget.html` instead.
 
 ::: info
-Here are some two-column styles for people following along.
+Here are some feature card styles for people following along.
 
 <AposCodeBlock>
 
 ```css
-.two-col {
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-}
-
-.two-col__column {
+.feature-card {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 8px;
+  max-width: 32rem;
+}
+
+.feature-card__image {
+  width: 100%;
+  height: auto;
 }
 ```
 <template v-slot:caption>
-modules/two-column-widget/ui/src/index.scss
+modules/feature-card-widget/ui/src/index.scss
 </template>
 </AposCodeBlock>
 
@@ -303,21 +330,13 @@ When adding client-side JavaScript for widget interaction, add a widget "player"
 
 We can use the example of a basic collapsible section widget, `collapse-widget` (also known as an "accordion" or "disclosure" widget). It will hide detail text until a user clicks the header/button.
 
-::: tip
-When using the [official CLI](/guide/development-setup.md#installing-the-apostrophe-cli) to create a widget type, include widget player starter code with the `--player` option.
-
-```bash
-apos add widget collapse --player
-```
-:::
-
 ::: details Example collapsible widget code
 **Module configuration**
 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Collapsible section'
@@ -345,21 +364,32 @@ modules/collapse-widget/index.js
 **Module template**
 <AposCodeBlock>
 
-``` nunjucks
-<section data-collapser class="collapser">
-  <h2>
-    <button data-collapser-button aria-expanded="false">
-      {{ data.widget.heading }}
-    </button>
-  </h2>
-  <div hidden data-collapser-detail>
-    {# `nlbr` and `safe` are core Nunjucks tag filters #}
-    {{ data.widget.detail | nlbr | safe }}
-  </div>
-</section>
+``` jsx
+export default function ({ widget }) {
+  return (
+    <section data-collapser className="collapser">
+      <h2>
+        <button data-collapser-button aria-expanded="false">
+          {widget.heading}
+        </button>
+      </h2>
+      <div hidden data-collapser-detail>
+        {/* The Nunjucks `nlbr` filter has no JSX equivalent. Split on
+            newlines instead — this keeps the text escaped, so there is no
+            need for the `safe` filter's counterpart either. */}
+        {widget.detail.split('\n').map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            {line}
+          </>
+        ))}
+      </div>
+    </section>
+  );
+}
 ```
 <template v-slot:caption>
-modules/collapse-widget/views/widget.html
+modules/collapse-widget/views/widget.jsx
 </template>
 </AposCodeBlock>
 
@@ -443,13 +473,13 @@ For example, we could change our collapse widget to include a `color` field valu
 
 <AposCodeBlock>
 
-``` nunjucks
-<section data-collapser data-color="{{ data.widget.color }}" class="collapser">
-  {# The rest of the code is the same... #}
+``` jsx
+<section data-collapser data-color={widget.color} className="collapser">
+  {/* The rest of the code is the same... */}
 </section>
 ```
 <template v-slot:caption>
-modules/collapse-widget/views/widget.html
+modules/collapse-widget/views/widget.jsx
 </template>
 </AposCodeBlock>
 
@@ -469,18 +499,18 @@ export default () => {
 };
 ```
 <template v-slot:caption>
-modules/collapse-widget/views/widget.html
+modules/collapse-widget/ui/src/index.js
 </template>
 </AposCodeBlock>
 
 The player *does* have access to the widget's wrapping element, so we use `el.dataset.color` to access the color data we stored on `data-color`.
 
 ::: tip
-We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a properly escaped string first. Use the `jsonAttribute` template filter to do this.
+We can pass a string, number, or boolean value with a data attribute using the method shown above. If the value we need to use in the widget player is an array or object, it will need to become a JSON string first — passing the object itself renders the useless string `[object Object]`.
 
-``` nunjucks
-<div data-config="{{ data.piece.someObjectOrArray | jsonAttribute }}"></div>
+``` jsx
+<div data-config={JSON.stringify(piece.someObjectOrArray)}></div>
 ```
 
-The value will be converted to a JSON string and escaped. The original value can be retrieved in the player with `JSON.parse`.
+Apostrophe escapes attribute values for you, so no further filtering is needed. The original value can be retrieved in the player with `JSON.parse`. In a Nunjucks template, the equivalent is the `jsonAttribute` filter.
 :::
