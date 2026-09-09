@@ -40,7 +40,7 @@ The label, key and capabilities above are this adapter's **defaults**, describin
 
 **For OpenAI proper, prefer [`openai`](/reference/modules/ai-adapter-openai.md).** It speaks OpenAI's first-class Responses API and supports `reasoning` alongside `tools`.
 
-`openai-compatible` speaks Chat Completions, which is what makes it universal. It works against `api.openai.com` too, but there a `tools` request drops `reasoning`, because the service rejects the combination in that dialect. Aliased entries describe other services, which accept it, and pass through untouched.
+`openai-compatible` speaks Chat Completions, which is what makes it universal. It works against `api.openai.com` too, with one caveat. When this adapter is pointed at OpenAI's own endpoint and a call carries `tools` alongside a reasoning level, **the adapter strips the reasoning** rather than let the call fail — OpenAI rejects that pairing in this dialect. A reasoning level of `none` is left alone, as are entries pointed at any other service, since those accept the pairing.
 
 ## A new provider with no code at all
 
@@ -61,7 +61,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 👇 An aliased entry: the name is yours, `adapter` names this module
     '@apostrophecms/ai': {
@@ -223,17 +223,17 @@ export default {
     return {
       adapter() {
         return {
-          name: 'my-service',
-          label: 'My Service',
-          baseUrl: 'https://api.example.com/v1',
-          envKey: 'MY_SERVICE_KEY',
+          name: 'acme',
+          label: 'Acme',
+          baseUrl: 'https://api.acme.example/v1',
+          envKey: 'ACME_API_KEY',
 
           // Optional: extra provider-entry keys this adapter reads. Each
           // resolves from the named variable or the entry - the variable
           // wins, like the key - and lands on `this` beside `apiKey`. Any
           // entry key you do not declare fails the boot as a typo.
           settings: {
-            tenantId: { envKey: 'MY_SERVICE_TENANT_ID' }
+            tenantId: { envKey: 'ACME_TENANT_ID' }
           },
 
           capabilities: {
@@ -290,7 +290,7 @@ export default {
 };
 ```
   <template v-slot:caption>
-    modules/my-ai-adapter/index.js
+    modules/ai-adapter-acme/index.js
   </template>
 </AposCodeBlock>
 

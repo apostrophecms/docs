@@ -30,7 +30,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 👇 The engine, with one provider entry naming this adapter
     '@apostrophecms/ai': {
@@ -63,7 +63,9 @@ Both adapters can talk to `api.openai.com`, and they are not interchangeable.
 
 **For OpenAI proper, prefer `openai`.** It speaks OpenAI's first-class Responses API and supports `reasoning` alongside `tools`.
 
-[`openai-compatible`](/reference/modules/ai-adapter-openai-compatible.md) speaks Chat Completions, the de facto wire standard of the whole ecosystem — that is what makes it the universal adapter. It works against `api.openai.com` too, but there a `tools` request drops `reasoning`, because the service rejects the combination in that dialect. Aliased entries describe other services, which accept it, and pass through untouched.
+[`openai-compatible`](/reference/modules/ai-adapter-openai-compatible.md) speaks Chat Completions, the de facto wire standard of the whole ecosystem — that is what makes it the universal adapter. It works against `api.openai.com` too, with one caveat. When that adapter is pointed at OpenAI's own endpoint and a call carries `tools` alongside a reasoning level, **it strips the reasoning** rather than let the call fail — OpenAI rejects that pairing in the Chat Completions dialect. A reasoning level of `none` is left alone, as are entries pointed at any other service, since those accept the pairing.
+
+This is the practical reason to prefer `openai` here: on the Responses API the combination works, so a call routed with `reasoning: 'high'` and a toolset keeps both.
 
 ## Options
 
@@ -161,7 +163,7 @@ export default {
     return {
       buildBody(_super, request) {
         const body = _super(request);
-        body.metadata = { project: 'my-project' };
+        body.metadata = { project: 'example-site' };
         return body;
       }
     };

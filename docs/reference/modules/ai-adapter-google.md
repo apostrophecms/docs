@@ -30,7 +30,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 👇 The engine, with one provider entry naming this adapter
     '@apostrophecms/ai': {

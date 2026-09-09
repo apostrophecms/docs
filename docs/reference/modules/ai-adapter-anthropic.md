@@ -30,7 +30,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 👇 The engine, with one provider entry naming this adapter
     '@apostrophecms/ai': {
@@ -156,7 +156,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 1. Describe the model, and send the `high` level to it
     '@apostrophecms/ai': {
@@ -272,7 +272,7 @@ export default {
     return {
       buildBody(_super, request) {
         const body = _super(request);
-        body.metadata = { user_id: 'my-project' };
+        body.metadata = { user_id: 'example-site' };
         return body;
       }
     };

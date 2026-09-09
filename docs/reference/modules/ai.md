@@ -59,7 +59,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     '@apostrophecms/ai': {
       options: {
@@ -68,7 +68,7 @@ apostrophe({
         }
       }
     },
-    'my-module': {}
+    summarizer: {}
   }
 });
 ```
@@ -105,7 +105,7 @@ export default {
 };
 ```
   <template v-slot:caption>
-    modules/my-module/index.js
+    modules/summarizer/index.js
   </template>
 </AposCodeBlock>
 
@@ -128,7 +128,7 @@ import apostrophe from 'apostrophe';
 
 apostrophe({
   root: import.meta,
-  shortName: 'my-project',
+  shortName: 'example-site',
   modules: {
     // 👇 The module entry the snippets below show
     '@apostrophecms/ai': {
@@ -522,7 +522,15 @@ if (!self.apos.ai.active) {
 
 ### `mockMode`
 
-`true` when `APOS_AI_MOCK` is `'1'`. Resolved once at startup and never re-read per call, so it is a stable boolean, not a live check of the environment. Use it to label placeholder output in the UI.
+`true` when `APOS_AI_MOCK` is `'1'` — that is, when answers are coming from the built-in mock rather than a provider. Use it to label placeholder output, so nobody mistakes a mock answer for a real one.
+
+```javascript
+if (self.apos.ai.mockMode) {
+  // e.g. flag the result in the UI as a placeholder
+}
+```
+
+Resolved once at startup and never re-read per call, so it is a stable boolean rather than a live check of the environment. Note that it is independent of [`active`](#active): under mock mode `active` is `true` even with no provider configured. See [Mock mode and testing](#mock-mode-and-testing).
 
 ## Featured methods
 
@@ -559,7 +567,7 @@ A prompt string is the final user turn: it is the whole conversation when there 
 | `pending` | `'refuse'` \| `'execute'` | What to do with a transcript ending in unanswered tool calls. See [Suspension](#suspension-asking-the-user-mid-run). |
 | `toolInput` | object | Answers for suspended tool calls, keyed by tool call id. Requires `pending: 'execute'`. |
 | `schema` | object | JSON Schema (object root) for structured output. |
-| `effort` | string | The routing level to resolve. Defaults to `effort.default`. |
+| `effort` | string | The routing level to resolve. Defaults to the value of `effort.default`. |
 | `provider` + `model` | string | Pin one model, bypassing the routing table. Required together. |
 | `reasoning` | string | Override the resolved row's reasoning, in the provider's vocabulary. |
 | `maxTokens` | integer | Output cap. Defaults to the routed model's declared `maxOutputTokens`. |
@@ -639,27 +647,59 @@ A message is `{ role, content }` where `role` is `'user'`, `'assistant'` or `'to
 
 ```javascript
 messages: [
-  { role: 'user', content: 'What is in this picture?' },
+  {
+    role: 'user',
+    content: [
+      { type: 'text', text: 'What is in this picture?' },
+      { type: 'image', image: { url: 'https://example.com/harbour.jpg' } }
+    ]
+  },
+  // The answer to that turn. A plain string is shorthand for one text part
+  { role: 'assistant', content: 'A harbour at dawn, with two boats at the quay.' },
   {
     role: 'user',
     content: [
       { type: 'text', text: 'And this one?' },
-      { type: 'image', image: { url: 'https://example.com/photo.jpg' } }
+      { type: 'image', image: { url: 'https://example.com/market.jpg' } }
     ]
   }
 ]
 ```
 
-| Part | Shape | Valid in |
-|---|---|---|
-| text | `{ type: 'text', text }` | `user`, `assistant` |
-| image | `{ type: 'image', image: { url } }` or `{ type: 'image', image: { data, mediaType } }` | `user`, `assistant` |
-| tool call | `{ type: 'toolCall', id, name, input }` | `assistant` |
-| tool result | `{ type: 'toolResult', toolCallId, output }` or `{ …, error }` | `tool` |
+Roles alternate, as they would in any chat transcript. You rarely build the assistant turns by hand — they come back on `result.messages`, which you hand to the next call as its `messages`.
+
+There are four content part types in total, each valid in particular roles:
+
+| Part | Shape | Valid in | |
+|---|---|---|---|
+| text | `{ type: 'text', text }` | `user`, `assistant` | shown above |
+| image | `{ type: 'image', image: { url } }` or `{ type: 'image', image: { data, mediaType } }` | `user`, `assistant` | shown above |
+| tool call | `{ type: 'toolCall', id, name, input }` | `assistant` | see below |
+| tool result | `{ type: 'toolResult', toolCallId, output }` or `{ …, error }` | `tool` | see below |
 
 ::: warning
 An image `url` is fetched server-side by the adapter. Vetting and authorizing a user-supplied URL is the caller's job before it reaches this surface.
 :::
+
+The first two are the parts you write. The other two you mostly read: they are how a tool round is recorded in the transcript the engine builds — an assistant turn asking for a tool, then a `tool` message answering it.
+
+```javascript
+// A tool round, as it appears in `result.messages`
+{
+  role: 'assistant',
+  content: [
+    { type: 'toolCall', id: 'call_abc', name: 'find_pages', input: { search: 'gardening' } }
+  ]
+},
+{
+  role: 'tool',
+  content: [
+    { type: 'toolResult', toolCallId: 'call_abc', output: { pages: [ /* … */ ] } }
+  ]
+}
+```
+
+The `toolCallId` is what pairs a result back to its call. A failed call carries `error` instead of `output`, holding the message the model was told. You do not assemble either by hand — the engine appends them as the loop runs, and hands them back for you to store. See [Tools](#tools).
 
 Transcripts round-trip. Hand `result.messages` straight back as the next call's `messages` and the conversation continues — including through a provider's own reasoning artifacts, which travel verbatim so a model keeps its thinking continuity across turns.
 
@@ -775,7 +815,7 @@ A tool handler that cannot finish without outside input — a confirmation, a ch
 // In a tool handler
 if (!args.confirmed) {
   throw self.apos.error('aiInput', 'confirmation required', {
-    question: 'Publish 12 pages?',
+    question: 'Archive 12 pages?',
     choices: [ 'yes', 'no' ]
   });
 }
@@ -787,7 +827,7 @@ The call returns with:
 {
   finishReason: 'input',
   suspended: [
-    { callId: 'call_abc', name: 'publish_pages', payload: { question: '…', choices: [ … ] } }
+    { callId: 'call_abc', name: 'archive_pages', payload: { question: '…', choices: [ … ] } }
   ],
   toolCalls: [ /* the suspended calls and any actions that never started */ ],
   messages: [ /* the transcript, with everything that DID execute recorded */ ]
@@ -799,7 +839,7 @@ Store the transcript, ask the user, then continue by handing it back:
 ```javascript
 const result = await self.apos.ai.generate(req, {
   messages: storedTranscript,
-  tools: [ 'publish_pages' ],
+  tools: [ 'archive_pages' ],
   pending: 'execute',
   toolInput: {
     call_abc: { confirmed: true }
@@ -990,20 +1030,33 @@ const catalog = self.apos.ai.modelCatalog();
 // }
 ```
 
-`active` answers "is AI usable"; `modelCatalog` answers "what is configured". Under mock mode with no providers, `active` is `true` and the catalog is empty.
+Three introspection surfaces that are easy to confuse, and the question each answers:
+
+| | Answers |
+|---|---|
+| [`active`](#active) | Is AI usable at all? |
+| [`mockMode`](#mockmode) | Is anything real happening, or is this the built-in mock? |
+| `modelCatalog()` | What is actually configured? |
+
+Under mock mode with no providers at all, `active` is `true`, `mockMode` is `true`, and the catalog is empty — features work, nothing is real, and there is nothing to build a picker from.
 
 ### `can(req, action, docOrType, [mode])`
 
-The AI permission seam. Same signature and semantics as `apos.permission.can` — see [Permissions and workflow](/guide/permissions-and-workflow.md) — but it is **not** a plain proxy: it applies AI-specific policy first, and can only ever be as restrictive as `apos.permission.can`, never looser.
+**Use this wherever the AI is about to act on the current user's behalf** — most often inside a [tool handler](#permissions-in-handlers), before it carries out what the model asked for.
+
+The AI has exactly the permissions of the person driving it, and no more: the engine never invents an identity, so the `req` reaching a handler is the caller's own. What the engine does *not* do is the checking. It validates the model's arguments, but it has no opinion on whether this user may change that page. That decision belongs to your handler, and this is the method for it.
 
 ```javascript
+// In a tool handler, before acting
 if (!self.apos.ai.can(req, 'edit', 'article')) {
   throw self.apos.error('forbidden');
 }
 ```
 
+Same signature and semantics as `apos.permission.can` — see [Permissions and workflow](/guide/permissions-and-workflow.md) — but it is **not** a plain proxy: it applies AI-specific policy first, and can only ever be as restrictive as `apos.permission.can`, never looser.
+
 ::: warning
-AI feature code and tool handlers must use this one, not `apos.permission.can` directly, so that policy denying the AI an action even for an admin's request stays centralized rather than scattered across handlers.
+Always this one, never `apos.permission.can` directly. A model can be talked into asking for things a person would not, so the project needs one place to deny the AI an action even when the user's own permissions would allow it. Calling straight through to `apos.permission.can` bypasses that, and scatters the decision across handlers.
 :::
 
 #### Denied doc types
@@ -1025,7 +1078,7 @@ self.apos.ai.can(req, 'view', '@apostrophecms/user'); // false, always
 
 ## Tools
 
-Tools are how a model does things: read content, search, write a draft, publish. The engine owns the loop; you own the handlers.
+Tools are how a model does things: read content, search, draft copy, change a field. The engine owns the loop; you own the handlers.
 
 ### `addTool(definition)`
 
@@ -1057,7 +1110,9 @@ export default {
   </template>
 </AposCodeBlock>
 
-`input` is a JSON Schema describing the arguments the model may pass. This tool takes none, so `{ type: 'object' }` — an object with nothing in it — is the whole schema. The handler returns an object, and that object is what the model reads.
+`input` is a JSON Schema describing the arguments the model may pass. This tool takes none, so `{ type: 'object' }` — an object with nothing in it — is the whole schema.
+
+**A handler must always return an object.** Not a string, not a number, not an array — `{ total: 42 }` rather than `42`. That holds whether or not the tool declares a result [`schema`](#the-definition): the schema adds validation on top, it is not what makes the object required. Returning anything else is a bug and stops the call. Whatever object you return is serialized as-is, and that is what the model reads.
 
 `kind: 'query'` says the tool only reads. Queries the model asks for together run in parallel; without it a tool defaults to `'action'` and runs serially, one after another. Tag your read-only tools and a model that asks for six of them at once gets its answer in the time of the slowest, not the sum. See [Kinds and scheduling](#kinds-and-scheduling).
 
@@ -1161,8 +1216,8 @@ self.apos.ai.addTool({
     required: [ 'pages' ]
   },
 
-  // Instead of an inline function: a method on any module, resolved at
-  // startup. Handy when the handler is long or already exists
+  // Either form works: an inline function, or 'moduleName:methodName'
+  // naming a method on any module, resolved at startup
   handler: 'page-tools:findPages'
 });
 ```
@@ -1216,13 +1271,14 @@ When a model turn requests several tools, queries all run first and together, th
 async function handler(req, args) {
   // args: the model's arguments, validated against `input`, with declared
   // defaults filled in, plus args._context
-  return { /* an object */ };
+  return { /* always an object */ };
 }
 ```
 
 - `req` is the caller's request, cloned and stamped with the AI nesting depth. The original is untouched, so concurrent calls sharing it are unaffected.
-- The handler **must return an object**. Returning anything else is a bug and stops the call.
-- With a declared result `schema`, the result is validated but never mutated.
+- The handler **must return an object — always**, including when the tool declares no result `schema`. A string, a number, an array or `undefined` is a bug and stops the call.
+- A declared result `schema` adds validation on top of that requirement; it is not what creates it. With one, the object is checked against it on every call. Without one, it only has to be an object.
+- Either way the object is serialized for the model exactly as returned — never coerced, never normalized, never mutated.
 
 `args._context` is injected by the engine *after* argument validation, so a model-provided property can never pose as core injection.
 
@@ -1238,14 +1294,14 @@ async function handler(req, args) {
 The engine never checks permissions for you. A tool handler is ordinary server code and must authorize its own work against `req`.
 
 ```javascript
-async function publishPage(req, args) {
+async function archivePage(req, args) {
   const page = await self.apos.page.find(req, { _id: args._id }).toObject();
 
   if (!page) {
     throw self.apos.error('aiToolError', 'no page with that id');
   }
-  if (!self.apos.ai.can(req, 'publish', page)) {
-    throw self.apos.error('forbidden', 'you may not publish this page');
+  if (!self.apos.ai.can(req, 'edit', page)) {
+    throw self.apos.error('forbidden', 'you may not edit this page');
   }
   // …
 }
@@ -1255,22 +1311,31 @@ Note the difference in the two throws — which brings us to:
 
 ### Errors in handlers
 
-There are exactly two outcomes for a failure, and the error code alone decides which.
+A throw from a handler has three possible outcomes, and **the error code alone decides which**.
 
-**Recoverable — `aiToolError`.** The message is fed back to the model as this call's result, siblings are unaffected, and the loop continues. Use it for anything the model can correct: a bad id, an empty search, a value out of range.
+**1. Recoverable — `aiToolError`.** The message is fed back to the model as this call's result, siblings are unaffected, and the loop continues. Use it for anything the model can correct: a bad id, an empty search, a value out of range.
 
 ```javascript
 throw self.apos.error('aiToolError', 'no page with that id; call find_pages first');
 ```
 
-**Hard stop — anything else.** The throw propagates and ends the whole call, and no trace of it ever reaches a model-bound message. Use it for authorization failures, infrastructure failures and bugs.
+**2. Pause — `aiInput`.** The run does not fail; it stops and returns with `finishReason: 'input'`, carrying the ask for you to put to the user. Use it when the handler cannot finish without outside input — a confirmation, a choice, a missing value.
 
-Two more failures the engine generates for you, both recoverable:
+```javascript
+throw self.apos.error('aiInput', 'confirmation required', {
+  question: 'Archive 12 pages?',
+  choices: [ 'yes', 'no' ]
+});
+```
+
+The throw's `data` is the ask. [Suspension](#suspension-asking-the-user-mid-run) covers the whole round trip, including how to continue the run once the user answers. In a nested run this converts to `aiToolError` — a delegated run has no one to ask.
+
+**3. Hard stop — anything else.** The throw propagates and ends the whole call, and no trace of it ever reaches a model-bound message. Use it for authorization failures, infrastructure failures and bugs.
+
+Two further failures the engine generates for you, without a throw from your handler, both recoverable:
 
 - **Invalid arguments.** Arguments that do not satisfy `input` never reach the handler; the validation message goes back to the model.
 - **Oversized results.** A result over `maxResultChars` is withheld, and the model is told the actual size, the budget and the largest properties, so it can ask for less. A result that violates the declared result `schema`, by contrast, is a handler bug: it stops the call, and nothing about it is fed back.
-
-And one that pauses instead of failing: `aiInput`, covered in [Suspension](#suspension-asking-the-user-mid-run). In a nested run it converts to `aiToolError` — a delegated run has no one to ask.
 
 ### A subagent tool
 
@@ -1339,7 +1404,7 @@ export default {
 };
 ```
   <template v-slot:caption>
-    modules/my-module/index.js
+    modules/house-style/index.js
   </template>
 </AposCodeBlock>
 
