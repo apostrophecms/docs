@@ -82,7 +82,9 @@ We can add functionality to the default home page type by adding a configuration
 
 Each page type requires a template. The only exception to that rule is if a page type extends another page type that already has a template.
 
-Page templates are added in a `views` directory for the page type as `page.jsx`. The template for the previous example's default page would be `modules/default-page/views/page.jsx`. A very simple page template for the Default page might look like this:
+Standard Apostrophe page type setup applies here — the module and field schema above work the same regardless of template language. Two differences apply once you write the template: write it as `.jsx` instead of `.html`, and it extends the site layout by passing named slots as props to `<Extend>` instead of using `{% block %}`.
+
+Page templates are added in a `views` directory for the page type as `page.jsx`. The template for the previous example's default page would be `modules/default-page/views/page.jsx`:
 <!-- TODO: Consider adding a file tree component when available. -->
 
 ```jsx
@@ -105,118 +107,12 @@ export default function({ page }, { Area, Extend }) {
 }
 ```
 
-There are a number of things at work here.
+`<Extend templateName="layout" main={...} />` extends `layout.jsx` (or `layout.html` in a project still on Nunjucks — the two are interchangeable targets for `<Extend>`), filling the layout's `main` slot the same way `{% block main %}{% endblock %}` would in Nunjucks. See [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx) for the layout side, including the transitional shape while a layout is still Nunjucks.
 
-### The template is extending a layout template
-
-```jsx
-<Extend templateName="layout" main={mainContent} />
-```
-
-`layout.jsx` (or `layout.html` in a project still on Nunjucks — the two are interchangeable targets for `<Extend>`) is a base-level template placed in `views/`. It adds markup for things that belong on every page, such as the website navigation and footer. It extends the `outerLayout` template from Apostrophe core, but provides a layer to customize the page wrapper without overwriting `outerLayoutBase.html`.
-
-Each prop passed to `<Extend>` fills a slot the layout exposes — `main={…}` above provides the page's content. This is the recommended way to migrate an existing project: convert page templates to JSX one at a time; a JSX page template extends an existing Nunjucks `layout.html` unchanged, no layout changes required first.
-
-A JSX layout renders its own invariant markup and exposes a single slot for the page body, rather than splitting a wrapper across separate regions:
-
-<AposCodeBlock>
-
-```jsx
-export default function(data, { Extend }) {
-  return (
-    <Extend
-      templateName={data.outerLayout}
-      main={
-        <div>
-          <header>{/* Page header code: logo, navigation, etc. */}</header>
-          <main>{data.main}</main>
-          <footer>{/* Page footer code: contact information, secondary navigation, etc. */}</footer>
-        </div>
-      }
-    />
-  );
-}
-```
-
-<template v-slot:caption>
-views/layout.jsx
-</template>
-</AposCodeBlock>
-
-For the full walkthrough — including the transitional shape while a layout is still Nunjucks, and a trap worth knowing about before converting one — see [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx). The Nunjucks equivalent, for reference:
-
-``` nunjucks
-{% extends data.outerLayout %}
-
-{% block beforeMain %}
-<div>
-  <header>
-    {# Page header code: logo, navigation, etc. #}
-  </header>
-  <main>
-{% endblock %}
-
-{% block main %}
-  {# Page body content. Pages templates normally override this. #}
-{% endblock %}
-
-{% block afterMain %}
-  </main>
-  <footer>
-    {# Page header code: contact information, secondary navigation, etc. #}
-  </footer>
-</div>
-{% endblock %}
-```
-
-Note how `beforeMain` opens the `<div>` and `<main>` tags that `afterMain` closes — Nunjucks blocks are textual, so a tag may be opened in one block and closed in another. JSX has no equivalent to reopen a tag block-by-block, but it doesn't need one: the JSX layout above sidesteps the problem entirely by rendering the whole wrapper in one place and taking the page body as a single `main` slot.
-
-### We are inserting page template markup in a named block
-
-```jsx
-<Extend templateName="layout" main={mainContent} />
-```
-
-The layout declares named blocks, and a page template fills them. In JSX each block is a **prop passed to `<Extend>`**, and the prop name is the block name — so `main={…}` overwrites the layout template's `main` block. Because a block's content is a prop rather than a tag pair, it must be a single expression: wrap multiple elements in a fragment (`<>…</>`), as the example above does.
-
-### Page data is the first argument
-
-```jsx
-{page.title}
-```
-
-Templates have access to the same data that Nunjucks templates reach through `data`. It arrives as the **first argument of the exported function**, so destructure the properties you need rather than reaching through a `data` object. In page templates, `page` contains data for the active page — for our Default page, that includes the title, subtitle, "main" area, and lots of other information.
-
-Naming specific properties inside curly braces, `{}`, prints them in the template.
-
-```jsx
-{page.subtitle && <p>{page.subtitle}</p>}
-```
-
-Conditionals are ordinary JavaScript. `&&` renders the right-hand side only when the left is truthy, and a ternary covers if/else. See [Conditionals](/guide/jsx-templates.md#conditionals) for the full set of idioms.
+For the rest of the mechanics on display above — page data arriving as the template function's first argument (`page.title` instead of `data.page.title`), the `Area` component, conditionals like `page.subtitle && <p>…</p>`, and debugging with `apos.log()` — see [JSX templates](/guide/jsx-templates.md), which covers the full helper set once rather than page by page. We'll explore areas more in [the areas guide](/guide/areas-and-widgets.md).
 
 ::: tip
-If you want to know what is available in a template object, you can log it in your terminal using the template method `apos.log()`. This looks like:
-
-```jsx
-{apos.log(page)}
-```
-:::
-
-### The widget area is added using the `Area` component
-
-```jsx
-<Area doc={page} name="main" />
-```
-
-`Area` is one of the helpers on the second argument of the template function. It lets editors add and manage content widgets on the page. Pass the field's context as `doc`, which is our page, and the field name as `name`. We [configured it in the `index.js` file](#creating-a-page-type) to use two widget types. While editing the page, the user will have access to a menu to add widgets of those types.
-
-![A page with the area menu opened](/images/page-area.jpg)
-
-We'll explore areas more in [the areas guide](/guide/areas-and-widgets.md).
-
-::: tip
-To overwrite the home page type template, create a template file for it at  `modules/@apostrophecms/home-page/views/page.html` and add template markup.
+To overwrite the home page type template, create a template file for it at `modules/@apostrophecms/home-page/views/page.jsx` and add template markup.
 :::
 
 ## Activating page types
