@@ -13,14 +13,14 @@ videoList:
 ::: tip Howdy! 👋🏻
 This documentation is available in textual and video forms. Watch the video for your operating system, or continue reading if you prefer. Of course, you can also do both!
 
-**Note:** The second video tutorial shows setup for Linux OS and WSL 2 on Windows OS. We now support direct Windows development as well - see the text documentation below for all options. Updated videos coming soon!
+**Note:** The videos cover installing Node.js and getting a terminal ready on each OS. The project-creation walkthrough below reflects the current installer, which has changed since these videos were recorded — follow the text for that part. Updated videos are coming.
 :::
 
 <iframe src="https://www.youtube.com/embed/nTjDATerqEg?si=ItkK3gz4-CJmI1WI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 <iframe src="https://www.youtube.com/embed/Ep_FvRt8thI?si=XEThrEvtaNyTdKo7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Overview
-This article covers the first steps to get started. We're going to make sure your workstation is ready for development and give an overview of the Apostrophe CLI. ApostropheCMS development works on Windows, macOS, and Linux.
+This article covers the first steps to get started. We're going to make sure your workstation is ready for development and walk through creating a project with the guided installer. ApostropheCMS development works on Windows, macOS, and Linux.
 
 ::: info 📌 Windows Development Options
 Windows developers have two options:
@@ -65,60 +65,90 @@ $ nvm use 22
 
 ### Choosing your database
 
-[Choose your preferred database](./choosing-a-database.md) and, if you chose Postgres or MongoDB, install it on your computer. If you choose MongoDB, [here are instructions to install it on your computer](./installing-mongodb-locally.md). You can also obtain managed hosting for local testing purposes.
+The installer will ask you to pick a database when you create a project — SQLite, MongoDB, or PostgreSQL. [Read about the tradeoffs](./choosing-a-database.md) if you're not sure which to choose.
 
 ::: tip
-If you're not sure, don't worry about it. You'll pick SQLite below when you create a project with the CLI. With SQLite, there is nothing to install.
+If you're not sure, don't worry about it. SQLite is the installer's recommended default and needs nothing installed locally — the database lives in a file inside your project.
 :::
 
-### Installing the Apostrophe CLI
-There is an [official CLI](https://github.com/apostrophecms/cli) for quickly setting up starter code for your Apostrophe project. Once in a project, the CLI can also help add new module code with a single command so you can focus on the aspects that are unique to your project rather than copying or remembering boilerplate.
+If you'd rather use MongoDB or PostgreSQL, install it locally first ([MongoDB instructions](./installing-mongodb-locally.md)), or point the installer at a managed/cloud instance (for example MongoDB Atlas) — you'll be asked for a connection string.
 
-The CLI is **not required** to work with Apostrophe, but it makes developing with Apostrophe faster and takes care of the more repetitive tasks during development. This is especially true when creating a new project.
+### A quick note on frontends
 
-Install the CLI globally through npm.
-`npm install --location=global @apostrophecms/cli`
+Every Apostrophe project needs the Apostrophe backend, but you get to choose how pages are rendered:
 
-::: info 📌 You can review more information about the Apostrophe CLI in the doc [here](https://www.npmjs.com/package/@apostrophecms/cli)
-:::
+- **Apostrophe + Astro** — an [Astro](https://astro.build/) frontend consumes Apostrophe as a headless CMS over REST, while editors still get in-context editing. This is the installer's recommended default. See the [Astro essentials overview](./astro-essentials-overview.md) or the [Astro demo overview](./astro-demo-overview.md), and the [Astro tutorial series](/tutorials/astro/apostrophecms-and-astro.html) for a full walkthrough.
+- **Apostrophe Standalone** — a traditional full-stack Apostrophe project, rendering [Nunjucks](./templating.md) or [JSX](./jsx-templates.md) templates directly, no separate frontend process.
+
+Both are first-class, fully-supported paths. The installer asks which one you want as its very first real decision — see [Creating a project](#creating-a-project) below. The rest of this guide (modules, content types, schemas, and most of the backend Guide) applies identically either way; only templating and the front-end asset build differ between them.
 
 ## Creating a project
 
-If you are not using Atlas, make sure your local server has been started before creating a project. MongoDB can be configured to run all the time or started as needed, but it must be up and running to provide a storage option for your initial admin user.
+The easiest way to get started with Apostrophe is the guided installer. It asks a short series of questions, then clones a starter kit, installs dependencies, sets up your database, and creates your first admin user — all in one run. If you are not using SQLite or a managed instance like Atlas, make sure your local database server has been started before creating a project.
 
-The easiest way to get started with Apostrophe is to use one of the official starter kit projects. If you have the CLI installed, go into your normal projects directory and use the command:
-
-``` bash
-apos create apos-app
-```
-
-This will install the ["Essentials"](https://github.com/apostrophecms/starter-kit-essentials) starter kit.
-
-::: tip
-💡 To install other starter kits, pass the `--starter` flag, along with the short name of one of our [starter kits](https://github.com/orgs/apostrophecms/repositories?q=starter-kit&type=all&language=&sort=). For example:
-
-``` bash
-apos create apos-app --starter=ecommerce
-```
-:::
-
-If you are using a MongoDB Atlas instance, add the `--mongodb-uri` flag, along with the URL of your Atlas instance. It is generally a good idea to enclose the entire connection string in quotes and use percent encoding for any special characters. For example:
-
-``` bash
-apos create apos-app --mongodb-uri="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR_PROJECT_NAME?retryWrites=true&w=majority"
-```
-
-Where the original unescaped connection string is: `mongodb+srv://username:pa$$word@mycluster.1234x.mongodb.net/?retryWrites=true&w=majority
-`
-
-The CLI will take care of installing dependencies and walk you through creating the first user. You can then skip down to the ["Finishing touches"](#finishing-touches) section.
-
-#### *If you don't want to use the CLI*, or if you want to see other things it does for you, continue on.
-
-To get started quickly without the CLI, clone the starter repository:
+Run it with npm — no global install required:
 
 ```bash
-git clone https://github.com/apostrophecms/starter-kit-essentials apos-app
+npm create apostrophe@latest
+```
+
+If you already have the [Apostrophe CLI](https://www.npmjs.com/package/@apostrophecms/cli) installed globally (`npm install --location=global @apostrophecms/cli`), the same guided installer is available as `apos create`. The CLI also gives you shorter commands for other project tasks (adding module boilerplate, and more) once you're inside a project — it isn't required, but it's convenient.
+
+### What the installer asks
+
+The installer walks through these steps, showing your progress as it goes (for example "Step 2/6"):
+
+1. **Project name** — becomes both the folder name and the project's database short name. Letters, numbers, hyphens, and underscores only.
+2. **How would you like to build?** — **Apostrophe + Astro** (recommended) or **Apostrophe Standalone**. This is the frontend decision described above.
+3. **Choose a starting point** — **Essentials** (a clean slate with no sample content) or **Demo** (a working blog, widgets, and components already in place). Picking Demo asks one more question: whether to pre-fill the database with sample content.
+4. **Choose a database** — SQLite, MongoDB, or PostgreSQL. Choosing MongoDB or PostgreSQL prompts for a connection string, which the installer verifies by actually connecting before moving on.
+5. **Create your admin account** — a username or email and a password. This becomes your first login.
+6. **Help us improve Apostrophe?** — an optional, anonymous telemetry opt-in (which starters and databases people choose, OS and Node version, and whether installs succeed — no content, no personal info). You can preview the exact payload before deciding, and change your answer later with `npm create apostrophe@latest -- telemetry on|off`. This step only appears the first time you run the installer; after that your preference is remembered. Set `APOS_TELEMETRY=0` to disable it outright.
+
+The build type and starting point together resolve to one of four starter repositories — two Astro, two standalone:
+
+| Build | Starting point | Repository | Overview guide |
+|---|---|---|---|
+| Apostrophe + Astro | Essentials | `starter-kit-astro-essentials` | [Astro essentials overview](./astro-essentials-overview.md) |
+| Apostrophe + Astro | Demo | `astro-public-demo` | [Astro demo overview](./astro-demo-overview.md) |
+| Apostrophe Standalone | Essentials | `starter-kit-essentials` | [Standalone essentials overview](./apostrophe-standalone-essentials-overview.md) |
+| Apostrophe Standalone | Demo | `public-demo` | [Apostrophe demo overview](./apostrophe-demo-overview.md) |
+
+("With sample content" reuses the same Demo repository with its database pre-seeded — it isn't a fifth repository.)
+
+Before doing anything, the installer shows a summary of all your answers and asks **"Ready to create?"**. Answering no takes you back through the questions with your previous answers pre-filled, so you can adjust one thing without starting over.
+
+### After it finishes
+
+On success, the installer prints your next steps:
+
+```bash
+cd my-project
+npm run dev
+```
+
+Then open the site (`http://localhost:4321` for Astro projects, `http://localhost:3000` for Standalone projects) and log in at `/login` with the admin account you just created.
+
+### Running it without prompts
+
+For CI or scripting, pass `--unattended` along with the required flags instead of answering prompts interactively:
+
+```bash
+npm create apostrophe@latest -- --unattended \
+  --project-name=my-site --password=secret --telemetry=off
+```
+
+`--kit` (default `apostrophe-astro-demo`), `--db` (default `sqlite`), `--db-uri`, and `--username` (default `admin`) are all optional overrides. Run `npm create apostrophe@latest -- --help` for the full flag list.
+
+::: info 📌 More detail on the installer, including its full architecture and telemetry payload, is documented [here](https://www.npmjs.com/package/create-apostrophe).
+:::
+
+## Creating a project without the installer
+
+If you'd rather set things up by hand, or want to see what the installer does for you, you can clone a starter repository directly and skip the guided flow. Pick whichever of the four repositories from the table above matches what you want to build — this example uses the Astro Essentials kit:
+
+```bash
+git clone https://github.com/apostrophecms/starter-kit-astro-essentials apos-app
 ```
 
 If you want to change the project directory name, please do so. We will continue referring to `apos-app`.
@@ -192,7 +222,7 @@ modules/@apostrophecms/express/index.js
 
 ### Starting up the website
 
-Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_MONGODB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in client-side code, rebuild the packages, then refresh the browser when it detects any. You can log in with the username and password you created at [http://localhost:3000/login](http://localhost:3000/login).
+Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_MONGODB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in server code, rebuild as needed, then refresh the browser when it detects any. Astro-based starters serve the site on `http://localhost:4321`; Standalone starters serve it on `http://localhost:3000`. Log in with the username and password you created at `/login` on that same host and port.
 
 ::: tip
 If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js`.
@@ -200,4 +230,4 @@ If you are starting the site in a production environment or do not want the proc
 
 ## Next steps
 
-Now that Apostrophe is installed, you're ready to start building. Check out the [guide](/guide/modules.html) to learn about essential features with plenty of code examples. To learn about building a site from scratch, jump to our [tutorial series](/tutorials/introduction.html). If you are looking to explore Apostrophe's inner workings peruse the [reference guide](/reference/glossary.md).
+Now that Apostrophe is installed, you're ready to start building. Check out the [guide](/guide/modules.html) to learn about essential features with plenty of code examples — nearly all of it applies whether you chose Astro or Standalone. If you chose Astro, the [Astro essentials overview](./astro-essentials-overview.md) or [Astro demo overview](./astro-demo-overview.md) is the best next read, and the [Astro tutorial series](/tutorials/astro/apostrophecms-and-astro.html) walks through building pages, pieces, and widgets from scratch in that architecture. If you chose Standalone, jump to our general [tutorial series](/tutorials/introduction.html) to build a site from scratch. If you are looking to explore Apostrophe's inner workings peruse the [reference guide](/reference/glossary.md).
