@@ -1,4 +1,4 @@
-# Sending email from your Apostrophe project
+# Sending email from your ApostropheCMS project
 
 Any module in Apostrophe can send email by calling its own [`self.email()`](/reference/modules/module.html#featured-methods) method and the popular [nodemailer](https://nodemailer.com/) package. However, prior to sending an email using this method, either the `nodemailer` option of the `@apostrophecms/email` module needs to be configured, or another Nodemailer transport needs to be defined as `self.transport` in that same module. The `nodemailer` option will pass any values to the [`createTransport` method](https://nodemailer.com/about/) of the nodemailer app.
 
@@ -103,9 +103,9 @@ Once the `@apostrophecms/email` module is configured, email can be sent from any
 
 The first parameter passed to this method is the `req`.
 
-The next parameter, `template`, takes the name of a Nunjucks template that will make up the body of the email. This template should be located in the `views` template of the module. The method will pass this HTML template, as well as an automatically generated plain text version, to the `nodemailer` transport object.
+The next parameter, `template`, takes the name of a template — JSX or Nunjucks, same resolution order as any other Apostrophe template — that will make up the body of the email. This template should be located in the `views` folder of the module. The method will pass the resulting HTML, as well as an automatically generated plain text version, to the `nodemailer` transport object.
 
-The `data` parameter takes an object that will be passed to the Nunjucks template for populating any customized fields. It can be accessed through `data.property` within the template.
+The `data` parameter takes an object that will be passed to the template for populating any customized fields. In Nunjucks it's accessed through `data.property`; in JSX it arrives as part of the destructured first argument.
 
 The final parameter, `options`, should be an object that contains the information for the email header. This is typically `from`, `to`, and `subject`.  The `from` parameter can alternatively be given a default by setting the `{ email: { from: 'some@address.com' } }` option in the module that is calling `self.email`, or by setting the `from: 'some@address.com'` option (not nested in a parent option) on the `@apostrophecms/email` module itself.  The `from` address used will then be (1) the `from` property given in the final parameter to `sendEmail`, or (2) the `from` subproperty of the `email` option configured on the module sending the email, or (3) the `from` option configured on the `@apostrophecms/email` module, in that order.
 
@@ -151,15 +151,15 @@ module.exports = {
 
 <AposCodeBlock>
 
-``` nunjucks
+``` jsx
 <h1>A new article has been added to the site</h1>
 <p>Here is the blurb</p>
-{{ data.piece.title }}
-{% area data.piece, 'blurb' %}
+{piece.title}
+<Area doc={piece} name="blurb" />
 ```
 
 <template v-slot:caption>
-  /modules/article/views/email.html
+  /modules/article/views/email.jsx
 </template>
 
 </AposCodeBlock>

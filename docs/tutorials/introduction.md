@@ -14,6 +14,10 @@ excludeFromFilters: true
 ---
 # Welcome to our ApostropheCMS Web Development Series
 
+::: warning Still Nunjucks — JSX conversion pending
+This tutorial series builds a project from the [`apostrophe-onboarding-project`](https://github.com/apostrophecms/apostrophe-onboarding-project) repo, which still uses Nunjucks templates. That repo hasn't been converted to JSX yet, so this series will too, once it is. The Nunjucks shown here is fully supported and works as written — but if you're starting a new project today, see [JSX templates](/guide/jsx-templates.md) for the currently recommended approach.
+:::
+
 <iframe src="https://www.youtube.com/embed/WaA-3zwKO0Y?si=bKzaJx2xUGsFM8z2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ::: tip Howdy! 👋🏻

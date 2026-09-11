@@ -1,4 +1,4 @@
-# Using S3 services with Apostrophe
+# Using S3 services with ApostropheCMS
 
 Deploying Apostrophe to production requires that you specify hosting for the code base, the MongoDB instance, and storage for any uploaded content. Many hosting services can provide all three, but it is also possible and sometimes desirable to split these between different services. This tutorial looks at file storage solutions using the S3 API.
 

@@ -1433,12 +1433,16 @@ The image widget's default `srcset` attribute for responsive behavior assumes th
 
 This configuration is applied as a template option. In the template's `area` tag, include a `sizes` [context option](/guide/areas-and-widgets.md#passing-context-options) for the image widget. The option value should be the actual HTML attribute value.
 
-``` nunjucks
-{% area data.page, 'main' with {
-  '@apostrophecms/image': {
-    sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
-  }
-} %}
+``` jsx
+<Area
+  doc={page}
+  name="main"
+  contextOptions={{
+    '@apostrophecms/image': {
+      sizes: '(min-width: 600px) 45vw, (min-width: 1140px) 530px'
+    }
+  }}
+/>
 ```
 
 See below for the image variant sizes that Apostrophe generates by default.

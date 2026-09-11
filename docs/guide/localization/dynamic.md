@@ -118,14 +118,14 @@ Apostrophe's default layouts automatically apply this to the `<html>` element. I
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    {# In a page template or widget #}
-    <div class="my-component" dir="{{ data.i18n.direction }}">
-      {# Component content will flow in the correct direction #}
-    </div>
+  ```jsx
+  {/* In a page template or widget */}
+  <div className="my-component" dir={i18n.direction}>
+    {/* Component content will flow in the correct direction */}
+  </div>
   ```
   <template v-slot:caption>
-    views/widget.html
+    views/widget.jsx
   </template>
 </AposCodeBlock>
 
@@ -133,13 +133,13 @@ You can also use it for conditional logic:
 
 <AposCodeBlock>
 
-  ``` nunjucks
-    <div class="hero {% if data.i18n.direction == 'rtl' %}hero--rtl{% endif %}">
-      {# Hero content #}
-    </div>
+  ```jsx
+  <div className={`hero ${i18n.direction === 'rtl' ? 'hero--rtl' : ''}`}>
+    {/* Hero content */}
+  </div>
   ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>
 
@@ -213,33 +213,46 @@ Here is an example of `data.localizations` for the page from the screenshots abo
 
 Here is an example of using the `data.localizations` array to generate a locale switcher for a page.
 
-``` nunjucks
-<div class="locales">
-  {# A button to open the list of locales (nothing special here) #}
-  <button class="locales__toggler" data-locales-toggle aria-expanded="false">
-    Toggle locales 🌐
-  </button>
-  <ul class="locales__list" data-locales hidden>
-    {# List of locales, looping over data.localizations #}
-    {% for localization in data.localizations %}
-      <li class="locales__item">
-        {#
-          Linking the locale name only when it exists in the locale and it's
-          not the current locale
-        #}
-        {% if localization._url and not localization.current %}
-          <a href="{{ localization._url or localization.homePageUrl }}" dir="{{ localization.direction }}">
-        {% endif %}
-        {# Using both the label and the locale code #}
-        {{ localization.label }} ({{ localization.locale }})
-        {% if localization._url and not localization.current %}
-          </a>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-</div>
+```jsx
+export default function({ localizations }) {
+  return (
+    <div className="locales">
+      {/* A button to open the list of locales (nothing special here) */}
+      <button className="locales__toggler" data-locales-toggle aria-expanded="false">
+        Toggle locales 🌐
+      </button>
+      <ul className="locales__list" data-locales hidden>
+        {/* List of locales, looping over localizations */}
+        {localizations.map((localization) => {
+          /* Using both the label and the locale code */
+          const label = `${localization.label} (${localization.locale})`;
+
+          return (
+            <li className="locales__item">
+              {/*
+                Link the locale name only when it exists in that locale and is
+                not the current locale
+              */}
+              {localization._url && !localization.current ? (
+                <a
+                  href={localization._url || localization.homePageUrl}
+                  dir={localization.direction}
+                >
+                  {label}
+                </a>
+              ) : (
+                label
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
 ```
+
+Note the structural change from the Nunjucks version. Nunjucks could open an `<a>` tag inside one `{% if %}` and close it inside another; JSX has no equivalent, because every element must be balanced within a single expression. Instead, pull the shared content into a variable and use a ternary that renders the element two complete ways.
 
 ### RTL support in external frontends
 

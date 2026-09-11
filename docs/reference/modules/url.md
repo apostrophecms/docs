@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module centralizes URL generation for ApostropheCMS pages and pieces. It exposes the `build` method as a Nunjucks filter, supplies helpers for generating filter and pagination URLs, and — when configured with `static: true` — enables path-based URL generation and the metadata API that drives Astro static builds.
+This module centralizes URL generation for ApostropheCMS pages and pieces. It exposes the `build` method as a Nunjucks filter (or call `apos.url.build(...)` directly in JSX), supplies helpers for generating filter and pagination URLs, and — when configured with `static: true` — enables path-based URL generation and the metadata API that drives Astro static builds.
 
 ## Configuration options
 
@@ -183,7 +183,7 @@ Because this module has an alias, you can call these from another module using t
 
 ### `build(url, [path], data, [...])`
 
-Builds a URL by merging new query parameters into an existing URL. This method is also available as the `build` filter in Nunjucks templates.
+Builds a URL by merging new query parameters into an existing URL. This method is also available as the `build` filter in Nunjucks templates, or call it directly as `apos.url.build(...)` in JSX.
 
 ::: warning
 `build` always produces query-string URLs and is not aware of the `static` option. For filter and pagination URLs in a static build context, use `getChoiceFilter` and `getPageFilter` instead.

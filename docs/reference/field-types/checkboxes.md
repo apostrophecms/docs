@@ -140,12 +140,12 @@ module.exports = {
 
 ## Use in templates
 
-The checkboxes field data value is stored in an array of the selected options' value. Nunjucks provides the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for) that you can use to loop over the array.
+The checkboxes field data value is stored in an array of the selected options' value. In JSX, map over the array like any other; in Nunjucks, use the [`{% for %}` template tag](https://mozilla.github.io/nunjucks/templating.html#for).
 
-```nunjucks
+```jsx
 <ul>
-  {% for genre in data.piece.genres %}
-    <li>{{ genre }}</li>
-  {% endfor %}
+  {piece.genres.map(genre => (
+    <li>{genre}</li>
+  ))}
 </ul>
 ```

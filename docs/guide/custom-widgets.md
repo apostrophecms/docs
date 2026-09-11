@@ -297,7 +297,7 @@ modules/feature-card-widget/views/widget.jsx
 </template>
 </AposCodeBlock>
 
-**Widget field values arrive as the `widget` property of the template's first argument.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available as `contextOptions`. See the [JSX templates guide](/guide/jsx-templates.md) for the full set of helpers, and [Nunjucks templating](/guide/templating.md) if you prefer to write `widget.html` instead.
+**Widget field values arrive as the `widget` property of the template's first argument.** [Context options](/guide/areas-and-widgets.md#passing-context-options) passed in are available as `contextOptions`. See the [JSX templates guide](/guide/jsx-templates.md) for the full set of helpers. Existing projects can keep writing `widget.html` in [Nunjucks](/guide/templating.md) instead — it remains fully supported.
 
 ::: info
 Here are some feature card styles for people following along.

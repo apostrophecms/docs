@@ -1,10 +1,10 @@
 ---
 next: 
-  text: 'Upgrading from A2 to A4'
-  link: '/guide/migration/upgrading.html'
+  text: 'Upgrade apostrophe-astro to v1.13'
+  link: '/guide/migration/upgrading-apostrophe-astro.html'
 ---
 
-# Migration from Apostrophe 3 to Apostrophe 4
+# Migration from ApostropheCMS 3 to ApostropheCMS 4
 
 ## Introduction
 
@@ -88,7 +88,7 @@ In Apostrophe, admin UI components are found in `ui/apos/components` subdirector
 
 The names of the props and events automatically used by the `v-model` feature have changed. If you have implemented the `v-model` pattern yourself, you will need to update your code:
 
-```nunjucks
+```vue
 <!-- These are the props passed by Vue when using v-model.
   In some cases we may want to pass them manually 
   to have more power over what's happening -->

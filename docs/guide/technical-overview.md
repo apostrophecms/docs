@@ -9,7 +9,7 @@ In brief, the main technologies behind Apostrophe are:
 - [Node.js](https://nodejs.org): **Popular server-side JavaScript runtime.** We originally chose Node.js to achieve a fully-JavaScript development experience for developers. It has continued to improve over time, delivering high performance and powerful features we can use.
 - [Express](https://npmjs.org/package/express): **Un-opinionated Node.js web framework.** Express is the most widely used web framework for Node.js. Because it is simple, un-opinionated, and well-known, it was straightforward to extend it to suit Apostrophe's needs.
 - [MongoDB](https://www.mongodb.com): **Document-based database engine.** The `db-connect` layer provides a fluent JavaScript-based API across all three supported databases, so choose MongoDB primarily if you need MongoDB-specific query features beyond what `db-connect` covers. [PostgreSQL](https://www.postgresql.org) is just as capable at scale and a great choice for a fully open-source stack, while [SQLite](https://www.sqlite.org) is ideal for evaluating Apostrophe or running smaller sites with zero setup. See [Choosing a Database](/guide/choosing-a-database.md) for more detail.
-- [Nunjucks](https://mozilla.github.io/nunjucks/): **Richly featured template language for JavaScript.** Nunjucks provides tons of features, extensibility, and a syntax nearly identical to Twig, Jinja, and other Django-inspired templating languages.
+- [JSX](/guide/jsx-templates.md): **Recommended template language for page, widget, and component templates.** JSX is real JavaScript with inline markup, so it brings modern editor support, real control flow, and accurate error reporting — with no separate front-end project required. Existing projects can convert to it incrementally, template by template, since a JSX template can extend or include a [Nunjucks](/guide/nunjucks-templates.md) one. Nunjucks — a richly featured template language with a syntax nearly identical to Twig, Jinja, and other Django-inspired templating languages — remains fully supported for projects that use it.
 
 ## Directory structure
 
@@ -20,7 +20,7 @@ There are a few directories and top-level files that are especially important in
 | `app.js` | The heart of the application. This is where you tell Apostrophe what modules are in your project and set a few top-level parameters. |
 | `/modules` | All project-level [modules](/reference/glossary.md#module) and configuration for installed modules. |
 | `/public` | Public, static files (not managed through the CMS). Apostrophe will generate specific directories inside, but you can also use it as needed.  |
-| `/views` | Template files that do not belong to any one module. Apostrophe looks for site wrapper templates here, including `layout.html`. |
+| `/views` | Template files that do not belong to any one module. Apostrophe looks for site wrapper templates here, including `layout.jsx` (or `layout.html` in a Nunjucks project). |
 
 ::: tip
 Core module configuration is all done in a subdirectory of `modules`: `modules/@apostrophecms`. This keeps core modules organized together and out of the way, following [the npm scoping pattern](https://docs.npmjs.com/about-scopes).

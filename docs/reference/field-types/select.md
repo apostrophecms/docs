@@ -145,6 +145,6 @@ module.exports = {
 
 Select field data is stored as the string `value` property of the selected choice.
 
-```nunjucks
-{{ data.page.theme }}
+```jsx
+{page.theme}
 ```

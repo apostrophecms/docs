@@ -181,32 +181,54 @@ This approach works well for simpler implementations:
 
 <AposCodeBlock>
 
-```nunjucks
-{% block extraBody %}
-  {{ super() }}
+```jsx
+export default function({ outerLayout, user, extraBody }, { Template }) {
+  return (
+    <Template
+      templateName={outerLayout}
+      extraBody={
+        <>
+          {/* Anything a page template passed in for this block */}
+          {extraBody}
 
-  {% if data.user %}
-    {# Load the support desk script only for logged-in users #}
-    <script src="https://cdn.example.com/support-desk.js?key=YOUR_API_KEY" async></script>
-    <script>
-      // Configure your support desk
-      // This example is generic - check your provider's documentation for specifics
-      window.supportDeskConfig = {
-        // Common configurations:
-        hideLauncher: true,
-        user: {
-          name: '{{ data.user.title }}',
-          email: '{{ data.user.email }}'
-        }
-      };
-    </script>
-  {% endif %}
-{% endblock %}
+          {user && (
+            <>
+              {/* Load the support desk script only for logged-in users */}
+              <script
+                src="https://cdn.example.com/support-desk.js?key=YOUR_API_KEY"
+                async
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    // Configure your support desk. This example is generic —
+                    // check your provider's documentation for specifics.
+                    window.supportDeskConfig = {
+                      hideLauncher: true,
+                      user: {
+                        name: ${JSON.stringify(user.title)},
+                        email: ${JSON.stringify(user.email)}
+                      }
+                    };
+                  `
+                }}
+              />
+            </>
+          )}
+        </>
+      }
+    />
+  );
+}
 ```
   <template v-slot:caption>
-    views/layout.html
+    views/layout.jsx
   </template>
 </AposCodeBlock>
+
+Two details worth noting. Inline script bodies go through `dangerouslySetInnerHTML` rather than being written as children, because JSX escapes text content — see [Auto-escaping and raw HTML](/guide/jsx-templates.md#auto-escaping-and-raw-html). And `JSON.stringify()` supplies the quoting for the user values, which the Nunjucks version's hand-written `'…'` quotes could not do safely for a name containing an apostrophe.
+
+The layout renders `{extraBody}` itself rather than a child calling `super()`; see [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super).
 
 ## Hiding the Default Widget Button
 

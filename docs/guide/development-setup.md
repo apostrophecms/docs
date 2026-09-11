@@ -94,6 +94,10 @@ npm create apostrophe@latest
 
 If you already have the [Apostrophe CLI](https://www.npmjs.com/package/@apostrophecms/cli) installed globally (`npm install --location=global @apostrophecms/cli`), the same guided installer is available as `apos create`. The CLI also gives you shorter commands for other project tasks (adding module boilerplate, and more) once you're inside a project — it isn't required, but it's convenient.
 
+::: warning
+`apos add` scaffolds its templates as **Nunjucks** — you will get a `views/widget.html` or `views/page.html`. In a project using [JSX templates](/guide/jsx-templates.md), rename the generated file to `.jsx` and rewrite it as a function component before going further. Everything else the command generates — the module folder, `index.js`, and its registration — is unaffected.
+:::
+
 ### What the installer asks
 
 The installer walks through these steps, showing your progress as it goes (for example "Step 2/6"):

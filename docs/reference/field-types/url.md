@@ -47,6 +47,6 @@ The string supplied to the `autocomplete` option is used as the value of the `au
 
 ## Use in templates
 
-```nunjucks
-<href="{{ data.piece.portfolio }}">My website</a>
+```jsx
+<a href={piece.portfolio}>My website</a>
 ```

@@ -10,7 +10,7 @@ The sections below cover the patterns you encounter in the first hour of working
 
 This starter is a single unified application: ApostropheCMS handles content modeling, the admin editing UI, server-side rendering, and asset serving in one Node.js/Express process. There is no separate frontend server. When a request arrives, ApostropheCMS selects the matching template, populates it with content data, and returns the rendered HTML directly.
 
-Templates can be written in Nunjucks (`.html`) or JSX (`.jsx`); both are fully supported and can coexist in the same project. If both exist for the same template, `.jsx` wins.
+Templates can be written in [JSX](/guide/jsx-templates.md) (`.jsx`) or Nunjucks (`.html`). JSX is the recommended choice for new work; Nunjucks remains fully supported, and the two coexist in the same project. Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 ## Template Discovery
 
@@ -18,56 +18,63 @@ Templates are discovered automatically by filename — there is no registry to u
 
 | Template | Path |
 |---|---|
-| Widget | `modules/{module-name}/views/widget.html` or `.jsx` |
-| Regular page | `modules/{module-name}/views/page.html` or `.jsx` |
-| Piece index | `modules/{module-name}/views/index.html` or `.jsx` |
-| Piece show | `modules/{module-name}/views/show.html` or `.jsx` |
+| Widget | `modules/{module-name}/views/widget.jsx` or `.html` |
+| Regular page | `modules/{module-name}/views/page.jsx` or `.html` |
+| Piece index | `modules/{module-name}/views/index.jsx` or `.html` |
+| Piece show | `modules/{module-name}/views/show.jsx` or `.html` |
 
 > **Note:** A `.jsx` template can extend or include a `.html` layout using `<Extend>` or `<Template>`. A `.html` template cannot extend or include a `.jsx` template — convert from the leaves up when migrating.
 
 ## Template Inheritance
 
-Every page and piece template slots its content into a shared outer shell via `{% extends %}`. The chain has four levels:
+Every page and piece template slots its content into a shared outer shell via `<Extend>`. The chain has four levels:
 
 ```
 data.outerLayout  (Apostrophe's HTML shell — do not edit)
-  └── views/layout.html  (site header, nav, footer — edit here for site-wide changes)
-        ├── modules/{page-type}/views/page.html  (regular page content)
+  └── views/layout.jsx  (site header, nav, footer — edit here for site-wide changes)
+        ├── modules/{page-type}/views/page.jsx  (regular page content)
         └── modules/{piece-page}/views/
-              ├── index.html  (paginated piece index)
-              └── show.html   (individual piece detail)
+              ├── index.jsx  (paginated piece index)
+              └── show.jsx   (individual piece detail)
 ```
 
-`views/layout.html` is where most structural customization lives: the nav, header, and footer all live there. `index.html` and `show.html` each extend `views/layout.html` independently — they are siblings, not children, of `page.html`.
+`views/layout.jsx` is where most structural customization lives: the nav, header, and footer all live there. It extends `data.outerLayout` directly through `<Extend>`, so there's no intermediate Nunjucks layout in this demo — the layout itself is JSX, following the target-state pattern described in [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx). `index.jsx` and `show.jsx` each extend `views/layout.jsx` independently — they are siblings, not children, of `page.jsx`.
 
-A regular page template overrides the `main` block and extends the layout:
+A regular page template extends the layout and supplies its content as the `main` prop — `layout.jsx` declared that prop, so this is composition, not block overriding:
 
-```nunjucks
-{# modules/default-page/views/page.html #}
-{% extends "layout.html" %}
-
-{% block main %}
-  <div class="general-content">
-    {% area data.page, 'main' %}
-  </div>
-{% endblock %}
+```jsx
+// modules/default-page/views/page.jsx
+export default function({ page }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={
+        <div className="general-content">
+          <Area doc={page} name="main" />
+        </div>
+      }
+    />
+  );
+}
 ```
 
 ## Template Data
 
-ApostropheCMS populates a `data` object available in every Nunjucks template. In JSX templates, these are passed as destructured arguments:
+ApostropheCMS passes the same content data to every template. In a JSX template it arrives as the **first argument** to the exported function — destructure the properties you need. In Nunjucks the same values hang off a `data` object.
 
-| Variable | Nunjucks | JSX | Contents |
+| Variable | JSX | Nunjucks | Contents |
 |---|---|---|---|
-| Page | `data.page` | `page` | The current page document |
-| Piece | `data.piece` | `piece` | The current piece on show pages; `null` elsewhere |
-| Global | `data.global` | `global` | Site-wide Global Settings — always available |
-| Home | `data.home` | `home` | The home page; `_children` = top-level nav pages |
-| Widget | `data.widget` | `widget` | The current widget document (widget templates only) |
+| Page | `page` | `data.page` | The current page document |
+| Piece | `piece` | `data.piece` | The current piece on show pages; `null` elsewhere |
+| Global | `global` | `data.global` | Site-wide Global Settings — always available |
+| Home | `home` | `data.home` | The home page; `_children` = top-level nav pages |
+| Widget | `widget` | `data.widget` | The current widget document (widget templates only) |
 
-## Area Fields and `{% area %}`
+The second argument is the helper object: `{ apos, helpers, Area, Component, Extend, Template, Widget }`. Destructure only the helpers a given template actually uses.
 
-An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The template's only job is to output the `{% area %}` tag pointing to that field.
+## Area Fields and `<Area>`
+
+An area field is an ordered list of widgets that an editor can add to, remove from, and reorder without developer involvement. Because the backend controls the content schema, the area's definition — including which widgets editors are allowed to place — lives entirely in the backend module. The template's only job is to render an `<Area>` pointing at that field.
 
 **Backend schema:**
 
@@ -91,15 +98,21 @@ export default {
 };
 ```
 
-**Nunjucks template:**
+**JSX template:**
 
-```nunjucks
-{# modules/default-page/views/page.html #}
-{% block main %}
-  {# {% area doc, 'fieldName' %} renders a CMS-editable widget sequence stored in that field.
-     In edit mode, editors see the widget picker here; in view mode, widgets render normally. #}
-  {% area data.page, 'main' %}
-{% endblock %}
+```jsx
+// modules/default-page/views/page.jsx
+// <Area doc={doc} name="fieldName" /> renders a CMS-editable widget sequence
+// stored in that field. In edit mode, editors see the widget picker here;
+// in view mode, widgets render normally.
+export default function({ page }, { Area, Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      main={<Area doc={page} name="main" />}
+    />
+  );
+}
 ```
 
 `ApostropheCMS` wraps the area in editing controls in edit mode; in view mode it renders the widget templates directly.
@@ -118,30 +131,43 @@ fields: {
 }
 ```
 
-The `modules/helper/index.js` module centralizes resolution so templates never navigate `_linkPage[0]._url` by hand. `apos.helper.linkPath()` is a convenience method — call it from any Nunjucks template:
+The `modules/helper/index.js` module centralizes resolution so templates never navigate `_linkPage[0]._url` by hand. `apos.helper.linkPath()` is a convenience method — call it from any template through the `apos` helper:
 
-```nunjucks
-{# apos.helper.linkPath() resolves any link object to a URL string —
-   whether it points to a page, file, or custom URL. #}
-<a href="{{ apos.helper.linkPath(widget) }}">{{ widget.linkText }}</a>
+```jsx
+export default function({ widget }, { apos }) {
+  // apos.helper.linkPath() resolves any link object to a URL string —
+  // whether it points to a page, file, or custom URL.
+  return <a href={apos.helper.linkPath(widget)}>{widget.linkText}</a>;
+}
 ```
 
-## Nunjucks Macros
+## Reusable Components
 
-Reusable HTML fragments that accept arguments are written as [Nunjucks macros](https://mozilla.github.io/nunjucks/templating.html#macro) and imported where needed. The `views/link.html` macro is the canonical example — it renders an `<a>` tag with the correct class, `href`, and `target` from any link object:
+Reusable markup that accepts arguments is an ordinary function component — this is what Nunjucks called a [macro](https://mozilla.github.io/nunjucks/templating.html#macro). The `views/link` template is the canonical example: it renders an `<a>` tag with the correct class, `href`, and `target` from any link object.
 
-```nunjucks
-{% import 'link.html' as link %}
+Render it by name with `<Template>`, which passes its props through as data:
 
-{{ link.render({
-  label: item.linkText,
-  path: apos.helper.linkPath(item),
-  target: item.linkTarget,
-  class: 'button'
-}) }}
+```jsx
+<Template
+  templateName="link"
+  label={item.linkText}
+  path={apos.helper.linkPath(item)}
+  target={item.linkTarget}
+  className="button"
+/>
 ```
 
-A macro imported in `views/layout.html` is not automatically available in templates that extend it — each template that uses a macro must import it at the top of that file.
+Because JSX templates are real JavaScript modules, you can also `import` a component directly, or define one inline in the same file:
+
+```jsx
+import Link from '../../views/link.jsx';
+
+function Badge({ label }) {
+  return <span className="badge">{label}</span>;
+}
+```
+
+Use `<Template>` when you want name-based lookup or Apostrophe's cross-module `module:file` syntax; use a direct `import` when the component is co-located. Either way, ordinary module scoping applies — a component imported in one template is not automatically in scope in templates that extend it. Each file imports what it uses.
 
 ## Image Helpers
 
@@ -149,21 +175,23 @@ Rendering an image requires one extra step: `_image` is a relationship to image 
 
 ApostropheCMS solves this with a two-step helper pattern. **Never access `_image[0].attachment` directly — always use `apos.image.first()` followed by `apos.attachment.url()`:**
 
-```nunjucks
-{# _image is a relationship field — always an array, even when max: 1.
-   apos.image.first() safely extracts the first attachment object. #}
-{% set attachment = apos.image.first(data.widget._image) %}
-{% set url = attachment and apos.attachment.url(attachment, { size: 'full' }) %}
+```jsx
+export default function({ widget }, { apos }) {
+  // _image is a relationship field — always an array, even when max: 1.
+  // apos.image.first() safely extracts the first attachment object.
+  const attachment = apos.image.first(widget._image);
+  const url = attachment && apos.attachment.url(attachment, { size: 'full' });
 
-{% if url %}
-  <img
-    src="{{ url }}"
-    width="{{ apos.attachment.getWidth(attachment) }}"
-    height="{{ apos.attachment.getHeight(attachment) }}"
-    srcset="{{ apos.image.srcset(attachment) }}"
-    alt="{{ data.widget.imageAlt or '' }}"
-  >
-{% endif %}
+  return url && (
+    <img
+      src={url}
+      width={apos.attachment.getWidth(attachment)}
+      height={apos.attachment.getHeight(attachment)}
+      srcset={apos.image.srcset(attachment)}
+      alt={widget.imageAlt || ''}
+    />
+  );
+}
 ```
 
 Default size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-third'`, `'one-sixth'`.
@@ -173,9 +201,12 @@ Default size strings: `'max'`, `'full'`, `'two-thirds'`, `'one-half'`, `'one-thi
 
 **The `_` prefix.** Any field whose name starts with `_` is a relationship field that Apostrophe resolves at request time. These always come back as arrays, even when the schema says `max: 1`. Always check `.length` before accessing `[0]`, or use `apos.image.first()` for image relationships:
 
-```nunjucks
-{% if article._author.length %}{{ article._author[0].title }}{% endif %}
-{% set attachment = apos.image.first(data.widget._image) %}
+```jsx
+{article._author.length > 0 && article._author[0].title}
+```
+
+```jsx
+const attachment = apos.image.first(widget._image);
 ```
 
 **`lib/` utilities.** `lib/link.js` exports the canonical link field set; spread it into any schema that needs a link rather than copying the fields. `lib/area.js` exports three area configurations for different editorial contexts — `basicConfig`, `fullConfig`, and `fullConfigExpandedGroups` — import the right one rather than defining widget lists inline.
@@ -198,12 +229,12 @@ Five pages are pre-built:
 - **Product Stories** — the index page for the `article` piece type, with category filter tabs for Insights, Behind the Scenes, Product Updates, and a custom category.
 - **Case Studies** — the index page for the `case-study` piece type.
 
-Individual article and case study pages demonstrate the piece show template, where `data.piece` is populated instead of `data.page`.
+Individual article and case study pages demonstrate the piece show template, where `piece` is populated instead of `page`.
 
 The Waypoint content lives in the database, not in the code. Replace it by logging in to the admin UI and editing or archiving pieces and pages through the normal editorial workflow. For site-wide fields like the logo and footer links, update the Global Settings document from the admin bar.
 
 ApostropheCMS localization works at two levels that are worth distinguishing. **Content localization** means each page and piece can have a separate version for each locale. Editors switch between locales using the locale picker in the admin bar and translate fields independently.
 
-The three configured locales are English (no URL prefix), French (`/fr`), and German (`/de`), set in `modules/@apostrophecms/i18n/index.js`. When a page is available in multiple locales, ApostropheCMS automatically populates `data.localizations` with a `_url`, `label`, and `flag` for each one. The `views/locales.html` Nunjucks template reads that array directly to render the flag dropdown in the site header — no custom routing logic required.
+The three configured locales are English (no URL prefix), French (`/fr`), and German (`/de`), set in `modules/@apostrophecms/i18n/index.js`. When a page is available in multiple locales, ApostropheCMS automatically populates `localizations` with a `_url`, `label`, and `flag` for each one. The `views/locales` template reads that array directly to render the flag dropdown in the site header — no custom routing logic required.
 
 **String localization** is a separate concern: it covers schema field labels, help text, and UI strings inside the admin. These live in `modules/@apostrophecms/i18n/i18n/project/` as `en.json`, `fr.json`, and `de.json`. Any schema label prefixed with `project:` (e.g. `label: 'project:articleBlurb'`) is looked up in the file matching the current admin locale. The `adminLocales` option in the same `index.js` controls which languages editors can choose for the admin UI itself, independently of the site's content locales.

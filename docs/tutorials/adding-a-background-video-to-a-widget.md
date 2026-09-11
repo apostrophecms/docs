@@ -151,7 +151,7 @@ apostrophe({
 Now give the widget a relationship to the new piece type so editors can choose a clip. We cap it at one with `max: 1`.
 
 > [!NOTE]
-> This recipe uses a hero widget as its example. If you don't already have one, crib from the hero widget in the ApostropheCMS public demo: [`apostrophecms/public-demo/modules/hero-widget`](https://github.com/apostrophecms/public-demo/tree/main/modules/hero-widget). Its `index.js` and `views/widget.html` are the starting point that the snippets below extend.
+> This recipe uses a hero widget as its example. If you don't already have one, crib from the hero widget in the ApostropheCMS public demo: [`apostrophecms/public-demo/modules/hero-widget`](https://github.com/apostrophecms/public-demo/tree/main/modules/hero-widget). Its `index.js` and view template are the starting point that the snippets below extend, shown here in JSX (`views/widget.jsx`) — check which templating language the branch you clone uses.
 
 <AposCodeBlock>
 
@@ -189,28 +189,32 @@ Pull the related piece out of the array, and render a `<video>` element only whe
 
 <AposCodeBlock>
 
-```nunjucks
-{% set backgroundVideo = widget._backgroundVideo[0] %}
+```jsx
+export default function({ widget }, { apos, Area }) {
+  const backgroundVideo = widget._backgroundVideo[0];
 
-<div class="widget hero-widget">
-  {% if backgroundVideo and backgroundVideo.video %}
-    <video
-      class="hero-widget__video"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
-      src="{{ apos.attachment.url(backgroundVideo.video) }}"
-    ></video>
-  {% endif %}
-  <div class="hero-widget__content">
-    {% area widget, 'content' %}
-  </div>
-</div>
+  return (
+    <div className="widget hero-widget">
+      {backgroundVideo?.video && (
+        <video
+          className="hero-widget__video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          src={apos.attachment.url(backgroundVideo.video)}
+        ></video>
+      )}
+      <div className="hero-widget__content">
+        <Area doc={widget} name="content" />
+      </div>
+    </div>
+  );
+}
 ```
   <template v-slot:caption>
-    modules/hero-widget/views/widget.html
+    modules/hero-widget/views/widget.jsx
   </template>
 </AposCodeBlock>
 

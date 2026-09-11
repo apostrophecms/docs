@@ -1,6 +1,6 @@
 # JSX templates
 
-Apostrophe page, widget, and component templates can be written in **JSX** as an alternative to [Nunjucks](/guide/templating.md). For developers already comfortable with React or another JSX-aware framework, this means modern editor support, real JavaScript control flow, and accurate error reporting with source maps, without standing up a separate front-end project.
+Apostrophe page, widget, and component templates can be written in **JSX** as an alternative to [Nunjucks](/guide/nunjucks-templates.md). For developers already comfortable with React or another JSX-aware framework, this means modern editor support, real JavaScript control flow, and accurate error reporting with source maps, without standing up a separate front-end project.
 
 ::: info
 This guide assumes you have written JSX before. It focuses on the Apostrophe-specific equivalents of Nunjucks features rather than on JSX itself.
@@ -10,6 +10,10 @@ JSX templates are a server-side rendering option. They do **not** imply React: t
 
 JSX interoperates with Nunjucks in one direction: a `.jsx` template can extend or include a `.html` template (with block overrides where appropriate), but a `.html` template cannot extend or include a `.jsx` template. In practice this means you migrate a project from the leaves up, converting individual page and widget templates to JSX while keeping `layout.html` and the core Nunjucks templates in place. See [Migration order](#migration-order) for the rules.
 
+::: tip Converting an existing project?
+[Migrating templates with an AI assistant](/guide/jsx-migration-assistant.md) provides instructions you can copy into your project's `CLAUDE.md` or `AGENTS.md`, so a coding assistant follows the rules on this page instead of guessing at them.
+:::
+
 ::: info
 Right now, the easiest way to get a peek at a working project with JSX templates is:
 ```bash
@@ -18,6 +22,7 @@ cd public-demo-jsx
 git checkout jsx
 npm install
 npm run dev
+```
 :::
 
 ## File location and naming
@@ -160,7 +165,7 @@ React-flavored attributes like `key` and `ref` are accepted but ignored. They ex
 <Component module="product" name="newest" max={3} />
 ```
 
-The component function defined in `modules/product/index.js` is invoked exactly as before. Apostrophe locates its template (`.jsx` first, then `.html`) using the same rules as Nunjucks.
+The component function defined in `modules/product/index.js` is invoked exactly as before, and Apostrophe locates its template using the same resolution rules as Nunjucks — see [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 Because JSX templates can run `async` code on their own (calling any method of any Apostrophe module directly), many components that previously existed only to expose async data to a template are no longer strictly necessary. They remain useful when you want a named, reusable separation of concerns.
 
@@ -187,6 +192,114 @@ If the template itself expects a prop literally named `name`, use `templateName`
 ```
 
 `name` is forwarded to the rendered template as a prop only when `templateName` is also present. `templateName` is never forwarded.
+
+## What does not carry over from React
+
+JSX here is a syntax for producing HTML on the server. The runtime walks your returned tree once and serializes it to a string — there is no component lifecycle, no reconciler, and no client-side runtime. Most React knowledge transfers, but the following do not, and none of them raise an error. They produce wrong markup silently.
+
+### Attribute names are mostly passed through verbatim
+
+Three groups are translated:
+
+| Written | Rendered |
+| --- | --- |
+| `className` | `class` |
+| `htmlFor` | `for` |
+| SVG camelCase properties — `strokeWidth`, `fillRule`, `clipPath`, `xlinkHref`, … | `stroke-width`, `fill-rule`, `clip-path`, `xlink:href`, … |
+
+**Write `className`, not `class`.** It is one of only three names the runtime translates, so it is supported behaviour rather than a React alias that happens to survive — and it is what the examples throughout this documentation use. Plain `class` also reaches the HTML intact, but consistency matters more than the two saved characters, and the two forms do not mix:
+
+::: danger
+Never put both on the same element. The runtime translates `className` and passes `class` through, so `<div class="a" className="b">` emits **two** `class` attributes and browsers keep only the first.
+:::
+
+Everything else reaches the HTML exactly as you typed it. `data-*` and `aria-*` attributes pass through unchanged, which is what you want. But React's wider alias table is not implemented, so these do **not** become their HTML equivalents:
+
+```jsx
+<img srcSet={srcset} />
+```
+
+```jsx
+<meta httpEquiv="refresh" />
+```
+
+Write the HTML attribute name instead:
+
+```jsx
+<img srcset={srcset} />
+```
+
+```jsx
+<meta http-equiv="refresh" />
+```
+
+`srcSet` is a special case worth calling out: it appears to work, because HTML parsing is case-insensitive about attribute names. Write `srcset` anyway — the casing is meaningless here and it misleads the next reader.
+
+React's form conventions are likewise absent. Use the real HTML attributes:
+
+```jsx
+<input value={piece.title} checked={piece.featured} />
+```
+
+### Event handler props do not work
+
+There is no event system and no hydration. A function passed as a prop is stringified into the attribute value:
+
+```jsx
+<button onClick={handleClick}>Save</button>
+```
+
+Attach behavior from browser-side JavaScript instead, targeting the element by class or data attribute:
+
+```jsx
+<button className="save-button" data-piece-id={piece._id}>Save</button>
+```
+
+A lowercase inline `onclick="…"` **string** still works, because it passes through verbatim like any other attribute. That is ordinary HTML, not React — leave existing `onclick` attributes lowercase when converting a template rather than "tidying" them into `onClick`.
+
+### `style` takes a string, not an object
+
+```jsx
+<div style={{ color: 'red' }} />
+```
+
+renders `style="[object Object]"`. Pass a string instead:
+
+```jsx
+<div style="color: red" />
+```
+
+### `false`, `null`, and `undefined` remove the attribute entirely
+
+Any prop whose value is `false`, `null`, or `undefined` is omitted. A value of `true` renders the bare attribute. This matches HTML's boolean attributes and is usually what you want:
+
+```jsx
+<input disabled={!canEdit} />
+```
+
+It differs from React for `aria-*`, where the string `"false"` is meaningful and an absent attribute is not the same thing:
+
+```jsx
+<div aria-hidden={false} />
+```
+
+drops the attribute entirely. Pass the string yourself:
+
+```jsx
+<div aria-hidden={String(isHidden)} />
+```
+
+### Non-string values are coerced, not validated
+
+An object used as a child renders as `[object Object]` rather than raising an error. Void elements given children serialize as malformed markup — `<img>…</img>` — instead of being rejected. The runtime will not catch these for you.
+
+### Absent entirely
+
+Hooks, state, context, refs, portals, hydration, class components, `memo`, and `forwardRef` do not exist. `key` and `ref` props are accepted and silently discarded — they exist in React to help the client-side reconciler, and there is no reconciler here. Don't bother adding them.
+
+::: info
+The useful mental model is **HTML written with JSX syntax**, plus function components and Apostrophe's async template helpers — not server-rendered React.
+:::
 
 ## Extending templates
 
@@ -295,13 +408,116 @@ modules/default-page/views/page.jsx
 </AposCodeBlock>
 
 ::: info
-`<Template>` and `<Extend>` differ only when the target is a `.html` file:
+`<Template>` and `<Extend>` differ only when the target resolves to a Nunjucks file:
 
-- `<Template templateName="layout.html" foo={…} />` is **include semantics**: `foo` arrives in `data.foo` and `{% block %}` declarations in `layout.html` are not overridden.
-- `<Extend templateName="layout.html" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in `layout.html`.
+- `<Template templateName="layout" foo={…} />` is **include semantics**: `foo` arrives in `data.foo` and `{% block %}` declarations in the target are not overridden.
+- `<Extend templateName="layout" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in the target.
 
 When the target is a `.jsx` file, both behave identically (props are the data argument, markup between tags is `children`). Use whichever name reads better in context.
 :::
+
+::: warning
+Write `templateName` **without a file extension**. Apostrophe strips a known extension and then searches `.jsx`, `.njk`, `.html` in that order, so `templateName="layout.html"` does *not* pin the target to the Nunjucks file — it still resolves `layout.jsx` first if one exists. The extension reads as a guarantee it does not provide.
+:::
+
+## Coming from blocks and `super()`
+
+Nunjucks lets a child override a block and call <span v-pre>`{{ super() }}`</span> inside it to render the parent's original content, then add to it:
+
+``` nunjucks
+{% block beforeMain %}
+  {{ super() }}
+  {% render header.headerArea(data.page) %}
+{% endblock %}
+```
+
+**There is no JSX equivalent, and none is planned.** Blocks are inheritance: a block is an overridable method, so `super()` is just a method call. Props are composition: a prop is a value the child computes and hands to the parent, and a value has no superclass. Every component-oriented framework works this way — React, Vue, Svelte and Web Components all treat default slot content as fallback only, with no way to invoke it from an override.
+
+So the migration is not to replace `super()`. It is to **make the block additive**, so nothing needs to call it.
+
+### The target shape: the layout owns what is shared
+
+Give the parent the invariant part and let it expose a slot for what varies:
+
+<AposCodeBlock>
+
+```jsx
+export default function({ beforeMain, children }, { Template }) {
+  return (
+    <Template templateName="outerLayoutBase"
+      beforeMain={
+        <>
+          <Navigation />
+          {beforeMain}
+        </>
+      }
+      main={<main className="mb-4">{children}</main>}
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+views/layout.jsx
+</template>
+</AposCodeBlock>
+
+A page now passes only its own header, and never learns what the navigation is — which was the point of the original `super()` call:
+
+```jsx
+<Extend templateName="layout" beforeMain={<Header page={page} />} />
+```
+
+### The transitional shape: the layout is still Nunjucks
+
+While the layout remains `.html`, get the same effect by **nesting a finer block inside the coarse one**. The outer block keeps the shared markup; children override only the inner one:
+
+<AposCodeBlock>
+
+``` nunjucks
+{% block beforeMain %}
+  {% render navigation.navigationArea() %}
+  {% block pageHeader %}{% endblock %}
+{% endblock %}
+```
+
+<template v-slot:caption>
+views/layout.html
+</template>
+</AposCodeBlock>
+
+Note this is *nesting*, not moving the markup out of the block — a template that uses `{% extends %}` can only contribute through blocks, so there is no "outside" available to it.
+
+::: warning
+Subdividing a block changes the parent's contract. Any Nunjucks child still overriding the **outer** block will drop or duplicate the shared markup, so convert those children first.
+:::
+
+### When you cannot edit the parent
+
+Hoist the parent's default into a component named after **the block**, not after its current contents, and let the parent's block body contain nothing else:
+
+```jsx
+// Right: names the block's default, so later changes to it still reach the child
+<Extend
+  templateName="layout"
+  beforeMain={<><BeforeMainDefault /><Header page={page} /></>}
+/>;
+
+// Wrong: names today's contents, and silently stops tracking the layout tomorrow
+<Extend
+  templateName="layout"
+  beforeMain={<><SiteNav /><Header page={page} /></>}
+/>;
+```
+
+### What to watch for
+
+- **Scope does not travel.** `super()` runs in the parent's context and can see variables set above it in the layout. A component evaluates in the child's scope, so pass those in as props. This is the most common cause of a conversion that looks right and renders wrong.
+- **Omitting the default fails silently.** Pass `beforeMain={<Header />}` alone and the navigation simply disappears — no error, and the page still renders.
+- **A function prop will not work.** `beforeMain={(Default) => <><Default /><Header /></>}` looks like a React render prop, but props here are values the parent renders, not callbacks it invokes.
+- **An intermediate template does not help.** Inserting a `base-with-nav` template between the layout and the pages recreates the identical constraint one level down.
+
+Composition also buys you things `super()` could not: place your content *before* the shared markup, include it conditionally, or pass it props.
 
 ## Migration order
 
@@ -316,6 +532,10 @@ That asymmetry determines how to migrate a project. Two orderings work; the hybr
 **Top-down in one cut: convert a whole inheritance chain together.** Once every `page.html` that extends `layout.html` is gone (either deleted or converted to `.jsx`), you can rename `layout.html` to `layout.jsx`. The new `layout.jsx` extends the core outer layout with `<Extend templateName="outerLayoutBase" … />`.
 
 **Hybrid: don't.** Don't leave any `.html` template extending a `.jsx` template. That combination cannot work.
+
+::: tip
+If you are using a coding assistant for the conversion, [Migrating templates with an AI assistant](/guide/jsx-migration-assistant.md) provides instructions you can copy into your project's `CLAUDE.md` or `AGENTS.md`, covering the ordering rules above along with the JSX behavior that most often trips up assistants.
+:::
 
 ::: info
 Core's `outerLayoutBase.html` will remain Nunjucks for the foreseeable future, because every existing project's `layout.html` extends it via `{% extends data.outerLayout %}`. A fully-JSX project typically ends up with a `.jsx` layout that extends the core Nunjucks outer layout through `<Extend>`. This is the intended steady state, not a limitation.
@@ -365,6 +585,41 @@ export default function({ product }) {
 ```
 
 This is in addition to `<Template name="...">`, which exists for parity with Nunjucks's string-based lookup and to support Apostrophe's `module:file` cross-module syntax. Use direct `import` when the partial is co-located and you do not need name-based resolution; use `<Template>` when you do.
+
+### Coming from macros and fragments
+
+Nunjucks offers two ways to package reusable markup, and **both become function components here**.
+
+A [macro](/guide/nunjucks-templates.md#macros) is a reusable block of markup that cannot run asynchronous code. A [fragment](/guide/fragments.md) is Apostrophe's answer to that limitation — the same idea, but able to contain `{% area %}` and async components. JSX templates are real JavaScript, so a function component can already do async work. The distinction the two features existed to draw does not apply, and there is no separate construct to learn.
+
+| Nunjucks | JSX |
+| -------- | --- |
+| `{% macro x() %}` or `{% fragment x() %}` | `function X() { … }` |
+| `{% render x() %}` | `<X />` |
+| Arguments | Props |
+| `{% import 'fragments/file.html' as f %}` | `import X from './file.jsx'` |
+| `{% import 'module-name:file.html' %}` | `<Template name="module-name:file" />` |
+| `rendercaller()` / `{% rendercall %}` | The implicit `children` prop |
+
+Markup passed between a component's tags arrives as `children`, which is the direct equivalent of `rendercaller()`:
+
+```jsx
+function Highlighter({ children }) {
+  return <aside className="highlight">{children}</aside>;
+}
+
+export default function({ page }) {
+  return (
+    <Highlighter>
+      Fun fact: {page.funFact}
+    </Highlighter>
+  );
+}
+```
+
+::: warning
+A macro or fragment and every template that imports it must convert **together**. The moment `file.html` becomes `file.jsx`, any remaining `.html` template importing it breaks — Nunjucks cannot load a JSX template. Count the importers before you start. See [Migration order](#migration-order).
+:::
 
 ## Widget templates
 

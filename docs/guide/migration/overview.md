@@ -5,7 +5,7 @@ next:
 prev: false
 ---
 
-# Changes from Apostrophe 3 to Apostrophe 4
+# Changes from ApostropheCMS 3 to ApostropheCMS 4
 
 Apostrophe 4.x (A4) differs from Apostrophe 3 in just one major area: the admin UI has been updated to use Vue 3,
 the current major supported version of the Vue frontend framework.
@@ -16,7 +16,7 @@ some minor changes.
 
 For more information, see the [3 to 4 upgrading guide](/guide/migration/upgrading-3-to-4.md).
 
-# Changes from Apostrophe 2 to Apostrophe 4
+# Changes from ApostropheCMS 2 to ApostropheCMS 4
 
 **While upgrading from 2.x to 3.x is possible, there is no benefit in not going directly to 4.x because 
 differences between 3.x and 4.x are very minor, 3 will reach its end of life for security updates in 2025,
