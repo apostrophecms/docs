@@ -128,12 +128,16 @@ local.example.js
 
 In this guide, we are starting by creating multiple containers and a persistent volume. This is so that we can provide both a MongoDB instance and a place to store uploaded assets. We are going to do this using [Docker Compose](https://docs.docker.com/compose/) and a `docker-compose.yml` file. In the following sections of the tutorial, we will look at removing the extra container and volume by taking advantage of cloud storage and database services. Create this file at the root of your project.
 
+::: tip
+This guide uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. Swapping the `db:` service image below for `postgres` and pointing the `APOS_DB_URI` environment variable at a `postgres://` URI (or skipping the database container entirely for a file-based SQLite setup with a `sqlite://` URI) works the same way. See [Choosing a Database](/guide/choosing-a-database.md) for details.
+:::
+
 <AposCodeBlock>
 
 ```bash
 services:
   db:
-    image: mongo:4.4.14
+    image: mongo:7.0
     ports:
       - "27018:27018"
     volumes:
@@ -160,7 +164,7 @@ services:
 
 </AposCodeBlock>
 
-The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container. Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:4.4.14` official image for running MongoDB v4.4.14. Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
+The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container. Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:7.0` official image for running MongoDB v7.0 — the minimum version Apostrophe supports (tested through 8.0). Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
 Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDB. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
 

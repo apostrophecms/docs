@@ -70,6 +70,10 @@ $ heroku config:set NODE_ENV=production
 ## Add a MongoDB Atlas cluster
 With our project set-up to deploy to Heroku, we need a database.
 
+::: tip
+This guide uses MongoDB Atlas, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. A managed PostgreSQL add-on works the same way — set the `APOS_DB_URI` config var to a `postgres://` connection string instead. See [Choosing a Database](/guide/choosing-a-database.md) for details.
+:::
+
 Heroku runs our node app, but it doesn't run MongoDB for us. So let's go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign up.
 
 Once you log-in to your account, create a project. I named my project 'apostrophe', but you can use any name you wish. Next, within that project, click on 'Build a Database'. Select the free 'Shared' tier and pick 'AWS' as your cloud provider and the same region you chose for Heroku.

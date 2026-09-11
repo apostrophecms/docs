@@ -47,7 +47,7 @@ Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little util
 You will need to exit the Ubuntu 22.04 window and open a new one after you complete the `nvm` installation step above. Otherwise, the `nvm install` command in the next step will cause a Command Not Found error.
 :::
 
-Now, install and start Node.js 18.x with this command:
+Now, install and start Node.js 22.x with this command:
 
 ```bash
 nvm install 22
@@ -64,6 +64,10 @@ If this produces a "command not found" error, you most likely did not install `n
 :::
 
 ## Installing MongoDB
+
+::: tip
+This section covers MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. If you just want to get a project running with no database install at all, [choose SQLite instead](/guide/choosing-a-database.md) and skip this section entirely.
+:::
 
 Now we'll need to provide a connection to a MongoDB instance. We can either use Atlas, create a Docker container to serve our database by following these [instructions](/guide/dockerized-mongodb.md), or install the MongoDB community server.
 

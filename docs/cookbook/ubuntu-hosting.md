@@ -4,7 +4,7 @@
 
 We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many services to use for hosting an Ubuntu VPS and the rest of the recipe is platform-agnostic.
 
-1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 20.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
+1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 22.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
    - There is a step on this first page to select or add an SSH key to connect securely from your computer. Follow Lightsail's directions to do this.
 2. Complete any additional configurations you want, then **create the instance**. Once the instance is created, click on it to continue configuration.
 3. On the "Networking" tab, you should see that the SSH and HTTP ports are already open. In addition, **open the HTTPS port** by clicking "Add rule" and selecting "HTTPS." You need this for `https://` connections.
@@ -13,7 +13,8 @@ We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many servi
 5. **Install MongoDB Community Edition.**  Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
    - **Be sure not to miss the command `sudo systemctl enable mongod`** which ensures it starts up on every reboot.
    - Don't use an Ubuntu package for this since they may be outdated.
-6. **Install Node.js 18.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 18.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
+   - This recipe uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer — see [Choosing a Database](/guide/choosing-a-database.md) if you'd rather skip installing a database server altogether.
+6. **Install Node.js 22.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 22.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
    - Again, it's best to not use an Ubuntu package for this.
 7. **Install nginx.** This one is up to date in nginx, so it's one line:
 
@@ -216,7 +217,7 @@ One important step is to run at least two Apostrophe processes, in order to guar
 
 One way to do that is to start two separate processes with `pm2`, using two `--name` settings and two `PORT` environment variable settings, and configure [nginx round-robin load balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/#choosing-a-load-balancing-method) to balance between them.
 
-If you need more capacity, you can run as many processes as you have CPU cores on the server, possibly reserving one for MongoDB.
+If you need more capacity, you can run as many processes as you have CPU cores on the server, possibly reserving one for a self-hosted database (MongoDB or PostgreSQL).
 
 ### Specify the `APOS_RELEASE_ID` if not deploying with git
 
