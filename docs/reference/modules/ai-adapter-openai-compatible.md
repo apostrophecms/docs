@@ -1,0 +1,390 @@
+---
+extends: '@apostrophecms/module'
+---
+
+# `@apostrophecms/ai-adapter-openai-compatible`
+
+<AposRefExtends :module="$frontmatter.extends" />
+
+**Use this adapter to run Apostrophe's AI features against a service other than Anthropic, OpenAI or Google** — including a model running on your own hardware.
+
+| Reach for it when the AI service is… | For example |
+|---|---|
+| A hosted provider Apostrophe ships no adapter for | Groq, Mistral, OpenRouter |
+| A model running locally, on your machine or your own server | Ollama, vLLM |
+| A gateway or proxy in front of several services | anything presenting one endpoint for many models |
+
+There is nothing to install for any of these, and no code to write. They all adopted OpenAI's Chat Completions format, which became the one almost every service implements — so a single adapter, pointed at a different address, talks to any of them. You describe the service in a provider entry: its address, which environment variable holds its key, and what models it offers. See [A new provider with no code at all](#a-new-provider-with-no-code-at-all).
+
+**If your service is OpenAI itself, use [`@apostrophecms/ai-adapter-openai`](/reference/modules/ai-adapter-openai.md) instead.** Both adapters can talk to OpenAI, but they are not equivalent there; the comparison below explains why.
+
+Like the other adapters, this one registers itself at startup and is configured in core's `defaults.js` — there is nothing to add to `app.js` to make it exist.
+
+## Related documentation
+
+- [`@apostrophecms/ai`](/reference/modules/ai.md) — the engine, and where providers are configured
+- [`@apostrophecms/ai-adapter-openai`](/reference/modules/ai-adapter-openai.md) — the Responses API adapter, preferred for OpenAI proper
+
+## Using it
+
+| | |
+|---|---|
+| **Adapter name** | `openai-compatible` — the value a provider entry's `adapter` names |
+| **Label** | OpenAI Completions |
+| **Default env key** | `APOS_OPENAI_KEY` |
+| **Capabilities** | `text`, `tools`, `structured`, `imageInput`, `caching`, `image` |
+
+The label, key and capabilities above are this adapter's **defaults**, describing OpenAI — the service it points at when nothing tells it otherwise. An entry for any other service overrides them, which is what the next two sections are about.
+
+## `openai` or `openai-compatible`?
+
+**For OpenAI proper, prefer [`openai`](/reference/modules/ai-adapter-openai.md).** It speaks OpenAI's first-class Responses API and supports `reasoning` alongside `tools`.
+
+`openai-compatible` speaks Chat Completions, which is what makes it universal. It works against `api.openai.com` too, with one caveat. When this adapter is pointed at OpenAI's own endpoint and a call carries `tools` alongside a reasoning level, **the adapter strips the reasoning** rather than let the call fail — OpenAI rejects that pairing in this dialect. A reasoning level of `none` is left alone, as are entries pointed at any other service, since those accept the pairing.
+
+## A new provider with no code at all
+
+Point this adapter at any compatible host and describe the service in the entry: its models, its effort rows, its capabilities.
+
+::: warning Aliased entries bring their own tables
+An **aliased** entry — one whose `adapter` differs from its own name — describes a different service than the adapter's native one, so the adapter's native effort rows and model table **do not apply to it**. Supply your own `effort` rows, and your own `models` to get metadata and defaults.
+
+If an aliased entry is the default provider and declares no effort rows, the default level resolves to nothing and the boot fails with a message saying exactly that.
+:::
+
+### Groq
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'example-site',
+  modules: {
+    // 👇 An aliased entry: the name is yours, `adapter` names this module
+    '@apostrophecms/ai': {
+      options: {
+        provider: 'groq',
+        providers: {
+          groq: {
+            adapter: 'openai-compatible',
+            baseUrl: 'https://api.groq.com/openai/v1',
+            envKey: 'GROQ_API_KEY',
+            capabilities: { image: false },
+            models: {
+              'llama-3.3-70b-versatile': { label: 'Llama 3.3 70B', contextWindow: 128000, maxOutputTokens: 32768 },
+              'llama-3.1-8b-instant': { label: 'Llama 3.1 8B', contextWindow: 128000, maxOutputTokens: 8192 }
+            },
+            effort: {
+              low: { model: 'llama-3.1-8b-instant' },
+              medium: { model: 'llama-3.3-70b-versatile' },
+              high: { model: 'llama-3.3-70b-versatile' }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+### A local Ollama runtime
+
+There is no authentication, but [a key is still required](/reference/modules/ai.md#providers), so point `envKey` at a project-defined variable holding a placeholder.
+
+```bash
+export OLLAMA_KEY=ollama
+```
+
+```javascript
+providers: {
+  ollama: {
+    adapter: 'openai-compatible',
+    baseUrl: 'http://localhost:11434/v1',
+    envKey: 'OLLAMA_KEY',
+    capabilities: { image: false, caching: false },
+    models: {
+      'qwen3:8b': { label: 'Qwen3 8B', contextWindow: 32768, maxOutputTokens: 8192 }
+    },
+    effort: {
+      low: { model: 'qwen3:8b' },
+      medium: { model: 'qwen3:8b' },
+      high: { model: 'qwen3:8b' }
+    }
+  }
+}
+```
+
+### One extra provider beside a standard one
+
+```javascript
+provider: 'anthropic',
+providers: {
+  anthropic: {},
+  openrouter: {
+    adapter: 'openai-compatible',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    envKey: 'OPENROUTER_API_KEY',
+    capabilities: { image: false },
+    models: { 'mistralai/mistral-large': { label: 'Mistral Large' } }
+  }
+},
+effort: {
+  levels: {
+    low: { provider: 'openrouter', model: 'mistralai/mistral-large' }
+  }
+}
+```
+
+## Options
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| [`timeout`](#timeout) | integer | `600000` | Per-request milliseconds. |
+
+### `timeout`
+
+Milliseconds one request to the service may take. A timeout is a *retryable* failure: it normalizes to `aiRetry` with `kind: 'timeout'`, and the engine's [retry policy](/reference/modules/ai.md#error-codes) decides what happens next. Worth raising for a local runtime on modest hardware.
+
+Note that this is a module option, so it applies to every provider entry using this adapter.
+
+## Models and effort
+
+This section describes what the adapter declares **for OpenAI**, its native service. An aliased entry — Groq, Ollama, anything from the section above — supplies its own models and effort rows, and none of the following applies to it.
+
+::: info
+Model lineups move with provider releases. These are what this version of the adapter declares, not a permanent contract. For the live answer in a running project, call [`apos.ai.modelCatalog()`](/reference/modules/ai.md#modelcatalog).
+:::
+
+Default effort table as shipped:
+
+| Level | Model | Reasoning |
+|---|---|---|
+| `low` | `gpt-5.6-luna` | — |
+| `medium` | `gpt-5.6-terra` | — |
+| `high` | `gpt-5.6-sol` | — |
+
+The `high` row carries no `reasoning`, unlike the [`openai`](/reference/modules/ai-adapter-openai.md) adapter's — the native service rejects reasoning beside tools in this dialect.
+
+All three text models declare a 1,050,000 context window, a `maxOutputTokens` of 128,000, and the reasoning vocabulary `none`, `low`, `medium`, `high`, `xhigh`, `max`.
+
+Image models declared: `gpt-image-2` (seven ratios) and `gpt-image-1` (`1:1`, `3:2`, `2:3` only) — shared with the [`openai`](/reference/modules/ai-adapter-openai.md#image-generation) adapter, since the Images API is independent of the chat dialect.
+
+## Adjusting the adapter
+
+Adapters are ordinary Apostrophe modules, so the dialect seams are overridable at project level. The three seams every adapter exposes are `buildBody(request)`, `parseResponse(response, request)` and `normalizeError(error)`.
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    timeout: 120000
+  },
+  extendMethods(self) {
+    return {
+      buildBody(_super, request) {
+        const body = _super(request);
+        // amend the dialect body here
+        return body;
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/ai-adapter-openai-compatible/index.js
+  </template>
+</AposCodeBlock>
+
+## Writing a new adapter
+
+Write one when a service's dialect is genuinely not Chat Completions. Otherwise use [a config-only provider](#a-new-provider-with-no-code-at-all).
+
+**The thin-adapter principle.** An adapter owns exactly five things: request-body translation, response parsing, finish-reason mapping, error normalization, and its provider's model / effort / capability metadata. Routing, retries, the agent loop, validation, caching policy and mock mode are the engine's, always.
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    timeout: 600000
+  },
+  init(self) {
+    self.apos.ai.addAdapter(self.adapter());
+  },
+  methods(self) {
+    return {
+      adapter() {
+        return {
+          name: 'acme',
+          label: 'Acme',
+          baseUrl: 'https://api.acme.example/v1',
+          envKey: 'ACME_API_KEY',
+
+          // Optional: extra provider-entry keys this adapter reads. Each
+          // resolves from the named variable or the entry - the variable
+          // wins, like the key - and lands on `this` beside `apiKey`. Any
+          // entry key you do not declare fails the boot as a typo.
+          settings: {
+            tenantId: { envKey: 'ACME_TENANT_ID' }
+          },
+
+          capabilities: {
+            text: true,
+            tools: true,
+            structured: false,
+            imageInput: false,
+            image: false,
+            caching: false
+          },
+          effort: {
+            low: { model: 'small' },
+            medium: { model: 'medium' },
+            high: { model: 'large', reasoning: 'high' }
+          },
+          models: {
+            small: { label: 'Small', contextWindow: 128000, maxOutputTokens: 8192 },
+            medium: { label: 'Medium', contextWindow: 256000, maxOutputTokens: 16384 },
+            large: { label: 'Large', contextWindow: 256000, maxOutputTokens: 32768 }
+          },
+
+          // Fail the boot on a configuration this adapter cannot work with.
+          // `this` is the instantiated adapter: the engine has assigned
+          // `provider`, `baseUrl` and the resolved `apiKey` - read from the
+          // entry's environment variable - from the configured entry.
+          validate() {
+            self.apos.ai.requireApiKey(this);
+          },
+
+          // ONE model turn. The engine drives the loop.
+          async chat(req, request) {
+            const response = await self.apos.http.post(`${this.baseUrl}/chat`, {
+              headers: { authorization: `Bearer ${this.apiKey}` },
+              body: self.buildBody(request),
+              timeout: self.options.timeout,
+              ...(request.signal && { signal: request.signal })
+            });
+
+            return self.parseResponse(response, request);
+          },
+
+          normalizeError(error) {
+            return self.normalizeError(error);
+          }
+        };
+      },
+      buildBody(request) { /* normalized → dialect */ },
+      parseResponse(response, request) { /* dialect → normalized turn */ },
+      normalizeError(error) {
+        return self.apos.ai.normalizeHttpError(error, { requestIdHeader: 'x-request-id' });
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/ai-adapter-acme/index.js
+  </template>
+</AposCodeBlock>
+
+Register the module in `app.js`, then configure a provider entry naming it.
+
+### Declaring settings
+
+`settings` is how an adapter accepts a provider-entry key beyond the standard ones — a service fact only that dialect knows. Each declared setting resolves from its named environment variable or from the entry, the variable winning exactly as it does for the key, and lands on `this` beside `apiKey`.
+
+Declaring them is also what makes an unrecognized entry key a **boot failure rather than a silent no-op**: the engine knows the full set of keys your adapter reads, so a typo is caught at startup and named, instead of surfacing later as a provider error you would have to debug at the service. The shipped example is the `anthropic` adapter's [`workspaceId`](/reference/modules/ai-adapter-anthropic.md#adapter-settings).
+
+Note that `envKey` on a provider entry renames the variable for the **api key only**. A setting's variable name is fixed by this declaration; renaming it is an override of `adapter()` itself.
+
+#### Reserved setting names
+
+A resolved setting is assigned onto the adapter instance, beside `apiKey`. A setting named after something already living there would clobber it, so these names are refused at startup:
+
+| | |
+|---|---|
+| **Standard entry keys** | `adapter`, `apiKey`, `envKey`, `baseUrl`, `models`, `effort`, `capabilities` |
+| **Adapter definition fields** | `name`, `label`, `settings`, `provider`, `validate`, `chat`, `image`, `normalizeError` |
+
+`image` and `provider` are the easy mistakes to make. Pick a name specific to the service — `tenantId`, `workspaceId`, `projectId` — rather than a generic one.
+
+### What `chat` receives
+
+```javascript
+{
+  system,     // optional
+  messages,   // normalized messages
+  tools,      // optional: [ { name, description, input } ] - handlers never reach here
+  schema,     // optional: JSON Schema for structured output
+  model,
+  maxTokens,  // optional
+  reasoning,  // optional, in your own vocabulary
+  cache,      // false | { ttl: 'short' | 'long' }
+  signal      // optional
+}
+```
+
+Optional fields are present only when they resolved to a value, so an unset dial leaves the provider's own default in place.
+
+### What `chat` must return
+
+```javascript
+{
+  content: [ /* text / toolCall parts */ ],
+  finishReason: 'stop' | 'toolCalls' | 'length' | 'refusal',
+  usage: { inputTokens, outputTokens },
+  model,   // optional: what actually answered
+  object   // optional: the structured answer, if the request carried a schema
+}
+```
+
+The engine validates this. A missing or unknown finish reason, malformed content or missing `usage` is treated as a truncated response and **retried** — never returned as a short success. So an unknown finish reason should map to nothing, not to `stop`.
+
+### `image(req, request)` — optional
+
+Receives `{ prompt, count, aspect?, quality?, images?, model, signal? }` and returns `{ images: [ { type, data } ], model?, usage?, size? }`. `aspect` is already resolved against the model's declared ratios and is always a `W:H` string, never a named token.
+
+### `normalizeError(error)` — required
+
+Map whatever the transport threw onto an apos error code. **The engine reacts to codes alone** — it never sniffs raw errors. Usually one call to the shared helper:
+
+```javascript
+self.apos.ai.normalizeHttpError(error, {
+  requestIdHeader: 'x-request-id',
+  retryHint: (error) => error.body?.retry_in_seconds
+});
+```
+
+The helper's ladder:
+
+| Condition | Result |
+|---|---|
+| An abort | passes through untouched |
+| Timeout or unreachable host | `aiRetry`, `kind: 'timeout'` / `'network'` |
+| 429 | `aiRetry`, `kind: 'rateLimit'` |
+| 5xx | `aiRetry`, `kind: 'overload'` |
+| 401 / 403 | `forbidden` |
+| 404 | `notfound` |
+| anything else | `invalid` |
+
+The provider's own message wins over the transport's when the error body carries one.
+
+Two more public helpers: [`apos.ai.parseRetryAfter(value)`](/reference/modules/ai.md#adapter-helpers) turns a `Retry-After` count or HTTP date into seconds, and `apos.ai.requireApiKey(adapter)` is the boot-time key check nearly every `validate()` is.
+
+Hints ride on the error's `data`: `status`, `kind`, `retryAfter` in seconds, `requestId`. They shape the delay and the log records, never the routing.
+
+::: warning
+Everything on `error.data` is written verbatim into [the engine's log records](/reference/modules/ai.md#logging). Never put keys, credentials or personal data there.
+:::
+
+### Two rules that are easy to get wrong
+
+- **Transport is `apos.http`, never a provider SDK.** Adapters are thin enough not to need one, and a dependency per provider is a dependency per provider.
+- **Skip content parts you do not own.** Provider reasoning artifacts round-trip through transcripts as opaque parts with dialect-distinct names, replayed verbatim so a model keeps its thinking continuity. `buildBody` must skip part types it does not recognize rather than choke on them or drop them.
