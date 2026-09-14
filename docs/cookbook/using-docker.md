@@ -4,6 +4,15 @@
 
 The initial steps of this guide will assume that you will be hosting your database, project, and uploaded assets on the same server. The second part will outline steps for configuring to use the AWS S3 service for hosting assets. Finally, the third portion will provide guidance for using the MongoDB Atlas multi-cloud database.
 
+::: tip
+This guide uses MongoDB throughout, but that is a choice, not a requirement. ApostropheCMS supports MongoDB, PostgreSQL, and SQLite through the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer, and the choice changes the shape of your Docker setup right from the start:
+
+- **MongoDB or PostgreSQL** — run the database as a second container (as this guide does) or point at a hosted service, setting `APOS_DB_URI` to a `mongodb://` or `postgres://` URI.
+- **SQLite** — no database container and no database server at all. The database is a file, so it lives on the same persistent volume as your uploads and `APOS_DB_URI` is a `sqlite://` path.
+
+See [Choosing a Database](/guide/choosing-a-database.md) for help deciding. The steps below apply either way; where a step is MongoDB-specific, we note the alternative.
+:::
+
 ::: warning
 Notice that we rely on a Docker base image specifically for Node.js here. That's the best path forward. If you use a `RUN apt-get` step in Debian or Ubuntu, you will likely get an outdated, unsupported version of Node.js. Also, note that Node.js base images already depend on Debian by default, so you can easily incorporate other Debian packages if you need them.
 :::
@@ -129,7 +138,7 @@ local.example.js
 In this guide, we are starting by creating multiple containers and a persistent volume. This is so that we can provide both a MongoDB instance and a place to store uploaded assets. We are going to do this using [Docker Compose](https://docs.docker.com/compose/) and a `docker-compose.yml` file. In the following sections of the tutorial, we will look at removing the extra container and volume by taking advantage of cloud storage and database services. Create this file at the root of your project.
 
 ::: tip
-This guide uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. Swapping the `db:` service image below for `postgres` and pointing the `APOS_DB_URI` environment variable at a `postgres://` URI (or skipping the database container entirely for a file-based SQLite setup with a `sqlite://` URI) works the same way. See [Choosing a Database](/guide/choosing-a-database.md) for details.
+This is the file where your [database choice](/guide/choosing-a-database.md) takes concrete form. For PostgreSQL, swap the `db:` service image below for `postgres`, adjust the port, and point `APOS_DB_URI` at a `postgres://` URI. For SQLite, drop the `db:` service and its `depends_on` entry altogether and give `APOS_DB_URI` a `sqlite://` path on the persistent volume.
 :::
 
 <AposCodeBlock>
@@ -138,10 +147,8 @@ This guide uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite v
 services:
   db:
     image: mongo:7.0
-    ports:
-      - "27018:27018"
     volumes:
-      - /data/db
+      - dbdata:/data/db
   web:
     build:
       context: .
@@ -155,7 +162,11 @@ services:
     depends_on:
       - db
     volumes:
-      - /srv/www/apostrophe/public/uploads
+      - uploads:/srv/www/apostrophe/public/uploads
+
+volumes:
+  dbdata:
+  uploads:
 ```
 
 <template v-slot:caption>
@@ -166,9 +177,17 @@ services:
 
 The spacing in this file is very important. Whitespace, not tab, indentation indicates that a particular line is nested within the object passed on the line above it. Walking through this file, it starts with `services:`. From the indentation, we can see that we are creating two services - a `db:` container and a `web:` container. Much like our `Dockerfile`, within the `db:` we start by specifying an image to run. In this case, it is the `mongo:7.0` official image for running MongoDB v7.0 — the minimum version Apostrophe supports (tested through 8.0). Other images can be found in the docker library GitHub repo [README](https://github.com/docker-library/docs/blob/master/mongo/README.md#supported-tags-and-respective-dockerfile-links). You should use the version that mirrors your development environment.
 
-Next, we are specifying that the database should communicate over port `27018`. This is different from the port typically used in order to direct communication to the dockerized version and not a local MongoDB. If you need your database to communicate over a different port, you have to change it here and in your `.env` file.
+Notice that the `db:` service publishes no ports. It doesn't need to: the `web:` container reaches the database over the private network Compose creates, at the hostname `db` and MongoDB's own port `27017`, which is why the connection string below is `mongodb://db:27017/apostrophe`. Adding a `ports:` entry here would publish the database on the server's network interface instead, which you do not want in production — and on Linux, Docker's published ports install their own firewall rules, so a port exposed this way can remain reachable even when `ufw` appears to forbid it. If you do need to reach the database from the host while testing, publish it temporarily with a mapping like `"27018:27017"` and remove it before deploying.
 
-Finally, we add a volume for the MongoDB storage engine to write files into. You shouldn't need to change this. Without the persistent volume at this stage, the database would appear to work, but all content would be lost on every restart.
+::: tip PostgreSQL and SQLite
+A `postgres` container listens on `5432` rather than `27017`, so the port in your connection URI changes accordingly. SQLite has no port at all — it isn't a server.
+:::
+
+Finally, we add a volume for the MongoDB storage engine to write files into. This is a *named* volume, `dbdata`, declared in the top-level `volumes:` section at the bottom of the file and mounted at `/data/db` inside the container. Naming it matters: Docker manages the volume independently of the container, so rebuilding or replacing the database container leaves the data intact, and you can find and back up the volume by name. Without a persistent volume at this stage, the database would appear to work, but all content would be lost on every restart.
+
+::: tip PostgreSQL and SQLite
+PostgreSQL writes to `/var/lib/postgresql/data` instead of `/data/db`, so mount the `dbdata` volume there instead. With SQLite there is no database service to give a volume to, but the same warning applies with more force: the database file must live on a persistent volume — the `uploads` volume on the `web:` container is a natural home — or your entire site content disappears on every restart, not just your uploads.
+:::
 
 Looking at the `web:` container, we aren't passing an image but instead passing `build`. Within this, we are adding `context: .` which specifies we should build the image for this container from the `Dockerfile` in the same directory.
 
@@ -180,7 +199,7 @@ The `environment:` key lists environment variables that will get passed into the
 
 The `depends_on:` key indicates that our Apostrophe instance requires the presence of the `db` container that we created first.
 
-Finally, much like with the database, we are persisting a volume for any uploads to be written into. Without this, any uploads would be lost the next time we deployed.
+Finally, much like with the database, we are persisting a named volume, `uploads`, for any uploads to be written into. Without this, any uploads would be lost the next time we deployed.
 
 ### Creating the `.env` file
 
@@ -190,7 +209,7 @@ The last file we need to create before bringing our project up is a `.env` file 
 
 ```bash
 NODE_ENV=production
-APOS_MONGODB_URI=mongodb://db:27018/apostrophe
+APOS_MONGODB_URI=mongodb://db:27017/apostrophe
 APOS_CLUSTER_PROCESSES=2
 ```
 
@@ -200,7 +219,21 @@ APOS_CLUSTER_PROCESSES=2
 
 </AposCodeBlock>
 
-The only other line that might need alteration is the `APOS_MONGODB_URI` if your database needs to listen on a different port.
+The only other line that might need alteration is the `APOS_MONGODB_URI`, if you have configured your database to listen on a port other than MongoDB's default.
+
+::: tip PostgreSQL and SQLite
+`APOS_MONGODB_URI` is the MongoDB-specific variable. For the other backends, use `APOS_DB_URI`, which accepts any of the three URI formats. Substitute the appropriate line in the `.env` file above, and change the matching entry under `environment:` in `docker-compose.yaml`:
+
+```bash
+# PostgreSQL, running in the db container
+APOS_DB_URI=postgres://user:password@db:5432/apostrophe
+
+# SQLite, as a file on the persistent volume
+APOS_DB_URI=sqlite:///srv/www/apostrophe/public/uploads/apostrophe.db
+```
+
+See [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for the full URI syntax.
+:::
 
 ### Spinning our project up
 
@@ -281,13 +314,13 @@ In order to pass the environment variables into our project container we just ne
 
 ### Changing the `.env` file
 
-Next, the `.env` file should be modified to contain values for each of the new environment variables. Each will get populated with values specific to your S3 buckets. Again, add the `APOS_S3_ENDPOINT` with value if using a service not hosted by AWS.
+Next, the `.env` file should be modified to contain values for each of the new environment variables. Each will get populated with values specific to your S3 buckets. Again, add the `APOS_S3_ENDPOINT` with value if using a service not hosted by AWS. These snippets carry the MongoDB `APOS_MONGODB_URI` line forward from earlier; if you chose PostgreSQL or SQLite, keep your `APOS_DB_URI` line in its place — the S3 variables are independent of the database backend.
 
 <AposCodeBlock>
 
 ```sh
 NODE_ENV=production
-APOS_MONGODB_URI=mongodb://db:27018/apostrophe
+APOS_MONGODB_URI=mongodb://db:27017/apostrophe
 APOS_S3_REGION=<your region>
 APOS_S3_BUCKET=<your bucket name>
 APOS_S3_KEY=<account key>
@@ -328,13 +361,46 @@ Any assets uploaded through the site will now be stored in your S3 bucket rather
 
 [MongoDB Atlas](https://www.mongodb.com/atlas/database) is a robust, multi-cloud database service. There are a number of advantages, but one is that using a cloud database means that our project can run on multiple servers but still all access the same database. If we run our project in a docker container without an accompanying database container, we don't have to use Docker Compose. However, since we have already built these assets, we can continue with these files. Two files must be altered - `docker-compose.yaml` and `.env`.
 
+::: tip PostgreSQL and SQLite
+This section is about a hosted database, and the shape of it applies to PostgreSQL too: a managed provider such as [Amazon RDS](https://aws.amazon.com/rds/postgresql/), [Neon](https://neon.tech/), or [Supabase](https://supabase.com/database) gives you a `postgres://` connection string that goes into `APOS_DB_URI`, and the `db:` container goes away exactly as described below. SQLite is the one backend this doesn't apply to — it's a local file by design, so it can't be shared between servers. If you need multiple servers hitting one database, choose MongoDB or PostgreSQL.
+:::
+
 ### Changing the `docker-compose.yaml` file
 
-Since we no longer have to use the database container, we can simply delete that whole section from the `services:`. Likewise, we can also remove the `depends_on:` section since we no longer have that container.
+Since we no longer have to use the database container, we can simply delete that whole section from the `services:`. Likewise, we can also remove the `depends_on:` section, since we no longer have that container. Finally, remove `dbdata` from the top-level `volumes:` block — the volume it declared belonged to the database container, and nothing mounts it now. Leaving it in place is harmless, but Docker would go on creating an empty volume you never use. The `uploads` volume stays. That leaves:
+
+<AposCodeBlock>
+
+```bash
+services:
+  web:
+    build:
+      context: .
+    container_name: "apostrophe-container"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV
+      - APOS_MONGODB_URI
+      - APOS_CLUSTER_PROCESSES
+    volumes:
+      - uploads:/srv/www/apostrophe/public/uploads
+
+volumes:
+  uploads:
+```
+
+<template v-slot:caption>
+  docker-compose.yaml
+</template>
+
+</AposCodeBlock>
+
+A SQLite setup ends up at this same single-service file, since it never needs a database container either — the difference is that its database is a file living on the `uploads` volume rather than at the far end of a connection string.
 
 ### Changing the `.env` file
 
-First, start by getting an account and setting up a project and cluster according to the [instructions](https://www.mongodb.com/docs/atlas/?_ga=2.115258319.959071482.1662986164-305956368.1655805952&_gac=1.50376795.1662898658.Cj0KCQjwjvaYBhDlARIsAO8PkE2KG3UP3yszcTYrzDpB8BRxDZ7vM2vLMafvX59emZZKkDExo_ZPZRIaAneGEALw_wcB) at the Atlas site. Once you do this, you can get the connect string for your database. The `APOS_MONGODB_URI` was already being set within the `.env` file. You simply need to substitute your connect string for the value.
+First, start by getting an account and setting up a project and cluster according to the [instructions](https://www.mongodb.com/docs/atlas/?_ga=2.115258319.959071482.1662986164-305956368.1655805952&_gac=1.50376795.1662898658.Cj0KCQjwjvaYBhDlARIsAO8PkE2KG3UP3yszcTYrzDpB8BRxDZ7vM2vLMafvX59emZZKkDExo_ZPZRIaAneGEALw_wcB) at the Atlas site. Once you do this, you can get the connect string for your database. The `APOS_MONGODB_URI` was already being set within the `.env` file. You simply need to substitute your connect string for the value. For a hosted PostgreSQL database, substitute the provider's `postgres://` connection string into `APOS_DB_URI` in the same way.
 
 ::: info
 Any special characters in your user name or password within the connection string need to be converted to %-encoding.

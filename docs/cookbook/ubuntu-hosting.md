@@ -10,10 +10,12 @@ We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many servi
 3. On the "Networking" tab, you should see that the SSH and HTTP ports are already open. In addition, **open the HTTPS port** by clicking "Add rule" and selecting "HTTPS." You need this for `https://` connections.
    - Wait a couple minutes even after it says it's ready, to be sure it will accept your SSH connection.
 4. SSH to your server's `ubuntu` account, according to the Lightsail instructions. This account has `sudo` privileges so you can take care of tasks that require root access.
-5. **Install MongoDB Community Edition.**  Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
+5. **Install MongoDB Community Edition.** Don't use an Ubuntu package for this, since they may be outdated. Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
    - **Be sure not to miss the command `sudo systemctl enable mongod`** which ensures it starts up on every reboot.
-   - Don't use an Ubuntu package for this since they may be outdated.
-   - This recipe uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer — see [Choosing a Database](/guide/choosing-a-database.md) if you'd rather skip installing a database server altogether.
+   - This recipe uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. What that changes about this step depends on which one you pick:
+     - **PostgreSQL** still needs a server. Install PostgreSQL 14 or newer in place of MongoDB — unlike the MongoDB case, Ubuntu's own `postgresql` package is a reasonable choice, though the [PostgreSQL project's apt repository](https://www.postgresql.org/download/linux/ubuntu/) carries newer releases — create an empty database for the site, and make sure the service is enabled at boot.
+     - **SQLite** needs no server at all, so you can skip this step entirely. The database is a single file on disk; put it somewhere durable outside the deployment directory, since the whole site's content lives in it.
+     - Either way, point the `APOS_DB_URI` environment variable at the appropriate `postgres://` or `sqlite://` URI instead of relying on the MongoDB default. See [Choosing a Database](/guide/choosing-a-database.md) to decide, and [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for the URI syntax.
 6. **Install Node.js 22.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 22.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
    - Again, it's best to not use an Ubuntu package for this.
 7. **Install nginx.** This one is up to date in nginx, so it's one line:
@@ -95,6 +97,18 @@ pm2 save
 # The second command saves our `pm2` configuration for future reboots.
 ```
 
+::: tip PostgreSQL and SQLite
+If you chose one of the other backends in step 5, this is where the connection string has to reach the site. With MongoDB nothing is needed, because Apostrophe defaults to a local MongoDB. Otherwise, set `APOS_DB_URI` in the environment `pm2` launches the process with, and make sure it survives a reboot — `pm2 save` records the environment along with the process, so export the variable before the `start` command above, or set it in the `nodeapps` user's shell profile:
+
+```sh
+export APOS_DB_URI=postgres://apos:password@localhost:5432/starter_kit_essentials
+# or, for SQLite
+export APOS_DB_URI=sqlite:///home/nodeapps/data/starter-kit-essentials.db
+```
+
+The asset build in step 3 doesn't touch the database, but command line tasks such as the `@apostrophecms/user:add` task below do, so the variable needs to be set in your shell when you run those too.
+:::
+
 At this point Apostrophe is running on port `3000`. We need to configure nginx as a proxy server to handle HTTP and HTTPS connections on port `80` and `443` and forward them.
 
 ### Adding your site to nginx
@@ -166,7 +180,7 @@ node app @apostrophecms/user:add lucy admin
 
 3. When prompted, **enter a secure password.** And be sure to record it securely as well!
 
-After that your account will be stored in the MongoDB database. Access it on the `/login` page of your website.
+After that your account will be stored in the database. Access it on the `/login` page of your website.
 
 ### Updating your site code
 
