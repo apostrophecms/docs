@@ -4,20 +4,19 @@
 
 We'll start off by creating an Ubuntu VPS on AWS Lightsail. There are many services to use for hosting an Ubuntu VPS and the rest of the recipe is platform-agnostic.
 
-1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 22.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
+1. In an [AWS Lightsail account](https://lightsail.aws.amazon.com), log in and  create an **Ubuntu 24.04 LTS** ("OS Only") instance. You need at least 1GB of RAM. We suggest 2GB to be safe.
    - There is a step on this first page to select or add an SSH key to connect securely from your computer. Follow Lightsail's directions to do this.
 2. Complete any additional configurations you want, then **create the instance**. Once the instance is created, click on it to continue configuration.
 3. On the "Networking" tab, you should see that the SSH and HTTP ports are already open. In addition, **open the HTTPS port** by clicking "Add rule" and selecting "HTTPS." You need this for `https://` connections.
    - Wait a couple minutes even after it says it's ready, to be sure it will accept your SSH connection.
 4. SSH to your server's `ubuntu` account, according to the Lightsail instructions. This account has `sudo` privileges so you can take care of tasks that require root access.
-5. **Install MongoDB Community Edition.** Don't use an Ubuntu package for this, since they may be outdated. Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/).
+5. **Install MongoDB Community Edition.** Don't install MongoDB from Ubuntu's package repositories or third-party PPAs — those builds are years out of date, no longer supported, and don't receive security fixes. Instead follow the [official instructions for installing MongoDB Community Edition on Ubuntu](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/).
    - **Be sure not to miss the command `sudo systemctl enable mongod`** which ensures it starts up on every reboot.
    - This recipe uses MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. What that changes about this step depends on which one you pick:
-     - **PostgreSQL** still needs a server. Install PostgreSQL 14 or newer in place of MongoDB — unlike the MongoDB case, Ubuntu's own `postgresql` package is a reasonable choice, though the [PostgreSQL project's apt repository](https://www.postgresql.org/download/linux/ubuntu/) carries newer releases — create an empty database for the site, and make sure the service is enabled at boot.
+     - **PostgreSQL** still needs a server. Install Ubuntu's `postgresql` package in place of MongoDB (`sudo apt-get install postgresql`), create an empty database for the site, and make sure the service is enabled at boot.
      - **SQLite** needs no server at all, so you can skip this step entirely. The database is a single file on disk; put it somewhere durable outside the deployment directory, since the whole site's content lives in it.
      - Either way, point the `APOS_DB_URI` environment variable at the appropriate `postgres://` or `sqlite://` URI instead of relying on the MongoDB default. See [Choosing a Database](/guide/choosing-a-database.md) to decide, and [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for the URI syntax.
-6. **Install Node.js 22.x.** Don't use an obsolete Ubuntu package. Instead follow the [official instructions for installing Node.js 22.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall)
-   - Again, it's best to not use an Ubuntu package for this.
+6. **Install Node.js 24.x.** Don't use Ubuntu's own `nodejs` package — it's pinned to whatever version shipped with the release and falls behind supported Node.js versions. Instead follow the [official instructions for installing Node.js 24.x on Ubuntu](https://github.com/nodesource/distributions/blob/master/README.md#debinstall).
 7. **Install nginx.** This one is up to date in nginx, so it's one line:
 
 ```sh

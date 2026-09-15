@@ -100,7 +100,7 @@ This will allow you to connect, but you might desire a fixed IP for your site. O
 You will need to set an environment variable in Heroku so that your dynos can communicate with the database. Within your new database deployment, click on the 'connect' button next to the name. Next, click on 'Connect your application'. By default, the driver drop-down menu should be set to 'Node.js' and version '4.1 or later'. If they aren't, change them and then copy the connection string. Paste the string into a text editor and add your password. Again, make sure to URL encode any special characters. Now use this string to set an environment variable in Heroku. It should look something like this:
 
 ```
-$ heroku config:set 'APOS_MONGODB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority'
+$ heroku config:set 'APOS_DB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority'
 ```
 
 We use single quotes to avoid problems with most special characters in the URI. If you used the `'` character in the URI, you'll need to escape that with `\'`.
@@ -108,7 +108,7 @@ We use single quotes to avoid problems with most special characters in the URI. 
 From here, you can test your site locally.
 
 ```bash
-APOS_MONGODB_URI='YOUR-uri-goes-here' npm start
+APOS_DB_URI='YOUR-uri-goes-here' npm start
 ```
 
 You should be able to view your website at the designated local port.
@@ -122,7 +122,7 @@ Press Control-C after you successfully test the site. Startup may take an extra 
 Now your database exists in the cloud, but it doesn't contain any users, so you won't be able to log in. So, let's use the command line to connect again to fix that:
 
 ```bash
-$ APOS_MONGODB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
+$ APOS_DB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
 ```
 
 *This is the same user-creation command you saw in our getting-started tutorial.* We're just talking to a different database.
@@ -148,7 +148,7 @@ Heroku periodically renames or retires specific plan tiers. Run `heroku addons:p
 This provisions a database and automatically sets a `DATABASE_URL` config var on your app. Two things are different from the MongoDB Atlas flow above:
 
 - The variable is named `DATABASE_URL`, not `APOS_DB_URI`, which is what Apostrophe looks for.
-- Heroku's own tooling manages that value and can rotate it (during credential rotation or a plan change), so copying it into a separate config var once, the way we did with `APOS_MONGODB_URI`, would eventually go stale.
+- Heroku's own tooling manages that value and can rotate it (during credential rotation or a plan change), so copying it into a separate config var once, the way we did with `APOS_DB_URI`, would eventually go stale.
 
 ### Point Apostrophe at the database
 

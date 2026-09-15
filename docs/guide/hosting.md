@@ -6,9 +6,9 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 
 | Software | Minimum Version |
 | ------------- | ------------- |
-| Ubuntu | 22.04+ |
+| Ubuntu | 22.04+ (24.04 recommended) |
 | [NGINX](https://www.nginx.com/) (or another reverse proxy like Caddy, Traefik) | Latest |
-| [Node.js](https://nodejs.org/en/) | 22.x+ |
+| [Node.js](https://nodejs.org/en/) | 22.x+ (24.x recommended) |
 | Database (choose one, via the `db-connect` layer) | See below |
 
 ApostropheCMS supports three database backends through the [`db-connect`](https://github.com/apostrophecms/apostrophe/blob/main/packages/db-connect/README.md) layer: MongoDB, PostgreSQL, and SQLite. See [Choosing a Database](/guide/choosing-a-database.md) for guidance on which is the best fit for your project, and [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for setup and switching details.
@@ -24,7 +24,7 @@ ApostropheCMS supports three database backends through the [`db-connect`](https:
 | RAM | **2GB** (to support the application and database) |
 | Disk space | **20GB** (see note below) |
 
-1GB of RAM may be sufficient if using a remote database service (e.g., MongoDB Atlas or a managed PostgreSQL provider). Sites running in a multicore configuration will require additional 2G or more RAM and, of course, CPU cores.
+1GB of RAM may be sufficient if you use a remote database service (e.g., MongoDB Atlas or a managed PostgreSQL provider) or SQLite, since neither runs a separate database server on the same machine. Sites running in a multicore configuration will require additional 2G or more RAM and, of course, CPU cores.
 
 ::: info
 If using MongoDB, it requires a minimum of 5GB free disk space at all times. Small websites may not need much more additional space than that. We have found that 20GB is sufficient for most Apostrophe applications, but more space may be necessary to handle an especially large number of file uploads or especially large uploaded files. SQLite and PostgreSQL have different storage profiles; see [Choosing a Database](/guide/choosing-a-database.md) for details.
