@@ -70,6 +70,10 @@ $ heroku config:set NODE_ENV=production
 ## Add a MongoDB Atlas cluster
 With our project set-up to deploy to Heroku, we need a database.
 
+::: tip
+This guide uses MongoDB Atlas, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. If you'd rather use [Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql) — a first-party add-on that's arguably a more natural fit on Heroku than a separate MongoDB Atlas account — skip ahead to [Using Heroku Postgres instead](#using-heroku-postgres-instead).
+:::
+
 Heroku runs our node app, but it doesn't run MongoDB for us. So let's go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign up.
 
 Once you log-in to your account, create a project. I named my project 'apostrophe', but you can use any name you wish. Next, within that project, click on 'Build a Database'. Select the free 'Shared' tier and pick 'AWS' as your cloud provider and the same region you chose for Heroku.
@@ -96,7 +100,7 @@ This will allow you to connect, but you might desire a fixed IP for your site. O
 You will need to set an environment variable in Heroku so that your dynos can communicate with the database. Within your new database deployment, click on the 'connect' button next to the name. Next, click on 'Connect your application'. By default, the driver drop-down menu should be set to 'Node.js' and version '4.1 or later'. If they aren't, change them and then copy the connection string. Paste the string into a text editor and add your password. Again, make sure to URL encode any special characters. Now use this string to set an environment variable in Heroku. It should look something like this:
 
 ```
-$ heroku config:set 'APOS_MONGODB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority'
+$ heroku config:set 'APOS_DB_URI=mongodb+srv://<yourUserName>:<password>@heroku-tut.lrzxt0l.mongodb.net/?retryWrites=true&w=majority'
 ```
 
 We use single quotes to avoid problems with most special characters in the URI. If you used the `'` character in the URI, you'll need to escape that with `\'`.
@@ -104,7 +108,7 @@ We use single quotes to avoid problems with most special characters in the URI. 
 From here, you can test your site locally.
 
 ```bash
-APOS_MONGODB_URI='YOUR-uri-goes-here' npm start
+APOS_DB_URI='YOUR-uri-goes-here' npm start
 ```
 
 You should be able to view your website at the designated local port.
@@ -118,12 +122,67 @@ Press Control-C after you successfully test the site. Startup may take an extra 
 Now your database exists in the cloud, but it doesn't contain any users, so you won't be able to log in. So, let's use the command line to connect again to fix that:
 
 ```bash
-$ APOS_MONGODB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
+$ APOS_DB_URI='YOUR-uri-goes-here' node app @apostrophecms/user:add admin admin
 ```
 
 *This is the same user-creation command you saw in our getting-started tutorial.* We're just talking to a different database.
 
 > You can also copy a local database from an existing site to Atlas using the [`mongodump`](https://www.mongodb.com/docs/database-tools/mongodump/) and [`mongorestore`](https://www.mongodb.com/docs/database-tools/mongorestore/) commands. For additional examples of their use, see the `scripts/sync-down` and `scripts/sync-up` files in a CLI created project.
+
+## Using Heroku Postgres instead
+
+If you'd rather use PostgreSQL, [Heroku Postgres](https://elements.heroku.com/addons/heroku-postgresql) is a first-party add-on — no separate account or IP allowlisting needed, unlike the MongoDB Atlas cluster above. If you're using it, skip the "Add a MongoDB Atlas cluster" section entirely and follow these steps instead. Everything later in this tutorial (S3 storage, asset delivery, deployment) applies the same way regardless of which database you choose.
+
+### Provision the add-on
+
+From your project directory:
+
+```bash
+$ heroku addons:create heroku-postgresql:essential-0
+```
+
+::: info
+Heroku periodically renames or retires specific plan tiers. Run `heroku addons:plans heroku-postgresql` to see the current options if `essential-0` isn't available.
+:::
+
+This provisions a database and automatically sets a `DATABASE_URL` config var on your app. Two things are different from the MongoDB Atlas flow above:
+
+- The variable is named `DATABASE_URL`, not `APOS_DB_URI`, which is what Apostrophe looks for.
+- Heroku's own tooling manages that value and can rotate it (during credential rotation or a plan change), so copying it into a separate config var once, the way we did with `APOS_DB_URI`, would eventually go stale.
+
+### Point Apostrophe at the database
+
+Rather than setting an `APOS_DB_URI` config var, configure the [`@apostrophecms/db`](/reference/modules/db.md) module in `app.js` to read `DATABASE_URL` directly at boot, so it always uses the current value:
+
+```js
+// app.js
+modules: {
+  '@apostrophecms/db': {
+    options: {
+      uri: process.env.DATABASE_URL || process.env.APOS_DB_URI,
+      // Heroku Postgres requires an SSL connection, and typically presents
+      // a certificate that isn't in Node's default trust store
+      connect: process.env.DATABASE_URL
+        ? { ssl: { rejectUnauthorized: false } }
+        : {}
+    }
+  }
+}
+```
+
+Falling back to `APOS_DB_URI` keeps local development working with whatever backend you've chosen there (see [Choosing a Database](/guide/choosing-a-database.md)), while production on Heroku always uses the live `DATABASE_URL`.
+
+### Create your admin user
+
+Once the app is deployed (see [Deploying to Heroku](#deploying-to-heroku) below), create your first admin user the same way as with MongoDB, just without needing to pass a URI on the command line — the dyno already has `DATABASE_URL` set:
+
+```bash
+$ heroku run node app @apostrophecms/user:add admin admin
+```
+
+### Everything else stays the same
+
+The Amazon S3 storage, asset delivery, and deployment steps below don't depend on which database you're using — follow them exactly as written.
 
 ## Storing files with Amazon S3
 
