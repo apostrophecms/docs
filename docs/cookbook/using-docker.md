@@ -138,7 +138,7 @@ local.example.js
 In this guide, we are starting by creating multiple containers and a persistent volume. This is so that we can provide both a MongoDB instance and a place to store uploaded assets. We are going to do this using [Docker Compose](https://docs.docker.com/compose/) and a `docker-compose.yml` file. In the following sections of the tutorial, we will look at removing the extra container and volume by taking advantage of cloud storage and database services. Create this file at the root of your project.
 
 ::: tip
-This is the file where your [database choice](/guide/choosing-a-database.md) takes concrete form. For PostgreSQL, swap the `db:` service image below for `postgres`, adjust the port, and point `APOS_DB_URI` at a `postgres://` URI. For SQLite, drop the `db:` service and its `depends_on` entry altogether and give `APOS_DB_URI` a `sqlite://` path on a dedicated volume, as described below.
+This is the file where your [database choice](/guide/choosing-a-database.md) takes concrete form. The file below and its walkthrough use MongoDB. If you chose another database, read them first, then follow [Adapting the file for PostgreSQL](#adapting-the-file-for-postgresql) or [Adapting the file for SQLite](#adapting-the-file-for-sqlite).
 :::
 
 <AposCodeBlock>
@@ -179,31 +179,7 @@ The spacing in this file is very important. Whitespace, not tab, indentation ind
 
 Notice that the `db:` service publishes no ports. It doesn't need to: the `web:` container reaches the database over the private network Compose creates, at the hostname `db` and MongoDB's own port `27017`, which is why the connection string below is `mongodb://db:27017/apostrophe`. Adding a `ports:` entry here would publish the database on the server's network interface instead, which you do not want in production — and on Linux, Docker's published ports install their own firewall rules, so a port exposed this way can remain reachable even when `ufw` appears to forbid it. If you do need to reach the database from the host while testing, publish it temporarily with a mapping like `"27018:27017"` and remove it before deploying.
 
-::: tip PostgreSQL and SQLite
-A `postgres` container listens on `5432` rather than `27017`, so the port in your connection URI changes accordingly. SQLite has no port at all — it isn't a server.
-:::
-
 Finally, we add a volume for the MongoDB storage engine to write files into. This is a *named* volume, `dbdata`, declared in the top-level `volumes:` section at the bottom of the file and mounted at `/data/db` inside the container. Naming it matters: Docker manages the volume independently of the container, so rebuilding or replacing the database container leaves the data intact, and you can find and back up the volume by name. Without a persistent volume at this stage, the database would appear to work, but all content would be lost on every restart.
-
-::: tip PostgreSQL and SQLite
-PostgreSQL writes to `/var/lib/postgresql/data` instead of `/data/db`, so mount the `dbdata` volume there instead. With SQLite there is no database service to give a volume to, but the same warning applies with more force: the database file must live on a persistent volume, or your entire site content disappears on every restart, not just your uploads.
-
-Give the database its own named volume on the `web:` container. **Don't reuse the `uploads` volume.** Everything in `public/uploads` is served publicly at `/uploads`, so a database file stored there could be downloaded by anyone. Mount the new volume outside `public/` instead:
-
-```yaml
-  web:
-    …
-    volumes:
-      - uploads:/srv/www/apostrophe/public/uploads
-      - sqlitedata:/srv/www/apostrophe/data
-
-volumes:
-  uploads:
-  sqlitedata:
-```
-
-Docker creates a missing mount point owned by `root`, which the `node` user can't write to. Add `RUN mkdir -p /srv/www/apostrophe/data` to the `Dockerfile` after the `USER node` line so the directory already exists with the right owner. The local `data/` folder is already listed in `.dockerignore`, so no development database gets copied into the image.
-:::
 
 Looking at the `web:` container, we aren't passing an image but instead passing `build`. Within this, we are adding `context: .` which specifies we should build the image for this container from the `Dockerfile` in the same directory.
 
@@ -216,6 +192,75 @@ The `environment:` key lists environment variables that will get passed into the
 The `depends_on:` key indicates that our Apostrophe instance requires the presence of the `db` container that we created first.
 
 Finally, much like with the database, we are persisting a named volume, `uploads`, for any uploads to be written into. Without this, any uploads would be lost the next time we deployed.
+
+#### Adapting the file for PostgreSQL
+
+Skip this section if you are using MongoDB or SQLite.
+
+PostgreSQL keeps the same two-container shape, so only the `db:` service changes. Swap the image for `postgres`, give the container the credentials and database name it should create on first start, and mount the `dbdata` volume at `/var/lib/postgresql/data`, which is where PostgreSQL writes its files:
+
+<AposCodeBlock>
+
+```yaml
+services:
+  db:
+    image: postgres:17
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+  web:
+    # unchanged from the MongoDB version above
+```
+
+<template v-slot:caption>
+  docker-compose.yaml
+</template>
+
+</AposCodeBlock>
+
+The `web:` service, the `depends_on:` entry, and the top-level `volumes:` section stay exactly as they are. As with MongoDB, the `db:` service publishes no ports: the `web:` container reaches PostgreSQL at the hostname `db` on its default port, `5432`. Set the `POSTGRES_*` values in your `.env` file alongside the other variables, as shown in the [next section](#creating-the-env-file).
+
+#### Adapting the file for SQLite
+
+Skip this section if you are using MongoDB or PostgreSQL.
+
+SQLite is not a server, so there is no `db:` service. Remove the `db:` service, the `depends_on:` entry, and the `dbdata` volume. The database is a file that Apostrophe writes from inside the `web:` container, so that container needs a persistent volume for it, just as a `db:` container would. Without one, the database file is lost on every restart.
+
+Give the database its own named volume. **Don't reuse the `uploads` volume.** Everything in `public/uploads` is served publicly at `/uploads`, so a database file stored there could be downloaded by anyone. Mount the new volume outside `public/` instead:
+
+<AposCodeBlock>
+
+```yaml
+services:
+  web:
+    build:
+      context: .
+    container_name: "apostrophe-container"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV
+      - APOS_DB_URI
+      - APOS_CLUSTER_PROCESSES
+    volumes:
+      - uploads:/srv/www/apostrophe/public/uploads
+      - sqlitedata:/srv/www/apostrophe/data
+
+volumes:
+  uploads:
+  sqlitedata:
+```
+
+<template v-slot:caption>
+  docker-compose.yaml
+</template>
+
+</AposCodeBlock>
+
+Docker creates a missing mount point owned by `root`, which the `node` user can't write to. Add `RUN mkdir -p /srv/www/apostrophe/data` to the `Dockerfile` after the `USER node` line so the directory already exists with the right owner. The local `data/` folder is already listed in `.dockerignore`, so no development database gets copied into the image.
 
 ### Creating the `.env` file
 
@@ -242,11 +287,16 @@ The only other line that might need alteration is the `APOS_DB_URI`, if you have
 
 ```bash
 # PostgreSQL, running in the db container
-APOS_DB_URI=postgres://user:password@db:5432/apostrophe
+POSTGRES_USER=apostrophe
+POSTGRES_PASSWORD=change-this-password
+POSTGRES_DB=apostrophe
+APOS_DB_URI=postgres://apostrophe:change-this-password@db:5432/apostrophe
 
 # SQLite, as a file on the dedicated sqlitedata volume
 APOS_DB_URI=sqlite:///srv/www/apostrophe/data/apostrophe.db
 ```
+
+For PostgreSQL, the user, password, and database name in `APOS_DB_URI` must match the `POSTGRES_*` values, which the `postgres` image uses to create the database the first time it starts.
 
 See [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for the full URI syntax.
 :::
@@ -412,7 +462,7 @@ volumes:
 
 </AposCodeBlock>
 
-A SQLite setup ends up with a similar single-service file, since it never needs a database container either. The difference is that it keeps the `sqlitedata` volume described [earlier](#creating-a-docker-compose-yaml-file) for its database file. That volume must stay separate from `uploads`, which is served publicly.
+A SQLite setup ends up with a similar single-service file, since it never needs a database container either. The difference is that it keeps the `sqlitedata` volume described [earlier](#adapting-the-file-for-sqlite) for its database file. That volume must stay separate from `uploads`, which is served publicly.
 
 ### Changing the `.env` file
 
