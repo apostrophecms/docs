@@ -78,7 +78,7 @@ export APOS_DB_URI=postgres://localhost:5432/apos_demo
 
 ## Changing your default adapter
 
-By default, if you do not set `APOS_DB_URI` or `APOS_MONGODB_URI`, apostrophecms defaults to `mongodb://localhost:27017/your-shortName-here`.
+By default, if you do not set `APOS_DB_URI`, Apostrophe defaults to `mongodb://localhost:27017/your-shortName-here`.
 
 For local development, if you always use `sqlite` or `postgres`, you can optionally set the `APOS_DEFAULT_ADAPTER` environment variable to `sqlite` or `postgres` to get the same effect with your preferred database.
 

@@ -179,7 +179,7 @@ Your ApostropheCMS backend requires:
    APOS_S3_KEY=your-s3-key
    APOS_S3_REGION=your-chosen-region
    ```
-   `APOS_DB_URI` accepts a `mongodb://`, `sqlite://`, or `postgres://` connection string, so it works regardless of which database you choose. (The older `APOS_MONGODB_URI` variable still works for MongoDB but is kept only for backward compatibility — prefer `APOS_DB_URI` going forward.) See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for connection string formats.
+   `APOS_DB_URI` accepts a `mongodb://`, `sqlite://`, or `postgres://` connection string, so it works regardless of which database you choose. See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for connection string formats.
 
 There are several guides for other [deployment options](/guide/hosting.html) and configuring [storage services](/cookbook/using-s3-storage.html) in the main ApostropheCMS documentation.
 
@@ -252,8 +252,6 @@ You can also use a `netlify.toml` file at the root of your project for configura
 # connection strings, so it's the recommended variable regardless of
 # which database you use. See "Using SQLite or PostgreSQL Instead of
 # MongoDB" in the main documentation for connection string formats.
-# (APOS_MONGODB_URI still works for MongoDB but is kept only for
-# backward compatibility.)
 NODE_ENV=production
 APOS_DB_URI=your_database_connection_string
 APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key

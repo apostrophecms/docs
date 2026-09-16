@@ -8,11 +8,11 @@ Most people don't need to install MongoDB! You can also use SQLite, which requir
 
 **Option 1: MongoDB Atlas**
 
-Consider skipping local installation altogether. MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_MONGODB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
+Consider skipping local installation altogether. MongoDB offers a hosted version of the server, [MongoDB Atlas](https://www.mongodb.com/atlas/database), that offers a free tier and doesn't require any local software installation. You can set a connection string for a hosted instance using the `APOS_DB_URI` environment variable or by setting the options of the [`@apostrophecms/db` module](/reference/modules/db.html) at the project level.
 
 For example:
 ```bash
-export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
+export APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
 **Option 2: Docker**
