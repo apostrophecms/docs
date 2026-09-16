@@ -6,21 +6,28 @@ We recommend hosting Apostrophe in self-hosted production environments with the 
 
 | Software | Minimum Version |
 | ------------- | ------------- |
-| Ubuntu | 22.04+ |
+| Ubuntu | 22.04+ (24.04 recommended) |
 | [NGINX](https://www.nginx.com/) (or another reverse proxy like Caddy, Traefik) | Latest |
-| [Node.js](https://nodejs.org/en/) | 20.x+ |
-| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/)  | 7.0+ (tested through 8.0) |
+| [Node.js](https://nodejs.org/en/) | 22.x+ (24.x recommended) |
+| Database (choose one, via the `db-connect` layer) | See below |
 
+ApostropheCMS supports three database backends through the [`db-connect`](https://github.com/apostrophecms/apostrophe/blob/main/packages/db-connect/README.md) layer: MongoDB, PostgreSQL, and SQLite. See [Choosing a Database](/guide/choosing-a-database.md) for guidance on which is the best fit for your project, and [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for setup and switching details.
+
+| Database | Minimum Version |
+| ------------- | ------------- |
+| [MongoDB](https://docs.mongodb.com/manual/administration/install-community/) | 7.0+ (tested through 8.0) |
+| [PostgreSQL](https://www.postgresql.org/) | Recent stable release |
+| [SQLite](https://www.sqlite.org/) | N/A (file-based, bundled via `better-sqlite3`) |
 
 | Hardware specification | Minimum recommendation |
 | ------------- | ------------- |
 | RAM | **2GB** (to support the application and database) |
 | Disk space | **20GB** (see note below) |
 
-1GB of RAM may be sufficient if using a remote database service (e.g., MongoDB Atlas). Sites running in a multicore configuration will require additional 2G or more RAM and, of course, CPU cores.
+1GB of RAM may be sufficient if you use a remote database service (e.g., MongoDB Atlas or a managed PostgreSQL provider) or SQLite, since neither runs a separate database server on the same machine. Sites running in a multicore configuration will require additional 2G or more RAM and, of course, CPU cores.
 
 ::: info
-MongoDB requires a minimum of 5GB free disk space at all times. Small websites may not need much more additional space than that. We have found that 20GB is sufficient for most Apostrophe applications, but more space may be necessary to handle an especially large number of file uploads or especially large uploaded files.
+If using MongoDB, it requires a minimum of 5GB free disk space at all times. Small websites may not need much more additional space than that. We have found that 20GB is sufficient for most Apostrophe applications, but more space may be necessary to handle an especially large number of file uploads or especially large uploaded files. SQLite and PostgreSQL have different storage profiles; see [Choosing a Database](/guide/choosing-a-database.md) for details.
 :::
 
 ## Deployment basics
@@ -40,7 +47,7 @@ Apostrophe includes performance enhancements when in "production mode." In produ
 
 ### Run multiple processes
 
-Running the website on multiple server processes is always a good idea in the production environment. You should run at least two processes to guarantee availability if one process is restarting, even if you only have one CPU core. If you have more than two CPU cores, you may run additional processes, one per additional core. If you have a lot of capacity, you might want to reserve a core for MongoDB.
+Running the website on multiple server processes is always a good idea in the production environment. You should run at least two processes to guarantee availability if one process is restarting, even if you only have one CPU core. If you have more than two CPU cores, you may run additional processes, one per additional core. If you have a lot of capacity and are self-hosting a database on the same server (MongoDB or PostgreSQL), you might want to reserve a core for it.
 
 We recommend using a utility such as [PM2](https://pm2.keymetrics.io/) to start and run these processes. PM2 will also restart the processes in the rare case of a crash.
 

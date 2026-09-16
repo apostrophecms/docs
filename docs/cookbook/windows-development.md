@@ -31,12 +31,12 @@ We recommend that you use WSL2. If you have WSL1, here are [Microsoft's upgrade 
 If you have never installed WSL before, WSL2 will be the default. The rest of this article assumes a first-time install of WSL2.
 :::
 
-First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular, we strongly recommend that you [install Ubuntu 22.04 LTS, which can also be done from the Windows app store](https://apps.microsoft.com/store/detail/ubuntu-2004/9N6SVWS3RX71?hl=en-us&gl=US). This method was tested for this article. Newer versions of Ubuntu might not support everything covered here, and 22.04 is supported without charge until 2027.
+First, you must [install WSL according to the documentation](https://docs.microsoft.com/en-us/windows/wsl/install). In particular, we strongly recommend that you install Ubuntu 24.04 LTS, either by running `wsl --install -d Ubuntu-24.04` from Powershell or by installing "Ubuntu 24.04 LTS" from the Microsoft Store. Ubuntu 24.04 is supported without charge until 2029.
 
-Second, launch Ubuntu 22.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl ~`.
+Second, launch Ubuntu 24.04 from the Start menu to access the Linux shell prompt. If you did not install Ubuntu via the Windows Store, you might need to access the prompt a different way, for instance by launching Powershell and typing `wsl ~`.
 
 ::: info
-From here on out, all commands are intended to be typed at the Ubuntu 22.04 shell prompt, not the regular Windows command or Powershell prompt.
+From here on out, all commands are intended to be typed at the Ubuntu 24.04 shell prompt, not the regular Windows command or Powershell prompt.
 :::
 
 ## Installing Node.js and npm
@@ -44,26 +44,30 @@ From here on out, all commands are intended to be typed at the Ubuntu 22.04 shel
 Next, install [nvm](https://github.com/nvm-sh/nvm). `nvm` is a great little utility that lets us run any version of Node.js we want without fussing with operating system packages. The correct command for installation changes over time, so [follow the official nvm installation guide](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating). **Do not** follow nvm installation guides meant for the Windows command prompt. We want the plain vanilla Linux instructions.
 
 ::: warning
-You will need to exit the Ubuntu 22.04 window and open a new one after you complete the `nvm` installation step above. Otherwise, the `nvm install` command in the next step will cause a Command Not Found error.
+You will need to exit the Ubuntu 24.04 window and open a new one after you complete the `nvm` installation step above. Otherwise, the `nvm install` command in the next step will cause a Command Not Found error.
 :::
 
-Now, install and start Node.js 18.x with this command:
+Now, install and start Node.js 24.x with this command:
 
 ```bash
-nvm install 22
+nvm install 24
 ```
 
 In the future, you can just type:
 
 ```bash
-nvm use 22
+nvm use 24
 ```
 
 ::: warning
-If this produces a "command not found" error, you most likely did not install `nvm` yet, or you did not restart your Ubuntu 22.04 window after installing `nvm`.
+If this produces a "command not found" error, you most likely did not install `nvm` yet, or you did not restart your Ubuntu 24.04 window after installing `nvm`.
 :::
 
 ## Installing MongoDB
+
+::: tip
+This section covers MongoDB, but ApostropheCMS also supports PostgreSQL and SQLite via the [`db-connect`](/guide/using-sqlite-and-postgres.md) layer. If you just want to get a project running with no database install at all, [choose SQLite instead](/guide/choosing-a-database.md) and skip this section entirely.
+:::
 
 Now we'll need to provide a connection to a MongoDB instance. We can either use Atlas, create a Docker container to serve our database by following these [instructions](/guide/dockerized-mongodb.md), or install the MongoDB community server.
 
@@ -84,7 +88,7 @@ curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
   sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
   --dearmor
 
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
 
 sudo apt-get update
 sudo apt-get install -y mongodb-org
@@ -109,7 +113,7 @@ mongod --dbpath=/home/apostrophe/mongodb-data/8.0
 ```
 
 ::: warning
-Since `--dbpath` doesn't understand `~` as a shortcut for "my home directory" in WSL2, we've used the full path to our home directory here. In this case, we chose the username `apostrophe` when we set up Ubuntu 22.04. If you're not sure what username you created when you installed Ubuntu 22.04, type `echo $HOME` to find out.
+Since `--dbpath` doesn't understand `~` as a shortcut for "my home directory" in WSL2, we've used the full path to our home directory here. In this case, we chose the username `apostrophe` when we set up Ubuntu 24.04. If you're not sure what username you created when you installed Ubuntu 24.04, type `echo $HOME` to find out.
 :::
 
 You'll see quite a bit of output, and the command prompt should **not** return. It should just keep running — and that's exactly what we want. You should **leave it running in this window for as long as you're working with ApostropheCMS, and open another, separate Ubuntu Window** to continue your work.
@@ -180,10 +184,10 @@ You can still access your Windows files at `/mnt/c/`, `/mnt/d/`, etc., but use t
 
 ## Installing ApostropheCMS
 
-Now we're ready to install the Apostrophe CLI (Command Line Interface)! To get started, **open a second Ubuntu 22.04 window**, and in that Window type:
+Now we're ready to install the Apostrophe CLI (Command Line Interface)! To get started, **open a second Ubuntu 24.04 window**, and in that Window type:
 
 ```bash
-nvm use 22
+nvm use 24
 ```
 
 Now you're ready to use the current stable version of Node.js in this shell.
