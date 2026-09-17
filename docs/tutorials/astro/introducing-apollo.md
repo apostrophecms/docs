@@ -195,10 +195,10 @@ export APOS_EXTERNAL_FRONT_KEY=your-secret-key-here
 # no further environment variables needed
 
 # MongoDB Atlas: Use the connection string from Atlas dashboard
-export APOS_MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>
+export APOS_DB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>
 
 # Local MongoDB on different port:
-export APOS_MONGODB_URI=mongodb://localhost:27018
+export APOS_DB_URI=mongodb://localhost:27018
 ```
 
 For MongoDB Atlas users: Replace `<username>`, `<password>`, `<cluster>`, and `<dbname>` with your actual Atlas connection details found in the Atlas dashboard under "Connect to Database".

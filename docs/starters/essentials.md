@@ -29,13 +29,13 @@ This Starter Kit, also known as a boilerplate project, serves as a template for 
 > Note that if you are connecting to an MongoDB Atlas instance you should add your connection string to the `APOS_DB_URI` environment variable first. Use:
 
   ``` sh
-  export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
+  export APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
   ```
 
-2. **Manual Setup**: Manually `git clone` this repository and install its dependencies using `npm install`. Then add an initial admin user with `node app @apostrophecms/user:add admin admin`. Again, if using a MongoDB Atlas instance set the `APOS_MONGODB_URI` environment variable first using:
+2. **Manual Setup**: Manually `git clone` this repository and install its dependencies using `npm install`. Then add an initial admin user with `node app @apostrophecms/user:add admin admin`. Again, if using a MongoDB Atlas instance set the `APOS_DB_URI` environment variable first using:
 
 ``` sh
-export APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
+export APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority"
 ```
 
 For those who need to create multiple projects with additional base modules, consider [forking this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) into your organizational or personal GitHub account. Customize it to fit your needs, then clone it directly:

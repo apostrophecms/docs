@@ -121,7 +121,7 @@ In the Railway dashboard, open your backend service and go to **Variables**. Add
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `MONGODB_URI` | Atlas connection URI (mark sensitive) | `mongodb+srv://...` |
+| `APOS_DB_URI` | Atlas connection URI (mark sensitive) | `mongodb+srv://...` |
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret — must match the Vercel frontend | `a-long-random-string` |
 | `APOS_BASE_URL` | Astro staging frontend URL (set after Part 2) | `https://your-project.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
@@ -469,7 +469,7 @@ Then confirm the following:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `MONGODB_URI` | Atlas connection URI | `mongodb+srv://...` |
+| `APOS_DB_URI` | Atlas connection URI | `mongodb+srv://...` |
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret (must match frontend) | `a-long-random-string` |
 | `APOS_BASE_URL` | Astro staging frontend URL | `https://your-project.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
@@ -512,7 +512,7 @@ Confirm `ASTRO_ADAPTER=vercel` is set in Vercel environment variables for the st
 The **Ignored Build Step** command was not saved. Go to **Settings → Git** in `my-project-production` and confirm `exit 1` is set.
 
 **Atlas connection fails on Railway**  
-Check that special characters in the Atlas password are percent-encoded in the `MONGODB_URI` value. See the note in section 1.1.
+Check that special characters in the Atlas password are percent-encoded in the `APOS_DB_URI` value. See the note in section 1.1.
 
 **`@astrojs/vercel` peer dependency warning during install**  
 Pin to `@astrojs/vercel@8` for Astro v5 compatibility. See version note in section 2.1.

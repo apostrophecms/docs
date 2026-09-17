@@ -185,7 +185,7 @@ Before starting up you'll need to create an admin-level user, either in your Atl
 
 Atlas Database
 ```bash
-APOS_MONGODB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
+APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
 
@@ -200,7 +200,7 @@ node app @apostrophecms/user:add my-user admin
 ::: tip
 * When using MongoDB Atlas, it's a good practice to enclose your entire connection string in quotes to prevent any issues with special characters. Also, use percent-encoding for special characters in your password.
 
-* Consider exporting your `APOS_MONGODB_URI` environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
+* Consider exporting your `APOS_DB_URI` environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
 :::
 
 ### Finishing touches
@@ -226,7 +226,7 @@ modules/@apostrophecms/express/index.js
 
 ### Starting up the website
 
-Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_MONGODB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in server code, rebuild as needed, then refresh the browser when it detects any. Astro-based starters serve the site on `http://localhost:4321`; Standalone starters serve it on `http://localhost:3000`. Log in with the username and password you created at `/login` on that same host and port.
+Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_DB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in server code, rebuild as needed, then refresh the browser when it detects any. Astro-based starters serve the site on `http://localhost:4321`; Standalone starters serve it on `http://localhost:3000`. Log in with the username and password you created at `/login` on that same host and port.
 
 ::: tip
 If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js`.
