@@ -108,25 +108,25 @@ Migrations like this only need to be run once because on future updates or inser
 
 ## Use in templates
 
-The Nunjucks [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) tag can help print textarea strings with line breaks.
+To print textarea strings with line breaks in a JSX template, split on newlines. Escaping is automatic — JSX escapes every interpolated value — so only tag-stripping and the line-break split need writing out explicitly:
+
+```jsx
+<>
+  <h2>{piece.dogName}</h2>
+  <p>
+    {(piece.biography || '')
+      .replace(/(<([^>]+)>)/ig, '')
+      .split('\n')
+      .map((line, i) => <>{i > 0 && <br />}{line}</>)}
+  </p>
+</>
+```
+
+In a Nunjucks template, the [nl2br](https://mozilla.github.io/nunjucks/templating.html#nl2br) filter handles the line breaks:
 
 ```nunjucks
 <h2>{{ data.piece.dogName }}</h2>
 <p>
   {{ data.piece.biography | striptags(true) | escape | nl2br }}
 </p>
-```
-
-In a JSX template, escaping is automatic — JSX escapes every interpolated value — so only tag-stripping and the line-break split need writing out explicitly:
-
-```jsx
-<>
-  <h2>{piece.dogName}</h2>
-  <p>
-    {piece.biography
-      .replace(/(<([^>]+)>)/ig, '')
-      .split('\n')
-      .map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)}
-  </p>
-</>
 ```

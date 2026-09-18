@@ -38,10 +38,10 @@ As explained on the [pages guide](/guide/pages.md#connecting-pages-with-page-tre
   ```jsx
   // 👇 `home` arrives the same way `page` does: as a property of the
   // data object passed to every template, layout included.
-  export default function({ home, main }, { Extend }) {
+  export default function({ outerLayout, home, main }, { Extend }) {
     return (
       <Extend
-        templateName="outerLayoutBase"
+        templateName={outerLayout}
         main={
           <div>
             <header>

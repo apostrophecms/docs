@@ -370,48 +370,82 @@ The default implementation calls the internal `stylesheetScopedRender` method wh
 - Determines whether to use inline styles vs. `<style>` tag based on presence of selectors/media queries
 - Handles all the same field properties as global styles
 
-## Nunjucks helpers (widget styles only)
+## Widget style methods (widget styles only)
 
-The following helpers are used for **widget styles** when `stylesWrapper: false` is set on a widget type, giving developers manual control over style application.
+The following methods are used for **widget styles** when `stylesWrapper: false` is set on a widget type, giving developers manual control over style application. In a JSX template, call them directly on `apos.styles`. Nunjucks templates use the [template helpers](#nunjucks-helpers-widget-styles-only) described below, which wrap these same methods.
 
-### `apos.styles.render(widget)`
+### `apos.styles.prepareWidgetStyles(widget)`
 
 Prepare styles for a widget instance. Used when `stylesWrapper: false` is set on the widget.
 
 **Parameters:**
 - `widget` (Object): Widget data object
 
-**Returns:** Object with style data for use with other helpers:
+**Returns:** Object with style data for use with the other methods:
 - `css` (String): Scoped CSS
 - `classes` (Array): Class names
 - `inline` (String): Inline styles
 - `styleId` (String): Unique ID for this instance
 - `widgetId` (String): Widget's `_id`
 
-### `apos.styles.elements(styles)`
+### `apos.styles.getWidgetElements(styles, { scene })`
 
 Generate `<style>` tag with scoped CSS for a widget.
 
 **Parameters:**
-- `styles` (Object): Result from `apos.styles.render(widget)`
+- `styles` (Object): Result from `apos.styles.prepareWidgetStyles(widget)`
+- `scene` (String): Optional. Needed for breakpoint-preview support in the admin UI
 
-**Returns:** HTML string with `<style>` element and data attributes linking it to the widget instance
+**Returns:** HTML string with `<style>` element and data attributes linking it to the widget instance. In JSX, insert it with `dangerouslySetInnerHTML`, not as a plain child.
 
-### `apos.styles.attributes(styles, additionalAttributes, options)`
+### `apos.styles.getWidgetAttributes(styles, additionalAttributes, options)`
 
-Generate HTML attributes string for widget wrapper element.
+Generate HTML attributes for the widget wrapper element.
 
 **Parameters:**
-- `styles` (Object): Result from `apos.styles.render(widget)`
+- `styles` (Object): Result from `apos.styles.prepareWidgetStyles(widget)`
 - `additionalAttributes` (Object): Additional HTML attributes to merge (optional)
   - `class` and `style` attributes are intelligently merged
   - Other attributes are added directly
 - `options` (Object): Configuration (optional)
   - `asObject` (Boolean): Return attributes as object instead of string
 
-**Returns:** String of HTML attributes (default) or object if `asObject: true`
+**Returns:** String of HTML attributes (default) or object if `asObject: true`. In JSX, pass `{ asObject: true }`: the returned object uses literal HTML attribute keys (`class`, `style`), which are exactly what Apostrophe's JSX runtime expects, so it can be spread directly onto an element.
 
-**Example usage in template:**
+**Example usage in a JSX template:**
+
+```jsx
+export default function({ widget }, { apos }) {
+  const styles = apos.styles.prepareWidgetStyles(widget);
+
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{
+        __html: apos.styles.getWidgetElements(styles)
+      }} />
+      <article {...apos.styles.getWidgetAttributes(styles, { class: 'my-class' }, { asObject: true })}>
+        {/* widget content */}
+      </article>
+    </>
+  );
+}
+```
+
+::: warning
+Don't also pass `className` on an element carrying spread `apos.styles` attributes — the object already contains a literal `class` key, and JSX's `className` → `class` translation would add a second `class` attribute rather than merging with it.
+:::
+
+## Nunjucks helpers (widget styles only)
+
+In a Nunjucks template, use these helpers instead. Each is a thin wrapper that calls `self.apos.template.safe()` around the matching module method above, and takes the same parameters.
+
+| Nunjucks helper | Module method |
+| --- | --- |
+| `apos.styles.render(widget)` | [`apos.styles.prepareWidgetStyles(widget)`](#apos-styles-preparewidgetstyles-widget) |
+| `apos.styles.elements(styles)` | [`apos.styles.getWidgetElements(styles, { scene })`](#apos-styles-getwidgetelements-styles-scene), without the `scene` option |
+| `apos.styles.attributes(styles, additionalAttributes, options)` | [`apos.styles.getWidgetAttributes(styles, additionalAttributes, options)`](#apos-styles-getwidgetattributes-styles-additionalattributes-options) |
+
+**Example usage in a Nunjucks template:**
 
 ```nunjucks
 {%- set styles = apos.styles.render(data.widget) -%}
@@ -420,32 +454,6 @@ Generate HTML attributes string for widget wrapper element.
   <!-- widget content -->
 </article>
 ```
-
-## JSX equivalents (widget styles only)
-
-The three Nunjucks helpers above are thin wrappers, each calling `self.apos.template.safe()` around a plain module method also defined on this module. In JSX, call the underlying methods directly on `apos.styles` — there is no `helpers.styles` detour required, unlike some other modules' template helpers.
-
-### `apos.styles.prepareWidgetStyles(widget)`
-
-Equivalent to `apos.styles.render(widget)`. Same parameters and return value.
-
-### `apos.styles.getWidgetElements(styles, { scene })`
-
-Equivalent to `apos.styles.elements(styles)`, with one addition: an optional `scene` option (needed for breakpoint-preview support in the admin UI). Returns the same raw `<style>` HTML string, so insert it with `dangerouslySetInnerHTML`, not as a plain child.
-
-### `apos.styles.getWidgetAttributes(styles, additionalAttrs, options)`
-
-Equivalent to `apos.styles.attributes(styles, additionalAttributes, options)`. The returned object (with `{ asObject: true }`) uses literal HTML attribute keys (`class`, `style`), which are exactly what Apostrophe's JSX runtime expects — spread it directly onto an element:
-
-```jsx
-<article {...apos.styles.getWidgetAttributes(styles, { class: 'my-class' }, { asObject: true })}>
-  {/* widget content */}
-</article>
-```
-
-::: warning
-Don't also pass `className` on an element carrying spread `apos.styles` attributes — the object already contains a literal `class` key, and JSX's `className` → `class` translation would add a second `class` attribute rather than merging with it.
-:::
 
 ## REST API routes (global styles only)
 

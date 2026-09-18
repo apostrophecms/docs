@@ -442,9 +442,9 @@ Give the parent the invariant part and let it expose a slot for what varies:
 <AposCodeBlock>
 
 ```jsx
-export default function({ beforeMain, children }, { Template }) {
+export default function({ outerLayout, beforeMain, children }, { Template }) {
   return (
-    <Template templateName="outerLayoutBase"
+    <Template templateName={outerLayout}
       beforeMain={
         <>
           <Navigation />
@@ -529,7 +529,7 @@ That asymmetry determines how to migrate a project. Two orderings work; the hybr
 
 **Bottom-up (recommended): convert leaves first.** Rename `page.html` files to `page.jsx` one at a time. Each new `page.jsx` extends the existing `layout.html` with `<Extend templateName="layout" … />`. Other `page.html` files continue to work unchanged because they still extend a `.html` layout.
 
-**Top-down in one cut: convert a whole inheritance chain together.** Once every `page.html` that extends `layout.html` is gone (either deleted or converted to `.jsx`), you can rename `layout.html` to `layout.jsx`. The new `layout.jsx` extends the core outer layout with `<Extend templateName="outerLayoutBase" … />`.
+**Top-down in one cut: convert a whole inheritance chain together.** Once every `page.html` that extends `layout.html` is gone (either deleted or converted to `.jsx`), you can rename `layout.html` to `layout.jsx`. The new `layout.jsx` extends the core outer layout with `<Extend templateName={data.outerLayout} … />`.
 
 **Hybrid: don't.** Don't leave any `.html` template extending a `.jsx` template. That combination cannot work.
 
