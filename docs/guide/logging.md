@@ -207,8 +207,12 @@ If the logger holds a resource — a transport, a connection, a buffer — it sh
 <AposCodeBlock>
 
 ```javascript
+import pino from 'pino';
+
+// ...
+
 log: {
-  logger: 'pino',
+  logger: pino(),
   messageAs: 'msg',
   filter: {
     '*': {

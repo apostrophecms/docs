@@ -18,12 +18,16 @@ Configuring `logger`, `messageAs`, and `filter` on this module still works, but 
 
 |  Property | Type | Description |
 |---|---|---|
-| [`logger`](#logger) | Object/Function | Optional. Used for outputting logs to third-party packages or custom logging functions. |
+| [`logger`](#logger) | Object | Optional. Used for outputting logs to third-party packages or custom logging functions. |
 | [`messageAs`](#messageas) | String | Optional. If this option is set, it converts the log notification from a string and object to just an object with the `messageAs` string as a property with the notification string as value. |
 | [`filter`](#filter) | Object | Optional. Takes named objects that determine what log notices are emitted |
 
 ### `logger`
-The `logger` option can take an object or a function. Any passed function should take `apos` and return an object of methods. Alternatively, the object can be passed directly to `logger`. The object should include methods for `debug()`, `info()`, `warn()`, and `error()` — this is validated when the logger is built, so a misconfigured logger fails loudly at startup rather than silently at the first warning. An example implementation of these methods can be found in the Apostrophe [`util/lib/logger.js` file](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js). Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event. Typically the `logger` takes a third-party logging package as value.
+The `logger` option takes an object, typically a configured instance of a third-party logging package. The object should include methods for `debug()`, `info()`, `warn()`, and `error()` — this is validated when the logger is built, so a misconfigured logger fails loudly at startup rather than silently at the first warning. An example implementation of these methods can be found in the Apostrophe [`util/lib/logger.js` file](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js). Optionally, this object can also include a `destroy()` method that will be called and awaited during the `apostrophe:destroy` event.
+
+::: warning
+This module also accepts a function that takes `apos` and returns a logger object. That form is deprecated, kept only for backward compatibility, and not supported by the top-level `log` option in `app.js`. Pass the logger object directly instead.
+:::
 
 The example below configures `logger` on this legacy module directly. For a new project, set the same option under the top-level `log` option in `app.js` instead — see [Popular package setup](/guide/logging.md#popular-package-setup) in the guide for the equivalent Pino, Winston, and Bunyan examples in that form.
 
@@ -114,9 +118,11 @@ The `filter` option allows for the selection of a subset of log notifications. I
 <AposCodeBlock>
 
 ```javascript
+const { pino } = require('pino');
+
 module.exports = {
   options: {
-    logger: 'pino',
+    logger: pino(),
     messageAs: 'msg',
     filter: {
       // By module name, or *. We can specify any mix of severity levels and specific event types,
