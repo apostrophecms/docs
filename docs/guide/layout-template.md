@@ -98,7 +98,30 @@ The `beforeMain`, `main`, and `afterMain` regions are inside the section that Ap
 :::
 
 ::: warning
-A `.jsx` layout can only be extended by `.jsx` templates. A `.html` template can never extend a `.jsx` layout. Any core-provided Nunjucks template that extends the project's layout by name needs a project-level `.jsx` shadow with the same name, or it will throw instead of rendering. `@apostrophecms/page`'s `notFound.html` is the one every project has.
+Only `.jsx` templates can extend a `.jsx` layout. A `.html` template that extends it throws an error instead of rendering.
+
+That includes templates you didn't write yourself, most commonly the 404 page. Current starter kits already include a JSX 404 template at `modules/@apostrophecms/page/views/notFound.jsx`. If you're converting an older project, check that folder before you switch to `layout.jsx`. If it has a `notFound.html`, or no 404 template at all so core's `notFound.html` is used, **create `notFound.jsx` there** and delete any project-level `notFound.html`. Apostrophe then uses your JSX version instead.
+
+<AposCodeBlock>
+
+```jsx
+export default function(data, { Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      title="404 - Page not found"
+      main={<p>We're sorry. We couldn't find the page you're looking for.</p>}
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/page/views/notFound.jsx
+</template>
+</AposCodeBlock>
+
+Do the same for any other `.html` template in your project, or in a module you installed, that extends `layout`.
 :::
 
 ## Nunjucks layouts
