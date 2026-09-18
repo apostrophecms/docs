@@ -471,6 +471,93 @@ Second, it shows the import of the `AposArea` component that is used to easily o
 You can pass any number of props to the `AposArea` component besides the required `area` named prop. You just need to have your widget template destructure those props from the `Astro.props` to use them. This is shown with the implementation of the core `ImageWidget.astro` component and the author piece image in the `backend/src/layouts/article-layouts/HeroGrid.astro` template.
 :::
 
+### Editing Fields in Place
+
+An area is not the only thing an editor can change without opening a modal. A `string` or `richText` schema field can be rendered directly into your Astro markup with the `AposField` component and edited right where it sits on the page.
+
+Start by adding a couple of such fields to the page type:
+
+<AposCodeBlock>
+
+```javascript
+import { getWidgetGroups } from '../../lib/helpers/area-widgets.js';
+
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Default Page'
+  },
+  fields: {
+    add: {
+      headline: {
+        type: 'string',
+        label: 'Headline',
+        wysiwyg: true
+      },
+      introduction: {
+        type: 'richText',
+        label: 'Introduction',
+        wysiwyg: true
+      },
+      main: {
+        type: 'area',
+        options: getWidgetGroups({
+          includeLayouts: true
+        })
+      }
+    },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: [
+          'headline',
+          'introduction',
+          'main'
+        ]
+      }
+    }
+  }
+};
+```
+  <template v-slot:caption>
+    backend/modules/default-page/index.js
+  </template>
+</AposCodeBlock>
+
+The `wysiwyg: true` setting is the part that is specific to Astro. ApostropheCMS never sees your Astro templates, so it has no way of knowing which of a page's fields you intend to render in place — and a page carries dozens it never will, every SEO and Open Graph field among them. Marking a field tells the backend to send that field's rendered markup, and the editing information to go with it, along with the page data. Nunjucks and JSX templates, which the backend renders itself, need no such opt-in.
+
+Note that the *rendered markup* is half of what the mark buys you. A `richText` field stores links to other ApostropheCMS documents as placeholders rather than URLs, and only the backend can turn them into real URLs — so mark a field you render through `AposField` even if you never intend it to be edited, and pass `edit={false}` to leave the editor out.
+
+::: info
+Rather than repeating `wysiwyg: true` on each field, you can list them all at once with the module's `wysiwygFields` option, e.g. `options: { wysiwygFields: [ 'headline', 'introduction' ] }`. Either way ApostropheCMS validates the names at startup, so a typo is caught immediately rather than showing up as a field that mysteriously refuses to be edited.
+:::
+
+Now render them in the template alongside the area:
+
+<AposCodeBlock>
+
+```astro
+---
+import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
+import AposField from '@apostrophecms/apostrophe-astro/components/AposField.astro';
+const { page, user, query } = Astro.props.aposData;
+const { main } = page;
+---
+<AposField doc={page} name="headline" tag="h1" class="article__headline" />
+<AposField doc={page} name="introduction" />
+<section class="main-content astro-default-content">
+  <AposArea area={main} />
+</section>
+```
+  <template v-slot:caption>
+    frontend/src/templates/DefaultPage.astro
+  </template>
+</AposCodeBlock>
+
+Note that `AposField` takes the document itself, not the value: the editor needs to know which field of which document it is changing. The `tag`, `class`, `style` and `attrs` props control the markup, and the field type picks a sensible tag when you don't give one — a `span` for a single line string, a block element for a `textarea: true` string or a `richText` field. Pass `edit={false}` to display a field without making it editable.
+
+For the whole feature, including how fields of widgets and array items are addressed, see [inline editing](/guide/inline-editing.md#astro).
+
 ### Template Mapping
 
 To connect the backend (ApostropheCMS) and frontend (Astro), we need to map the page type to its template:

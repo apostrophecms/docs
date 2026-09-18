@@ -82,11 +82,16 @@ Beyond the Nunjucks language, Apostrophe adds tags of its own. The most common:
 {# Render an editable area #}
 {% area data.page, 'main' %}
 
+{# Render one schema field, editable in place #}
+{% field data.page, 'headline' with { tag: 'h1' } %}
+
 {# Render an async component #}
 {% component 'blog:recent' with { max: 5 } %}
 ```
 
 `{% area %}` takes the document the field belongs to and the field name. In edit mode Apostrophe wraps it in editing controls; in view mode it renders the widget templates directly.
+
+`{% field %}` does the same for a single `string` or `richText` field: outside of edit mode it outputs the value and nothing else, and in edit mode the editor is mounted in place, so the editor types the headline on the page rather than in a modal. See [inline editing](/guide/inline-editing.md).
 
 Context options can be passed to specific widget types with the `with` keyword:
 
@@ -262,6 +267,7 @@ If you are not migrating, none of this affects you — a wholly Nunjucks project
 ## Further reading
 
 - [Template tag reference](/reference/template-tags.md) — every Apostrophe tag in detail
+- [Inline editing](/guide/inline-editing.md) — `{% field %}`, and its JSX and Astro equivalents
 - [Template filters](/guide/template-filters.md) — built-in and custom filters
 - [Fragments](/guide/fragments.md) — Apostrophe's async-capable alternative to macros
 - [Layout template](/guide/layout-template.md) — the root layout and `data.outerLayout`
