@@ -302,7 +302,7 @@ By default, widget styles are applied automatically with no template modificatio
 
 ## Manual styling control
 
-For complete control over style application, you can opt out of automatic wrapping and use template helpers:
+For complete control over style application, you can opt out of automatic wrapping and apply the styles yourself:
 
 <AposCodeBlock>
 
@@ -323,27 +323,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-Then use the template helpers in your widget template:
-
-<AposCodeBlock>
-
-```nunjucks
-{%- set styles = apos.styles.render(data.widget) -%}
-{{ apos.styles.elements(styles) }}
-
-<article {{ apos.styles.attributes(styles, { class: 'my-custom-class' }) }}>
-  <h2>{{ data.widget.title }}</h2>
-  <!-- widget content -->
-</article>
-```
-
-<template v-slot:caption>
-  modules/custom-widget/views/widget.html
-</template>
-
-</AposCodeBlock>
-
-In a JSX widget template, reach for the same logic as plain `apos.styles` module methods rather than the `apos.styles.render/elements/attributes` Nunjucks helpers — the helpers are thin wrappers over these for use inside Nunjucks specifically:
+Then prepare and apply the styles yourself in your widget template. In a JSX widget template, call the `apos.styles` module methods directly:
 
 <AposCodeBlock>
 
@@ -379,23 +359,64 @@ export default function({ widget }, { apos }) {
 `getWidgetAttributes()`'s return object uses literal HTML attribute names (`class`, `style`), not JSX names (`className`). Spread it as-is — don't also pass `className` on the same element, or you'll emit two `class` attributes. The same applies to `additionalAttributes`: pass `{ class: '...' }`, not `{ className: '...' }`, or the merge silently misses it.
 :::
 
-### Template helpers (Nunjucks) / module methods (JSX)
+In a Nunjucks widget template, use the `apos.styles.render/elements/attributes` template helpers, which are thin wrappers over the same module methods:
 
-**`apos.styles.render(widget)`** (Nunjucks) / **`apos.styles.prepareWidgetStyles(widget)`** (JSX)
+<AposCodeBlock>
+
+```nunjucks
+{%- set styles = apos.styles.render(data.widget) -%}
+{{ apos.styles.elements(styles) }}
+
+<article {{ apos.styles.attributes(styles, { class: 'my-custom-class' }) }}>
+  <h2>{{ data.widget.title }}</h2>
+  <!-- widget content -->
+</article>
+```
+
+<template v-slot:caption>
+  modules/custom-widget/views/widget.html
+</template>
+
+</AposCodeBlock>
+
+### Module methods (JSX) / template helpers (Nunjucks)
+
+**`apos.styles.prepareWidgetStyles(widget)`** (JSX) / **`apos.styles.render(widget)`** (Nunjucks)
 - Prepares styles for the widget
 - Returns a styles object for use with other helpers
 
-**`apos.styles.elements(styles)`** (Nunjucks) / **`apos.styles.getWidgetElements(styles)`** (JSX)
+**`apos.styles.getWidgetElements(styles)`** (JSX) / **`apos.styles.elements(styles)`** (Nunjucks)
 - Generates the `<style>` tag with scoped CSS
 - Must be called before using the styles
 - In JSX, insert the result with `dangerouslySetInnerHTML` since it's a raw HTML string
 
-**`apos.styles.attributes(styles, additionalAttributes, options)`** (Nunjucks) / **`apos.styles.getWidgetAttributes(styles, additionalAttributes, options)`** (JSX)
+**`apos.styles.getWidgetAttributes(styles, additionalAttributes, options)`** (JSX) / **`apos.styles.attributes(styles, additionalAttributes, options)`** (Nunjucks)
 - Generates HTML attributes for the widget wrapper
 - Merges style classes and inline styles with any additional attributes
 - `additionalAttributes` (optional): Object with additional HTML attributes, keyed by HTML attribute name (`class`, not `className`)
 - `options` (optional): 
   - `asObject: true` - Return attributes as a plain object instead of a string. In JSX this is the form you want, so it can be spread directly onto an element: `{...apos.styles.getWidgetAttributes(styles, {}, { asObject: true })}`
+
+<AposCodeBlock>
+
+```jsx
+<>
+  {/* Basic usage */}
+  <div {...apos.styles.getWidgetAttributes(styles, {}, { asObject: true })}></div>
+
+  {/* With additional attributes */}
+  <article {...apos.styles.getWidgetAttributes(styles, {
+    class: 'fancy-article',
+    'data-category': 'featured'
+  }, { asObject: true })}></article>
+</>
+```
+
+<template v-slot:caption>
+  Example module method usage
+</template>
+
+</AposCodeBlock>
 
 <AposCodeBlock>
 
@@ -415,27 +436,6 @@ export default function({ widget }, { apos }) {
 
 <template v-slot:caption>
   Example template helper usage
-</template>
-
-</AposCodeBlock>
-
-<AposCodeBlock>
-
-```jsx
-<>
-  {/* Basic usage */}
-  <div {...apos.styles.getWidgetAttributes(styles, {}, { asObject: true })}></div>
-
-  {/* With additional attributes */}
-  <article {...apos.styles.getWidgetAttributes(styles, {
-    class: 'fancy-article',
-    'data-category': 'featured'
-  }, { asObject: true })}></article>
-</>
-```
-
-<template v-slot:caption>
-  Example module method usage
 </template>
 
 </AposCodeBlock>

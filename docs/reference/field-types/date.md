@@ -43,13 +43,7 @@ birthday: {
 ## Use in templates
 
 <!-- TODO: Link to the date filter documentation -->
-A date value will often be paired with the date template filter.
-
-```nunjucks
-Their birthday is {{ data.piece.birthday | date('MMMM D, YYYY') }}.
-```
-
-In a JSX template, there's no `date` filter — import `dayjs` directly and call it. See [Template filters](/guide/template-filters.md) for the full filter-to-JSX mapping.
+In a JSX template, format a date value by importing `dayjs` and calling it directly. See [Template filters](/guide/template-filters.md) for the full filter-to-JSX mapping.
 
 ```jsx
 import dayjs from 'dayjs';
@@ -57,4 +51,10 @@ import dayjs from 'dayjs';
 // ...
 
 <>Their birthday is {dayjs(piece.birthday).format('MMMM D, YYYY')}.</>
+```
+
+In a Nunjucks template, a date value is often paired with the `date` template filter:
+
+```nunjucks
+Their birthday is {{ data.piece.birthday | date('MMMM D, YYYY') }}.
 ```
