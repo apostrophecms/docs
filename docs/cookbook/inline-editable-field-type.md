@@ -6,11 +6,15 @@ next: false
 
 ## Introduction
 
-[Inline editing](/guide/inline-editing.md) lets a template put a schema field on the page and let the editor type straight into it. Out of the box that works for [`string`](/reference/field-types/string.md) and [`richText`](/reference/field-types/richText.md). A [custom field type](/guide/custom-schema-field-types.md) can join them.
+[Inline editing](/guide/inline-editing.md) lets a template put a schema field on the page and let the editor change it right there. Out of the box that works for [`string`](/reference/field-types/string.md) and [`richText`](/reference/field-types/richText.md). A [custom field type](/guide/custom-schema-field-types.md) can join them.
 
-In this recipe we build a `markdown` field type: the stored value is Markdown source, the page shows the HTML it renders to, and the editor types the source right there on the page. When they stop typing, the value is patched and the page updates.
+In this recipe we build an `inlineSelect` field type: one choice out of several, shown on the page as a word in a sentence and changed with a `select` element in that same spot. Pick a new choice and the document is patched immediately.
 
-Markdown is a good illustration because the display and the value genuinely differ. Only the server has the Markdown parser, so only the server can say what the page should show — exactly the situation `richText` is in with its permalinks. Everything here applies just as well to a field type whose rendering is a simpler affair.
+A select makes a good illustration for two reasons.
+
+**What is stored is not what is shown.** The document holds `faculty`; the page shows *Faculty*. Only the server knows the choices, so only the server can turn one into the other — exactly the situation `richText` is in with its permalinks. That is what `wysiwygRender` is for.
+
+**The editor is not a text box.** Inline editing is not only about typing. A select changes once, deliberately, so this component saves immediately instead of debouncing keystrokes, and it needs no styling tricks to grow as you type. It is the shortest complete example of the pattern.
 
 Finished, it is used like any other field:
 
@@ -21,22 +25,37 @@ export default {
   extend: '@apostrophecms/piece-type',
   fields: {
     add: {
-      notes: {
-        type: 'markdown',
-        label: 'Release notes',
-        textarea: true
+      affinity: {
+        label: 'Affinity',
+        type: 'inlineSelect',
+        choices: [
+          {
+            label: 'Faculty',
+            value: 'faculty'
+          },
+          {
+            label: 'Student',
+            value: 'student'
+          },
+          {
+            label: 'Employee',
+            value: 'employee'
+          }
+        ]
       }
     }
   }
 };
 ```
   <template v-slot:caption>
-    modules/release/index.js
+    modules/person/index.js
   </template>
 </AposCodeBlock>
 
+Templates render it like any other field too. Here it sits in the middle of a sentence, which is what the field type's choice of tag is for:
+
 ```jsx
-<Field doc={piece} name="notes" with={{ class: 'release__notes' }} />
+<p>Affiliation: <Field doc={piece} name="affinity" />.</p>
 ```
 
 ## What a field type has to provide
@@ -54,85 +73,67 @@ A field type opts in with `wysiwyg: true` and customizes the rest:
 
 None of these replace the ordinary parts of a field type. `convert` still sanitizes and stores the value, and `vueComponent` is still the editor shown in the modal. Inline editing is an addition, not an alternative: the same field is editable both ways.
 
-## Installing the Markdown parser
-
-```bash
-npm install markdown-it
-```
-
 ## The server side
 
 <AposCodeBlock>
 
 ```javascript
-import MarkdownIt from 'markdown-it';
-
-// `html: false` means raw HTML in the source is escaped rather than passed
-// through. Markdown is a convenience for editors, not a way around
-// sanitization, and this is the one line that keeps it that way
-const markdown = new MarkdownIt({
-  html: false,
-  linkify: true,
-  typographer: true
-});
-
 export default {
   icons: {
-    'language-markdown-icon': 'LanguageMarkdown'
+    'form-select-icon': 'FormSelect'
   },
   init(self) {
-    self.addMarkdownFieldType();
+    self.addInlineSelectFieldType();
   },
   methods(self) {
     return {
-      addMarkdownFieldType() {
+      addInlineSelectFieldType() {
         self.apos.schema.addFieldType({
-          name: 'markdown',
-          // The editor shown in the document's modal: a plain string input,
-          // or a textarea for a field configured with `textarea: true`
-          vueComponent: 'AposInputString',
-          def: '',
+          name: 'inlineSelect',
+          // In the document's modal it is an ordinary select field
+          vueComponent: 'AposInputSelect',
+          def: null,
 
           // 👇 Everything from here down is inline editing
 
           // This type can be edited in place
           wysiwyg: true,
-          // Our own component, since the value is not what is displayed
-          wysiwygComponent: 'AposWysiwygInputMarkdown',
-          // Markdown is a block of prose, so a block element
+          // Our own component, since a select is not a text box
+          wysiwygComponent: 'AposWysiwygInputInlineSelect',
+          // A choice is a word in a sentence, not a block of its own
           wysiwygTag() {
-            return 'div';
-          },
-          // So a stylesheet can address it: `.apos-wysiwyg-field--markdown`
-          // is added for us, this adds `--prose` on top of it
-          wysiwygModifiers() {
-            return [ 'prose' ];
+            return 'span';
           },
           // Registered in the `icons` section above
-          wysiwygIcon: 'language-markdown-icon',
-          // The part only the server can do
+          wysiwygIcon: 'form-select-icon',
+          // The page shows the label; the document stores the value. Only the
+          // server knows which is which, so only the server can say this
           async wysiwygRender(req, field, value) {
-            return markdown.render(value || '');
+            const choice = (field.choices || [])
+              .find(choice => choice.value === value);
+            return self.apos.util.escapeHtml(choice ? req.t(choice.label) : '');
           },
 
           // 👆 Everything above is inline editing
 
           convert(req, field, data, destination) {
-            const value = self.apos.launder.string(data[field.name], field.def);
-            if (field.required && !value.length) {
-              throw self.apos.error('required');
-            }
-            destination[field.name] = value;
+            destination[field.name] = self.apos.launder.select(
+              data[field.name],
+              field.choices,
+              field.def
+            );
           },
           index(value, field, texts) {
             texts.push({
-              weight: field.weight || 10,
-              text: value || '',
-              silent: field.silent ?? false
+              weight: field.weight || 15,
+              text: value,
+              // A stored choice is rarely what someone searches for, so stay
+              // out of the search index unless the field asks to be in it
+              silent: field.silent ?? true
             });
           },
           isEmpty(field, value) {
-            return !(value || '').trim().length;
+            return !value;
           }
         });
       }
@@ -141,7 +142,7 @@ export default {
 };
 ```
   <template v-slot:caption>
-    modules/markdown-field/index.js
+    modules/inline-select-field/index.js
   </template>
 </AposCodeBlock>
 
@@ -149,11 +150,11 @@ Don't forget to enable the module in `app.js`, like any other module.
 
 A few things to note:
 
-`wysiwygRender` receives the request, so it can do anything an Apostrophe method can: look up related documents, honor the locale, check a permission. `richText` uses that to resolve permalinks, which is why rich text rendered in place has working internal links.
+`wysiwygRender` receives the request, so it can do anything an Apostrophe method can: look up related documents, honor the locale, check a permission. Here it uses `req.t` so a choice whose label is a translation key is shown in the visitor's language. `richText` uses the same hook to resolve permalinks, which is why rich text rendered in place has working internal links.
 
-Its return value is trusted as markup and inserted unescaped. That is the whole point — the field type is the authority on what its value looks like as HTML — so it is also where the responsibility to sanitize lands. Here `markdown-it` is configured not to pass raw HTML through, so there is nothing to sanitize afterwards.
+Its return value is trusted as markup and inserted unescaped. That is the whole point — the field type is the authority on what its value looks like as HTML — so it is also where the responsibility to escape lands, which is what `escapeHtml` is doing above.
 
-`wysiwygModifiers` returns bare words. Apostrophe prefixes each with `apos-wysiwyg-field--`, alongside the `apos-wysiwyg-field` and `apos-wysiwyg-field--markdown` classes every inline field gets, and any `class` the template passed.
+`wysiwygTag` returns `span` because a choice belongs on a line with other words. Apostrophe notices that the rendered element is inline and lays the editor out inline too, so the sentence reads the same while it is being edited. A type whose value is a block of its own should return `div` instead, which is the default.
 
 ## The browser side
 
@@ -161,92 +162,90 @@ The editing component is an ordinary Vue component in `ui/apos/components`. Mix 
 
 <AposCodeBlock>
 
-```js
+```vue
 <template>
-  <textarea
-    ref="textarea"
-    class="apos-wysiwyg-markdown"
-    rows="1"
+  <select
+    class="apos-wysiwyg-inline-select"
     :value="next"
-    :placeholder="placeholder"
-    :readonly="readOnly"
+    :disabled="readOnly"
     :aria-label="placeholder"
-    @input="onInput"
-    @blur="flush"
-  />
+    @change="update($event.target.value)"
+  >
+    <option
+      v-if="!field.required"
+      value=""
+    >
+      {{ placeholder }}
+    </option>
+    <option
+      v-for="choice in field.choices"
+      :key="choice.value"
+      :value="choice.value"
+    >
+      {{ $t(choice.label) }}
+    </option>
+  </select>
 </template>
 
 <script>
 import AposWysiwygInputMixin from 'Modules/@apostrophecms/schema/mixins/AposWysiwygInputMixin';
 
 export default {
-  name: 'AposWysiwygInputMarkdown',
-  mixins: [ AposWysiwygInputMixin ],
-  mounted() {
-    this.resize();
-  },
-  methods: {
-    onInput(event) {
-      // Saves about once a second while the user is typing, and emits
-      // `context-editing` so the context bar shows work in progress
-      this.updateDebounced(event.target.value);
-      this.resize();
-    },
-    resize() {
-      const el = this.$refs.textarea;
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
-    }
-  }
+  name: 'AposWysiwygInputInlineSelect',
+  mixins: [ AposWysiwygInputMixin ]
 };
 </script>
 
 <style lang="scss" scoped>
-  // Editing should feel like typing on the page, so take the page's own
-  // typography rather than the admin UI's
-  .apos-wysiwyg-markdown {
-    display: block;
-    overflow: hidden;
-    width: 100%;
+  // Editing should feel like changing a word on the page, not filling in a
+  // form, so take the page's own typography and none of the form chrome
+  .apos-wysiwyg-inline-select {
     margin: 0;
     padding: 0;
     border: 0;
     background-color: transparent;
     color: inherit;
     font: inherit;
-    resize: none;
+    letter-spacing: inherit;
+    text-align: inherit;
+    text-transform: inherit;
+    cursor: pointer;
     outline: none;
 
-    &::placeholder {
-      color: inherit;
-      opacity: 0.4;
+    &:disabled {
+      cursor: default;
     }
   }
 </style>
 ```
   <template v-slot:caption>
-    modules/markdown-field/ui/apos/components/AposWysiwygInputMarkdown.vue
+    modules/inline-select-field/ui/apos/components/AposWysiwygInputInlineSelect.vue
   </template>
 </AposCodeBlock>
+
+There is no `methods` section at all. The mixin's `update` is already the right handler for a select, so the template calls it directly.
 
 The mixin gives the component:
 
 | | |
 |---|---|
-| `field` | The schema field definition, as the server composed it, so `field.textarea`, `field.required` and any option of your own are all available |
-| `modelValue` | The stored value — the Markdown source, not the rendered HTML |
+| `field` | The schema field definition, as the server composed it. This is where `field.choices` comes from: the editor never has to ask the server what the choices are |
+| `modelValue` | The stored value — `faculty`, not *Faculty* |
 | `next` | The working copy the component edits. Starts as `modelValue` and follows it if it changes underneath |
 | `placeholder` | The field's `placeholder`, or its `label`, already localized |
 | `readOnly` | True for a `readOnly` field |
 | `update(value)` | Accept a value and save it immediately |
 | `updateDebounced(value)` | Accept a value, signal that the user is typing, and save in about a second. What you want for a keystroke |
 | `flush()` | Save a pending debounced change right now. Call it on blur; the mixin also calls it before unmounting |
+| `focus()` | Put the cursor in the editor, because the user clicked the last crumb of the field's trail. Finds an ordinary form control or a rich text editing area, whether that is the component's own root element — as the `select` is here — or something inside it. Override it if your editor is neither |
+
+::: tip `update` or `updateDebounced`?
+Use `updateDebounced` when the value passes through states the user does not mean — every keystroke of a half-typed word — and `update` when each change is a finished thought. A select is the second kind, which is why nothing here debounces, and why there is no `flush` on blur: there is never a pending change to lose.
+
+Apostrophe's own [`AposWysiwygInputString.vue`](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/schema/ui/apos/components/AposWysiwygInputString.vue) is the other case, and a short read.
+:::
 
 There is no save call to write. When the field belongs to the document the page is about, the mixin patches it through the context bar, which debounces and serializes changes the way the area editor does. When it does not — the same component mounted inside a modal, for instance — it emits `update:modelValue` and `changed` for a parent to deal with. Either way the component's only job is to say what the value is now.
-
-::: tip
-Apostrophe's own [`AposWysiwygInputString.vue`](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/schema/ui/apos/components/AposWysiwygInputString.vue) is a short, complete implementation of the same pattern, including a trick for growing a textarea without measuring anything. It is worth a read before writing your own.
-:::
 
 Remember that admin UI code is only rebuilt when you ask for it. Run with `APOS_DEV=1` or configure `hmr: 'apos'` while working on the component. See [customizing the user interface](/guide/custom-ui.md).
 
@@ -259,15 +258,15 @@ Add the field to a piece type or page type, render it with `Field`, and edit the
 ```jsx
 export default function({ piece }, { Field }) {
   return (
-    <article className="release">
+    <article className="person">
       <Field doc={piece} name="title" with={{ tag: 'h1' }} />
-      <Field doc={piece} name="notes" with={{ class: 'release__notes' }} />
+      <p>Affiliation: <Field doc={piece} name="affinity" />.</p>
     </article>
   );
 }
 ```
   <template v-slot:caption>
-    modules/release-page/views/show.jsx
+    modules/person-page/views/show.jsx
   </template>
 </AposCodeBlock>
 
@@ -276,21 +275,23 @@ Or in Nunjucks:
 <AposCodeBlock>
 
 ```nunjucks
-<article class="release">
+<article class="person">
   {% field data.piece, 'title' with { tag: 'h1' } %}
-  {% field data.piece, 'notes' with { class: 'release__notes' } %}
+  <p>Affiliation: {% field data.piece, 'affinity' %}.</p>
 </article>
 ```
   <template v-slot:caption>
-    modules/release-page/views/show.html
+    modules/person-page/views/show.html
   </template>
 </AposCodeBlock>
 
-Clicking the notes should replace the rendered HTML with the Markdown source, in the page's own type, and typing should update the document a second later.
+Logged out, the page says `Affiliation: Faculty.` — one `span`, no editor, no second copy of the value. Editing the page turns that same word into a select, on the same line, in the page's own type. Choosing *Student* patches the document right away and the sentence reads `Affiliation: Student.`
+
+A field with no value yet renders as an empty element, which is nothing to look at but is still there to click: in edit mode the select appears in its place with the label as its placeholder.
 
 ## Astro and other external fronts
 
-Nothing above changes, but each field that a front end renders in place has to say so, with `wysiwyg: true` in its definition or by being named in its module's `wysiwygFields` option. Apostrophe sends an external front its data before the templates run, so it cannot work out which fields are involved on its own. See [Astro](/guide/inline-editing.md#astro).
+Nothing above changes, but each field that a front end renders in place has to say so, with `wysiwyg: true` in its definition or by being named in its module's `wysiwygFields` option. Apostrophe sends an external front its data before the templates run, so it cannot work out which fields are involved on its own. This matters even for a field nobody will edit, because the rendered markup — *Faculty* rather than `faculty` — travels with that annotation. See [Astro](/guide/inline-editing.md#astro).
 
 ## Related
 

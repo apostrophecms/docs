@@ -53,7 +53,7 @@ Outside of edit mode, the field is exactly the tag your template asked for, carr
 In edit mode:
 
 - The editor is mounted **in place**, inheriting the page's own typography, and taking up no more room than the markup it replaced. Nothing on the page moves when editing begins.
-- Approaching a field outlines it and raises the same breadcrumb trail a widget has, opening with an icon for the field type. A field inside a widget is preceded in the trail by that widget, and by whatever contains it.
+- Approaching a field outlines it and raises the same breadcrumb trail a widget has, opening with an icon for the field type. A field inside a widget is preceded in the trail by that widget, and by whatever contains it. Clicking the crumb that names the field puts the cursor in it.
 - An empty field shows its `placeholder`, or its `label` if it has no placeholder.
 - Changes are saved the way an area on the page is saved: patched on the fly, one field at a time, debounced and serialized.
 
