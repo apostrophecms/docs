@@ -1,89 +1,8 @@
-# Layout templates
+# ApostropheCMS layout templates
 
 A layout template is common in most Apostrophe apps. As the name suggests, it **contains the markup that surrounds page content and is mostly consistent across the website**. Website navigation and footers are both usually in the layout template, whether directly as markup or included from template partials.
 
-**Let's look at a simple layout template file at `views/layout.html`.**
-
-<AposCodeBlock>
-
-``` nunjucks
-{% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
-
-{# 👇 Inserting markup into a lower level template block #}
-{% block beforeMain %}
-<div>{# Open page wrapper #}
-  <header>
-    <img src="/images/logo.png" alt="Organization logo">
-    <nav>{# Website navigation #}</nav>
-    {% if not data.user %}<a href="/login">Login</a>{% endif %}
-  </header>
-  <main>{# Open main tag #}
-{% endblock %}
-
-{% block afterMain %}
-  </main>{# Close main tag #}
-  <footer class="bp-footer">
-    <p>
-      © Apostrophe Technology, Inc.
-    </p>
-  </footer>
-</div>{# Close page wrapper #}
-{% endblock %}
-```
-<template v-slot:caption>
-views/layout.html
-</template>
-</AposCodeBlock>
-
-You might notice is that this does not have essential web page elements such as a `head` or `body` tag. That is because the first thing this template does is extend another template:
-
-``` nunjucks
-{% extends data.outerLayout %}
-```
-
-`data.outerLayout` is a reference to a lower level layout template from Apostrophe core that includes those critical HTML elements, markup required by Apostrophe, and the template block structure that project-level templates use. **The lowest-level templates in any project should extend this.** ([See that file on Github](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
-
-This layout template then includes two template blocks, **`beforeMain` and `afterMain`**, containing markup that wraps most page content.
-
-``` nunjucks
-{% block beforeMain %}
-  {# Page opening markup... #}
-{% endblock %}
-
-{% block afterMain %}
-  {# Page ending markup... #}
-{% endblock %}
-```
-
-These two are before and after the `main` block in the base layout template linked above. By using them in `views/layout.html`, they override the matching blocks in the extended template. They are great places to put the site navigation, site footer, and other markup that should always wrap the main content of the page.
-
-The most important templates blocks from that core layout template are:
-
-| Template block name | What is it? |
-| ------------------- | ----------- |
-| `startHead` | A block at the beginning of the `head` tag for inserting metadata tags. |
-| `title` | The contents of the `title` tag. This defaults to using the title of the page or piece (for [show pages](/guide/piece-pages.md#the-show-page-template)). |
-| `extraHead` | A block at the end of the `head` tag for inserting metadata tags. |
-| `bodyClass` | A block in the `body` tag's `class` attribute for adding a class for when that template is used. |
-| `beforeMain` | A block before the `main` content block. Usually used for the website header. |
-| `main` | The primary block for page content. Most page template markup goes inside `main`. |
-| `afterMain` | A block after the `main` content block. Usually used for the website footer. |
-| `extraBody` | A block at the end of the `body` tag. |
-
-The layout template and any page, index page, or show page template could use these blocks to overwrite them or add to them ([using the `super()` tag](/guide/nunjucks-templates.md#the-super-tag)).
-
-::: info NOTES
-The `beforeMain`, `main`, and `afterMain` blocks are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside those blocks will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related JavaScript belongs in a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets).
-
-`layout.html` is a naming convention in Apostrophe, but is not a required file name. You can name it anything you like. Just remember to  extend `data.outerLayout` and update page templates to extend it by its new name.
-
-**RTL language support:** The `outerLayout` template automatically applies the correct text direction (`dir` attribute) to the `<html>` element based on your locale configuration. See the [localization guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for more information.
-
-:::
-
-## Writing a layout in JSX
-
-A layout can be written as `views/layout.jsx` instead. The block-based shape above doesn't translate directly — a JSX layout doesn't override `outerLayoutBase`'s blocks piecemeal, it renders the whole invariant part itself and exposes props for what each page needs to supply. This also resolves a case the Nunjucks version above can't express cleanly: `beforeMain` and `afterMain` open and close a single `<div>` across two separate blocks, which has no equivalent when there's no block system — a JSX layout renders that wrapping `<div>` in one place, as one component.
+**Let's look at a simple layout template file at `views/layout.jsx`.**
 
 <AposCodeBlock>
 
@@ -128,18 +47,120 @@ views/layout.jsx
 </template>
 </AposCodeBlock>
 
-A page template then extends it and passes only its own content as `main` — it never needs to know what the header or footer render, which is what the Nunjucks version's `super()` calls would otherwise be for:
+You might notice that this does not have essential web page elements such as a `head` or `body` tag. That is because the layout extends another template:
+
+```jsx
+<Extend templateName={data.outerLayout} … />
+```
+
+`data.outerLayout` is a reference to a lower level layout template from Apostrophe core. **The lowest-level templates in any project should extend this.** For a normal page request it points to core's `outerLayout.html`. When Apostrophe refreshes page content during editing, it points to a smaller `refreshLayout.html` instead, which is why layouts extend `data.outerLayout` rather than naming a template directly.
+
+`outerLayout.html` itself contains only one line: it extends `outerLayoutBase.html`. That base template is where the critical HTML elements, the markup required by Apostrophe, and the named regions that project-level templates fill in are defined. ([See `outerLayoutBase.html` on GitHub](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
+
+These core outer layouts are Nunjucks templates, and they are expected to stay that way, since every existing Nunjucks project extends them too. You never need to edit them or write any Nunjucks to use them. A JSX template can extend a Nunjucks template: `<Extend>` turns each prop you pass into the matching `{% block %}` of that template. Here, `title` fills the document `<title>` and `main` fills the page body. See [Extending a Nunjucks template](/guide/jsx-templates.md#extending-a-nunjucks-template-named-block-overrides) for how that bridge works.
+
+The same mechanism is what lets an existing project adopt JSX gradually. A project that still has a Nunjucks `layout.html` can write any new page template in JSX, extending `layout.html` with `<Extend templateName="layout" … />`, and convert its older templates over time. The reverse is not possible: a Nunjucks template can never extend a JSX one. See [Migration order](/guide/jsx-templates.md#migration-order) for the rules.
+
+The layout renders everything that wraps the page content (header, `<main>` element, footer) in one place, inside `main`. Page templates then extend the layout and pass only their own content:
 
 ```jsx
 <Extend templateName="layout" main={<PageContent page={page} />} />
 ```
 
+A page never needs to know what the header or footer render. The layout owns what is shared, and each page supplies only what varies.
+
 ::: tip
-`data` is deliberately not destructured in the layout above. A page template's own props — `title`, `main` — arrive as this template's `data`, so `data.main` here is the page's content prop, not something from the page document itself.
+`data` is deliberately not destructured in the layout above. A page template's own props, such as `title` and `main`, arrive as this template's `data`, so `data.main` here is the page's content prop, not something from the page document itself.
 :::
 
-See [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super) for the general pattern this follows, including the transitional shape for a project converting one page at a time while `layout.html` is still Nunjucks.
+The most important props you can pass to the core outer layout are:
+
+| Prop name | What is it? |
+| ------------------- | ----------- |
+| `startHead` | Markup at the beginning of the `head` tag for inserting metadata tags. |
+| `title` | The contents of the `title` tag. This defaults to using the title of the page or piece (for [show pages](/guide/piece-pages.md#the-show-page-template)). |
+| `extraHead` | Markup at the end of the `head` tag for inserting metadata tags. |
+| `bodyClass` | A string added to the `body` tag's `class` attribute. |
+| `beforeMain` | Markup before the `main` content region. |
+| `main` | The primary region for page content. In a JSX layout, this usually holds the header, page content, and footer together. |
+| `afterMain` | Markup after the `main` content region. |
+| `extraBody` | Markup at the end of the `body` tag. |
+
+Your layout decides which of these its pages can influence. To let a page set its own `bodyClass`, for example, pass `bodyClass={data.bodyClass}` through from the layout, the same way `title` is passed above.
+
+::: info NOTES
+The `beforeMain`, `main`, and `afterMain` regions are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside them will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related JavaScript belongs in a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets).
+
+`layout` is a naming convention in Apostrophe, but is not a required file name. You can name it anything you like. Just remember to extend `data.outerLayout` and update page templates to extend it by its new name.
+
+**RTL language support:** The `outerLayout` template automatically applies the correct text direction (`dir` attribute) to the `<html>` element based on your locale configuration. See the [localization guide](/guide/localization/overview.md#right-to-left-rtl-language-support) for more information.
+
+:::
 
 ::: warning
-Converting a project's layout to JSX only works one direction: a `.jsx` layout can be extended by both `.jsx` and `.html` pages, but a `.html` template can never extend a `.jsx` layout. Any core-provided Nunjucks template that extends the project's layout by name — `@apostrophecms/page`'s `notFound.html` is the one every project has — needs a project-level `.jsx` shadow with the same name, or it will throw instead of rendering once the layout itself is JSX.
+Only `.jsx` templates can extend a `.jsx` layout. A `.html` template that extends it throws an error instead of rendering.
+
+That includes templates you didn't write yourself, most commonly the 404 page. Current starter kits already include a JSX 404 template at `modules/@apostrophecms/page/views/notFound.jsx`. If you're converting an older project, check that folder before you switch to `layout.jsx`. If it has a `notFound.html`, or no 404 template at all so core's `notFound.html` is used, **create `notFound.jsx` there** and delete any project-level `notFound.html`. Apostrophe then uses your JSX version instead.
+
+<AposCodeBlock>
+
+```jsx
+export default function(data, { Extend }) {
+  return (
+    <Extend
+      templateName="layout"
+      title="404 - Page not found"
+      main={<p>We're sorry. We couldn't find the page you're looking for.</p>}
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/page/views/notFound.jsx
+</template>
+</AposCodeBlock>
+
+Do the same for any other `.html` template in your project, or in a module you installed, that extends `layout`.
 :::
+
+## Nunjucks layouts
+
+Projects created before JSX support, and projects still converting their templates, use a Nunjucks layout at `views/layout.html`. As described above, new JSX page templates can extend it directly, and the layout itself is converted last.
+
+The same layout as above, written in Nunjucks, looks like this:
+
+<AposCodeBlock>
+
+``` nunjucks
+{% extends data.outerLayout %}{# 👈 Extending outerLayout.html from core #}
+
+{# 👇 Inserting markup into a lower level template block #}
+{% block beforeMain %}
+<div>{# Open page wrapper #}
+  <header>
+    <img src="/images/logo.png" alt="Organization logo">
+    <nav>{# Website navigation #}</nav>
+    {% if not data.user %}<a href="/login">Login</a>{% endif %}
+  </header>
+  <main>{# Open main tag #}
+{% endblock %}
+
+{% block afterMain %}
+  </main>{# Close main tag #}
+  <footer class="bp-footer">
+    <p>
+      © Apostrophe Technology, Inc.
+    </p>
+  </footer>
+</div>{# Close page wrapper #}
+{% endblock %}
+```
+<template v-slot:caption>
+views/layout.html
+</template>
+</AposCodeBlock>
+
+In Nunjucks, the props from the table above are **template blocks**, overridden with `{% block %}` tags. This layout overrides `beforeMain` and `afterMain`, leaving `main` for page templates to fill, and page templates can add to a block's existing content [using the `super()` tag](/guide/nunjucks-templates.md#the-super-tag).
+
+Notice that the page wrapper `<div>` and the `<main>` tag are opened in one block and closed in another. Blocks can't express a single element that wraps the content between them, which is one reason the JSX layout renders all of this in `main` instead. For the general pattern of moving from blocks and `super()` to props, see [Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super).

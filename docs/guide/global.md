@@ -45,9 +45,9 @@ Once the global doc is configured with fields, it will be added to the admin bar
 **Templates always have direct access to the global doc as `data.global`.** The Github URL field could be used in a template as a property of that doc:
 
 ``` jsx
-export default function({ global }, { Extend }) {
+export default function({ outerLayout, global }, { Extend }) {
   return (
-    <Extend templateName="outerLayoutBase"
+    <Extend templateName={outerLayout}
       afterMain={
         <footer>
           {global.githubUrl && (

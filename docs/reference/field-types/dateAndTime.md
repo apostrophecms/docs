@@ -40,18 +40,21 @@ eventDateAndTime: {
 
 Times are stored, and will print, in the ISO 8601 format `YYYY-MM-DDTHH:MM:SSZ`.
 
-To print them in the format of your choice pass a [momentjs/datejs compliant format string](https://momentjs.com/docs/#/displaying/) to the date Nunjucks filter, like this:
-
-```nunjucks
-{{ data.piece.eventDateAndTime | date("dddd, MMMM Do YYYY, h:mm:ss a") }}
-```
-
-In a JSX template, import `dayjs` and call it directly — there's no filter mechanism. See [Template filters](/guide/template-filters.md) for the full filter-to-JSX mapping.
+To print them in the format of your choice in a JSX template, import `dayjs` and call it directly with a format string. See [Template filters](/guide/template-filters.md) for the full filter-to-JSX mapping. Ordinal tokens such as `Do` ("1st", "2nd") come from dayjs's `advancedFormat` plugin, so extend dayjs with it once at the top of the template:
 
 ```jsx
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat.js';
+
+dayjs.extend(advancedFormat);
 
 // ...
 
 {dayjs(piece.eventDateAndTime).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+```
+
+In a Nunjucks template, pass a [momentjs/datejs compliant format string](https://momentjs.com/docs/#/displaying/) to the `date` filter:
+
+```nunjucks
+{{ data.piece.eventDateAndTime | date("dddd, MMMM Do YYYY, h:mm:ss a") }}
 ```

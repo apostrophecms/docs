@@ -10,8 +10,8 @@ Nunjucks remains fully supported, so this page describes current, working functi
 | `build(...)` | Call `apos.url.build(url, path, data)` directly |
 | `escape` (`e`) | Not needed. JSX auto-escapes interpolated values, and Apostrophe data is already escaped |
 | `safe` | <span v-pre>`<div dangerouslySetInnerHTML={{ __html: value }} />`</span> — see [Auto-escaping and raw HTML](/guide/jsx-templates.md#auto-escaping-and-raw-html) |
-| `nlbr` | Split and map instead of emitting raw HTML: `{text.split('\n').map((line, i) => <React.Fragment key={i}>{line}<br /></React.Fragment>)}` |
-| `nlp` | Same shape as `nlbr`, wrapping in `<p>` instead: `{text.split('\n').map((line, i) => <p key={i}>{line}</p>)}` |
+| `nlbr` | Split and map instead of emitting raw HTML: `{(text ?? '').split('\n').map((line, i) => <>{i > 0 && <br />}{line}</>)}` |
+| `nlp` | Same shape as `nlbr`, wrapping in `<p>` instead: `{(text ?? '').split('\n').map(line => <p>{line}</p>)}` |
 | `date(format)` | `import` and call `dayjs` directly in the template |
 | `css` | Call `apos.util.cssName(s)` directly — the filter is a thin wrapper around this same method |
 | `clonePermanent` | Call `apos.util.clonePermanent(o, keepScalars)` directly, same reason |

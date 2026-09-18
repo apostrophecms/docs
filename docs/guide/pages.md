@@ -175,10 +175,10 @@ By default, one level of children are available on each ancestor, as well as on 
 With that available data, we could construct navigation for the website header. In JSX this is a `.map()` over the children — and `home` arrives the same way `page` does, as a property of the data object passed to every template, layout included:
 
 ```jsx
-export default function({ home, main }, { Extend }) {
+export default function({ outerLayout, home, main }, { Extend }) {
   return (
     <Extend
-      templateName="outerLayoutBase"
+      templateName={outerLayout}
       main={
         <div>
           <header>

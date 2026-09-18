@@ -36,7 +36,7 @@ module.exports = {
 
 </AposCodeBlock>
 
-The `page-type` module can expose multiple views, but by default serves the template located at `<module-name>/views/page.html`. Additional views can be exposed using the `dispatch()` method.
+The `page-type` module can expose multiple views, but by default serves the template located at `<module-name>/views/page.jsx` (or `page.html` for a Nunjucks template). Additional views can be exposed using the `dispatch()` method.
 
 ## Featured Methods:
 The following methods belong to this module and may be useful in project-level code. See the [source code](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/page-type/index.js) for all the methods that belong to this module.
@@ -56,13 +56,13 @@ dispatchAll() {
 </AposCodeBlock>
 
 ### `dispatch(pattern, ...middleware, handler)`
-The `dispatch()` method provides a way to add Express-style routing for ApostropheCMS pages. This method allows you to define custom behavior for URLs that extend beyond the basic page slug, matching specified URL patterns. For example, this method is used in the `@apostrophecms/piece-page-type` to redirect from the `index.html` template to the `show.html` template when the URL matches the pattern `/:slug`. The `pattern` argument takes a string that can contain a mix of static and dynamic values. The dynamic values, or parameters, are proceeded with a `:` and will match any string passed in that position of the URL string. For instance, in the pattern `/user/:userId`, `:userId` is a dynamic segment that will match any string in its place. When a user accesses a URL like `/user/123`, the `req` userId parameter will be set to `123`.
+The `dispatch()` method provides a way to add Express-style routing for ApostropheCMS pages. This method allows you to define custom behavior for URLs that extend beyond the basic page slug, matching specified URL patterns. For example, this method is used in the `@apostrophecms/piece-page-type` to redirect from the `index` template to the `show` template when the URL matches the pattern `/:slug`. The `pattern` argument takes a string that can contain a mix of static and dynamic values. The dynamic values, or parameters, are proceeded with a `:` and will match any string passed in that position of the URL string. For instance, in the pattern `/user/:userId`, `:userId` is a dynamic segment that will match any string in its place. When a user accesses a URL like `/user/123`, the `req` userId parameter will be set to `123`.
 
 A `pattern` can have multiple dynamic segments. For example, consider an online learning platform where users can access multiple courses and each course has multiple lessons and quizes. You could set up a dispatch route of `/course/:courseId/lessons/:lessonId` to be able to deliver a specified template for individual lessons and another route `/course/:courseId/quizzes/:quizId` to deliver the quiz template.
 
 This method takes an optional `middleware` argument that can take any number of middleware functions. These functions are executed in the order they are provided, prior to the final handler. Middleware in this context can be used for a variety of purposes, such as authentication checks, logging, request data manipulation, error handling, or any other preparatory work that needs to occur before the request reaches the final handler. If any middleware function explicitly returns `false`, then no further middleware will be run and the final handler will also not be run.
 
-The final `handler` argument handles any URL matching the pattern and receives the `req` object. In most cases, this is used to set the template that is rendered using `setTemplate(req, '<template-name>')`, where the template name is the name of the file to be used from the `modules/custom-module/views` folder minus the `.html` extension. The handler method must be an async function, and it will be awaited.
+The final `handler` argument handles any URL matching the pattern and receives the `req` object. In most cases, this is used to set the template that is rendered using `setTemplate(req, '<template-name>')`, where the template name is the name of the file to be used from the `modules/custom-module/views` folder minus the `.jsx` or `.html` extension. The handler method must be an async function, and it will be awaited.
 
 The `dispatch()` and `dispatchAll()` methods can be effectively used to create dynamic routes, potentially based on data retrieved from an API. For instance, you can fetch a list of available routes from an API at startup and dynamically register them using dispatch.
 
@@ -82,7 +82,7 @@ methods(self) {
         } catch (error) {
           // Log the error and render an error page in case of failure
           console.error('Error fetching products:', error);
-          // render the 'views/errorTemplate.html' template
+          // render the 'views/errorTemplate.jsx' template
           return self.setTemplate(req, 'errorTemplate');
         }
       });
@@ -113,4 +113,6 @@ methods(self) {
 }
 
 ```
-In this example, your custom module would have a `modules/custom-module/views/productIndex.html` template that would be used to display all of the products returned from the API when a user navigates to `https://your-site.com/your-product-page/`. This template would create dynamic links using a loop over the `data.products` object. For example, <span v-pre>`<a href="{{data.page._url}}/{{product}}">{{ product }}</a>`</span>. When clicked, this would then trigger the `/:product` dispatch route and render the template located at `modules/custom-module/views/productDetails.html`. The specific product name and details would be available through `data.product` and `data.details` in the template.
+In this example, your custom module would have a `modules/custom-module/views/productIndex.jsx` template that would be used to display all of the products returned from the API when a user navigates to `https://your-site.com/your-product-page/`. This template would create dynamic links by mapping over the `products` array, for example `` {products.map(product => <a href={`${page._url}/${product}`}>{product}</a>)} ``. When clicked, this would then trigger the `/:product` dispatch route and render the template located at `modules/custom-module/views/productDetails.jsx`. The specific product name and details would be available as `product` and `details` on the template's data object.
+
+In a Nunjucks project, the same templates would be `productIndex.html` and `productDetails.html`, looping over `data.products` with <span v-pre>`{% for product in data.products %}<a href="{{ data.page._url }}/{{ product }}">{{ product }}</a>{% endfor %}`</span> and reading `data.product` and `data.details`.
