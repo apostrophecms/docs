@@ -206,6 +206,10 @@ const sidebarGuide = [
             link: 'guide/async-components.md'
           },
           {
+            text: 'Inline Editing',
+            link: 'guide/inline-editing.md'
+          },
+          {
             text: 'JSX Templates',
             link: 'guide/jsx-templates.md'
           },
@@ -336,6 +340,10 @@ const sidebarGuide = [
       {
         text: 'Custom Field Types',
         link: 'guide/custom-schema-field-types.md'
+      },
+      {
+        text: 'Inline Editing for Custom Field Types',
+        link: 'cookbook/inline-editable-field-type.md'
       },
       {
         text: 'Adding Batch Operations',

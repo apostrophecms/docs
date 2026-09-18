@@ -903,6 +903,12 @@ The rich text widget provides a space for entering and editing formatted text. E
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/LmVOzjKW13s?si=P3NxaJTFqwUBxK5I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+::: info
+Rich text is also available as a schema field on its own, without an area: see the [`richText` field type](/reference/field-types/richText.md). It uses this same editor and accepts all of the options below, so everything on this page applies to it too. Reach for it when an editor should get a block of formatted text in a fixed place, rather than a widget they can add, remove and reorder.
+
+One difference is worth knowing about. A widget resolves its own permalinks and inline image URLs when it renders. A field has no render-time hook, so render it with [`Field`](/guide/inline-editing.md), which supplies one — <span v-pre>`with={{ edit: false }}`</span> if you do not want editing in place.
+:::
+
 There are many text formatting features that you can configure for rich text widgets. These editor options are configured in three widget options: [`toolbar`](#configuring-the-toolbar), [`styles`](#configuring-text-styles), and [`color`](#configuring-the-color-picker). Add these to the widget configuration object when adding an area field.
 
 <AposCodeBlock>

@@ -30,6 +30,7 @@ See below for a list of all of the field types available in Apostrophe along wit
 |[range](/reference/field-types/range.md) | A floating point number with a sliding interface |
 |[relationship](/reference/field-types/relationship.md) | One or more related content docs (pieces or pages) |
 |[relationshipReverse](/reference/field-types/relationship-reverse.md) | Reveals the "other side" of a `relationship` |
+|[richText](/reference/field-types/richText.md) | Formatted text, edited with the rich text editor, stored as HTML |
 |[select](/reference/field-types/select.md) | Single value selection with a dropdown interface |
 |[slug](/reference/field-types/slug.md) | Text string value that is converted on save to lowercase and hyphenated |
 |[string](/reference/field-types/string.md) | Simple text string |

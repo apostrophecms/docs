@@ -33,9 +33,14 @@ The composition model is the same in both languages. What differs is the syntax:
 
 Almost every page template extends a layout, which in turn extends Apostrophe's core outer layout. See the [layout template](/guide/layout-template.md) guide for how that chain fits together.
 
+## Templates decide what is editable on the page
+
+A template does more than display content. Where it renders an [area](/guide/areas-and-widgets.md), editors can add and rearrange widgets on the page; where it renders a `string` or `richText` field with `<Field>`, `{% field %}` or `<AposField>`, editors can type straight into it instead of opening the editor modal. See [inline editing](/guide/inline-editing.md).
+
 ## Further reading
 
 - [JSX templates](/guide/jsx-templates.md) — syntax, the Nunjucks-to-JSX cheat sheet, and what does not carry over from React
 - [Nunjucks templates](/guide/nunjucks-templates.md) — syntax, tags, filters, macros, and `super()`
 - [Template data](/guide/template-data.md) — what is available inside a template
 - [Areas and widgets](/guide/areas-and-widgets.md) — rendering editable content
+- [Inline editing](/guide/inline-editing.md) — putting individual schema fields on the page, editable in place

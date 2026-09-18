@@ -147,3 +147,7 @@ fields: {
 ```
 
 The resulting value is then available as the `stars` property of the piece or widget, with an integer value between `1` and `5`.
+
+## Editing the field on the page
+
+The component above is the editor shown in the document's modal, which is what every field type needs. A field type whose value is text can go further and be [edited in place](/guide/inline-editing.md), as `string` and `richText` are — the template puts it on the page and the user types straight into it. See the recipe: [adding inline editing to a custom field type](/cookbook/inline-editable-field-type.md).

@@ -72,6 +72,7 @@ The function may be `async`. It does not need to be: see [Async without async](#
 | `apos` | The same object the rest of Apostrophe calls `self.apos`. Call any module method directly; JSX templates can `await`. |
 | `helpers` | The Nunjucks-oriented helper functions (mostly thin wrappers around `apos.util` and related modules). Use these when you want the exact behavior of an existing Nunjucks helper or filter. |
 | `Area` | Renders an area. Replaces `{% area ... %}`. |
+| `Field` | Renders one schema field, [editable in place](/guide/inline-editing.md). Replaces `{% field ... %}`. |
 | `Component` | Invokes an [async component](/guide/async-components.md). Replaces `{% component ... %}`. |
 | `Template` | Renders another template by name with **include semantics**: props are passed as data. Replaces `{% include %}`. Against a JSX target, also serves as `{% extends %}` because props *are* data. |
 | `Extend` | Renders another template by name with **extends semantics**. Against a Nunjucks target, props become named `{% block %}` overrides. Against a JSX target, behaves identically to `Template`. |
@@ -141,19 +142,39 @@ React-flavored attributes like `key` and `ref` are accepted but ignored. They ex
 <Area doc={page} name="main" />
 ```
 
-[Context options](/guide/areas-and-widgets.md#passing-context-options) become an ordinary prop:
+[Context options](/guide/areas-and-widgets.md#passing-context-options) go in a `with` prop, as they do after the `with` keyword in Nunjucks:
 
 ```jsx
 <Area
   doc={page}
   name="main"
-  contextOptions={{
+  with={{
     '@apostrophecms/image': {
       sizes: '(min-width: 600px) 45vw, 530px'
     }
   }}
 />
 ```
+
+### Fields
+
+```jsx
+<Field doc={page} name="headline" with={{ tag: 'h1', class: 'article__headline' }} />
+```
+
+```nunjucks
+{% field data.page, 'headline' with { tag: 'h1', class: 'article__headline' } %}
+```
+
+`Field` renders one `string` or `richText` field and lets the editor type into it right there on the page. It takes exactly three props — `doc`, `name`, and the optional `with` object — and the `with` object carries the presentation: `tag`, `class`, `style`, `attrs`, `edit`.
+
+A single line string is rendered inline, so it keeps its place in a sentence:
+
+```jsx
+<p>Name: <Field doc={person} name="name" />.</p>
+```
+
+See [inline editing](/guide/inline-editing.md) for the whole feature.
 
 ### Async components
 
@@ -207,13 +228,7 @@ Three groups are translated:
 | `htmlFor` | `for` |
 | SVG camelCase properties — `strokeWidth`, `fillRule`, `clipPath`, `xlinkHref`, … | `stroke-width`, `fill-rule`, `clip-path`, `xlink:href`, … |
 
-**Write `className`, not `class`.** It is one of only three names the runtime translates, so it is supported behaviour rather than a React alias that happens to survive — and it is what the examples throughout this documentation use. Plain `class` also reaches the HTML intact, but consistency matters more than the two saved characters, and the two forms do not mix:
-
-::: danger
-Never put both on the same element. The runtime translates `className` and passes `class` through, so `<div class="a" className="b">` emits **two** `class` attributes and browsers keep only the first.
-:::
-
-Everything else reaches the HTML exactly as you typed it. `data-*` and `aria-*` attributes pass through unchanged, which is what you want. But React's wider alias table is not implemented, so these do **not** become their HTML equivalents:
+Everything else reaches the HTML exactly as you typed it. This includes `class`, for instance. `data-*` and `aria-*` attributes pass through unchanged, which is what you want. But React's wider alias table is not implemented, so these do **not** become their HTML equivalents:
 
 ```jsx
 <img srcSet={srcset} />

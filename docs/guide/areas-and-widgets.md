@@ -84,6 +84,27 @@ introduction: {
 }
 ```
 
+::: tip Reach for a `richText` field instead
+An area that allows rich text and nothing else, capped at one widget, is a rich text *field* in disguise — and that disguise costs you a wrapper in every template and an "Add widget" affordance the editor can never use twice. Prefer the [`richText` field type](/reference/field-types/richText.md):
+
+```javascript
+introduction: {
+  label: 'Introduction',
+  type: 'richText'
+}
+```
+
+It uses the same editor and takes the same `toolbar` and `styles` options, but stores a plain string of HTML and can be [edited right on the page](/guide/inline-editing.md). Keep the area when more than one widget type is allowed, or when the number of widgets is open-ended.
+
+Render it with `Field` rather than printing the property. A widget resolves its own permalinks and image URLs when it renders; a field has no render-time hook of its own, and `Field` is what supplies one:
+
+```jsx
+<Field doc={page} name="introduction" />
+```
+
+Add <span v-pre>`with={{ edit: false }}`</span> if you want the rendering without offering editing in place. See [displaying the value](/reference/field-types/richText.md#displaying-the-value).
+:::
+
 ## Adding default widgets to areas
 
 To solve the "blank page" problem and help editors get started with content creation, you can configure areas to include default widgets when a new document is created. This is particularly useful when combined with the [layout widget](/guide/core-widgets.html#layout-widget) to provide editors with a pre-structured content framework.
