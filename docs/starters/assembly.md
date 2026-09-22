@@ -285,6 +285,35 @@ Now try creating `company2` and `company3`. Notice that while the code is the sa
 
 ## Scheduling tasks with ApostropheCMS Assembly hosting
 
+### Using a crontab file
+
+**This is the recommended way to schedule tasks.** Add a file named `crontab` to the root of your project repository, and ApostropheCMS hosting reads it automatically. It uses ordinary cron syntax, and it works for single-site ApostropheCMS projects as well as for Assembly.
+
+The current working directory is the root of your repository, so each entry invokes your application exactly as you would from a terminal there. In the Astro kit, where the ApostropheCMS project lives in the `backend` workspace:
+
+```
+0 0 * * * node backend/app.js @apostrophecms/scheduled-publishing:update
+```
+
+In the JSX kit, where the project sits at the repository root:
+
+```
+0 0 * * * node app.js @apostrophecms/scheduled-publishing:update
+```
+
+Because each entry is an ordinary command line invocation, the usual multisite rule applies: say which site the task is for with `--site=`, or use `--all-sites` to run it for every site except the dashboard.
+
+```
+0 * * * * node app.js products:sync --all-sites
+0 3 * * * node app.js some-module:some-task --site=dashboard
+```
+
+If you are self-hosting, put the equivalent entries in your server's own crontab instead.
+
+### The `tasks` option
+
+The `tasks` option predates the crontab file and is still supported. It was designed for environments running several workers, using locks so that a scheduled task runs only once across the cluster. In practice a single worker per environment has been the norm, so the crontab file above is both simpler and more flexible — it can express any schedule, rather than only hourly and daily.
+
 To schedule tasks much like you would with `cron` in a single-server environment, add a new `tasks` option to `app.js` when configuring `@apostrophecms/multisite`. This option is top-level, it's a peer of the `sites` and `dashboard` options.
 
 ```javascript
