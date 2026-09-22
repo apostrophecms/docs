@@ -287,7 +287,7 @@ Now try creating `company2` and `company3`. Notice that while the code is the sa
 
 ### Using a crontab file
 
-**This is the recommended way to schedule tasks.** Add a file named `crontab` to the root of your project repository, and ApostropheCMS hosting reads it automatically. It uses ordinary cron syntax, and it works for single-site ApostropheCMS projects as well as for Assembly.
+**This is the recommended way to schedule tasks.** Add a file named `crontab` to the root of your project repository, and ApostropheCMS hosting reads it automatically. It uses ordinary cron syntax, and it works for single-site ApostropheCMS projects as well as for Assembly. As with any crontab, entries run in your server's timezone.
 
 The current working directory is the root of your repository, so each entry invokes your application exactly as you would from a terminal there. In the Astro kit, where the ApostropheCMS project lives in the `backend` workspace:
 
