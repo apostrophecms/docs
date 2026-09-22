@@ -469,7 +469,7 @@ Both kits ship the same content model and the same widget set, so this section a
 * `price-card-widget` — a pricing card.
 * `button-widget` — a button or inline link.
 * `article-widget` — teases an article on any page.
-* `github-prs-widget` — lists pull requests from GitHub, included as a worked example of calling an external API from a widget.
+* `github-prs-widget` — lists pull requests from GitHub, demonstrating how a widget can call an external API.
 
 Several of these reuse the shared schema helpers in `sites/lib`, particularly `link.js` for link fields and `area.js` for area configuration. These serve as a model for implementing reusable parts of widgets in your own project.
 
