@@ -326,7 +326,7 @@ Right now we have a bare-bones example. Let's look at where to put our code to c
 
 ### Where Does My Apostrophe Project Code Go?
 
-> If you are not already familiar with single-site Apostrophe development, we strongly recommend that you [read the ApostropheCMS documentation](https://apostrophecms.com/docs) as a starting point.
+> If you are not already familiar with single-site Apostrophe development, start with [Code organization with modules](/guide/modules.md), which covers how a module is structured, configured, and inherited — the concepts the rest of this section assumes.
 
 In a typical single-site Apostrophe project, modules are configured in `app.js`. In a multisite project, you'll find that `app.js` is instead reserved for top-level configuration that applies to all sites.
 
@@ -483,7 +483,7 @@ Both kits have the `@apostrophecms-pro/multisite-dashboard` extension installed.
 
 The dashboard site can be extended much like the regular sites. Dashboard development is very similar to regular site development, except that modules live in `dashboard/modules`, what normally resides in `app.js` lives in `dashboard/index.js`, and so on.
 
-The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](/guide/modules.md) for extending any package at project level.
+The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](/guide/module-configuration-patterns.md) for extending any package at project level.
 
 The `site` schema field values get passed to the individual sites in the `site` object. This is what is used to set the theme configuration in the `sites/index.js` file. The starter kits also add the value of the `theme` schema field to the `apos.options` object.
 
