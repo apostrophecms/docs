@@ -463,7 +463,7 @@ Note that Apostrophe builds one asset bundle per theme. This is why you **must n
 
 ### Automatic Translation
 
-Both kits include `@apostrophecms-pro/automatic-translation`, routed through the ApostropheCMS AI engine rather than a dedicated translation service. You configure AI once, and translation inherits it — there is no translation-specific key, client or model to manage. The configuration lives with your other site modules, in `sites/index.js` (`backend/sites/index.js` in the Astro kit):
+Both kits include `@apostrophecms-pro/automatic-translation`, routed through the [ApostropheCMS AI engine](/reference/modules/ai.md) rather than a dedicated translation service. You configure AI once, and translation inherits it — there is no translation-specific key, client or model to manage. The configuration lives with your other site modules, in `sites/index.js` (`backend/sites/index.js` in the Astro kit):
 
 ```javascript
 // The core AI engine, configured once for every AI feature
@@ -489,7 +489,7 @@ Both kits include `@apostrophecms-pro/automatic-translation`, routed through the
 
 To turn translation on:
 
-1. Set the API key for your chosen adapter in the environment — `APOS_ANTHROPIC_KEY` for the Anthropic adapter the kits are configured for.
+1. Set the API key for your chosen adapter in the environment — `APOS_ANTHROPIC_KEY` for the [Anthropic adapter](/reference/modules/ai-adapter-anthropic.md) the kits are configured for.
 2. Change `enabled` to `true`.
 
 Translation then appears as **AI** in the localization dialog.
@@ -498,7 +498,7 @@ Translation then appears as **AI** in the localization dialog.
 Setting `enabled: true` without a configured AI provider will stop your project from starting, with `no AI provider is configured`. The check runs once at startup rather than when a translation is first requested, so configure the key and the flag together.
 :::
 
-The adapter choice is not fixed. The AI engine also ships adapters for OpenAI, Google Gemini, and any OpenAI-compatible service, and swapping between them is a configuration change rather than a code change. Translation is inexpensive work, so the `effort` option on `@apostrophecms-pro/automatic-translation-llm` is worth setting to `low` if you are routing to a model that supports effort levels.
+The adapter choice is not fixed. The AI engine also ships adapters for [OpenAI](/reference/modules/ai-adapter-openai.md), [Google Gemini](/reference/modules/ai-adapter-google.md), and any [OpenAI-compatible service](/reference/modules/ai-adapter-openai-compatible.md), and swapping between them is a configuration change rather than a code change. Translation is inexpensive work, so the `effort` option on `@apostrophecms-pro/automatic-translation-llm` is worth setting to `low` if you are routing to a model that supports effort levels.
 
 ### Serving Static Files: Fonts and Static Images
 
