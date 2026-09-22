@@ -88,19 +88,7 @@ npm install
 
 In the Astro kit this is an npm workspaces project, so a single install at the root covers both the `backend` and `frontend` workspaces.
 
-4) **In the Astro kit only**, deal with automatic translation before going any further.
-
-::: warning
-The Astro kit enables `@apostrophecms-pro/automatic-translation` with the DeepL provider, and **the backend will refuse to start — including for command line tasks — until that provider has a key.** Either export a real key:
-
-```sh
-export APOS_DEEPL_API_SECRET=your-deepl-api-secret
-```
-
-...or, if you don't intend to use automatic translation, remove the `@apostrophecms-pro/automatic-translation` and `@apostrophecms-pro/automatic-translation-deepl` entries from `backend/sites/index.js`.
-:::
-
-5) Add an admin user to the dashboard site, which manages all other sites. In the Astro kit, Apostrophe tasks run from the `backend` directory; in the JSX kit they run from the project root:
+4) Add an admin user to the dashboard site, which manages all other sites. In the Astro kit, Apostrophe tasks run from the `backend` directory; in the JSX kit they run from the project root:
 
 ```sh
 node app @apostrophecms/user:add admin admin --site=dashboard
@@ -472,6 +460,45 @@ The `config` object already contains what was configured in `sites/index.js`. He
 **What a theme controls depends on your kit.** In the JSX kit, a theme module is a natural home for that theme's own SCSS and JavaScript entry points, so themes can be the unit of visual difference. In the Astro kit the frontend is Astro, and the theme module is an intentionally empty starting point; a theme there is still the right hook for changing *backend* configuration per site, but visual variation belongs in your Astro components. The theme name is not sent to the Astro frontend automatically; expose it with the [`templateData` module option](/reference/module-api/module-options.md#templatedata) so that it arrives alongside the rest of your page data, then branch on it in your components.
 
 Note that Apostrophe builds one asset bundle per theme. This is why you **must not decide to completely enable or disable a module that pushes assets on any basis other than the theme name.**
+
+### Automatic Translation
+
+Both kits include `@apostrophecms-pro/automatic-translation`, routed through the ApostropheCMS AI engine rather than a dedicated translation service. You configure AI once, and translation inherits it — there is no translation-specific key, client or model to manage. The configuration lives with your other site modules, in `sites/index.js` (`backend/sites/index.js` in the Astro kit):
+
+```javascript
+// The core AI engine, configured once for every AI feature
+'@apostrophecms/ai': {
+  options: {
+    provider: 'anthropic',
+    providers: {
+      anthropic: {}
+    }
+  }
+},
+'@apostrophecms-pro/automatic-translation': {
+  options: {
+    enabled: false,
+    provider: 'llm'
+  }
+},
+// Nothing to configure: it inherits the AI configuration above
+'@apostrophecms-pro/automatic-translation-llm': {}
+```
+
+**The kits ship with `enabled: false`**, so a fresh clone starts without requiring any AI credentials. In that state the module registers no translation provider and adds no editing UI, but its content extraction API stays available to other modules that depend on it.
+
+To turn translation on:
+
+1. Set the API key for your chosen adapter in the environment — `APOS_ANTHROPIC_KEY` for the Anthropic adapter the kits are configured for.
+2. Change `enabled` to `true`.
+
+Translation then appears as **AI** in the localization dialog.
+
+::: warning
+Setting `enabled: true` without a configured AI provider will stop your project from starting, with `no AI provider is configured`. The check runs once at startup rather than when a translation is first requested, so configure the key and the flag together.
+:::
+
+The adapter choice is not fixed. The AI engine also ships adapters for OpenAI, Google Gemini, and any OpenAI-compatible service, and swapping between them is a configuration change rather than a code change. Translation is inexpensive work, so the `effort` option on `@apostrophecms-pro/automatic-translation-llm` is worth setting to `low` if you are routing to a model that supports effort levels.
 
 ### Serving Static Files: Fonts and Static Images
 
