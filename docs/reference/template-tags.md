@@ -8,6 +8,7 @@ Tags are a **Nunjucks** feature — JSX has no tag syntax at all, since it's rea
 | Nunjucks tag | In a JSX template |
 | --- | --- |
 | [`area`](#area) | `<Area doc={page} name="main" />` — see [Areas](/guide/jsx-templates.md#areas) |
+| [`field`](#field) | <span v-pre>`<Field doc={page} name="headline" with={{ tag: 'h1' }} />`</span> — see [Inline editing](/guide/inline-editing.md#jsx-templates) |
 | [`component`](#component) | `<Component module="product" name="newest" max={3} />` — see [Async components](/guide/jsx-templates.md#async-components) |
 | [`fragment`](#fragment-render-and-rendercall) | A plain function component — see the [fragments-to-components mapping](/guide/fragments.md) |
 | [`render`](#fragment-render-and-rendercall) | Call the component as a JSX element, e.g. `<Button text="Click me" action="send" />` |
@@ -22,6 +23,7 @@ If a template tag takes multiple arguments they will be comma-separated. Additio
 | Tag name | Description | Self-closing |
 | -------- | ----------- | ------------ |
 | [`area`](#area) | Insert a [widget area](/guide/areas-and-widgets.md) | Yes |
+| [`field`](#field) | Insert one schema field, [editable in place](/guide/inline-editing.md) | Yes |
 | [`component`](#component) | Insert an [async component](/guide/async-components.md) | Yes |
 | [`fragment`](#fragment-render-and-rendercall) | Declare a [template fragment](/guide/fragments.md) | No |
 | [`render`](#fragment-render-and-rendercall) | Insert a basic template fragment | Yes |
@@ -70,6 +72,73 @@ Context options are optional for all core and official Apostrophe widget types.
 
 ::: info
 Context options are not the best place for most widget configuration. That should be done in the [area field configuration](/reference/field-types/area.md#widgets). Context options are used to supplement that with options that only apply to the specific template context. Context options cannot change which widgets are permitted in an area.
+:::
+
+## `field`
+
+The `field` tag outputs one schema field of a document, widget, array item or object, and lets the user edit it right where it appears on the page.
+
+In JSX this is the [`Field` helper](/guide/jsx-templates.md#fields), which takes the same arguments in the same order:
+
+```jsx
+<Field doc={page} name="headline" with={{ tag: 'h1' }} />
+```
+
+See the [inline editing guide](/guide/inline-editing.md) for the full feature, in JSX, Nunjucks and Astro.
+
+### Usage
+
+``` nunjucks
+{% field context, fieldName with options %}
+```
+
+**Example:**
+``` nunjucks
+{# The tag the field type chooses, and nothing else #}
+{% field data.page, 'blurb' %}
+
+{# Overriding the tag and adding a class #}
+{% field data.page, 'headline' with { tag: 'h1', class: 'article__headline' } %}
+
+{# A single line string stays on its line, full stop and all #}
+<p>Name: {% field data.page, 'name' %}.</p>
+
+{# A field of an array item #}
+{% for section in data.page.sections %}
+  {% field section, 'caption' with { tag: 'h2' } %}
+{% endfor %}
+```
+
+### Arguments
+
+#### `context`
+
+The document the field belongs to — a page (`data.page`), piece (`data.piece`), widget (`data.widget`), `array` item or `object` field value. The field must be defined in the field schema for that context.
+
+#### `fieldName`
+
+The name (a string) of the field as defined in the field schema.
+
+Only field types with an on-page editor can be named here, which today means [`string`](/reference/field-types/string.md) and [`richText`](/reference/field-types/richText.md). An [`area`](/reference/field-types/area.md) is also accepted, and is exactly equivalent to `{% area %}`. Any other type raises an exception naming the field and its type, rather than rendering something the user cannot edit — output those with an ordinary <span v-pre>`{{ }}`</span> expression.
+
+#### `options` (optional)
+
+An object added after the field name following the `with` keyword:
+
+|  Property | Type | Description |
+|---|---|---|
+|`tag` | String | Overrides the tag the field type chose. A `string` is a `span`, a `string` with `textarea: true` is a `div`, and so is a `richText` field. |
+|`class` | String | Added to the classes the field type asks for, not replacing them. |
+|`style` | String | An inline style string, passed through to the tag. |
+|`attrs` | Object | Additional attributes, passed through to the tag. |
+|`edit` | Boolean | `false` renders the value and never offers editing, even to a user who could. |
+
+Any other property is passed on to the editor component as one of its options.
+
+When the field is an area, `with` means [what it means for `{% area %}`](#contextoptions-optional).
+
+::: info
+The tag outputs exactly one element — the one described above, with its classes, styles and attributes — whether or not the user is editing. Only the `data-` attributes the editor needs are added, and only in edit mode. Nothing is printed after the closing tag, not even a newline, so a field can be followed immediately by a comma or a full stop.
 :::
 
 ## `component`

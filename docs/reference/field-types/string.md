@@ -45,11 +45,13 @@ biography: {
 |`min` | Integer | n/a | Sets the minimum number of characters allowed |
 |`max` | Integer | n/a | Sets the maximum number of characters allowed |
 |`pattern` | String | n/a | Accepts a regular expression string to validate the input. Only values matching the pattern are allowed. |
+|`placeholder` | String | n/a | Placeholder text shown while the field is empty. Falls back to `label` when the field is [edited in place](#editing-in-place). |
 |`readOnly` | Boolean | `false` | If `true`, prevents the user from editing the field value |
 |`required` | Boolean | `false` | If `true`, the field is mandatory |
 |`requiredIf` | Object | `{}` | Conditions to meet before the field is required. [See the guide for details.](/guide/conditional-fields) |
 |`sortify` |	Boolean |	`false` |	If true, creates "sortified" fields. See below. |
 |`textarea` | Boolean | `false` | If `true`, use a textarea interface with multiple lines, which allows line breaks |
+|`wysiwyg` | Boolean | `false` | Only needed for [Astro and other external fronts](/guide/inline-editing.md#astro) that render this field in place. Nunjucks and JSX do not need it. |
 
 <!-- TODO: 2.x options not yet available -->
 <!-- |contextual | Boolean | false | If `true`, it will prevent the field from appearing in the editor modal | -->
@@ -106,7 +108,31 @@ If you add `sortify: true` to an existing field, existing objects will get the s
 Migrations like this only need to be run once because on future updates or inserts of a document the sortified property is automatically set.
 :::
 
+## Editing in place
+
+A `string` field can be rendered on the page and edited there, instead of only in the editor modal:
+
+```jsx
+<h2><Field doc={piece} name="dogName" /></h2>
+```
+
+``` nunjucks
+{% field data.piece, 'dogName' with { tag: 'h2' } %}
+```
+
+```astro
+<AposField doc={piece} name="dogName" tag="h2" />
+```
+
+A single line string is rendered as a `span` and edited inline, keeping its place on the line; a `textarea: true` string is rendered as a `div` and its box grows as the editor types. Line breaks are preserved when displaying a `textarea: true` string, and refused in a single line one.
+
+Rendered this way, the value is escaped for you and the `nl2br`-style handling below is unnecessary. See [inline editing](/guide/inline-editing.md) for the whole feature, including the `wysiwyg` opt-in that Astro and other external fronts require.
+
 ## Use in templates
+
+::: tip None of this is necessary if you use `Field`
+[`Field` and its equivalents](#editing-in-place) escape the value and, for a `textarea: true` string, turn its line breaks into `<br />` — the work the recipes below do by hand. Pass `edit: false` if you want that rendering without offering an editor. What follows is for printing a string as an ordinary template expression.
+:::
 
 To print textarea strings with line breaks in a JSX template, split on newlines. Escaping is automatic — JSX escapes every interpolated value — so only tag-stripping and the line-break split need writing out explicitly:
 

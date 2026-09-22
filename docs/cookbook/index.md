@@ -11,6 +11,7 @@ Welcome to the cookbook. These code recipes show how to execute specific tasks, 
 ## Project features
 
 - [Creating webhooks](creating-webhooks.md)
+- [Adding inline editing to a custom field type](inline-editable-field-type.md)
 
 ## Hosting
 
