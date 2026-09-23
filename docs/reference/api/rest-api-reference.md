@@ -83,6 +83,18 @@ const articles = await response.json();
   <template #leftColumn>
     <AposCtaButton
       detail-heading="API"
+      title="Document Versions REST API"
+      content="List a document's version history, read a version's changes, and restore an earlier version."
+      url="document-versions.html"
+      hideEffort="true"
+    />
+  </template>
+</AposTwoColumns>
+
+<AposTwoColumns>
+  <template #leftColumn>
+    <AposCtaButton
+      detail-heading="API"
       title="Working with Rich Text"
       content="Handle rich text content including HTML filtering, inline images, and importing external content."
       url="rich-text.html"

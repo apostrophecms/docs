@@ -61,6 +61,10 @@ const sidebarGuide = [
           {
             text: 'Upgrade apostrophe-astro to v1.13',
             link: 'guide/migration/upgrading-apostrophe-astro.md'
+          },
+          {
+            text: 'Migrate from pro document-versions',
+            link: 'guide/migration/document-versions-migration.md'
           }
         ]
       },
@@ -356,6 +360,10 @@ const sidebarGuide = [
       {
         text: 'Custom Widget Placeholders',
         link: 'guide/adding-custom-widget-placeholder-content.md'
+      },
+      {
+        text: 'Showing Version Changes in Widgets',
+        link: 'guide/showing-version-changes.md'
       },
       {
         text: 'Custom Auth Requirements',
