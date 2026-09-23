@@ -24,17 +24,16 @@ This Starter Kit includes:
 
 ## Requirements For Development On Your Computer
 
-### Operating System: Mac, Linux, or Virtual Linux
+### Operating System
 
-**Your local development environment must be either MacOS or Linux.** If your development computer runs Windows, we recommend development on
-Windows Subsystem for Linux (WSL). Microsoft recommends WSL for Node.js development.
+ApostropheCMS development works on Windows, macOS, and Linux. Windows developers can either work directly on Windows, using Git Bash as their terminal, or use the Windows Subsystem for Linux (WSL 2). See [Setting up your environment](/guide/development-setup.md) for the tradeoffs and setup steps for each.
 
 ### Software Installation Requirements
 
 To test-drive the project in development, make sure you have Apostrophe's usual dependencies on your local machine:
 
-* MongoDB (5.x or better, we recommend 6.x or better)
-* NodeJS (18.x or better)
+* MongoDB (7.0 or better, we recommend 8.0). See [Installing MongoDB locally](/guide/installing-mongodb-locally.md).
+* Node.js 22 or later. We recommend the current Active LTS release (Node 24 at the time of writing). Node 18 and 20 have both reached end of life, and Node 22 is in maintenance until April 2027.
 
 For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 

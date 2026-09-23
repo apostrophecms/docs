@@ -499,7 +499,7 @@ const sidebarGuide = [
         link: 'starters/pro-essentials.md'
       },
       {
-        text: ' Pro Assembly Starter Kit',
+        text: 'Assembly Starter Kits',
         link: 'starters/assembly.md'
       }
     ]

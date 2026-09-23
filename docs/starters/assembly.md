@@ -2,83 +2,119 @@
 prev: false
 next: false
 ---
-# ApostropheCMS Assembly Essentials Starter Kit
+# ApostropheCMS Assembly Starter Kits
 
 ::: info
 This page provides detailed information about a Pro module, accessible with an Apostrophe Pro subscription. If you haven't subscribed yet, explore our [Apostrophe Workspaces](https://app.apostrophecms.com/login) to discover the benefits of a subscription. For further details or inquiries, feel free to [contact us](https://apostrophecms.com/contact-us) or visit our [pricing page](https://apostrophecms.com/pricing).
 :::
 
+## Choosing your starter kit
+
+There are two starter kits for Apostrophe Assembly. Both are working examples of a project built on the [`@apostrophecms-pro/multisite` module](https://apostrophecms.com/extensions/multisite-apostrophe-assembly), and they are deliberately close siblings: the same dashboard, the same hostname and theming model, the same widgets, and the same article-based content model. **What differs is how your customer-facing sites are rendered.**
+
+| | **Astro kit**<br>[`astro-public-demo-multisite`](https://github.com/apostrophecms/astro-public-demo-multisite) | **JSX kit**<br>[`public-demo-multisite`](https://github.com/apostrophecms/public-demo-multisite) |
+|---|---|---|
+| Customer-facing rendering | Astro components, in a separate frontend project | [JSX templates](/guide/jsx-templates.md), rendered in-process by ApostropheCMS |
+| Processes in development | Two: ApostropheCMS on port 3000, Astro on port 4321 | One, on port 3000 |
+| Frontend asset build | Astro's own build | Apostrophe's `ui/src` build, via [Vite](/guide/vite.md) |
+| Project layout | npm workspaces: `backend/` and `frontend/` | A single ApostropheCMS project at the root |
+
+**If you have no strong reason to choose otherwise, start from [`astro-public-demo-multisite`](https://github.com/apostrophecms/astro-public-demo-multisite).** It gives your frontend developers a full Astro project, with the ecosystem and tooling that comes with it, and it is the architecture the rest of our documentation and tooling is built around.
+
+Choose [`public-demo-multisite`](https://github.com/apostrophecms/public-demo-multisite) when you would rather keep everything in a single process and render on the server with JSX templates — fewer moving parts, and a shorter path for a team already comfortable inside ApostropheCMS.
+
+This page refers to them by the short names above. Most of it applies to both kits; sections that apply to only one are marked.
+
+::: info
+Earlier versions of this page documented `starter-kit-assembly-essentials`. That repository has been archived and is no longer a starting point for Assembly projects. Its Nunjucks templates, palette configuration and sample Dockerfile are not carried forward by either kit above.
+:::
+
 ## Purpose
 
-The purpose of the [Assembly Essentials starter kit](https://github.com/apostrophecms/starter-kit-assembly-essentials) is to serve as a quick start for multisite-enabled, cloud-hosted projects based on and hosted via Apostrophe Assembly. Technically speaking, it serves as a working example of a project built on the [`@apostrophecms-pro/multisite` module](https://apostrophecms.com/extensions/multisite-apostrophe-assembly).
+Each starter kit serves as a quick start for multisite-enabled, cloud-hosted projects based on and hosted via Apostrophe Assembly. Each also serves as example code for creating your own custom modules and organizing your files in an ApostropheCMS project.
 
-It also serves as example code for creating your own custom modules and organizing your files in an ApostropheCMS project. The [section describing the widgets](#provided-widgets) outlines some code practices and features that can be used in your own custom modules.
-
-This starter kit includes:
+Both starter kits include:
 
 * An example of project-level code for your customer-facing sites.
 * An example of project-level code for the dashboard site that manages the rest.
-* An example of project-level frontend asset generation via a modern webpack build.
+* A working content model — articles with a paginated index and show pages — plus a set of [layout and marketing widgets](#provided-widgets-and-content).
 * Best practices for easy hostname configuration in dev, staging and prod environments.
 * Support for multiple themes.
 
 ## Requirements For Development On Your Computer
 
-### Operating System: Mac, Linux, or Virtual Linux
+### Operating System
 
-**Your local development environment must be either MacOS or Linux.** If your development computer runs Windows, we recommend development on Ubuntu Linux in a full virtual Linux machine, via [VirtualBox](https://www.virtualbox.org/).
+ApostropheCMS development works on Windows, macOS, and Linux. Windows developers can either work directly on Windows, using Git Bash as their terminal, or use the Windows Subsystem for Linux (WSL 2). See [Setting up your environment](/guide/development-setup.md) for the tradeoffs and setup steps for each.
 
-Another option is to use the Windows Subsystem for Linux, which is also an Ubuntu Linux-based environment. However this option has not been extensively tested with Assembly.
+Two things are worth knowing before developing an Assembly project on native Windows:
+
+* **Both kits use bash for their build and deployment scripts** — `npm run build` in the JSX kit calls `bash -c`, and the Astro kit's `backend/deployment` scripts have a bash shebang. Git Bash satisfies this; PowerShell does not.
+* **The hosts file you will edit below is at a different path on Windows**, and requires an administrator to change it. See [Hosts file configuration requirements](#hosts-file-configuration-requirements).
 
 ### Software Installation Requirements
 
 To test-drive the project in development, make sure you have Apostrophe's usual dependencies on your local machine:
 
-* MongoDB (5.0 or better, we recommend 6.0)
-* NodeJS (18.x or better, latest long term support release recommended)
+* MongoDB (6.0 or better, we recommend 8.0). See [Installing MongoDB locally](/guide/installing-mongodb-locally.md).
+* Node.js 22 or later. We recommend the current Active LTS release (Node 24 at the time of writing). Node 18 and 20 have both reached end of life, and Node 22 is in maintenance until April 2027.
 
 For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
 
 ## Getting started
 
-**We recommend installing this project by cloning it locally and then pushing it to a repository in your own account. The Apostrophe CLI is not currently intended for multisite projects**
+**We recommend installing either project by cloning it locally and then pushing it to a repository in your own account. The Apostrophe CLI is not currently intended for multisite projects.**
 
-1) Navigate to the [Starter Kit](https://github.com/apostrophecms/starter-kit-assembly-essentials) repository and clone it locally, or navigate to the directory where you want your project installed and type:
+Both kits require access to the private `@apostrophecms-pro` npm packages, so be sure you are logged in to an npm account that has been granted access before installing (`npm whoami` should print your username).
+
+1) Clone the kit you chose into the directory where you want your project installed:
 
 ```sh
-git clone https://github.com/apostrophecms/starter-kit-assembly-essentials.git your-new-project-name
+# Astro frontend
+git clone https://github.com/apostrophecms/astro-public-demo-multisite.git your-new-project-name
+
+# JSX templates, single process
+git clone https://github.com/apostrophecms/public-demo-multisite.git your-new-project-name
 ```
-2) In the root directory of your project initialize version tracking with your preferred tool (GitHub, BitBucket, SourceForge, etc...) and create the base repo for your project.
+
+2) In the root directory of your project, initialize version tracking with your preferred tool (GitHub, BitBucket, SourceForge, etc...) and create the base repo for your project.
 
 3) Install dependencies:
 
-``` sh
+```sh
+cd your-new-project-name
 npm install
 ```
 
-3) After installation, add an admin user to the dashboard site, which manages all other sites:
+In the Astro kit this is an npm workspaces project, so a single install at the root covers both the `backend` and `frontend` workspaces.
+
+4) Add an admin user to the dashboard site, which manages all other sites. In the Astro kit, Apostrophe tasks run from the `backend` directory; in the JSX kit they run from the project root:
 
 ```sh
 node app @apostrophecms/user:add admin admin --site=dashboard
 ```
 
-Enter a password when prompted.
+Enter a password when prompted. The first startup also builds the admin UI, so expect this to take a minute or two.
 
 > When running command line tasks in a multisite environment you must always specify which site you are referring to. For the dashboard, use `--site=dashboard`. For other sites, you can use any of their valid hostnames, or `--all-sites` which runs the task on every site except the dashboard.
 
 ## First Steps: required before project startup
 
+::: info
+The JSX kit is a single ApostropheCMS project, so `app.js`, `domains.js` and `themes.js` sit at the repository root. In the Astro kit the ApostropheCMS project is one workspace down, so the same files are `backend/app.js`, `backend/domains.js` and `backend/themes.js`.
+:::
+
 ### Setting your shortname prefix
 
-Before you do anything else, set the fallback value for the `shortnamePrefix` option in `app.js` to a unique string for your project, replacing `a3ab-`. This should match your repo name followed by a `-` character. This should be distinct from any other Assembly projects you have, to ensure their MongoDB databases do not conflict in a dev environment.
+Before you do anything else, set the fallback value for the `shortNamePrefix` option in `app.js` to a unique string for your project, replacing the value the kit ships with. This should match your repo name followed by a `-` character. This should be distinct from any other Assembly projects you have, to ensure their MongoDB databases do not conflict in a dev environment.
 
 > MongoDB Atlas note: if you are self-hosting and you plan to use a low-end MongoDB Atlas cluster (below M10), you must use a unique prefix less than 12 characters (before the `-`), even if your repo name is longer. This is not an issue with hosting provided by the Apostrophe Assembly team.
 
 ### Configuring your domains
 
-After cloning this project, be sure to edit the `domains.js` file in the root directory and update the list to match your actual project's domains, typically for development, staging, and production. The `@apostrophecms-pro/multisite-dashboard` extension's `site` module requires an object with URL strings for the `baseUrlDomains` option, and this file provides those values. While `dev`, `staging`, and `prod` are common domain names, you can use other names, but the first one defined in the object will be considered the development environment.
+After cloning this project, be sure to edit the `domains.js` file and update the list to match your actual project's domains, typically for development, staging, and production. The `@apostrophecms-pro/multisite-dashboard` extension's `site` module requires an object with URL strings for the `baseUrlDomains` option, and this file provides those values. While `dev`, `staging`, and `prod` are common domain names, you can use other names, but the first one defined in the object will be considered the development environment.
 
-If you are doing local development on your own computer, leave the `dev` domain set to `localhost:3000`. For staging and production, the Apostrophe Assembly team will typically preconfigure this for you and you won't need to worry about DNS or certificates.
+If you are doing local development on your own computer, leave the development domain pointed at your local machine. In the JSX kit that value is `localhost:3000`, the port ApostropheCMS listens on. **In the Astro kit it is `localhost:4321`, the port Astro listens on** — your browser always talks to Astro, which talks to ApostropheCMS on port 3000 behind the scenes. For staging and production, the Apostrophe Assembly team will typically preconfigure this for you and you won't need to worry about DNS or certificates.
 
 If you are rolling your own hosting, the recommended approach is to create a DNS "wildcard" `A` record for a subdomain of your actual domain name, like `*.staging.example.com`, and configure `staging.example.com` as the `staging` value in `domains.js`. You'll also need a wildcard SSL certificate for each of staging and production.
 
@@ -119,7 +155,7 @@ The hostname above will become `fr-cars.your-domain.com`.
 
 This option applies only when the hostname is determined in part by the `shortName` field for the site, so if a production hostname is configured for the locale it will be used exactly as given.
 
-> **Note:** Your configuration won't be applied immediately on the existing sites. You need to update ("touch") your site records in order to apply the changes. You can do that for all existing sites via the CLI command `node app site:touch --site=dashboard`. If you do not have the `touch` task, update the apostrophe module to the latest 3.x version.
+> **Note:** Your configuration won't be applied immediately on the existing sites. You need to update ("touch") your site records in order to apply the changes. You can do that for all existing sites via the CLI command `node app site:touch --site=dashboard`.
 
 > **Note:** This option is not currently supported by Apostrophe Assembly Hosting, as we apply the naming convention for you when hosting for you. It's there for self-hosted customers with different needs.
 
@@ -140,32 +176,48 @@ Note that if `shortNameSuffix` is also set, the two options are combined to arri
 
 ### Disabled File Key
 
-In `sites/index.js`, locate `disabledFileKey` and change `CHANGEME` to a random string of your choosing. This is used when disabling access to files in the local backend.
+Locate `disabledFileKey` and replace the value the kit ships with, using a random string of your choosing. This is used when disabling access to files in the local backend.
+
+* **JSX kit:** the `@apostrophecms/uploadfs` options in `sites/index.js`.
+* **Astro kit:** `backend/dashboard/modules/@apostrophecms/uploadfs/index.js`.
 
 ### Session Secret
 
-In `sites/index.js`, locate `secret` and change `CHANGEME` to a random string of your choosing. This is used for login session encryption.
+Locate the session `secret` and replace it with a random string of your choosing. This is used for login session encryption. Set one everywhere it appears — the top-level configuration, the sites and the dashboard each have their own.
 
+* **JSX kit:** the `sessionSecret` option in `app.js`, plus the `@apostrophecms/express` session options in `sites/index.js`.
+* **Astro kit:** the `sessionSecret` option in `backend/app.js`, plus the `session.secret` option in `backend/sites/modules/@apostrophecms/express/index.js` and `backend/dashboard/modules/@apostrophecms/express/index.js`.
 
-### `/etc/hosts` File Configuration Requirements
+### Hosts File Configuration Requirements
 
 Because this project serves multiple websites, certain hostnames must point directly to your own computer for local testing.
 
 **If you will only be testing in Chrome at first,** you do not have to edit your hosts file right away. That's because in Chrome, all subdomains of `localhost` resolve to your own computer.
 
-However, in other browsers this is not true and you must add the following lines to `/etc/hosts` before proceeding:
+In other browsers this is not true, and you must add the following line to your hosts file before proceeding:
 
 ```
 127.0.0.1 dashboard.localhost company1.localhost
 ```
 
+Your hosts file is in a different place on each platform:
+
+* **macOS and Linux:** `/etc/hosts`. You will need `sudo` to save changes.
+* **Windows:** `C:\Windows\System32\drivers\etc\hosts`. Open your editor as an administrator first, or the file will appear read-only.
+
+These entries are hostnames only, so they are the same for both starter kits regardless of which port you browse.
+
 **You will need a subdomain for each test site you plan to add to the multisite platform.** See the example below, where a site called `company` is added to the platform via the dashboard. You can always add more of these entries later.
 
 ## Starting Up In Development
-Once you have followed the steps above you are ready to start your project up in development mode.
 
-Type
-```
+Once you have followed the steps above you are ready to start your project up in development mode. How you start it, and which port you browse, depends on your starter kit.
+
+### Starting the JSX kit
+
+This kit runs a single process. Type:
+
+```sh
 npm run dev
 ```
 
@@ -175,7 +227,31 @@ When ready, visit:
 http://dashboard.localhost:3000/login
 ```
 
-> If you are on a Mac this will work without extra configuration. If you are on Linux you may need to edit `/etc/hosts` and add an entry for `dashboard.localhost`, pointing to 127.0.0.1 just like plain `localhost` does. You'll do this for each site you test locally.
+### Starting the Astro kit
+
+This kit runs two processes: the ApostropheCMS backend on port 3000 and the Astro frontend on port 4321. Start each in its own terminal, from the project root:
+
+```sh
+# Terminal 1 — the ApostropheCMS backend
+npm run dev-backend
+
+# Terminal 2 — the Astro frontend
+npm run dev-frontend
+```
+
+Both scripts set `APOS_EXTERNAL_FRONT_KEY=dev` for you, which is the shared secret Astro uses to authenticate to the backend. If you run the two halves by hand instead, you must set the same value in both.
+
+The backend builds the admin UI for each theme on first startup, which takes a minute or two. Wait for `Proxy listening on port 3000` before browsing.
+
+**You browse port 4321, never port 3000.** Astro serves every request and proxies the login page, the media uploads, the REST API, and the admin UI assets through to ApostropheCMS. When ready, visit:
+
+```
+http://dashboard.localhost:4321/login
+```
+
+### Creating your first sites
+
+> In Chrome this works with no extra configuration, since every subdomain of `localhost` resolves to your own computer. In other browsers, add each site's hostname to your hosts file as described in [Hosts file configuration requirements](#hosts-file-configuration-requirements). You'll do this for each site you test locally.
 
 You can now log into the admin account and view the basic dashboard.
 
@@ -183,7 +259,7 @@ To create a site, access "Sites" on the admin bar and add a new site. Notice tha
 
 Be sure to give your first site a "shortname" which is distinct from other sites, like `company1`. Also fill out the admin password field for the site.
 
-After you successfully save the site, you can access:
+After you successfully save the site, you can access it at its own subdomain — on port 3000 for the JSX kit, or port 4321 for the Astro kit:
 
 ```
 http://company1.localhost:3000/login
@@ -196,6 +272,35 @@ Now try creating `company2` and `company3`. Notice that while the code is the sa
 > If you access these sites while logged out, you won't see your content edits unless you have used the "Commit" button to make them live.
 
 ## Scheduling tasks with ApostropheCMS Assembly hosting
+
+### Using a crontab file
+
+**This is the recommended way to schedule tasks.** Add a file named `crontab` to the root of your project repository, and ApostropheCMS hosting reads it automatically. It uses ordinary cron syntax, and it works for single-site ApostropheCMS projects as well as for Assembly. As with any crontab, entries run in your server's timezone.
+
+The current working directory is the root of your repository, so each entry invokes your application exactly as you would from a terminal there. In the Astro kit, where the ApostropheCMS project lives in the `backend` workspace:
+
+```
+0 0 * * * node backend/app.js @apostrophecms/scheduled-publishing:update
+```
+
+In the JSX kit, where the project sits at the repository root:
+
+```
+0 0 * * * node app.js @apostrophecms/scheduled-publishing:update
+```
+
+Because each entry is an ordinary command line invocation, the usual multisite rule applies: say which site the task is for with `--site=`, or use `--all-sites` to run it for every site except the dashboard.
+
+```
+0 * * * * node app.js products:sync --all-sites
+0 3 * * * node app.js some-module:some-task --site=dashboard
+```
+
+If you are self-hosting, put the equivalent entries in your server's own crontab instead.
+
+### The `tasks` option
+
+The `tasks` option predates the crontab file and is still supported. It was designed for environments running several workers, using locks so that a scheduled task runs only once across the cluster. In practice a single worker per environment has been the norm, so the crontab file above is both simpler and more flexible — it can express any schedule, rather than only hourly and daily.
 
 To schedule tasks much like you would with `cron` in a single-server environment, add a new `tasks` option to `app.js` when configuring `@apostrophecms/multisite`. This option is top-level, it's a peer of the `sites` and `dashboard` options.
 
@@ -238,7 +343,7 @@ Right now we have a bare-bones example. Let's look at where to put our code to c
 
 ### Where Does My Apostrophe Project Code Go?
 
-> If you are not already familiar with single-site Apostrophe development, we strongly recommend that you [read the ApostropheCMS documentation](https://apostrophecms.com/docs) as a starting point.
+> If you are not already familiar with single-site Apostrophe development, start with [Code organization with modules](/guide/modules.md), which covers how a module is structured, configured, and inherited — the concepts the rest of this section assumes.
 
 In a typical single-site Apostrophe project, modules are configured in `app.js`. In a multisite project, you'll find that `app.js` is instead reserved for top-level configuration that applies to all sites.
 
@@ -250,25 +355,87 @@ If you have already started a single-site project, you can move your modules dir
 
 > **If you are hosting your project with us, or using tools provided by us, you should remove any legacy app.js or module code that configures UploadFS cloud storage or mongodb database hosts.** Such settings are handled automatically and the configuration is set behind the scenes by `@apostrophecms-pro/multisite` and the provided logic in the starter kit.
 
+In the JSX kit, that project sits at the repository root:
+
+```
+├── app.js               # Top-level multisite configuration
+├── domains.js           # Per-environment base domains
+├── themes.js            # The list of available themes
+├── sites/               # Code for the customer-facing sites
+│   ├── index.js         # What `app.js` holds in a single-site project
+│   ├── lib/             # Shared helpers and per-theme config
+│   ├── modules/         # Page types, piece types, and widgets
+│   └── views/           # Shared JSX templates, including the layout
+└── dashboard/           # Code for the dashboard site
+    ├── index.js
+    └── modules/
+```
+
+In the Astro kit, that same ApostropheCMS project lives in the `backend` workspace, and the Astro application that renders your customer-facing sites lives alongside it in `frontend`:
+
+```
+├── backend/                 # The ApostropheCMS multisite project, as above
+│   ├── app.js
+│   ├── domains.js
+│   ├── themes.js
+│   ├── sites/
+│   └── dashboard/
+└── frontend/                # The Astro application
+    └── src/
+        ├── pages/           # A single [...slug].astro catch-all route
+        ├── templates/       # One component per page type, plus index.js
+        ├── widgets/         # One component per widget, plus index.js
+        └── components/      # Reusable pieces such as the header and footer
+```
+
+Both kits are written as ES modules, using `import` and `export default` rather than `require` and `module.exports`.
+
+### Rendering With JSX Templates
+
+*This section applies to the JSX kit.*
+
+Your customer-facing sites are rendered by ApostropheCMS itself, using [JSX templates](/guide/jsx-templates.md). Every page and widget template in `sites/` is a `.jsx` file — `sites/views/layout.jsx` for the shared layout, `sites/modules/hero-widget/views/widget.jsx` for a widget, `sites/modules/article-page/views/index.jsx` and `show.jsx` for the article index and show pages.
+
+JSX here is a server-side rendering option, not a front-end framework: there is no virtual DOM, no client runtime, and no React dependency. It is an alternate JavaScript syntax for markup, evaluated on the server in the same place Nunjucks would have run, which buys you real JavaScript control flow, editor support, and accurate error reporting with source maps. The [JSX templates guide](/guide/jsx-templates.md) covers the Apostrophe-specific equivalents of the Nunjucks features you may know.
+
+The dashboard site is the exception: its views are still Nunjucks (`dashboard/views/layout.html`). This is by design — the dashboard is an internal admin tool, and you rarely need to touch its markup.
+
+Frontend assets follow the standard ApostropheCMS pattern, built by [Vite](/guide/vite.md). Place modern JavaScript in the `ui/src/index.js` file of any module, and Sass SCSS in `ui/src/index.scss`, using `import` statements to pull in more of each. As noted in our documentation, it is **important for `ui/src/index.js` to export a function as its default export.** This function will be invoked to initialize your module at a safe time when `apos.http`, `apos.util`, etc. are already available. This kit keeps its project-wide styles together in the `asset` module, at `sites/modules/asset/ui/src/`.
+
+### Rendering With Astro
+
+*This section applies to the Astro kit.*
+
+ApostropheCMS still owns every content schema, widget definition, page type, and the editing UI. Astro owns the markup. The `@apostrophecms/apostrophe-astro` bridge package connects the two, and preserves in-context editing, so your editors still click directly on the page to make changes.
+
+The division of labor means adding a widget is a two-sided job:
+
+1. Create the widget module under `backend/sites/modules/`, and turn it on in `backend/sites/index.js`.
+2. Create the matching component in `frontend/src/widgets/`, and register it in `frontend/src/widgets/index.js`.
+
+Page types work the same way, using `frontend/src/templates/` and its `index.js`.
+
+**The registry keys must match the names ApostropheCMS stores in the database, not the module folder names.** Apostrophe strips the `-widget` suffix, so the `hero-widget` module is registered under the key `hero`, and core widgets keep their scope — `@apostrophecms/rich-text`, not `rich-text`. A missing or misspelled key doesn't crash anything; the widget simply renders as nothing, with an error logged on the server.
+
+Because the multisite module routes requests by hostname, and Astro passes the incoming `Host` header through to the backend, a single Astro process serves every site on your platform. There is nothing per-site to configure on the frontend.
+
+For a fuller treatment of these patterns — `aposPageFetch`, `AposArea`, link resolution, and image rendering — see the [Astro demo architecture guide](/guide/astro-demo-overview.md) and the [ApostropheCMS and Astro tutorial](/tutorials/astro/apostrophecms-and-astro.md).
+
 ### Themes
 
-Apostrophe Assembly and the multisite module are designed to accommodate hundreds of websites, or more, running on a single codebase. But, you may need some differences in appearance and behavior that go beyond what the palette editor can provide. For that you can create multiple themes. Each site is set via the dashboard UI to use a single theme and will typically stay with that theme throughout its lifetime.
+Apostrophe Assembly and the multisite module are designed to accommodate hundreds of websites, or more, running on a single codebase. But, you may need some differences in appearance and behavior between sites. For that you can create multiple themes. Each site is set via the dashboard UI to use a single theme and will typically stay with that theme throughout its lifetime.
 
-You might not need more than one theme. If that's the case, just build out the `default` theme to suit your needs, and remove the `demo` theme from `themes.js`. You can also remove the `sites/modules/theme-demo` module and `sites/lib/theme-demo.js`.
+Each kit ships with exactly one theme to build on — `default` in the JSX kit, `demo` in the Astro kit. You might not need more than one. If that's the case, just build that theme out to suit your needs.
 
 #### Adding a New Theme
 
 To configure your list of themes, edit `themes.js`. Right now it looks like:
 
 ```javascript
-module.exports = [
+export default [
   {
     value: 'default',
     label: 'Default'
-  },
-  {
-    value: 'demo',
-    label: 'Demo'
   }
 ];
 ```
@@ -277,10 +444,10 @@ You can add additional themes as needed. Your `value` should be a shortname like
 
 #### Custom Module Configuration for Themes
 
-If your theme is named `default`, then you must have a `sites/lib/theme-default.js` file, like this:
+For a theme named `default`, you must have a `sites/lib/theme-default.js` file, like this:
 
 ```javascript
-module.exports = function(site, config) {
+export default function(site, config) {
   config.modules = {
     ...config.modules,
     'theme-default': {}
@@ -288,98 +455,97 @@ module.exports = function(site, config) {
 };
 ```
 
-The `config` object already contains what was configured in `sites/index.js`. Here we can modify the configuration by adding extra modules only for this theme, or changing the configuration of a module specifically for this theme.
+The `config` object already contains what was configured in `sites/index.js`. Here we can modify the configuration by adding extra modules only for this theme, or changing the configuration of a module specifically for this theme. Any module you enable this way — such as the `theme-default` module above — needs a corresponding directory in `sites/modules`.
 
-In this case we add one custom module, `theme-default`, when the default theme is active. **It is a best practice to push your theme's frontend assets to Apostrophe in a module like this,** named after the theme. If your themes share any assets, then they should be imported into the appropriate `.js` or `.scss` master file by each theme.
+**What a theme controls depends on your kit.** In the JSX kit, a theme module is a natural home for that theme's own SCSS and JavaScript entry points, so themes can be the unit of visual difference. In the Astro kit the frontend is Astro, and the theme module is an intentionally empty starting point; a theme there is still the right hook for changing *backend* configuration per site, but visual variation belongs in your Astro components. The theme name is not sent to the Astro frontend automatically; expose it with the [`templateData` module option](/reference/module-api/module-options.md#templatedata) so that it arrives alongside the rest of your page data, then branch on it in your components.
 
-#### Modern Frontend Assets Without A Custom Build Process
+Note that Apostrophe builds one asset bundle per theme. This is why you **must not decide to completely enable or disable a module that pushes assets on any basis other than the theme name.**
 
-Beginning with the 1.1.0 release, there is no need for Webpack for simpler cases. Specifically, you can follow our documentation and place your modern JavaScript code in the `ui/src/index.js` file of any module, or use `import` statements in that file to import it there. As noted in our documentation, it is **important for `ui/src/index.js` to export a function as its default export.** This function will be invoked to initialize your module at a safe time when `apos.http`, `apos.util`, etc. are already available.
+### Automatic Translation
 
-You may also place Sass SCSS code in the `ui/src/index.scss` file of any module, and use `import` statements in that file to bring in more Sass SCSS code.
+Both kits include `@apostrophecms-pro/automatic-translation`, routed through the [ApostropheCMS AI engine](/reference/modules/ai.md) rather than a dedicated translation service. You configure AI once, and translation inherits it — there is no translation-specific key, client or model to manage. The configuration lives with your other site modules, in `sites/index.js` (`backend/sites/index.js` in the Astro kit):
 
-To include theme-specific code, place it in the `ui/src/index.scss` or `ui/src/index.js` file of the appropriate theme module. The provided example theme modules are `theme-default` and `theme-alternate`.
+```javascript
+// The core AI engine, configured once for every AI feature
+'@apostrophecms/ai': {
+  options: {
+    provider: 'anthropic',
+    providers: {
+      anthropic: {}
+    }
+  }
+},
+'@apostrophecms-pro/automatic-translation': {
+  options: {
+    enabled: false,
+    provider: 'llm'
+  }
+},
+// Nothing to configure: it inherits the AI configuration above
+'@apostrophecms-pro/automatic-translation-llm': {}
+```
 
-For example:
-- The default theme's SASS stylesheet entrypoint is located at `sites/modules/theme-default/ui/src/index.scss`
-- The default theme's JavaScript browser-side entry point is located at: `sites/modules/theme-default/ui/src/index.js`
+**The kits ship with `enabled: false`**, so a fresh clone starts without requiring any AI credentials. In that state the module registers no translation provider and adds no editing UI, but its content extraction API stays available to other modules that depend on it.
 
-#### Example webpack extensions
+To turn translation on:
 
-The `theme-default` and `theme-demo` modules modify the base webpack build using the [`webpack` property](/guide/webpack.md#extending-webpack-configuration) to incorporate SCSS variables for colors and fonts. This is included to demonstrate how to set up centralized theme management with global variables in one place. They also both add a function for converting font sizes from `px` to `rem`. While this is a useful function that is used in several of the `theme-default` stylesheets, it primarily serves to illustrate how SCSS functions can be added to your project. A similar approach would be used to add in any SCSS mixins that subsequent stylesheets utilize.
+1. Set the API key for your chosen adapter in the environment — `APOS_ANTHROPIC_KEY` for the [Anthropic adapter](/reference/modules/ai-adapter-anthropic.md) the kits are configured for.
+2. Change `enabled` to `true`.
 
-The two theme modules accomplish this extension in slightly different ways. The `theme-default` extension adds all the variables and the function into a template literal block within the `additionalData` property. If you continue to use the `theme-default` module in your project and want to use the included project-level widgets, you need to keep and potentially edit this template literal block since the styling of the widgets depends on them.
+Translation then appears as **AI** in the localization dialog.
 
-The `theme-demo` module includes the variables and function by importing files from the `sites/modules/theme-demo/ui/src/scss/settings/` folder. Note that these files also need to be imported into the `sites/modules/theme-demo/ui/src/index.scss` file. This is necessary for the main webpack build to include them. If your project includes additional [SASS "partials"](https://sass-lang.com/guide/#partials) files that other stylesheets access through `@use` you will need to add them to both the `index.scss` file and in the extended webpack configuration. Again, the project-level widgets included in this starter-kit depend on the styling included in these files.
+::: warning
+Setting `enabled: true` without a configured AI provider will stop your project from starting, with `no AI provider is configured`. The check runs once at startup rather than when a translation is first requested, so configure the key and the flag together.
+:::
 
-The `theme-default` module depends on only the `sites/layout.html` file to provide markup for the `@apostrophecms/home-page` page type. In contrast, the `views` folder of the `theme-demo` module has two markup files that provide additional HTML markup. The main `welcome.html` file contains a conditional block for displaying different content based on whether there is a user is logged in or not. It has a second conditional block for displaying markup from the `placeholder.html` file if no content has been added to the page. The Nunjucks template in the `sites/modules/@apostophecms/home-page/views/page.html` file conditionally adds this markup if `demo` is the selected theme. You can choose to maintain this structure and modify the `welcome.html` file, or change the `modules/@apostrophecms/home-page/views/page.html` to contain your own markup.
+The adapter choice is not fixed. The AI engine also ships adapters for [OpenAI](/reference/modules/ai-adapter-openai.md), [Google Gemini](/reference/modules/ai-adapter-google.md), and any [OpenAI-compatible service](/reference/modules/ai-adapter-openai-compatible.md), and swapping between them is a configuration change rather than a code change. Translation is inexpensive work, so the `effort` option on `@apostrophecms-pro/automatic-translation-llm` is worth setting to `low` if you are routing to a model that supports effort levels.
 
-#### Frontend Assets With Your Own Build Process
+### Serving Static Files: Fonts and Static Images
 
-Beginning with the 1.1.0 release, a sample webpack build is not included as standard equipment, as `ui/src` suffices for most needs. However, if you need to use webpack or another custom build process, the solution is to configure the output of your build process to be a `ui/public/something.js` file in any module in your Apostrophe project. As above you can create a build that is included in only one theme by writing its output to the `ui/src` subdirectory of that theme module.
+If you need to serve static files, you can do this much as you would in standalone ApostropheCMS development.
 
-#### Developing For IE11
+The folder `sites/public` maps to `/` in the URL space of a site. For instance, `sites/public/fonts/myfile.ttf` maps to `/fonts/myfile.ttf`. In the Astro kit, static files for the frontend can also be served from Astro's own `frontend/public` directory.
 
-With Microsoft ending Internet Explorer 11 support in 2022, we no longer enable IE11 support by default. However you can enable IE11 support by setting the `es5: true` option to the `@apostrophecms/asset` module. This will create a compatibility build of your `ui/src` JavaScript. Please note that editing is never supported in IE11. See the Apostrophe documentation for more information.
+## Provided widgets and content
 
-#### Serving Static Files: Fonts and Static Images
+Both kits ship the same content model and the same widget set, so this section applies to either one. In the JSX kit each widget is a module under `sites/modules`; in the Astro kit each widget is a module under `backend/sites/modules` paired with a component in `frontend/src/widgets`.
 
-If you need to serve static files, you can do this much as you would in standalone A3 development.
+**Content types:**
 
-The folder `sites/public` maps to `/` in the URL space of a site. For instance, `sites/public/fonts/myfile.ttf` maps to `/fonts/myfile.ttf`. For assets like favicons and fonts, you can add `link` tags to the `standardHead` block already present in `sites/modules/@apostrophecms/template/views/outerLayout.html`.
+* `article` — a piece type extending `@apostrophecms/blog`.
+* `article-category` — a piece type for categorizing articles.
+* `article-page` — a paginated index of articles, with "show pages" for individual articles.
+* `default-page` — a page type for ordinary pages.
 
-### Palette Configuration
+**Widgets**, supplementing the core rich text, image, video and file widgets:
 
-The palette allows styles to be edited visually on the site. It is configured in `sites/modules/@apostrophecms-pro/palette/index.js`. There you can specify the selectors, CSS properties, and field types to be used to manipulate color, font size, font family and other aspects of the site as a whole.
+* `layout-widget` and `layout-column-widget` — structured page composition.
+* `hero-widget` — a hero element with image or color background, text and links. Demonstrates using `relationship` schema fields to add an image or video for the background.
+* `card-widget` — a card with optional image and text, which can be made directly clickable or have links and buttons added.
+* `price-card-widget` — a pricing card.
+* `button-widget` — a button or inline link.
+* `article-widget` — teases an article on any page.
+* `github-prs-widget` — lists pull requests from GitHub, demonstrating how a widget can call an external API.
 
-For complete information and a sample configuration, see the [@apostrophecms-pro/palette module documentation](https://npmjs.org/package/@apostrophecms-pro/palette). *You will need to be logged into an npm account that has been granted access, such as the one you used to npm install this project.*
+Several of these reuse the shared schema helpers in `sites/lib`, particularly `link.js` for link fields and `area.js` for area configuration. These serve as a model for implementing reusable parts of widgets in your own project.
 
-> Note that like all other changes, palette changes do not take place for logged-out users until the user clicks "Publish."
-
-## Provided widgets
-There are six basic widget modules located in the `sites/modules/widgets` folder of this starter kit. This supplements the core `rich-text`, `image`, `video`, and `html` widgets. They can be altered to fit the design and functionality of your project or act as a blueprint to build your own custom widgets. Both the `hero` and `column` widgets have been added to the `main` area of the `@apostrophecms/home-page`. The remainder of the basic widgets have been added to the areas of the `column` widget as described below.
-
-If you look at the `sites/index.js` file you won't see these widget modules in the `modules` object. Instead, they are being registered using the `nestedModuleSubdirs` property. Setting this property to `true` will cause Apostrophe to register all the modules listed in the `modules.js` file of any subfolder in the project-level `sites/modules` folder. You can choose to organize any custom modules, such as grouping all of your piece-types, to keep your `modules` folder and the `index.js` file less cluttered. Note that if you choose to move any of the provided widgets out of the current folder you will need to add them to the `sites/index.js` file and remove them from the `sites/modules/widgets/modules.js` file. If you choose to keep this structure, any custom widgets you add to the folder need to be listed in the `modules.js` file.
-
-All the styling for the supplied widgets, except for the partials added in the custom webpack extensions added in the theme modules, is located in the `ui/src/index.scss` file of each module. You can choose to maintain this structure, move the styling to another project-level module like a `sites/modules/asset/ui/src/` folder, or organize them in a different project-specific manner. Note that for them to be included in the standard webpack build, they need to be imported into a `<module>/ui/src/index.scss` file.
-
-### `accordion-widget`
-The `accordion-widget` implements an accordion element powered by the [`accordion-js` npm package](https://www.npmjs.com/package/accordion-js). You can read about additional configuration options in the documentation of that package. The module consists of a main `index.js` file with the content schema fields, plus a `views` folder that contains a `widget.html` file with the Nunjucks markup for the accordion.
-
-Finally, there is the `ui/src` folder that contains the `index.scss` stylesheet and the `index.js` file that contains the JavaScript that is delivered to the frontend and powers the accordion using a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets). Any custom widgets that require client-side code should be structured in this same way. Data is passed from the schema fields to the browser for use in the player script by adding it to a data attributes in the template.
-
-### `card-widget`
-The `card-widget` creates a simple card with optional image and text. The card can be made directly clickable, or can have links and buttons added. The schema fields for these elements are provided by the `lib/schema/link.js` file, which serves as a model for implementing reusable parts of widgets. These same schema fields are reused in the `hero` and `link` widgets and can be used in your custom project widgets. The markup for the links is imported into the `card-widget` template from the `sites/views/fragments/link.html` file using the [`rendercall` helper](/guide/fragments.md#inserting-markup-with-rendercall). This is present in a simpler form in the `links-widget`. Again, all your custom modules (not just widgets) can utilize fragments to replicate similar areas of markup in this same way.
-
-### `column-widget`
-The `column-widget` implements one method of adding a user-selected number of columns to a page. It uses a select field and conditional fields that restrict the number of columns based on the value of the select. Each column has an area with widgets for the `link`, `card`, and `accordion` basic widgets, plus the core `rich-text`, `image`, and `video` widgets. These are added through a shared configuration object that defines the available widgets for each column. The first column additionally adds the basic `slideshow` widget.
-
-The widget also provides a `helper(self)` customization function that is used in the Nunjucks template. Depending on the value of the select field it returns the correct number of columns. The `helper(self)` functions can be used in your custom modules to provide computed values from data passed back from the markup.
-
-### `hero-widget`
-The `hero-widget` implements a hero element with image or color background, text and links. As stated above, this module reuses the `links.js` helper file. It also demonstrates how to use `relationship` schema fields to add an image or video for the background.
-
-### `link-widget`
-This simple widget adds either a button or inline-link. As described for the `card-widget`, It utilizes the `lib/schema/link.js` helper file and the `sites/views/fragments/link.html` fragment. Within the widget template there is a `rendercall` that passes data from the widget schema fields to the fragment.
-
-### `slideshow-widget`
-The `slideshow-widget`, much like the `accordion-widget`, utilizes client-side JavaScript. For this widget the `ui/src/index.js` is adding the [`swiper.js` package](https://swiperjs.com/) to the player.
+If you look at the `sites/index.js` file you won't see every widget module listed individually in the `modules` object. Instead, the `nestedModuleSubdirs` property is set to `true`, which causes Apostrophe to register all the modules listed in the `modules.js` file of any subfolder in the project-level `sites/modules` folder. You can use this to organize custom modules, such as grouping all of your piece types, to keep your `modules` folder and the `index.js` file less cluttered.
 
 ## Dashboard Development
 
 **The dashboard site has one job: managing the other sites.** As such you don't need to worry about making this site a pretty experience for the general public, because they won't have access to it. However you may want to dress up this experience and add extra functionality for your own customer admin team (the people who add and remove sites from the platform).
 
-This starter kit has the `@apostrophecms-pro/multisite-dashboard` extension installed. This converts the dashboard from sites being presented as individual cards to a scrollable list. Each site now has a link for login to the site, as well as navigation to the home-page. This extension also creates a search box that makes finding sites easier. Finally, this extension also adds a template tab to the site creation modal. When creating or editing a site you can select to make it a template by clicking on "Template" control in the "Basics" tab. This will still be an active site, but it will be moved to the template tab. Sites in the template tab can be duplicated by selection that option in the context menu to the far right.
+Both kits have the `@apostrophecms-pro/multisite-dashboard` extension installed. This presents sites as a scrollable list rather than individual cards. Each site has a link for login to the site, as well as navigation to the home page. This extension also creates a search box that makes finding sites easier. Finally, this extension adds a template tab to the site creation modal. When creating or editing a site you can select to make it a template by clicking on "Template" control in the "Basics" tab. This will still be an active site, but it will be moved to the template tab. Sites in the template tab can be duplicated by selecting that option in the context menu to the far right.
 
 The dashboard site can be extended much like the regular sites. Dashboard development is very similar to regular site development, except that modules live in `dashboard/modules`, what normally resides in `app.js` lives in `dashboard/index.js`, and so on.
 
-The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](/guide/modules.md) for extending any package at project level.
+The most important module is the `site` module. The `site` module is a piece type, with a piece to represent each site that your dashboard admins choose to create. This module is registered through the `@apostrophecms-pro/multisite-dashboard` extension and can be extended at the project level by creating a `dashboard/modules/@apostrophecms-pro/site` folder and placing your code there. This is the [standard method](/guide/module-configuration-patterns.md) for extending any package at project level.
 
-The `site` schema field values get passed to the individual sites in the `site` object. This is what is used to set the theme configuration in the `sites/index.js` file. The starter kit is also adding the value of the `theme` schema field to the `apos.options` object.
+The `site` schema field values get passed to the individual sites in the `site` object. This is what is used to set the theme configuration in the `sites/index.js` file. The starter kits also add the value of the `theme` schema field to the `apos.options` object.
 
-```
+```javascript
 // sites/index.js
-module.exports = function (site) {
+export default async function (site) {
   const config = {
     // Theme name is globally available as apos.options.theme
     theme: site.theme,
@@ -390,7 +556,7 @@ If you have additional values being passed from the `site` piece schema that you
 
 ```javascript
 // sites/index.js
-module.exports = function (site) {
+export default async function (site) {
   const config = {
     // Theme name is globally available as apos.options.theme
     theme: site.theme,
@@ -403,7 +569,9 @@ module.exports = function (site) {
       },
       ...
 ```
-You can also elect to add them to the `apos.options` object, as is shown above example for the `site.theme`. This can then be accessed in any module function with access to `self` using `self.apos.options.<property>`. If you need that value in your templates you can use the [`templateData` module option](/reference/module-api/module-options.md#templatedata).
+
+You can also elect to add them to the `apos.options` object, as is shown in the example above for `site.theme`. This can then be accessed in any module function with access to `self` using `self.apos.options.<property>`. If you need that value in your templates you can use the [`templateData` module option](/reference/module-api/module-options.md#templatedata).
+
 ### Allowing dashboard admins to pass configuration to sites
 
 You can add custom schema fields to `sites` and those fields are available on the `site` object passed to `sites/index.js`, and so they can be passed on as part of the configuration of modules.
@@ -413,11 +581,11 @@ However, there is one important restriction: you **must not decide to completely
 **"Should I add a field to the `site` piece in the dashboard, or just add it to `@apostrophecms/global` for sites?"** Good question! Here's a checklist for you:
 
 * **If single-site admins who cannot edit the dashboard should be able to edit it,** you should put it in `sites/modules/@apostrophecms/global`.
-* **If only dashboard admins who create and remove sites should be able to make this decision,** it belongs in `dashboard/modules/site/index.js`. You can then pass it on as module configuration in `sites/lib/index.js`.
+* **If only dashboard admins who create and remove sites should be able to make this decision,** it belongs in `dashboard/modules/site/index.js`. You can then pass it on as module configuration in `sites/index.js`.
 
 ## Accessing the MongoDB utilities for a specific site
 
-The database name for a site is the prefix, followed by the `_id` of the site piece. However this is awkward to look up on your own, so we have provided utility tasks to access the MongoDB utilities:
+The database name for a site is the prefix, followed by the `_id` of the site piece. However this is awkward to look up on your own, so we have provided utility tasks to access the MongoDB utilities. Run these — and every other `node app` task — from the project root in the JSX kit, or from the `backend` directory in the Astro kit:
 
 ```
 # Mongo shell for the dashboard site
@@ -444,60 +612,9 @@ Self-hosted arrangements can also be made. For more information contact the Apos
 
 If we are hosting Apostrophe Assembly for you, then you can deploy updates to your staging cloud by pushing to your `staging` git branch, and deploy updates to your production cloud by pushing to your `production` git branch. You will receive notifications in our shared Slack channel, including links to access the deployment progress logs.
 
-Apostrophe will complete asset builds for each theme, as well as running any necessary new database migrations for each site, before switching to the newly deployed version of the code.
+Apostrophe will complete asset builds for each theme, as well as running any necessary new database migrations for each site, before switching to the newly deployed version of the code. Both kits provide the scripts this relies on: a build that runs `@apostrophecms/asset:build` once per theme, and a migration step that runs `@apostrophecms/migration:migrate` for the dashboard and for all sites.
 
-## Profiling with OpenTelemetry
-
-ApostropheCMS supports profiling with OpenTelemetry. There is an [article in the documentation](/cookbook/opentelemetry.md) covering the use of OpenTelemetry in general. Launching Apostrophe Assembly with OpenTelemetry support is slightly different. However for your convenience, `app.js` and `telemetry.js` are already set up appropriately in this project.
-
-To launch in your local development environment with OpenTelemetry logging to Jaeger, first [launch Jaeger according to the instructions in our documentation](/cookbook/opentelemetry.md). Then start your Apostrophe Assembly project like this:
-
-```
-APOS_OPENTELEMETRY=1 npm run dev
-```
-
-This provides a great deal of visibility into where the time is going when Apostrophe responds to a request. Note that separate hosts can be distinguished via the `http.host` tag attached to each request in Jaeger.
-
-Using OpenTelemetry in a staging environment provided by the Apostrophe team is possible. This involves modifying the provided `telemetry.js` file to log to a hosted backend such as [New Relic](https://docs.newrelic.com/docs/more-integrations/open-source-telemetry-integrations/opentelemetry/opentelemetry-introduction/) using an appropriate Open Telemetry exporter module. `process.env.ENV` can be used to distinguish between `dev` or no setting (usually local development), `staging` and `prod` when decidig whether to enable an OpenTelemetry backend.
-
-We do not recommend enabling OpenTelemetry in production, at least not permanently, because of the performance impact of the techniques OpenTelemetry uses to obtain the necessary visibility into async calls.
-
-## Self-hosting and the sample Dockerfile
-
-A sample `Dockerfile` is provided with this project and can be used for self-hosting. See also the provided `.dockerignore` file.
-
-Typical `build` and `run` commands look like:
-
-```bash
-# build command
-docker build -t apostrophe-assembly . \
-  --build-arg="NPMRC=//registry.npmjs.org/:_authToken=YOUR_NPM_TOKEN_GOES_HERE" \
-  --build-arg="ENV=prod" --build-arg="APOS_PREFIX=YOUR-PREFIX-GOES-HERE-" \
-  --build-arg="DASHBOARD_HOSTNAME=dashboard.YOUR-DOMAIN-NAME-GOES-HERE.com" \
-  --build-arg="PLATFORM_BALANCER_API_KEY=YOUR-STRING-GOES-HERE" \
-  --build-arg="APOS_S3_REGION=YOURS-GOES-HERE" \
-  --build-arg="APOS_S3_BUCKET=YOURS-GOES-HERE" \
-  --build-arg="APOS_S3_KEY=YOURS-GOES-HERE" \
-  --build-arg="APOS_S3_SECRET=YOURS-GOES-HERE"
-
-# run command
-docker run -it --env MONGODB_URL=YOUR-MONGODB-ATLAS-URL-GOES-HERE apostrophe-assembly
-```
-
-To avoid passing the real MongoDB URL to the build task, currently the provided Dockerfile uses a
-temporary instance of `mongod` to satisfy a requirement that it be present for the build task.
-
-An npm token is required to successfully `npm install` the private packages inside the
-image during the build.
-
-S3 credentials are passed to the build so that the static assets can be mirrored to S3, however
-at a cost in performance this can be avoided by removing `APOS_UPLOADFS_ASSETS=1` from
-the `Dockerfile` and removing the references to these environment variables as well. Note
-that you will still need S3 credentials in the `run` command, unless you arrange for
-`dashboard/public/uploads` and `sites/public/uploads` to be persistent volumes on a
-filesystem shared by all instances. This is slow, so we recommend using S3 or configuring
-a different [uploadfs backend](https://github.com/apostrophecms/uploadfs) such as
-Azure Blob Storage or Google Cloud Storage.
+In the Astro kit, the Astro frontend is deployed alongside the backend and must be able to reach it. Set `APOS_EXTERNAL_FRONT_KEY` to the same value for both halves — a real secret, not the `dev` value used locally — and be sure the frontend passes the incoming `Host` header through, since that is how the multisite module knows which site a request is for. If you are hosting with us, the Assembly team configures this for you.
 
 ## Localized domain names
 
@@ -542,10 +659,10 @@ If this sub-option is set to `true`, every new locale created will have its `pri
 
 ```javascript
 // in dashboard/index.js
-const themes = require('../themes');
-const baseUrlDomains = require('../domains');
+import themes from '../themes.js';
+import baseUrlDomains from '../domains.js';
 
-module.exports = {
+export default {
   privateDashboards: true,
   modules: {
     // other dashboard modules
