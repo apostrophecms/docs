@@ -32,7 +32,7 @@ ApostropheCMS development works on Windows, macOS, and Linux. Windows developers
 
 To test-drive the project in development, make sure you have Apostrophe's usual dependencies on your local machine:
 
-* MongoDB (6.0 or better, we recommend 8.0). See [Installing MongoDB locally](/guide/installing-mongodb-locally.md).
+* MongoDB (7.0 or better, we recommend 8.0). See [Installing MongoDB locally](/guide/installing-mongodb-locally.md).
 * Node.js 22 or later. We recommend the current Active LTS release (Node 24 at the time of writing). Node 18 and 20 have both reached end of life, and Node 22 is in maintenance until April 2027.
 
 For more information see the Apostrophe [Getting Started Tutorial](/guide/development-setup.md).
