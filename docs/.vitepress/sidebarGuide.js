@@ -160,6 +160,10 @@ const sidebarGuide = [
           {
             text: 'Piece Pages',
             link: 'guide/piece-pages.md'
+          },
+          {
+            text: 'Document Versions',
+            link: 'guide/document-versions.md'
           }
         ]
       },
@@ -545,10 +549,6 @@ const sidebarGuide = [
       {
         text: 'Advanced Permissions',
         link: 'https://apostrophecms.com/extensions/advanced-permission'
-      },
-      {
-        text: 'Document Versions',
-        link: 'https://apostrophecms.com/extensions/document-version'
       },
       {
         text: 'Template Library',

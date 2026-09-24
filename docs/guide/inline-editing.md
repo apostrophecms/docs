@@ -359,9 +359,14 @@ A `richText` field is the clearest case. Its stored markup holds [permalink](/re
 
 ## Inline editing and Document Versions
 
-Document Versions records each saved version of a document and lets editors compare and roll back.
+[Document versions](/guide/document-versions.md) records each saved version of a document and lets editors review changes and restore earlier versions.
 
-Inline editable fields are the best-supported case for **WYSIWYG display of changes**: because the template already says where each field appears on the page and what markup it renders as, a version comparison can show the change where the content actually lives, rather than as a row in a field-by-field list. Support for this is currently being implemented.
+Inline editable fields get the most direct **display of changes**. Because the template already says where each field appears on the page and what markup it renders as, the versions modal shows a changed inline field where the content actually lives:
+
+- An inline `richText` field shows its added and removed words marked in place, the same way a [rich text widget](/guide/showing-version-changes.md#rich-text-marks) does.
+- Any other inline field is framed as changed, like a changed widget. Selecting the frame reveals the matching row in the change list.
+
+No template changes are needed for either.
 
 This is worth weighing when you are deciding between an inline editable `string` or `richText` field and an equivalent that is only edited in a modal.
 

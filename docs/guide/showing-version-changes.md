@@ -1,13 +1,34 @@
-# Widget developers: showing what changed
+# Showing version changes in widgets
 
-When an editor opens a document's version history, the [`@apostrophecms/document-versions`](/reference/modules/document-versions.md) module frames every changed widget and labels it **Modified** by default, and the change list names each field that differs. Two widget options improve on that default. Neither is required.
+When an editor selects a version in the **Document Versions** modal, they see two things side by side:
 
-## `titleField`: name your widgets in the change list
+- **The change list:** one text row per change, such as a changed heading with its old and new text.
+- **The document:** the version's content, displayed the way the site displays it. Each widget is rendered with its normal template, the same one visitors see. Every changed widget is framed and badged as Added, Modified, Deleted, or Moved.
+
+(See the [Document versions guide](/guide/document-versions.md) for how versions are recorded.)
+
+All of this works for every widget, with no extra code. Two optional widget type settings improve it:
+
+- [`titleField`](#titlefield-name-your-widgets) gives each widget a readable name in the change list.
+- [`renderVersions`](#renderversions-show-what-changed-in-your-template) lets your widget's template show, inside the frame, exactly what changed.
+
+## `titleField`: name your widgets
+
+`titleField` names one of the widget's own fields. The change list uses that field's value to identify each widget, so editors can tell apart several widgets of the same type.
+
+Without it, a widget is identified only by the `label` of its widget type, in the breadcrumb that shows where each change is. That's enough when a page has one widget of each type, but not when it has several of the same type.
+
+For example, take a hero widget type whose `label` is "Hero," used three times on a page, each with its own heading. If an editor changes the subheading of two of them, the change list shows two rows with identical breadcrumbs:
+
+- Content › Hero › Subheading
+- Content › Hero › Subheading
+
+Each hero has a different heading, so the heading is a good identifier. Set `titleField: 'heading'`:
 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Hero',
@@ -15,7 +36,14 @@ module.exports = {
   },
   fields: {
     add: {
-      heading: { type: 'string', label: 'Heading' }
+      heading: {
+        type: 'string',
+        label: 'Heading'
+      },
+      subheading: {
+        type: 'string',
+        label: 'Subheading'
+      }
     }
   }
 };
@@ -25,17 +53,43 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-`titleField` names a schema field of the widget — dot notation is allowed for fields inside objects. Its text labels the widget in breadcrumbs ("Hero · Autumn sale") and is what an Added or Deleted widget row shows, the same way the `titleField` of an array field labels its items. Without it, a page with five Hero widgets has five rows that read alike, told apart only by position. A choice field reads as the label of the stored choice.
+Now each widget's heading appears after the type label, and the same two rows read:
 
-## `renderVersions`: let the template compare
+- Content › Hero · Autumn sale › Subheading
+- Content › Hero · Spring launch › Subheading
+
+The title is the field's value in the version being viewed, or, for a deleted widget, its value before it was deleted. It also labels the row for an added or deleted widget, which otherwise shows only "Hero." This works the same way as the `titleField` of an array field.
+
+`titleField` accepts dot notation for fields inside an `object` field, such as `'content.heading'`. A select, radio, or checkboxes field reads as the label of the chosen value.
+
+Rich text widgets need no `titleField`; they are identified by their text.
+
+## `renderVersions`: show what changed in your template
+
+In the document view of the modal, a changed widget is rendered by its normal template, exactly as it appears on the site, with a Modified frame around it. The editor can see *that* the widget changed, but has to read the change list to see *what* changed.
+
+`renderVersions` lets the widget's template show the change itself. You don't write a separate template for versions. When the option is set, your normal template receives one extra piece of data in the modal: the widget as it was in the previous version. The template can compare the two and highlight what changed.
+
+The option is not needed for a widget to display in the modal; every widget does. Of the core widgets, only the rich text widget sets it, to [mark changed words](#rich-text-marks). The others display as usual inside a Modified frame.
+
+To use it, set the option on the widget type:
 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
+    label: 'Price',
     renderVersions: true
+  },
+  fields: {
+    add: {
+      price: {
+        type: 'string',
+        label: 'Price'
+      }
+    }
   }
 };
 ```
@@ -44,17 +98,40 @@ module.exports = {
 </template>
 </AposCodeBlock>
 
-When set, a widget of this type that changed in the version being viewed receives the widget as it was in the version before, as `data.widget._olderVersion` — sanitized and loaded like the widget itself, with relationships populated. The template decides what to make of it:
+When a widget of this type changed in the version being viewed, its template receives the previous version of the widget as `widget._olderVersion`. The older widget is sanitized and loaded like the current one, so its relationships are populated.
+
+This is the price widget's normal template, used on the site and in the modal alike. On the site, and for any widget that did not change, `_olderVersion` is absent, so the template shows just the price. In the modal, when the price changed, it also shows the old price struck through:
+
+<AposCodeBlock>
+
+```jsx
+export default function({ widget }) {
+  const older = widget._olderVersion;
+  const changed = older && older.price !== widget.price;
+
+  return (
+    <p className={changed ? 'price price--changed' : 'price'}>
+      {widget.price}
+      {changed && <s>{older.price}</s>}
+    </p>
+  );
+}
+```
+<template v-slot:caption>
+  modules/price-widget/views/widget.jsx
+</template>
+</AposCodeBlock>
+
+Nunjucks templates remain fully supported and receive the same data:
 
 <AposCodeBlock>
 
 ```nunjucks
 {% set older = data.widget._olderVersion %}
-<p class="price{% if older and older.price != data.widget.price %} price--changed{% endif %}">
+{% set changed = older and older.price != data.widget.price %}
+<p class="price{% if changed %} price--changed{% endif %}">
   {{ data.widget.price }}
-  {% if older and older.price != data.widget.price %}
-    <s>{{ older.price }}</s>
-  {% endif %}
+  {% if changed %}<s>{{ older.price }}</s>{% endif %}
 </p>
 ```
 <template v-slot:caption>
@@ -62,62 +139,114 @@ When set, a widget of this type that changed in the version being viewed receive
 </template>
 </AposCodeBlock>
 
-A few things to keep in mind:
+In an Astro project, the widget component receives `_olderVersion` on its `widget` prop:
 
-- An unchanged widget never receives `_olderVersion`, and neither does any widget outside the versions modal, so the template needs the guard above and nothing else.
-- An added widget has no older version. A deleted widget renders from its old data, in place, dimmed.
-- A widget whose only changes are inside widgets nested in it gets no marker and no `_olderVersion` of its own — the nested widgets get theirs.
-- The frame and the Modified badge are drawn around the widget either way, whether or not `renderVersions` is set.
+<AposCodeBlock>
 
-## The markers on an annotated document
+```astro
+---
+const { widget } = Astro.props;
+const older = widget._olderVersion;
+const changed = older && older.price !== widget.price;
+---
+<p class:list={[ 'price', { 'price--changed': changed } ]}>
+  {widget.price}
+  {changed && <s>{older.price}</s>}
+</p>
+```
+<template v-slot:caption>
+  src/widgets/PriceWidget.astro
+</template>
+</AposCodeBlock>
 
-`GET :versionId?annotate=1` and the `getAnnotatedDoc` server method (see the [module reference](/reference/modules/document-versions.md#featured-methods)) return a copy of the document with these properties on its widgets. They exist only in that copy — never on a widget loaded any other way.
+### When `_olderVersion` is present
 
-| Marker | Meaning |
-| -- | -- |
-| `_inserted: true` | A widget the older version does not have. |
-| `_deleted: true` | A widget the newer version does not have, put back into its area's `items` at its old position. |
-| `_olderVersion: { ... }` | A widget with changes of its own, on a type that sets `renderVersions`. |
-| `_modified: true` | The same, for a type that does not set `renderVersions`. |
-| `_moved: true` | A widget that changed places, alongside any of the markers above. Set on the fewest widgets that account for the new order. |
-| `_changedWithAi`, `_movedWithAi` | Set alongside `_modified`/`_olderVersion` or `_moved`, when AI was involved (relevant for consolidated versions). |
+Your template only needs to check whether `_olderVersion` exists. It is present only when all of these are true:
 
-A change outside any widget sets the `@apostrophecms/schema:highlight` meta property of its top-level field (`aposMeta.<field>`), and `@apostrophecms/document-versions:ai` alongside it when AI was involved.
+- The widget is being displayed in the Document Versions modal. It is never present on the live site or in the page editor.
+- The widget changed in the version being viewed.
+- The widget existed in the previous version. An added widget has no older version.
+
+A few related cases:
+
+- A **deleted** widget renders in its old position, from its old data, dimmed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted).
+- A widget whose only changes are inside **nested widgets** gets no `_olderVersion` of its own. The nested widgets get theirs.
+- The Modified frame and badge are drawn around the widget whether or not its type sets `renderVersions`.
 
 ## Rich text marks
 
-`@apostrophecms/rich-text-widget` sets `renderVersions` by default, and core handles the comparison for it: in an annotated document, the `content` of a changed rich text widget is the newer markup with the changed text marked in place. The same is done for `richText` schema fields outside widgets. A rich text widget type of your own gets this behavior automatically when it defines `getRichText` and sets `renderVersions`.
+The core rich text widget sets `renderVersions` by default, and Apostrophe compares its text for you. When a rich text widget changed, its `content` in the versions modal is the newer markup with added and removed words marked:
 
 ```html
 <p>Our <del data-apos-version-change="removed"><span class="apos-sr-only">Removed </span>old</del>
 <ins data-apos-version-change="added"><span class="apos-sr-only">Added </span>new</ins> mission</p>
 ```
 
-- The marks are semantic `del` and `ins`, so a front end with no styles of its own still shows strikethrough and underline. This holds for any template engine, and for an external front end, since the marks are in the same stored-shape `content` every renderer already outputs.
-- `data-apos-version-change` (`removed` or `added`) is the one styling hook, and what distinguishes these marks from an editor's own strikethrough formatting.
-- The hidden `span` is real text for screen readers, in the language of the admin UI. A front end that renders annotated content needs a visually-hidden rule for `.apos-sr-only`.
-- The newer markup is never restructured to produce these marks. A removed element comes back only whole, and only into the parent it had.
-- Marks cover words only. Formatting, attributes, images, and structure are not marked in the text itself — the change list names those changes instead, in `formatChanges` (see the [REST API reference](/reference/api/document-versions.md#the-change-row)).
-- When a change cannot be shown this way, `content` is left untouched and the widget is marked Modified as a whole instead. This happens when no text changed (a formatting-only change), when removed text has no place to go (a rebuilt table, a list that became paragraphs), or when the two sides differ by more than about 2000 tokens (roughly a thousand words).
-- `richText` fields inside a widget's own schema are not marked this way; such a widget reads as Modified as a whole, or compares itself through `_olderVersion` if `renderVersions` is set.
+Because the marks are in `content` itself, they appear with any front end that outputs rich text content, including JSX, Nunjucks, and Astro templates, with no template changes.
 
-## Project field types
+- **The marks are standard `<del>` and `<ins>` elements.** Browsers show them as strikethrough and underline by default, even if your styles never mention them.
+- **`data-apos-version-change` is the styling hook.** Its value is `removed` or `added`. It also distinguishes these marks from strikethrough that an editor applied as formatting.
+- **Each mark includes hidden text for screen readers**, "Removed" or "Added", in the language of the admin UI. It is wrapped in `.apos-sr-only`. If your front end renders annotated content with its own stylesheet, include a visually hidden rule for that class.
+- **Words are marked, including some formatting.** Bold, italic, and a change of block kind, such as a split or merged paragraph or a paragraph turned into a heading, are marked as the words removed and added again in their new form. Other formatting, attributes, and images are not marked in the text. The change list names them instead, in the row's [`formatChanges`](/reference/api/document-versions.md#formatting-changes).
+- **The newer markup is never restructured.** A removed element comes back only whole, and only inside the parent it had.
 
-A field type your project registers with `apos.schema.addFieldType` works in version history without any extra code, as long as it says what it extends:
+For example, to style the marks to match your site:
 
-- A type with `extend: 'string'` (or any other single-value type) is compared and read as that type.
-- A type extending `area`, `array`, `object`, `relationship`, or `richText` is walked as one: its items and widgets get their own change rows, changes of order are detected, and rich text gets marks.
-- The type's own `isEqual(req, field, one, two)` decides whether a value changed, when the type defines one (`one` and `two` are the objects holding the field, as everywhere else in core). Without it, values are compared deeply, treating `null` and `undefined` as equal.
-- The type's own `isEmpty(field, value)` decides between an Added/Deleted row and a Modified row, when the type defines one. Without it, `null`, `undefined`, `''`, and `[]` count as empty.
+<AposCodeBlock>
 
-In a change row, `fieldType` is your project's type name and `kind` is what it resolves to structurally. Code that reads rows should test `kind`, not `fieldType`.
+```css
+[data-apos-version-change="added"] {
+  background: #e6f4ea;
+  text-decoration: none;
+}
 
-::: info
-A project field type extending `array` or `object` is read by version history the same as any other, but core's schema composition does not accept `fields: { add }` for such a type — it must provide a ready `schema`. This is a general limit of custom field types, not something specific to versions; see [Custom schema field types](/guide/custom-schema-field-types.md).
-:::
+[data-apos-version-change="removed"] {
+  background: #fce8e6;
+}
+```
+<template v-slot:caption>
+  Optional styles for rich text marks
+</template>
+</AposCodeBlock>
+
+### When text is not marked
+
+Sometimes the change cannot be shown as marked words. Then `content` is left as it is, and the whole widget is framed as Modified instead. This happens when:
+
+- Only formatting changed, and not bold, italic, or a block's kind.
+- Removed text has no place to go, as in a rebuilt table.
+- The two versions differ by more than 2000 tokens, roughly a thousand words.
+
+The same marks are applied to `richText` fields of the document itself, so an [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) rich text field shows them in place. They are **not** applied to `richText` fields inside a widget's own schema. A widget with such a field is framed as Modified, unless its type sets `renderVersions` and compares the field itself in its template.
+
+A custom rich text widget type gets the same marks when it defines `getRichText` and sets `renderVersions: true`.
+
+## The annotated document
+
+The versions modal displays an **annotated document**: a copy of the version's document with markers added to show what changed. You can get the same copy yourself, with `GET /api/v1/@apostrophecms/document-versions/:versionId?annotate=1` or the server-side [`getAnnotatedDoc`](/reference/modules/document-versions.md#getannotateddoc-req-older-newer-options) method.
+
+The annotated document is for display only. Never save it.
+
+Changed widgets carry these properties:
+
+| Property | Set on |
+| -- | -- |
+| `_inserted: true` | A widget that the previous version did not have. |
+| `_deleted: true` | A widget that this version removed. It is put back into its area's `items`, at its old position, so it can be displayed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted). |
+| `_olderVersion: { ... }` | A changed widget whose type sets `renderVersions`. The value is the widget as it was in the previous version. |
+| `_modified: true` | A changed widget whose type does not set `renderVersions`. |
+| `_moved: true` | A widget that changed position in its area, alongside any of the above. Only the fewest widgets that explain the new order are marked: dragging one widget to the top marks that widget, not every widget it passed. |
+| `_changedWithAi`, `_movedWithAi` | Alongside the other properties, when AI was involved in the change or move. The value is `'changed'` or `'assisted'`, with the same meaning as a change row's [`ai`](/reference/api/document-versions.md#ai-involvement). |
+
+### Widgets that are not shown when deleted
+
+A deleted widget is normally put back in its old position so editors can see what was removed. That doesn't work for a widget that positions itself within its parent's layout, such as a layout column: shown in place, the deleted widget would overlap the others.
+
+A widget type like that sets the `versionsRenderDeleted: false` option. A deleted widget of that type is not put back. Instead, the widget that contained it is marked as modified, or, if there is no containing widget, the document field is. The core `@apostrophecms/layout-column-widget` sets this option, so layout columns and widget types that extend them are never put back.
 
 ## Related documentation
 
-- [`@apostrophecms/document-versions` module reference](/reference/modules/document-versions.md)
-- [Document Versions REST API](/reference/api/document-versions.md)
-- [Custom Widgets](/guide/custom-widgets.md)
+- [Document versions guide](/guide/document-versions.md)
+- [Widget type module reference](/reference/modules/widget-type.md)
+- [Document versions REST API](/reference/api/document-versions.md)
+- [Custom widgets](/guide/custom-widgets.md)
