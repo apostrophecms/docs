@@ -361,14 +361,15 @@ A `richText` field is the clearest case. Its stored markup holds [permalink](/re
 
 [Document versions](/guide/document-versions.md) records each saved version of a document and lets editors review changes and restore earlier versions.
 
-Inline editable fields get the most direct **display of changes**. Because the template already says where each field appears on the page and what markup it renders as, the versions modal shows a changed inline field where the content actually lives:
+How a changed inline editable field appears in the versions modal depends on the field type and on where the field lives:
 
-- An inline `richText` field shows its added and removed words marked in place, the same way a [rich text widget](/guide/showing-version-changes.md#rich-text-marks) does.
-- Any other inline field is framed as changed, like a changed widget. Selecting the frame reveals the matching row in the change list.
+- **A `richText` field of the document itself** shows its added and removed words marked in place, inside the field on the page, the same way a [rich text widget](/guide/showing-version-changes.md#rich-text-marks) does. No template changes are needed.
+- **A `string` field of the document** is framed as Modified. The before and after values appear only in the change list.
+- **Any field inside a widget**, `richText` included, is not marked on its own. The widget's template renders the field from the widget's data, so Apostrophe cannot mark it in place. The widget is framed as Modified, and the field's before and after values appear in the change list. A widget type can show the change in place by setting [`versionsRender`](/guide/showing-version-changes.md#versionsrender-show-what-changed-in-your-template) and comparing the field with `widget._olderVersion` in its template.
 
-No template changes are needed for either.
+Every changed field, however it is displayed, has its own row in the change list. Selecting a frame or marked text reveals the matching row.
 
-This is worth weighing when you are deciding between an inline editable `string` or `richText` field and an equivalent that is only edited in a modal.
+This is worth weighing when you are deciding between a document-level inline editable `richText` field and an equivalent that is only edited in a modal or lives inside a widget.
 
 ## Adding inline editing to a custom field type
 

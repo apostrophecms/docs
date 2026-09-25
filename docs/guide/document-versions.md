@@ -80,11 +80,13 @@ Archived documents record nothing. Taking a document out of the archive also rec
 
 ## What editors see
 
-Each version is compared with the one before it on the timeline. Editors see the result in three places:
+The versions list that editors see is consolidated, so it can have fewer entries than there are stored versions. When one author's draft versions mix AI-written saves and hand edits, the list shows them as a single entry. For example, suppose an editor starts from an AI translation and then clicks **Save Draft** four times, making edits between clicks. That work is stored as several versions but listed as one entry. See [Consolidated versions](#consolidated-versions).
+
+Each entry in the list is compared with the one before it on the timeline. Editors see the result in three places:
 
 - **The edit count** on each entry in the list, such as "3 edits." It counts the individual changes, at their full depth: a changed field inside a widget inside an area is one edit.
 - **The change list** for the selected version, one row per change, with a breadcrumb showing where the change sits in the document.
-- **The document itself**, drawn with a frame around each changed widget and field, and with added and removed words marked in rich text. [Inline editable fields](/guide/inline-editing.md#inline-editing-and-document-versions) are marked where they appear on the page. Selecting a marker reveals the matching row in the change list.
+- **The document itself**, drawn with a frame around each changed widget and field, and with added and removed words marked in rich text. An [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) `richText` field of the document shows its word marks in place on the page. Selecting a marker reveals the matching row in the change list.
 
 Widget authors can improve how their widgets appear in all of this. See [Showing version changes in widgets](/guide/showing-version-changes.md).
 
@@ -172,7 +174,9 @@ Versions are stored in the `aposDocsVersions` MongoDB collection. Each version's
 
 There is no retention policy. A document's versions in a locale are kept until the document is deleted in that locale. Because draft work is recorded as well as publishes, plan for the collection to grow steadily on an actively edited site. Compression keeps each record small.
 
-When a document type's module is later removed from the project, its version records stay in the collection and can still be read.
+When a document type's module is later removed from the project, its version records stay in the collection. They can still be read programmatically, through the module methods, but not in the **Document Versions** modal.
+
+This matters when a project migrates documents from one type to another, for example from a pro extension's piece type to a core type, and removes the old module. The migrated documents keep their history, but the versions recorded under the old type still carry that type. In the modal, selecting one of those versions shows a message in place of its changes, and the version offers no **Changes** or **Restore** action. This guards against restoring content into a schema that no longer matches it, which could lose data.
 
 ## Known limitations
 

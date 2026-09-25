@@ -10,7 +10,7 @@ When an editor selects a version in the **Document Versions** modal, they see tw
 All of this works for every widget, with no extra code. Two optional widget type settings improve it:
 
 - [`titleField`](#titlefield-name-your-widgets) gives each widget a readable name in the change list.
-- [`renderVersions`](#renderversions-show-what-changed-in-your-template) lets your widget's template show, inside the frame, exactly what changed.
+- [`versionsRender`](#versionsrender-show-what-changed-in-your-template) lets your widget's template show, inside the frame, exactly what changed.
 
 ## `titleField`: name your widgets
 
@@ -64,11 +64,11 @@ The title is the field's value in the version being viewed, or, for a deleted wi
 
 Rich text widgets need no `titleField`; they are identified by their text.
 
-## `renderVersions`: show what changed in your template
+## `versionsRender`: show what changed in your template
 
 In the document view of the modal, a changed widget is rendered by its normal template, exactly as it appears on the site, with a Modified frame around it. The editor can see *that* the widget changed, but has to read the change list to see *what* changed.
 
-`renderVersions` lets the widget's template show the change itself. You don't write a separate template for versions. When the option is set, your normal template receives one extra piece of data in the modal: the widget as it was in the previous version. The template can compare the two and highlight what changed.
+`versionsRender` lets the widget's template show the change itself. You don't write a separate template for versions. When the option is set, your normal template receives one extra piece of data in the modal: the widget as it was in the previous version. The template can compare the two and highlight what changed.
 
 The option is not needed for a widget to display in the modal; every widget does. Of the core widgets, only the rich text widget sets it, to [mark changed words](#rich-text-marks). The others display as usual inside a Modified frame.
 
@@ -81,7 +81,7 @@ export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Price',
-    renderVersions: true
+    versionsRender: true
   },
   fields: {
     add: {
@@ -171,11 +171,11 @@ A few related cases:
 
 - A **deleted** widget renders in its old position, from its old data, dimmed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted).
 - A widget whose only changes are inside **nested widgets** gets no `_olderVersion` of its own. The nested widgets get theirs.
-- The Modified frame and badge are drawn around the widget whether or not its type sets `renderVersions`.
+- The Modified frame and badge are drawn around the widget whether or not its type sets `versionsRender`.
 
 ## Rich text marks
 
-The core rich text widget sets `renderVersions` by default, and Apostrophe compares its text for you. When a rich text widget changed, its `content` in the versions modal is the newer markup with added and removed words marked:
+The core rich text widget sets `versionsRender` by default, and Apostrophe compares its text for you. When a rich text widget changed, its `content` in the versions modal is the newer markup with added and removed words marked:
 
 ```html
 <p>Our <del data-apos-version-change="removed"><span class="apos-sr-only">Removed </span>old</del>
@@ -217,9 +217,9 @@ Sometimes the change cannot be shown as marked words. Then `content` is left as 
 - Removed text has no place to go, as in a rebuilt table.
 - The two versions differ by more than 2000 tokens, roughly a thousand words.
 
-The same marks are applied to `richText` fields of the document itself, so an [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) rich text field shows them in place. They are **not** applied to `richText` fields inside a widget's own schema. A widget with such a field is framed as Modified, unless its type sets `renderVersions` and compares the field itself in its template.
+The same marks are applied to `richText` fields of the document itself, so an [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) rich text field shows them in place. They are **not** applied to `richText` fields inside a widget's own schema. A widget with such a field is framed as Modified, unless its type sets `versionsRender` and compares the field itself in its template.
 
-A custom rich text widget type gets the same marks when it defines `getRichText` and sets `renderVersions: true`.
+A custom rich text widget type gets the same marks when it defines `getRichText` and sets `versionsRender: true`.
 
 ## The annotated document
 
@@ -233,8 +233,8 @@ Changed widgets carry these properties:
 | -- | -- |
 | `_inserted: true` | A widget that the previous version did not have. |
 | `_deleted: true` | A widget that this version removed. It is put back into its area's `items`, at its old position, so it can be displayed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted). |
-| `_olderVersion: { ... }` | A changed widget whose type sets `renderVersions`. The value is the widget as it was in the previous version. |
-| `_modified: true` | A changed widget whose type does not set `renderVersions`. |
+| `_olderVersion: { ... }` | A changed widget whose type sets `versionsRender`. The value is the widget as it was in the previous version. |
+| `_modified: true` | A changed widget whose type does not set `versionsRender`. |
 | `_moved: true` | A widget that changed position in its area, alongside any of the above. Only the fewest widgets that explain the new order are marked: dragging one widget to the top marks that widget, not every widget it passed. |
 | `_changedWithAi`, `_movedWithAi` | Alongside the other properties, when AI was involved in the change or move. The value is `'changed'` or `'assisted'`, with the same meaning as a change row's [`ai`](/reference/api/document-versions.md#ai-involvement). |
 
