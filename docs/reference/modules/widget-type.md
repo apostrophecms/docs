@@ -140,6 +140,9 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`preview`](#preview) | Boolean | Allow for in-context preview during widget edit. |
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The template name to render. |
+| [`titleField`](#titlefield) | String | The field whose text names a widget of this type in the Document Versions change list. |
+| [`versionsRender`](#versionsrender) | Boolean | Pass the previous version of a changed widget to its template in the Document Versions modal. |
+| [`versionsRenderDeleted`](#versionsrenderdeleted) | Boolean | Set to `false` so a deleted widget of this type is not shown in place in the Document Versions modal. |
 | [`width`](#width) | String | Define the size of the widget modal. Defaults to `window`. Can also accept `one-third`, `two-thirds`, `half`, and `full` |
 | [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 | `hideSingleTab` | Boolean | If `true` and an editing modal only has a single tab, that tab will be hidden. |
@@ -218,6 +221,24 @@ Setting this option globally enables the behavior for all widgets. To enable or 
 ### `template`
 
 The name of the template in the `views` folder of the module that should be rendered to display the widget. This option defaults to `widget`, and it is generally not necessary to change it.
+
+### `titleField`
+
+The name of a field of this widget type, such as `'heading'`, whose text identifies a widget in the Document Versions change list. Dot notation is accepted for fields inside an `object` field. Without it, widgets of the same type are told apart only by position. There is no default.
+
+See [Showing version changes in widgets](/guide/showing-version-changes.md#titlefield-name-your-widgets).
+
+### `versionsRender`
+
+When `true`, a widget of this type that changed in the version being viewed in the Document Versions modal receives the widget as it was in the previous version, as `widget._olderVersion`. The template can use it to show what changed. Without this option, a changed widget renders as usual, framed as Modified. Defaults to `false`, except for `@apostrophecms/rich-text-widget`, which sets it and marks changed words in its content automatically.
+
+See [Showing version changes in widgets](/guide/showing-version-changes.md#versionsrender-show-what-changed-in-your-template).
+
+### `versionsRenderDeleted`
+
+Defaults to `true`: when a version deleted a widget of this type, the Document Versions modal shows it in its old position, marked as deleted. Set it to `false` for a widget type that positions itself within its parent's layout, where a deleted widget shown in place would overlap the others. The widget that contained it is then marked as modified instead, or, if there is none, the document field. `@apostrophecms/layout-column-widget` sets it to `false`.
+
+See [Widgets that are not shown when deleted](/guide/showing-version-changes.md#widgets-that-are-not-shown-when-deleted).
 
 ### `width`
 
