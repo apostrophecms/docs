@@ -1,0 +1,180 @@
+---
+extends: '@apostrophecms/module'
+---
+
+# `@apostrophecms/ai-adapter-openai`
+
+<AposRefExtends :module="$frontmatter.extends" />
+
+The adapter for OpenAI's Responses API and Images API. It registers itself at startup and is configured in core's `defaults.js` — there is nothing to install and nothing to add to `app.js`.
+
+An adapter is a thin translator for one service dialect: it turns the engine's normalized request into that service's HTTP body and its response back into the normalized shape. Routing, retries, the agent loop, validation, caching policy and mock mode all belong to [`@apostrophecms/ai`](/reference/modules/ai.md).
+
+## Related documentation
+
+- [`@apostrophecms/ai`](/reference/modules/ai.md) — the engine, and where providers are configured
+- [`@apostrophecms/ai-adapter-openai-compatible`](/reference/modules/ai-adapter-openai-compatible.md) — Chat Completions, and adding a service with no adapter code
+
+## Using it
+
+Name a provider that uses this adapter, and set its key in the environment. An empty entry is a complete configuration.
+
+```bash
+export APOS_OPENAI_KEY=sk-...
+```
+
+<AposCodeBlock>
+
+```javascript
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'example-site',
+  modules: {
+    // 👇 The engine, with one provider entry naming this adapter
+    '@apostrophecms/ai': {
+      options: {
+        providers: {
+          openai: {}
+        }
+      }
+    }
+  }
+});
+```
+  <template v-slot:caption>
+    app.js
+  </template>
+</AposCodeBlock>
+
+The entry's own key doubles as the adapter name, which is why `openai: {}` resolves to this adapter. See [`providers`](/reference/modules/ai.md#providers) for the full entry shape.
+
+| | |
+|---|---|
+| **Adapter name** | `openai` |
+| **Label** | OpenAI |
+| **Default env key** | `APOS_OPENAI_KEY` |
+| **Capabilities** | `text`, `tools`, `structured`, `imageInput`, `caching`, `image` |
+
+## `openai` or `openai-compatible`?
+
+Both adapters can talk to `api.openai.com`, and they are not interchangeable.
+
+**For OpenAI proper, prefer `openai`.** It speaks OpenAI's first-class Responses API and supports `reasoning` alongside `tools`.
+
+[`openai-compatible`](/reference/modules/ai-adapter-openai-compatible.md) speaks Chat Completions, the de facto wire standard of the whole ecosystem — that is what makes it the universal adapter. It works against `api.openai.com` too, with one caveat. When that adapter is pointed at OpenAI's own endpoint and a call carries `tools` alongside a reasoning level, **it strips the reasoning** rather than let the call fail — OpenAI rejects that pairing in the Chat Completions dialect. A reasoning level of `none` is left alone, as are entries pointed at any other service, since those accept the pairing.
+
+This is the practical reason to prefer `openai` here: on the Responses API the combination works, so a call routed with `reasoning: 'high'` and a toolset keeps both.
+
+## Options
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| [`timeout`](#timeout) | integer | `600000` | Per-request milliseconds. |
+
+```javascript
+'@apostrophecms/ai-adapter-openai': {
+  options: {
+    timeout: 600000
+  }
+}
+```
+
+### `timeout`
+
+Milliseconds one request to the service may take. A timeout is a *retryable* failure: it normalizes to `aiRetry` with `kind: 'timeout'`, and the engine's [retry policy](/reference/modules/ai.md#error-codes) decides what happens next. Image generation is the slow case worth tuning for.
+
+## Models and effort
+
+::: info
+Model lineups move with provider releases. The tables below are what this version of the adapter declares, not a permanent contract. For the live answer in a running project, call [`apos.ai.modelCatalog()`](/reference/modules/ai.md#modelcatalog).
+:::
+
+Default effort table as shipped:
+
+| Level | Model | Reasoning |
+|---|---|---|
+| `low` | `gpt-5.6-luna` | — |
+| `medium` | `gpt-5.6-terra` | — |
+| `high` | `gpt-5.6-sol` | `high` |
+
+These rows are the base of the project's [effort table](/reference/modules/ai.md#effort) whenever an `openai` entry is the default provider — which is why a bare `providers: { openai: {} }` gives you working `low` / `medium` / `high` levels.
+
+Declared model metadata — all three text models share one lineup:
+
+| Model | Label | Context window | `maxOutputTokens` | `reasoning` accepts |
+|---|---|---|---|---|
+| `gpt-5.6-luna` | GPT-5.6 Luna | 1,050,000 | 128,000 | `none`, `low`, `medium`, `high`, `xhigh`, `max` |
+| `gpt-5.6-terra` | GPT-5.6 Terra | 1,050,000 | 128,000 | same |
+| `gpt-5.6-sol` | GPT-5.6 Sol | 1,050,000 | 128,000 | same |
+
+Note `none` among the reasoning values: it is how a call turns thinking off on a model that would otherwise do it, rather than omitting `reasoning` and inheriting the routed row's.
+
+Image models declared: `gpt-image-2` and `gpt-image-1`. They are **not** interchangeable on shape — see below.
+
+## Image generation
+
+This adapter declares the `image` capability, so it can serve the engine's [image route](/reference/modules/ai.md#image).
+
+```javascript
+'@apostrophecms/ai': {
+  options: {
+    provider: 'anthropic',
+    providers: {
+      anthropic: {},
+      openai: {}
+    },
+    image: {
+      provider: 'openai',
+      model: 'gpt-image-2',
+      aspect: 'landscape',
+      quality: 'medium'
+    }
+  }
+}
+```
+
+A requested `aspect` resolves to the nearest ratio the routed model declares, and the resolved ratio comes back on the result. See [`generateImage`](/reference/modules/ai.md#async-generateimage-req-prompt-options).
+
+**The two image models declare different ratios**, so the model you route to changes what a shape request can resolve to:
+
+| Model | Declared aspects |
+|---|---|
+| `gpt-image-2` | `1:1`, `3:2`, `2:3`, `4:3`, `3:4`, `16:9`, `9:16` |
+| `gpt-image-1` | `1:1`, `3:2`, `2:3` only — these are its fixed sizes, the only ones it accepts |
+
+An `aspect` of `16:9` on `gpt-image-1` therefore resolves to whichever of its three it is nearest, not to `16:9`. Read the resolved value back from `result.aspect` rather than assuming the request was honored.
+
+Both models are shared with the [`openai-compatible`](/reference/modules/ai-adapter-openai-compatible.md) adapter: image generation is the Images API, a REST surface independent of the chat dialect, so the two adapters make the same call.
+
+## Adjusting the adapter
+
+Adapters are ordinary Apostrophe modules, so the dialect seams are overridable at project level. The three seams every adapter exposes are `buildBody(request)`, `parseResponse(response, request)` and `normalizeError(error)`.
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    timeout: 120000
+  },
+  extendMethods(self) {
+    return {
+      buildBody(_super, request) {
+        const body = _super(request);
+        body.metadata = { project: 'example-site' };
+        return body;
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/@apostrophecms/ai-adapter-openai/index.js
+  </template>
+</AposCodeBlock>
+
+::: warning
+Reasoning artifacts round-trip through transcripts as opaque content parts so a model keeps its thinking continuity across turns. An override of `buildBody` must skip part types it does not recognize rather than choke on them or drop them.
+:::
