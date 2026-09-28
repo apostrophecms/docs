@@ -15,7 +15,7 @@ The `@apostrophecms/util` module contains utility methods and tools that do not 
 
 |  Property | Type | Description |
 |---|---|---|
-|`logger` | Function | Deprecated in favor of the new option exposed in the `@apostrophecms/logging` module. A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). |
+|`logger` | Function | Deprecated in favor of the top-level `log` option in `app.js` (see [Logging in ApostropheCMS](/guide/logging.md#the-log-option)). A function that accepts the Apostrophe instance object (`self.apos`) and returns an object with at least `info`, `debug`, `warn`, and `error` methods for logging messages. Similarly named `util` module methods use these functions. See [the default logger function](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/util/lib/logger.js) for an example. Overrides should be written with support for substitution strings. See the [`console.log` documentation](https://developer.mozilla.org/en-US/docs/Web/API/Console/log). If a top-level `log` option is present in `app.js`, this option is ignored. |
 | `stackLimit` | Integer | Defaults to 50. This is the maximum size of the asynchronous stack, tracking active widget loaders, async components, and relationship loaders. |
 
 ## Featured methods
@@ -28,6 +28,8 @@ Because this module has an alias, you can call these from another module from th
 ### Logging utilities
 
 The descriptions for `log`, `info`, `debug`, `warn`, and `error` below reflect default behavior. See the `logger` option description above for information about custom behavior. The `info`, `debug`, `warn`, and `error` methods have been deprecated going forward in favor of the structured logging methods `logInfo`, `logDebug`, `logWarn`, and `logError`, respectively, available on every module.
+
+These methods are message-first: the first argument (and any string arguments before a trailing data object) are composed into the log message the way `console.log` composes arguments, substitution strings included. **An object in the final position is always the event data** — its keys become queryable fields of the log entry rather than being folded into the message text. For example, `apos.util.warn('Cannot load', name, { id })` files `id` as a field on the entry. See [Logging in ApostropheCMS](/guide/logging.md#the-apos-util-methods) for how this output is rendered as structured JSON in production and a colorized view in development.
 
 #### `log(msg)`
 
@@ -49,7 +51,7 @@ Logs a warning message. The default implementation wraps `console.warn` and pass
 
 #### `warnDev(msg)`
 
-Identical behavior to [`apos.util.warn`](#warn-msg) except that the warning is not displayed if `process.env.NODE_ENV` is `production`. It will log the message every time it is called. See `warnDevOnce()` for a quieter version when messages may become repetitive.
+Identical behavior to [`apos.util.warn`](#warn-msg) except that the warning is not displayed if `process.env.NODE_ENV` is `production`. It will log the message every time it is called. See `warnDevOnce()` for a quieter version when messages may become repetitive. It no longer prefixes the message with a warning icon, since the renderer now marks severity itself.
 
 #### `warnDevOnce(name, msg)`
 
