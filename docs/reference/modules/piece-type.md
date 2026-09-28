@@ -30,6 +30,7 @@ The only reason to configure this module directly would be to apply the changes 
 | `singleton` | Boolean | Ensures no one can create a new piece of that type. You should use `singletonAuto: true` in almost all cases. |
 | `singletonAuto` | Boolean | Auto-creates and ensures there is only one and only one document of this type (per locale). |
 | [`sort`](#sort) | Object | The value for a piece type's default sort order query builder. |
+| [`versions`](#versions) | Boolean | Set to `false` to turn off version history for this type, or `true` to turn it on for a type that would not otherwise have it. |
 
 ### `autopublish`
 
@@ -294,6 +295,30 @@ module.exports = {
 ```
 <template v-slot:caption>
 modules/article/index.js
+</template>
+</AposCodeBlock>
+
+### `versions`
+
+Controls whether documents of this type have a [version history](/guide/document-versions.md). By default, piece types have versions unless they set `autopublish: true` or `localized: false`. Set `versions: true` to record versions for such a type anyway, or `versions: false` to turn them off.
+
+A localized type published by hand keeps Undo Publish with `versions: false`: its two most recent publication points are still recorded. Page types accept the same option. See [Which document types have versions](/guide/document-versions.md#which-document-types-have-versions) for the full rules.
+
+#### Example
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  options: {
+    versions: false
+  }
+  // ...
+};
+```
+<template v-slot:caption>
+modules/newsletter-signup/index.js
 </template>
 </AposCodeBlock>
 

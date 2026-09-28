@@ -61,6 +61,10 @@ const sidebarGuide = [
           {
             text: 'Upgrade apostrophe-astro to v1.13',
             link: 'guide/migration/upgrading-apostrophe-astro.md'
+          },
+          {
+            text: 'Migrate from pro document-versions',
+            link: 'guide/migration/document-versions-migration.md'
           }
         ]
       },
@@ -156,6 +160,10 @@ const sidebarGuide = [
           {
             text: 'Piece Pages',
             link: 'guide/piece-pages.md'
+          },
+          {
+            text: 'Document Versions',
+            link: 'guide/document-versions.md'
           }
         ]
       },
@@ -358,6 +366,10 @@ const sidebarGuide = [
         link: 'guide/adding-custom-widget-placeholder-content.md'
       },
       {
+        text: 'Showing Version Changes in Widgets',
+        link: 'guide/showing-version-changes.md'
+      },
+      {
         text: 'Custom Auth Requirements',
         link: 'guide/custom-login-requirements.md'
       },
@@ -537,10 +549,6 @@ const sidebarGuide = [
       {
         text: 'Advanced Permissions',
         link: 'https://apostrophecms.com/extensions/advanced-permission'
-      },
-      {
-        text: 'Document Versions',
-        link: 'https://apostrophecms.com/extensions/document-version'
       },
       {
         text: 'Template Library',
