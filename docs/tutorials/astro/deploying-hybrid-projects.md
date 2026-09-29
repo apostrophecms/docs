@@ -42,13 +42,20 @@ If you prefer, we can handle all of those details for you via our [Managed Hosti
 
 Before deploying your Astro frontend, you'll need to adjust the `astro.config.mjs` file for production. Let's look at key configuration options:
 
-```javascript
+```mjs
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
 
 export default defineConfig({
   output: "server",  // Required for SSR
+  security: {
+    // The public origin(s) of your site. Without this, Astro rejects
+    // logout, file uploads, and other form-like requests in production
+    allowedDomains: [
+      { protocol: 'https', hostname: 'www.example.com' }
+    ]
+  },
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     // Uncomment for hosting platforms like Heroku that need this
@@ -58,8 +65,8 @@ export default defineConfig({
     mode: 'standalone'  // For most deployment scenarios
   }),
   integrations: [apostrophe({
-    // In production, this should be set via the APOS_HOST env variable
-    aposHost: process.env.APOS_HOST || 'http://localhost:3000',
+    // Overridden by the APOS_HOST environment variable at build time
+    aposHost: 'http://localhost:3000',
     widgetsMapping: './src/widgets',
     templatesMapping: './src/templates',
     
@@ -76,7 +83,6 @@ export default defineConfig({
     // excludeRequestHeaders: ['host']
   })],
   
-  // Required to handle virtual URLs in the integration
   vite: {
     css: {
       preprocessorOptions: {
@@ -84,9 +90,6 @@ export default defineConfig({
           quietDeps: true
         }
       }
-    },
-    ssr: {
-      noExternal: ['@apostrophecms/apostrophe-astro']
     }
   },
   
@@ -107,15 +110,21 @@ export default defineConfig({
    - The `server.port` setting defaults to 4321 but reads from the `PORT` environment variable if set
    - Some platforms (Heroku, Railway) require `host: true` to listen on all interfaces
 
-2. **Integration Settings**
-   - `aposHost` must point to your production backend URL in production
-   - Set via the `APOS_HOST` environment variable rather than hardcoding
+2. **Allowed Domains**
+   - `security.allowedDomains` must list every public hostname of the site
+   - Without it, a production build rejects logout, file uploads, and similar requests with `403 Cross-site POST form submissions are forbidden`
+   - See [Configuring Astro for your domain](/guide/hosting-astro.md#configuring-astro-for-your-domain) for the reverse proxy headers this depends on
 
-3. **Header Configuration**
+3. **Integration Settings**
+   - `aposHost` must point to your production backend URL in production
+   - Set it with the `APOS_HOST` environment variable rather than hardcoding it
+   - `APOS_HOST` is read when `astro build` runs and written into the build output, so it must be set in your build environment. Changing it later requires a rebuild
+
+4. **Header Configuration**
    - `includeResponseHeaders` determines which response headers from ApostropheCMS are preserved
    - Essential for maintaining security settings between backend and frontend
 
-4. **Split Deployment Settings**
+5. **Split Deployment Settings**
    - When deploying to separate servers, you may need to exclude the `host` header
    - Uncomment `excludeRequestHeaders: ['host']` to prevent hostname conflicts
 
@@ -145,7 +154,7 @@ For more control or to leverage specific platform features, you can deploy the b
 
 Your ApostropheCMS backend requires:
 
-- Node.js environment (v18 or better, at least v20 recommended)
+- Node.js 22.19 or newer
 - A database connection - MongoDB by default, or SQLite/PostgreSQL via the `@apostrophecms/db-connect` adapter (see [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html))
 - Asset storage solution (S3 or equivalent cloud storage)
 
@@ -191,9 +200,9 @@ Your Astro frontend can be deployed to any service, including our [managed hosti
 
 1. **ApostropheCMS**
   - Hosts the combined Astro + ApostropheCMS monorepo in one step
-  - Zero latency when Astro communicates with ApostropheCMS
+  - Astro and ApostropheCMS run on the same server, so requests between them never leave the machine
   - Configures your database and S3 storage automatically
-  - Provides `APOS_EXTERNAL_FRONTEND_KEY` automatically
+  - Provides `APOS_EXTERNAL_FRONT_KEY` automatically
 
 2. **Netlify**
    - Excellent Astro integration
@@ -212,13 +221,19 @@ Your Astro frontend can be deployed to any service, including our [managed hosti
 
 #### Example: Deploying to Netlify
 
-1. Log in to your [Netlify](https://www.netlify.com/) account
-2. Create a new site by connecting your GitHub repository
+Netlify runs Astro's server-rendered pages as serverless functions, so the frontend needs Netlify's adapter instead of the Node adapter shown earlier.
+
+1. Add the adapter from the `frontend` directory:
+   ```bash
+   npx astro add netlify
+   ```
+   This installs `@astrojs/netlify` and replaces the `adapter` in `astro.config.mjs`. Because Astro and ApostropheCMS run on different hosts, also add `'host'` to the integration's `excludeRequestHeaders` option.
+2. Log in to your [Netlify](https://www.netlify.com/) account and create a new site by connecting your GitHub repository
 3. Configure build settings:
    - Base directory: `frontend`
    - Build command: `npm run build`
    - Publish directory: `frontend/dist`
-4. Set environment variables:
+4. Set environment variables. Netlify makes them available during the build, which is when `APOS_HOST` is read:
    ```
    APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key
    APOS_HOST=https://your-backend-url.com
@@ -233,13 +248,10 @@ You can also use a `netlify.toml` file at the root of your project for configura
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/entry"
-  status = 200
+  NODE_VERSION = "22"
 ```
+
+The adapter generates the function and routing configuration during the build, so you don't need to add redirects yourself.
 
 ## Environment Configuration for Production
 
@@ -264,6 +276,9 @@ APOS_S3_REGION=your-chosen-region
 
 # For identifying releases (if not using Git-based deployment)
 APOS_RELEASE_ID=unique-random-string
+
+# The public URL of the site (the Astro frontend, not the backend)
+APOS_BASE_URL=https://your-site.com
 ```
 
 See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for full details on switching databases, including the `multipostgres://` format for multisite deployments.
@@ -273,7 +288,7 @@ See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-post
 ```bash
 # Required
 APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key  # Must match backend
-APOS_HOST=https://your-backend-url.com
+APOS_HOST=https://your-backend-url.com  # Read at build time
 
 # Optional for specific hosts
 PORT=8080  # If your host requires a specific port
@@ -291,12 +306,14 @@ HOST=0.0.0.0  # For hosts that need to listen on all interfaces
    ```
 3. **Keep your `APOS_EXTERNAL_FRONT_KEY` secret** - it's your security link between frontend and backend
 
+For topology, deployment order, process management, and caching recommendations, see [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md).
+
 ## Troubleshooting Common Issues
 
 ### Connection Problems
 If your frontend can't connect to the backend:
-1. Verify the `APOS_HOST` environment variable is set correctly
-2. Ensure `APOS_EXTERNAL_FRONT_KEY` matches between frontend and backend
+1. Verify the `APOS_HOST` environment variable was set correctly when the frontend was built. Changing it on a running server has no effect until you rebuild
+2. Ensure `APOS_EXTERNAL_FRONT_KEY` matches between frontend and backend. A mismatch makes ApostropheCMS respond with `403 forbidden` and log an `externalFrontKeyInvalid` error
 3. Check network access between your frontend and backend servers
 
 ### Header Issues

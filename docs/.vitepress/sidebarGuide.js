@@ -408,6 +408,10 @@ const sidebarGuide = [
         link: 'guide/hosting.md'
       },
       {
+        text: 'Hosting with Astro',
+        link: 'guide/hosting-astro.md'
+      },
+      {
         text: 'Docker',
         link: 'cookbook/using-docker.md'
       },

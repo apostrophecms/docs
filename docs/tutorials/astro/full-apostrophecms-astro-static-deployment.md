@@ -205,7 +205,7 @@ npm install @astrojs/vercel@8
 
 The config needs to switch adapters based on environment — `@astrojs/vercel` when building on Vercel, `@astrojs/node` for local development. This means `astro dev` is completely unaffected; adapters only apply during `astro build`.
 
-```js
+```mjs
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import vercel from '@astrojs/vercel';
@@ -222,6 +222,14 @@ export default defineConfig({
     host: process.env.HOST || false
   },
   adapter: isStatic ? undefined : (isVercel ? vercel() : node({ mode: 'standalone' })),
+  // Needed by the SSR staging site; skipped for static builds
+  ...(!isStatic && {
+    security: {
+      allowedDomains: [
+        { protocol: 'https', hostname: 'your-staging-project.vercel.app' }
+      ]
+    }
+  }),
   integrations: [
     apostrophe({
       aposHost: process.env.APOS_HOST || 'http://localhost:3000',
@@ -240,9 +248,6 @@ export default defineConfig({
     })
   ],
   vite: {
-    ssr: {
-      noExternal: ['@apostrophecms/apostrophe-astro'],
-    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -260,6 +265,7 @@ Key points:
 - `isVercel` uses an explicit `ASTRO_ADAPTER` env var rather than relying on Vercel's injected `VERCEL` system variable, which is not reliably available when `astro.config.mjs` is evaluated
 - `'host'` is included in `excludeRequestHeaders` — **required** when Astro and Apostrophe are on separate hosts, or the proxy will fail
 - Adapter selection is conditional so local dev is unchanged
+- `security.allowedDomains` lists the staging site's hostname. Without it, editors on the staging site can't log out or upload files. Add any custom domain you attach to the staging project. It is applied only to server-rendered builds, because static builds don't need it and Astro 6 and later warn about it on every page
 
 ### 2.3 Add `.vercel` to `.gitignore`
 

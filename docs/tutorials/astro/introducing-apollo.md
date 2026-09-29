@@ -57,7 +57,7 @@ The [`apostrophe-astro` package](https://github.com/apostrophecms/apostrophe-ast
 
 The Apollo theme and the more bare bones [`combined-astro-starter-kit`](https://github.com/apostrophecms/combined-astro-starter-kit) both include this package as a dependency and provide the necessary `astro.config.mjs` configuration. You can explore additional configuration options in the [package documentation](https://github.com/apostrophecms/apostrophe-astro).
 
-```javascript
+```mjs
 // backend/astro.config.mjs
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
