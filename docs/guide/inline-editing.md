@@ -42,6 +42,10 @@ Astro and other [external fronts](/guide/headless-cms.md) do need one line of sc
 
 Any other field type raises an exception naming the field and its type, rather than rendering something the editor cannot click on. Output those with an ordinary template expression.
 
+::: warning Changing a field's type requires a migration
+Because inline editing works on `string` and `richText` fields, it can be tempting to change an existing field to one of those types. Documents already in the database still hold that field's value in its old shape, though: an `area`, for instance, is stored as an object containing an array of widgets, not as text. Templates and widgets that expect the new shape will break when they meet the old one. Whenever you change a field's type, write a [migration](/guide/writing-migrations.md) that converts the stored values. This applies to any schema change that alters a field's shape, not only to inline editing.
+:::
+
 In JSX and Nunjucks, `Field` and `Area` are interchangeable: naming an area with `Field` does exactly what `<Area>` does, `with` clause and all, so a template that iterates a schema does not have to special-case it. In Astro they are separate components — use `<AposArea>` for areas.
 
 Custom field types can opt in — see [Adding inline editing to a custom field type](#adding-inline-editing-to-a-custom-field-type).
