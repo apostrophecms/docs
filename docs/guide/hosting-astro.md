@@ -28,7 +28,7 @@ The simplest production setup runs both processes on the same machine. Astro lis
 
 - Set `ADDRESS=127.0.0.1` for the ApostropheCMS process so it only accepts local connections. By default it listens on all interfaces.
 - Point Astro at the backend with `APOS_HOST=http://127.0.0.1:3000`.
-- Size the server for both processes. Start from the [server requirements](/guide/hosting.md#server-requirements) for ApostropheCMS and add memory for the Astro processes.
+- Plan for at least **2 GB of RAM**. A small site running two processes of each application uses about 825 MB at rest (two ApostropheCMS processes at 250–350 MB each and two Astro processes at about 120 MB each), which leaves room to rebuild in place. The ApostropheCMS asset build is the largest single demand, at about 750 MB, so on a 2 GB server add 1–2 GB of swap as a safety margin, or build in CI and copy the output to the server. Choose 4 GB for busier sites or more processes.
 
 This is also the model [ApostropheCMS hosting](https://apostrophecms.com/hosting) uses, so traffic between the two applications never leaves the machine.
 
@@ -85,9 +85,43 @@ frontend/astro.config.mjs
 </AposCodeBlock>
 
 - **Include every hostname the site answers on,** such as the bare domain and `www`, and a staging domain if staging uses the same build.
-- **Forward the original protocol and host from your reverse proxy.** When NGINX terminates HTTPS, Astro receives plain HTTP. Set `proxy_set_header Host $host;` and `proxy_set_header X-Forwarded-Proto $scheme;` so that Astro sees `https://www.example.com`, which matches the `protocol` in the pattern.
+- **Forward the original protocol and host from your reverse proxy.** When NGINX terminates HTTPS, Astro receives plain HTTP. The `Host` and `X-Forwarded-Proto` headers in [Configuring the reverse proxy](#configuring-the-reverse-proxy) let Astro see `https://www.example.com`, which matches the `protocol` in the pattern.
 - **Include the port for non-standard ports,** for example `{ protocol: 'http', hostname: 'localhost', port: '4321' }` when testing a production build locally.
 - **Apply the option only to server-rendered builds.** With Astro 6 and later, it produces a warning for every prerendered page in a static build. See [Upgrading apostrophe-astro](/guide/migration/upgrading-apostrophe-astro.md#static-builds-guard-security-alloweddomains-to-ssr-only) for a pattern that applies it conditionally.
+
+## Configuring the reverse proxy
+
+Point the reverse proxy at Astro, not at ApostropheCMS. Astro passes the requests that ApostropheCMS handles, including the admin UI, API calls and uploads, through to the backend. A minimal NGINX configuration for a site on one server:
+
+<AposCodeBlock>
+
+```nginx
+server {
+  listen 80;
+  server_name www.example.com;
+
+  # Allow media uploads larger than NGINX's 1 MB default
+  client_max_body_size 50m;
+
+  location / {
+    proxy_pass http://127.0.0.1:4321;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+```
+
+<template v-slot:caption>
+/etc/nginx/conf.d/example.conf
+</template>
+</AposCodeBlock>
+
+- **Raise `client_max_body_size`.** NGINX rejects request bodies over 1 MB by default, so editors can't upload larger images or files. The upload fails with `413 Request Entity Too Large`. Set a limit that fits the largest file editors will upload.
+- **Make sure the HTTPS `server` block has these settings.** Certbot adds HTTPS to the existing block, so settings there carry over. If you write a separate block for port 443 yourself, repeat the `client_max_body_size` and `proxy_set_header` lines in it.
+- **Keep `Host` and `X-Forwarded-Proto`.** Astro uses them, together with [`security.allowedDomains`](#configuring-astro-for-your-domain), to determine the site's public origin.
 
 ## Environment variables
 
@@ -125,7 +159,7 @@ Extend the [deployment basics](/guide/hosting.md#deployment-basics) for Apostrop
 2. **Build the backend:** `NODE_ENV=production node app @apostrophecms/asset:build`. Unless the deployment is a git checkout, set `APOS_RELEASE_ID` for this step and give the running site the same value.
 3. **Run migrations:** `NODE_ENV=production node app @apostrophecms/migration:migrate`. Migrations also run when ApostropheCMS starts, but a separate step stops a failed migration from reaching the running site.
 4. **Build the frontend:** `astro build`, with `APOS_HOST` set to the production backend URL.
-5. **Restart ApostropheCMS, then Astro.**
+5. **Restart ApostropheCMS, then Astro.** With PM2 in cluster mode, `pm2 reload ecosystem.config.cjs` does this without downtime. See [Running the processes](#running-the-processes).
 
 The starter kits include scripts for each step. From the project root, `npm run build` builds both halves and `npm run migrate` runs migrations. `npm run serve-backend` and `npm run serve-frontend` start them in production mode.
 
@@ -156,6 +190,9 @@ module.exports = {
       name: 'astro',
       cwd: './frontend',
       script: 'dist/server/entry.mjs',
+      // Load frontend/.env. Use an absolute path: in cluster mode a
+      // relative path is not resolved against `cwd`
+      node_args: `--env-file=${__dirname}/frontend/.env`,
       instances: 2,
       exec_mode: 'cluster',
       env: {
@@ -184,7 +221,19 @@ SyntaxError: Unexpected token 'export'
 Because of this, the example above has no CJS/ESM toggle. It always displays as CommonJS whichever format you've selected elsewhere in the documentation.
 :::
 
-Save the file in the project root, next to the `backend` and `frontend` directories. Each app's `cwd` is relative to that location. Keep secrets such as `APOS_EXTERNAL_FRONT_KEY` and `APOS_DB_URI` in the server environment rather than in this file. Point your reverse proxy at the Astro port. The Astro process binds to `127.0.0.1` here because the reverse proxy runs on the same machine. Use `0.0.0.0` on platforms that route traffic to the container from outside.
+Save the file in the project root, next to the `backend` and `frontend` directories. Each app's `cwd` is relative to that location. Point your reverse proxy at the Astro port. The Astro process binds to `127.0.0.1` here because the reverse proxy runs on the same machine. Use `0.0.0.0` on platforms that route traffic to the container from outside.
+
+Keep secrets such as `APOS_EXTERNAL_FRONT_KEY`, `APOS_SESSION_SECRET`, and `APOS_DB_URI` out of this file and out of the repository:
+
+- **Backend:** put them in `backend/.env`. The starter kits' `app.js` loads that file with `dotenv`, for the running site and for command line tasks such as migrations.
+- **Frontend:** put `APOS_EXTERNAL_FRONT_KEY` in `frontend/.env`. The Astro server does not load `.env` files at runtime, so the `node_args` line above has Node.js load it. The path must be absolute. With a relative path, the Astro processes crash on startup with nothing in their logs, and PM2 marks them as `errored`.
+- **Don't rely on exported shell variables.** They only reach processes started from that shell, and they are lost when the server reboots.
+
+`pm2 env` doesn't list variables loaded from these files, because Node.js and `dotenv` read them inside the process. To check that they loaded, request a page from Astro and look for key errors in `pm2 logs`.
+
+To restart both applications after a reboot, run `pm2 save` and then `pm2 startup`, and follow the instructions it prints.
+
+When both applications start at the same time, as they do after a reboot or a `pm2 start`, Astro is ready within a second or two, before ApostropheCMS has finished starting. Requests in that window fail, and the Astro logs show `connect ECONNREFUSED 127.0.0.1:3000`. These errors stop once ApostropheCMS logs that it is listening, and you can ignore them. To avoid them during deployments, restart with `pm2 reload ecosystem.config.cjs` instead of `pm2 restart`. In cluster mode, `reload` replaces processes one at a time, so the old processes keep serving until the new ones are ready.
 
 ## Media and caching
 
@@ -205,5 +254,6 @@ Save the file in the project root, next to the `backend` and `frontend` director
 - The backend is not publicly reachable, or at least is not linked from anywhere public.
 - For single-site projects, `excludeRequestHeaders` includes `'host'` if the two applications run on different hosts.
 - Uploads are stored in persistent or cloud storage.
-- Each application runs at least two processes under a process manager.
+- The reverse proxy's `client_max_body_size` allows the largest file editors upload, including in the HTTPS `server` block. Test by uploading an image larger than 1 MB.
+- Each application runs at least two processes under a process manager, configured to restart after a reboot (`pm2 save` and `pm2 startup`). Test by rebooting the server.
 - Test the production build locally with `npm run build` followed by `npm run serve-backend` and `npm run serve-frontend` before deploying.
