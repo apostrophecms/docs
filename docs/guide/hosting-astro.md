@@ -57,6 +57,14 @@ Server-side rendering is the default in the starter kits and the right choice fo
 
 A static site still needs an SSR environment for editing. The usual pattern is an SSR staging site that editors work in, plus a static production build that is triggered when content is ready to publish. See [Static builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.md) and [Full static deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.md).
 
+## Choosing a database
+
+Only ApostropheCMS connects to the database. Astro never does, so the choice doesn't change anything on the frontend. See [Choosing a database](/guide/choosing-a-database.md) for the tradeoffs. A few points affect how you host:
+
+- **SQLite works well on a single server.** Several ApostropheCMS processes on the same machine can share one SQLite file. Keep the file outside the directory you deploy into, on a persistent disk. SQLite can't be shared between servers, so plan to move to PostgreSQL or MongoDB before running the backend on more than one machine.
+- **A managed database simplifies operations.** Managed services such as MongoDB Atlas or a hosting provider's managed PostgreSQL run on their own servers, which frees memory on yours, and they usually include automatic backups. Place the database in the same region as the backend, because every page request waits on it.
+- **Set the connection string with `APOS_DB_URI`.** It accepts `mongodb://`, `postgres://`, and `sqlite://` URIs. See [Using SQLite and PostgreSQL](/guide/using-sqlite-and-postgres.md) for the formats.
+
 ## Configuring Astro for your domain
 
 Astro checks the origin of every `POST`, `PUT`, `PATCH`, and `DELETE` request to a server-rendered site that has a form-like body or no body at all, and rejects cross-site requests with `403 Cross-site POST form submissions are forbidden`. To build the site's origin, Astro only trusts the `Host` and `X-Forwarded-*` headers when they match the `security.allowedDomains` option. With the default empty list, a production build treats every request as coming from `http://localhost`, so requests from your real domain fail the check.
@@ -241,6 +249,17 @@ When both applications start at the same time, as they do after a reboot or a `p
 - **Serve media from storage or a CDN, not through Astro.** When uploads are in cloud storage, image URLs point at the storage service directly. Otherwise, every image request travels through Astro's `/uploads` proxy to the backend.
 - **Pass through caching headers.** Include `'cache-control'` in the integration's `includeResponseHeaders` option so that the cache headers ApostropheCMS sets reach browsers and CDNs. See [Caching](/guide/caching.md) for configuring them. The starter kits include this header by default.
 - **Pass through security headers.** If you use `@apostrophecms/security-headers`, list its headers in `includeResponseHeaders` too. The integration removes the `nonce` from the `content-security-policy` header's `script-src` value because Astro does not support it.
+
+## Running the site over time
+
+Getting the site online is only the start. These practices apply to any production deployment:
+
+- **Back up the database and the uploads.** Content lives in two places: the database and the uploaded files, either on disk or in cloud storage. Back up both on a schedule, keep copies off the server, and test restoring them now and then. A managed database or your host's backup service can take care of part of this.
+- **Make deployments repeatable.** Script the release steps, or run them in CI, so every deployment installs dependencies, sets a new release ID, builds both applications, runs migrations, and reloads the processes in the same order. A missed step, such as a stale `APOS_HOST` or a mismatched release ID, is the most common cause of a broken deployment.
+- **Configure outgoing email.** Features such as password reset need to send email. Configure an email transport in `@apostrophecms/email` before editors depend on them. See [Sending email](/guide/sending-email.md).
+- **Monitor the site.** Use an uptime checker so you hear about outages before visitors do, and keep an eye on memory use and disk space. SQLite databases and uploads grow over time.
+- **Keep the stack updated.** Apply operating system security updates, stay on a supported Node.js release, and update ApostropheCMS, Astro, and the integration regularly. Test updates on a staging copy first.
+- **Renew TLS certificates automatically.** Certbot and most hosting platforms set this up for you, but confirm that renewal is scheduled.
 
 ## Production checklist
 
