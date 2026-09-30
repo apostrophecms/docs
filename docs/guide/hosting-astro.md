@@ -26,7 +26,7 @@ These proxy routes exist only when Astro runs with `output: 'server'`. A static 
 
 The simplest production setup runs both processes on the same machine. Astro listens on the public-facing port behind your reverse proxy, and ApostropheCMS listens on a private port that only Astro can reach.
 
-- Set `ADDRESS=127.0.0.1` for the ApostropheCMS process so it only accepts local connections. By default it listens on all interfaces.
+- Set `ADDRESS=127.0.0.1` for the ApostropheCMS process so it only accepts local connections. By default it listens on all interfaces. As a second layer, configure the server's firewall to allow only SSH, HTTP and HTTPS, for example with `ufw` or your hosting provider's firewall.
 - Point Astro at the backend with `APOS_HOST=http://127.0.0.1:3000`.
 - Plan for at least **2 GB of RAM**. A small site running two processes of each application uses about 825 MB at rest (two ApostropheCMS processes at 250–350 MB each and two Astro processes at about 120 MB each), which leaves room to rebuild in place. The ApostropheCMS asset build is the largest single demand, at about 750 MB, so on a 2 GB server add 1–2 GB of swap as a safety margin, or build in CI and copy the output to the server. Choose 4 GB for busier sites or more processes.
 
@@ -159,7 +159,7 @@ Extend the [deployment basics](/guide/hosting.md#deployment-basics) for Apostrop
 2. **Build the backend:** `NODE_ENV=production node app @apostrophecms/asset:build`. Unless the deployment is a git checkout, set `APOS_RELEASE_ID` for this step and give the running site the same value.
 3. **Run migrations:** `NODE_ENV=production node app @apostrophecms/migration:migrate`. Migrations also run when ApostropheCMS starts, but a separate step stops a failed migration from reaching the running site.
 4. **Build the frontend:** `astro build`, with `APOS_HOST` set to the production backend URL.
-5. **Restart ApostropheCMS, then Astro.** With PM2 in cluster mode, `pm2 reload ecosystem.config.cjs` does this without downtime. See [Running the processes](#running-the-processes).
+5. **Restart ApostropheCMS, then Astro.** With PM2 in cluster mode, `pm2 reload ecosystem.config.cjs` does this with only a brief interruption. See [Running the processes](#running-the-processes).
 
 The starter kits include scripts for each step. From the project root, `npm run build` builds both halves and `npm run migrate` runs migrations. `npm run serve-backend` and `npm run serve-frontend` start them in production mode.
 
@@ -233,7 +233,7 @@ Keep secrets such as `APOS_EXTERNAL_FRONT_KEY`, `APOS_SESSION_SECRET`, and `APOS
 
 To restart both applications after a reboot, run `pm2 save` and then `pm2 startup`, and follow the instructions it prints.
 
-When both applications start at the same time, as they do after a reboot or a `pm2 start`, Astro is ready within a second or two, before ApostropheCMS has finished starting. Requests in that window fail, and the Astro logs show `connect ECONNREFUSED 127.0.0.1:3000`. These errors stop once ApostropheCMS logs that it is listening, and you can ignore them. To avoid them during deployments, restart with `pm2 reload ecosystem.config.cjs` instead of `pm2 restart`. In cluster mode, `reload` replaces processes one at a time, so the old processes keep serving until the new ones are ready.
+When both applications start at the same time, as they do after a reboot or a `pm2 start`, Astro is ready within a second or two, before ApostropheCMS has finished starting. Requests in that window fail, and the Astro logs show `connect ECONNREFUSED 127.0.0.1:3000`. These errors stop once ApostropheCMS logs that it is listening, and you can ignore them. For deployments, use `pm2 reload ecosystem.config.cjs` instead of `pm2 restart`. In cluster mode, `reload` replaces processes one at a time, which keeps the interruption short. Expect a few failed requests over a second or two, not zero downtime.
 
 ## Media and caching
 
