@@ -2,7 +2,7 @@
 
 An ApostropheCMS + Astro project runs as two cooperating Node.js applications: the ApostropheCMS backend, which stores content and serves the editing UI, and the Astro frontend, which renders every page a visitor sees. Everything in [Hosting ApostropheCMS in production](/guide/hosting.md) still applies to the backend. This page covers what changes when Astro sits in front of it.
 
-For step-by-step walkthroughs on specific platforms, see [Deploying ApostropheCMS + Astro projects](/tutorials/astro/deploying-hybrid-projects.md) and the other [Astro tutorials](/tutorials/astro/apostrophecms-and-astro.md).
+For platform options and worked examples, including a single-server deployment on DigitalOcean, see [Deploying ApostropheCMS + Astro projects](/tutorials/astro/deploying-hybrid-projects.md). The other [Astro tutorials](/tutorials/astro/apostrophecms-and-astro.md) cover static builds and a full Railway and Vercel deployment.
 
 ## How requests flow
 
@@ -37,8 +37,9 @@ This is also the model [ApostropheCMS hosting](https://apostrophecms.com/hosting
 You can host the backend and frontend on different platforms, for example ApostropheCMS on a VPS or container platform and Astro on a serverless host. This gives you independent scaling and lets you use platform-specific Astro adapters, at the cost of a network hop on every page request.
 
 - Place the two services in the same region, and on a private network if your platform supports it. Every uncached page view waits for a round trip to ApostropheCMS.
-- For single-site projects, add `'host'` to the integration's `excludeRequestHeaders` option. Otherwise the browser's `Host` header, which names the Astro site, is forwarded to the ApostropheCMS server.
+- For single-site projects, add `'host'` to the integration's `excludeRequestHeaders` option. Otherwise the browser's `Host` header, which names the Astro site, is forwarded to the ApostropheCMS server. When the backend is served over HTTPS, that mismatch makes every page fail with a `500` error that reports `Hostname/IP does not match certificate's altnames`.
 - Restrict direct public access to the backend where you can. Astro is the only client that needs it.
+- Check the frontend host's request size limit. Uploads from the admin UI pass through Astro, so on a serverless platform the limit on request size caps the files editors can upload, whatever storage the backend uses. On Netlify, for example, uploads over about 4 MB fail.
 
 ::: info
 Multisite projects built with [Assembly](/starters/assembly.md) have additional hosting considerations, because each site is served from its own hostname. [Contact us](https://apostrophecms.com/contact-us) for advice on hosting a multisite project with an Astro frontend.
@@ -70,6 +71,8 @@ Only ApostropheCMS connects to the database. Astro never does, so the choice doe
 Astro checks the origin of every `POST`, `PUT`, `PATCH`, and `DELETE` request to a server-rendered site that has a form-like body or no body at all, and rejects cross-site requests with `403 Cross-site POST form submissions are forbidden`. To build the site's origin, Astro only trusts the `Host` and `X-Forwarded-*` headers when they match the `security.allowedDomains` option. With the default empty list, a production build treats every request as coming from `http://localhost`, so requests from your real domain fail the check.
 
 The admin UI sends several requests of this kind through Astro's proxy, including logging out and uploading files. Editors can still log in and edit, but these actions fail. The development server builds the origin from the incoming request, so the problem typically appears only after you deploy a production build.
+
+This applies to the Node adapter running behind a reverse proxy. Platform adapters can behave differently. On Netlify, for example, these requests succeed without the option.
 
 List the public origin of each environment in `astro.config.mjs`:
 
