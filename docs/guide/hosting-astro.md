@@ -248,7 +248,7 @@ When both applications start at the same time, as they do after a reboot or a `p
 
 ## Media and caching
 
-- **Store uploads outside the server.** Use cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) so that uploads survive redeploys and every backend process sees the same files. This matters most when Astro runs on a serverless host with no persistent disk.
+- **Store uploads where they survive a redeploy.** On a single server, the default local storage in `backend/public/uploads` is enough, as long as deployments leave that folder in place and you back it up. Use cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) when the backend runs on more than one server, when each deployment replaces the project directory, or when the platform has no persistent disk.
 - **Serve media from storage or a CDN, not through Astro.** When uploads are in cloud storage, image URLs point at the storage service directly. Otherwise, every image request travels through Astro's `/uploads` proxy to the backend.
 - **Pass through caching headers.** Include `'cache-control'` in the integration's `includeResponseHeaders` option so that the cache headers ApostropheCMS sets reach browsers and CDNs. See [Caching](/guide/caching.md) for configuring them. The starter kits include this header by default.
 - **Pass through security headers.** If you use `@apostrophecms/security-headers`, list its headers in `includeResponseHeaders` too. The integration removes the `nonce` from the `content-security-policy` header's `script-src` value because Astro does not support it.

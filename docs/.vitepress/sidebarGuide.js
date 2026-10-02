@@ -408,7 +408,7 @@ const sidebarGuide = [
         link: 'guide/hosting.md'
       },
       {
-        text: 'Hosting with Astro',
+        text: 'Hosting with an Astro Frontend',
         link: 'guide/hosting-astro.md'
       },
       {

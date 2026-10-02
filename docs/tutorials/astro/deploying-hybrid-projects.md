@@ -217,6 +217,7 @@ This example uses SQLite, so there is no database server to install. Only the fi
    exit
    ```
    Back in the root shell, have PM2 start the site whenever the server boots:
+   
    ```sh
    env PATH=$PATH:/usr/bin pm2 startup systemd -u nodeapps --hp /home/nodeapps
    ```
@@ -238,6 +239,10 @@ This example uses SQLite, so there is no database server to install. Only the fi
 11. **Check the result.** Open the site over HTTPS, log in, upload an image larger than 1 MB, and log out. Then reboot the server and confirm the site comes back by itself.
 
 To deploy an update, pull the new code, run `npm install`, repeat step 6 without the last command, and run `pm2 reload ecosystem.config.cjs`.
+
+::: info
+In this setup, uploaded images and files are stored on the server's disk, in `backend/public/uploads`. Git ignores that folder, so pulling new code leaves it in place, and a single server needs nothing more. Include the folder in your backups along with the database file. Switch to cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) if you plan to run the backend on more than one server, deploy by replacing the project directory, or want media to survive the loss of the server.
+:::
 
 ## Split Deployment (Separate Backend and Frontend)
 
@@ -292,7 +297,7 @@ There are several guides for other [deployment options](/guide/hosting.html) and
 
 ### Frontend (Astro) Deployment
 
-Your Astro frontend can be deployed to any service, including our [managed hosting](https://apostrophecms.com/hosting), that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend' folder as the root for your Astro deployment.
+Your Astro frontend can be deployed to any service, including our [managed hosting](https://apostrophecms.com/hosting), that supports SSR (Server-Side Rendering). Depending on the hosting provider you may also need to make changes to your `astro.config.mjs` file. The [Astro.build](https://docs.astro.build/en/guides/deploy/#deployment-guides) site has a number of guides for deployment. The only extra consideration is that we are deploying a monorepo, so you need to take the extra steps to identify the `frontend` folder as the root for your Astro deployment.
 
 #### Common Frontend Hosting Options
 
@@ -342,7 +347,7 @@ Netlify runs Astro's server-rendered pages as serverless functions, so the front
    APOS_EXTERNAL_FRONT_KEY=your_shared_secret_key
    APOS_HOST=https://your-backend-url.com
    ```
-6. On the backend, set `APOS_BASE_URL` to the Netlify site's public URL and restart it. Otherwise logging in sends editors to whatever URL the backend was configured with.
+6. On the backend, set `APOS_BASE_URL` to the Netlify site's public URL and restart it. Otherwise, logging in sends editors to whatever URL the backend was configured with.
 7. Open the site in a browser where you are not logged in to Netlify. If it asks for a Netlify login or a password, change the site's visitor access setting to public in the Netlify project configuration.
 
 ::: warning
@@ -420,7 +425,7 @@ If you want to generate a fully static frontend at build time — outputting pla
 
 ### Full Static Deployment with Railway and Vercel
 
-A complete worked example of a two-tier deployment: ApostropheCMS on Railway as the backend, Astro SSR on Vercel as a always-on editorial environment, and a static production site triggered by a Vercel Deploy Hook. Covers environment variables, attachment storage, admin user creation, and a publish workflow that gives content managers deliberate control over what goes live.
+A complete worked example of a two-tier deployment: ApostropheCMS on Railway as the backend, Astro SSR on Vercel as an always-on editorial environment, and a static production site triggered by a Vercel Deploy Hook. Covers environment variables, attachment storage, admin user creation, and a publish workflow that gives content managers deliberate control over what goes live.
 
 [ApostropheCMS + Astro: Full Static Deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.html)
 
