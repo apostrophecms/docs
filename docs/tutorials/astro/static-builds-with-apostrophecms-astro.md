@@ -121,7 +121,7 @@ Rather than maintaining two separate config files, the recommended approach is t
 
 <AposCodeBlock>
 
-```javascript
+```mjs
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
@@ -131,6 +131,14 @@ const isStatic = process.env.APOS_BUILD === 'static';
 export default defineConfig({
   output: isStatic ? 'static' : 'server',
   adapter: isStatic ? undefined : node({ mode: 'standalone' }),
+  // Needed by the SSR editing site; skipped for static builds
+  ...(!isStatic && {
+    security: {
+      allowedDomains: [
+        { protocol: 'https', hostname: 'edit.example.com' }
+      ]
+    }
+  }),
   integrations: [
     apostrophe({
       aposHost: 'http://localhost:3000',
