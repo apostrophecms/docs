@@ -641,14 +641,16 @@ One shape, always. Which fields are populated is what tells you what happened.
 | `cancel` | The call's `signal` fired. Partial `text`, `steps` and `usage` are preserved. |
 | `input` | A tool handler paused the run waiting for outside input. The asks are on `suspended`. |
 
-`usage` is aggregated across every model turn of the call. `inputTokens` counts every input token the provider billed, cached or not, and `outputTokens` every output token, reasoning included. When the provider reports how much of the prompt its cache served or stored, two more fields carry that share:
+`usage` is aggregated across every model turn of the call. `inputTokens` counts every input token the provider billed, cached or not, and `outputTokens` every output token, reasoning included. When the provider breaks those totals down, more fields carry the parts that can bill at a rate of their own:
 
 | Field | Meaning |
 |---|---|
 | `cacheReadTokens` | The part of `inputTokens` served from the provider's prompt cache. |
 | `cacheWriteTokens` | The part of `inputTokens` written to the cache. |
+| `imageInputTokens` | The part of `inputTokens` that was images. |
+| `imageOutputTokens` | The part of `outputTokens` that was images. |
 
-Both are parts of `inputTokens`, never additions to it, so `inputTokens - cacheReadTokens - cacheWriteTokens` is what the provider charged at the full input rate. A field is present only when the provider reported it: absent means unknown, not zero. Anthropic and OpenAI report both; Google reports reads only, and only on a cache hit; a Chat Completions host reports whatever it implements. Image results carry `inputTokens` and `outputTokens` only.
+Each is a part of its total, never an addition to it, so `inputTokens - cacheReadTokens - cacheWriteTokens` is what the provider charged at the full input rate. A field is present only when the provider reported it: absent means unknown, not zero. Anthropic and OpenAI report both cache shares; Google reports reads only, and only on a cache hit; a Chat Completions host reports whatever it implements. The image shares come from OpenAI's image models and from Google, which reports them on chat calls too. Image results carry no cache shares.
 
 To bill or price AI work, use the [`usage` event](#tracking-ai-usage) rather than this total: providers price each model request on its own, and a call that throws returns no `usage` at all.
 
@@ -1508,7 +1510,7 @@ Why one record per response, rather than one per call:
 | `provider`, `model` | The provider entry, and the model as the provider reported it — possibly a dated snapshot of the one requested. |
 | `step`, `attempt` | Which model turn of the call, and which retry attempt of that turn. An attempt that failed with an HTTP error sent nothing back and has no record, but still counts. |
 | `outcome` | `'accepted'` when the engine kept the response, `'rejected'` when it threw it away. Both were billed. |
-| `usage` | This response's counts, shaped like the [call's `usage`](#the-return-value): `inputTokens` is every input token billed, cached or not; `cacheReadTokens` and `cacheWriteTokens` are the parts of it the provider's prompt cache served or stored, present when the provider reports them. On an image record, present only when the provider reported tokens. |
+| `usage` | This response's counts, shaped like the [call's `usage`](#the-return-value): `inputTokens` is every input token billed, cached or not; `cacheReadTokens` and `cacheWriteTokens` are the parts of it the provider's prompt cache served or stored, and `imageInputTokens` and `imageOutputTokens` the parts of either total that were images, each present when the provider reports it. On an image record, present only when the provider reported tokens. |
 | `cache` | Chat only: the cache lifetime the request asked for. Providers that price cache lifetimes differently bill writes by it. |
 | `images`, `quality`, `aspect`, `size` | Image only, describing what was made: how many images came back; `quality` and `aspect` as the call resolved them, in Apostrophe's own vocabulary, before the adapter translated them; and `size`, the provider's native pixel size, when its dialect works in one. |
 | `metadata` | A copy of the [`usageMetadata`](#labeling-records-with-metadata) option, `{}` by default. Each record gets its own copy. |
@@ -1522,7 +1524,7 @@ Why one record per response, rather than one per call:
 - Pick the rate tier from the record's own `usage.inputTokens`, the full prompt of that request.
 - The uncached share is `inputTokens - cacheReadTokens - cacheWriteTokens` (an absent share counts as zero). Price it, the cache reads and the cache writes each at their own rate, writes at the rate for the record's `cache` lifetime.
 - Price `outputTokens`, which includes any reasoning tokens.
-- Price image records from `usage` when it is present: the shipped image providers bill generated images as output tokens. `images`, `quality` and `size` are there for a provider that prices per image instead.
+- Price image records from `usage` when it is present: the shipped image providers bill images as tokens. Where the price list has a separate rate for image tokens, price `imageInputTokens` and `imageOutputTokens` at it and the rest of each total at the text rate; the rest of an image record's `outputTokens` is text and thinking. `images`, `quality` and `size` are there for a provider that prices per image instead.
 
 ### Collecting records
 
