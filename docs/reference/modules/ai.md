@@ -168,6 +168,7 @@ export default {
 | [`jobPollInterval`](#tunables) | integer | `2000` | Milliseconds between cancellation checks on a background run. |
 | [`mock`](#mock-mode-and-testing) | function | built-in | Answers chat calls under `APOS_AI_MOCK`. |
 | [`mockImage`](#mock-mode-and-testing) | function | built-in | The same for image calls. |
+| [`usageMetadata`](#tracking-ai-usage) | object | `{}` | Copied onto every usage record as its `metadata`. |
 
 ```javascript
 '@apostrophecms/ai': {
@@ -176,6 +177,7 @@ export default {
     provider: 'anthropic',   // the default one
     effort: { /* … */ },     // the routing table
     image: { /* … */ },      // the image route
+    usageMetadata: { /* … */ }, // labels every usage record
     maxSteps: 5,
     retryAttempts: 5,
     retryBaseDelay: 1000,
@@ -625,7 +627,7 @@ One shape, always. Which fields are populated is what tells you what happened.
   toolCalls: [ /* unexecuted tool requests you must handle yourself */ ],
   suspended: [ /* the asks of handlers that paused the run */ ],
   finishReason: 'stop',
-  usage: { inputTokens: 1200, outputTokens: 310 },
+  usage: { inputTokens: 1200, outputTokens: 310, cacheReadTokens: 900, cacheWriteTokens: 0 },
   model: 'claude-sonnet-5',
   provider: 'anthropic'
 }
@@ -639,7 +641,18 @@ One shape, always. Which fields are populated is what tells you what happened.
 | `cancel` | The call's `signal` fired. Partial `text`, `steps` and `usage` are preserved. |
 | `input` | A tool handler paused the run waiting for outside input. The asks are on `suspended`. |
 
-`usage` is aggregated across every model turn of the call.
+`usage` is aggregated across every model turn of the call. `inputTokens` counts every input token the provider billed, cached or not, and `outputTokens` every output token, reasoning included. When the provider breaks those totals down, more fields carry the parts that can be billed at a rate of their own:
+
+| Field | Meaning |
+|---|---|
+| `cacheReadTokens` | The part of `inputTokens` served from the provider's prompt cache. |
+| `cacheWriteTokens` | The part of `inputTokens` written to the cache. |
+| `imageInputTokens` | The part of `inputTokens` that was images. |
+| `imageOutputTokens` | The part of `outputTokens` that was images. |
+
+Each is a part of its total, never an addition to it, so `inputTokens - cacheReadTokens - cacheWriteTokens` is what the provider charged at the full input rate. A field is present only when the provider reported it: absent means unknown, not zero. Anthropic and OpenAI report both cache shares; Google reports reads only, and only on a cache hit; a Chat Completions host reports whatever it implements. The image shares come from OpenAI's image models and from Google, which reports them on chat calls too. Image results carry no cache shares.
+
+To bill or price AI work, use the [`usage` event](#tracking-ai-usage) rather than this total: providers price each model request on its own, and a call that throws returns no `usage` at all.
 
 #### Messages
 
@@ -1384,9 +1397,10 @@ These exist for adapter authors. See [writing a new adapter](/reference/modules/
 
 | Event | Payload |
 |---|---|
-| `beforeGenerate` / `afterGenerate` | `(req, context)` — one shared mutable object carrying `provider`, `request` and, afterwards, `result`. Handlers can enrich the request and correlate the two. |
+| `beforeGenerate` / `afterGenerate` | `(req, context)` — one shared mutable object carrying `callId`, `provider`, `request` and, afterwards, `result`. Handlers can enrich the request and correlate the two. `afterGenerate` fires only when the call returns. |
 | `beforeGenerateImage` / `afterGenerateImage` | The same, around an image call. |
 | `beforeToolCall` / `afterToolCall` | `(req, payload)` — `call`, `tool`, and afterwards `result`, `error` or `suspended`. |
+| `usage` | `(req, record)` — one record per provider response, the unit providers bill. See [Tracking AI usage](#tracking-ai-usage). |
 
 <AposCodeBlock>
 
@@ -1408,7 +1422,7 @@ export default {
   </template>
 </AposCodeBlock>
 
-Because every AI call passes through these events, they are the one place to audit AI usage project-wide — no feature has to opt in.
+Because every AI call passes through these events, they are the one place to audit what AI did project-wide — no feature has to opt in.
 
 <AposCodeBlock>
 
@@ -1417,11 +1431,12 @@ export default {
   handlers(self) {
     return {
       '@apostrophecms/ai:afterGenerate': {
-        // Who spent what, on which model
-        async recordSpend(req, context) {
+        // One entry per finished call, with its total usage
+        async recordCall(req, context) {
           await self.db.insertOne({
             at: new Date(),
             userId: req.user?._id,
+            callId: context.callId,
             provider: context.result.provider,
             model: context.result.model,
             usage: context.result.usage,
@@ -1453,11 +1468,170 @@ export default {
   </template>
 </AposCodeBlock>
 
-What makes this a real trail: the events fire for every call, background jobs and subagents included, and `afterToolCall` sees the arguments as validated, so what you record is what the handler actually ran with. Skipping `kind: 'query'` keeps the trail to actions that changed something.
+What makes this a real trail: the events fire for every call, background jobs and subagents included, and `afterToolCall` sees the arguments as validated, so what you record is what the handler actually ran with. Skipping `kind: 'query'` keeps the trail to actions that changed something. `afterGenerate` fires only when a call returns, so its total is a summary of finished work, not a bill: for that, see [Tracking AI usage](#tracking-ai-usage).
 
 ::: info
 One gap to know about: a handler that fails with a hard-stopping error propagates immediately, so `afterToolCall` does not fire for it. Pair with `beforeToolCall` — which always fires — when the trail must show attempts as well as outcomes.
 :::
+
+## Tracking AI usage
+
+`@apostrophecms/ai:usage` fires once for every response a provider sends back, with that response's own token counts. It is the complete, low-level record of what was billed: a project that bills its own customers for AI, or just wants to know what AI costs, listens to it and nothing else. Apostrophe reports tokens; it never computes a price, because prices change and belong to whoever holds the provider contract.
+
+Why one record per response, rather than one per call:
+
+- **Providers price each request on its own.** Some models charge higher rates for a request whose prompt passes a size threshold, and cached tokens count toward that size. A tool-calling call makes several requests whose prompts grow turn by turn, so one call can straddle the threshold. Only per-request counts can be priced exactly.
+- **Responses that were billed but discarded are reported too.** A response the engine rejects — malformed, or structured output that does not match the schema — was still billed, and the engine asks again. A call that stops partway, refused by the model or stopped by a tool handler, has already paid for its earlier turns. None of these reach `afterGenerate`; every one of them is a `usage` record.
+
+### The record
+
+```javascript
+{
+  callId: 'clxyz…',            // the generate or generateImage call; also on its event context
+  parentCallId: 'clabc…',      // the delegating call, on a subagent's records only
+  kind: 'chat',                // 'chat' or 'image'
+  provider: 'anthropic',
+  model: 'claude-sonnet-5',    // what answered, as the provider reported it
+  step: 2,                     // the model turn within the call, counting from 1
+  attempt: 1,                  // the retry attempt within that turn, counting from 1
+  outcome: 'accepted',         // or 'rejected': billed, but retried or the call stopped
+  usage: { inputTokens: 41200, outputTokens: 310, cacheReadTokens: 38000, cacheWriteTokens: 2900 },
+  cache: 'short',              // the cache policy the request asked for: false, 'short' or 'long'
+  metadata: { /* a copy of the usageMetadata option */ },
+  at: new Date()
+}
+```
+
+| Property | Meaning |
+|---|---|
+| `callId` | The call the response belongs to. The same value is `context.callId` on that call's `beforeGenerate` / `afterGenerate` (or image) events, so a record joins its call. |
+| `parentCallId` | On a [subagent](#a-subagent-tool)'s records: the call whose tool started it. |
+| `kind` | `'chat'` or `'image'`. |
+| `provider`, `model` | The provider entry, and the model as the provider reported it — possibly a dated snapshot of the one requested. |
+| `step`, `attempt` | Which model turn of the call, and which retry attempt of that turn. An attempt that failed with an HTTP error sent nothing back and has no record, but still advances `attempt`. |
+| `outcome` | `'accepted'` when the engine kept the response, `'rejected'` when it threw it away. Both were billed. |
+| `usage` | This response's counts, shaped like the [call's `usage`](#the-return-value): `inputTokens` is every input token billed, cached or not; `cacheReadTokens` and `cacheWriteTokens` are the parts of it the provider's prompt cache served or stored, and `imageInputTokens` and `imageOutputTokens` the parts of either total that were images, each present when the provider reports it. On an image record, present only when the provider reported tokens. |
+| `cache` | Chat only: the cache lifetime the request asked for. Providers that price cache lifetimes differently bill writes by it. |
+| `images`, `quality`, `aspect`, `size` | Image only, describing what was made: how many images came back; `quality` and `aspect` as the call resolved them, in Apostrophe's own vocabulary, before the adapter translated them; and `size`, the provider's native pixel size, when its dialect works in one. |
+| `metadata` | A copy of the [`usageMetadata`](#labeling-records-with-metadata) option, `{}` by default. Each record gets its own shallow copy, so changing a top-level key on one record never reaches another. |
+| `mock` | `true` under [mock mode](#mock-mode-and-testing): the counts are an estimate and nothing was billed. Absent otherwise. |
+| `at` | When the response arrived. |
+
+**Summing records.** Count every record, rejected ones included. A subagent's work is its own call with its own records, and the delegating call's `usage` leaves it out, so summing every record counts each token exactly once.
+
+**Pricing a record.** Price each record by itself, against the provider's price list:
+
+- Pick the rate tier from the record's own `usage.inputTokens`, the full prompt of that request.
+- The uncached share is `inputTokens - cacheReadTokens - cacheWriteTokens` (an absent share counts as zero). Price the uncached share, the cache reads and the cache writes at their own rates, using the write rate that matches the record's `cache` lifetime.
+- Price `outputTokens`, which includes any reasoning tokens.
+- Price image records from `usage` when it is present: the shipped image providers bill images as tokens. Where the price list has a separate rate for image tokens, price `imageInputTokens` and `imageOutputTokens` at it and the rest of each total at the text rate; the rest of an image record's `outputTokens` is text and reasoning. `images`, `quality` and `size` are there for a provider that prices per image instead.
+
+### Collecting records
+
+A `usage` handler is awaited inside the AI call, like every event handler, so it should hand records off rather than make a slow network call per response. A handler that throws is logged as a [`hook` record](#the-event-types) and never fails the AI call. The module below batches records and sends them to a central billing service once a minute:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  init(self) {
+    self.pending = [];
+    self.timer = setInterval(() => self.flushUsage(), 60 * 1000);
+    // Don't keep command-line tasks running just for this timer
+    self.timer.unref();
+  },
+  handlers(self) {
+    return {
+      '@apostrophecms/ai:usage': {
+        collect(req, record) {
+          // Mock mode estimates; nothing was billed
+          if (record.mock) {
+            return;
+          }
+          self.pending.push({
+            ...record,
+            userId: req.user?._id
+          });
+        }
+      },
+      'apostrophe:destroy': {
+        async flushOnShutdown() {
+          clearInterval(self.timer);
+          await self.flushUsage();
+        }
+      }
+    };
+  },
+  methods(self) {
+    return {
+      async flushUsage() {
+        const batch = self.pending.splice(0);
+        if (!batch.length) {
+          return;
+        }
+        try {
+          await self.apos.http.post('https://billing.example.com/ai-usage', {
+            body: batch
+          });
+        } catch (e) {
+          // Keep the batch for the next flush
+          self.pending.unshift(...batch);
+          self.logError('usage-flush-failed', e.message, { records: batch.length });
+        }
+      }
+    };
+  }
+};
+```
+  <template v-slot:caption>
+    modules/ai-usage/index.js
+  </template>
+</AposCodeBlock>
+
+The queue lives in memory, so it is a sketch rather than a ledger: records still pending when the process crashes are lost, and a long billing-service outage grows the queue without limit. Where every record must survive, write it to a collection of your own instead and send or total it from there. Either way, store each record whole, so it can be priced or re-priced later.
+
+### Labeling records with metadata
+
+The `usageMetadata` option is copied onto every record as `metadata` — a place for whatever your billing needs to know that the engine does not, such as which customer or plan the instance serves:
+
+```javascript
+'@apostrophecms/ai': {
+  options: {
+    usageMetadata: {
+      tenant: 'acme',
+      plan: 'enterprise'
+    }
+  }
+}
+```
+
+In a multisite project, the `@apostrophecms-pro/multisite` extension sets it on every instance: `{ instance: 'site', siteId, shortName }` on each site — `siteId` is the site's `_id` and the key to total by, `shortName` a label that may be renamed — and `{ instance: 'dashboard' }` on the dashboard. Add keys of your own by returning `usageMetadata` from the [`sites(site)` function](/tutorials/passing-site-data-in-multisite.md), or from the `dashboard` option for the dashboard:
+
+```javascript
+sites(site) {
+  return {
+    modules: {
+      '@apostrophecms/ai': {
+        options: {
+          usageMetadata: { plan: site.plan }
+        }
+      }
+    }
+  };
+}
+```
+
+Your keys are deep-merged with multisite's, and yours win on a collision, so avoid reusing `instance`, `siteId` or `shortName`. A `usageMetadata` option set in `sites/modules/@apostrophecms/ai/index.js` is replaced by multisite's, because configuration passed from `app.js` takes precedence over a module file's `options`. Use `sites(site)` instead.
+
+To label a single call rather than the whole instance, add keys to `record.metadata` in a `usage` handler. The handler receives the call's own `req` (a subagent's records get a clone of it), so a property the calling code sets on `req` before calling `generate` can be read there. Handlers run in the order they were registered: module by module in the order modules initialize, which for project modules follows `app.js`, then in the order declared within a module. Put the labeling handler in a module that initializes before the collecting one, or do the labeling in the collecting handler itself.
+
+### What a record cannot tell you
+
+A record exists only for a response that arrived with readable token counts. Three things can be billed, or partly billed, without one:
+
+- **Cancellation.** A call cancelled through its `signal` abandons the provider request in flight. The provider may still bill the work it did, but no response ever arrives.
+- **HTTP errors.** An attempt that failed with an HTTP error sent nothing back, so there is nothing to report. When a later attempt succeeds, its record's `attempt` shows the gap.
+- **Unreadable counts.** A response whose token counts the engine could not read leaves a [`usage-unreported`](#the-event-types) log record instead, carrying `provider`, `model`, `callId` and `attempt`. An image response is still reported, without `usage`, since its images are billed either way.
 
 ## Error codes
 
@@ -1493,7 +1667,8 @@ The engine's observability is structured logging, not a collection you have to f
 | `failure` | `error` | A call stopped — the error is being thrown to the caller. |
 | `image-partial` | `error` | An image batch delivered fewer images than requested: some of the parallel provider requests failed, but not all, so the call still succeeds with what arrived. |
 | `notify` | `error` | A background job's progress event could not be delivered to the browser. |
-| `hook` | `error` | A caller hook threw where its throw must not replace what is already happening — `onEnd`, or the end report of a tool call that is already failing. |
+| `hook` | `error` | A caller hook threw where its throw must not replace what is already happening — `onEnd`, the end report of a tool call that is already failing, or a `usage` handler. |
+| `usage-unreported` | `warn` | A provider response carried token counts the engine could not read, so it has no [usage record](#tracking-ai-usage). |
 | `watcher` | `error` | A background job's cancellation watcher died. The run continues, but a cancel request can no longer stop it before it finishes. |
 
 ### The fields on `retry` and `failure`
@@ -1515,7 +1690,7 @@ These two share one data shape, so a rate limit, an overload, a timeout and a ba
 | `reason` | On `failure` only: `'attempts'` (the attempt cap was reached) or `'budget'` (the next delay would land past `retryMaxElapsed`). Absent means the code was simply not retryable — retrying was never on the table. |
 | `stack` | On `failure` only: the stack of the original throw, which is the useful trace when an adapter wrapped a client error. |
 
-`image-partial` carries `provider`, `model`, `code`, `status`, `kind`, plus `requested` and `delivered`. `notify` carries `jobId`, `stage` and `stack`. `hook` carries `stack` plus `jobId` and `hook: 'onEnd'`, or the tool name. `watcher` carries `jobId` and `stack`.
+`image-partial` carries `provider`, `model`, `code`, `status`, `kind`, plus `requested` and `delivered`. `notify` carries `jobId`, `stage` and `stack`. `hook` carries `stack`, plus `jobId` and `hook: 'onEnd'` (for `onEnd`), the tool name (for a tool's end report), or `event: 'usage'` and `callId` (for a `usage` handler). `watcher` carries `jobId` and `stack`. `usage-unreported` carries `provider`, `model`, `callId` and `attempt`.
 
 ### Reading them
 
@@ -1526,7 +1701,7 @@ These two share one data shape, so a rate limit, an overload, a timeout and a ba
 | `failure` with no `reason`, `code: 'forbidden'` or `'invalid'` | Credentials or configuration. Retrying would never have helped, and the engine did not try. |
 | `failure` with `code: 'aiRetry'` and a malformed message | The provider answered, but broke its contract. Usually an adapter or a model-behavior problem, not an outage. |
 
-**The swallowed failures matter most.** `notify`, `hook`, `watcher` and `image-partial` all record something that did *not* fail the run: a broken progress transport, a throwing hook, a dead cancellation watcher and a partial image batch are all survivable by design. That is exactly why they are logged — without the record they would be invisible. If a user reports "the progress bar froze but the job finished", `notify` is the first thing to look at.
+**The swallowed failures matter most.** `notify`, `hook`, `watcher`, `image-partial` and `usage-unreported` all record something that did *not* fail the run: a broken progress transport, a throwing hook, a dead cancellation watcher, a partial image batch and a response with unreadable token counts are all survivable by design. That is exactly why they are logged — without the record they would be invisible. If a user reports "the progress bar froze but the job finished", `notify` is the first thing to look at.
 
 ### Configuring
 
@@ -1564,6 +1739,7 @@ APOS_AI_MOCK=1 npm run dev
 - With providers configured, real routing still applies, so the configuration stays exercised.
 - With no providers at all, placeholder routing stands in and `apos.ai.active` is still `true` — features work with no key anywhere.
 - `apos.ai.mockMode` tells feature code it is in mock mode, for a UI that wants to label placeholder output as such.
+- [Usage records](#tracking-ai-usage) are still emitted, with estimated counts and `mock: true`, so usage handlers are testable offline.
 - Chat calls return `[mock] <the last user text>`; a structured call returns a deterministic object conforming to its schema; image calls return placeholder pixels.
 
 Script the mock for tests:
