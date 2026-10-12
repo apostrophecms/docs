@@ -641,7 +641,7 @@ One shape, always. Which fields are populated is what tells you what happened.
 | `cancel` | The call's `signal` fired. Partial `text`, `steps` and `usage` are preserved. |
 | `input` | A tool handler paused the run waiting for outside input. The asks are on `suspended`. |
 
-`usage` is aggregated across every model turn of the call. `inputTokens` counts every input token the provider billed, cached or not, and `outputTokens` every output token, reasoning included. When the provider breaks those totals down, more fields carry the parts that can bill at a rate of their own:
+`usage` is aggregated across every model turn of the call. `inputTokens` counts every input token the provider billed, cached or not, and `outputTokens` every output token, reasoning included. When the provider breaks those totals down, more fields carry the parts that can be billed at a rate of their own:
 
 | Field | Meaning |
 |---|---|
@@ -1481,7 +1481,7 @@ One gap to know about: a handler that fails with a hard-stopping error propagate
 Why one record per response, rather than one per call:
 
 - **Providers price each request on its own.** Some models charge higher rates for a request whose prompt passes a size threshold, and cached tokens count toward that size. A tool-calling call makes several requests whose prompts grow turn by turn, so one call can straddle the threshold. Only per-request counts can be priced exactly.
-- **Billed responses the call never keeps are reported too.** A response the engine rejects — malformed, or structured output that does not match the schema — was still billed, and the engine asks again. A call that stops partway, refused by the model or stopped by a tool handler, has already paid for its earlier turns. None of these reach `afterGenerate`; every one of them is a `usage` record.
+- **Responses that were billed but discarded are reported too.** A response the engine rejects — malformed, or structured output that does not match the schema — was still billed, and the engine asks again. A call that stops partway, refused by the model or stopped by a tool handler, has already paid for its earlier turns. None of these reach `afterGenerate`; every one of them is a `usage` record.
 
 ### The record
 
@@ -1491,7 +1491,7 @@ Why one record per response, rather than one per call:
   parentCallId: 'clabc…',      // the delegating call, on a subagent's records only
   kind: 'chat',                // 'chat' or 'image'
   provider: 'anthropic',
-  model: 'claude-sonnet-5-5',  // what answered, as the provider reported it
+  model: 'claude-sonnet-5',    // what answered, as the provider reported it
   step: 2,                     // the model turn within the call, counting from 1
   attempt: 1,                  // the retry attempt within that turn, counting from 1
   outcome: 'accepted',         // or 'rejected': billed, but retried or the call stopped
@@ -1508,12 +1508,12 @@ Why one record per response, rather than one per call:
 | `parentCallId` | On a [subagent](#a-subagent-tool)'s records: the call whose tool started it. |
 | `kind` | `'chat'` or `'image'`. |
 | `provider`, `model` | The provider entry, and the model as the provider reported it — possibly a dated snapshot of the one requested. |
-| `step`, `attempt` | Which model turn of the call, and which retry attempt of that turn. An attempt that failed with an HTTP error sent nothing back and has no record, but still counts. |
+| `step`, `attempt` | Which model turn of the call, and which retry attempt of that turn. An attempt that failed with an HTTP error sent nothing back and has no record, but still advances `attempt`. |
 | `outcome` | `'accepted'` when the engine kept the response, `'rejected'` when it threw it away. Both were billed. |
 | `usage` | This response's counts, shaped like the [call's `usage`](#the-return-value): `inputTokens` is every input token billed, cached or not; `cacheReadTokens` and `cacheWriteTokens` are the parts of it the provider's prompt cache served or stored, and `imageInputTokens` and `imageOutputTokens` the parts of either total that were images, each present when the provider reports it. On an image record, present only when the provider reported tokens. |
 | `cache` | Chat only: the cache lifetime the request asked for. Providers that price cache lifetimes differently bill writes by it. |
 | `images`, `quality`, `aspect`, `size` | Image only, describing what was made: how many images came back; `quality` and `aspect` as the call resolved them, in Apostrophe's own vocabulary, before the adapter translated them; and `size`, the provider's native pixel size, when its dialect works in one. |
-| `metadata` | A copy of the [`usageMetadata`](#labeling-records-with-metadata) option, `{}` by default. Each record gets its own copy. |
+| `metadata` | A copy of the [`usageMetadata`](#labeling-records-with-metadata) option, `{}` by default. Each record gets its own shallow copy, so changing a top-level key on one record never reaches another. |
 | `mock` | `true` under [mock mode](#mock-mode-and-testing): the counts are an estimate and nothing was billed. Absent otherwise. |
 | `at` | When the response arrived. |
 
@@ -1522,13 +1522,13 @@ Why one record per response, rather than one per call:
 **Pricing a record.** Price each record by itself, against the provider's price list:
 
 - Pick the rate tier from the record's own `usage.inputTokens`, the full prompt of that request.
-- The uncached share is `inputTokens - cacheReadTokens - cacheWriteTokens` (an absent share counts as zero). Price it, the cache reads and the cache writes each at their own rate, writes at the rate for the record's `cache` lifetime.
+- The uncached share is `inputTokens - cacheReadTokens - cacheWriteTokens` (an absent share counts as zero). Price the uncached share, the cache reads and the cache writes at their own rates, using the write rate that matches the record's `cache` lifetime.
 - Price `outputTokens`, which includes any reasoning tokens.
-- Price image records from `usage` when it is present: the shipped image providers bill images as tokens. Where the price list has a separate rate for image tokens, price `imageInputTokens` and `imageOutputTokens` at it and the rest of each total at the text rate; the rest of an image record's `outputTokens` is text and thinking. `images`, `quality` and `size` are there for a provider that prices per image instead.
+- Price image records from `usage` when it is present: the shipped image providers bill images as tokens. Where the price list has a separate rate for image tokens, price `imageInputTokens` and `imageOutputTokens` at it and the rest of each total at the text rate; the rest of an image record's `outputTokens` is text and reasoning. `images`, `quality` and `size` are there for a provider that prices per image instead.
 
 ### Collecting records
 
-A `usage` handler is awaited inside the AI call, like every event handler, so it should hand records off rather than make a slow network call per response. A handler that throws is logged as a [`hook` record](#the-event-types) and never fails the AI call. This module batches records and sends them to a central billing service once a minute:
+A `usage` handler is awaited inside the AI call, like every event handler, so it should hand records off rather than make a slow network call per response. A handler that throws is logged as a [`hook` record](#the-event-types) and never fails the AI call. The module below batches records and sends them to a central billing service once a minute:
 
 <AposCodeBlock>
 
@@ -1537,6 +1537,8 @@ export default {
   init(self) {
     self.pending = [];
     self.timer = setInterval(() => self.flushUsage(), 60 * 1000);
+    // Don't keep command-line tasks running just for this timer
+    self.timer.unref();
   },
   handlers(self) {
     return {
@@ -1586,7 +1588,7 @@ export default {
   </template>
 </AposCodeBlock>
 
-Writing the records to a collection of your own and totaling them by day works the same way: store each record whole, so it can be priced or re-priced later.
+The queue lives in memory, so it is a sketch rather than a ledger: records still pending when the process crashes are lost, and a long billing-service outage grows the queue without limit. Where every record must survive, write it to a collection of your own instead and send or total it from there. Either way, store each record whole, so it can be priced or re-priced later.
 
 ### Labeling records with metadata
 
@@ -1603,13 +1605,33 @@ The `usageMetadata` option is copied onto every record as `metadata` — a place
 }
 ```
 
-In a multisite project, multisite sets it on every instance: `{ instance: 'site', siteId, shortName }` on each site — `siteId` is the key to total by, `shortName` a label that may be renamed — and `{ instance: 'dashboard' }` on the dashboard. Add keys of your own through the `sites(site)` function, where they combine with multisite's.
+In a multisite project, the `@apostrophecms-pro/multisite` extension sets it on every instance: `{ instance: 'site', siteId, shortName }` on each site — `siteId` is the site's `_id` and the key to total by, `shortName` a label that may be renamed — and `{ instance: 'dashboard' }` on the dashboard. Add keys of your own by returning `usageMetadata` from the [`sites(site)` function](/tutorials/passing-site-data-in-multisite.md), or from the `dashboard` option for the dashboard:
 
-To label a single call rather than the whole instance, add to `record.metadata` in a `usage` handler that runs before the one collecting the records — handlers run in the order their modules are registered.
+```javascript
+sites(site) {
+  return {
+    modules: {
+      '@apostrophecms/ai': {
+        options: {
+          usageMetadata: { plan: site.plan }
+        }
+      }
+    }
+  };
+}
+```
+
+Your keys are deep-merged with multisite's, and yours win on a collision, so avoid reusing `instance`, `siteId` or `shortName`. A `usageMetadata` option set in `sites/modules/@apostrophecms/ai/index.js` is replaced by multisite's, because configuration passed from `app.js` takes precedence over a module file's `options`. Use `sites(site)` instead.
+
+To label a single call rather than the whole instance, add keys to `record.metadata` in a `usage` handler. The handler receives the call's own `req` (a subagent's records get a clone of it), so a property the calling code sets on `req` before calling `generate` can be read there. Handlers run in the order they were registered: module by module in the order modules initialize, which for project modules follows `app.js`, then in the order declared within a module. Put the labeling handler in a module that initializes before the collecting one, or do the labeling in the collecting handler itself.
 
 ### What a record cannot tell you
 
-A call cancelled through its `signal` abandons the provider request in flight. The provider may still bill the work it did, but no response ever arrives, so there is no record of it.
+A record exists only for a response that arrived with readable token counts. Three things can be billed, or partly billed, without one:
+
+- **Cancellation.** A call cancelled through its `signal` abandons the provider request in flight. The provider may still bill the work it did, but no response ever arrives.
+- **HTTP errors.** An attempt that failed with an HTTP error sent nothing back, so there is nothing to report. When a later attempt succeeds, its record's `attempt` shows the gap.
+- **Unreadable counts.** A response whose token counts the engine could not read leaves a [`usage-unreported`](#the-event-types) log record instead, carrying `provider`, `model`, `callId` and `attempt`. An image response is still reported, without `usage`, since its images are billed either way.
 
 ## Error codes
 
@@ -1668,7 +1690,7 @@ These two share one data shape, so a rate limit, an overload, a timeout and a ba
 | `reason` | On `failure` only: `'attempts'` (the attempt cap was reached) or `'budget'` (the next delay would land past `retryMaxElapsed`). Absent means the code was simply not retryable — retrying was never on the table. |
 | `stack` | On `failure` only: the stack of the original throw, which is the useful trace when an adapter wrapped a client error. |
 
-`image-partial` carries `provider`, `model`, `code`, `status`, `kind`, plus `requested` and `delivered`. `notify` carries `jobId`, `stage` and `stack`. `hook` carries `stack` plus `jobId` and `hook: 'onEnd'`, the tool name, or `event: 'usage'` and the `callId`. `watcher` carries `jobId` and `stack`. `usage-unreported` carries `provider`, `model`, `callId` and `attempt`.
+`image-partial` carries `provider`, `model`, `code`, `status`, `kind`, plus `requested` and `delivered`. `notify` carries `jobId`, `stage` and `stack`. `hook` carries `stack`, plus `jobId` and `hook: 'onEnd'` (for `onEnd`), the tool name (for a tool's end report), or `event: 'usage'` and `callId` (for a `usage` handler). `watcher` carries `jobId` and `stack`. `usage-unreported` carries `provider`, `model`, `callId` and `attempt`.
 
 ### Reading them
 
