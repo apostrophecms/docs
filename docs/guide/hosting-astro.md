@@ -1,8 +1,12 @@
 # Hosting ApostropheCMS + Astro in production
 
-An ApostropheCMS + Astro project runs as two cooperating Node.js applications: the ApostropheCMS backend, which stores content and serves the editing UI, and the Astro frontend, which renders every page a visitor sees. Everything in [Hosting ApostropheCMS in production](/guide/hosting.md) still applies to the backend. This page covers what changes when Astro sits in front of it.
+An ApostropheCMS + Astro project runs as two cooperating Node.js applications: the ApostropheCMS backend, which stores content and powers the editing UI, and the Astro frontend, which renders every page. Editors log in and edit on the Astro site itself, the same as visitors browse it. Astro passes the editing UI's assets and API calls through to ApostropheCMS behind the scenes. Everything in [Hosting ApostropheCMS in production](/guide/hosting.md) still applies to the backend.
 
-For platform options and worked examples, including a single-server deployment on DigitalOcean, see [Deploying ApostropheCMS + Astro projects](/tutorials/astro/deploying-hybrid-projects.md). The other [Astro tutorials](/tutorials/astro/apostrophecms-and-astro.md) cover static builds and a full Railway and Vercel deployment.
+This guide is the platform-independent reference for what changes when Astro sits in front of ApostropheCMS. It explains how the two applications fit together and walks through the decisions and configuration every production deployment needs, whatever host you choose: topology, output mode, database, reverse proxy, environment variables, process management, and a final checklist. It does not walk through any one platform step by step. For that, see [Deploying ApostropheCMS + Astro projects](/tutorials/astro/deploying-hybrid-projects.md), which compares platform options and includes a single-server deployment on DigitalOcean. The other [Astro tutorials](/tutorials/astro/apostrophecms-and-astro.md) cover static builds and a full Railway and Vercel deployment.
+
+::: info
+[ApostropheCMS hosting](https://apostrophecms.com/hosting) runs ApostropheCMS + Astro projects for you, including the servers and their operating system updates, the database, media storage, HTTPS certificates, and backups. With managed hosting, most of what this guide covers is handled for you. You still deploy your own codebase, so updating ApostropheCMS, Astro, and your other dependencies, including for security fixes, remains part of your project's work. See [Deploying with ApostropheCMS Hosting](/tutorials/astro/deploying-hybrid-projects.md#deploying-with-apostrophecms-hosting).
+:::
 
 ## How requests flow
 
@@ -26,7 +30,7 @@ These proxy routes exist only when Astro runs with `output: 'server'`. A static 
 
 The simplest production setup runs both processes on the same machine. Astro listens on the public-facing port behind your reverse proxy, and ApostropheCMS listens on a private port that only Astro can reach.
 
-- Set `ADDRESS=127.0.0.1` for the ApostropheCMS process so it only accepts local connections. By default it listens on all interfaces. As a second layer, configure the server's firewall to allow only SSH, HTTP and HTTPS, for example with `ufw` or your hosting provider's firewall.
+- Configure the server's firewall to allow only SSH, HTTP and HTTPS, for example with `ufw` or your hosting provider's firewall, so the backend port can't be reached from outside. By default ApostropheCMS listens on all interfaces. As an optional second layer, set `ADDRESS=127.0.0.1` for the ApostropheCMS process so it only accepts local connections. Don't set it when ApostropheCMS runs in a container. There, `127.0.0.1` is the container's own loopback, so nothing outside the container can reach the backend, including Astro if it runs in a separate container.
 - Point Astro at the backend with `APOS_HOST=http://127.0.0.1:3000`.
 - Plan for at least **2 GB of RAM**. A small site running two processes of each application uses about 825 MB at rest (two ApostropheCMS processes at 250–350 MB each and two Astro processes at about 120 MB each), which leaves room to rebuild in place. The ApostropheCMS asset build is the largest single demand, at about 750 MB, so on a 2 GB server add 1–2 GB of swap as a safety margin, or build in CI and copy the output to the server. Choose 4 GB for busier sites or more processes.
 
@@ -56,7 +60,7 @@ The integration supports both Astro output modes:
 
 Server-side rendering is the default in the starter kits and the right choice for most projects. Any Astro adapter that supports `output: 'server'` works. The starter kits ship with [`@astrojs/node`](https://docs.astro.build/en/guides/integrations-guide/node/) in `standalone` mode. For serverless hosts, swap in that platform's adapter.
 
-A static site still needs an SSR environment for editing. The usual pattern is an SSR staging site that editors work in, plus a static production build that is triggered when content is ready to publish. See [Static builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.md) and [Full static deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.md).
+A static site still needs an SSR environment for editing. The usual pattern is an SSR pre-production site that editors work in, plus a static production build that is triggered when content is ready to publish. See [Static builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.md) and [Full static deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.md).
 
 ## Choosing a database
 
@@ -95,7 +99,7 @@ frontend/astro.config.mjs
 </template>
 </AposCodeBlock>
 
-- **Include every hostname the site answers on,** such as the bare domain and `www`, and a staging domain if staging uses the same build.
+- **Include every hostname the site answers on,** such as the bare domain and `www`. If the same build also runs elsewhere, such as on a pre-production site for a static deployment or a staging site for testing, add those domains too.
 - **Forward the original protocol and host from your reverse proxy.** When NGINX terminates HTTPS, Astro receives plain HTTP. The `Host` and `X-Forwarded-Proto` headers in [Configuring the reverse proxy](#configuring-the-reverse-proxy) let Astro see `https://www.example.com`, which matches the `protocol` in the pattern.
 - **Include the port for non-standard ports,** for example `{ protocol: 'http', hostname: 'localhost', port: '4321' }` when testing a production build locally.
 - **Apply the option only to server-rendered builds.** With Astro 6 and later, it produces a warning for every prerendered page in a static build. See [Upgrading apostrophe-astro](/guide/migration/upgrading-apostrophe-astro.md#static-builds-guard-security-alloweddomains-to-ssr-only) for a pattern that applies it conditionally.
@@ -146,7 +150,7 @@ server {
 | `APOS_SESSION_SECRET` | ApostropheCMS | Runtime | Secret used to sign session cookies. See [Set a session secret](/guide/hosting.md#set-a-session-secret). |
 | `NODE_ENV` | ApostropheCMS | Runtime | Set to `production`. See [Hosting ApostropheCMS in production](/guide/hosting.md#set-the-node-env-variable-for-production). |
 | `APOS_DB_URI` | ApostropheCMS | Runtime | Database connection string. See [Choosing a database](/guide/choosing-a-database.md). |
-| `PORT` | Each process | Runtime | Listening port. Both applications read this variable, so give each process its own value. |
+| `PORT` | Each process | Runtime | Listening port. Both applications read this variable, so give each process its own value. Defaults to 3000 for the backend and 4321 for the frontend. |
 
 ::: warning
 The integration writes `APOS_HOST` and `APOS_PREFIX` into the build output when `astro build` runs. Setting them only when starting the server has no effect. If the backend URL changes, rebuild the frontend.
@@ -154,7 +158,7 @@ The integration writes `APOS_HOST` and `APOS_PREFIX` into the build output when 
 
 ### Managing the external front key
 
-`APOS_EXTERNAL_FRONT_KEY` is what prevents other sites from pulling unlimited data out of your backend while posing as your frontend.
+`APOS_EXTERNAL_FRONT_KEY` is what prevents other sites from pulling data not normally displayed on the page while posing as your frontend.
 
 - Generate a long random value and keep it in your platform's secret store, not in the repository.
 - Use a different value in each environment, such as staging and production.
@@ -248,8 +252,29 @@ When both applications start at the same time, as they do after a reboot or a `p
 
 ## Media and caching
 
-- **Store uploads where they survive a redeploy.** On a single server, the default local storage in `backend/public/uploads` is enough, as long as deployments leave that folder in place and you back it up. Use cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) when the backend runs on more than one server, when each deployment replaces the project directory, or when the platform has no persistent disk.
-- **Serve media from storage or a CDN, not through Astro.** When uploads are in cloud storage, image URLs point at the storage service directly. Otherwise, every image request travels through Astro's `/uploads` proxy to the backend.
+Uploaded images and files need storage that survives each deployment. There are two ways to provide it.
+
+**Cloud storage** keeps uploads in Amazon S3 or another S3-compatible service, Azure Blob Storage, or Google Cloud Storage. Media storage then scales on its own, deployments never touch it, and the backend can run on more than one server or on a platform with no persistent disk. Media URLs point at the storage service directly, so media requests don't pass through Astro. To serve media through a CDN instead, configure the CDN to pull from your storage, and set the [`cdn` option](/reference/modules/uploadfs.md#cdn) of `@apostrophecms/uploadfs` to the CDN's URL so that ApostropheCMS writes media URLs that point at it. See [Using S3 storage](/cookbook/using-s3-storage.md) for setup with several providers, and the [`@apostrophecms/uploadfs` reference](/reference/modules/uploadfs.md) for every storage option.
+
+**Local disk** works for a single server. By default, ApostropheCMS stores uploads in `backend/public/uploads`, and every media request travels through Astro's `/uploads` proxy to the backend. Keep the files in a directory outside the project, so that a fresh clone, a release-directory deployment, or `git clean` can't remove them, and link to it at the end of each deployment:
+
+```bash
+# Run from the project root after each deployment, before restarting the processes
+UPLOADS_DIR=/opt/apostrophecms/uploads
+LINK=backend/public/uploads
+
+mkdir -p "$UPLOADS_DIR"
+if [ -d "$LINK" ] && [ ! -L "$LINK" ]; then
+  echo "$LINK is a real directory. Move its contents to $UPLOADS_DIR and remove it first." >&2
+  exit 1
+fi
+ln -sfn "$UPLOADS_DIR" "$LINK"
+```
+
+The user that runs ApostropheCMS must be able to write to the uploads directory. Include it in your backups along with the database.
+
+Whichever storage you choose:
+
 - **Pass through caching headers.** Include `'cache-control'` in the integration's `includeResponseHeaders` option so that the cache headers ApostropheCMS sets reach browsers and CDNs. See [Caching](/guide/caching.md) for configuring them. The starter kits include this header by default.
 - **Pass through security headers.** If you use `@apostrophecms/security-headers`, list its headers in `includeResponseHeaders` too. The integration removes the `nonce` from the `content-security-policy` header's `script-src` value because Astro does not support it.
 
@@ -259,15 +284,14 @@ Getting the site online is only the start. These practices apply to any producti
 
 - **Back up the database and the uploads.** Content lives in two places: the database and the uploaded files, either on disk or in cloud storage. Back up both on a schedule, keep copies off the server, and test restoring them now and then. A managed database or your host's backup service can take care of part of this.
 - **Make deployments repeatable.** Script the release steps, or run them in CI, so every deployment installs dependencies, sets a new release ID, builds both applications, runs migrations, and reloads the processes in the same order. A missed step, such as a stale `APOS_HOST` or a mismatched release ID, is the most common cause of a broken deployment.
-- **Configure outgoing email.** Features such as password reset need to send email. Configure an email transport in `@apostrophecms/email` before editors depend on them. See [Sending email](/guide/sending-email.md).
+- **Configure outgoing email if you enable features that use it.** The starter kits don't send email out of the box, but features such as [password reset](/reference/modules/login.md#passwordreset) and form submission notifications from the `@apostrophecms/form` extension do. If you turn one on, configure an email transport in `@apostrophecms/email` before anyone relies on it. See [Sending email](/guide/sending-email.md).
 - **Monitor the site.** Use an uptime checker so you hear about outages before visitors do, and keep an eye on memory use and disk space. SQLite databases and uploads grow over time.
 - **Keep the stack updated.** Apply operating system security updates, stay on a supported Node.js release, and update ApostropheCMS, Astro, and the integration regularly. Test updates on a staging copy first.
-- **Renew TLS certificates automatically.** Certbot and most hosting platforms set this up for you, but confirm that renewal is scheduled.
 
 ## Production checklist
 
-- Both applications run on Node.js 22.19 or newer, as the Astro integration requires.
-- `APOS_EXTERNAL_FRONT_KEY` is a strong secret, identical on both sides, and different in each environment.
+- Both applications run on Node.js 24 LTS. The Astro integration requires at least Node.js 22.19.
+- `APOS_EXTERNAL_FRONT_KEY` is a strong secret, identical for the frontend and backend applications, and different between development, staging and production environments.
 - `APOS_HOST` is set when `astro build` runs.
 - `security.allowedDomains` in `astro.config.mjs` lists the site's public origin, and the reverse proxy forwards `Host` and `X-Forwarded-Proto`. Test by logging out on the production site.
 - `APOS_SESSION_SECRET` is set to a long random value on the backend, not left at the built-in placeholder.

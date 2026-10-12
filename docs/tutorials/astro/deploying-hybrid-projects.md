@@ -2,7 +2,7 @@
 title: "Deploying ApostropheCMS-Astro Projects"
 detailHeading: "Astro"
 url: "/tutorials/astro/deploying-hybrid-projects.html"
-content: "Make your ApostropheCMS + Astro project public. Learn deployment options, environment configuration, and hosting best practices for your integrated application."
+content: "Make your ApostropheCMS + Astro project public. Choose a deployment option and follow step-by-step walkthroughs for ApostropheCMS hosting, your own server, Render, and Netlify."
 tags:
   topic: "Core Concepts"
   type: astro
@@ -21,115 +21,37 @@ There are two main approaches to deploying your ApostropheCMS + Astro project:
 1. **Unified Deployment** (via Apostrophe Hosting or hosting that supports Node.js)
    - Deploy both frontend and backend together
    - Simplest option with minimal configuration
-   - Managed infrastructure and automatic updates with Apostrophe Hosting
+   - Managed infrastructure with Apostrophe Hosting
 
 2. **Split Deployment**
    - Deploy backend and frontend to separate services
    - More flexibility and control
    - Requires more configuration and coordination
 
-Start with unified deployment unless you have a reason not to. It has one thing to deploy, the backend stays private, and requests between the two applications never leave the machine. Split deployment makes sense when your backend platform can't run both applications, or when production is a [static build](/tutorials/astro/static-builds-with-apostrophecms-astro.md) served as plain files.
+Start with unified deployment unless you have a reason not to. It has one thing to deploy, the backend stays private, and requests between the two applications never leave the machine. Split deployment makes sense when your backend platform can't run both applications.
 
-## Prerequisites for Production Deployment
+Serving production as a [static build](/tutorials/astro/static-builds-with-apostrophecms-astro.md) doesn't remove this choice. Editors still need a server-rendered pre-production site, made up of the backend and an Astro SSR frontend, deployed in one of these two ways. The static build is an additional deployment, published to file hosting whenever content is ready.
 
-Regardless of your deployment method, you'll need:
+## Before You Deploy
 
-- A database - MongoDB is the default, but SQLite or PostgreSQL can be used instead. See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html)
-- Environment variables properly configured
-- Asset storage solution like AWS S3 or a persistent folder that doesn't get erased during each deployment (for uploaded images/files)
+Whichever option you choose, the project needs the same production settings. [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md) explains each one, and the walkthroughs on this page assume you have worked through it. In particular, make sure you have:
 
-If you prefer, we can handle all of those details for you via our [Managed Hosting](https://apostrophecms.com/hosting).
+- **A database.** MongoDB is the default, and SQLite or PostgreSQL also work. See [Choosing a database](/guide/hosting-astro.md#choosing-a-database).
+- **Media storage that survives a deployment,** either cloud storage such as S3 or a directory outside the project. See [Media and caching](/guide/hosting-astro.md#media-and-caching).
+- **Every public hostname in `security.allowedDomains`** in `frontend/astro.config.mjs`. Without it, a production build rejects logout, file uploads, and similar requests. See [Configuring Astro for your domain](/guide/hosting-astro.md#configuring-astro-for-your-domain).
+- **The environment variables for each application,** including `APOS_HOST` in the frontend's build environment, because it is written into the build. See [Environment variables](/guide/hosting-astro.md#environment-variables).
 
-## Configuring Astro for Production
+Some platforms assign the port through `PORT`, or need the Astro server to listen on all interfaces. With the Node adapter, set `HOST=0.0.0.0` for those platforms.
 
-Before deploying your Astro frontend, you'll need to adjust the `astro.config.mjs` file for production. Let's look at key configuration options:
+Test the production build locally before deploying. From the project root, build both applications, then start each one in its own terminal:
 
-```mjs
-import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';
-import apostrophe from '@apostrophecms/apostrophe-astro';
-
-export default defineConfig({
-  output: "server",  // Required for SSR
-  security: {
-    // The public origin(s) of your site. Without this, Astro rejects
-    // logout, file uploads, and other form-like requests in production
-    allowedDomains: [
-      { protocol: 'https', hostname: 'www.example.com' }
-    ]
-  },
-  server: {
-    port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
-    // Uncomment for hosting platforms like Heroku that need this
-    // host: true
-  },
-  adapter: node({
-    mode: 'standalone'  // For most deployment scenarios
-  }),
-  integrations: [apostrophe({
-    // Overridden by the APOS_HOST environment variable at build time
-    aposHost: 'http://localhost:3000',
-    widgetsMapping: './src/widgets',
-    templatesMapping: './src/templates',
-    
-    // Security headers to pass from backend to frontend
-    includeResponseHeaders: [
-      'content-security-policy',
-      'strict-transport-security',
-      'x-frame-options',
-      'referrer-policy',
-      'cache-control'
-    ],
-    
-    // For split deployment (separate servers), uncomment:
-    // excludeRequestHeaders: ['host']
-  })],
-  
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          quietDeps: true
-        }
-      }
-    }
-  },
-  
-  // SCSS configuration if using Sass
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      }
-    }
-  }
-});
+```bash
+npm run build
+npm run serve-backend
+npm run serve-frontend
 ```
 
-### Key Configuration Areas
-
-1. **Port Configuration**
-   - The `server.port` setting defaults to 4321 but reads from the `PORT` environment variable if set
-   - Some platforms (Heroku, Railway) require `host: true` to listen on all interfaces
-
-2. **Allowed Domains**
-   - `security.allowedDomains` must list every public hostname of the site
-   - Without it, a production build rejects logout, file uploads, and similar requests with `403 Cross-site POST form submissions are forbidden`
-   - See [Configuring Astro for your domain](/guide/hosting-astro.md#configuring-astro-for-your-domain) for the reverse proxy headers this depends on
-
-3. **Integration Settings**
-   - `aposHost` must point to your production backend URL in production
-   - Set it with the `APOS_HOST` environment variable rather than hardcoding it
-   - `APOS_HOST` is read when `astro build` runs and written into the build output, so it must be set in your build environment. Changing it later requires a rebuild
-
-4. **Header Configuration**
-   - `includeResponseHeaders` determines which response headers from ApostropheCMS are preserved
-   - Essential for maintaining security settings between backend and frontend
-
-5. **Split Deployment Settings**
-   - When deploying to separate servers, exclude the `host` header
-   - Uncomment `excludeRequestHeaders: ['host']`. Without it, requests to an HTTPS backend fail with a certificate error
-
+Before going live, run through the guide's [production checklist](/guide/hosting-astro.md#production-checklist). If you prefer, we can handle all of these details for you via our [Managed Hosting](https://apostrophecms.com/hosting).
 
 ## Deploying with ApostropheCMS Hosting
 
@@ -142,7 +64,7 @@ Apostrophe offers a straightforward hosting solution specifically designed for A
 - Built-in asset storage and delivery
 - SSL certificate management
 - Automatic backups
-- Security updates
+- Server and operating system security updates
 
 ### Getting Started with Apostrophe Hosting
 
@@ -178,9 +100,11 @@ This example uses SQLite, so there is no database server to install. Only the fi
    cd your-project
    npm install
    ```
-4. **Create the environment files.** The two applications share one key, so generate it once and write it to both files:
+4. **Create the data directory and environment files.** The database and uploaded media live in `~/data`, outside the project directory, so they survive redeploys. Link the uploads folder into the project, then generate the shared key once and write it to both environment files:
    ```sh
-   mkdir -p ~/data
+   mkdir -p ~/data/uploads
+   ln -s ~/data/uploads backend/public/uploads
+
    KEY=$(openssl rand -hex 32)
 
    cat > backend/.env <<EOF
@@ -194,8 +118,7 @@ This example uses SQLite, so there is no database server to install. Only the fi
    APOS_EXTERNAL_FRONT_KEY=$KEY
    EOF
    ```
-   The database file lives in `~/data`, outside the project directory, so it survives redeploys.
-5. **Add your domain to `security.allowedDomains`** in `frontend/astro.config.mjs`, as shown in [Configuring Astro for Production](#configuring-astro-for-production). Commit this to your repository so every deployment includes it.
+5. **Add your domain to `security.allowedDomains`** in `frontend/astro.config.mjs`, as shown in [Configuring Astro for your domain](/guide/hosting-astro.md#configuring-astro-for-your-domain). Commit this to your repository so every deployment includes it.
 6. **Build both applications, run migrations, and create an admin user:**
    ```sh
    cd ~/your-project/backend
@@ -241,7 +164,7 @@ This example uses SQLite, so there is no database server to install. Only the fi
 To deploy an update, pull the new code, run `npm install`, repeat step 6 without the last command, and run `pm2 reload ecosystem.config.cjs`.
 
 ::: info
-In this setup, uploaded images and files are stored on the server's disk, in `backend/public/uploads`. Git ignores that folder, so pulling new code leaves it in place, and a single server needs nothing more. Include the folder in your backups along with the database file. Switch to cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) if you plan to run the backend on more than one server, deploy by replacing the project directory, or want media to survive the loss of the server.
+In this setup, uploaded images and files are stored on the server's disk, in `~/data/uploads`. Git ignores the `backend/public/uploads` link, so pulling new code leaves it in place. If you ever deploy from a fresh clone, recreate the link before restarting, as shown in [Media and caching](/guide/hosting-astro.md#media-and-caching). Include `~/data` in your backups. Switch to cloud storage such as [Amazon S3](/cookbook/using-s3-storage.md) if you plan to run the backend on more than one server, deploy by replacing the project directory, or want media to survive the loss of the server.
 :::
 
 ## Split Deployment (Separate Backend and Frontend)
@@ -257,7 +180,7 @@ For more control or to leverage specific platform features, you can deploy the b
 
 Your ApostropheCMS backend requires:
 
-- Node.js 22.19 or newer
+- Node.js 24 LTS (at least 22.19)
 - A database connection - MongoDB by default, or SQLite/PostgreSQL via the `@apostrophecms/db-connect` adapter (see [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html))
 - Asset storage solution (S3 or equivalent cloud storage)
 
@@ -324,7 +247,7 @@ Your Astro frontend can be deployed to any service, including our [managed hosti
 
 #### Example: Deploying to Netlify
 
-Netlify runs Astro's server-rendered pages as serverless functions, so the frontend needs Netlify's adapter instead of the Node adapter shown earlier.
+Netlify runs Astro's server-rendered pages as serverless functions, so the frontend needs Netlify's adapter instead of the Node adapter the starter kits use.
 
 1. Add the adapter from the `frontend` directory:
    ```bash
@@ -356,38 +279,6 @@ On Netlify, uploads from the admin UI pass through a serverless function, and Ne
 
 The adapter generates the function and routing configuration during the build, so you don't need a `netlify.toml` file or redirect rules. You also don't need to add the Netlify hostname to `security.allowedDomains`. Logging out and uploading files work on Netlify without it.
 
-## Environment Configuration for Production
-
-The [environment variables table](/guide/hosting-astro.md#environment-variables) in the hosting guide lists every variable, which application it belongs to, and whether it is read at build time or at runtime. Whichever platform you choose, set at least these:
-
-- **Backend:** `NODE_ENV=production`, `APOS_DB_URI`, `APOS_EXTERNAL_FRONT_KEY`, `APOS_SESSION_SECRET`, and `APOS_BASE_URL`, which is the public URL of the site, not the backend URL. Add `APOS_RELEASE_ID` if the deployment is not a git checkout.
-- **Frontend:** the same `APOS_EXTERNAL_FRONT_KEY` as the backend, and `APOS_HOST` in the build environment.
-- **Platform-specific:** some hosts assign a `PORT`, or need `HOST=0.0.0.0` so the application listens on all interfaces.
-
-`APOS_DB_URI` accepts `mongodb://`, `sqlite://`, and `postgres://` connection strings. See [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html) for the formats, including the `multipostgres://` format for multisite deployments.
-
-If uploads go to cloud storage, the backend also needs the storage variables. See [Using S3 storage](/cookbook/using-s3-storage.md) for the full set of options:
-
-```bash
-APOS_S3_BUCKET=your-bucket-name
-APOS_S3_SECRET=your-s3-secret
-APOS_S3_KEY=your-s3-key
-APOS_S3_REGION=your-chosen-region
-```
-
-## Best Practices for Production
-
-1. **Always use HTTPS** for both frontend and backend
-2. **Test the production build locally** before deploying. From the project root, build both applications, then start each one in its own terminal:
-   ```bash
-   npm run build
-   npm run serve-backend
-   npm run serve-frontend
-   ```
-3. **Keep your `APOS_EXTERNAL_FRONT_KEY` secret** - it's your security link between frontend and backend
-
-For topology, deployment order, process management, and caching recommendations, see [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md). Its [production checklist](/guide/hosting-astro.md#production-checklist) is worth running through before you go live.
-
 ## Troubleshooting Common Issues
 
 ### Connection Problems
@@ -415,7 +306,7 @@ If security headers aren't propagating properly, check your `includeResponseHead
 
 ## Detailed Deployment Guides
 
-The sections above cover the concepts and configuration common to all ApostropheCMS + Astro deployments. For more complete, step-by-step guidance, see the following guides:
+If production is a static build, see these step-by-step guides:
 
 ### Static Builds with ApostropheCMS + Astro
 
@@ -425,7 +316,7 @@ If you want to generate a fully static frontend at build time — outputting pla
 
 ### Full Static Deployment with Railway and Vercel
 
-A complete worked example of a two-tier deployment: ApostropheCMS on Railway as the backend, Astro SSR on Vercel as an always-on editorial environment, and a static production site triggered by a Vercel Deploy Hook. Covers environment variables, attachment storage, admin user creation, and a publish workflow that gives content managers deliberate control over what goes live.
+A complete worked example of a two-tier deployment: ApostropheCMS on Railway as the backend, Astro SSR on Vercel as an always-on pre-production site for editors, and a static production site triggered by a Vercel Deploy Hook. Covers environment variables, attachment storage, admin user creation, and a publish workflow that gives content managers deliberate control over what goes live.
 
 [ApostropheCMS + Astro: Full Static Deployment with Railway and Vercel](/tutorials/astro/full-apostrophecms-astro-static-deployment.html)
 

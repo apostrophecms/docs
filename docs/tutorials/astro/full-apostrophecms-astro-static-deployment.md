@@ -16,12 +16,12 @@ This is a detailed implementation guide for one specific deployment approach. If
 
 This guide covers deploying an ApostropheCMS + Astro hybrid project using:
 - **ApostropheCMS** hosted on [Railway](https://railway.app) (backend)
-- **Astro SSR** hosted on [Vercel](https://vercel.com) (staging/editorial frontend)
+- **Astro SSR** hosted on [Vercel](https://vercel.com) (pre-production/editorial frontend)
 - **Static site** built and deployed via Vercel Deploy Hook (production)
 
 Railway and Vercel are the recommended platforms for this stack, but they are not the only options. ApostropheCMS can run on any Node-capable host with a persistent process and outbound access to MongoDB — Lightsail, Render, and Fly.io are all viable alternatives. The Vercel-specific steps in Parts 2 and 3 would need to be adapted for other static or SSR hosts, but the overall architecture and environment variable requirements remain the same.
 
-> **Managed hosting:** If you are starting a new project, ApostropheCMS offers its own managed hosting that handles both the backend and the Astro SSR frontend together, which sidesteps the Railway/Vercel setup entirely. The static build and Deploy Hook workflow described in Part 3 applies regardless of where the staging tier is hosted.
+> **Managed hosting:** If you are starting a new project, ApostropheCMS offers its own managed hosting that handles both the backend and the Astro SSR frontend together, which sidesteps the Railway/Vercel setup entirely. The static build and Deploy Hook workflow described in Part 3 applies regardless of where the pre-production tier is hosted.
 
 ## Prerequisites
 
@@ -39,7 +39,7 @@ This setup uses a two-tier publishing model:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│ STAGING TIER (always-on)                            │
+│ PRE-PRODUCTION TIER (always-on)                     │
 │                                                     │
 │  ApostropheCMS ──────────► Astro SSR                │
 │  (Railway / Atlas)  proxied  (Vercel project A)     │
@@ -59,7 +59,7 @@ This setup uses a two-tier publishing model:
 
 Content managers work entirely within the Astro SSR frontend — they never interact directly with the ApostropheCMS admin panel. Astro proxies the full Apostrophe editing experience.
 
-When content is ready to publish, a Deploy Hook triggers a static build on a second Vercel project. This gives the team deliberate control over what goes to production without requiring CI/CD infrastructure, and without taking the staging environment offline.
+When content is ready to publish, a Deploy Hook triggers a static build on a second Vercel project. This gives the team deliberate control over what goes to production without requiring CI/CD infrastructure, and without taking the pre-production environment offline.
 
 ---
 
@@ -123,16 +123,16 @@ In the Railway dashboard, open your backend service and go to **Variables**. Add
 |----------|-------------|---------|
 | `APOS_DB_URI` | Atlas connection URI (mark sensitive) | `mongodb+srv://...` |
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret — must match the Vercel frontend | `a-long-random-string` |
-| `APOS_BASE_URL` | Astro staging frontend URL (set after Part 2) | `https://your-project.vercel.app` |
+| `APOS_BASE_URL` | Astro pre-production frontend URL (set after Part 2) | `https://my-project-preprod.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
 | `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | `${{RAILWAY_GIT_COMMIT_SHA}}` |
-| `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://your-project-production.vercel.app` |
+| `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://my-project-production.vercel.app` |
 
 > **`APOS_EXTERNAL_FRONT_KEY`:** Generate a long random string for this value. It authenticates the Astro frontend with ApostropheCMS. Both Railway and Vercel must use the exact same value or requests will be rejected. Treat it like a password.
 
 > **`APOS_RELEASE_ID`:** Setting this to <span v-pre>`${{RAILWAY_GIT_COMMIT_SHA}}`</span> uses Railway's built-in reference variable to automatically generate a unique value from the git commit hash on every deploy. This is preferable to a static random string, which would remain the same across redeployments.
 
-> **`APOS_BASE_URL` and `APOS_STATIC_BASE_URL` — chicken-and-egg:** Both of these point to Vercel URLs that do not exist yet. `APOS_BASE_URL` requires the staging URL from Part 2, and `APOS_STATIC_BASE_URL` requires the production URL from Part 3. Set the other three variables now and come back to add these after each project is deployed.
+> **`APOS_BASE_URL` and `APOS_STATIC_BASE_URL` — chicken-and-egg:** Both of these point to Vercel URLs that do not exist yet. `APOS_BASE_URL` requires the pre-production URL from Part 2, and `APOS_STATIC_BASE_URL` requires the production URL from Part 3. Set the other three variables now and come back to add these after each project is deployed.
 
 ### 1.6 Deploy to Railway
 
@@ -189,7 +189,7 @@ For full setup instructions, see the [ApostropheCMS uploadfs documentation](http
 
 ---
 
-## Part 2: Astro SSR on Vercel (Staging)
+## Part 2: Astro SSR on Vercel (Pre-production)
 
 ### 2.1 Install the Vercel Adapter
 
@@ -222,11 +222,11 @@ export default defineConfig({
     host: process.env.HOST || false
   },
   adapter: isStatic ? undefined : (isVercel ? vercel() : node({ mode: 'standalone' })),
-  // Needed by the SSR staging site; skipped for static builds
+  // Needed by the SSR pre-production site; skipped for static builds
   ...(!isStatic && {
     security: {
       allowedDomains: [
-        { protocol: 'https', hostname: 'your-staging-project.vercel.app' }
+        { protocol: 'https', hostname: 'my-project-preprod.vercel.app' }
       ]
     }
   }),
@@ -265,7 +265,7 @@ Key points:
 - `isVercel` uses an explicit `ASTRO_ADAPTER` env var rather than relying on Vercel's injected `VERCEL` system variable, which is not reliably available when `astro.config.mjs` is evaluated
 - `'host'` is included in `excludeRequestHeaders` — **required** when Astro and Apostrophe are on separate hosts, or the proxy will fail
 - Adapter selection is conditional so local dev is unchanged
-- `security.allowedDomains` lists the staging site's hostname. Without it, editors on the staging site can't log out or upload files. Add any custom domain you attach to the staging project. It is applied only to server-rendered builds, because static builds don't need it and Astro 6 and later warn about it on every page
+- `security.allowedDomains` lists the pre-production site's hostname. Without it, editors on the pre-production site can't log out or upload files. Add any custom domain you attach to the pre-production project. It is applied only to server-rendered builds, because static builds don't need it and Astro 6 and later warn about it on every page
 
 ### 2.3 Add `.vercel` to `.gitignore`
 
@@ -275,7 +275,7 @@ The `.vercel/` folder contains local metadata linking your machine to a specific
 echo ".vercel" >> .gitignore
 ```
 
-### 2.4 Create the Staging Vercel Project
+### 2.4 Create the Pre-production Vercel Project
 
 If you have an existing `vercel.json` or `.vercel/` folder from a previous deployment, remove them first:
 
@@ -297,20 +297,20 @@ Answer the prompts as follows:
 | Set up and deploy? | `Y` |
 | Which scope? | Your account |
 | Link to existing project? | `N` |
-| Project name | e.g. `my-project-staging` |
+| Project name | e.g. `my-project-preprod` |
 | Directory where code is located | `.` |
 | Build command | `npm run build` |
 | Output directory | *(leave blank)* |
 | Development command | *(leave blank)* |
 | Modify additional settings? | `N` |
 
-> **Output directory:** Leave this blank for the SSR staging project. The `@astrojs/vercel` adapter outputs to `.vercel/output` in Vercel's Build Output API format — Vercel handles this automatically. The `dist` output directory only applies to Project B, where Astro writes plain static files with no adapter.
+> **Output directory:** Leave this blank for the SSR pre-production project. The `@astrojs/vercel` adapter outputs to `.vercel/output` in Vercel's Build Output API format — Vercel handles this automatically. The `dist` output directory only applies to Project B, where Astro writes plain static files with no adapter.
 
 ### 2.5 Connect to GitHub
 
-In the [Vercel dashboard](https://vercel.com/dashboard), open `my-project-staging` and go to **Settings → Git**. Connect the project to your GitHub repository. Once connected, every push to `main` will automatically trigger a new staging deployment — no CLI needed for day-to-day work.
+In the [Vercel dashboard](https://vercel.com/dashboard), open `my-project-preprod` and go to **Settings → Git**. Connect the project to your GitHub repository. Once connected, every push to `main` will automatically trigger a new pre-production deployment — no CLI needed for day-to-day work.
 
-> Your local `.vercel/` folder stays linked to `my-project-staging` permanently. There is no reason to switch it to another project.
+> Your local `.vercel/` folder stays linked to `my-project-preprod` permanently. There is no reason to switch it to another project.
 
 ### 2.6 Set Environment Variables
 
@@ -343,14 +343,14 @@ Environments: Production, Preview
 vercel --prod --force
 ```
 
-Use `--force` to skip build cache on the initial deploy. After this, subsequent staging deployments happen automatically on every push to `main`.
+Use `--force` to skip build cache on the initial deploy. After this, subsequent pre-production deployments happen automatically on every push to `main`.
 
 ### 2.8 Set `APOS_BASE_URL` on Railway
 
-Now that the staging URL is known, go back to the Railway dashboard and add the final backend variable:
+Now that the pre-production URL is known, go back to the Railway dashboard and add the final backend variable:
 
 ```
-APOS_BASE_URL=https://your-project-staging.vercel.app
+APOS_BASE_URL=https://my-project-preprod.vercel.app
 ```
 
 > **Gotcha:** `APOS_BASE_URL` must point to the **Astro frontend URL** (not the Railway URL itself), and must include the `https://` protocol. Getting either wrong causes redirect loops or broken navigation after login.
@@ -359,9 +359,9 @@ APOS_BASE_URL=https://your-project-staging.vercel.app
 
 #### Logging in
 
-Navigate to your Vercel staging URL and go to `/login`. Use the admin credentials created in step 1.7.
+Navigate to your Vercel pre-production URL and go to `/login`. Use the admin credentials created in step 1.7.
 
-The full ApostropheCMS admin UI is proxied through Astro — content managers work entirely within the Vercel staging URL and never need to access Railway directly.
+The full ApostropheCMS admin UI is proxied through Astro — content managers work entirely within the Vercel pre-production URL and never need to access Railway directly.
 
 #### Editing content
 
@@ -370,26 +370,26 @@ In-context editing works as it does in a standard ApostropheCMS installation:
 - Click the edit button on any page to enter edit mode
 - Add, remove, and reorder widgets inline
 - Changes are saved to the ApostropheCMS backend on Railway
-- Content is live in the staging environment immediately
+- Content is live in the pre-production environment immediately
 
 #### What editors see vs. what is published
 
-Changes made in the editorial environment are **staging only**. The public production site is a separate static build and is not updated until a deliberate publish step is taken (see Part 3).
+Changes made in the editorial environment are **pre-production only**. The public production site is a separate static build and is not updated until a deliberate publish step is taken (see Part 3).
 
 ---
 
 ## Part 3: Static Production Site on Vercel
 
-The production site is a second Vercel project connected to the same GitHub repository. It builds in static mode, fetching all content from the Railway backend at build time and outputting plain HTML, CSS, and JS. The staging project is completely unaffected — editors keep working while a publish is in progress.
+The production site is a second Vercel project connected to the same GitHub repository. It builds in static mode, fetching all content from the Railway backend at build time and outputting plain HTML, CSS, and JS. The pre-production project is completely unaffected — editors keep working while a publish is in progress.
 
 Each publish is a full rebuild: a fresh snapshot of whatever content is in Atlas at that moment. There is no incremental update — if content changed, the whole site rebuilds. This is intentional; it makes the production site a deliberate, auditable point-in-time capture.
 
-Project B is set up and managed entirely from the Vercel dashboard. Your local `.vercel/` folder stays linked to the staging project — there is no need to touch it.
+Project B is set up and managed entirely from the Vercel dashboard. Your local `.vercel/` folder stays linked to the pre-production project — there is no need to touch it.
 
 ### 3.1 Create the Production Vercel Project
 
 1. In the [Vercel dashboard](https://vercel.com/dashboard), click **Add New → Project**
-2. Import the same GitHub repository used for the staging project
+2. Import the same GitHub repository used for the pre-production project
 3. Name the project e.g. `my-project-production`
 4. Set the following build settings:
 
@@ -477,12 +477,12 @@ Then confirm the following:
 |----------|-------------|---------|
 | `APOS_DB_URI` | Atlas connection URI | `mongodb+srv://...` |
 | `APOS_EXTERNAL_FRONT_KEY` | Shared auth secret (must match frontend) | `a-long-random-string` |
-| `APOS_BASE_URL` | Astro staging frontend URL | `https://your-project.vercel.app` |
+| `APOS_BASE_URL` | Astro pre-production frontend URL | `https://my-project-preprod.vercel.app` |
 | `NODE_ENV` | Sets production mode | `production` |
 | `APOS_RELEASE_ID` | Unique ID per deploy for cache busting | <span v-pre>`${{RAILWAY_GIT_COMMIT_SHA}}`</span> |
-| `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://your-project-production.vercel.app` |
+| `APOS_STATIC_BASE_URL` | Public origin for static production URLs | `https://my-project-production.vercel.app` |
 
-### Astro Frontend — Staging (Vercel Project A)
+### Astro Frontend — Pre-production (Vercel Project A)
 
 | Variable | Description | Example |
 |----------|-------------|---------|
@@ -509,10 +509,10 @@ Then confirm the following:
 Check Vercel function logs with `vercel logs --prod` immediately after triggering a page load. Most likely causes: wrong `APOS_HOST` value, missing `https://` protocol, or mismatched `APOS_EXTERNAL_FRONT_KEY`.
 
 **Redirects to a malformed URL after login**  
-`APOS_BASE_URL` on the Railway backend is missing `https://` or is still set to the Railway URL instead of the Vercel staging URL.
+`APOS_BASE_URL` on the Railway backend is missing `https://` or is still set to the Railway URL instead of the Vercel pre-production URL.
 
-**Build uses wrong adapter / falls back to static on staging**  
-Confirm `ASTRO_ADAPTER=vercel` is set in Vercel environment variables for the staging project and redeploy with `--force`.
+**Build uses wrong adapter / falls back to static on pre-production**  
+Confirm `ASTRO_ADAPTER=vercel` is set in Vercel environment variables for the pre-production project and redeploy with `--force`.
 
 **Static build runs on every GitHub push to production project**  
 The **Ignored Build Step** command was not saved. Go to **Settings → Git** in `my-project-production` and confirm `exit 1` is set.

@@ -78,7 +78,7 @@ apostrophe({
   </template>
 </AposCodeBlock>
 
-This is separate from `baseUrl`, which should point to your Astro frontend — `http://localhost:4321` in development, or your SSR staging URL in production. ApostropheCMS uses `baseUrl` as the public origin for things like login redirects and email links, and in an Astro integration that public origin is the Astro server, not the ApostropheCMS backend directly.
+This is separate from `baseUrl`, which should point to your Astro frontend — `http://localhost:4321` in development, or the URL of your SSR pre-production site when deployed. ApostropheCMS uses `baseUrl` as the public origin for things like login redirects and email links, and in an Astro integration that public origin is the Astro server, not the ApostropheCMS backend directly.
 
 In production you will typically set `staticBaseUrl` via the `APOS_STATIC_BASE_URL` environment variable rather than hardcoding it, which makes it easier to manage across different environments.
 
@@ -153,7 +153,7 @@ export default defineConfig({
   </template>
 </AposCodeBlock>
 
-When `APOS_BUILD` is not set, the config behaves exactly as before — SSR mode with the Node.js adapter — so your development workflow and SSR staging environment are unaffected.
+When `APOS_BUILD` is not set, the config behaves exactly as before — SSR mode with the Node.js adapter — so your development workflow and SSR pre-production environment are unaffected.
 
 ### 2. Add `getStaticPaths` to Your Catch-All Route
 
@@ -259,7 +259,7 @@ The value of `prefix` on the backend and `base` on the frontend must be identica
 
 1. **The backend must stay online for the entire static build.** If your ApostropheCMS instance goes down mid-build, the build will fail or produce incomplete output.
 2. **Content changes require a new build and deploy.** Unlike the SSR setup where content updates are visible immediately, a static site is a snapshot. Plan for a publish workflow — whether that's a manual trigger, a scheduled build, or a webhook from ApostropheCMS.
-3. **Preview and in-context editing are not available on the static site.** The ApostropheCMS admin UI only works in the SSR environment. Your editors will need access to a separate SSR staging environment to create and edit content before publishing.
+3. **Preview and in-context editing are not available on the static site.** The ApostropheCMS admin UI only works in the SSR environment. Your editors will need access to a separate SSR pre-production environment to create and edit content before publishing.
 4. **Static mode can significantly increase build time** with large sites, many filter combinations, or large attachment sets. Test your build times early so they don't become a surprise in production.
 
 ## Next Steps
