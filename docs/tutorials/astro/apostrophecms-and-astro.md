@@ -91,7 +91,7 @@ If you get stuck:
 - Join our [Discord community](http://chat.apostrophecms.org)
 - Check the [ApostropheCMS documentation](https://apostrophecms.com/docs)
 - Review the [Astro documentation](https://docs.astro.build)
-- Visit our [Github repository](https://github.com/apostrophecms/apostrophe-astro)
+- Visit our [Github repository](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro)
 
 ## Want to learn more?
 Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:

@@ -500,26 +500,17 @@ const sidebarGuide = [
   },
   {
     text: 'Starter Kits',
-    collapsed: false,
-    items: [
-      {
-        text: 'Essentials Starter Kit',
-        link: 'starters/essentials.md'
-      },
-      {
-        text: 'Pro Essentials Starter Kit',
-        link: 'starters/pro-essentials.md'
-      },
-      {
-        text: 'Assembly Starter Kits',
-        link: 'starters/assembly.md'
-      }
-    ]
-  },
-  {
-    text: 'CLI Starters',
     collapsed: true,
+    link: 'starters/index.md',
     items: [
+      {
+        text: 'Astro Essentials',
+        link: 'guide/astro-essentials-overview.md'
+      },
+      {
+        text: 'Astro Public Demo',
+        link: 'guide/astro-demo-overview.md'
+      },
       {
         text: 'Essentials',
         link: 'guide/apostrophe-standalone-essentials-overview.md'
@@ -529,12 +520,8 @@ const sidebarGuide = [
         link: 'guide/apostrophe-demo-overview.md'
       },
       {
-        text: 'Astro Essentials',
-        link: 'guide/astro-essentials-overview.md'
-      },
-      {
-        text: 'Astro Public Demo',
-        link: 'guide/astro-demo-overview.md'
+        text: 'Assembly Starter Kits',
+        link: 'starters/assembly.md'
       }
     ]
   },

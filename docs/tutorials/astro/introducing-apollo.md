@@ -49,13 +49,13 @@ Throughout our tutorials, we'll highlight which patterns are Apollo-specific and
 
 ### Integration with Astro
 
-The [`apostrophe-astro` package](https://github.com/apostrophecms/apostrophe-astro) seamlessly connects ApostropheCMS with Astro, handling all the complex integration work behind the scenes. Once installed in your Astro project, you get:
+The [`apostrophe-astro` package](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro) seamlessly connects ApostropheCMS with Astro, handling all the complex integration work behind the scenes. Once installed in your Astro project, you get:
 - Full use of the ApostropheCMS Admin UI with in-context editing
 - Zero-configuration content delivery - no need to write any fetch code or API calls
 - Automatic routing that matches your ApostropheCMS page tree
 - Support for your choice of frontend framework (React, Vue, Svelte, etc.) or Astro's native templating system
 
-The Apollo theme and the more bare bones [`combined-astro-starter-kit`](https://github.com/apostrophecms/combined-astro-starter-kit) both include this package as a dependency and provide the necessary `astro.config.mjs` configuration. You can explore additional configuration options in the [package documentation](https://github.com/apostrophecms/apostrophe-astro).
+The Apollo theme and the more bare bones [`starter-kit-astro-essentials`](https://github.com/apostrophecms/starter-kit-astro-essentials) both include this package as a dependency and provide the necessary `astro.config.mjs` configuration. You can explore additional configuration options in the [package documentation](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro).
 
 ```javascript
 // backend/astro.config.mjs

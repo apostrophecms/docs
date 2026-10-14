@@ -1,6 +1,6 @@
 # Astro Essentials Starter Architecture Guide
 
-This guide explains the key patterns and conventions in the ApostropheCMS + Astro [Essentials starter](https://github.com/apostrophecms/combined-astro-starter-kit). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
+This guide explains the key patterns and conventions in the ApostropheCMS + Astro [Essentials starter](https://github.com/apostrophecms/starter-kit-astro-essentials). It pairs with the in-repo `ARCHITECTURE.md` quick reference and is aimed at developers who are new to ApostropheCMS and want to understand how the two halves of the architecture fit together before extending the starter.
 
 The sections below cover the patterns you encounter in the first hour of working in the codebase: the bridge package, the component registry, area fields, and image rendering.
 
