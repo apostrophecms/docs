@@ -25,7 +25,7 @@ Railway and Vercel are the recommended platforms for this stack, but they are no
 
 ## Prerequisites
 
-- An ApostropheCMS + Astro project using [`@apostrophecms/apostrophe-astro`](https://github.com/apostrophecms/apostrophe-astro) in a GitHub repository
+- An ApostropheCMS + Astro project using [`@apostrophecms/apostrophe-astro`](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro) in a GitHub repository
 - A [MongoDB Atlas](https://www.mongodb.com/atlas) cluster with a connection URI
 - [Railway CLI](https://docs.railway.app/develop/cli) installed and authenticated
 - [Vercel CLI](https://vercel.com/docs/cli) installed globally and authenticated

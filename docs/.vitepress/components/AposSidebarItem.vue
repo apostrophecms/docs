@@ -45,7 +45,7 @@ const {
 const myCollapsed = ref(false);
 const myIsActive = ref(false);
 const myHasActive = ref(false);
-myIsActive.value = page.value.relativePath === props.item.link;
+myIsActive.value = normalizePath(page.value.relativePath) === normalizePath(props.item.link);
 
 const isFixed = computed(() => props.item.collapsed === 'fixed');
 
@@ -85,7 +85,7 @@ if (props.item.collapsed === 'fixed') {
   myCollapsed.value = false;
 } else if (props.item.items) {
   // Regular items follow normal collapse logic
-  myCollapsed.value = props.item.collapsed === false ? false : !hasActiveChild;
+  myCollapsed.value = props.item.collapsed === false ? false : !hasActiveChild && !myIsActive.value;
 } else {
   myCollapsed.value = null;
 }
