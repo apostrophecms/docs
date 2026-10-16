@@ -127,6 +127,8 @@ server {
   listen *:80;
   # Replace `your.host.name` with your actual hostname
   server_name your.host.name;
+  # Allow media uploads larger than nginx's 1 MB default
+  client_max_body_size 50m;
   location @proxy {
     proxy_pass http://localhost:3000;
     proxy_set_header Host $host;

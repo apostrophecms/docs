@@ -429,6 +429,12 @@ export default defineConfig({
   markdown: {
     theme: require('./theme/dracula-at-night.json'),
     defaultHighlightLang: 'sh',
+    // `mjs` and `cjs` fences highlight as JavaScript but opt out of the
+    // CJS/ESM toggle below, which only applies to `js`, `javascript` and `ts`
+    languageAlias: {
+      mjs: 'js',
+      cjs: 'js'
+    },
     languages: [
       'html',
       {
