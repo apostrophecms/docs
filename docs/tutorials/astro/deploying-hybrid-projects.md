@@ -180,7 +180,7 @@ For more control or to leverage specific platform features, you can deploy the b
 
 Your ApostropheCMS backend requires:
 
-- Node.js 24 LTS (at least 22.19)
+- Node.js 24 LTS (22.19 is the minimum version)
 - A database connection - MongoDB by default, or SQLite/PostgreSQL via the `@apostrophecms/db-connect` adapter (see [Using SQLite or PostgreSQL Instead of MongoDB](/guide/using-sqlite-and-postgres.html))
 - Asset storage solution (S3 or equivalent cloud storage)
 

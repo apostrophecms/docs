@@ -290,7 +290,7 @@ Getting the site online is only the start. These practices apply to any producti
 
 ## Production checklist
 
-- Both applications run on Node.js 24 LTS. The Astro integration requires at least Node.js 22.19.
+- Both applications run on Node.js. We recommend Node.js 24 LTS. Node.js 22.19 is the minimum version.
 - `APOS_EXTERNAL_FRONT_KEY` is a strong secret, identical for the frontend and backend applications, and different between development, staging and production environments.
 - `APOS_HOST` is set when `astro build` runs.
 - `security.allowedDomains` in `astro.config.mjs` lists the site's public origin, and the reverse proxy forwards `Host` and `X-Forwarded-Proto`. Test by logging out on the production site.
