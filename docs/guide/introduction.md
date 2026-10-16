@@ -1,4 +1,5 @@
 ---
+description: "ApostropheCMS is an open source, full-stack JavaScript CMS with in-context editing, a built-in headless API, custom content types, and localization."
 next:
   text: 'Why ApostropheCMS'
   link: 'guide/why-apostrophe.md'

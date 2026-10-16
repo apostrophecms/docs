@@ -1,5 +1,6 @@
 ---
 title: ApostropheCMS Documentation
+description: Set up ApostropheCMS, build modules and widgets, connect Astro. Guides and API reference.
 layout: doc
 ---
 

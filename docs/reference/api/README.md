@@ -1,4 +1,5 @@
 ---
+description: REST API routes for ApostropheCMS authentication, pieces, pages, and media.
 prev: false
 next: false
 ---

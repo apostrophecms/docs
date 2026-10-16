@@ -1,3 +1,6 @@
+---
+description: "Reference for ApostropheCMS module configuration: static settings, configuration cascades, the initialization function, and customization functions."
+---
 # Module configuration
 
 Module configuration objects may use the following configuration properties. The overall categories are broadly defined:
