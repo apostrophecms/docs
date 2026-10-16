@@ -1,5 +1,5 @@
 
-## Device breakpoint preview
+# Device breakpoint preview
 
 Apostrophe provides a convenient way to emulate devices, like phones and tablets, making it easy to see how your content will look at different screen sizes.
 

@@ -1,3 +1,6 @@
+---
+description: "Reference for the widgets built into ApostropheCMS (layout, rich text, image, video, file, and raw HTML) and how to configure each one."
+---
 # Core widgets
 
 Apostrophe comes with some content widgets you can use in areas right away. See below for their descriptions and options.

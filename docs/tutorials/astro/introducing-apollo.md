@@ -1,4 +1,5 @@
 ---
+description: "Get to know Apollo, an ApostropheCMS and Astro starter project: set up the development environment and explore its page types, widgets, pieces, and theme."
 title: "Introducing the Apollo Theme"
 detailHeading: "Astro"
 url: "/tutorials/astro/introducing-apollo.html"

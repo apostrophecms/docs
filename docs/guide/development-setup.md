@@ -1,4 +1,5 @@
 ---
+description: "Install Node.js, pick SQLite, MongoDB, or PostgreSQL, and create your first ApostropheCMS project with the guided installer on macOS, Windows, or Linux."
 videoList:
   - id: 'nTjDATerqEg'
     title: 'Setup for MacOS'
