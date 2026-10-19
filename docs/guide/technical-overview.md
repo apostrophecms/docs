@@ -1,3 +1,6 @@
+---
+description: "The core technologies behind ApostropheCMS (Node.js, Express, a choice of databases, and JSX or Nunjucks templates) and the layout of a typical project."
+---
 # Technical overview
 
 <iframe src="https://www.youtube.com/embed/DoOSBfOy6NY?si=ZziVXYUqaSyEVZn2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

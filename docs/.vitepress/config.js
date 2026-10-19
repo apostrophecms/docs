@@ -3,7 +3,6 @@ import { fileURLToPath, URL } from 'node:url';
 import { sidebarGuide } from './sidebarGuide';
 import { sidebarTutorials } from './sidebarTutorials';
 import { JSDOM } from 'jsdom';
-import nlp from 'compromise';
 
 import nunjucks from './theme/njk-html.tmLanguage.json';
 
@@ -31,7 +30,7 @@ const hostname = hostnames[process.env.ENV || 'dev' ];
 
 export default defineConfig({
   title: 'ApostropheCMS',
-  description: 'Documentation for ApostropheCMS',
+  description: 'Guides, tutorials, and API reference for ApostropheCMS, the open source Node.js CMS.',
 
   ignoreDeadLinks: 'localhostLinks',
   base,
@@ -161,12 +160,24 @@ export default defineConfig({
     }
   },
   transformHead: async (context) => {
-    const docText = await parseContent(context.content);
-    const description = await processText(docText);
     const { pageData } = context;
+    const { frontmatter } = pageData;
+    // Tutorials keep a hand-written summary for their listing card in `content`
+    const leadText = (
+      frontmatter.description ||
+      (typeof frontmatter.content === 'string' && frontmatter.content.trim()) ||
+      extractLeadText(context.content)
+    ).replace(/`/g, '');
+    // Search engines show about 155 characters; social previews show a little more
+    const metaDescription = truncate(leadText, 155);
+    const socialDescription = truncate(leadText, 200);
 
     const relativePath = pageData.relativePath;
-    const absolutePath = `${hostname}/docs/${relativePath.replace('.md', '.html')}`;
+    // Index pages are linked as `/docs/` and `/docs/tutorials/`, not `index.html`
+    const pagePath = relativePath
+      .replace(/(^|\/)index\.md$/, '$1')
+      .replace(/\.md$/, '.html');
+    const absolutePath = `${hostname}/docs/${pagePath}`;
 
     const head = [
       [
@@ -243,7 +254,7 @@ export default defineConfig({
         'meta',
         {
           property: 'og:description',
-          content: description
+          content: socialDescription
         }
       ],
       [
@@ -299,7 +310,7 @@ export default defineConfig({
         'meta',
         {
           property: 'twitter:description',
-          content: description
+          content: socialDescription
         }
       ],
       [
@@ -318,11 +329,11 @@ export default defineConfig({
       ]
     ];
 
-    // Basic SEO meta tags from frontmatter
-    if (pageData.frontmatter.description) {
+    // Replaces VitePress's site-wide default description
+    if (metaDescription) {
       head.push(['meta', {
         name: 'description',
-        content: pageData.frontmatter.description
+        content: metaDescription
       }]);
     }
 
@@ -379,12 +390,16 @@ export default defineConfig({
       });
     }
 
-    // Canonical URL
-    const canonicalUrl = pageData.frontmatter.canonical || absolutePath;
-    head.push(['link', {
-      rel: 'canonical',
-      href: canonicalUrl
-    }]);
+    // Canonical URL, unless the page sets its own in frontmatter `head`
+    // (redirect stubs point theirs at the new page)
+    const hasCanonical = (frontmatter.head || [])
+      .some(([ tag, attrs ]) => tag === 'link' && attrs?.rel === 'canonical');
+    if (!hasCanonical) {
+      head.push(['link', {
+        rel: 'canonical',
+        href: frontmatter.canonical || absolutePath
+      }]);
+    }
 
     // Structured data for tutorials
     if (pageData.frontmatter.categories?.includes('Tutorials')) {
@@ -400,7 +415,7 @@ export default defineConfig({
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
         headline: pageData.title,
-        description: pageData.frontmatter.description || description,
+        description: metaDescription,
         author: {
           '@type': 'Organization',
           name: pageData.frontmatter.author || 'ApostropheCMS Team'
@@ -527,43 +542,65 @@ export default defineConfig({
   }
 });
 
-async function parseContent(htmlBlock) {
-  const dom = new JSDOM(htmlBlock);
-  const h1Element = dom.window.document.querySelector('h1');
-  let textContent;
-
-  if (h1Element) {
-    const parentElement = h1Element.parentElement;
-    parentElement.removeChild(h1Element);
-    textContent = parentElement.textContent.trim();
+// Builds a plain-text summary of a page from its opening paragraphs.
+// Headings, code blocks, tables, and callouts are skipped so that only
+// prose ends up in the meta and social descriptions.
+function extractLeadText(html) {
+  const { document } = new JSDOM(html).window;
+  const root = document.querySelector('.vp-doc') ||
+    document.querySelector('h1')?.parentElement;
+  if (!root) {
+    return '';
   }
-  return textContent;
+
+  root.querySelectorAll([
+    'pre',
+    'table',
+    '.header-anchor',
+    '.custom-block',
+    '.code-block-container',
+    '[class*="language-"]'
+  ].join(', ')).forEach(el => el.remove());
+
+  const parts = [];
+  let length = 0;
+  for (const el of root.querySelectorAll('p, h2')) {
+    // Prefer the page's introduction over text from later sections
+    if (el.tagName === 'H2') {
+      if (parts.length) {
+        break;
+      }
+      continue;
+    }
+    const text = el.textContent.replace(/[\s\u200B]+/g, ' ').trim();
+    // Skip empty paragraphs and rows of links like "Demo · Roadmap"
+    const linkText = [ ...el.querySelectorAll('a') ]
+      .map(a => a.textContent)
+      .join('');
+    if (!text || text.replace(/[\s·|-]/g, '') === linkText.replace(/\s/g, '')) {
+      continue;
+    }
+    // Skip label lines like "**Alias:** `apos.asset`" on module reference pages
+    const label = el.firstElementChild;
+    if (label?.tagName === 'STRONG' && label.textContent.trim().endsWith(':') &&
+      text.length < 100) {
+      continue;
+    }
+    parts.push(text);
+    length += text.length;
+    if (length >= 300) {
+      break;
+    }
+  }
+  return parts.join(' ');
 }
 
-async function processText(htmlBlock) {
-  if (!htmlBlock) {
-    return '';
+// Shortens text to `max` characters at a word boundary.
+function truncate(text, max) {
+  if (text.length <= max) {
+    return text;
   }
-  const truncate = (str, length) => {
-    if (str.length <= length) return str;
-    const trimmedStr = str.substr(0, length);
-    return (
-      trimmedStr.substr(
-        0,
-        Math.min(trimmedStr.length, trimmedStr.lastIndexOf(' '))
-      ) + '...'
-    );
-  };
-  const strippedHTML = htmlBlock.replace(/<\/?[^>]+(>|$)|[\u0022\u0027\u0060\u003C\u003E\u0026]/g, function (match) {
-    if (match === '\u200B') {
-      return ' ';
-    }
-    return '';
-  });
-
-  const analysis = nlp(strippedHTML);
-  const sentences = analysis.sentences().out('array');
-  let summary = sentences.join(' ');
-  summary = truncate(summary, 300);
-  return summary;
+  const cut = text.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:.]+$/, '')}…`;
 }
