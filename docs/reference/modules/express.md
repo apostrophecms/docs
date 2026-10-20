@@ -12,7 +12,7 @@ This module initializes the Express framework, which Apostrophe uses and extends
 
 |  Property | Type | Description |
 |---|---|---|
-|`address` | String | Apostrophe listens for connections on all interfaces (`0.0.0.0`) unless this option is set to another address. If the `ADDRESS` environment variable is set, it is used instead. |
+|`address` | String | Apostrophe listens for connections on all interfaces unless this option is set to another address. If the `ADDRESS` environment variable is set, it is used instead. |
 |`apiKeys` | Object | Configure API keys for request authentication. See [the authentication guide](/reference/api/authentication.md#api-keys) for more. |
 |`bodyParser` | Object | The `json` and `urlencoded` properties of this object are merged with Apostrophe's default options to be passed to the [`body-parser` npm module's](https://www.npmjs.com/package/body-parser) `json` and `urlencoded` methods. |
 |`csrf` | Boolean/Object | Set to `false` to disable CSRF protection or to an object with a `name` property to customize the CSRF cookie name. See below. |

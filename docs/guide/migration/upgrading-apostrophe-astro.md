@@ -27,7 +27,7 @@ Starting in Astro v6, the framework reads `request.headers` during prerendering 
 
 The fix is to apply `allowedDomains` only when running in SSR mode, since it has no effect during prerendering anyway:
 
-```js
+```mjs
 // astro.config.mjs
 const isStatic = process.env.APOS_BUILD === 'static'; // or however you detect it
 
