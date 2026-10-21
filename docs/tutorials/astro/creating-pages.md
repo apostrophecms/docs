@@ -9,25 +9,9 @@ tags:
   effort: beginner
 order: 3
 excludeFromFilters: true
-videoList:
-  - id: 'lKJkXomBa4U'
-    title: 'Introducing Page-types'
-    link: '#building-pages-in-apostrophecms-astro'
-  - id: 'AlWPERA3E1w'
-    title: 'Creating Pages'
-    link: '#implementing-a-default-page'
-  - id: 'grvZKHb35BQ'
-    title: 'Creating Piece Pages'
-    link: '#implementing-piece-pages'
 ---
 # Building Pages in ApostropheCMS + Astro
 This section will give you an idea of the basics of page creation, but it only scratches the surface of using Astro components for templating. We encourage you to look at the excellent [Astro documentation](https://docs.astro.build/en/basics/astro-pages/#astro-pages).
-
-::: tip Watch & Learn! 🎥
-This tutorial is available in both text and video formats. The videos cover the key highlights, while this page provides additional details and references. Watch the videos for a guided introduction, then read on for deeper insights!
-:::
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/lKJkXomBa4U?si=Nw5i3RYStlXmOZl-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Understanding Astro Page Structure
 If you're coming from ApostropheCMS, Astro's page structure might look quite different from what you're used to. Let's break down the key components of an Astro page:
@@ -325,8 +309,6 @@ This slot system provides a structured way to organize your site's content while
 
 Now let's look at a simple default page type that can be used for basic content pages. This requires configuration in both the backend (ApostropheCMS) and frontend (Astro).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/AlWPERA3E1w?si=sm7zo2cn3AQ6yEMA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 ### Backend Configuration
 
 The backend ApostropheCMS module defines the page type's structure and available content areas.
@@ -584,8 +566,6 @@ export default templateComponents;
 </AposCodeBlock>
 
 ## Implementing Piece Pages
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/grvZKHb35BQ?si=PstzMnL5mklc1zYq" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 While standard pages have a straightforward one-to-one mapping between ApostropheCMS page types and Astro templates, piece pages require a different approach. A single piece page type in ApostropheCMS typically needs two different templates:
 

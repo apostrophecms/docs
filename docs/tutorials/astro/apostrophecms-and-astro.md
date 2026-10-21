@@ -1,8 +1,4 @@
 ---
-videoList:
-  - id: '8HczFSLFDno'
-    title: 'Apollo Overview'
-    link: '#want-to-learn-more'
 next:
   text: 'Introducing Apollo'
   link: '/tutorials/astro/introducing-apollo.html'
@@ -14,7 +10,7 @@ tags:
   topic: "Core Concepts"
   type: astro
   effort: beginner
-order: 1,
+order: 1
 excludeFromFilters: true
 ---
 # Building Websites with ApostropheCMS and Astro
@@ -65,11 +61,22 @@ This section is divided into two paths. You don't need to complete one before st
 
 ### Path 1: Build a Site
 
-A step-by-step series that walks you through the Apollo theme — a complete, production-ready ApostropheCMS + Astro project. You'll learn how the two systems connect, how to create pages, widgets, and pieces, and how the in-context editing experience works in practice.
+A step-by-step series that starts from the [Astro Essentials starter kit](https://github.com/apostrophecms/starter-kit-astro-essentials) and builds it up into the [Astro public demo](https://github.com/apostrophecms/astro-public-demo), a complete ApostropheCMS + Astro site. Each chapter adds one part of the demo and explains the concepts behind it:
+
+- **Getting started:** create a project, run the two servers, and see how a request flows from ApostropheCMS to Astro
+- **Site chrome:** global settings, the header, navigation, footer, and breadcrumbs
+- **Pages:** page types, areas, and template mapping
+- **Widgets:** custom widgets with shared link fields, nested areas, and arrays
+- **Styling:** widget styles, site-wide design tokens, and dark mode
+- **Core widgets:** customizing the image, rich text, and video widgets
+- **Pieces:** articles, categories, and authors, with index and show pages, filters, and pagination
+- **Fetching data:** widgets that load content from the REST API and from external services, plus client-side behavior with web components
+- **Localization:** locales, translated strings, and a locale switcher
+- **SEO and extensions:** SEO fields, Open Graph, sitemaps, favicons, and import/export
 
 <AposCtaButton
   detail-heading="Series"
-  title="Start with the Apollo Theme"
+  title="Start Building"
   content="Set up your development environment, explore core concepts, and learn the fundamental patterns for building with ApostropheCMS and Astro."
   url="introducing-apollo.html"
 />
@@ -91,8 +98,4 @@ If you get stuck:
 - Join our [Discord community](http://chat.apostrophecms.org)
 - Check the [ApostropheCMS documentation](https://apostrophecms.com/docs)
 - Review the [Astro documentation](https://docs.astro.build)
-- Visit our [Github repository](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro)
-
-## Want to learn more?
-Listen to the CTO of ApostropheCMS talk about the integration of ApostropheCMS and Astro:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/8HczFSLFDno?si=tHxIhDTdOboNyIPN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+- Visit the [`apostrophe-astro` package on GitHub](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro)

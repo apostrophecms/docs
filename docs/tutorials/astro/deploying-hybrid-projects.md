@@ -12,7 +12,7 @@ excludeFromFilters: true
 ---
 # Deploying ApostropheCMS + Astro Projects
 
-Now that you've built your site with ApostropheCMS and Astro, it's time to deploy it for the world to see. The Apollo project's dual-repository structure (backend + frontend) offers flexibility but also requires special considerations for deployment.
+Now that you've built your site with ApostropheCMS and Astro, it's time to deploy it for the world to see. An ApostropheCMS + Astro project runs as two applications, an ApostropheCMS backend and an Astro frontend. That split offers flexibility but also requires special considerations for deployment.
 
 ## Understanding Deployment Options
 
