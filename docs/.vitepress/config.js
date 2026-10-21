@@ -514,6 +514,8 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/apostrophe-primary-mark.svg',
+    // The logo goes to the marketing site; "Guide" covers the docs homepage
+    logoLink: hostname || 'https://apostrophecms.com',
     lastUpdated: true,
     docsRepo: 'https://github.com/apostrophecms/docs',
     docsBranch: 'main',
