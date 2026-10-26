@@ -10,7 +10,7 @@ extends: '@apostrophecms/module'
 
 This module provides services for database migrations. These **migrations are used to make changes to the database** at the time of a new code deployment, typically because of *data structure changes* in code or *to fix data errors*. This is completely separate from transferring data between environments or between major versions of Apostrophe.
 
-The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). In development environments all new migrations also run on every site startup.
+The `@apostrophecms/migration:migrate` task carries out all migrations that have been registered with this module, though typically only new migrations will run (see the warning below). All new migrations also run on every site startup, in every environment.
 
 ## Featured methods
 
@@ -21,7 +21,7 @@ Because this module has an alias, you can call these from another module from th
 
 ### `add(name, fn)`
 
-Add a migration function (`fn`) to be invoked when the `@apostrophecms/migration:migrate` task is invoked. Each migration is only invoked once, however they will all be invoked on a brand-new site, so they must check whether a change is actually needed before executing changes. They must also be harmless to run twice.
+Add a migration function (`fn`) to be invoked on site startup or when the `@apostrophecms/migration:migrate` task is invoked. Each migration is only invoked once, however they will all be invoked on a brand-new site, so they must check whether a change is actually needed before executing changes. They must also be harmless to run twice.
 
 Functions receive no arguments, but have access to the modules where they are registered (via `self`) and the Apostrophe object (`self.apos`).
 
@@ -108,4 +108,4 @@ Continuing from `eachArea()`, this method goes one level deeper. Invokes the `it
 
 Full command: `node app @apostrophecms/migration:migrate`
 
-Run this command-line task to run all migrations. Migrations do not run automatically in production environments, so in that context this must be run manually or as part of a deployment process.
+Run this command-line task to run all migrations. Migrations also run automatically on every site startup, but in production it is recommended to run this task as part of a deployment process.
