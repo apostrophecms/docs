@@ -80,11 +80,11 @@ export APOS_DB_URI=postgres://localhost:5432/apos_demo
 
 By default, if you do not set `APOS_DB_URI`, Apostrophe defaults to `mongodb://localhost:27017/your-shortName-here`.
 
-For local development, if you always use `sqlite` or `postgres`, you can optionally set the `APOS_DEFAULT_ADAPTER` environment variable to `sqlite` or `postgres` to get the same effect with your preferred database.
+For local development, if you always use `sqlite` or `postgres`, you can optionally set the `APOS_DEFAULT_DB_ADAPTER` environment variable to `sqlite` or `postgres` to get the same effect with your preferred database.
 
-If you set `APOS_DEFAULT_ADAPTER` to `sqlite`, then a `shortName` setting of `my-project` will point to the `sqlite://data/my-project.sqlite`, which refers to the `data/my-project.sqlite` file in your project. Make sure you add the file to `.gitignore` and be aware that if your project folder is removed, the database is gone too.
+If you set `APOS_DEFAULT_DB_ADAPTER` to `sqlite`, then a `shortName` setting of `my-project` will point to the `sqlite://data/my-project.sqlite`, which refers to the `data/my-project.sqlite` file in your project. Make sure you add the file to `.gitignore` and be aware that if your project folder is removed, the database is gone too.
 
-If you set `APOS_DEFAULT_ADAPTER` to `postgres`, then a `shortName` setting of `my-project` will point to `postgres://localhost:5432/my-project`.
+If you set `APOS_DEFAULT_DB_ADAPTER` to `postgres`, then a `shortName` setting of `my-project` will point to `postgres://localhost:5432/my-project`.
 
 If you choose this approach it is best to be consistent about it, e.g. set it in your `.bashrc` or `.zshrc` file.
 

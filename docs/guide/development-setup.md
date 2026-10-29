@@ -74,7 +74,7 @@ The installer will ask you to pick a database when you create a project — SQLi
 If you're not sure, don't worry about it. SQLite is the installer's recommended default and needs nothing installed locally — the database lives in a file inside your project.
 :::
 
-If you'd rather use MongoDB or PostgreSQL, install it locally first ([MongoDB instructions](./installing-mongodb-locally.md)), or point the installer at a managed/cloud instance (for example MongoDB Atlas) — you'll be asked for a connection string.
+If you'd rather use MongoDB or PostgreSQL, install it locally first ([MongoDB instructions](./installing-mongodb-locally.md)), or use a managed/cloud instance (for example MongoDB Atlas) — you'll need its connection string. The same choices are available whether you use the installer or [set up a project by hand](#creating-a-project-without-the-installer).
 
 ### A quick note on frontends
 
@@ -156,15 +156,23 @@ If you'd rather set things up by hand, or want to see what the installer does fo
 
 ```bash
 git clone https://github.com/apostrophecms/starter-kit-astro-essentials apos-app
+cd apos-app
 ```
 
 If you want to change the project directory name, please do so. We will continue referring to `apos-app`.
 
-Open the `app.js` file in the root project directory. Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). This will be used as the name of your database.
+::: info 📌 Where the Apostrophe app lives
+The Astro starters (`starter-kit-astro-essentials` and `astro-public-demo`) contain two projects: the Apostrophe backend in `backend/` and the Astro frontend in `frontend/`. In the steps below, Apostrophe's files (`app.js` and `.env`) are in `backend/`, and `node app` commands run from `backend/`. The Standalone starters keep everything at the project root.
+:::
+
+### Setting the project name
+
+Open `app.js` (`backend/app.js` in an Astro starter). Find the `shortName` setting and change it to match your project (only letters, digits, hyphens and/or underscores). Apostrophe uses it to name your database.
 
 <AposCodeBlock>
 
 ```javascript
+import 'dotenv/config';
 import apostrophe from 'apostrophe';
 
 apostrophe({
@@ -178,61 +186,121 @@ app.js
 </template>
 </AposCodeBlock>
 
-Excellent! Back in your terminal, we'll install dependencies:
+### Installing dependencies
+
+Back in your terminal, install dependencies from the project root:
 
 ```bash
 npm install
 ```
 
-Before starting up you'll need to create an admin-level user, either in your Atlas instance or local database, so that you can log in. After running the following command, Apostrophe will ask you to enter a password for this user.
+In an Astro starter, this installs dependencies for both `backend/` and `frontend/`.
 
-Atlas Database
+### Configuring your database
+
+Apostrophe reads its database settings from environment variables, and every starter loads them from a `.env` file in the Apostrophe app folder. Copy the `.env.example` file the starter includes:
+
 ```bash
-APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/YOUR-PROJECT-NAME?retryWrites=true&w=majority" node app @apostrophecms/user:add my-user admin
-# Replace `my-user` with the name you want for your first user.
+# Standalone starters
+cp .env.example .env
+
+# Astro starters
+cp backend/.env.example backend/.env
 ```
 
-OR
+The `.env` file is gitignored, so connection strings and secrets stay out of your repository. Add the setting for your database below. If you're not sure which to use, see [Choosing a database](./choosing-a-database.md).
 
-Local Database
+#### SQLite
+
+<AposCodeBlock>
+
+```bash
+APOS_DEFAULT_DB_ADAPTER=sqlite
+```
+<template v-slot:caption>
+.env
+</template>
+</AposCodeBlock>
+
+There is no database server to install or run. On first start, Apostrophe creates the database file at `data/<shortName>.sqlite` in the Apostrophe app folder. The `data/` folder is gitignored, and deleting the project folder deletes the database with it.
+
+#### MongoDB on your machine
+
+You don't need to add anything. With no database settings, Apostrophe connects to `mongodb://localhost:27017/<shortName>`. Make sure MongoDB is installed and running first — see [installing MongoDB locally](./installing-mongodb-locally.md) or [running MongoDB in Docker](./dockerized-mongodb.md).
+
+#### MongoDB Atlas or another hosted MongoDB
+
+<AposCodeBlock>
+
+```bash
+APOS_DB_URI="mongodb+srv://username:pa%24%24word@mycluster.1234x.mongodb.net/apos-app?retryWrites=true&w=majority"
+```
+<template v-slot:caption>
+.env
+</template>
+</AposCodeBlock>
+
+Wrap the connection string in quotes so special characters don't cause problems, and percent-encode any special characters in your password (`$` becomes `%24` in the example above).
+
+#### PostgreSQL
+
+Apostrophe supports PostgreSQL 14 and later. Create an empty database on your server, local or hosted:
+
+```bash
+createdb apos_app
+```
+
+Then point Apostrophe at it:
+
+<AposCodeBlock>
+
+```bash
+APOS_DB_URI=postgres://user:password@localhost:5432/apos_app
+```
+<template v-slot:caption>
+.env
+</template>
+</AposCodeBlock>
+
+On first start, Apostrophe creates the tables and indexes it needs inside that database.
+
+::: tip
+For more about SQLite and PostgreSQL, including PostgreSQL's standard `PG*` credential variables and moving content between databases, see [Using SQLite or PostgreSQL](./using-sqlite-and-postgres.md).
+:::
+
+### Creating an admin user
+
+Before starting up, create an admin-level user so you can log in. From the Apostrophe app folder (`backend/` in an Astro starter), run:
+
 ```bash
 node app @apostrophecms/user:add my-user admin
 # Replace `my-user` with the name you want for your first user.
 ```
 
-::: tip
-* When using MongoDB Atlas, it's a good practice to enclose your entire connection string in quotes to prevent any issues with special characters. Also, use percent-encoding for special characters in your password.
-
-* Consider exporting your `APOS_DB_URI` environment variable to make it available throughout your session. This approach helps in avoiding the repetition of the connection string and reduces the risk of errors.
-:::
+Apostrophe asks you to enter a password for this user. The command reads the same `.env` file as the site, so the user is created in the database you configured above.
 
 ### Finishing touches
 
-You should also update the [session secret for Express.js](https://github.com/expressjs/session?tab=readme-ov-file#secret) to a unique, random string. The starter project has a placeholder for this option already. If you do not update this, you will see a warning each time the app starts up.
+You should also set the [session secret for Express.js](https://github.com/expressjs/session?tab=readme-ov-file#secret) to a unique, random string. If you don't, you will see a warning each time the app starts up. Add it to the same `.env` file:
 
 <AposCodeBlock>
 
-```javascript
-export default {
-  options: {
-    session: {
-      // If this still says `undefined`, set a real secret!
-      secret: undefined
-    }
-  }
-};
+```bash
+APOS_SESSION_SECRET=replace-with-a-long-random-string
 ```
 <template v-slot:caption>
-modules/@apostrophecms/express/index.js
+.env
 </template>
 </AposCodeBlock>
 
+One way to generate a value is `openssl rand -hex 32`. You can instead set the `session.secret` option in `modules/@apostrophecms/express/index.js`, where the starter has a placeholder, but `.env` keeps the secret out of your repository.
+
 ### Starting up the website
 
-Start the site with `npm run dev`. If you are using an Atlas instance you need to pass the connection string through the `APOS_DB_URI` environment variable or set the `uri` or other options of the `@apostrophecms/db` at project level. The app will then watch for changes in server code, rebuild as needed, then refresh the browser when it detects any. Astro-based starters serve the site on `http://localhost:4321`; Standalone starters serve it on `http://localhost:3000`. Log in with the username and password you created at `/login` on that same host and port.
+Start the site with `npm run dev` from the project root. In an Astro starter, this starts both the Apostrophe backend and the Astro frontend. The app will then watch for changes in server code, rebuild as needed, then refresh the browser when it detects any. Astro-based starters serve the site on `http://localhost:4321`; Standalone starters serve it on `http://localhost:3000`. Log in with the username and password you created at `/login` on that same host and port.
 
 ::: tip
-If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js`.
+If you are starting the site in a production environment or do not want the process to watch for changes, start the site with `node app.js` (from `backend/` in an Astro starter).
 :::
 
 ## Next steps
