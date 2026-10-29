@@ -21,7 +21,7 @@ We configure locales through the `@apostrophecms/i18n` module. In a project code
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       options: {
         locales: {}
       }
@@ -44,7 +44,7 @@ Additionally, we need to tell Apostrophe how to identify which one to use. This 
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       options: {
         locales: {
           en: {
@@ -110,7 +110,7 @@ To designate a locale as RTL, add the `direction: 'rtl'` property to the locale 
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       options: {
         locales: {
           en: {
@@ -153,7 +153,7 @@ You can set the `direction` property directly on individual field definitions:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     fields: {
       add: {

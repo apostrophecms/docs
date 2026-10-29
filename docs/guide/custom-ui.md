@@ -52,7 +52,7 @@ Let's look at a simple piece type module called `review` that takes advantage of
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   fields: {
     add: {
@@ -197,7 +197,10 @@ Now **make sure you enable the `admin-ui-overrides` module in `app.js`, otherwis
 <AposCodeBlock>
 
 ```js
-const apostrophe = require({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   modules: {
     // ... Plenty of other modules should be here, this is just an example
     // that demonstrates enabling one more
@@ -356,7 +359,7 @@ Here is an example of how to do that:
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     components: {
@@ -421,7 +424,7 @@ Here's an example of adding a custom context menu item that opens a modal dialog
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Article',
@@ -457,7 +460,7 @@ Alternatively, you can create a context menu item that emits an event instead of
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Article',
@@ -589,7 +592,7 @@ There are times when you want to allow people that don't have editing or content
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extendMethods(self) {
     return {
       getShowAdminBar(_super, req) {

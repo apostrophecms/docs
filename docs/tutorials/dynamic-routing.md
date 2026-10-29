@@ -26,7 +26,7 @@ Our first step will be to introduce a new page type into our project, specifical
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Dogs Page'

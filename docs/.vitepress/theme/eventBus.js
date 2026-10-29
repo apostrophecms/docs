@@ -1,10 +1,11 @@
 import { ref } from 'vue';
 
 export function createEventBus() {
+  // ESM is the default; CJS is shown only when a reader picks it
   const preference = ref(
     typeof window !== 'undefined'
-      ? window.localStorage?.getItem('modulePreference') || 'cjs'
-      : 'cjs'
+      ? window.localStorage?.getItem('modulePreference') || 'esm'
+      : 'esm'
   );
   const subscribers = new Set();
 

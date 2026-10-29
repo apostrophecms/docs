@@ -47,7 +47,7 @@ In this example, page objects are fetched with one level of page tree "children"
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     builders: {
       children: { depth: 2 }
@@ -111,7 +111,7 @@ The home page document is added to all page requests on `req.data.home` so it ca
 
 ```javascript
 // modules/@apostrophecms/page/index.js
-module.exports = {
+export default {
   options: {
     home: { children: false }
   },
@@ -158,7 +158,7 @@ The default is:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     minimumPark: [
       {
@@ -208,7 +208,7 @@ If added on the top level of the page object, these properties will not be edita
 
 ```javascript
 // modules/@apostrophecms/page/index.js
-module.exports = {
+export default {
   options: {
     park: [
       // Customizing home page properties, including title and page type.
@@ -255,7 +255,7 @@ This should be set to an object containing individual field name keys set to `1`
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     publicApiProjection: {
       title: 1,
@@ -282,7 +282,7 @@ Pages are included in the admin bar "quick create" menu by default. Setting `qui
 
 ```javascript
 // modules/@apostrophecms/page/index.js
-module.exports = {
+export default {
   options: {
     quickCreate: false
   },
@@ -309,7 +309,7 @@ The `types` array defines the page types available to users when creating or edi
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     types: [
       {

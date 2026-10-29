@@ -24,7 +24,7 @@ apos add piece product
 <AposCodeBlock>
 
   ``` js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
   };
   ```
@@ -37,7 +37,10 @@ apos add piece product
 <AposCodeBlock>
 
   ``` js
-  require('apostrophe')({
+  import apostrophe from 'apostrophe';
+
+  apostrophe({
+    root: import.meta,
     shortName: 'my-store',
     modules: {
       product: {}
@@ -55,7 +58,7 @@ A more realistic product piece might also include [fields](/reference/field-type
 <AposCodeBlock>
 
   ``` js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     options: {
       label: 'Product',

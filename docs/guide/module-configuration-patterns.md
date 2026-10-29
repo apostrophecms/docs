@@ -307,7 +307,7 @@ While project-level module improvements are made by creating matching file paths
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/rich-text-widget',
   options: {
     typoConfig: {}

@@ -9,7 +9,10 @@ Configure API keys as an option in the `@apostrophecms/express` module in `app.j
 <AposCodeBlock>
 
 ``` javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   modules: {
     '@apostrophecms/express': {
       options: {
@@ -142,7 +145,7 @@ All piece types in Apostrophe have a corresponding REST API. By default, this AP
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     publicApiProjection: {
@@ -172,7 +175,7 @@ to the REST APIs you can enable this for each relevant piece type:
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     guestApiAccess: true
@@ -190,7 +193,7 @@ You can also enable it for pages:
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     guestApiAccess: true
   }

@@ -33,7 +33,7 @@ The piece page module then looks like:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-page-type',
     options: {
       label: 'Blog page'
@@ -57,7 +57,7 @@ This method allows you to name the module whatever you want since you are specif
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     label: 'Blog page',
@@ -99,7 +99,7 @@ Once those template files exist, you would **add this to the `app.js` configurat
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     types: [
       // 👇 Adding our new page type
@@ -299,7 +299,7 @@ Assuming our `article` piece type example has a single `body` area, it could loo
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     options: {
       label: 'Article'

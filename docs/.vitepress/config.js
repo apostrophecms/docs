@@ -484,6 +484,8 @@ export default defineConfig({
           return defaultFence(tokens, idx, options, env, slf);
         }
 
+        // Static HTML always shows ESM, so crawlers, search and readers
+        // without JS see ESM first. CJS is available through the toggle.
         if (['js', 'javascript', 'ts'].includes(lang)) {
           let cjsCode, esmCode;
 
@@ -503,7 +505,7 @@ export default defineConfig({
             data-esm="${encodeURIComponent(esmHighlighted)}"
             data-source="${format}"
             data-lang="${lang}">
-            ${format === 'cjs' ? cjsHighlighted : esmHighlighted}
+            ${esmHighlighted}
             </div>`;
           return finalOutput;
         }

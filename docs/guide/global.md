@@ -18,7 +18,7 @@ To demonstrate, we may want to display an organizational Github URL in the websi
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields: {
     add: {
       githubUrl: {

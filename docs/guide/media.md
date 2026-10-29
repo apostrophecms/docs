@@ -15,7 +15,7 @@ The core [image widget](/guide/core-widgets.md#image-widget) is a good way to al
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   fields: {
     add: {
@@ -65,7 +65,7 @@ Importantly, a file uploaded through an attachment field *will not appear in eit
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   fields: {
     add: {
@@ -160,7 +160,7 @@ If the image or file should be reusable and in the image or file library, but we
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   fields: {
     add: {

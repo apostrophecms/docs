@@ -34,9 +34,9 @@ The example below configures `logger` on this legacy module directly. For a new 
 <AposCodeBlock>
 
 ``` javascript
-const { pino } = require('pino');
+import { pino } from 'pino';
 
-module.exports = {
+export default {
   options: {
     logger: pino({
       transport: {
@@ -118,9 +118,9 @@ The `filter` option allows for the selection of a subset of log notifications. I
 <AposCodeBlock>
 
 ```javascript
-const { pino } = require('pino');
+import { pino } from 'pino';
 
-module.exports = {
+export default {
   options: {
     logger: pino(),
     messageAs: 'msg',

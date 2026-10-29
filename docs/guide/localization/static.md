@@ -77,7 +77,7 @@ To register strings in **custom API routes**, use the `req.t()` method on the re
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     apiRoutes(self) {
       return {
@@ -266,7 +266,7 @@ An important part of the admin UI that often needs localization is the field lab
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields: {
     add: {
       location: {
@@ -344,7 +344,7 @@ Here is an example module `index.js` file that sets the `browser: true` flag for
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // Note this is at top level, not under options
   i18n: {
     venueStrings: {

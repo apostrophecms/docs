@@ -92,7 +92,7 @@ Configure the allowlist in your module options:
 
 ```javascript
 // modules/@apostrophecms/rich-text-widget/index.js
-module.exports = {
+export default {
   options: {
     imageImportAllowedHostnames: [
       'myoldsite.com',

@@ -33,7 +33,7 @@ Defaults to `true`. When enabled, a file upload button is available in the image
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     insertViaUpload: false
   }
@@ -53,7 +53,7 @@ The number of images fetched per batch via the infinite scroll mechanism in the 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     perPage: 100
   }
@@ -73,7 +73,7 @@ Defaults to `false` for images, excluding them from Apostrophe's built-in search
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     searchable: true
   }
@@ -97,7 +97,7 @@ Defaults to `{ createdAt: -1 }`, sorting images by creation date in descending o
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     sort: {
       title: 1

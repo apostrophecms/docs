@@ -29,7 +29,7 @@ By default, if the browser is not heard from for 15 seconds, the lock expires. T
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     advisoryLockTimeout: 20
   }

@@ -40,7 +40,7 @@ For brevity, this method is aliased as `apos.error`.
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     apiRoutes(self) {
       return {

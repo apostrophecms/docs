@@ -27,7 +27,7 @@ In the following example, we are writing the function that powers an [async temp
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     // ...
     components(self) {
@@ -180,7 +180,7 @@ For example, we might have a select field on a `product` piece type to identify 
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     fields: {
       add: {
         //...

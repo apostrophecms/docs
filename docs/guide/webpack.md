@@ -20,7 +20,7 @@ It's possible to extend the webpack config from any module. To do so add a `webp
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       // ...
       webpack: {
         extensions: {
@@ -79,7 +79,7 @@ Example:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     webpack: {
       extensions: {
         addAlias: {
@@ -101,7 +101,7 @@ Example:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     webpack: {
       extensions: {
         addAlias: {
@@ -135,7 +135,7 @@ Example:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     webpack: {
       extensions: {
         // Extension can be a function and return the final config
@@ -170,7 +170,7 @@ Example:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     webpack: {
       extensionOptions: {
         addAlias (options) {
@@ -193,7 +193,7 @@ Example:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     webpack: {
       extensionOptions: {
         // It also can be a simple object if nothing has to be merged
@@ -244,7 +244,7 @@ We can contribute code to a new, named bundle by adding a `bundles` sub-section 
 <AposCodeBlock>
 
 ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/widget-type',
     webpack: {
       bundles: {
@@ -296,7 +296,7 @@ Let's say we have another bundle, `about-page`, and we want to load an extra bun
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       extend: '@apostrophecms/page-type',
       webpack: {
         bundles: {
@@ -321,7 +321,7 @@ We can accomplish that with the `templates` sub-property:
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       extend: '@apostrophecms/piece-page-type',
       webpack: {
         bundles: {
@@ -360,7 +360,7 @@ This option takes an object with module names, optionally combined with a `:` an
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     rebundleModules: {
       // Everything from the fancy-form module should go in the regular "main" bundle

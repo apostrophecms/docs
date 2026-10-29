@@ -93,7 +93,7 @@ By default, Apostrophe does *not* guarantee that code written in modern JavaScri
 
 ```js
 // modules/@apostrophecms/asset/index.js
-module.exports = {
+export default {
   options: {
     es5: true
   }

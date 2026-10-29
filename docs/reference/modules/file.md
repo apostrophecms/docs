@@ -30,7 +30,7 @@ Defaults to `true`. When enabled, a file upload button is available in the file 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     insertViaUpload: false
   }
@@ -54,7 +54,7 @@ If you wish to use this feature with an Astro project, you'll need to add `/file
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     prettyUrls: true
   }
@@ -74,7 +74,7 @@ Defaults to `'/files'`. Sets the URL path prefix used when [`prettyUrls`](#prett
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     prettyUrls: true,
     prettyUrlDir: '/downloads'

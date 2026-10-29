@@ -8,15 +8,6 @@
         </span>
         <div class="right-section">
           <div class="module-toggles">
-            <AposTooltip content="CommonJS format" position="top">
-              <button 
-                class="module-btn"
-                :class="{ active: moduleType === 'cjs' }"
-                @click="setModuleType('cjs')"
-              >
-                CJS
-              </button>
-            </AposTooltip>
             <AposTooltip content="ES Modules format" position="top">
               <button 
                 class="module-btn"
@@ -24,6 +15,15 @@
                 @click="setModuleType('esm')"
               >
                 ESM
+              </button>
+            </AposTooltip>
+            <AposTooltip content="CommonJS format" position="top">
+              <button 
+                class="module-btn"
+                :class="{ active: moduleType === 'cjs' }"
+                @click="setModuleType('cjs')"
+              >
+                CJS
               </button>
             </AposTooltip>
           </div>

@@ -60,20 +60,12 @@ export function transpileToESM(code) {
       esmCode = esmCode.replace(/require\(['"]apostrophe['"][\s\S]*?\)\s*\(/g,
         "import apostrophe from 'apostrophe';\n\napostrophe(");
 
-      // Check if it's a compact format (no newlines after opening brace)
-      const isCompactFormat = esmCode.match(/apostrophe\(\s*{\s*\w+/);
-
-      if (isCompactFormat) {
-        // Handle compact formatting
-        esmCode = esmCode.replace(/apostrophe\(\s*{/g,
-          'apostrophe({\n  root: import.meta,  ');
-      } else {
-        // Handle standard formatting with newlines, but avoid adding extra blank lines
-        esmCode = esmCode.replace(/apostrophe\(\s*{\s*\n/g,
-          'apostrophe({\n  root: import.meta,');
-      }
-
-      return esmCode;
+      // Add `root: import.meta` as the first property, matching the
+      // sample's layout (multi-line or everything on one line)
+      esmCode = esmCode
+        .replace(/apostrophe\(\s*\{[ \t]*\n/g, 'apostrophe({\n  root: import.meta,\n')
+        .replace(/apostrophe\(\s*\{[ \t]*(?=[^\s}])/g, 'apostrophe({ root: import.meta, ');
+      // Keep going so other requires in the same sample are converted too
     }
 
     // Handle immediate require calls - pattern: require('x')({ ... })
@@ -98,11 +90,13 @@ export function transpileToESM(code) {
       return `import { ${importList} } from '${moduleName}${extension}'`;
     });
 
-    // Handle simple requires with warning for relative imports
-    const simpleRequireRegex = /(?:const|let|var)\s+(\w+)\s*=\s*require\(['"]([^'"]+)['"]\)/g;
+    // Handle simple requires; ESM needs the extension on relative paths
+    // Skips chained calls like require('util').promisify(...), which have
+    // no direct import equivalent
+    const simpleRequireRegex = /(?:const|let|var)\s+(\w+)\s*=\s*require\(['"]([^'"]+)['"]\)(?!\s*[.([])/g;
     esmCode = esmCode.replace(simpleRequireRegex, (match, varName, moduleName) => {
-      const warning = moduleName.startsWith('.') ? ' // Note: You may need to add the file extension for ESM' : '';
-      return `import ${varName} from '${moduleName}'${warning}`;
+      const extension = moduleName.startsWith('.') && !/\.[cm]?js$/.test(moduleName) ? '.js' : '';
+      return `import ${varName} from '${moduleName}${extension}'`;
     });
 
     // First, collect all individual exports
@@ -115,17 +109,17 @@ export function transpileToESM(code) {
       esmCode = esmCode.replace(fullMatch, '');
     }
 
-    // Handle module.exports
-    const moduleExportsRegex = /module\.exports\s*=\s*/;
-    if (moduleExportsRegex.test(esmCode)) {
-      esmCode = esmCode.replace(moduleExportsRegex, 'export default ');
-    }
-
-    // Clean up empty lines
+    // CJS globals that ESM exposes on import.meta
     esmCode = esmCode
-      .split('\n')
-      .filter(line => line.trim() !== '')
-      .join('\n');
+      .replace(/\b__dirname\b/g, 'import.meta.dirname')
+      .replace(/\b__filename\b/g, 'import.meta.filename');
+
+    // Handle module.exports. Global, because some samples show
+    // alternatives ("// OR") with more than one module.exports
+    esmCode = esmCode.replace(/module\.exports\s*=\s*/g, 'export default ');
+
+    // Collapse gaps left by removed exports, keeping intentional blank lines
+    esmCode = esmCode.replace(/\n[ \t]*\n(?:[ \t]*\n)+/g, '\n\n').replace(/^\n+/, '');
 
     // Add collected imports at the start if we have any from immediate requires
     if (imports.size > 0) {
@@ -163,8 +157,10 @@ export function transpileToCJS(code) {
     const importMetaPattern = /root:\s*import\.meta/;
 
     if (apostropheEsmPattern.test(cjsCode) && importMetaPattern.test(cjsCode)) {
-      // First, remove the root: import.meta line
-      cjsCode = cjsCode.replace(/\s*root:\s*import\.meta,?\s*/g, '');
+      // First, remove `root: import.meta`, whether on its own line or inline
+      cjsCode = cjsCode
+        .replace(/^[ \t]*root:\s*import\.meta,?[ \t]*\n/gm, '')
+        .replace(/root:\s*import\.meta,?\s*/g, '');
 
       // Then transform the import and function call
       // Use a more relaxed pattern that preserves comments
@@ -177,14 +173,18 @@ export function transpileToCJS(code) {
         cjsCode = cjsCode.replace(/apostrophe\s*\(/g, 'require(\'apostrophe\')(');
 
         // Clean up any excessive newlines
-        cjsCode = cjsCode.replace(/\n{3,}/g, '\n\n');
+        cjsCode = cjsCode.replace(/\n{3,}/g, '\n\n').replace(/^\n+/, '');
       }
-
-      return cjsCode;
+      // Keep going so other imports in the same sample are converted too
     }
 
-    // Transform default exports
-    cjsCode = cjsCode.replace(/export\s+default\s+([^;]+);?/, 'module.exports = $1;');
+    cjsCode = cjsCode
+      .replace(/\bimport\.meta\.dirname\b/g, '__dirname')
+      .replace(/\bimport\.meta\.filename\b/g, '__filename');
+
+    // Transform default exports. Global, because some samples show
+    // alternatives ("// OR") with more than one default export
+    cjsCode = cjsCode.replace(/export\s+default\s+/g, 'module.exports = ');
 
     // Transform named exports
     cjsCode = cjsCode.replace(/export\s+const\s+(\w+)\s*=\s*([^;]+);/g, 'exports.$1 = $2;');

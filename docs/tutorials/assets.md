@@ -29,7 +29,7 @@ We aren't going to alter the `index.js` file of this module, but it is worth ope
 
 ``` javascript
 // modules/asset/index.js
-module.exports = {
+export default {
   handlers(self) {
     return {
       '@apostrophecms/page:beforeSend': {
@@ -52,7 +52,7 @@ In the boilerplate project, the `ui/src` folder contains two files, `index.js` a
 
 Next, open up the `modules/asset/ui/src/index.scss` file. Inside are a series of import statements. The topmost one imports the popular `normalize.css` CSS resets file. The remainder of the import statements bring in starter kit-specific styling from the `scss` folder in the same directory. The Bootstrap project brings in its own CSS resets, so we can delete all the contents of this file. Add in Bootstrap using `@import 'bootstrap';`. This will bring the bootstrap CSS from the node package. All of our other styling will be imported before this so that any variables we add will be brought properly into the Bootstrap framework. At this point, you can delete the contents of the `scss` folder in this directory. We will begin adding back some custom styling next.
 
-Although this project won't be using any Bootstrap components, only styling, we can also import the Bootstrap JavaScript. Open the `ui/src/index.js` file. You can elect to get rid of the `console.log('Hello World');` that is in the `export default()` function, but don't delete the function itself. At the top of the file, before the `export`, add in `const bootstrap = require('bootstrap');`. Your code linter may complain that you are creating a constant, but never using it. This is fine, the Apostrophe webpack will still import the bootstrap JavaScript and make it available on the front end for use.
+Although this project won't be using any Bootstrap components, only styling, we can also import the Bootstrap JavaScript. Open the `ui/src/index.js` file. You can elect to get rid of the `console.log('Hello World');` that is in the `export default()` function, but don't delete the function itself. At the top of the file, before the `export`, add in `import 'bootstrap';`. The Apostrophe build bundles the Bootstrap JavaScript and makes it available on the front end.
 
 ![Screenshot of our page after addition of the Bootstrap CSS framework](../images/sec2-3-styled.png)
 
@@ -124,7 +124,7 @@ There are cases where your project may use a different CSS pre-processor or need
 The `extensions` property takes an object of named objects. Each of these named objects should be set to an object that will be merged into the existing webpack configuration. The structure of this configuration comes from the [webpack configuration specs](https://webpack.js.org/configuration/). For example:
 
 ```javascript
-module.exports = {
+export default {
   webpack: {
     extensions: {
       extensionName: {
@@ -143,7 +143,7 @@ module.exports = {
 This would create an alias that you could then use within files in the `modules/custom-module/ui/src/` folder.
 
 ```javascript
-import { customMethod } from ('Uilities/methods.js');
+import { customMethod } from 'Utilities/methods.js';
 
 export default () => {
   // Code utilizing customMethod()

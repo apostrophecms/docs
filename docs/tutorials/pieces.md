@@ -43,7 +43,7 @@ We will start by opening the `modules/review/index.js` file that extends the `@a
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   // extending a core module creates a new instance of that module type
   // with a new name, but all the same functions
   extend: '@apostrophecms/piece-type',
@@ -754,7 +754,7 @@ This will create a `modules/all-reviews-widget` folder and populate it with an `
 Open the `index.js` file and add the following code:
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'All Reviews Widget'
@@ -878,7 +878,7 @@ Open the newly created `modules/review-widget/index.js` file and add the followi
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Review Widget',
@@ -1275,7 +1275,7 @@ Thus far, we have used the `modules/@apostrophecms/global` module as a place to 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       _featuredPost: {

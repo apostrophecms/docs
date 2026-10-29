@@ -107,7 +107,10 @@ Enable the Advanced Permission extension by adding the following two modules to 
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-project',
   modules: {
     // other modules...
@@ -148,7 +151,7 @@ For example, you can define a custom `decriptionField` permission with:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   fields: {
     // ...
@@ -183,7 +186,7 @@ For example, you can assign the custom `decriptionField` permission to the `desc
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   fields: {
     add: {
@@ -223,7 +226,7 @@ Suppose your project has a `service` piece. You want to add a custom â€œPricingâ
 <AposCodeBlock>
 
 ```javascript
-    module.exports = {
+    export default {
       extend: '@apostrophecms/piece-type',
       options: {
         label: 'Service'

@@ -51,7 +51,7 @@ By default Apostrophe stores sessions in MongoDB so it is not necessary to insta
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     options: {
       session: {
         store: {

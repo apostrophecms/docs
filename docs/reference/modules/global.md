@@ -28,7 +28,7 @@ If set to `true`, the `deferWidgetLoading` option reduces the number of queries 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
  options: {
    deferWidgetLoading: true
  },

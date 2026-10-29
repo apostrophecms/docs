@@ -11,7 +11,7 @@ This module serves as the cornerstone for creating page types in Apostrophe. It 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     types: [
       {

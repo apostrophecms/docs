@@ -59,7 +59,7 @@ Here is a simple "hero" heading widget. Both the heading and the width of the he
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     contextual: true,

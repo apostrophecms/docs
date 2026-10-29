@@ -21,7 +21,7 @@ For example, if we had a dog adoption website that used an external API, we may 
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     // ...
     methods (self) {
@@ -32,16 +32,16 @@ For example, if we had a dog adoption website that used an external API, we may 
           const dogDocument = await self.find(req, {
             dogId
           }).toObject();
-  
+
           if (!dogDocument) {
             return null;
           };
-  
+
           // We update the `status` property.
           dogDocument.status = status;
-  
+
           const updateResult = await self.update(req, dogDocument);
-  
+
           return updateResult;
         }
       };
@@ -117,7 +117,7 @@ Instead, use the `self.newInstance()` method to get a fresh document object of t
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     // ...
     methods (self) {

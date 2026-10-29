@@ -57,7 +57,7 @@ When an editor that has the correct permissions creates a new page, they can dec
 
 ``` javascript
 // modules/blog-post/index.js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   // 👇 The field schema
   fields: {
@@ -535,7 +535,7 @@ Locales are configured through the `@apostrophecms/i18n` module. Open the `modul
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     locales: {
       en: {
@@ -734,7 +734,7 @@ As pointed out in the code overview tutorial, the boilerplate project contains a
 
 ``` javascript
 // lib/area.js
-module.exports = {
+export default {
   '@apostrophecms/image': {},
   '@apostrophecms/video': {},
   '@apostrophecms/html': {},
@@ -792,9 +792,9 @@ Opening the `modules/default-page/index.js` we can delete the existing `fields.a
 <AposCodeBlock>
 
 ``` javascript
-const { fullConfig } = require('../../lib/area');
+import { fullConfig } from '../../lib/area.js';
 
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Default Page'

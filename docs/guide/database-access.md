@@ -14,7 +14,7 @@ If you are [using SQLite or PostgreSQL](./using-sqlite-and-postgres.md), be awar
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // remainder of the module properties
   methods(self) {
     return {

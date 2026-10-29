@@ -65,7 +65,7 @@ Each property takes a string value, indicating the name of the new bundle for th
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     rebundleModules: {
       // Everything from the fancy-form module should go in the regular "main" bundle
@@ -182,7 +182,7 @@ Below are the default settings for the `breakpointPreviewMode` option:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     breakpointPreviewMode: {
       // Enable breakpoint preview mode
@@ -244,7 +244,7 @@ For example, your media query might use widths based on `em` and the final layou
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     breakpointPreviewMode: {
       enable: true,
@@ -368,9 +368,9 @@ Modification of the `resolve` property of the webpack configuration using a simp
 <AposCodeBlock>
 
 ```javascript
-const path = require("path");
+import path from 'path';
 
-module.exports = {
+export default {
 // ...
 webpack: {
  extensions: {
@@ -397,7 +397,7 @@ This example will expose a shortcut to the `lib/utils` folder that we can use in
 <AposCodeBlock>
 
 ```javascript
-import  { customMethod } from ('Utilities/methods.js');
+import { customMethod } from 'Utilities/methods.js';
 
 export default () => {
 // Code utilizing customMethod
@@ -419,9 +419,9 @@ Functions in the `extensions` property can take an `options` parameter to allow 
 <AposCodeBlock>
 
 ```javascript
-const path = require("path");
+import path from 'path';
 
-module.exports = {
+export default {
 // ...
 webpack: {
  extensions: {
@@ -456,7 +456,7 @@ Extending the previous example with an additional alias using a simple object:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
 // ...
 webpack: {
  extensionOptions: {

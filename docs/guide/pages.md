@@ -9,7 +9,7 @@ Apostrophe core only includes a "Home page" type with some basic default content
 <AposCodeBlock>
 
   ```js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/page-type'
   };
   ```
@@ -22,7 +22,10 @@ Apostrophe core only includes a "Home page" type with some basic default content
 <AposCodeBlock>
 
 ```js
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-website',
   modules: {
     'default-page': {}
@@ -41,7 +44,7 @@ If we add a string field for the subtitle and an [area field](/reference/field-t
 <AposCodeBlock>
 
   ```js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/page-type',
     fields: {
       add: {
@@ -126,7 +129,7 @@ This is a core module option, but you can add your own configuration by giving i
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     types: [
       // 👇 Adding our new page type

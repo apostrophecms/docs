@@ -27,7 +27,7 @@ This option should be passed to the `@apostrophecms/attachment` module. By defau
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     fileGroups: [
       {
@@ -92,7 +92,7 @@ A new extension can be added to the existing groups, either `office` or `image` 
 <AposCodeBlock>
 
 ```javascript
-module.exports= {
+export default {
   options: {
     addFileGroups: [
       // adds tif extension to the 'images' group
@@ -125,7 +125,7 @@ The `addFileGroups` option can also be used to add a new grouping without elimin
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     addFileGroups: [
       {
@@ -205,7 +205,7 @@ The Apostrophe admin UI may display various sizes to help you manage your images
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   imageSizes: {
     add: {
       mini: {
@@ -504,7 +504,7 @@ This setting should be passed to the `@apostrophecms/uploadfs` module. The 'imag
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       copyOriginal: false
@@ -526,9 +526,9 @@ Here is an example based on the `imagemin` documentation:
 <AposCodeBlock>
 
 ```javascript
-const imagemin = require('imagemin');
-const imageminJpegtran = require('imagemin-jpegtran');
-const imageminPngquant = require('imagemin-pngquant');
+import imagemin from 'imagemin';
+import imageminJpegtran from 'imagemin-jpegtran';
+import imageminPngquant from 'imagemin-pngquant';
 
 uploadfs({
   storage: 'local',

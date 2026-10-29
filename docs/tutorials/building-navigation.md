@@ -77,7 +77,7 @@ The *default* query builder options for the page module look like this:
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     options: {
       builders: {
         children: true,
@@ -98,7 +98,7 @@ For example, **to include two levels of pages in template ancestor data** we wou
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     options: {
       builders: {
         children: true,
@@ -126,7 +126,7 @@ By default the page data object includes all properties from the database docume
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     options: {
       builders: {
         children: true,
@@ -151,7 +151,7 @@ If pages had **thumbnail images we wanted to show in the navigation**, we can in
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     options: {
       builders: {
         children: true,
@@ -191,7 +191,7 @@ With those ideas in mind, we can look at an example of project-level global modu
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     fields: {
       add: {
         // Adding our array field, `primaryNav`

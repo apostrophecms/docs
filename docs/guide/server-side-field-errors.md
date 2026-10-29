@@ -19,7 +19,7 @@ The folder name matters. Placing this code in `modules/@apostrophecms/doc-type/i
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     forbiddenSlugs: [
       '/evil-page',
