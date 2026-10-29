@@ -15,9 +15,12 @@ Body copy large: When COVID-19 shut last season down, the NBA had a golden oppor
 `GET /api/v1/@apostrophecms/page`
 
 ```javascript code-light
-const path = require('path');
+import path from 'path';
 
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'a3-demo',
 
   // See lib/modules for basic project-level configuration of our modules

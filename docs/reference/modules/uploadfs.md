@@ -16,7 +16,7 @@ The `uploadfs` module storage options can be configured in several ways. For the
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
 👉🏻  uploadfs: {
       storage: 'local'
@@ -47,7 +47,7 @@ If you choose to host assets on a CDN, set the `cdn` property value to the URL o
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       cdn: {
@@ -83,7 +83,7 @@ During processing of files, the `uploadfs` module first copies them to a tempora
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       storage: 'local' // this is also the default
@@ -132,7 +132,7 @@ Also see the (environment variables)[#environment-variables], which are often su
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       storage: 's3',
@@ -206,7 +206,7 @@ See the [Azure documentation](https://docs.microsoft.com/en-us/rest/api/storages
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       storage: 'azure',
@@ -281,7 +281,7 @@ See the [Google Cloud Storage (GCS) documentation](https://googleapis.dev/nodejs
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     uploadfs: {
       storage: 'gcs',
@@ -341,13 +341,18 @@ This method is used for handling uploads by the various storage types exposed by
 
 #### Example
 ```javascript
-async handleFile( file, uploadfsPath) {  
-  const copyIn = require('util').promisify(self.uploadfs.copyIn);
+import { promisify } from 'util';
+
+// ...
+
+async handleFile(file, uploadfsPath) {
+  const copyIn = promisify(self.uploadfs.copyIn);
   try {
-    await copyIn(file, uploadfsPath)
+    await copyIn(file, uploadfsPath);
   } catch (e) {
     console.error(e);
-};  
+  }
+}
 ```
 
 ### `copyOut(localPath, path, options, callback)`
@@ -356,17 +361,21 @@ Much like the `copyIn` method, the `copyOut` method takes a `localPath` and a up
 #### Example
 
 ```javascript
-async modifyImage( file, uploadfsPath) {  
-  const copyOut = require('util').promisify(self.uploadfs.copyOut);
-  const copyIn = require('util').promisify(self.uploadfs.copyIn);
-  try {  
+import { promisify } from 'util';
+
+// ...
+
+async modifyImage(file, uploadfsPath) {
+  const copyOut = promisify(self.uploadfs.copyOut);
+  const copyIn = promisify(self.uploadfs.copyIn);
+  try {
     await copyOut(file, uploadfsPath);
     await newImageCrop(file);
     await copyIn(file, uploadfsPath);
-   } catch (err) {
+  } catch (err) {
     console.error(err);
   }
-};
+}
 ```
 
 ### `migrateFromDisabledFileKey(callback)` {migratefromdisabledfilekey}

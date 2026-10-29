@@ -15,7 +15,7 @@ We will start with a basic blog article piece type with only an area field for t
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   fields: {
     add: {
@@ -73,7 +73,7 @@ Then we can add a "Topics" piece type. Since it is only used for categorization,
 <AposCodeBlock>
 
   ``` js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type'
   };
   ```
@@ -92,7 +92,7 @@ The article piece type's relationship field would look like:
 <AposCodeBlock>
 
   ``` js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     fields: {
       add: {
@@ -227,7 +227,7 @@ In the example above of articles and topics, you might want to give each topic t
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   fields: {
     add: {
@@ -282,7 +282,7 @@ If people have *unique job titles within different teams* we could store the job
 <AposCodeBlock>
 
   ``` js
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     fields: {
       add: {

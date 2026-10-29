@@ -25,7 +25,7 @@ If the `adminLocales` option is set in the `@apostrophecms/i18n` module, this fi
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     subforms: {
       // The `adminLocales` option **must** be configured in the `@apostrophecms/i18n` module for this to be allowed
@@ -73,7 +73,7 @@ module.exports = {
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       firstName: {
@@ -112,7 +112,7 @@ module.exports = {
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     defaultLocale: 'en',
     locales: {
@@ -172,7 +172,7 @@ For complex subforms with multiple fields, or with sensitive information like a 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     subforms: {
       // other subforms
@@ -183,8 +183,9 @@ module.exports = {
         fields: [ 'lastName', 'firstName' ],
         preview: '{{ firstName }} {{ lastName}}'
       }
-    },
+    }
     // remainder of configuration
+  }
 };
 
 ```
@@ -199,7 +200,7 @@ In order to show the user a preview of selected subform fields, or to take advan
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     subforms: {
       // other subforms

@@ -18,7 +18,10 @@ The package then needs to be added to the `app.js` file:
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-project',
   modules: {
     '@apostrophecms/vite': {},
@@ -43,7 +46,10 @@ HMR can be configured in three modes using the `@apostrophecms/asset` options:
 
 ```javascript
 // in app.js
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-project',
   modules: {
     '@apostrophecms/vite': {},
@@ -344,7 +350,7 @@ Use the `build.vite` property in your module to extend Vite's configuration:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   build: {
     vite: {
       myViteConfig: {
@@ -448,7 +454,7 @@ Then, register and configure the component in your module:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   components(self) {
     return {
       devTools(req, data) {

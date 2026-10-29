@@ -17,7 +17,7 @@ Let's look at the `index.js` file:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/rich-text-widget',
   options: {
     typoConfig: {}

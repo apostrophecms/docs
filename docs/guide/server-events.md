@@ -17,7 +17,7 @@ The examples below show two examples of how a custom `product` module registers 
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     handlers(self) {
       return {
@@ -53,7 +53,7 @@ Event handlers can be spread *across multiple modules* in a project even if they
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     handlers(self) {
       return {
@@ -75,7 +75,7 @@ Event handlers can be spread *across multiple modules* in a project even if they
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     handlers(self) {
       return {
@@ -99,7 +99,7 @@ At the same time, *multiple event handlers for a single event can be included in
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     // ...
     handlers(self) {
       return {

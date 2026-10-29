@@ -37,7 +37,7 @@ If this property is not set, the module will implicitly extend the base module, 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   // ...
 }
@@ -54,7 +54,10 @@ In this example, a "Landing page" module uses a "Default page" as its base class
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   modules: {
     'default-page': {},
     'landing-page': {}
@@ -69,7 +72,7 @@ require('apostrophe')({
 
 ```javascript
 // modules/landing-page/index.js
-module.exports = {
+export default {
   extend: 'default-page'
 };
 ```
@@ -94,7 +97,7 @@ Within an application, you can alter installed or core module behavior by adding
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/image'
   // Additional functionality ...
 };
@@ -135,7 +138,7 @@ Each property key in the `icons` setting object will be the name used to referen
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   icons: {
     airhorn: 'AirHorn',
@@ -173,7 +176,7 @@ Each property in the `i18n` object represents a namespace that needs special han
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   i18n: {
     adminStrings: {
@@ -222,7 +225,7 @@ Adding a field using an object:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields: {
     add: {
       title: {
@@ -247,7 +250,7 @@ Adding a field using a function:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields(self, options) {
     let fields = {
       add: {
@@ -284,7 +287,7 @@ Removing a field using an object:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: 'article',
   fields: {
     remove: [ 'subtitle' ]
@@ -301,7 +304,7 @@ Removing a field using a function:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: 'article',
   fields(self, options) {
     return {
@@ -330,7 +333,7 @@ Grouping fields using an object:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields: {
     add: {
       // ...
@@ -358,7 +361,7 @@ Grouping fields using a function:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   fields(self, options) {
     let groupFields = [ 'author', '_category' ];
     if (options.subtitle) {
@@ -407,7 +410,7 @@ Add `filters` with object:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   filters: {
     add: {
       _category: { // 👈 Referencing a relationship field named `_category`
@@ -436,7 +439,7 @@ Add `filters` with function:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   filters(self, options) {
     // Check self or options to dynamically add schema fields
     return {
@@ -470,7 +473,7 @@ An array of filter names from the base class module to remove.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: 'article',
   filters: {
     remove: [ 'featured' ]
@@ -489,7 +492,7 @@ An array of field names to sort them in a particular order.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   filters(self, options) {
     // Check self or options to dynamically add schema fields
     return {
@@ -534,7 +537,7 @@ An object of columns or a function that returns an object of columns to add to t
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Adds a column showing when the article was published.
@@ -557,7 +560,7 @@ Dot notation may also be used to display subproperties, for instance:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Adds a column showing when the article was published.
@@ -585,7 +588,7 @@ An array of column names from the base class module to remove.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   columns: {
     // 👇 Hides the column showing when the article was last updated.
@@ -605,7 +608,7 @@ An array of column names to sort the columns in a particular order. This will of
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   columns: {
     add: {
@@ -648,7 +651,7 @@ The following example uses a hypothetical batch operation that might reset piece
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   batchOperations: {
     add: {
       // This uses a hypothetical `reset` route added in `apiRoutes`
@@ -707,7 +710,7 @@ An array of batch operation names to sort them in a particular order within the 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   batchOperations: {
     add: {
       // This uses a hypothetical `reset` route added in `apiRoutes`
@@ -742,7 +745,7 @@ While [customization functions](#customization-functions) add functionality for 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   options: {
     alias: 'product',
@@ -818,7 +821,7 @@ The following example updates the `generate` method in the `extendMethods` secti
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   extendMethods(self) {
     return {
@@ -846,7 +849,7 @@ This example shows another example, extending a [REST API function](#restapirout
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   extendRestApiRoutes(self) {
     return {
@@ -881,7 +884,7 @@ Add methods that can be invoked on `self` or from another module on `self.apos.m
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   methods(self) {
     return {
@@ -935,7 +938,7 @@ See the [async component guide](/guide/async-components.md) for more usage infor
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   // ...
   components(self) {
@@ -983,7 +986,7 @@ Helpers are called in templates from their module on the `apos` object. See the 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   options: {
     alias: 'product'
@@ -1032,7 +1035,7 @@ Each route can be defined as a function or an object. If not using any route opt
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   restApiRoutes(self) {
     return {
@@ -1094,7 +1097,7 @@ Each route can be defined as a function or an object. If not using any route opt
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   apiRoutes(self) {
     return {
@@ -1136,7 +1139,7 @@ Beginning the name of a route with a forward slash (`/`) will allow you to creat
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   apiRoutes(self) {
     return {
@@ -1194,7 +1197,7 @@ The name of the route dictates the template file that will be rendered. For exam
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   renderRoutes(self) {
     return {
@@ -1232,7 +1235,7 @@ Each route can be defined as a function or an object. If not using any route opt
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   routes(self) {
     return {
@@ -1283,7 +1286,7 @@ Arguments passed to the event handlers will vary depending on the arguments pass
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   handlers(self) {
     return {
@@ -1340,7 +1343,7 @@ Query builders are defined as objects with a set of properties available to them
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   queries(self, query) {
     return {
@@ -1391,7 +1394,7 @@ An object of methods that execute queries after any builders have been applied. 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   queries(self, query) {
     return {
@@ -1435,7 +1438,7 @@ Note that `middleware(self)` is global and runs for every request, not just for 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   middleware(self, options) {
     return {
@@ -1471,7 +1474,7 @@ Example using the `before` option:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   middleware(self, options) {
     return {
@@ -1530,7 +1533,7 @@ Task functions takes the object `argv` as an argument, which includes the argume
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   tasks(self, options) {
     return {

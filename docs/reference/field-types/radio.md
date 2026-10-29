@@ -124,7 +124,7 @@ When your `choices` method is async, while calls to the method are debounced to 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Example'

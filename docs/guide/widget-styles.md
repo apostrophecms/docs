@@ -11,7 +11,7 @@ Add styles to any widget by including a `styles` property in the widget's `index
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Hero Widget'
@@ -307,7 +307,7 @@ For complete control over style application, you can opt out of automatic wrappi
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Custom Widget',
@@ -455,7 +455,7 @@ This requires the `@apostrophecms-pro/advanced-permission` module. For global st
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Hero Widget'

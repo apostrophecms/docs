@@ -82,7 +82,7 @@ Note the following important considerations:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Image'

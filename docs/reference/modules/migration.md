@@ -28,7 +28,7 @@ Functions receive no arguments, but have access to the modules where they are re
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type'
   init(self) {
     // 👇 Adding a data migration related to this module.

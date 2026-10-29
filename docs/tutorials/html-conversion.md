@@ -249,7 +249,7 @@ Next, we need to add the schema fields to populate our navigation menu. If your 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       brand: {
@@ -357,7 +357,7 @@ Modify the global settings file to include the new footer schema fields.
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       // ...
@@ -580,7 +580,7 @@ Next, we need to modify the schema fields of the `default-page/index.js` file to
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     label: 'Default Page'
@@ -718,7 +718,10 @@ Once we have these added to our project we need to modify the `app.js` file to i
 <AposCodeBlock>
 
 ``` javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   modules: {
     // ...
     blog: {},
@@ -740,7 +743,7 @@ Next, we will modify the `modules/blog/index.js` file to include the necessary f
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   fields: {
     add: {
@@ -833,7 +836,7 @@ The `index.js` file for the `blog-page` will also be quite similar. Again, it wi
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     perPage: 5

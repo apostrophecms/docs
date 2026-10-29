@@ -27,8 +27,7 @@ The `groups` option takes an array of one or more objects that group several men
 <AposCodeBlock>
 
 ```javascript
-
-module.exports = {
+export default {
  options: {
    groups: [
      {

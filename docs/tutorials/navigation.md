@@ -35,7 +35,7 @@ Pages in ApostropheCMS operate within a hierarchical structure, a feature that p
 By default, one level of children is available on each ancestor, as well as on the home page. This default behavior can be altered by adding `builders` to the `@apostrophecme/page` module at project-level.
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     builders: {
       children: true,

@@ -251,7 +251,7 @@ Give content managers control over their experience through customized preferenc
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     subforms: {
       themePreference: {

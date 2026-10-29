@@ -11,7 +11,7 @@ The `@apostrophecms/search` module implements a sitewide search powered by the f
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     park: [
       {
@@ -49,7 +49,7 @@ The `types` option takes an array of page-type and piece-type document names tha
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     // search only the product piece-type, blog piece-types, and blog page-types
     // not adding 'product-page' will exclude results from product `index.html` page
@@ -72,7 +72,7 @@ The `filters` option takes an array of objects that each have `name` and `label`
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   options: {
     filters: [
       {

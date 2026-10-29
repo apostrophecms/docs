@@ -43,7 +43,7 @@ The core image and file modules use this option, for example. It eliminates the 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     autopublish: true
@@ -86,7 +86,7 @@ If not set, Apostrophe will convert the module name to a readable label by split
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Featured Article'
@@ -110,7 +110,7 @@ The "users" piece type disables localization in this way. It can also be useful 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     localized: false
@@ -132,7 +132,7 @@ In piece types, the `perPage` option, expressed as an integer, sets the number o
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     perPage: 20 // REST `GET` requests will return 20 pieces per page.
@@ -156,7 +156,7 @@ If no `pluralLabel` value is provided, Apostrophe will append the `label` (wheth
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Goose',
@@ -181,7 +181,7 @@ This should be set to an object containing individual field name keys set to `1`
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     publicApiProjection: {
@@ -209,7 +209,7 @@ Setting `quickCreate: true` on a piece adds that piece type to the admin bar "qu
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     quickCreate: true
@@ -232,7 +232,7 @@ Setting `searchable: false` on a piece type will exclude that piece type from th
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     searchable: false
@@ -272,7 +272,7 @@ This `sort` setting will return articles first based on a custom `priority` fiel
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     sort: {

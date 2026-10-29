@@ -11,7 +11,7 @@ The overall structure of the module is almost the same as the typography module 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/rich-text-widget',
   options: {
     smiliesConfig: {}

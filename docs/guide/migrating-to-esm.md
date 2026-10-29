@@ -142,14 +142,12 @@ import config from './config/index.js';
 If you encounter errors like `ERR_MODULE_NOT_FOUND`, ensure you've added `.js` extensions to all local file imports.
 
 ### __dirname and __filename
-These CommonJS variables aren't available in ESM. Instead, use:
+These CommonJS variables aren't available in ESM. Use `import.meta.dirname` and `import.meta.filename` instead:
 
 ```javascript
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
+import path from 'node:path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const templatesDir = path.join(import.meta.dirname, 'templates');
 ```
 
 ### Dynamic Imports

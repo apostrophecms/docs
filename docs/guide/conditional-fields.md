@@ -307,7 +307,7 @@ The method will receive values of `(req, {docId})`, where the `docId` is `null` 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       selectSponsors: {

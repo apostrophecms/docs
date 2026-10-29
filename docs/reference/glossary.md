@@ -91,7 +91,7 @@ Here is a simple example in which we add a required "author" string field to the
 
 ```javascript
 // modules/story/index.js in our project
-module.exports = {
+export default {
   extend: 'apostrophe-pieces',
   name: 'story',
   fields: {

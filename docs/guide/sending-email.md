@@ -13,7 +13,7 @@ If your server has `sendmail` installed, `nodemailer` can use the service to sen
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   options: {
     nodemailer: {
       // enables the usage of `sendmail`
@@ -40,7 +40,7 @@ Using a 3rd-party email delivery provider like Gmail, or Mailgun will probably b
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   options: {
     nodemailer: {
       service: 'gmail',
@@ -74,7 +74,7 @@ The `nodemailer` app has four built-in transports - `sendmail`, `SES` - for send
 <AposCodeBlock>
 
 ```js
-const mg = require('nodemailer-mailgun-transport');
+import mg from 'nodemailer-mailgun-transport';
 
 const auth = {
   auth: {
@@ -85,7 +85,7 @@ const auth = {
   }
 };
 
-module.exports = {
+export default {
   options: {
     nodemailer: mg(auth)
   }
@@ -114,7 +114,7 @@ The final parameter, `options`, should be an object that contains the informatio
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     lable: 'article',
@@ -171,7 +171,7 @@ In this example, we are creating a custom piece type that implements an article.
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     // Allow password reset, requires that the `@apostrophecms/email` module
     // is configured
@@ -206,7 +206,7 @@ The returned data can also be used along with the `stream` transporter to ensure
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   options: {
     nodemailer: {
       // enables the usage of the `stream` transport
@@ -224,7 +224,7 @@ module.exports = {
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     lable: 'article',
@@ -268,7 +268,7 @@ In addition to using `handlers()` to trigger email delivery, you can use `apiRou
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     lable: 'contact'

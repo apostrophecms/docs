@@ -36,7 +36,7 @@ For example, the `@apostrophecms/image` module uses the `image-` slug prefix. Im
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     options: {
       slugPrefix: 'pub-'

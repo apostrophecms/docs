@@ -12,7 +12,10 @@ We can set the `nestedModuleSubdirs` option to `true` in `app.js`, like this:
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-project',
   nestedModuleSubdirs: true
   // etc., you may have additional options here as always
@@ -32,7 +35,7 @@ Now you can nest modules in subdirectories, like the example `modules/products` 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // This code merges with the `modules` section of `app.js`
   'product': {},
   'product-page': {},
@@ -53,7 +56,7 @@ Now we'll implement those modules in their own sub-subdirectories:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Products'
@@ -68,7 +71,7 @@ module.exports = {
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     label: 'Products Page'
@@ -83,7 +86,7 @@ module.exports = {
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Products'

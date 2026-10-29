@@ -8,7 +8,7 @@ Apostrophe assigns shortcuts for custom piece-types based on the first letter of
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     shortcut: 'g,z',
@@ -44,7 +44,7 @@ Any module can streamline the editorial workflow through the addition of custom 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   commands(self) {
     return {
@@ -65,7 +65,7 @@ New shortcuts are registered by passing them as an object of objects to the `add
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   commands(self) {
     return {
@@ -165,7 +165,7 @@ If you add a `label` property to a key that specifies an existing section, the p
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
     commands(self) {
     return {
@@ -205,7 +205,7 @@ Shortcuts can be added to the piece-type menu by specifying the particular modul
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   / ...
   commands(self) {
     return {

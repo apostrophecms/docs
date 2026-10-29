@@ -23,9 +23,9 @@ If using a pre-configured Nodemailer transport package that must be passed to th
 <AposCodeBlock>
 
   ```javascript
-  const mailjetTransport = require('nodemailer-mailjet-transport');
+  import mailjetTransport from 'nodemailer-mailjet-transport';
 
-  module.exports = {
+  export default {
     options: {
       from: '"Jane Doe" <jane.doe@my-website.com>',
       nodemailer: mailjetTransport({
@@ -44,10 +44,10 @@ If needed, you may assign the *fully* created transport directly to `self.transp
 <AposCodeBlock>
 
   ```javascript
-  const nodemailer = require('nodemailer');
-  const mailjetTransport = require('nodemailer-mailjet-transport');
+  import nodemailer from 'nodemailer';
+  import mailjetTransport from 'nodemailer-mailjet-transport';
 
-  module.exports = {
+  export default {
     init(self) {
       self.transport = nodemailer.createTransport(mailjetTransport({
         // Mailjet configuration...

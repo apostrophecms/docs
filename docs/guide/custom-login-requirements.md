@@ -11,7 +11,7 @@ While [most password complexity rules are often counterproductive](https://arste
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     fields: {
       add: {
         // "Re-add" the standard password field
@@ -61,7 +61,7 @@ To illustrate, the general structure on the server side is:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     requirements(self) {
       return {
         add: {
@@ -152,7 +152,7 @@ Here is complete server-side code for a simple requirement to solve a math probl
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     requirements(self) {
       return {
         add: {
@@ -266,7 +266,7 @@ Below is a simple example of a requirement to solve a weak form of 2FA challenge
 <AposCodeBlock>
 
   ``` javascript
-  module.exports = {
+  export default {
     requirements(self) {
       return {
         add: {

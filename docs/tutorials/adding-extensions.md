@@ -39,7 +39,10 @@ To install the `seo` extension we will go to the [extension page](https://apostr
 <AposCodeBlock>
 
 ``` javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'apostrophe-onboarding-project',
   modules: {
     '@apostrophecms/seo': {},
@@ -62,10 +65,10 @@ Like the other custom modules we created for this onboarding project, the top le
 <AposCodeBlock>
 
 ``` javascript
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = {
+export default {
   options: {
     alias: 'seo',
     i18n: {
@@ -92,7 +95,7 @@ module.exports = {
 };
 
 function getBundleModuleNames() {
-  const source = path.join(__dirname, './modules/@apostrophecms');
+  const source = path.join(import.meta.dirname, './modules/@apostrophecms');
   return fs
     .readdirSync(source, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
@@ -206,7 +209,7 @@ This same template can be used on a piece-page or another page-type, so it has t
 The `seo` extension bundles eight modules that each `improve` a different core apostrophe module. By improving each of these core modules, the core modules and all custom modules in your project that extend these same core modules will have these code changes.
 
 ``` javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/file',
   options: {
     seoFields: false
@@ -262,7 +265,10 @@ fields(self, options) {
 The `seo-fields-global` module of the extension also disables the SEO fields for the global piece-type, but adds several other schema fields to a tab labeled with the `aposSeo:group` translation string. In this case, rather than add a `fields` object directly, the object is being returned from a function that uses conditionals to check whether three different options have been enabled. These options can be passed to the `@apostrophecms/global` module from two different places at project level. In the `README.md` file of the extension package it demonstrates enabling them by adding the module to the `modules` object of the `app.js` file.
 
 ``` javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'MYPROJECT',
   modules: {
     '@apostrophecms/seo': {},
@@ -296,7 +302,10 @@ To install the `@apostrophecms/blog` module, navigate to the [extension page](ht
 <AposCodeBlock>
 
 ``` javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'apostrophe-onboarding-project',
   bundles: [ '@apostrophecms/blog' ],
   modules: {
@@ -325,7 +334,7 @@ This extension is slightly more modest in scope than the `seo` extension. The ma
 
 #### The `index.js` file
 
-Let's walk through the `npm_modules/@apostrophecms/blog/index.js` file. At the top, the file  uses `require` to bring two dependencies into the module, the `dayjs` library and the `queries.js` helper file.
+Let's walk through the `npm_modules/@apostrophecms/blog/index.js` file. At the top, the file uses `import` to bring two dependencies into the module, the `dayjs` library and the `queries.js` helper file.
 
 ``` javascript
 bundle: {
@@ -642,7 +651,7 @@ This module implements the pages for showing your blog pieces. The `index.html` 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
 
   options: {

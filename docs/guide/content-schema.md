@@ -7,7 +7,7 @@ Our blog post module's schema might look something like this:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     // 👇 The field schema
     fields: {
@@ -59,7 +59,7 @@ Fields that a piece type inherits will likely already be in field groups. This i
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type',
     init (self) {
       console.log(self.fieldsGroups);
@@ -92,7 +92,7 @@ As in the example above, you could include `title` with the "Basics" group along
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   // ...
   fields: {
     add: {

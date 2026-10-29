@@ -87,7 +87,7 @@ As introduced in the [Core Concepts](/guide/core-concepts.html#modules) section 
 
 ``` javascript
 // modules/blog-post/index.js
-module.exports = {
+export default {
   // ...
 }
 ```
@@ -100,11 +100,14 @@ apos add widget article
 
 The `add` command takes the type of module to be created (`piece`, `widget`, or `module`) and a name for the module. For a widget module, it will automatically add the correct ending. So for this example it would create a folder named `article-widget`. You can also pass an optional flag of `--page` when creating a `piece`. This will set up the folder and files for your views that we will be talking about in the [Creating Pieces](/tutorials/pieces.html) tutorial. When adding a `widget` you can pass the optional `--player` flag. This will create the folder and file structure for adding browser-side JavaScript to your widget that we will talk about in the [Creating Widgets](/tutorials/widgets.html) tutorial.
 
-Making a new module from scratch is fairly easy. A basic module in Apostrophe consists of a folder that is named for the module being created, so `default-page`, or `column-widget`. Modules that create pages are typically appended with `-page` and those that create widgets with `-widget`. Within that folder, at minimum, there needs to be an `index.js` file that has a `module.exports` object. That object will contain code to configure and power the functionality of that module. As we will cover in additional tutorials, the module folder can also contain additional folders that can be used to deliver style sheets and JavaScript to the front end, create new Admin UI components, and more.
+Making a new module from scratch is fairly easy. A basic module in Apostrophe consists of a folder that is named for the module being created, so `default-page`, or `column-widget`. Modules that create pages are typically appended with `-page` and those that create widgets with `-widget`. Within that folder, at minimum, there needs to be an `index.js` file that has an `export default` object. That object will contain code to configure and power the functionality of that module. As we will cover in additional tutorials, the module folder can also contain additional folders that can be used to deliver style sheets and JavaScript to the front end, create new Admin UI components, and more.
 
 ```javascript
 // app.js
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortname: 'onboarding-project',
   modules: {
     // ...
@@ -118,7 +121,7 @@ In addition to adding this folder to your project `modules` folder, the new modu
 
 ```javascript
 // modules/blog-post/index.js
-module.exports = {
+export default {
   extend: `@apostrophecms/piece-type`
   // ...
 }
@@ -133,7 +136,7 @@ You might also have modules in your project that `improve` the core modules. Unl
 
 ```javascript
 // modules/blog-post/index.js
-module.exports = {
+export default {
   extend: `@apostrophecms/piece-type`
   options: {
     alias: 'blog',

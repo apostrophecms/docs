@@ -37,7 +37,7 @@ Unnamed errors are returned with the 500 error code, so it does not need to be r
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     options: {
       addErrors: {
         timeout: 408

@@ -13,7 +13,7 @@ This extension provides us with character and word counts for the content of the
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   improve: '@apostrophecms/rich-text-widget',
   options: {
     charCountConfig: {}

@@ -19,7 +19,10 @@ You can choose to build out each of these extensions from scratch or install the
 <AposCodeBlock>
 
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'my-project',
   // Activate the bundle
   bundles: [ '@apostrophecms/rich-text-example-extensions' ],

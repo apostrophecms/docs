@@ -30,7 +30,7 @@ Async component functions are defined in a module's `components` customization f
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   components(self) {
     return {
@@ -59,7 +59,7 @@ For example, this component function in a `product` module requests products fro
 <AposCodeBlock>
 
 ``` js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   components(self) {
     return {

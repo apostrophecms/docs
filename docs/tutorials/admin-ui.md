@@ -26,7 +26,7 @@ The left side of our current project admin-bar has a number of items that could 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     groups: [
       {
@@ -169,7 +169,7 @@ Open the `modules/@apostrophecms/settings/index.js` file and replace the existin
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   options: {
     subforms: {
       changePassword: {
@@ -266,7 +266,7 @@ Create a `modules/@apostrophecms/user/index.js` file and add the following code:
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   fields: {
     add: {
       firstName: {

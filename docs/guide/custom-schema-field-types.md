@@ -13,7 +13,7 @@ Note that this code could be in any module. Here we've chosen to create a module
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   init(self) {
     self.addStarRatingFieldType();
   },

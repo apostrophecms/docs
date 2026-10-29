@@ -124,7 +124,7 @@ We could hard code each of the four different areas, as shown in this example, b
 <AposCodeBlock>
 
 ```javascript
-const fullConfig = require('../../../lib/area');
+import fullConfig from '../../../lib/area.js';
 const fields = {
   columns: {
     label: 'Column layout',
@@ -191,13 +191,13 @@ for (let i = 1; i <= 4; i++) {
   // console.log(`Output for i = ${i}:`, fields);
 }
 
-module.exports = {
+export default {
   fields
 };
 ```
 Walking through each line,
 ``` javascript
-const fullConfig = require('../../../lib/area');
+import fullConfig from '../../../lib/area.js';
 ```
   <template v-slot:caption>
     modules/row-widget/lib/fields.js
@@ -286,7 +286,7 @@ Next, we set up a loop to add from 1 to 4 columns. For each iteration, we add an
 
 Finally, at the end of this file we have:
 ```javascript
-module.exports = {
+export default {
   fields
 };
 ```
@@ -297,7 +297,7 @@ Open the `modules/row-widget/index.js` file and add:
 <AposCodeBlock>
 
 ``` javascript
-const { fields } = require('./lib/fields');
+import { fields } from './lib/fields.js';
 ```
   <template v-slot:caption>
     modules/row-widget/index.js
@@ -444,7 +444,7 @@ Open the newly-created `module/deal-widget/index.js` file and add the following 
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   // extending a core module creates a new instance of that module type
   // with a new name, but all the same functions
   extend: '@apostrophecms/widget-type',
@@ -605,7 +605,7 @@ const fullConfig = {
   deal: {}
 };
 
-module.exports = {
+export default {
   basicConfig,
   fullConfig
 };
@@ -622,7 +622,7 @@ By altering the file in this way we are creating two named exports and eliminati
 <AposCodeBlock>
 
 ``` javascript
-const { fullConfig } = require('../../../lib/area');
+import { fullConfig } from '../../../lib/area.js';
 ```
   <template v-slot:caption>
     modules/row-widget/lib/fields.js
@@ -647,7 +647,7 @@ We will start by adding the ability for the editor to add a rating to the produc
 <AposCodeBlock>
 
 ``` javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Rating Widget',

@@ -9,7 +9,7 @@ All settings described here are placed in a module's `options` configuration obj
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   // 👇 Module configuration options
   options: {
@@ -30,7 +30,10 @@ modules/article/index.js
 
 `app.js` example:
 ```javascript
-require('apostrophe')({
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
   shortName: 'bowling-league-site', // Unique to your project
   modules: {
     article: {
@@ -63,7 +66,7 @@ For example, if you had a custom piece type, it might look like this:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     alias: 'article'
@@ -109,7 +112,7 @@ set an alias to easily reference the module from other modules. There is no defa
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     alias: 'article'
@@ -139,7 +142,7 @@ This is an advanced option since it can easily break the user interface.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     components: {
       managerModal: 'MyCustomPiecesManager'
@@ -162,7 +165,7 @@ See the [Express module](/reference/modules/express.md#csrf) for more on CSRF pr
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     csrfExceptions: [ 'login', '/safe-url' ]
   },
@@ -183,7 +186,7 @@ The `templateData` module option can be set to an object whose properties will b
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     templateData: {
@@ -235,7 +238,7 @@ If `true`, only users with the sitewide admin permission can read or write docs 
 
 <AposCodeBlock>
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     adminOnly: true
@@ -259,7 +262,7 @@ The core image and file modules use this option, for example. It eliminates the 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     autopublish: true
@@ -289,7 +292,7 @@ If not set, Apostrophe will convert the module `name` meta property to a readabl
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Featured Article'
@@ -311,7 +314,7 @@ Defaults to `true`. If set to `false`, this doc type will _not_ be included in t
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     localized: false
@@ -337,7 +340,7 @@ This `sort` setting will return articles first based on a custom `priority` fiel
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     sort: {
@@ -372,7 +375,7 @@ Set `slugPrefix` to a string to prepend all [slugs](/reference/glossary.md#slug)
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     slugPrefix: 'category-'
@@ -408,7 +411,7 @@ If no `pluralLabel` value is provided, Apostrophe will append the `label` (wheth
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Goose',
@@ -431,7 +434,7 @@ In piece types, the `perPage` option, expressed as an integer, sets the number o
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     perPage: 20 // REST `GET` requests will return 20 pieces per page.
@@ -455,7 +458,7 @@ This should be set to an object containing individual field name keys set to `1`
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     publicApiProjection: {
@@ -483,7 +486,7 @@ Setting `quickCreate: true` on a piece adds that piece type to the admin bar "qu
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     quickCreate: true
@@ -506,7 +509,7 @@ Setting `searchable: false` on a piece type will exclude that piece type from th
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     searchable: false
@@ -554,7 +557,7 @@ In this example, page objects are fetched with one level of page tree "children"
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     builders: {
       children: { depth: 2 }
@@ -584,7 +587,7 @@ The home page document is added to all page requests on `req.data.home` so it ca
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     home: { children: false }
   },
@@ -632,7 +635,7 @@ The default is:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     minimumPark: [
       {
@@ -681,7 +684,7 @@ If added on the top level of the page object, these properties will not be edita
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     park: [
       // The blog page has a permanent slug, title, and type.
@@ -721,7 +724,7 @@ This should be set to an object containing individual field name keys set to `1`
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     publicApiProjection: {
       title: 1,
@@ -747,7 +750,7 @@ Pages are included in the admin bar "quick create" menu by default. Setting `qui
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     quickCreate: false
   },
@@ -770,7 +773,7 @@ The `types` array defines the page types available to users when creating or edi
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     types: [
       {
@@ -812,7 +815,7 @@ Scenes are contexts in which certain sets of front end assets are delivered. Nor
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   options: {
     scene: 'apos'
@@ -849,7 +852,7 @@ This is, more simply, the number of pieces that will normally be displayed on ea
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     perPage: 12
@@ -873,7 +876,7 @@ If set to `true`, Apostrophe will include the next piece, based on the [sort opt
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     next: true
@@ -883,7 +886,7 @@ module.exports = {
 
 // OR
 
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     // The next article piece would be returned with only the `title`, `_url`,
@@ -931,7 +934,7 @@ When the index page is served, configured filters will be represented on a `req.
 
 ```javascript
 // 👆
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     piecesFilters: [
@@ -977,7 +980,7 @@ You can override this pattern by explicitly setting `pieceModuleName` to an acti
 ```javascript
 // 👆 This module name would look for a piece type named `team` if not for
 // `pieceModuleName`
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     pieceModuleName: 'person'
@@ -1002,7 +1005,7 @@ If set to `true`, Apostrophe will include the previous piece, based on the [sort
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     previous: true
@@ -1012,7 +1015,7 @@ module.exports = {
 
 // OR
 
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     // The previous article piece would be returned with only the `title`,
@@ -1057,7 +1060,7 @@ Official Apostrophe widget templates support adding an html class from the `clas
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     className: 'c-image-widget'
   },
@@ -1081,7 +1084,7 @@ Some widgets, including the core rich text widget, should not be edited in a mod
 
 ```javascript
 // modules/@apostrophecms/layout-widget/index.js
-module.exports = {
+export default {
   options: {
     contextual: true,
     components: {
@@ -1105,7 +1108,7 @@ Identify an icon to be used with a widget label in the area menu with the `icon`
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     icon: 'pillar'
@@ -1133,7 +1136,7 @@ modules/two-column-widget/index.js
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Two Column Layout'
@@ -1169,7 +1172,7 @@ Rich text widgets can start with default content by setting `defaultData` to an 
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     defaultData: {
       content: '<p>Replace me</p>'
@@ -1194,7 +1197,7 @@ The rich text widget is configured by default with useful [rich text toolbar set
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     defaultOptions: {
       toolbar: [
@@ -1233,7 +1236,7 @@ If introducing an editor tool that is not included in core, you will need to cre
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     editorTools: {
       styles: {

@@ -28,7 +28,7 @@ For this example, we are creating a new `piece-type` module.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Student'
@@ -569,7 +569,7 @@ Just like with our first example, we need to create server-side code to handle r
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   init(self) {
     self.enableBrowserData();
     self.addColorGradientFieldType();

@@ -17,7 +17,7 @@ One of the more common use cases for a headless CMS is to simply get data from t
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   // ...
   options: {
     publicApiProjection: {

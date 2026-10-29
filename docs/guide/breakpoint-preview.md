@@ -17,7 +17,7 @@ Breakpoint preview is enabled by default, but if you want to change the configur
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   options: {
     breakpointPreviewMode: {
       enable: true,
@@ -189,7 +189,9 @@ The transform option provides a workaround for handling special cases by allowin
 ### Usage
 
 ```js
-require('postcss-viewport-to-container-toggle')({
+import viewportToContainerToggle from 'postcss-viewport-to-container-toggle';
+
+viewportToContainerToggle({
   transform: (mediaFeature) => string
 })
 ```

@@ -17,7 +17,7 @@ Example for adding a custom image.
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: 'Custom Widget',

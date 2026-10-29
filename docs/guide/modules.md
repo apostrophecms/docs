@@ -27,31 +27,9 @@ However, it’s important to note that at the project-level, you must fully comm
 
 As we continue to evolve ApostropheCMS, ESM may become mandatory in the future. We encourage developers to transition to ESM to stay ahead of this shift and take full advantage of modern JavaScript features.
 
-### Using CommonJS
-
-If you’re working with a legacy project or prefer CommonJS, the module configuration is assigned to `module.exports`. This is a familiar pattern if you’ve worked with Node.js before.
-
-```javascript
-// modules/blog-post/index.js
-module.exports = {
-  // ...
-};
-```
-
-To enable this blog post module, configure it in your main application file (`app.js`) within the `modules` object:
-
-```javascript
-// app.js
-require('apostrophe')({
-  modules: {
-    'blog-post': {}
-  }
-});
-```
-
 ### Using ESM
 
-For newer projects, we recommend using ECMAScript Modules. The module configuration is exported using `export default`. This approach takes advantage of the latest JavaScript module syntax.
+We recommend ECMAScript Modules for all new projects, and the starter kits use them. The module configuration is exported using `export default`.
 
 ```javascript
 // modules/blog-post/index.js
@@ -60,13 +38,36 @@ export default {
 };
 ```
 
-To enable this module in your main application file (`app.mjs`), you’ll use an `import` statement:
+To enable this module, import `apostrophe` in your main application file (`app.js`) and add the module to the `modules` object:
 
 ```javascript
-// app.mjs
+// app.js
 import apostrophe from 'apostrophe';
 
 apostrophe({
+  root: import.meta,
+  modules: {
+    'blog-post': {}
+  }
+});
+```
+
+### Using CommonJS
+
+In a legacy CommonJS project, the module configuration is assigned to `module.exports` instead.
+
+```cjs
+// modules/blog-post/index.js
+module.exports = {
+  // ...
+};
+```
+
+The main application file uses `require` and does not need the `root` option:
+
+```cjs
+// app.js
+require('apostrophe')({
   modules: {
     'blog-post': {}
   }
@@ -89,7 +90,7 @@ As we stressed in [`Module Configuration'](/guide/module-configuration-patterns.
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     extend: '@apostrophecms/piece-type'
   };
   ```
@@ -124,7 +125,7 @@ Then add the event handler:
 <AposCodeBlock>
 
   ```javascript
-  module.exports = {
+  export default {
     handlers(self) {
       return {
         afterPublish: {

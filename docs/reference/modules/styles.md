@@ -28,7 +28,7 @@ The `styles` configuration uses `add` to define individual style fields:
 
 ```javascript
 // modules/@apostrophecms/styles/index.js
-module.exports = {
+export default {
   styles: {
     add: {
       backgroundColor: {
@@ -59,7 +59,7 @@ module.exports = {
 
 ```javascript
 // modules/hero-widget/index.js
-module.exports = {
+export default {
   extend: '@apostrophecms/widget-type',
   // ... other widget configuration
   styles: {
@@ -176,7 +176,7 @@ When set to `true`, all CSS rendering (including preview during editing) goes th
 **This option is only available for global styles.** Widget styles are always rendered by our standardized logic for performance reasons.
 
 ```javascript
-module.exports = {
+export default {
   options: {
     serverRendered: true
   }
@@ -188,7 +188,7 @@ module.exports = {
 Configure default values for built-in presets like `border` and `boxShadow`:
 
 ```javascript
-module.exports = {
+export default {
   options: {
     defaultStyles: {
       borderColor: '#cccccc',
@@ -307,7 +307,7 @@ You must set `serverRendered: true` in options to ensure this method is called f
 :::
 
 ```javascript
-module.exports = {
+export default {
   options: {
     serverRendered: true
   },

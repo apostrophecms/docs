@@ -38,7 +38,7 @@ Let's take a look at the context menu localization using a new page in the Apost
 <AposCodeBlock>
 
   ```javascript
-    module.exports = {
+    export default {
       options: {
         locales: {
           en: {

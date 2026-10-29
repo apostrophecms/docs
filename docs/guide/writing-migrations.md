@@ -13,7 +13,7 @@ Example adding the migration to `init(self)`:
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   async init(self) {
     self.migration.add('add-copyright-notice', async () => {
@@ -43,7 +43,7 @@ Example using `methods(self)`:
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   async init(self) {
     self.apos.migration.add('add-copyright-notice', self.addCopyrightNotice);
@@ -98,7 +98,7 @@ Here is an example migration that adds a `featured` boolean property to all `art
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
    async init(self) {
     self.apos.migration.add('change-featured-flag', self.changeFeaturedFlag);
@@ -147,7 +147,7 @@ If you need to remove a property, you can use `$unset`. Note that this is going 
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophecms/page-type',
   init(self) {
     self.apos.migration.add('remove-note', self.removeNote);
@@ -189,7 +189,7 @@ Here is an example migration that adds an `alignment` property to all `image` wi
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophe/widget-type',
   init(self) {
     self.apos.migration.add('align-images', self.alignImages);
@@ -234,7 +234,7 @@ Here’s how you can remove a property from widgets using `$unset`. Again, this 
 <AposCodeBlock>
 
 ```js
-module.exports = {
+export default {
   extend: '@apostrophe/widget-type',
   init(self) {
     self.apos.migration.add('remove-vid-border', self.removeVidBorder);
@@ -276,7 +276,7 @@ For example, the first migration using `eachDoc` could easily be performed by an
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
    async init(self) {
     self.apos.migration.add('change-featured-flag', self.changeFeaturedFlag);

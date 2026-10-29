@@ -67,7 +67,7 @@ This option can also be set to an object whose keys are [query builders](/refere
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     next: true
@@ -77,7 +77,7 @@ module.exports = {
 
 // OR
 
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     // The next article piece would be returned with only the `title, `_url`
@@ -104,7 +104,7 @@ The `perPage` option should be set to an integer and specifies the number of pie
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     perPage: 20
@@ -140,7 +140,7 @@ A simplified schema for a 'book' `piece-type`:
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-type',
   options: {
     label: 'Book',
@@ -173,7 +173,7 @@ A partial schema, including a `piecesFilters` option, for the 'book-page' `piece
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     piecesFilters: [
@@ -313,7 +313,7 @@ Piece page types are associated with a single piece type. If named with the patt
 ```javascript
 // 👆 This module name would look for a piece type
 // named `fiction` if not for `pieceModuleName`
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     pieceModuleName: 'book'
@@ -335,7 +335,7 @@ This option can also be set to an object whose keys are [query builders](/refere
 <AposCodeBlock>
 
 ```javascript
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     previous: true
@@ -345,7 +345,7 @@ module.exports = {
 
 // OR
 
-module.exports = {
+export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     // The previous article piece would be returned with only the `title`, `_url`
