@@ -1,3 +1,0 @@
-- Redirects:
-  - /docs/starters/essentials.html → /docs/guide/apostrophe-standalone-essentials-overview.html
-  - /docs/starters/pro-essentials.html → /docs/starters/ (not one of the three targets the ticket suggested, so let Lindsay know)
