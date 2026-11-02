@@ -271,71 +271,29 @@ Now try creating `company2` and `company3`. Notice that while the code is the sa
 
 > If you access these sites while logged out, you won't see your content edits unless you have used the "Commit" button to make them live.
 
-## Scheduling tasks with ApostropheCMS Assembly hosting
+## Scheduled tasks
 
-### Using a crontab file
+Schedule recurring tasks for an Assembly project with a `crontab` file in the root of your repository, the same way as for any other ApostropheCMS project. See [Scheduled tasks](/guide/hosting.md#scheduled-tasks) for the file format, the supported syntax and how to remove a task.
 
-**This is the recommended way to schedule tasks.** Add a file named `crontab` to the root of your project repository, and ApostropheCMS hosting reads it automatically. It uses ordinary cron syntax, and it works for single-site ApostropheCMS projects as well as for Assembly. As with any crontab, entries run in your server's timezone.
-
-The current working directory is the root of your repository, so each entry invokes your application exactly as you would from a terminal there. In the Astro kit, where the ApostropheCMS project lives in the `backend` workspace:
-
-```
-0 0 * * * node backend/app.js @apostrophecms/scheduled-publishing:update
-```
+In a multisite project every entry must say which site or sites the task applies to: `--site=` for a single site, `--sites=` for several, or `--all-sites` to run it for every site except the dashboard. An entry without one of these fails when it runs.
 
 In the JSX kit, where the project sits at the repository root:
-
-```
-0 0 * * * node app.js @apostrophecms/scheduled-publishing:update
-```
-
-Because each entry is an ordinary command line invocation, the usual multisite rule applies: say which site the task is for with `--site=`, or use `--all-sites` to run it for every site except the dashboard.
 
 ```
 0 * * * * node app.js products:sync --all-sites
 0 3 * * * node app.js some-module:some-task --site=dashboard
 ```
 
-If you are self-hosting, put the equivalent entries in your server's own crontab instead.
+In the Astro kit, where the ApostropheCMS project lives in the `backend` workspace:
 
-### The `tasks` option
-
-The `tasks` option predates the crontab file and is still supported. It was designed for environments running several workers, using locks so that a scheduled task runs only once across the cluster. In practice a single worker per environment has been the norm, so the crontab file above is both simpler and more flexible — it can express any schedule, rather than only hourly and daily.
-
-To schedule tasks much like you would with `cron` in a single-server environment, add a new `tasks` option to `app.js` when configuring `@apostrophecms/multisite`. This option is top-level, it's a peer of the `sites` and `dashboard` options.
-
-```javascript
-tasks: {
-  // These tasks are run for all sites, i.e. like the `--all-sites` option
-  'all-sites': {
-    hourly: [
-      // Run this task hourly but only on the server that
-      // happens to grab the lock first
-      'products:sync'
-    ],
-    daily: [ ... also supported, same syntax ]
-  },
-  // These tasks are run for the dashboard site, i.e. like `--site=dashboard`
-  dashboard: {
-    hourly: [
-      'some-module-name:some-task-name'
-    ],
-    daily: [ ... also supported, same syntax ]
-  }
-}
+```
+0 * * * * node backend/app.js products:sync --all-sites
+0 3 * * * node backend/app.js some-module:some-task --site=dashboard
 ```
 
-Note that the individual tasks are configured as strings. These strings start with the Apostrophe task name, like `product:sync`, and can optionally also include additional parameters to the task exactly as they would if you invoked it directly at the command line. You should **not** include `node app` in these strings.
-
-Then, to test your hourly tasks in a local environment:
-
-```javascript
-node app tasks --frequency=daily
-```
-
-> ⚠️ VERY IMPORTANT NOTE: this will intentionally **not** run the job more than once in an hour, even if you try to test it twice in an hour. That's normal. This is a guard so that tasks scheduled on more than one of our workers actually run just once as intended.
-
-If you need to skip that check for testing purposes, you can clear the `aposTaskLog` mongodb collection in your dashboard database. If your `shortName` is `companyname`, then your dashboard database name is `companyname-dashboard`.
+::: info
+The `tasks` option of `@apostrophecms/multisite` predates the `crontab` file and is still supported. It can only run tasks hourly or daily, so we recommend the `crontab` file for new projects.
+:::
 
 ## Site Development
 
