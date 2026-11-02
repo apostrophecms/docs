@@ -67,7 +67,7 @@ Apostrophe concatenates [project-level front end code](/guide/front-end-assets.m
 
 ## Scheduled tasks
 
-Some ApostropheCMS command line tasks need to run on a schedule rather than once. For example, the task that publishes and unpublishes documents at their scheduled times, or a cleanup task of your own. These run as ordinary command line tasks, such as `node app @apostrophecms/scheduled-publishing:update`. How you schedule them depends on where the project is hosted.
+Some ApostropheCMS command line tasks need to run on a schedule rather than once. For example, the task that publishes and unpublishes documents at their scheduled times, or a cleanup task of your own. These run as ordinary command line tasks, such as `node app @apostrophecms/scheduled-publishing:update`. To write a task of your own, see [Creating command line tasks](/tutorials/creating-command-line-tasks.md), and for the methods available inside a task, see the [`@apostrophecms/task` reference](/reference/modules/task.md). How you schedule tasks depends on where the project is hosted.
 
 ### With ApostropheCMS hosting
 
@@ -91,7 +91,7 @@ Commands run from the root of your repository. In a project where ApostropheCMS 
 
 Each entry must start with either five schedule fields or a shortcut:
 
-* **Five fields** (minute, hour, day of month, month, day of week) using only digits, `*`, `,`, `-` and `/`. For example `*/15 * * * *` or `30 2 * * 1-5`.
+* **Five fields** (minute, hour, day of month, month, day of week) using only digits, `*`, `,`, `-` and `/`. Day of week counts from `0` for Sunday: `1` is Monday and `6` is Saturday. For example, `*/15 * * * *` runs every 15 minutes, and `30 2 * * 1-5` runs at 02:30 UTC, Monday through Friday.
 * **A shortcut:** `@hourly`, `@midnight`, `@daily`, `@weekly`, `@monthly` or `@annually`.
 
 The following are **not** supported:
