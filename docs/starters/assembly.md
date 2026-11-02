@@ -291,9 +291,44 @@ In the Astro kit, where the ApostropheCMS project lives in the `backend` workspa
 0 3 * * * node backend/app.js some-module:some-task --site=dashboard
 ```
 
-::: info
+### The `tasks` option
+
 The `tasks` option of `@apostrophecms/multisite` predates the `crontab` file and is still supported. It can only run tasks hourly or daily, so we recommend the `crontab` file for new projects.
-:::
+
+To schedule tasks much like you would with `cron` in a single-server environment, add a new `tasks` option to `app.js` when configuring `@apostrophecms/multisite`. This option is top-level, it's a peer of the `sites` and `dashboard` options.
+
+```javascript
+tasks: {
+  // These tasks are run for all sites, i.e. like the `--all-sites` option
+  'all-sites': {
+    hourly: [
+      // Run this task hourly but only on the server that
+      // happens to grab the lock first
+      'products:sync'
+    ],
+    daily: [ ... also supported, same syntax ]
+  },
+  // These tasks are run for the dashboard site, i.e. like `--site=dashboard`
+  dashboard: {
+    hourly: [
+      'some-module-name:some-task-name'
+    ],
+    daily: [ ... also supported, same syntax ]
+  }
+}
+```
+
+Note that the individual tasks are configured as strings. These strings start with the Apostrophe task name, like `product:sync`, and can optionally also include additional parameters to the task exactly as they would if you invoked it directly at the command line. You should **not** include `node app` in these strings.
+
+Then, to test your hourly tasks in a local environment:
+
+```sh
+node app tasks --frequency=hourly
+```
+
+> ⚠️ VERY IMPORTANT NOTE: this will intentionally **not** run the job more than once in an hour, even if you try to test it twice in an hour. That's normal. This is a guard so that tasks scheduled on more than one of our workers actually run just once as intended.
+
+If you need to skip that check for testing purposes, you can clear the `aposTaskLog` mongodb collection in your dashboard database. If your `shortName` is `companyname`, then your dashboard database name is `companyname-dashboard`.
 
 ## Site Development
 
