@@ -30,9 +30,14 @@ const hostname = hostnames[process.env.ENV || 'dev' ];
 
 export default defineConfig({
   title: 'ApostropheCMS',
+  // Sets docs results apart from marketing-site results for the same query
+  titleTemplate: ':title | ApostropheCMS Docs',
   description: 'Guides, tutorials, and API reference for ApostropheCMS, the open source Node.js CMS.',
 
   ignoreDeadLinks: 'localhostLinks',
+  // Partials are pulled into other pages and the style guide is for testing
+  // the theme, so neither should be published as its own page
+  srcExclude: [ '**/_*.md', 'styleguide.md' ],
   base,
   vite: {
     resolve: {
@@ -149,6 +154,8 @@ export default defineConfig({
     // generated for review even in dev
     hostname: (hostname || 'http://localhost:4173'),
     transformItems: (items) => {
+      // The old setup URL only redirects, and is marked noindex
+      items = items.filter(page => page.url !== 'guide/setting-up.html');
       items.forEach(page => {
         // We need to add
         // the base because vitepress doesn't do that automatically
@@ -157,6 +164,22 @@ export default defineConfig({
         page.changefreq = 'monthly';
       });
       return items;
+    }
+  },
+  transformPageData: (pageData) => {
+    // Reference H1s are bare names like "string", which say little in search
+    // results. Add the kind of page to the <title> without changing the H1.
+    if (pageData.frontmatter.title) {
+      return;
+    }
+    const fileName = pageData.relativePath.split('/').pop();
+    if (fileName === 'index.md' || fileName.startsWith('_')) {
+      return;
+    }
+    if (pageData.relativePath.startsWith('reference/field-types/')) {
+      pageData.title = `${pageData.title} field type`;
+    } else if (pageData.relativePath.startsWith('reference/modules/')) {
+      pageData.title = `${pageData.title} module`;
     }
   },
   transformHead: async (context) => {
@@ -302,21 +325,21 @@ export default defineConfig({
       [
         'meta',
         {
-          property: 'twitter:title',
+          name: 'twitter:title',
           content: pageData.title
         }
       ],
       [
         'meta',
         {
-          property: 'twitter:description',
+          name: 'twitter:description',
           content: socialDescription
         }
       ],
       [
         'meta',
         {
-          property: 'twitter:image',
+          name: 'twitter:image',
           content: `${hostname}/docs/images/og-docs-image.png`
         }
       ],
@@ -328,6 +351,13 @@ export default defineConfig({
         }
       ]
     ];
+
+    if (relativePath === '404.md') {
+      head.push(['meta', {
+        name: 'robots',
+        content: 'noindex'
+      }]);
+    }
 
     // Replaces VitePress's site-wide default description
     if (metaDescription) {
