@@ -1,3 +1,7 @@
+---
+title: "Document versions in ApostropheCMS"
+---
+
 # Document versions
 
 ApostropheCMS keeps a history of every page and piece. Editors open it from a document's context menu, under **Document Versions**. There they can see who changed what and when, see each change in place on the document, and restore an earlier version.

@@ -1,3 +1,7 @@
+---
+title: "Connecting content with relationships in ApostropheCMS"
+---
+
 # Connecting content with relationships
 
 Creating and displaying content is great, but the power of a CMS really shines when you start connecting pieces of content to one another. In Apostrophe we do that with **relationship fields**.

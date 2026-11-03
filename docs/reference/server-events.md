@@ -1,4 +1,5 @@
 ---
+title: "Server-side events reference"
 sidebarDepth: 2
 ---
 

@@ -1,4 +1,5 @@
 ---
+title: "Using Tiptap extensions in ApostropheCMS rich text"
 excludeFromFilters: true
 ---
 # The `@apostrophecms/typography` extension

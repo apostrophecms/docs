@@ -2,7 +2,8 @@
 
 next: false
 prev: false
-title: "Using React for interactive components in ApostropheCMS with Vite"
+title: "Using React components in ApostropheCMS with Vite"
+cardTitle: "Using React for interactive components in ApostropheCMS with Vite"
 detailHeading: "Tutorial"
 url: "/tutorials/using-react-in-apostrophecms.html"
 content: "Learn how to use React for an interactive browser-side component in ApostropheCMS, including how to extend the Vite build and connect React to a widget player."

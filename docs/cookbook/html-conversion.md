@@ -1,4 +1,5 @@
 ---
+title: "Converting an HTML template to ApostropheCMS"
 prev: false
 next: false
 ---
@@ -59,7 +60,7 @@ Let's get started converting this template to an Apostrophe project!
 
 ## Creating a new project
 
-If you don't already have the apostrophe CLI installed, follow the instructions [here](/guide/setting-up.md#the-apostrophe-cli-tool). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
+If you don't already have the apostrophe CLI installed, follow the instructions [here](/guide/development-setup.md#creating-a-project). Next, create a new project from the command line. Make sure you are in the directory where you want to create your new project folder and run the following command:
 
 <AposCodeBlock>
 

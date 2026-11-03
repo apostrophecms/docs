@@ -1,5 +1,6 @@
 ---
-title: "Responsive Widget Visibility Best Practices in ApostropheCMS"
+title: "Responsive widget visibility in ApostropheCMS"
+cardTitle: "Responsive Widget Visibility Best Practices in ApostropheCMS"
 detailHeading: "Tutorial"
 url: "/tutorials/responsive-widget-visibility.html"
 content: "Learn how to give content editors intuitive control over widget visibility across different screen sizes while maintaining clean, performant code. This guide covers modern CSS approaches, accessibility considerations, and editor-friendly configuration patterns."

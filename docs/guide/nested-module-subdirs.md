@@ -1,3 +1,7 @@
+---
+title: "Nested module folders in ApostropheCMS"
+---
+
 # Nested module folders
 
 When projects have dozens of modules, the `modules/` folder can begin to appear cluttered. It can be difficult to locate a particular module in such a long list. Similarly, since every module must at least be activated in `app.js`, that file can begin to feel cluttered as well. In this situation, developers often wish for a way to group their modules into subdirectories, as well as a way to break up `app.js` into multiple files for readability. Apostrophe offers the `nestedModuleSubdirs` option as a solution to both problems.

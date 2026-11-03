@@ -23,7 +23,8 @@ export default createContentLoader('tutorials/**/*.md', {
 
         // Process the page data
         return {
-          title: page.frontmatter.title || page.title,
+          // `cardTitle` keeps a card short when the page `title` is written for search
+          title: page.frontmatter.cardTitle || page.frontmatter.title || page.title,
           path: page.url,
           frontmatter: {
             detailHeading: page.frontmatter.detailHeading || (defaultType === 'series' ? 'Series' : 'Tutorial'),

@@ -1,3 +1,7 @@
+---
+title: "ApostropheCMS reference"
+---
+
 # Reference
 
 > The reference documentation is broken up into 5 sections.

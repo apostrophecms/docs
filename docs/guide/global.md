@@ -1,4 +1,5 @@
 ---
+title: "Global settings in ApostropheCMS"
 next:
   text: 'Localization - Overview'
   link: 'guide/localization/overview.md'

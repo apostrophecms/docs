@@ -1,5 +1,7 @@
 ---
 title: ApostropheCMS Documentation
+# The suffix would repeat the site name on the home page
+titleTemplate: false
 description: Set up ApostropheCMS, build modules and widgets, connect Astro. Guides and API reference.
 layout: doc
 ---

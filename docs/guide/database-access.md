@@ -1,3 +1,7 @@
+---
+title: "Accessing the ApostropheCMS database directly"
+---
+
 # Accessing the database directly
 
 ## Working with collections

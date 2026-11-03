@@ -1,3 +1,7 @@
+---
+title: "Custom login requirements in ApostropheCMS"
+---
+
 # Custom login requirements
 
 Apostrophe's built-in login form handles the typical case where a user logs in with a username and password. And the [@apostrophecms/passport-bridge](https://github.com/apostrophecms/passport-bridge) module handles "single sign-on," in which users log in via a third-party system like Google Workspace, Twitter, Facebook, etc. These two solutions cover most situations. However in some cases developers may wish to extend the built-in login form with additional, custom login requirements. Often these are shipped as npm modules. This guide will explain how to implement such requirements.

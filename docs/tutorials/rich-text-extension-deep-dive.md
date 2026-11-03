@@ -1,4 +1,5 @@
 ---
+title: "Building a character count rich text extension"
 excludeFromFilters: true
 ---
 # The `@apostrophecms/characterCount` extension

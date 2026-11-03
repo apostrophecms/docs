@@ -1,5 +1,5 @@
 ---
-title: "Code organization"
+title: "Organizing code with ApostropheCMS modules"
 prev: false
 ---
 

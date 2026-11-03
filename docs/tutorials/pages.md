@@ -1,4 +1,5 @@
 ---
+title: "Creating pages in ApostropheCMS (tutorial)"
 videoList:
   - id: '3Ojv9v36zfk'
     title: 'Pages: Schema & Templates'

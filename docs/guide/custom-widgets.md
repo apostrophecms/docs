@@ -1,3 +1,7 @@
+---
+title: "Creating custom widgets in ApostropheCMS"
+---
+
 # Custom widgets
 
 Creating new widget options in addition to the [core widgets](/guide/core-widgets.md) is crucial to getting the most from Apostrophe. Doing so allows developers to build the content *structure* a design requires while giving editors flexibility in how content will evolve over time.

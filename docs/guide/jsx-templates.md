@@ -1,3 +1,7 @@
+---
+title: "JSX templates in ApostropheCMS"
+---
+
 # JSX templates
 
 Apostrophe page, widget, and component templates can be written in **JSX** as an alternative to [Nunjucks](/guide/nunjucks-templates.md). For developers already comfortable with React or another JSX-aware framework, this means modern editor support, real JavaScript control flow, and accurate error reporting with source maps, without standing up a separate front-end project.

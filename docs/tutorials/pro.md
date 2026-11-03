@@ -1,4 +1,5 @@
 ---
+title: "ApostropheCMS Pro extension tutorials"
 next: false
 prev: false
 excludeFromFilters: true

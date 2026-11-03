@@ -1,3 +1,7 @@
+---
+title: "Using Vite with ApostropheCMS"
+---
+
 # Vite
 
 [Vite](https://vite.dev/) is a modern build tool that significantly improves the development experience. Unlike traditional bundlers like webpack, Vite leverages native ES modules in the browser to enable faster builds and updates. During development, when using UI frameworks that support Hot Module Replacement (HMR) like Vue, React, or Svelte, your changes appear instantly in the browser without rebuilding the entire bundle or refreshing the page. For vanilla JavaScript or frameworks without HMR support, Vite still provides fast page reloads on changes. When building for production, Vite uses Rollup to create highly optimized assets.

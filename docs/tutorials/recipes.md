@@ -1,4 +1,5 @@
 ---
+title: "ApostropheCMS recipes"
 next: false
 prev: false
 excludeFromFilters: true

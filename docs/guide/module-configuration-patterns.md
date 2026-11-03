@@ -1,3 +1,7 @@
+---
+title: "Extending and improving ApostropheCMS modules"
+---
+
 # Module Extension and Improvement
 
 One core feature of ApostropheCMS is its module system that allows you to customize and enhance functionality without modifying core code. This approach keeps your project maintainable and upgrade-friendly while giving you the flexibility to tailor the CMS to your needs. You will see this information partially repeated in several areas of our documentation including in the [reference section](/reference/module-api/module-overview.html#extend) because we feel it is so important for developers to understand.

@@ -1,3 +1,7 @@
+---
+title: "Working with templates in ApostropheCMS"
+---
+
 # Working with templates
 
 Templates are where code and content turn into web pages people can actually see and use.

@@ -1,5 +1,5 @@
 ---
-title: "Passing Dashboard Data to Sites in the Multisite Pro extension"
+title: "Sharing dashboard data in ApostropheCMS Multisite"
 detailHeading: "Pro"
 url: "/tutorials/passing-site-data-in-multisite.html"
 content: "Learn how to configure site-specific settings through the dashboard that automatically flow to individual sites, giving content managers control over site behavior without requiring code changes."

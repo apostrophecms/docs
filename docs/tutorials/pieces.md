@@ -1,4 +1,5 @@
 ---
+title: "Creating pieces in ApostropheCMS (tutorial)"
 videoList:
   - id: 'jsJqO9K14dc'
     title: 'Pieces: Creating Pieces'

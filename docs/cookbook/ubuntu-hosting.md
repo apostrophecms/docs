@@ -1,3 +1,7 @@
+---
+title: "Hosting ApostropheCMS on Ubuntu"
+---
+
 # Ubuntu hosting setup
 
 ## Setting up the Ubuntu VPS

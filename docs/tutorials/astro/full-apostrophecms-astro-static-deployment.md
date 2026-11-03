@@ -1,5 +1,5 @@
 ---
-title: "ApostropheCMS + Astro: Full Static Deployment with Railway and Vercel"
+title: "Static ApostropheCMS + Astro on Railway and Vercel"
 detailHeading: "Astro"
 url: "/tutorials/astro/full-apostrophecms-astro-static-deployment.html"
 content: "A complete guide to deploying your ApostropheCMS + Astro project using Railway for the backend and Vercel for both a live SSR editorial environment and a static production site."

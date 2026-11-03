@@ -1,3 +1,7 @@
+---
+title: "Customizing the ApostropheCMS admin UI"
+---
+
 # Customizing the user interface
 
 This guide focuses on how to customize Apostrophe's administrative user interface, or "admin UI." The built-in functionality covers most situations, but sometimes you'll want to add or change functionality.
