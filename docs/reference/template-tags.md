@@ -1,3 +1,7 @@
+---
+title: "Template tags reference"
+---
+
 # Template tags
 
 Apostrophe template tags add additional functionality to templates, such as inserting widget areas, async components, and template fragments. The tags described below are specific to Apostrophe, though they use the standard Nunjucks syntax: `{% tagName %}`. See standard tags in the [Nunjucks reference](https://mozilla.github.io/nunjucks/templating.html#tags).

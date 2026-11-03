@@ -1,3 +1,7 @@
+---
+title: "Contributing to ApostropheCMS"
+---
+
 # Contribution guide
 
 Hello! ApostropheCMS and its open-source ecosystem depend on contributions from the developer community to improve and evolve. The same goes for the Apostrophe documentation.

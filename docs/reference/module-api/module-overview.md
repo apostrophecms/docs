@@ -1,4 +1,5 @@
 ---
+title: "Module configuration overview"
 description: "Reference for ApostropheCMS module configuration: static settings, configuration cascades, the initialization function, and customization functions."
 ---
 # Module configuration

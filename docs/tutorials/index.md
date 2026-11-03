@@ -1,4 +1,5 @@
 ---
+title: "ApostropheCMS tutorials"
 next: false
 prev: false
 excludeFromFilters: true

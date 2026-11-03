@@ -1,3 +1,7 @@
+---
+title: "Nunjucks templates in ApostropheCMS"
+---
+
 # Nunjucks templates
 
 Apostrophe page, widget, and component templates can be written in **Nunjucks** (`.html`) or [JSX](/guide/jsx-templates.md) (`.jsx`). Both are fully supported and coexist in the same project.

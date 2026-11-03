@@ -1,3 +1,7 @@
+---
+title: "Global styles in ApostropheCMS"
+---
+
 # Global Styles
 
 **Global styles** allow content creators to modify CSS properties through the ApostropheCMS admin interface. Developers define which properties can be modified using schema field configuration, and content creators adjust colors, spacing, typography, and other design elements without writing code.

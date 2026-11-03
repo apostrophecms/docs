@@ -1,3 +1,7 @@
+---
+title: "Rich text widgets in the REST API"
+---
+
 # rich text widgets in the REST API
 
 ### A simple example of what to expect

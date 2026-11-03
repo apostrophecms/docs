@@ -1,3 +1,7 @@
+---
+title: "Per-widget styling in ApostropheCMS"
+---
+
 # Per-Widget Styling
 
 **Per-widget styling** allows content creators to customize individual widget instances through the widget editor modal. Unlike global styles that apply site-wide, widget styles are scoped to specific widget instances, enabling unique styling for each occurrence of a widget on your pages.

@@ -1,3 +1,7 @@
+---
+title: "Server-side field errors in ApostropheCMS"
+---
+
 # Generating errors for individual fields from the server side
 
 ## Motivation

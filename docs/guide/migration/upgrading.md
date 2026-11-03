@@ -1,4 +1,5 @@
 ---
+title: "Migrating from ApostropheCMS 2 to 4 with AI"
 next: false
 ---
 # Migration from ApostropheCMS 2 to ApostropheCMS 4 with AI

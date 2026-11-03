@@ -1,3 +1,7 @@
+---
+title: "Using webpack with ApostropheCMS"
+---
+
 # Webpack
 
 In modern Apostrophe (>=4.9.0), there are now two methods available for building project assets. By default, Apostrophe uses a [webpack](https://webpack.js.org/)-powered process to compile frontend JavaScript and SCSS automatically, so following the [frontend asset documentation](front-end-assets.md) is usually all you need. For those who prefer, Apostrophe now offers an optional build process using [Vite](https://vite.dev/) for either the Admin UI or public-facing assets. For details, refer to the [Vite configuration documentation](vite.md).

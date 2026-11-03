@@ -1,3 +1,7 @@
+---
+title: "Permissions and workflow in ApostropheCMS"
+---
+
 # Permissions and Workflow
 
 The permission system available through the core `@apostrophecms/permission` module manages content workflows, user access, and site administration. It allows you to:

@@ -1,3 +1,7 @@
+---
+title: "Caching in ApostropheCMS"
+---
+
 # Caching
 
 ## Express Cache on Demand

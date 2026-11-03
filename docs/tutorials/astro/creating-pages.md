@@ -1,5 +1,5 @@
 ---
-title: "Creating Pages"
+title: "Building pages in ApostropheCMS + Astro"
 detailHeading: "Astro"
 url: "/tutorials/astro/creating-pages.html"
 content: "ApostropheCMS and Astro handle page routing and content through a unified dynamic route system. Learn how to structure your pages, work with slots, and create custom page templates for your site."

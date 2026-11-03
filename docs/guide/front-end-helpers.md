@@ -1,3 +1,7 @@
+---
+title: "Front end helper methods in ApostropheCMS"
+---
+
 # Front end helper methods
 
 Apostrophe provides a small library of front-end utility methods to support implementing client-side JavaScript. These can be useful in widget players, for example. [General utility methods](#general-utility-methods) area available on `apos.util` and [HTTP request methods](#http-request-methods) are available on `apos.http`.

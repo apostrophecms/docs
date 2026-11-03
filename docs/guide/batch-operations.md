@@ -1,3 +1,7 @@
+---
+title: "Custom batch operations in the ApostropheCMS admin UI"
+---
+
 # Custom batch operations
 
 Apostrophe page and piece type modules both have access to a batch operation system in the user interface. This allows editors to take an action, such as archiving, on many documents at once. By default, all page and piece types have batch operation UI for archiving pieces and restoring pieces from the archive, for example.

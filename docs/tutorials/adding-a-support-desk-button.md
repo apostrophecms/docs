@@ -1,5 +1,6 @@
 ---
-title: "Integrating a Third-Party Support Desk into ApostropheCMS Admin Bar"
+title: "Adding a support desk to the ApostropheCMS admin bar"
+cardTitle: "Integrating a Third-Party Support Desk into ApostropheCMS Admin Bar"
 detailHeading: "Tutorial"
 url: "/tutorials/adding-a-support-desk-button.html"
 content: "Learn how to add a support desk button to the ApostropheCMS admin bar, giving content editors easy access to help without leaving the CMS interface."

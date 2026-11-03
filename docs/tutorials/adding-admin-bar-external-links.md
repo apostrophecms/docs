@@ -1,5 +1,6 @@
 ---
-title: "Adding External Link Buttons to the ApostropheCMS Admin Bar"
+title: "Adding external links to the ApostropheCMS admin bar"
+cardTitle: "Adding External Link Buttons to the ApostropheCMS Admin Bar"
 detailHeading: "Tutorial"
 url: "/tutorials/adding-admin-bar-external-links.html"
 content: "Learn how to add a custom button to the ApostropheCMS admin bar that opens an external URL, giving content editors quick access to external resources without leaving the CMS interface."

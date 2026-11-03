@@ -1,5 +1,6 @@
 ---
-title: "Managing Brand Colors"
+title: "Managing brand colors in ApostropheCMS color fields"
+cardTitle: "Managing Brand Colors"
 detailHeading: "Tutorial"
 url: "/tutorials/managing-brand-colors.html"
 content: "Learn how to create a reusable brand color configuration that ensures content editors always have access to approved colors across all color field instances in your ApostropheCMS project."

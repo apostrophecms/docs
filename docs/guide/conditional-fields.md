@@ -1,4 +1,5 @@
 ---
+title: "Conditional schema fields in ApostropheCMS"
 prev:
   text: 'Content fields'
   link: 'guide/content-schema.md'

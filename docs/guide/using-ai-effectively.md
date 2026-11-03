@@ -1,3 +1,7 @@
+---
+title: "Using AI coding tools with ApostropheCMS"
+---
+
 # Using AI Coding Tools Effectively in ApostropheCMS Development
 
 AI coding tools have a working knowledge of ApostropheCMS. The framework is well-documented, open source, and has a public GitHub history. This is enough that tools like Claude, ChatGPT, Copilot, Codex, or Cursor can often explain core concepts, describe how the module system works, or outline the difference between pieces and widgets without much help.

@@ -1,4 +1,5 @@
 ---
+title: "Building navigation in ApostropheCMS (tutorial)"
 excludeFromFilters: true
 ---
 # Navigation

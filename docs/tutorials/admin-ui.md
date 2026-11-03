@@ -1,4 +1,5 @@
 ---
+title: "Customizing the ApostropheCMS admin bar (tutorial)"
 excludeFromFilters: true
 ---
 # Admin-bar Customization

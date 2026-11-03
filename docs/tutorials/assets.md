@@ -1,4 +1,5 @@
 ---
+title: "Adding front end assets in ApostropheCMS (tutorial)"
 excludeFromFilters: true
 ---
 # Assets

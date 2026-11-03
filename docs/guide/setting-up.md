@@ -1,9 +1,12 @@
 ---
-title: Redirecting...
+title: Moved to Setting up an ApostropheCMS development environment
 head:
   - - link
     - rel: canonical
       href: /docs/guide/development-setup.html
+  - - meta
+    - name: robots
+      content: noindex
 ---
 
 <script setup>

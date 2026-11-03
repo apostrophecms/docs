@@ -1,3 +1,7 @@
+---
+title: "ApostropheCMS glossary"
+---
+
 # Glossary
 
 While these terms have more common definitions, these descriptions focus on each term's use in the context of Apostrophe.

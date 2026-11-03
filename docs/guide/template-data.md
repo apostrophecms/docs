@@ -1,3 +1,7 @@
+---
+title: "Template data in ApostropheCMS"
+---
+
 # Template data
 
 All Apostrophe template files have access to a `data` object. It contains content data as well as additional information such as the page's URL and the active user. Some properties differ depending on the template type (e.g., `data.widget` is only available in widget templates).

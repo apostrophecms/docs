@@ -1,4 +1,5 @@
 ---
+title: "ApostropheCMS core widgets"
 description: "Reference for the widgets built into ApostropheCMS (layout, rich text, image, video, file, and raw HTML) and how to configure each one."
 ---
 # Core widgets

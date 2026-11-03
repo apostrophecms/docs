@@ -1,4 +1,5 @@
 ---
+title: "Creating a text replacement rich text extension"
 excludeFromFilters: true
 ---
 # The `@apostrophecms/smilies` extension

@@ -1,3 +1,7 @@
+---
+title: "Areas and widgets in ApostropheCMS"
+---
+
 # Areas and widgets
 
 **Areas** are core to Apostrophe's in-context editing experience. They are special fields where editors can add one or more content widgets. A **widget** is a section of structured content, such as a block of rich text, an image slideshow, or a grid of featured products. Together, these two features let editors add custom and advanced content to a website, move it around, and edit it &ndash; all within a model that maintains the content design. Areas can be configured for editors to add content through a basic menu or through an expanded preview menu.

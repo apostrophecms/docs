@@ -1,3 +1,7 @@
+---
+title: "Inline editing in ApostropheCMS"
+---
+
 # Inline editing
 
 [Areas](/guide/areas-and-widgets.md) have always been editable right where they appear on the page. Ordinary schema fields were not: to change a headline, an editor had to open the document's editor modal, find the field, type into a form control, and save.

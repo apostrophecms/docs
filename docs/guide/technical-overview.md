@@ -1,4 +1,5 @@
 ---
+title: "ApostropheCMS technical overview"
 description: "The core technologies behind ApostropheCMS (Node.js, Express, a choice of databases, and JSX or Nunjucks templates) and the layout of a typical project."
 ---
 # Technical overview

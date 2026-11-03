@@ -24,7 +24,7 @@ The name of the npm package of the Advanced Permission module is `@apostrophecms
 
 The requirements for setting up the Advanced Permission module are:
 
-- **An Apostrophe 3+ application**: If you don’t already have one, make sure you meet the requirements and then follow the instructions in the [development setup guide](/guide/setting-up.md).
+- **An Apostrophe 3+ application**: If you don’t already have one, make sure you meet the requirements and then follow the instructions in the [development setup guide](/guide/development-setup.md).
 - **An Apostrophe Pro or Apostrophe Assembly subscription**: To gain access to the Advanced Permission module, you first need to join [Apostrophe Pro](https://apostrophecms.com/pro) or [Apostrophe Assembly](https://apostrophecms.com/assembly). 
 ## Installing the Advanced Permission Module
 

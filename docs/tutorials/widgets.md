@@ -1,4 +1,5 @@
 ---
+title: "Creating widgets in ApostropheCMS (tutorial)"
 videoList:
   - id: 'KS4o4IUmSGE'
     title: 'Creating a layout widget'

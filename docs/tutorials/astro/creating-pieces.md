@@ -1,5 +1,5 @@
 ---
-title: "Creating Pieces"
+title: "Working with pieces in ApostropheCMS + Astro"
 detailHeading: "Astro"
 url: "/tutorials/astro/creating-pieces.html"
 content: "Pieces manage collections of reusable content like articles or team members. Learn how to create, organize, and display piece content throughout your ApostropheCMS + Astro site."

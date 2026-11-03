@@ -1,3 +1,7 @@
+---
+title: "REST API authentication"
+---
+
 # Authentication
 
 ## API keys

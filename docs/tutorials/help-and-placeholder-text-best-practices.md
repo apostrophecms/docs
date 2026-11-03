@@ -1,5 +1,6 @@
 ---
-title: "Help and Placeholder Text Best Practices in ApostropheCMS"
+title: "Writing help and placeholder text in ApostropheCMS"
+cardTitle: "Help and Placeholder Text Best Practices in ApostropheCMS"
 detailHeading: "Tutorial"
 url: "/tutorials/help-and-placeholder-text-best-practices.html"
 content: "Learn how to create intuitive schema fields with effective help text, placeholders, and tooltips that improve content creation workflows in ApostropheCMS. This guide covers internationalization, accessibility, and practical examples to enhance editor experience."

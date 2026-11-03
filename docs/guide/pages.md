@@ -1,3 +1,7 @@
+---
+title: "Pages and page types in ApostropheCMS"
+---
+
 # Pages and page types
 
 Every page in an Apostrophe website is assigned a **"page type"**. The page type tells Apostrophe **what template to use** to render the page and **what configuration to apply**. Configurations will often at least include the field schema for the page type.
