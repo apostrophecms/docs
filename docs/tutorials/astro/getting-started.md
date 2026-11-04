@@ -460,4 +460,4 @@ For a reference overview of the starter kit's patterns, including image helpers,
 
 ## Next steps
 
-Your project runs, and you know how a page gets from ApostropheCMS to the browser. In the next chapter, you'll give the site its chrome: global settings, a header with navigation, a footer, and breadcrumbs.
+Your project runs, and you know how a page gets from ApostropheCMS to the browser. In the [next chapter](/tutorials/astro/site-chrome.html), you'll give the site its chrome: global settings, a header with navigation, a footer, and breadcrumbs.
