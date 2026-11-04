@@ -98,4 +98,4 @@ If you get stuck:
 - Join our [Discord community](http://chat.apostrophecms.org)
 - Check the [ApostropheCMS documentation](https://apostrophecms.com/docs)
 - Review the [Astro documentation](https://docs.astro.build)
-- Visit the [`apostrophe-astro` package on GitHub](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro)
+- Review the [`apostrophe-astro` package on GitHub](https://github.com/apostrophecms/apostrophe/tree/main/packages/apostrophe-astro)
