@@ -10,7 +10,7 @@ exampleTutorials:
   - title: "Building Websites with ApostropheCMS and Astro"
     frontmatter:
       detailHeading: "Astro" 
-      content: "An introduction to Apollo"
+      content: "Build a complete ApostropheCMS + Astro site"
       url: "/tutorials/astro/apostrophecms-and-astro.html"
       tags:
         topic: "basics"
