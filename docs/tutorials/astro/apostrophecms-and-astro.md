@@ -61,7 +61,7 @@ This section is divided into two paths. You don't need to complete one before st
 
 ### Path 1: Build a Site
 
-A step-by-step series that starts from the [Astro Essentials starter kit](https://github.com/apostrophecms/starter-kit-astro-essentials) and builds it up into the [Astro public demo](https://github.com/apostrophecms/astro-public-demo), a complete ApostropheCMS + Astro site. Each chapter adds one part of the demo and explains the concepts behind it:
+A step-by-step series that starts from the [Astro Essentials starter kit](https://github.com/apostrophecms/starter-kit-astro-essentials) and builds it up into the [Astro public demo](https://github.com/apostrophecms/astro-public-demo), a more complete ApostropheCMS + Astro site. Each chapter in the series adds one element of the demo to the site and explains the concepts behind it:
 
 - **Getting started:** create a project, run the two servers, and see how a request flows from ApostropheCMS to Astro
 - **Site chrome:** global settings, the header, navigation, footer, and breadcrumbs
