@@ -68,7 +68,7 @@ A step-by-step series that starts from the [Astro Essentials starter kit](https:
 - **Pages:** page types, areas, and template mapping
 - **Widgets:** custom widgets with shared link fields, nested areas, and arrays
 - **Styling:** widget styles, site-wide design tokens, and dark mode
-- **Core widgets:** customizing the image, rich text, and video widgets
+- **Core widgets:** image customization, rich text, and video widgets
 - **Pieces:** articles, categories, and authors, with index and show pages, filters, and pagination
 - **Fetching data:** widgets that load content from the REST API and from external services, plus client-side behavior with web components
 - **Localization:** locales, translated strings, and a locale switcher
