@@ -49,8 +49,8 @@ const sidebarTutorials = [
     link: 'tutorials/astro/apostrophecms-and-astro.md',
     items: [
       {
-        text: 'Introducing Apollo',
-        link: 'tutorials/astro/introducing-apollo.md'
+        text: 'Getting Started',
+        link: 'tutorials/astro/getting-started.md'
       },
       {
         text: 'Creating Pages',
