@@ -76,7 +76,7 @@ A step-by-step series that starts from the [Astro Essentials starter kit](https:
 
 <AposCtaButton
   detail-heading="Series"
-  title="Start Building"
+  title="Start building"
   content="Set up your development environment, explore core concepts, and learn the fundamental patterns for building with ApostropheCMS and Astro."
   url="introducing-apollo.html"
 />
