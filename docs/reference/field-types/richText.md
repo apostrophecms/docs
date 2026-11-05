@@ -42,6 +42,8 @@ introduction: {
 
 **Rule of thumb:** if the area's `widgets` option names only `@apostrophecms/rich-text` and constrains the count to one, use a `richText` field. If more than one widget type is allowed, or the number is open-ended, keep the area.
 
+To change an existing area into a `richText` field, including the migration that converts content already in the database, see [Converting a rich text area to a `richText` field](/guide/inline-editing.md#converting-a-rich-text-area-to-a-richtext-field).
+
 ## Settings
 
 ### Required
