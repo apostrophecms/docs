@@ -28,9 +28,6 @@ const base = '/docs/';
 
 const hostname = hostnames[process.env.ENV || 'dev' ];
 
-// Filled by transformPageData, read by the sitemap
-const noindexPages = new Set();
-
 export default defineConfig({
   title: 'ApostropheCMS',
   // Sets docs results apart from marketing-site results for the same query
@@ -157,8 +154,8 @@ export default defineConfig({
     // generated for review even in dev
     hostname: (hostname || 'http://localhost:4173'),
     transformItems: (items) => {
-      // Redirect stubs and other noindex pages stay out of the sitemap
-      items = items.filter(page => !noindexPages.has(page.url));
+      // The old setup URL only redirects, and is marked noindex
+      items = items.filter(page => page.url !== 'guide/setting-up.html');
       items.forEach(page => {
         // We need to add
         // the base because vitepress doesn't do that automatically
@@ -170,14 +167,6 @@ export default defineConfig({
     }
   },
   transformPageData: (pageData) => {
-    // Runs for every page before the sitemap is built
-    const isNoindex = (pageData.frontmatter.head || [])
-      .some(([ tag, attrs ]) => tag === 'meta' && attrs?.name === 'robots' &&
-        attrs.content?.includes('noindex'));
-    if (isNoindex) {
-      noindexPages.add(pageData.relativePath.replace(/\.md$/, '.html'));
-    }
-
     // Reference H1s are bare names like "string", which say little in search
     // results. Add the kind of page to the <title> without changing the H1.
     if (pageData.frontmatter.title) {
