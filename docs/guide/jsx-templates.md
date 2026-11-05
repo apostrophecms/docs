@@ -429,8 +429,8 @@ modules/default-page/views/page.jsx
 ::: info
 `<Template>` and `<Extend>` differ only when the target resolves to a Nunjucks file:
 
-- `<Template templateName="layout" foo={…} />` is **include semantics**: `foo` arrives in `data.foo` and `{% block %}` declarations in the target are not overridden.
-- `<Extend templateName="layout" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in the target.
+- `<Template templateName="layout" foo={…} />` is **include semantics**: `foo` arrives as `data.foo`, and also as `foo`, as variables of the including template do with `{% include %}`. `{% block %}` declarations in the target are not overridden.
+- `<Extend templateName="layout" foo={…} />` is **extends semantics**: `foo` overrides `{% block foo %}` in the target. If `foo` is `undefined`, the block keeps its own content, so a layout can pass its props through whether or not they are set.
 
 When the target is a `.jsx` file, both behave identically (props are the data argument, markup between tags is `children`). Use whichever name reads better in context.
 :::
@@ -450,9 +450,29 @@ Nunjucks lets a child override a block and call <span v-pre>`{{ super() }}`</spa
 {% endblock %}
 ```
 
-**There is no JSX equivalent, and none is planned.** Blocks are inheritance: a block is an overridable method, so `super()` is just a method call. Props are composition: a prop is a value the child computes and hands to the parent, and a value has no superclass. Every component-oriented framework works this way — React, Vue, Svelte and Web Components all treat default slot content as fallback only, with no way to invoke it from an override.
+### When the parent is Nunjucks, or core's outer layout
 
-So the migration is not to replace `super()`. It is to **make the block additive**, so nothing needs to call it.
+When `<Extend>` targets a Nunjucks template, or Apostrophe's own outer layout in either language, a prop may be a function. It receives the block's default markup and returns the markup to use, exactly as `super()` would supply it:
+
+```jsx
+<Extend
+  templateName="layout"
+  beforeMain={(beforeMain) => (
+    <>
+      {beforeMain}
+      <Header page={page} />
+    </>
+  )}
+/>
+```
+
+Treat the argument as markup to place, as above, and never as a string. Depending on the parent it may be already-rendered markup, so string operations such as `` `${title} - My Site` `` don't work. Write `<>{title} - My Site</>` instead.
+
+### When the parent is your own JSX layout
+
+A JSX layout receives each prop as a plain value, and does with it whatever its code says. There is no `super()` to call, and a function prop is just a function unless the layout passes it on to a parent that understands it, such as core's outer layout. Blocks are inheritance: a block is an overridable method, so `super()` is just a method call. Props are composition: a prop is a value the child computes and hands to the parent. Every component-oriented framework works this way — React, Vue, Svelte and Web Components all treat default slot content as fallback only, with no way to invoke it from an override.
+
+So between your own JSX templates, the migration is not to replace `super()`. It is to **make the block additive**, so nothing needs to call it.
 
 ### The target shape: the layout owns what is shared
 
@@ -489,7 +509,7 @@ A page now passes only its own header, and never learns what the navigation is �
 
 ### The transitional shape: the layout is still Nunjucks
 
-While the layout remains `.html`, get the same effect by **nesting a finer block inside the coarse one**. The outer block keeps the shared markup; children override only the inner one:
+While the layout remains `.html`, a function prop keeps its default, as shown above. To make the block additive instead, so the eventual JSX layout has the right shape from the start, **nest a finer block inside the coarse one**. The outer block keeps the shared markup; children override only the inner one:
 
 <AposCodeBlock>
 
@@ -513,7 +533,7 @@ Subdividing a block changes the parent's contract. Any Nunjucks child still over
 
 ### When you cannot edit the parent
 
-Hoist the parent's default into a component named after **the block**, not after its current contents, and let the parent's block body contain nothing else:
+If the parent is Nunjucks, pass a function prop, as shown above. If it is a JSX layout, hoist the parent's default into a component named after **the block**, not after its current contents, and let the parent's block body contain nothing else:
 
 ```jsx
 // Right: names the block's default, so later changes to it still reach the child
@@ -533,7 +553,7 @@ Hoist the parent's default into a component named after **the block**, not after
 
 - **Scope does not travel.** `super()` runs in the parent's context and can see variables set above it in the layout. A component evaluates in the child's scope, so pass those in as props. This is the most common cause of a conversion that looks right and renders wrong.
 - **Omitting the default fails silently.** Pass `beforeMain={<Header />}` alone and the navigation simply disappears — no error, and the page still renders.
-- **A function prop will not work.** `beforeMain={(Default) => <><Default /><Header /></>}` looks like a React render prop, but props here are values the parent renders, not callbacks it invokes.
+- **A function prop works only where the parent supports it.** A Nunjucks template or core's outer layout calls it with the default markup, as shown above. Your own JSX layout gets the function as a plain value, and outputs it as text if it renders it directly. Note also that the argument is markup, not a component: write `{beforeMain}`, not `<BeforeMain />`.
 - **An intermediate template does not help.** Inserting a `base-with-nav` template between the layout and the pages recreates the identical constraint one level down.
 
 Composition also buys you things `super()` could not: place your content *before* the shared markup, include it conditionally, or pass it props.
@@ -556,9 +576,34 @@ That asymmetry determines how to migrate a project. Two orderings work; the hybr
 If you are using a coding assistant for the conversion, [Migrating templates with an AI assistant](/guide/jsx-migration-assistant.md) provides instructions you can copy into your project's `CLAUDE.md` or `AGENTS.md`, covering the ordering rules above along with the JSX behavior that most often trips up assistants.
 :::
 
-::: info
-Core's `outerLayoutBase.html` will remain Nunjucks for the foreseeable future, because every existing project's `layout.html` extends it via `{% extends data.outerLayout %}`. A fully-JSX project typically ends up with a `.jsx` layout that extends the core Nunjucks outer layout through `<Extend>`. This is the intended steady state, not a limitation.
-:::
+## JSX all the way down
+
+Apostrophe's own templates ship in both languages. These have `.jsx` twins that render the same HTML as the `.html` versions: the outer layouts (`outerLayoutBase`, `outerLayout` and `refreshLayout`), `area`, the rich text, image, video, file, HTML and layout widgets, the login page and password reset email, the 404 page, the default piece index and show pages and their pager, the search pages, and the template error page.
+
+By default Apostrophe renders the `.html` versions, exactly as earlier releases did, so existing projects see no change. Two options of `@apostrophecms/template` switch to the `.jsx` versions:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    // Render Apostrophe's own templates from their JSX versions
+    jsx: true
+  }
+};
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/template/index.js
+</template>
+</AposCodeBlock>
+
+- **`jsx: true`** renders core's templates from their `.jsx` versions. Your own templates are unaffected. Nunjucks templates still work, including those of installed extensions: a Nunjucks layout or page that extends `data.outerLayout` renders through the JSX outer layout, its blocks passed as props, and a block that calls `super()` gets the JSX layout's default markup.
+- **`nunjucks: false`** goes further, and implies `jsx: true`. Nunjucks is never loaded, and rendering any Nunjucks template throws an error naming it. Use it once a project has no Nunjucks templates left, to confirm that and to skip loading Nunjucks at all.
+
+Before setting `nunjucks: false`, check your installed extensions. Any that render Nunjucks templates of their own need a `.jsx` override for each one, in your project at `modules/<module-name>/views/`. A template in your project's folder for a module takes precedence over the module's own, whatever the language of either.
+
+A fully-JSX project with `nunjucks: false` needs no Nunjucks at all: its `layout.jsx` extends `data.outerLayout`, which is now core's JSX outer layout. See [Layout templates](/guide/layout-template.md) for the props it accepts, and for customizing it.
 
 ## Auto-escaping and raw HTML
 

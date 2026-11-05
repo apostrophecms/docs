@@ -58,9 +58,12 @@ once every template extending `layout.html` is converted or deleted can
 Before a multi-file conversion, build the dependency picture: grep for
 `{% extends %}`, `{% include %}`, and `{% import %}` across the templates, and
 work out which files are depended upon by others. Convert files nothing depends
-on first. Apostrophe's core `outerLayoutBase.html` stays Nunjucks indefinitely —
-a fully-migrated project ends with a `.jsx` layout extending it via `<Extend>`.
-That is the intended steady state, not an unfinished migration.
+on first. Apostrophe's core outer layout ships in both Nunjucks and JSX, so a
+fully-migrated project's `.jsx` layout extends `data.outerLayout` either way.
+Once no `.html` templates remain, set `nunjucks: false` on
+`@apostrophecms/template`: Nunjucks is then never loaded, and any template still
+in Nunjucks, including one an installed extension ships, throws an error naming
+it. That is the check that the migration is complete.
 
 ### Macros do not convert incrementally
 
@@ -144,8 +147,11 @@ empty. Write `{items.length > 0 && …}`.
 ### Where no clean equivalent exists yet
 
 Nunjucks **template filters are unavailable in JSX** — they live in a registry
-the JSX renderer does not read. `{{ super() }}` inside a block override has no
-documented equivalent. `apos.styles.elements()` and `apos.styles.attributes()`
+the JSX renderer does not read. `{{ super() }}` has an equivalent only when the
+parent is a Nunjucks template or core's outer layout: pass a function prop,
+which receives the default markup and returns the markup to use, e.g.
+`beforeMain={(beforeMain) => <>{beforeMain}<Header /></>}`. Place the argument
+as markup; never use it as a string. A JSX layout you wrote has no `super()`. `apos.styles.elements()` and `apos.styles.attributes()`
 return raw HTML and attribute strings that do not drop into JSX.
 
 For a project's *own* custom filters there is a clean path: register the
@@ -165,9 +171,9 @@ unverified guess shipped silently is how a migration quietly breaks a production
 site. Both halves matter. Never invent an API that does not exist — if you
 cannot find the real one, say so.
 
-For `super()` specifically, leaving that template in Nunjucks is often the right
-call. A template whose only purpose is tweaking one block is a poor conversion
-candidate.
+Before converting a project layout that children reach with `super()`, make the
+block they extend additive, so its shared markup no longer needs calling; see
+[Coming from blocks and `super()`](/guide/jsx-templates.md#coming-from-blocks-and-super).
 
 ### Verifying
 
