@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { withBase } from 'vitepress';
 import UpdateNotification from '../components/AposUpdateNotification.vue';
 
 export function setupUpdateChecker() {
@@ -13,7 +14,7 @@ export function setupUpdateChecker() {
   const checkForUpdates = async () => {
     try {
       const timestamp = new Date().getTime();
-      const response = await fetch(`/version.json?t=${timestamp}`);
+      const response = await fetch(withBase(`/version.json?t=${timestamp}`));
 
       if (!response.ok) {
         console.warn('Update check failed:', response.status);

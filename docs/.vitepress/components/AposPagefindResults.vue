@@ -91,7 +91,8 @@ const loading = ref(false)
 const unavailable = ref(false)
 
 let pagefindApi = null
-let pagefindLoadFailed = false
+// The pagefind-entry.json that `pagefindApi` was loaded against
+let pagefindEntry = null
 let searchRequestId = 0
 
 // Caches the in-flight load, not just the finished result: without this, two searches fired
@@ -101,7 +102,6 @@ let searchRequestId = 0
 let pagefindLoadPromise = null
 
 function loadPagefind() {
-  if (pagefindApi || pagefindLoadFailed) return Promise.resolve(pagefindApi)
   if (pagefindLoadPromise) return pagefindLoadPromise
   pagefindLoadPromise = loadPagefindOnce().finally(() => {
     pagefindLoadPromise = null
@@ -112,23 +112,38 @@ function loadPagefind() {
 async function loadPagefindOnce() {
   try {
     // Built by `npm run build:search-index` (scripts/build-search-index.mjs) into
-    // dist/pagefind/, which is served at `withBase('/pagefind/pagefind.js')` (i.e.
-    // /docs/pagefind/pagefind.js in prod, since `base: '/docs/'`). It does not exist until
-    // after a full build + index step, so this import will fail (and search will report
-    // itself unavailable) in `vitepress dev` and in any build where
-    // `npm run build:search-index` hasn't run yet.
-    const pagefindEntryUrl = withBase('/pagefind/pagefind.js')
-    const api = await import(/* @vite-ignore */ pagefindEntryUrl)
+    // dist/pagefind/, which is served at `withBase('/pagefind/')` (i.e. /docs/pagefind/ in
+    // prod, since `base: '/docs/'`). It does not exist until after a full build + index step,
+    // so loading fails (and search reports itself unavailable) in `vitepress dev` and in any
+    // build where `npm run build:search-index` hasn't run yet.
+    const response = await fetch(withBase('/pagefind/pagefind-entry.json'), { cache: 'no-store' })
+    if (!response.ok) {
+      throw new Error(`pagefind-entry.json returned ${response.status}`)
+    }
+    const entry = await response.text()
+    if (pagefindApi && entry === pagefindEntry) return pagefindApi
+
+    // Checked before every search: a deploy replaces the index chunks, whose file names are
+    // hashed. An instance loaded before the deploy still asks for the old chunks, and Pagefind
+    // treats the 404s as "no matches" instead of an error. Start over with a fresh module
+    // instance, which also picks up a newer pagefind.js if the deploy upgraded Pagefind.
+    await pagefindApi?.destroy?.()
+    pagefindApi = null
+    const indexHashes = Object.values(JSON.parse(entry).languages || {})
+      .map((language) => language.hash)
+      .join('-')
+    const pagefindUrl = `${withBase('/pagefind/pagefind.js')}?v=${encodeURIComponent(indexHashes)}`
+    const api = await import(/* @vite-ignore */ pagefindUrl)
 
     // Intentionally docs-only: unlike the marketing site (which merges this site's index in via
     // `mergeIndex()` — see navigationClient.js), docs search does not merge in the marketing
     // site's index. Per product decision, docs search should only ever return docs results;
     // marketing search should return both. See SEARCH.md (repo root) for the full write-up.
     pagefindApi = api
+    pagefindEntry = entry
     return pagefindApi
   } catch (error) {
     console.error('Failed to load Pagefind index:', error)
-    pagefindLoadFailed = true
     return null
   }
 }
