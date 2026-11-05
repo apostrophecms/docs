@@ -10,7 +10,7 @@ The sections below cover the patterns you encounter in the first hour of working
 
 This starter is a single unified application: ApostropheCMS handles content modeling, the admin editing UI, server-side rendering, and asset serving in one Node.js/Express process. There is no separate frontend server. When a request arrives, ApostropheCMS selects the matching template, populates it with content data, and returns the rendered HTML directly.
 
-Templates can be written in [JSX](/guide/jsx-templates.md) (`.jsx`) or Nunjucks (`.html`). JSX is the recommended choice for new work; Nunjucks remains fully supported, and the two coexist in the same project. Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
+Templates can be written in [JSX](/guide/jsx-templates.md) (`.jsx`) or Nunjucks (`.html`). JSX is the recommended choice for new work; Nunjucks remains fully supported, and the two coexist in the same project. This demo is JSX all the way down: `modules/@apostrophecms/template/index.js` sets `nunjucks: false`, so Apostrophe renders its own templates from their JSX versions and never loads Nunjucks. A Nunjucks template, such as one an installed extension ships, throws an error naming it until the project overrides it with a `.jsx` version. See [JSX all the way down](/guide/jsx-templates.md#jsx-all-the-way-down). Apostrophe walks the module's view-folder override chain, preferring `.jsx` then `.njk` then `.html` **within each folder** — so a template in a nearer override folder wins regardless of its extension. See [`render()`](/reference/modules/module.md#async-render-req-template-data).
 
 ## Template Discovery
 
@@ -30,7 +30,7 @@ Templates are discovered automatically by filename — there is no registry to u
 Every page and piece template slots its content into a shared outer shell via `<Extend>`. The chain has four levels:
 
 ```
-data.outerLayout  (Apostrophe's HTML shell — do not edit)
+data.outerLayout  (Apostrophe's JSX HTML shell — do not edit)
   └── views/layout.jsx  (site header, nav, footer — edit here for site-wide changes)
         ├── modules/{page-type}/views/page.jsx  (regular page content)
         └── modules/{piece-page}/views/
@@ -38,7 +38,7 @@ data.outerLayout  (Apostrophe's HTML shell — do not edit)
               └── show.jsx   (individual piece detail)
 ```
 
-`views/layout.jsx` is where most structural customization lives: the nav, header, and footer all live there. It extends `data.outerLayout` directly through `<Extend>`, so there's no intermediate Nunjucks layout in this demo — the layout itself is JSX, following the target-state pattern described in [Writing a layout in JSX](/guide/layout-template.md#writing-a-layout-in-jsx). `index.jsx` and `show.jsx` each extend `views/layout.jsx` independently — they are siblings, not children, of `page.jsx`.
+`views/layout.jsx` is where most structural customization lives: the nav, header, and footer all live there. It extends `data.outerLayout` directly through `<Extend>`, which is core's JSX outer layout, so no template in the chain is Nunjucks. The props it passes, and how to add to core's default markup instead of replacing it, are described in [Layout templates](/guide/layout-template.md). `index.jsx` and `show.jsx` each extend `views/layout.jsx` independently — they are siblings, not children, of `page.jsx`.
 
 A regular page template extends the layout and supplies its content as the `main` prop — `layout.jsx` declared that prop, so this is composition, not block overriding:
 
