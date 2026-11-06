@@ -27,7 +27,9 @@ modules/article-page/views/page.jsx
 
 </AposCodeBlock>
 
-No schema change is required in a Nunjucks or JSX project. `headline` and `blurb` are ordinary fields, still present in the editor modal, still available to the REST API. The template has simply chosen to put them on the page in a form the editor can type into.
+For a `string` field, a JSX or Nunjucks project needs no schema change. `headline` is an ordinary field, still present in the editor modal, still available to the REST API. The template has simply chosen to put it on the page in a form the editor can type into.
+
+Formatted text like `blurb` is usually kept in an area that holds a single rich text widget. To edit it in place, change that area into a `richText` field first: see [Converting a rich text area to a `richText` field](#converting-a-rich-text-area-to-a-richtext-field).
 
 ::: info
 Astro and other [external fronts](/guide/headless-cms.md) do need one line of schema configuration per field. See [Astro](#astro) below for why.
@@ -42,17 +44,209 @@ Astro and other [external fronts](/guide/headless-cms.md) do need one line of sc
 | [`richText`](/reference/field-types/richText.md) | A `div` | The full rich text editor, with whatever `toolbar` and `styles` the field configures |
 | [`area`](/reference/field-types/area.md) | Whatever its widgets render | Exactly as `<Area>` — see below |
 
-"By default" because the tag is the field type's suggestion, not a rule: pass `tag` to render a headline as an `h1` or a blurb as a `p`. See [controlling the markup](#controlling-the-markup).
+"By default" because the tag is the field type's suggestion, not a rule. `tag` is optional for every type and only overrides that default: pass it to render a headline as an `h1` or a blurb as a `p`. See [controlling the markup](#controlling-the-markup). An area is the exception: it has no tag of its own to override, and its `with` object is passed to the area as [context options](/guide/areas-and-widgets.md#passing-context-options), exactly as it would be with `<Area>`.
 
 Any other field type raises an exception naming the field and its type, rather than rendering something the editor cannot click on. Output those with an ordinary template expression.
-
-::: warning Changing a field's type requires a migration
-Because inline editing works on `string` and `richText` fields, it can be tempting to change an existing field to one of those types. Documents already in the database still hold that field's value in its old shape, though: an `area`, for instance, is stored as an object containing an array of widgets, not as text. Templates and widgets that expect the new shape will break when they meet the old one. Whenever you change a field's type, write a [migration](/guide/writing-migrations.md) that converts the stored values. This applies to any schema change that alters a field's shape, not only to inline editing.
-:::
 
 In JSX and Nunjucks, `Field` and `Area` are interchangeable: naming an area with `Field` does exactly what `<Area>` does, `with` clause and all, so a template that iterates a schema does not have to special-case it. In Astro they are separate components — use `<AposArea>` for areas.
 
 Custom field types can opt in — see [Adding inline editing to a custom field type](#adding-inline-editing-to-a-custom-field-type).
+
+## Converting a rich text area to a `richText` field
+
+Many projects keep a block of formatted text in an area that allows only the rich text widget, and only one of it. That text is already editable on the page, but as a widget: the editor gets an area's controls for something that can never hold a second widget, and inside another widget has to select the right widget in the breadcrumb before typing.
+
+The [`richText`](/reference/field-types/richText.md) field type stores the same rich text, edited with the same editor, as an HTML string directly on the document. Converting the area into a `richText` field lets the template render it with `Field`, so the editor types straight into it.
+
+Convert when the area allows only `@apostrophecms/rich-text` and holds exactly one. If editors should be able to add images, videos or other widgets alongside the text, or more than one block of it, keep the area. The [`richText` reference](/reference/field-types/richText.md#when-to-use-it-instead-of-an-area) explains the choice in more detail.
+
+Converting takes four steps: change the schema, change the template, migrate the stored content, and check your styles.
+
+### 1. Change the schema
+
+Here is an area that holds one rich text widget:
+
+<AposCodeBlock>
+
+```javascript
+introduction: {
+  label: 'Introduction',
+  type: 'area',
+  options: {
+    max: 1,
+    widgets: {
+      '@apostrophecms/rich-text': {
+        toolbar: [ 'styles', 'bold', 'italic', 'link' ],
+        styles: [
+          { tag: 'p', label: 'Paragraph' },
+          { tag: 'h3', label: 'Heading 3' }
+        ]
+      }
+    }
+  }
+}
+```
+<template v-slot:caption>
+Before
+</template>
+
+</AposCodeBlock>
+
+And here is the same field as `richText`:
+
+<AposCodeBlock>
+
+```javascript
+introduction: {
+  label: 'Introduction',
+  type: 'richText',
+  // 👇 Astro only
+  wysiwyg: true,
+  options: {
+    toolbar: [ 'styles', 'bold', 'italic', 'link' ],
+    styles: [
+      { tag: 'p', label: 'Paragraph' },
+      { tag: 'h3', label: 'Heading 3' }
+    ]
+  }
+}
+```
+<template v-slot:caption>
+After
+</template>
+
+</AposCodeBlock>
+
+The rich text options (`toolbar`, `styles`, `insert` and the rest) move out of `options.widgets['@apostrophecms/rich-text']` and sit directly in the field's `options`. Keep them inside `options`: placed at the top level of the field, next to `type` and `label`, they are ignored, and Apostrophe only logs a warning at startup. `max` and `widgets` go away, because a `richText` field always holds exactly one value. Anything you did not set still comes from the `defaultOptions` of the `@apostrophecms/rich-text-widget` module, as it did for the widget.
+
+`wysiwyg: true` is needed only in Astro projects, which must [tell Apostrophe which fields they render](#telling-apostrophe-which-fields-you-render). Leave it out in JSX and Nunjucks projects.
+
+### 2. Change the template
+
+Render the field with `Field` instead of `Area`:
+
+```jsx
+// Before
+<Area doc={page} name="introduction" />
+
+// After
+<Field doc={page} name="introduction" />
+```
+
+``` nunjucks
+{# Before #}
+{% area data.page, 'introduction' %}
+
+{# After #}
+{% field data.page, 'introduction' %}
+```
+
+```astro
+<!-- Before -->
+<AposArea area={page.introduction} />
+
+<!-- After -->
+<AposField doc={page} name="introduction" />
+```
+
+### 3. Migrate the stored content
+
+Documents already in the database still hold the field in its old shape. An area is stored as an object whose `items` array holds the widgets, with each rich text widget's HTML in its `content` property. A `richText` field is stored as the HTML string itself. Without a [migration](/guide/writing-migrations.md) to convert one into the other, existing content renders empty.
+
+For a field of a page or piece type, use `eachDoc`:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/piece-type',
+  // fields, as in step 1
+  init(self) {
+    self.apos.migration.add('article-introduction-to-rich-text', async () => {
+      await self.apos.migration.eachDoc({ type: 'article' }, async (doc) => {
+        // Already converted
+        if (typeof doc.introduction === 'string') {
+          return;
+        }
+        await self.apos.doc.db.updateOne(
+          { _id: doc._id },
+          { $set: { introduction: areaToHtml(doc.introduction) } }
+        );
+      });
+    });
+  }
+};
+
+// Join the HTML of every rich text widget in the area
+function areaToHtml(area) {
+  return (area?.items || [])
+    .filter(item => item.type === '@apostrophecms/rich-text')
+    .map(item => item.content || '')
+    .join('');
+}
+```
+<template v-slot:caption>
+modules/article/index.js
+</template>
+
+</AposCodeBlock>
+
+For a field of a widget, use `eachWidget`. It visits every widget in every area of every document, however deeply nested: in a page's area, in an `array` or `object` field, or in an area of another widget. Check the widget's type, then use the `dotPath` it receives to update that one widget:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/widget-type',
+  // fields, as in step 1, with the field named `content`
+  init(self) {
+    self.apos.migration.add('hero-content-to-rich-text', async () => {
+      await self.apos.migration.eachWidget({}, async (doc, widget, dotPath) => {
+        if ((widget.type !== 'hero') || (typeof widget.content === 'string')) {
+          return;
+        }
+        await self.apos.doc.db.updateOne(
+          { _id: doc._id },
+          { $set: { [`${dotPath}.content`]: areaToHtml(widget.content) } }
+        );
+      });
+    });
+  }
+};
+
+// areaToHtml as in the previous example
+```
+<template v-slot:caption>
+modules/hero-widget/index.js
+</template>
+
+</AposCodeBlock>
+
+A few things about these migrations:
+
+- Both helpers work on the database directly, so they convert drafts and published documents in every locale.
+- `areaToHtml` joins every rich text widget rather than keeping only the first. An area can hold more than one even when the schema meant to allow one, for instance when `max` was placed beside `options` instead of inside it, where it has no effect.
+- Skipping values that are already strings leaves converted content alone, so the migration is safe to run against a database where some documents already use the new shape.
+
+The same applies to any change of a field's type, not only this one: whenever the stored shape changes, write a migration that converts it.
+
+### 4. Check your styles
+
+The widget took its wrapper markup with it. A rich text widget renders its HTML inside a `div` with a `data-rich-text` attribute and the class set by the `className` option of the `@apostrophecms/rich-text-widget` module, inside the area's own markup. The field renders its HTML inside a single tag, `div` by default, with only the `apos-wysiwyg-field` classes and whatever `class` you pass.
+
+So CSS that selects on the widget's `className`, on `[data-rich-text]` or on the area wrapper no longer matches. The simplest fix is usually to give the field the same class:
+
+```jsx
+<Field doc={page} name="introduction" with={{ class: 'rich-text' }} />
+```
+
+``` nunjucks
+{% field data.page, 'introduction' with { class: 'rich-text' } %}
+```
+
+```astro
+<AposField doc={page} name="introduction" class="rich-text" />
+```
 
 ## What the editor sees
 
