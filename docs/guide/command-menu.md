@@ -131,6 +131,8 @@ async mounted() {
 
 The final key required by the shortcut object is `shortcut`. This is set identically to the top-level `shortcut` option that is used to reassign automatically added shortcuts.
 
+The optional `requireWidgetFocus` property, if `true`, runs the shortcut only while a widget is selected. Your handler can read the selected widget's id from `focusedWidget` in the widget store. When an editor has selected several widgets, the shortcut still runs, but `focusedWidget` is only the last-clicked widget. To act on all of them, read `selectedWidgetIds` instead. See [operations on several widgets](../reference/modules/widget-type.md#operations-on-several-widgets).
+
 ## Keymappings
 Not that the key mappings below are shown with initial capitalization, but are case-insensitive.
 | key(s) | Mapping |
