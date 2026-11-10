@@ -4,6 +4,10 @@
 If your project uses an Astro frontend, read this page for the backend, then see [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md) for the frontend and how the two work together.
 :::
 
+::: tip
+Just want to show work in progress to coworkers? You don't need a server for that. See [Sharing a local ApostropheCMS site with Cloudflare Tunnel](/guide/sharing-local-sites.md).
+:::
+
 ## Server requirements
 
 We recommend hosting Apostrophe in self-hosted production environments with the following minimum specifications:
