@@ -5,11 +5,11 @@ description: "Give coworkers a temporary public URL for an ApostropheCMS or Apos
 
 # Sharing a local ApostropheCMS site with Cloudflare Tunnel
 
-Once your project runs on your own computer, you'll often want to show it to someone else: a coworker reviewing a design, a product manager checking a prototype, or a client giving early feedback. Setting up a server just for that is a lot of work at an early stage.
+Once your project is set up on your computer, you'll often want to show it to someone else: a coworker reviewing a design, a product manager checking a prototype, or a client giving early feedback. Setting up a server just for that is a lot of work at an early stage.
 
 A Cloudflare quick tunnel skips that step. It gives your locally running site a temporary public URL, such as `https://lunch-strip-cats-nimble.trycloudflare.com`, that anyone you share it with can open in their browser. The site keeps running on your computer, and the URL stops working as soon as you stop the tunnel. You don't need a Cloudflare account.
 
-This is a way to share work in progress, not a way to host a site. When you're ready for a permanent home, see [Hosting ApostropheCMS in production](/guide/hosting.md) or, for Astro projects, [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md).
+This is a way to share work in progress, not a way to host a site. It requires your computer be running and actively serving your project. When you're ready for a permanent home, see [Hosting ApostropheCMS in production](/guide/hosting.md) or, for Astro projects, [Hosting ApostropheCMS + Astro in production](/guide/hosting-astro.md).
 
 ## Installing `cloudflared`
 
@@ -52,6 +52,10 @@ cloudflared --version
 
 ## Sharing an ApostropheCMS project
 
+::: info
+Using an Astro frontend? Skip to [Sharing an ApostropheCMS + Astro project](#sharing-an-apostrophecms-astro-project). Its steps are different.
+:::
+
 1. In your project folder, start the site as usual:
 
    ```bash
@@ -81,7 +85,7 @@ If your `app.js` sets the `baseUrl` option, links on your pages point to that ad
 
 ## Sharing an ApostropheCMS + Astro project
 
-An ApostropheCMS + Astro project runs two applications, but the Astro starter kits start both with a single command. Visitors and editors only ever talk to the Astro frontend, so that's the one to tunnel. You don't need a separate tunnel for the ApostropheCMS backend. Astro passes logins, editing, API calls, and uploaded media through to it. See [How requests flow](/guide/hosting-astro.md#how-requests-flow) for details.
+An ApostropheCMS + Astro project runs two applications, but the Astro starter kits start both with a single command. Visitors and editors only ever talk to the Astro frontend, so that is where you want to connect your tunnel. You don't need a separate tunnel for the ApostropheCMS backend. Astro passes logins, editing, API calls, and uploaded media through to it. See [How requests flow](/guide/hosting-astro.md#how-requests-flow) for details.
 
 The Astro starter kits set `baseUrl` to `http://localhost:4321` in `backend/app.js`, and ApostropheCMS uses it to build the links on every page. For a viewer on another computer, those links would point at their own machine. To fix that, start the tunnel first, then start your site with the tunnel's URL in the `APOS_BASE_URL` environment variable, which overrides `baseUrl`.
 
@@ -117,7 +121,7 @@ Without this option, your development server receives requests addressed to the 
 
 ## Stopping the tunnel
 
-Press `Control-C` in the terminal window running `cloudflared` to close the tunnel. The URL stops working right away. Press `Control-C` in the other window to stop your site.
+Press `Control-C` in the terminal window running `cloudflared` to close the tunnel. The URL stops working right away. Press `Control-C` in your development window to stop your site.
 
 Each time you start a new tunnel, you get a new random URL, so you'll need to share the new one.
 
