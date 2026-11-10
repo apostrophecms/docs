@@ -71,6 +71,10 @@ const sidebarGuide = [
       {
         text: 'Using AI Effectively',
         link: 'guide/using-ai-effectively.md'
+      },
+      {
+        text: 'Sharing a Local Site',
+        link: 'guide/sharing-local-sites.md'
       }
     ]
   },
