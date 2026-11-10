@@ -4,6 +4,10 @@ An ApostropheCMS + Astro project runs as two cooperating Node.js applications: t
 
 This guide is the platform-independent reference for what changes when Astro sits in front of ApostropheCMS. It explains how the two applications fit together and walks through the decisions and configuration every production deployment needs, whatever host you choose: topology, output mode, database, reverse proxy, environment variables, process management, and a final checklist. It does not walk through any one platform step by step. For that, see [Deploying ApostropheCMS + Astro projects](/tutorials/astro/deploying-hybrid-projects.md), which compares platform options and includes a single-server deployment on DigitalOcean. The other [Astro tutorials](/tutorials/astro/apostrophecms-and-astro.md) cover static builds and a full Railway and Vercel deployment.
 
+::: tip
+Just want to show work in progress to coworkers? You don't need a server for that. See [Sharing a local ApostropheCMS site with Cloudflare Tunnel](/guide/sharing-local-sites.md#sharing-an-apostrophecms-astro-project).
+:::
+
 ::: info
 [ApostropheCMS hosting](https://apostrophecms.com/hosting) runs ApostropheCMS + Astro projects for you, including the servers and their operating system updates, the database, media storage, HTTPS certificates, and backups. With managed hosting, most of what this guide covers is handled for you. You still deploy your own codebase, so updating ApostropheCMS, Astro, and your other dependencies, including for security fixes, remains part of your project's work. See [Deploying with ApostropheCMS Hosting](/tutorials/astro/deploying-hybrid-projects.md#deploying-with-apostrophecms-hosting).
 :::

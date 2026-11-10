@@ -27,6 +27,10 @@ const sidebarGuide = [
         link: 'guide/development-setup.md'
       },
       {
+        text: 'Sharing a Local Site',
+        link: 'guide/sharing-local-sites.md'
+      },
+      {
         text: 'Choosing a Database',
         link: 'guide/choosing-a-database.md'
       },
