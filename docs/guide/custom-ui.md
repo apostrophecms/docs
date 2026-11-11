@@ -416,6 +416,7 @@ Apostrophe offers a context menu that can be used to carry out certain operation
 Custom context menu items can either:
 1. Open a modal dialog box that implements `AposModal`. For an example of this, see the [code for the draft sharing modal](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/modal/ui/apos/components/AposModalShareDraft.vue).
 2. Emit an event that can be listened for elsewhere in your code using `apos.bus.$on()`
+3. Turn something on and off, showing a check mark while it is on. See [Toggling a mode](#toggling-a-mode).
 
 It is important to note that context menu operations will appear for all documents, even if added by a module associated with a specific type of document. However, you can use the options described below to limit when they appear.
 
@@ -529,6 +530,61 @@ The event data passed with the event is an object which includes:
 }
 ```
 
+### Toggling a mode
+
+A menu item with `type: 'toggle'` turns something on and off. The menu shows a check mark next to it while it is on. Core uses this for **See Changes**.
+
+Like an event item, a toggle emits its `action` on `apos.bus`. The event data also includes `checked`: the state the user asked for, `true` to turn on and `false` to turn off.
+
+The menu does not track the state itself. Whatever owns the state reports it with `setChecked` of the `contextOperations` store, and every menu that offers the item shows it. That way the check mark stays correct however the state changes, for example when your code turns the mode off on its own.
+
+This example adds a **Show Grid** item that outlines the page's layout grid:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  init(self) {
+    self.apos.doc.addContextOperation({
+      context: 'update',
+      action: 'show-grid',
+      label: 'Show Grid',
+      type: 'toggle',
+      // Only in the menu next to "Preview", for the document on the page
+      location: 'context-bar'
+    });
+  }
+};
+```
+  <template v-slot:caption>
+    modules/grid-overlay/index.js
+  </template>
+</AposCodeBlock>
+
+<AposCodeBlock>
+
+```javascript
+import { useContextOperationsStore } from 'Modules/@apostrophecms/ui/stores/contextOperations.js';
+
+export default function() {
+  apos.bus.$on('show-grid', ({ checked }) => {
+    document.body.classList.toggle('show-grid', checked);
+    // Report the new state, so the menu shows the check mark
+    useContextOperationsStore().setChecked('show-grid', checked);
+  });
+}
+```
+  <template v-slot:caption>
+    modules/grid-overlay/ui/apos/apps/GridOverlay.js
+  </template>
+</AposCodeBlock>
+
+If nothing calls `setChecked`, the item never shows as checked, and every click asks to turn it on.
+
+### Limiting an item to the context bar
+
+The context menu appears in several places: next to **Preview** in the admin bar, for the document being viewed on the page, and in editor modals and managers. Set `location: 'context-bar'` to offer an item only in the menu next to **Preview**. Use it for operations that act on the page itself, such as a mode that changes how the page displays. `'context-bar'` is the only location.
+
 ### Configuration Options
 
 | Property | Required | Description |
@@ -536,8 +592,9 @@ The event data passed with the event is an object which includes:
 | `context` | Yes | Currently only `'update'` is supported (for previously saved documents) |
 | `action` | Yes | A globally unique identifier for this operation |
 | `label` | Yes | The text displayed in the context menu |
-| `modal` | Only added for modals | The name of the modal component to open. Not required when type: 'event' is specified. |
-| `type` | Only added for events | Set to 'event' to emit an event instead of opening a modal. Omit this property when using modal. |
+| `modal` | Only added for modals | The name of the modal component to open. Not required when `type` is `'event'` or `'toggle'`. |
+| `type` | Only added for events and toggles | `'modal'` (the default) opens `modal`. `'event'` emits an event instead. `'toggle'` emits an event with `checked` and shows a check mark while on. See [Toggling a mode](#toggling-a-mode). |
+| `location` | No | Set to `'context-bar'` to show the item only in the menu next to **Preview**, for the document on the page. See [Limiting an item to the context bar](#limiting-an-item-to-the-context-bar). |
 | `conditions` | No | Array of built-in permission conditions that must all be satisfied |
 | `if` | No | MongoDB-style query to match document properties |
 | `moduleIf` | No | MongoDB-style query to match module properties |
