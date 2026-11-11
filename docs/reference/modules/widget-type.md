@@ -12,22 +12,24 @@ The only reason to configure this module directly would be to apply the changes 
 
 ### `widgetOperations`
 
-This configuration cascade adds operations to the controls editors see when they select a widget on the page. An operation opens a modal or emits an action. It can appear in the widget toolbar, in the breadcrumb above the widget, or in both, and it can depend on the widget's data and the user's permissions.
+This configuration cascade allows you to define custom operations that appear in the menu that appears when editing the widget on page. These operations can trigger modals, perform actions, or be conditionally displayed based on widget state and user permissions.
 
-The `widgetOperations` cascade is a function that takes `self` and `options` as parameters and returns an object. Add operations with the `add` key:
+The `widgetOperations` should be a function that takes `self` and `options` as parameters and returns an object specifying operations to add to the widget context menu:
 
 ```javascript
 widgetOperations(self, options) {
   return {
     add: {
       operationName: {
-        label: 'Label text or i18n key',     // Text for the operation
-        icon: 'icon-name',                   // A registered icon
-        modal: 'ComponentName',              // Modal to open, or use `action`
-        tooltip: 'Tooltip text or i18n key', // Text shown on hover
+        // Required properties
+        label: 'Label text or i18n key',   // Text displayed in the menu
+        modal: 'ComponentName',            // Modal component to open when clicked
 
-        // Also offer it when several widgets are selected
-        multiple: true,
+        // Required for addition to the primary display menu
+        icon: 'icon-name',                 // Icon to display (needs to be registered already)
+
+        // Optional properties
+        tooltip: 'Tooltip text or i18n key', // Text shown on hover
 
         // Conditional display based on widget state
         if: {
@@ -55,56 +57,18 @@ widgetOperations(self, options) {
   };
 }
 ```
-
-#### Operation properties
-
-| Property | Type | Description |
-|---|---|---|
-| `label` | String | The operation's text or i18n key. Also used as the tooltip when `tooltip` is not set. Required with `secondaryLevel: true`. |
-| `icon` | String | The name of a registered icon. Required, except with `secondaryLevel: true` or a breadcrumb `type`. |
-| `modal` | String | The name of a modal component to open. See [Modal operations](#modal-operations). |
-| `action` | String | An event to emit on `apos.bus` when the operation has no `modal`. See [Action operations](#action-operations). |
-| `tooltip` | String | Text or i18n key shown on hover. |
-| `if` | Object | Conditions on the widget's data, using the same syntax as a schema field's `if`. The operation appears only when they match. |
-| `permission` | Object | An object with `action` and `type` properties, such as `{ action: 'edit', type: 'article' }`. The operation appears only for users with that permission. |
-| `placement` | String | Where the operation appears: `'standard'` (the widget toolbar, the default), `'breadcrumb'`, or `'all'` (both). |
-| `type` | String | `'info'` shows a non-interactive item in the breadcrumb. `'switch'` shows a two-choice toggle in the breadcrumb. `'menu'` shows a button that opens `modal` inline. |
-| `choices` | Array | For `type: 'switch'`, exactly two `{ label, value }` objects. The selected `value` is set on the widget. |
-| `secondaryLevel` | Boolean | If `true`, the operation appears in the toolbar's "more" menu instead of as a button. Standard placement only. |
-| `rawEvents` | Array | DOM event names, such as `'mouseover'`, that are forwarded as the operation's `action`. Breadcrumb placement only, with `action` and no `type`. See `@apostrophecms/layout-widget` for an example. |
-| `ignoreResult` | Boolean | If `true`, the modal's result does not replace the widget. |
-| `multiple` | Boolean | If `true`, the operation is also offered when several widgets are selected. See [Operations on several widgets](#operations-on-several-widgets). |
-
-Each toolbar operation needs either `modal` or `action`.
-
-Apostrophe validates operations at startup and throws an error if:
-
-- `type: 'switch'`, `type: 'info'` or `rawEvents` is used without `placement: 'breadcrumb'`.
-- A `switch` operation does not have exactly two `choices`.
-- An `info` operation has a `modal`.
-- A `menu` operation has no `modal`.
-- `multiple` is not a boolean.
-- `multiple: true` is combined with `placement: 'breadcrumb'` or `type: 'menu'`.
-
-#### Modal operations
-
-When an editor clicks an operation that has a `modal` for one widget, the modal receives these props:
-
+#### Modal Interaction
+When a user clicks on an operation that specifies a modal property, the modal component will be launched with the following props:
 ```javascript
 {
-  widget,        // The current widget
-  widgetSchema,  // The schema for the widget
-  widgetOptions, // The area's options for this widget type
-  widgets        // Only with `multiple: true`: [ { widget, widgetSchema, widgetOptions } ]
+  widget,       // The current widget instance
+  widgetSchema  // The schema for the widget
 }
 ```
 
-Operations in the breadcrumb receive only `widget` and `widgetSchema`.
-
-To update the widget from your modal, emit a `modal-result` event before closing:
-
+To update the original widget from your modal, you must emit a `modal-result` event before closing:
 ```javascript
-// Inside your modal component, emit the updated widget
+// Inside your modal component emit the updated data
 this.$emit('modal-result', widgetData);
 ```
 
@@ -112,51 +76,6 @@ Note the following important considerations:
 
   - The widget's `type` and `_id` properties must not be changed.
   - If the modal closes without emitting a `modal-result` event, the original widget remains unchanged.
-  - If the operation sets `ignoreResult: true`, the result does not replace the widget.
-
-#### Action operations
-
-An operation with an `action` and no `modal` emits that action on `apos.bus`. For one widget, the payload is `{ widgetId, index }`. With `multiple: true`, the payload also includes `widgetIds: [ widgetId ]`. Breadcrumb operations also include a `data` property, which holds the switch value or the raw DOM event.
-
-```javascript
-apos.bus.$on('my-widget-action', ({ widgetId, index }) => {
-  // Act on the widget
-});
-```
-
-#### Operations on several widgets
-
-Editors can select several widgets in the same area. Selected widgets are always siblings in one area. While several widgets are selected, the toolbar offers an operation only if it sets `multiple: true`, every selected widget's type defines it, and every selected widget passes its `if`.
-
-The built-in up, down, remove, cut, copy and duplicate operations set `multiple: true`. Edit and Styles act on one widget at a time.
-
-When the operation runs on several widgets:
-
-- **Modal operations** receive only `widgets`, an array of `{ widget, widgetSchema, widgetOptions }` in document order. There is no `widget` prop. To update the widgets, the result must be an array of widgets. Each one replaces the selected widget with the same `_id`. All of the replacements form one undo step. `ignoreResult` works the same way as for one widget.
-- **Action operations** are emitted once with only `{ widgetIds }`, in document order. There is no `widgetId` or `index`.
-
-Since an operation with `multiple: true` receives `widgets` or `widgetIds` for one widget too, a single modal or listener can handle both cases. Return a widget when the modal received one, and an array when it received several:
-
-```javascript
-// Inside a modal for an operation with `multiple: true`
-const updated = this.widgets.map(({ widget }) => ({
-  ...widget,
-  highlighted: true
-}));
-this.$emit('modal-result', this.widget ? updated[0] : updated);
-```
-
-```javascript
-apos.bus.$on('my-widget-action', ({ widgetIds }) => {
-  // Same code for one widget or several
-});
-```
-
-::: info Browser code and multiple selection
-- Keyboard shortcuts registered with [`requireWidgetFocus: true`](../../guide/command-menu.md#registering-shortcut-commands) still run while several widgets are selected, but `focusedWidget` is only the last-clicked widget. To act on every selected widget, read the selection from the widget store.
-- The widget store, imported with `import { useWidgetStore } from 'Modules/@apostrophecms/ui/stores/widget.js'`, has `selectedWidgetIds` with the ids of the selected widgets. `focusedWidget` is the primary, last-clicked widget. `setWidgetSelection({ selectedWidgetIds }, { primaryId, areaId })` replaces the selection.
-- The widget clipboard can hold several widgets. Use `apos.area.widgetClipboard.getMany()` and `apos.area.widgetClipboard.setMany(widgets)` to read and write all of them. `get()` returns only the first widget, and `set(widget)` stores one widget.
-:::
 
 **Example:**
 
@@ -338,6 +257,11 @@ No matter what, the widget modal width will take 100% of the screen for screens 
 
 Choose the side from where the widget modal will open. If left unset (default) Apostrophe will make a best guess based on the position of the widget on the page. If the widget appears in the left half of the screen, the widget modal is positioned on the right, and vice-versa. Also accepts `left` or `right`.
 
+## Related documentation
+
+- [Core widgets](/guide/core-widgets.md)
+- [Custom widgets](/guide/custom-widgets.md)
+
 ## Featured methods
 
 ### `getBrowserData(req)`
@@ -458,9 +382,4 @@ node app @apostrophecms/rich-text-widget:list
 ```
 
 Will list all of the rich text widgets on the site.
-
-## Related documentation
-
-- [Core widgets](/guide/core-widgets.md)
-- [Custom widgets](/guide/custom-widgets.md)
 
