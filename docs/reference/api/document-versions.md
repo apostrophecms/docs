@@ -1,6 +1,6 @@
 # Document versions REST API
 
-The [`@apostrophecms/document-versions`](/reference/modules/document-versions.md) module provides routes to list a document's versions, read one version, and read the changes a version made. For the concepts used on this page, such as timelines, publication points, and consolidated versions, see the [Document versions guide](/guide/document-versions.md).
+The [`@apostrophecms/document-versions`](/reference/modules/document-versions.md) module provides routes to list a document's versions, read one version, read the changes a version made, and read the changes of a draft since its last publication. For the concepts used on this page, such as timelines, publication points, and consolidated versions, see the [Document versions guide](/guide/document-versions.md).
 
 Every route requires permission to edit the document. The routes answer `notfound` for a document the user cannot edit, and for a document whose type has no versions. Authenticate as you would for any other REST route, for example with an [API key](/reference/api/authentication.md#api-keys) for a role that can edit the document.
 
@@ -11,6 +11,7 @@ Every route requires permission to edit the document. The routes answer `notfoun
 |`GET` | [`/api/v1/@apostrophecms/document-versions`](#get-api-v1-apostrophecms-document-versions) | List the versions of a document |
 |`GET` | [`/api/v1/@apostrophecms/document-versions/:versionId`](#get-api-v1-apostrophecms-document-versions-versionid) | Get one version, with its document |
 |`GET` | [`/api/v1/@apostrophecms/document-versions/:versionId/changes`](#get-api-v1-apostrophecms-document-versions-versionid-changes) | Get the changes a version made |
+|`GET` | [`/api/v1/@apostrophecms/document-versions/draft-changes`](#get-api-v1-apostrophecms-document-versions-draft-changes) | Get the changes of a draft since its last publication |
 
 There is no restore route. To restore a version, save its content to the document's own REST route. See [Restoring a version](#restoring-a-version).
 
@@ -238,6 +239,104 @@ A row's `ai` property shows AI's part in the change, based on the versions that 
 
 Test it for truthiness to find every change AI was involved in. The version record's own `ai` field stays a boolean: it describes one save, while a row's `ai` describes one change.
 
+## `GET /api/v1/@apostrophecms/document-versions/draft-changes`
+
+Returns every change of a document's draft since its last publication: the list [See Changes](/guide/document-versions.md#see-changes) shows. Each changed value appears once, from its published value to its draft value, with who changed it and when. A document that was never published is compared with a new document of its type.
+
+Only types that record versions of their drafts are supported: types with versions that are localized and do not set `autopublish: true`. Other types, and users who cannot edit the draft, get `notfound`.
+
+### Query parameters
+
+| Parameter | Example | Description |
+|----------|------|-------------|
+|`docId` | `?docId=ckitdo5oq004pu69kr6oxo6fr:en:draft` | **Required.** The document's `_id`, with its locale, in either mode. |
+|`annotate` | `?annotate=1` | Also returns `doc`, the draft marked with its changes, for display. See [The annotated document](/guide/showing-version-changes.md#the-annotated-document). |
+
+### Request example
+
+```javascript
+// Request inside an async function.
+const response = await fetch('http://example.net/api/v1/@apostrophecms/document-versions/draft-changes?docId=ckitdo5oq004pu69kr6oxo6fr:en:draft&apikey=myapikey', {
+  method: 'GET'
+});
+const { rows, counts, baseline } = await response.json();
+```
+
+### Response
+
+```json
+{
+  "rows": [
+    {
+      "path": [ { "name": "title", "label": "Title" } ],
+      "type": "modified",
+      "fieldType": "string",
+      "kind": "leaf",
+      "old": "About",
+      "new": "About us",
+      "oldText": "About",
+      "newText": "About us",
+      "diff": [
+        { "text": "About", "change": "same" },
+        { "text": " us", "change": "added" }
+      ],
+      "ai": false,
+      "authors": [ { "_id": "clx1u0a9z0000qz8habcdefgh", "title": "Jane Editor" } ],
+      "changedAt": "2026-10-21T15:40:03.000Z",
+      "patchKey": "title",
+      "fieldId": "clx1u0b2c0000qz8hfieldid01",
+      "editable": true,
+      "restore": {
+        "patch": { "title": "About" },
+        "inverse": { "title": "About us" }
+      }
+    }
+  ],
+  "counts": { "added": 0, "modified": 1, "deleted": 0, "ai": 0 },
+  "baseline": { "kind": "published", "at": "2026-10-20T09:12:44.000Z" }
+}
+```
+
+| Property | Description |
+|----------|-------------|
+| `rows` | The changes. Each is a [change row](#the-change-row), with the extra properties below. |
+| `counts` | The number of rows of each change type, and the number AI was involved in, as for the [changes route](#get-api-v1-apostrophecms-document-versions-versionid-changes). |
+| `baseline` | What the draft is compared with: `{ kind: 'published', at }` for the published document, where `at` is when it was last published, or `{ kind: 'default' }` for a new document of its type, when the document was never published. |
+| `doc` | With `annotate=1` only. The draft, marked with its changes. For display only: never save it. |
+
+Rows from this route have these properties in addition to those of [the change row](#the-change-row):
+
+| Property | Description |
+| -- | -- |
+| `authors` | Everyone who changed this value since the publication, as `{ _id, title }`. Empty for a change not yet recorded in a version. |
+| `changedAt` | When this value was last changed, if that change is recorded in a version. |
+| `patchKey` | The key that addresses this value in a `PATCH` body, such as `title` or `@<widgetId>.heading`. Absent when the value cannot be addressed on its own. |
+| `editable` | `true` when the user may change this value. |
+| `restore` | Present when the change can be restored on its own. `patch` is the `PATCH` body that puts the published value back. `inverse` is the body that undoes that restore. See [Restoring one change](#restoring-one-change). |
+
+#### Restoring one change
+
+To restore one change, send its `restore.patch` to the document's own `PATCH` route in draft mode, with `_strict: true`:
+
+```javascript
+// Request inside an async function.
+// `row` is a row from the draft-changes route, with `restore`
+const response = await fetch('http://example.net/api/v1/article/ckitdo5oq004pu69kr6oxo6fr:en:draft?apikey=myapikey&aposMode=draft', {
+  method: 'PATCH',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    ...row.restore.patch,
+    _strict: true
+  })
+});
+```
+
+`_strict: true` makes the save fail with `invalid` when the document as a whole would not be valid afterward, as a save from its editor modal would. Without it, a `PATCH` only validates the fields it names. The patch may use `@` notation and other [MongoDB-style operators](/reference/api/pieces.md#mongodb-style-requests).
+
+A restored change is an ordinary edit of the draft. It is recorded in the history like any other save, and does not set `_restoreVersion`.
+
 ## Restoring a version
 
 There is no restore route. To restore a version, `PUT` its document to the document's own REST route in draft mode, with `_restoreVersion` set to the version's `_id`.
@@ -312,5 +411,5 @@ Keep in mind:
 
 | Error | Cause |
 | -- | -- |
-| `invalid` | `docId` is missing, `before` is not a valid date, or a version id is malformed. |
-| `notfound` | The version or document does not exist, the user cannot edit the document, or the document's type has no versions. |
+| `invalid` | `docId` is missing or malformed, `before` is not a valid date, or a version id is malformed. |
+| `notfound` | The version or document does not exist, the user cannot edit the document, or the document's type has no versions. For `draft-changes`, also when the type does not record versions of its drafts. |

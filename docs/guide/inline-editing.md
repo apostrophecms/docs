@@ -559,19 +559,24 @@ In every one of these cases the value still displays, rendered the way its field
 A `richText` field is the clearest case. Its stored markup holds [permalink](/reference/field-types/richText.md#displaying-the-value) placeholders rather than real URLs, so printing the property gives you internal links that go nowhere. `Field` resolves them. `edit: false` gets you that rendering and no editor at all, which is less work than calling `renderRichText` yourself and impossible to forget. In Astro, keep `wysiwyg: true` on such a field anyway: it is what sends the rendered markup, not just the editor.
 :::
 
-## Inline editing and Document Versions
+## Inline editing, Document Versions, and See Changes
 
-[Document versions](/guide/document-versions.md) records each saved version of a document and lets editors review changes and restore earlier versions.
+Editors review changes in two places. The [Document Versions](/guide/document-versions.md) modal shows what each saved version changed. [See Changes](/guide/document-versions.md#see-changes) shows the page with everything its draft changes since the last publication. Both render the document with your templates, read-only, and both mark changes on it.
 
-How a changed inline editable field appears in the versions modal depends on the field type and on where the field lives:
+A field rendered with `Field`, `{% field %}` or `AposField` shows its own change **in place**, inside the field on the page:
 
-- **A `richText` field of the document itself** shows its added and removed words marked in place, inside the field on the page, the same way a [rich text widget](/guide/showing-version-changes.md#rich-text-marks) does. No template changes are needed.
-- **A `string` field of the document** is framed as Modified. The before and after values appear only in the change list.
-- **Any field inside a widget**, `richText` included, is not marked on its own. The widget's template renders the field from the widget's data, so Apostrophe cannot mark it in place. The widget is framed as Modified, and the field's before and after values appear in the change list. A widget type can show the change in place by setting [`versionsRender`](/guide/showing-version-changes.md#versionsrender-show-what-changed-in-your-template) and comparing the field with `widget._olderVersion` in its template.
+- **A `string` field** shows its removed and added words, marked with `<del>` and `<ins>`.
+- **A `richText` field** shows its removed and added words inside its markup, the same way a [rich text widget](/guide/showing-version-changes.md#rich-text-marks) does.
+
+This works wherever the field lives: on the document, in an array item or object, or in a widget at any depth. In-place marks need nothing beyond the template code that makes the field editable.
+
+A field gets no in-place mark when the template prints its value with an ordinary expression, such as <span v-pre>`{{ data.page.subhead }}`</span> or `{page.subhead}`. Apostrophe cannot tell which part of the page that value is. The same goes for a field that is [displayed but not edited](#when-a-field-is-displayed-but-not-edited), for example one rendered with `edit: false`. A field that is not marked in place is still listed with its old and new values, and a widget that holds it is framed as Modified.
+
+In an Astro project, a field must also be [opted in](#telling-apostrophe-which-fields-you-render) with `wysiwyg: true` or `wysiwygFields`. Without that, `AposField` displays the value but has nothing to mark.
 
 Every changed field, however it is displayed, has its own row in the change list. Selecting a frame or marked text reveals the matching row.
 
-This is worth weighing when you are deciding between a document-level inline editable `richText` field and an equivalent that is only edited in a modal or lives inside a widget.
+This makes `Field` worth using for any `string` or `richText` value an editor may want to review, even one that is mostly edited in a modal.
 
 ## Adding inline editing to a custom field type
 
