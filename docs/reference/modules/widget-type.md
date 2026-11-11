@@ -338,6 +338,11 @@ No matter what, the widget modal width will take 100% of the screen for screens 
 
 Choose the side from where the widget modal will open. If left unset (default) Apostrophe will make a best guess based on the position of the widget on the page. If the widget appears in the left half of the screen, the widget modal is positioned on the right, and vice-versa. Also accepts `left` or `right`.
 
+## Related documentation
+
+- [Core widgets](/guide/core-widgets.md)
+- [Custom widgets](/guide/custom-widgets.md)
+
 ## Featured methods
 
 ### `getBrowserData(req)`
@@ -458,9 +463,4 @@ node app @apostrophecms/rich-text-widget:list
 ```
 
 Will list all of the rich text widgets on the site.
-
-## Related documentation
-
-- [Core widgets](/guide/core-widgets.md)
-- [Custom widgets](/guide/custom-widgets.md)
 
