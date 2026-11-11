@@ -297,6 +297,47 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 }
 ```
 
+### Validating the whole document with `_strict`
+
+A `PATCH` validates only the fields it names. That can leave the document in a state its editor modal would refuse to save. For example, suppose an event type has a `ticketUrl` field that is `required` only while `hasTickets` is `true`. A patch that sets only `hasTickets` saves, and leaves `ticketUrl` empty:
+
+```javascript
+{
+  "hasTickets": true
+}
+```
+
+Add `_strict: true` to validate the whole document after the patch is applied, as a save from the editor modal would. If the document would be invalid, nothing is saved and the request fails:
+
+```javascript
+{
+  "hasTickets": true,
+  "_strict": true
+}
+```
+
+The response has status `400`. The body names the fields that failed:
+
+```json
+{
+  "name": "invalid",
+  "message": "invalid",
+  "data": {
+    "errors": [
+      {
+        "name": "required",
+        "code": 422,
+        "message": "required",
+        "data": {},
+        "path": "ticketUrl"
+      }
+    ]
+  }
+}
+```
+
+`_strict` is not stored. With `_patches`, setting `_strict` on any one patch validates the document once, after all of them are applied.
+
 ### Response
 
 The successful `PATCH` request returns the complete patched document. See the [piece document response example](#piece-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.

@@ -385,6 +385,21 @@ The `PATCH` request body may use MongoDB-style operators. For example, you may u
 }
 ```
 
+### Validating the whole page with `_strict`
+
+A `PATCH` validates only the fields it names. That can leave the page in a state its editor modal would refuse to save, for example when a field is `required` only while another field has a certain value. Add `_strict: true` to validate the whole page after the patch is applied, as a save from the editor modal would:
+
+```javascript
+{
+  "showBanner": true,
+  "_strict": true
+}
+```
+
+If the page would be invalid, for instance because a `bannerText` field is required while `showBanner` is `true` and is empty, nothing is saved. The request fails with status `400` and an `invalid` error whose `data.errors` names the fields that failed. See [the piece type REST API](/reference/api/pieces.md#validating-the-whole-document-with-strict) for the response body.
+
+`_strict` is not stored. With `_patches`, setting `_strict` on any one patch validates the page once, after all of them are applied.
+
 ### Response
 
 The successful `PATCH` request returns the complete patched document. See the [page document response example](#page-document-response-example) below for a sample response body. In case of an error an appropriate HTTP status code is returned.
