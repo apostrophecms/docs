@@ -6,7 +6,9 @@ title: "Document versions in ApostropheCMS"
 
 ApostropheCMS keeps a history of every page and piece. Editors open it from a document's context menu, under **Document Versions**. There they can see who changed what and when, see each change in place on the document, and restore an earlier version.
 
-Version history is part of core, in the [`@apostrophecms/document-versions`](/reference/modules/document-versions.md) module. There is nothing to install, and it works without configuration. This guide explains how the history is recorded, for developers who configure it, build on it, or write code that saves content.
+On the page itself, editors can also turn on [See Changes](#see-changes), which shows everything the current draft changes since the document was last published.
+
+Version history and See Changes are part of core, in the [`@apostrophecms/document-versions`](/reference/modules/document-versions.md) module. There is nothing to install, and both work without configuration. This guide explains how the history is recorded, for developers who configure it, build on it, or write code that saves content.
 
 ::: info
 If your project uses the `@apostrophecms-pro/document-versions` extension, start with the [migration guide](/guide/migration/document-versions-migration.md). The core module replaces it, and the two cannot run together.
@@ -90,7 +92,7 @@ Each entry in the list is compared with the one before it on the timeline. Edito
 
 - **The edit count** on each entry in the list, such as "3 edits." It counts the individual changes, at their full depth: a changed field inside a widget inside an area is one edit.
 - **The change list** for the selected version, one row per change, with a breadcrumb showing where the change sits in the document.
-- **The document itself**, drawn with a frame around each changed widget and field, and with added and removed words marked in rich text. An [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) `richText` field of the document shows its word marks in place on the page. Selecting a marker reveals the matching row in the change list.
+- **The document itself**, drawn with a frame around each changed widget and field, and with added and removed words marked in rich text. A field the template renders [inline editable](/guide/inline-editing.md#inline-editing-document-versions-and-see-changes) shows its added and removed words in place. Selecting a marker reveals the matching row in the change list.
 
 Widget authors can improve how their widgets appear in all of this. See [Showing version changes in widgets](/guide/showing-version-changes.md).
 
@@ -109,6 +111,63 @@ Consecutive draft versions by the same author are consolidated when at least one
 A restore always goes to the draft, even when the restored version is a publication point. The restored content goes live when the draft is published. To restore through the REST API, see [Restoring a version](/reference/api/document-versions.md#restoring-a-version).
 
 **Undo Publish** uses the version history. It returns the published document to the previous publication point and records that as a published version that is also a restored version. Undo Publish cannot be applied twice in a row; after one, only a new publish can be undone. To find the publication point Undo Publish would return to, call [`getPreviousPublication`](/reference/modules/document-versions.md#getpreviouspublication-req-published).
+
+## See Changes
+
+**See Changes** shows what publishing the current draft would change. An editor turns it on from the **More Options** menu next to **Preview**, while editing a page or a piece on its own page. The page then shows the draft with every change since the last publication marked in place, and a floating window lists the same changes.
+
+The two features answer different questions:
+
+| | Document Versions | See Changes |
+| -- | -- | -- |
+| **Question** | Who changed what, and when? | What will happen if I publish? |
+| **Compares** | Each version with the one before it | The current draft with the last publication point |
+| **Shows** | The full history, version by version | Each changed value once, credited to everyone who changed it since the publication, with AI involvement |
+| **Opens** | In a modal, for any document with versions | On the page, for the document the page displays |
+| **Restores** | A whole version | One change at a time |
+
+When a document has never been published, See Changes compares the draft with a new, empty document of its type, so every value the editor entered is listed as a change.
+
+### Restore and Edit
+
+Each change in the list can have two actions:
+
+- **Restore** puts back the published value of that change alone, such as one field, one widget, or one array item. The rest of the draft stays as it is.
+- **Edit** opens an editor for that value, inside the list. It saves to the draft with **Update Draft**.
+
+Both save to the draft right away, then the page and the list refresh. The page itself is read-only while See Changes is on. Closing the window, or switching to **Preview**, returns to normal editing.
+
+A restore or an edit is refused when it would leave the document invalid, for example a value that a [conditional field](/guide/conditional-fields.md) rule no longer allows alongside the other fields. The editor is told to make the change in the document's editor instead.
+
+Restore is not offered for a change when:
+
+- The editor cannot change the field, because it is `readOnly`, `hidden`, or restricted by `editPermission` or `viewPermission`.
+- The restored value would bring back a widget type that the area no longer allows, or a related document that the editor can no longer load.
+- The change is to a widget whose type sets [`versionsStandalone: false`](/guide/showing-version-changes.md#widgets-that-do-not-stand-alone), such as a layout column, which can only be put back with the widgets around it.
+- The change is to the order of an array or area. Restoring the old order would also undo every other change to the list.
+
+Edit uses the same schema-driven inputs as the document's editor. A widget that was added or changed as a whole opens in its widget editor. A widget with no visible schema fields and no [in-context editor](/guide/editing-custom-widgets-in-context.md) of its own has nothing to edit, so its changes offer Restore only. See [Widgets in See Changes](/guide/showing-version-changes.md#widgets-in-see-changes).
+
+### Which documents offer See Changes
+
+See Changes is offered for a document when all of these are true:
+
+- Its type records versions of its drafts: it [has versions](#which-document-types-have-versions), is localized, and does not set `autopublish: true`.
+- It has its own page, so that it can be shown in context: a page, or a piece whose type has a [piece page type](/guide/piece-pages.md).
+- The user can edit it.
+
+Pieces without a page of their own still have their history in **Document Versions**.
+
+### What your project needs
+
+See Changes renders the page with your own templates, so how much it can mark in place depends on how they output content:
+
+- **Inline fields** show their changed words in place only when the template renders them with `Field` in JSX, `{% field %}` in Nunjucks, or `AposField` in Astro. A value printed with an ordinary template expression is not marked on the page, but it is still listed. See [Inline editing, Document Versions, and See Changes](/guide/inline-editing.md#inline-editing-document-versions-and-see-changes).
+- **Widgets** are framed and badged as in the Document Versions modal, and the same widget type options apply. See [Showing version changes in widgets](/guide/showing-version-changes.md).
+
+In an Astro project, See Changes works through the same bridge as in-context editing, with no extra setup. Fields need the same `wysiwyg` opt-in that inline editing needs.
+
+See Changes is built for in-context editing, so it is not available on a [headless](/guide/headless-cms.md) front end. The same list of changes is available from the [`draft-changes` route](/reference/api/document-versions.md#get-api-v1-apostrophecms-document-versions-draft-changes), with each change's restore patch, if you want to build your own review screen.
 
 ## Marking AI-written saves
 
@@ -195,4 +254,5 @@ This matters when a project migrates documents from one type to another, for exa
 - [`@apostrophecms/document-versions` module reference](/reference/modules/document-versions.md)
 - [Document versions REST API](/reference/api/document-versions.md)
 - [Showing version changes in widgets](/guide/showing-version-changes.md)
+- [Inline editing](/guide/inline-editing.md)
 - [Migrating from `@apostrophecms-pro/document-versions`](/guide/migration/document-versions-migration.md)

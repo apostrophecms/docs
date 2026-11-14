@@ -117,6 +117,8 @@ From the submitted drafts interface, editors can:
 - Share a preview link for others to review the draft
 - Dismiss the submission if it's not ready for publication
 
+On the submitted document's own page, the editor can turn on [See Changes](/guide/document-versions.md#see-changes) from the **More Options** menu. It marks on the page exactly what publishing the draft would change, and lets the editor restore or edit each change individually. This is especially useful for revisions to content that is already live.
+
 ### Step 3: Publication
 
 <div style="
@@ -133,6 +135,8 @@ From the submitted drafts interface, editors can:
 The article is now live on the website. If changes are needed later:
 - The original Contributor can continue to edit the published article (but changes remain as drafts until an editor publishes them)
 - The Editor can make immediate changes and publish them
+
+Draft work and every publication are recorded in [Document Versions](/guide/document-versions.md), so editors can see who changed what and when, restore an earlier version, or undo a publish.
 
 ## Advanced Permissions Extension
 

@@ -7,6 +7,8 @@ When an editor selects a version in the **Document Versions** modal, they see tw
 
 (See the [Document versions guide](/guide/document-versions.md) for how versions are recorded.)
 
+[See Changes](/guide/document-versions.md#see-changes) displays changes the same way, on the page itself, for everything the draft changes since the last publication. Everything on this page applies to both views.
+
 All of this works for every widget, with no extra code. Two optional widget type settings improve it:
 
 - [`titleField`](#titlefield-name-your-widgets) gives each widget a readable name in the change list.
@@ -163,13 +165,13 @@ const changed = older && older.price !== widget.price;
 
 Your template only needs to check whether `_olderVersion` exists. It is present only when all of these are true:
 
-- The widget is being displayed in the Document Versions modal. It is never present on the live site or in the page editor.
-- The widget changed in the version being viewed.
-- The widget existed in the previous version. An added widget has no older version.
+- The widget is being displayed in the Document Versions modal or in See Changes. It is never present on the live site or during normal editing.
+- The widget changed in the version being viewed. In See Changes, it changed since the last publication.
+- The widget existed in the previous version, or in See Changes, in the published document. An added widget has no older version.
 
 A few related cases:
 
-- A **deleted** widget renders in its old position, from its old data, dimmed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted).
+- A **deleted** widget renders in its old position, from its old data, dimmed, unless its type sets [`versionsStandalone: false`](#widgets-that-do-not-stand-alone).
 - A widget whose only changes are inside **nested widgets** gets no `_olderVersion` of its own. The nested widgets get theirs.
 - The Modified frame and badge are drawn around the widget whether or not its type sets `versionsRender`.
 
@@ -217,13 +219,17 @@ Sometimes the change cannot be shown as marked words. Then `content` is left as 
 - Removed text has no place to go, as in a rebuilt table.
 - The two versions differ by more than 2000 tokens, roughly a thousand words.
 
-The same marks are applied to `richText` fields of the document itself, so an [inline editable](/guide/inline-editing.md#inline-editing-and-document-versions) rich text field shows them in place. They are **not** applied to `richText` fields inside a widget's own schema. A widget with such a field is framed as Modified, unless its type sets `versionsRender` and compares the field itself in its template.
+The same marks appear in a `richText` or `string` field that the template renders [inline editable](/guide/inline-editing.md#inline-editing-document-versions-and-see-changes) with `Field`, `{% field %}` or `AposField`, wherever that field lives, including in a widget's own schema. A widget field printed with an ordinary template expression is not marked. Its widget is framed as Modified, unless its type sets `versionsRender` and compares the field itself in its template.
 
 A custom rich text widget type gets the same marks when it defines `getRichText` and sets `versionsRender: true`.
 
 ## The annotated document
 
-The versions modal displays an **annotated document**: a copy of the version's document with markers added to show what changed. You can get the same copy yourself, with `GET /api/v1/@apostrophecms/document-versions/:versionId?annotate=1` or the server-side [`getAnnotatedDoc`](/reference/modules/document-versions.md#getannotateddoc-req-older-newer-options) method.
+The versions modal and See Changes display an **annotated document**: a copy of the document with markers added to show what changed. You can get the same copy yourself:
+
+- For a version, with `GET /api/v1/@apostrophecms/document-versions/:versionId?annotate=1`.
+- For the draft since its last publication, as See Changes shows it, with [`GET /api/v1/@apostrophecms/document-versions/draft-changes?docId=...&annotate=1`](/reference/api/document-versions.md#get-api-v1-apostrophecms-document-versions-draft-changes).
+- For any two copies of a document, with the server-side [`getAnnotatedDoc`](/reference/modules/document-versions.md#getannotateddoc-req-older-newer-options) method.
 
 The annotated document is for display only. Never save it.
 
@@ -232,17 +238,34 @@ Changed widgets carry these properties:
 | Property | Set on |
 | -- | -- |
 | `_inserted: true` | A widget that the previous version did not have. |
-| `_deleted: true` | A widget that this version removed. It is put back into its area's `items`, at its old position, so it can be displayed, unless its type sets [`versionsRenderDeleted: false`](#widgets-that-are-not-shown-when-deleted). |
+| `_deleted: true` | A widget that this version removed. It is put back into its area's `items`, at its old position, so it can be displayed, unless its type sets [`versionsStandalone: false`](#widgets-that-do-not-stand-alone). |
 | `_olderVersion: { ... }` | A changed widget whose type sets `versionsRender`. The value is the widget as it was in the previous version. |
 | `_modified: true` | A changed widget whose type does not set `versionsRender`. |
 | `_moved: true` | A widget that changed position in its area, alongside any of the above. Only the fewest widgets that explain the new order are marked: dragging one widget to the top marks that widget, not every widget it passed. |
 | `_changedWithAi`, `_movedWithAi` | Alongside the other properties, when AI was involved in the change or move. The value is `'changed'` or `'assisted'`, with the same meaning as a change row's [`ai`](/reference/api/document-versions.md#ai-involvement). |
 
-### Widgets that are not shown when deleted
+### Widgets that do not stand alone
 
 A deleted widget is normally put back in its old position so editors can see what was removed. That doesn't work for a widget that positions itself within its parent's layout, such as a layout column: shown in place, the deleted widget would overlap the others.
 
-A widget type like that sets the `versionsRenderDeleted: false` option. A deleted widget of that type is not put back. Instead, the widget that contained it is marked as modified, or, if there is no containing widget, the document field is. The core `@apostrophecms/layout-column-widget` sets this option, so layout columns and widget types that extend them are never put back.
+A widget type like that sets the `versionsStandalone: false` option. A deleted widget of that type is not put back. Instead, the widget that contained it is marked as modified, or, if there is no containing widget, the document field is. In See Changes, a widget of that type that was added, deleted, or changed as a whole cannot be restored on its own, because putting it back or taking it out alone would break its parent's layout. Changes to fields inside it can still be restored.
+
+The core `@apostrophecms/layout-column-widget` sets this option, so layout columns and widget types that extend them behave this way. `versionsRenderDeleted: false` is an older name for the same setting and still works.
+
+## Widgets in See Changes
+
+In See Changes, each change in the list can offer [Restore and Edit](/guide/document-versions.md#restore-and-edit). For widgets, which actions appear depends on what changed and on the widget type:
+
+| Change | Restore | Edit |
+| -- | -- | -- |
+| A field of the widget's schema | Puts back that field's published value. | Opens an input for that field. |
+| A widget added or deleted | Removes the added widget, or puts the deleted one back in its old position. | Added widgets open in their widget editor. |
+| The text of a rich text widget | Puts back the published text. | Opens the rich text editor, with the widget's options. |
+| A widget's data stored outside its schema | Puts back the published data. The widget's schema fields are restored separately. | Only if the widget type has an [in-context editor](/guide/editing-custom-widgets-in-context.md) or visible schema fields. |
+
+The last row matters for custom widgets that store data their schema does not describe, such as a widget with its own in-context editor that saves an arbitrary structure. Apostrophe cannot build a schema-driven input for that data, so unless the widget's own editor can edit it, the change offers Restore only. It is still listed and framed on the page like any other change.
+
+A widget whose type sets [`versionsStandalone: false`](#widgets-that-do-not-stand-alone) offers neither action for a change to the widget as a whole.
 
 ## Related documentation
 

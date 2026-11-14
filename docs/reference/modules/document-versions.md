@@ -8,7 +8,7 @@ extends: '@apostrophecms/module'
 
 <AposRefExtends :module="$frontmatter.extends" />
 
-This module records the version history of pages and pieces and provides the **Document Versions** modal, where editors review changes and restore earlier versions. It is part of core and active in every project.
+This module records the version history of pages and pieces and provides the **Document Versions** modal, where editors review changes and restore earlier versions. It also provides [See Changes](/guide/document-versions.md#see-changes), which shows on the page what the current draft changes since its last publication. It is part of core and active in every project.
 
 For how versions are recorded, which types have them, and how to mark AI-written saves, see the [Document versions guide](/guide/document-versions.md). This page is the reference for the module's options, data, and server API. The HTTP API is covered in the [Document versions REST API](/reference/api/document-versions.md).
 
@@ -111,7 +111,7 @@ These methods are the module's public API. The module's other methods support th
 
 Most of these methods take the request, `req`, as their first argument, as elsewhere in Apostrophe. Depending on the method, `req` determines:
 
-- Whether the user may see the version, for the methods that check permissions (`getOne` and `getVersionChanges`).
+- Whether the user may see the version, for the methods that check permissions (`getOne`, `getVersionChanges`, and `getDraftChanges`).
 - Which related documents are visible when their titles are looked up for display.
 - The language of the display text, which is the language of the user's admin UI.
 
@@ -119,7 +119,7 @@ In a task or migration, where there is no request, use `self.apos.task.getReq()`
 
 ### Permissions
 
-Only `getOne` and `getVersionChanges` check permissions. They require the user to be able to **edit** the document, as the REST routes do. Read permission is not enough, because versions include unpublished draft content.
+Only `getOne`, `getVersionChanges`, and `getDraftChanges` check permissions. They require the user to be able to **edit** the document, as the REST routes do. Read permission is not enough, because versions include unpublished draft content.
 
 ::: warning
 The other methods read the versions collection directly and check nothing, even though they take `req`. This includes `find`, `findOne`, `count`, `getTimelinePage`, `getPreviousVersion`, and `getPreviousPublication`. If you show their results to a user, check first that the user can edit the document:
@@ -202,9 +202,17 @@ Returns the changes a stored version made, compared with the version before it: 
 
 Use this method to show the changes of a version. It finds the copies to compare for you.
 
+#### `getDraftChanges(req, docId, options)`
+
+Returns every change of a document's draft since its last publication, as [See Changes](/guide/document-versions.md#see-changes) lists them: `{ rows, counts, baseline }`, in the same shape as the [draft changes route](/reference/api/document-versions.md#get-api-v1-apostrophecms-document-versions-draft-changes). `docId` is the document's `_id` in either mode. Each changed value appears once, credited to the people who changed it since the publication, and carries the patch that restores it when `req` may make that change.
+
+`options` accepts `annotate`, a boolean, which adds `doc`: the draft marked with the changes. See [The annotated document](/guide/showing-version-changes.md#the-annotated-document).
+
+Throws `invalid` for a malformed id, and `notfound` when the draft does not exist, `req` cannot edit it, or its type does not [record draft versions](#hasdraftversions-moduleoptions).
+
 #### `getChangeList(req, pairs)`
 
-Returns the same kind of change list as `getVersionChanges`, `{ rows, counts }`, for copies of a document that you supply. Use it to show changes that are not a stored version, such as how a draft differs from the published document, or how an import would change a document.
+Returns the same kind of change list as `getVersionChanges`, `{ rows, counts }`, for copies of a document that you supply. Use it to show changes that are not a stored version, such as how an import would change a document. To list a draft's changes since its last publication, `getDraftChanges` does the work for you.
 
 `pairs` is an array of comparisons, each an object with these properties:
 
@@ -255,10 +263,14 @@ Returns a copy of `newer` marked with its changes since `older`, for display. Se
 
 Returns whether a document type with these module options has versions, following the rules of the [`versions` option](/guide/document-versions.md#which-document-types-have-versions).
 
+#### `hasDraftVersions(moduleOptions)`
+
+Returns whether a document type with these module options records versions of its drafts: it has versions, is localized, and does not set `autopublish: true`. These are the types that `getDraftChanges` and See Changes support.
+
 ::: info
 `getChangeRows`, `getChangeCount`, and `getAnnotatedDoc` read the schema of the document's type, so that type's module must still be in the project. `getChangeList` and `getVersionChanges` return an empty list instead when it is not.
 
-`getOne` and `getVersionChanges` throw the same errors as the REST routes: `invalid` for a malformed id, and `notfound` for a version that does not exist or that `req` cannot edit. Check `error.name`, as with any `apos.error`.
+`getOne`, `getVersionChanges`, and `getDraftChanges` throw the same errors as the REST routes: `invalid` for a malformed id, and `notfound` for a version that does not exist or that `req` cannot edit. Check `error.name`, as with any `apos.error`.
 :::
 
 ## Events

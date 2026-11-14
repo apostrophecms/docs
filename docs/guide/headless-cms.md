@@ -191,6 +191,12 @@ GET https://example.rocks/about-us?aposRefresh=1
 
 This technique is quite effective. It can be extended by passing additional custom query parameters and checking `data.query.parameterName` inside page and layout templates to decide how to further adjust the response.
 
+## Reviewing changes before publishing
+
+[See Changes](/guide/document-versions.md#see-changes) marks a draft's unpublished changes on the page, so it needs Apostrophe's in-context editing. It works with the [Astro](#astro-plugin) integration, which supports in-context editing, but not with a front end that only reads the REST API.
+
+A headless front end can read the same list of changes from the [`draft-changes` route](/reference/api/document-versions.md#get-api-v1-apostrophecms-document-versions-draft-changes), with a patch to restore each one, and build its own review screen. The full history of each document is available from the other [document versions routes](/reference/api/document-versions.md).
+
 ## Headless integrations
 
 As official platform-specific plugins are made available they will be added here. These are meant to make it even easier to use Apostrophe REST APIs with certain popular front end systems.

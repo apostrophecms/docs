@@ -141,8 +141,8 @@ These are options to *the module itself*, so they apply to *every* instance of t
 | [`scene`](#scene) | String | **Deprecated.** Can specify that this widget type requires logged-in assets. |
 | [`template`](#template) | String | The template name to render. |
 | [`titleField`](#titlefield) | String | The field whose text names a widget of this type in the Document Versions change list. |
-| [`versionsRender`](#versionsrender) | Boolean | Pass the previous version of a changed widget to its template in the Document Versions modal. |
-| [`versionsRenderDeleted`](#versionsrenderdeleted) | Boolean | Set to `false` so a deleted widget of this type is not shown in place in the Document Versions modal. |
+| [`versionsRender`](#versionsrender) | Boolean | Pass the previous version of a changed widget to its template in the Document Versions modal and See Changes. |
+| [`versionsStandalone`](#versionsstandalone) | Boolean | Set to `false` for a widget type laid out together with its siblings, so it is never shown deleted in place or restored on its own. |
 | [`width`](#width) | String | Define the size of the widget modal. Defaults to `window`. Can also accept `one-third`, `two-thirds`, `half`, and `full` |
 | [`origin`](#origin) | String | Define the position of the widget modal (left or right). |
 | `hideSingleTab` | Boolean | If `true` and an editing modal only has a single tab, that tab will be hidden. |
@@ -230,15 +230,24 @@ See [Showing version changes in widgets](/guide/showing-version-changes.md#title
 
 ### `versionsRender`
 
-When `true`, a widget of this type that changed in the version being viewed in the Document Versions modal receives the widget as it was in the previous version, as `widget._olderVersion`. The template can use it to show what changed. Without this option, a changed widget renders as usual, framed as Modified. Defaults to `false`, except for `@apostrophecms/rich-text-widget`, which sets it and marks changed words in its content automatically.
+When `true`, a widget of this type that changed in the version being viewed in the Document Versions modal, or since the last publication in See Changes, receives the widget as it was in the previous version, as `widget._olderVersion`. The template can use it to show what changed. Without this option, a changed widget renders as usual, framed as Modified. Defaults to `false`, except for `@apostrophecms/rich-text-widget`, which sets it and marks changed words in its content automatically.
 
 See [Showing version changes in widgets](/guide/showing-version-changes.md#versionsrender-show-what-changed-in-your-template).
 
-### `versionsRenderDeleted`
+### `versionsStandalone`
 
-Defaults to `true`: when a version deleted a widget of this type, the Document Versions modal shows it in its old position, marked as deleted. Set it to `false` for a widget type that positions itself within its parent's layout, where a deleted widget shown in place would overlap the others. The widget that contained it is then marked as modified instead, or, if there is none, the document field. `@apostrophecms/layout-column-widget` sets it to `false`.
+Defaults to `true`: a widget of this type stands alone in Document Versions and See Changes. When it is deleted, it is shown in its old position, marked as deleted, and in See Changes it can be restored on its own.
 
-See [Widgets that are not shown when deleted](/guide/showing-version-changes.md#widgets-that-are-not-shown-when-deleted).
+Set it to `false` for a widget type whose widgets are laid out together by their parent, where one shown or changed alone would overlap the others. Then:
+
+- A deleted widget of this type is not shown in place. The widget that contained it is marked as modified instead, or, if there is none, the document field.
+- In See Changes, a widget of this type that was added, deleted, or changed as a whole cannot be restored on its own. Changes to fields inside it still can.
+
+`@apostrophecms/layout-column-widget` sets it to `false`.
+
+`versionsRenderDeleted` is the older name of this option. `versionsRenderDeleted: false` has the same effect as `versionsStandalone: false`.
+
+See [Widgets that do not stand alone](/guide/showing-version-changes.md#widgets-that-do-not-stand-alone).
 
 ### `width`
 
