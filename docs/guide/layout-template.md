@@ -53,11 +53,11 @@ You might notice that this does not have essential web page elements such as a `
 <Extend templateName={data.outerLayout} … />
 ```
 
-`data.outerLayout` is a reference to a lower level layout template from Apostrophe core. **The lowest-level templates in any project should extend this.** For a normal page request it points to core's `outerLayout.html`. When Apostrophe refreshes page content during editing, it points to a smaller `refreshLayout.html` instead, which is why layouts extend `data.outerLayout` rather than naming a template directly.
+`data.outerLayout` is a reference to a lower level layout template from Apostrophe core. **The lowest-level templates in any project should extend this.** For a normal page request it points to core's `outerLayout` template. When Apostrophe refreshes page content during editing, it points to a smaller `refreshLayout` template instead, which is why layouts extend `data.outerLayout` rather than naming a template directly.
 
-`outerLayout.html` itself contains only one line: it extends `outerLayoutBase.html`. That base template is where the critical HTML elements, the markup required by Apostrophe, and the named regions that project-level templates fill in are defined. ([See `outerLayoutBase.html` on GitHub](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
+`outerLayout` itself only extends `outerLayoutBase`. That base template is where the critical HTML elements, the markup required by Apostrophe, and the named regions that project-level templates fill in are defined. ([See `outerLayoutBase.html` on GitHub](https://github.com/apostrophecms/apostrophe/blob/main/packages/apostrophe/modules/%40apostrophecms/template/views/outerLayoutBase.html) if you're interested.)
 
-These core outer layouts are Nunjucks templates, and they are expected to stay that way, since every existing Nunjucks project extends them too. You never need to edit them or write any Nunjucks to use them. A JSX template can extend a Nunjucks template: `<Extend>` turns each prop you pass into the matching `{% block %}` of that template. Here, `title` fills the document `<title>` and `main` fills the page body. See [Extending a Nunjucks template](/guide/jsx-templates.md#extending-a-nunjucks-template-named-block-overrides) for how that bridge works.
+Apostrophe ships these outer layouts twice: as Nunjucks (`.html`) and as JSX (`.jsx`). By default it renders the Nunjucks versions, exactly as earlier releases did. Set the `jsx` option of `@apostrophecms/template` to render the JSX versions instead; see [JSX all the way down](/guide/jsx-templates.md#jsx-all-the-way-down). You never need to edit either one, and a layout passes the same props to both. Against the Nunjucks version, `<Extend>` turns each prop you pass into the matching `{% block %}` of that template. Here, `title` fills the document `<title>` and `main` fills the page body. See [Extending a Nunjucks template](/guide/jsx-templates.md#extending-a-nunjucks-template-named-block-overrides) for how that bridge works.
 
 The same mechanism is what lets an existing project adopt JSX gradually. A project that still has a Nunjucks `layout.html` can write any new page template in JSX, extending `layout.html` with `<Extend templateName="layout" … />`, and convert its older templates over time. The reverse is not possible: a Nunjucks template can never extend a JSX one. See [Migration order](/guide/jsx-templates.md#migration-order) for the rules.
 
@@ -86,7 +86,25 @@ The most important props you can pass to the core outer layout are:
 | `afterMain` | Markup after the `main` content region. |
 | `extraBody` | Markup at the end of the `body` tag. |
 
-Your layout decides which of these its pages can influence. To let a page set its own `bodyClass`, for example, pass `bodyClass={data.bodyClass}` through from the layout, the same way `title` is passed above.
+Your layout decides which of these its pages can influence. To let a page set its own `bodyClass`, for example, pass `bodyClass={data.bodyClass}` through from the layout, the same way `title` is passed above. A prop that is `undefined` keeps core's default markup for that region, so a layout can pass props through whether or not a page sets them.
+
+### Adding to core's default markup
+
+To keep core's markup for a region and add to it, pass a function instead of markup. It receives the default and returns the markup to use, as a Nunjucks block does by calling `super()`:
+
+```jsx
+<Extend
+  templateName={data.outerLayout}
+  standardHead={(standardHead) => (
+    <>
+      {standardHead}
+      <meta name="theme-color" content="#1a1a2e" />
+    </>
+  )}
+/>
+```
+
+This works with both versions of the outer layout. Place the argument in your markup as shown, and don't use it as a string: depending on the outer layout, it may be already-rendered markup rather than text, so `` `${title} - My Site` `` does not work. Write `<>{title} - My Site</>` instead.
 
 ::: info NOTES
 The `beforeMain`, `main`, and `afterMain` regions are inside the section that Apostrophe refreshes regularly during content editing. Any `script` tags inside them will run an indeterminate number of times during editing. Be especially careful when using event handlers. As a reminder, any widget-related JavaScript belongs in a [widget player](/guide/custom-widgets.md#client-side-javascript-for-widgets).
@@ -100,7 +118,7 @@ The `beforeMain`, `main`, and `afterMain` regions are inside the section that Ap
 ::: warning
 Only `.jsx` templates can extend a `.jsx` layout. A `.html` template that extends it throws an error instead of rendering.
 
-That includes templates you didn't write yourself, most commonly the 404 page. Current starter kits already include a JSX 404 template at `modules/@apostrophecms/page/views/notFound.jsx`. If you're converting an older project, check that folder before you switch to `layout.jsx`. If it has a `notFound.html`, or no 404 template at all so core's `notFound.html` is used, **create `notFound.jsx` there** and delete any project-level `notFound.html`. Apostrophe then uses your JSX version instead.
+That includes templates you didn't write yourself, most commonly the 404 page. If you set the `jsx` option of `@apostrophecms/template`, core's own 404 template is JSX and works with any layout, so there is nothing more to do. Otherwise, check for a 404 template of your own. Current starter kits already include a JSX 404 template at `modules/@apostrophecms/page/views/notFound.jsx`. If you're converting an older project, check that folder before you switch to `layout.jsx`. If it has a `notFound.html`, or no 404 template at all so core's `notFound.html` is used, **create `notFound.jsx` there** and delete any project-level `notFound.html`. Apostrophe then uses your JSX version instead.
 
 <AposCodeBlock>
 
@@ -123,6 +141,37 @@ modules/@apostrophecms/page/views/notFound.jsx
 
 Do the same for any other `.html` template in your project, or in a module you installed, that extends `layout`.
 :::
+
+## Customizing the outer layout
+
+You rarely need to, but a project can replace core's outer layout with its own JSX version. Set the `jsx` option of `@apostrophecms/template` (see [JSX all the way down](/guide/jsx-templates.md#jsx-all-the-way-down)), add `outerLayout.jsx` (or `refreshLayout.jsx`) to `modules/@apostrophecms/template/views/`, and extend `outerLayoutBase` from it. Don't extend `outerLayout` itself, which would resolve back to your own template.
+
+<AposCodeBlock>
+
+```jsx
+export default function({ extraHead }, { Extend }) {
+  return (
+    <Extend
+      templateName="outerLayoutBase"
+      extraHead={
+        <>
+          <link rel="icon" href="/favicon.svg" />
+          {extraHead}
+        </>
+      }
+    />
+  );
+}
+```
+
+<template v-slot:caption>
+modules/@apostrophecms/template/views/outerLayout.jsx
+</template>
+</AposCodeBlock>
+
+Pass only what you change. With the `jsx` option set, every other block reaches `outerLayoutBase` on its own. Without it, `outerLayoutBase` is the Nunjucks version, which receives only the blocks you pass explicitly, so the page's `main` and the rest would be lost.
+
+Every layout that extends `data.outerLayout` now renders through your outer layout, including Nunjucks layouts and page templates, such as those installed extensions ship. Their blocks arrive as props, and a block that calls `super()` gets the default markup.
 
 ## Nunjucks layouts
 
