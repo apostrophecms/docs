@@ -25,12 +25,14 @@ By the end of the chapter you'll have:
 Start the project with `npm run dev` from the project root if it isn't already running.
 
 ::: info Comparing with the demo
-The code in this chapter comes from the [Astro public demo](https://github.com/apostrophecms/astro-public-demo), the site this series builds. The demo's versions also include a locale switcher, translated labels, a favicon setting, and a dark mode toggle. Later chapters add those, so this chapter leaves them out.
+The header and breadcrumbs come from the [Astro public demo](https://github.com/apostrophecms/astro-public-demo). The demo's versions also include a locale switcher, translated labels, a favicon setting, and a dark mode toggle. Later chapters add those, so this chapter leaves them out. The footer in this chapter is simpler than the demo's.
 :::
 
 ## Add global settings
 
 Some content belongs to the whole site rather than to one page, like the site title and logo. ApostropheCMS keeps this content in a single **global** document. Every page request loads it, so it's always available to your templates.
+
+Global settings follow the same pattern as the building blocks in [Core concepts](/tutorials/astro/getting-started.html#core-concepts): a backend module defines the fields, and Astro components render them. The difference is the last step. There's only one global document and it comes with every request, so it needs no mapping. The catch-all route passes it straight to the components that use it.
 
 The global document comes from the core `@apostrophecms/global` module. To add fields to it, configure the module in your project. Create this file:
 
@@ -78,7 +80,9 @@ The backend restarts when you save the file. Then set the title and logo:
 2. In the admin bar, click the gear icon on the right, labeled **Open Global Site Settings**.
 3. Enter a **Site Title**.
 4. Under **Site Logo**, click **Browse Images** and upload or choose an image. A wide, short logo works best.
-5. Save your changes.
+5. Click **Update**. ApostropheCMS publishes the global document when it creates it, so the button says **Update** rather than **Publish**.
+
+<!-- TODO(screenshot): Global Site Settings modal, General tab, with Site Title filled in and a logo selected -->
 
 Nothing on the site changes yet. The settings are stored, but no template displays them. You'll do that next.
 
@@ -162,8 +166,331 @@ You'll create the two components and the stylesheet in the next sections. Until 
 
 ## Build the header
 
-Create `frontend/src/components/SiteHeader.astro`:
+The header has three parts: the logo, the navigation, and a menu for small screens. You'll build `SiteHeader.astro` one part at a time.
 
+### The logo
+
+Create `frontend/src/components/SiteHeader.astro` with the logo:
+
+<AposCodeBlock>
+
+```astro
+---
+import {
+  getAttachmentUrl,
+  getWidth,
+  getHeight,
+} from "@apostrophecms/apostrophe-astro/helpers/universal";
+
+const { aposData } = Astro.props;
+const { page, home, global } = aposData;
+
+const logoAttachment = global?._siteLogo?.[0];
+const logoUrl = logoAttachment
+  ? getAttachmentUrl(logoAttachment, { size: "one-third" })
+  : null;
+const logoWidth = logoAttachment ? getWidth(logoAttachment) : 100;
+const logoHeight = logoAttachment ? getHeight(logoAttachment) : 36;
+---
+
+<header class="header">
+  <div class="nav-bar">
+    <h2>
+      <a href="/">
+        {
+          logoAttachment ? (
+            <img
+              src={logoUrl}
+              alt={global?.siteTitle || "Home"}
+              width={logoWidth}
+              height={logoHeight}
+            />
+          ) : (
+            global?.siteTitle || "Site Title"
+          )
+        }
+      </a>
+    </h2>
+  </div>
+</header>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+`global._siteLogo` is an array, because relationships can hold more than one document. The header takes the first image and passes it to three helpers from `@apostrophecms/apostrophe-astro`:
+
+- `getAttachmentUrl` returns the URL of the image at a given size. ApostropheCMS stores several sizes of every uploaded image, and `one-third` is wide enough for a logo.
+- `getWidth` and `getHeight` return the image's dimensions, so the browser can reserve space for it before it loads.
+
+If no logo is set, the header shows the site title as text.
+
+### The navigation
+
+Add the navigation inside `<div class="nav-bar">`, after the closing `</h2>` tag. The comment marks the spot:
+
+<AposCodeBlock>
+
+```astro
+      </a>
+    </h2>
+    <!-- Add the navigation here -->
+  </div>
+</header>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Add this code:
+
+<AposCodeBlock>
+
+```astro
+    <nav class="nav" role="navigation">
+      <ul>
+        <li>
+          <a
+            class={page?.slug === home?.slug ? "active" : ""}
+            href={home?._url || "/"}>{home?.title || "Home"}</a
+          >
+        </li>
+        {
+          home?._children
+            ?.filter((p) => p.visibility === "public")
+            .map((navPage) => (
+              <li>
+                <a
+                  class={page?.slug === navPage.slug ? "active" : ""}
+                  href={navPage._url}
+                >
+                  {navPage.title}
+                </a>
+              </li>
+            ))
+        }
+      </ul>
+    </nav>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+ApostropheCMS adds `aposData.home` to every page request: the home page, along with its child pages in `_children`. Those children are the top level of the page tree, which makes them the site's main navigation. When an editor adds, removes, or reorders a top-level page in the page tree, the navigation follows.
+
+Each child page has a `visibility` field. The filter keeps only pages set to **Public**, so pages that require a login don't appear in the navigation.
+
+The `active` class marks the link for the current page by comparing slugs.
+
+::: tip Deeper navigation
+`_children` holds only one level of pages. For drop-down menus, each ancestor in `page._ancestors` also includes its own `_children`. To load more levels everywhere, set the [`builders` option](/reference/modules/page.html#builders) of the `@apostrophecms/page` module. This configuration gives each page in `home._children` its own `_children`:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  options: {
+    builders: {
+      children: true,
+      ancestors: {
+        children: {
+          depth: 2
+        }
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  backend/modules/@apostrophecms/page/index.js
+</template>
+</AposCodeBlock>
+
+[Building site navigation](/tutorials/building-navigation.html#change-page-tree-data-in-templates) covers more options, such as leaving out area data to keep the response small. Its templates use Nunjucks, but the backend configuration is the same.
+:::
+
+### The mobile menu
+
+The mobile menu takes three additions. First, add the menu button inside `<div class="nav-bar">`, after the closing `</nav>` tag:
+
+<AposCodeBlock>
+
+```astro
+      </ul>
+    </nav>
+    <!-- Add the menu button here -->
+  </div>
+</header>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Add this code:
+
+<AposCodeBlock>
+
+```astro
+    <button
+      class="nav__mobile-button"
+      data-mobile-trigger
+      aria-controls="mobile-nav"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-menu-icon lucide-menu"
+        ><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"
+        ></path></svg
+      >
+      <span>Menu</span>
+    </button>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Then add the menu itself after the closing `</header>` tag, at the end of the file. It's a second copy of the navigation in a panel that covers the screen:
+
+<AposCodeBlock>
+
+```astro
+  </div>
+</header>
+<!-- Add the mobile menu here -->
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Add this code:
+
+<AposCodeBlock>
+
+```astro
+<div class="mobile-nav" data-mobile-nav="hidden" aria-hidden="true">
+  <button class="mobile-nav__close-trigger" data-mobile-close-trigger>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-x-icon lucide-x"
+      ><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+    >
+    <span>Close</span>
+  </button>
+  <nav id="mobile-nav" class="mobile-nav__nav" role="navigation">
+    <ul>
+      <li>
+        <a
+          class={page?.slug === home?.slug ? "active" : ""}
+          href={home?._url || "/"}>{home?.title || "Home"}</a
+        >
+      </li>
+      {
+        home?._children
+          ?.filter((p) => p.visibility === "public")
+          .map((navPage) => (
+            <li>
+              <a
+                class={page?.slug === navPage.slug ? "active" : ""}
+                href={navPage._url}
+              >
+                {navPage.title}
+              </a>
+            </li>
+          ))
+      }
+    </ul>
+  </nav>
+</div>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Finally, add the script that opens and closes the menu, again at the end of the file:
+
+<AposCodeBlock>
+
+```astro
+  </nav>
+</div>
+<!-- Add the script here -->
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+Add this code:
+
+<AposCodeBlock>
+
+```astro
+<script is:inline>
+  (function () {
+    // Guard against duplicate initialization
+    if (window.__mobileNavInit) return;
+    window.__mobileNavInit = true;
+
+    function initMobileNav() {
+      const trigger = document.querySelector("[data-mobile-trigger]");
+      const closeTrigger = document.querySelector(
+        "[data-mobile-close-trigger]",
+      );
+      const mobileNav = document.querySelector("[data-mobile-nav]");
+
+      if (!trigger || trigger.dataset.initialized) return;
+      trigger.dataset.initialized = "true";
+
+      trigger.addEventListener("click", () => {
+        mobileNav?.classList.add("active");
+        mobileNav?.setAttribute("aria-hidden", "false");
+      });
+
+      closeTrigger?.addEventListener("click", () => {
+        mobileNav?.classList.remove("active");
+        mobileNav?.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initMobileNav);
+    } else {
+      initMobileNav();
+    }
+  })();
+</script>
+```
+<template v-slot:caption>
+  frontend/src/components/SiteHeader.astro
+</template>
+</AposCodeBlock>
+
+On narrow screens, the menu button replaces the navigation and opens a full-screen copy of it. The script that does this uses `is:inline`, so Astro adds it to the page as written instead of bundling it. It's small, it runs on every page, and it guards against running twice when ApostropheCMS refreshes the page during editing.
+
+::: details The complete SiteHeader.astro
 <AposCodeBlock>
 
 ```astro
@@ -333,93 +660,33 @@ const logoHeight = logoAttachment ? getHeight(logoAttachment) : 36;
   frontend/src/components/SiteHeader.astro
 </template>
 </AposCodeBlock>
-
-The header has three parts.
-
-### The logo
-
-`global._siteLogo` is an array, because relationships can hold more than one document. The header takes the first image and passes it to three helpers from `@apostrophecms/apostrophe-astro`:
-
-- `getAttachmentUrl` returns the URL of the image at a given size. ApostropheCMS stores several sizes of every uploaded image, and `one-third` is wide enough for a logo.
-- `getWidth` and `getHeight` return the image's dimensions, so the browser can reserve space for it before it loads.
-
-If no logo is set, the header shows the site title as text.
-
-### The navigation
-
-ApostropheCMS adds `aposData.home` to every page request: the home page, along with its child pages in `_children`. Those children are the top level of the page tree, which makes them the site's main navigation. When an editor adds, removes, or reorders a top-level page in the page tree, the navigation follows.
-
-Each child page has a `visibility` field. The filter keeps only pages set to **Public**, so pages that require a login don't appear in the navigation.
-
-The `active` class marks the link for the current page by comparing slugs.
-
-::: tip Deeper navigation
-`_children` holds only one level of pages. For drop-down menus, each ancestor in `page._ancestors` also includes its own `_children`. To load more levels everywhere, set the `builders` option of the [`@apostrophecms/page`](/reference/modules/page.html) module.
 :::
-
-### The mobile menu
-
-On narrow screens, the menu button replaces the navigation and opens a full-screen copy of it. The script that does this uses `is:inline`, so Astro adds it to the page as written instead of bundling it. It's small, it runs on every page, and it guards against running twice when ApostropheCMS refreshes the page during editing.
 
 ## Build the footer
 
-The demo's footer is a set of link columns beside the ApostropheCMS logo. Most of it is plain HTML, so rather than typing it in, copy it from the demo:
+The footer uses the global settings too. It's simpler than the [demo's footer](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/SiteFooter.astro), which has columns of links and the dark mode toggle, so you can focus on reading content from the global document.
 
-1. Copy [`SiteFooter.astro`](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/SiteFooter.astro) from the demo to `frontend/src/components/SiteFooter.astro`.
-2. Delete the frontmatter, everything between the two `---` lines at the top, including the lines themselves. It loads translation helpers you haven't added yet.
-3. Change the logo link from `href={basePath("/")}` to `href="/"`.
-4. Replace the three column headings with plain text: `Explore ApostropheCMS`, `Product`, and `Social Media`. In the demo they're written as `{__t("footerExplore")}` and so on.
-5. Delete everything from `<!-- Light/Dark mode switch -->` to the end of the file. That's the dark mode toggle, which you'll add in the Styling chapter.
-
-The result starts like this, with the logo SVG and the last two columns shortened:
+Create `frontend/src/components/SiteFooter.astro`:
 
 <AposCodeBlock>
 
 ```astro
+---
+const { aposData } = Astro.props;
+const { global } = aposData;
+const siteTitle = global?.siteTitle || "Site Title";
+const year = new Date().getFullYear();
+---
+
 <footer class="footer">
   <div class="footer__section footer__top">
-    <div class="footer__column footer__column--logo">
-      <a href="/" class="footer__logo">
-        <svg ...>
-          <!-- ApostropheCMS logo, copied from the demo -->
-        </svg>
-      </a>
-    </div>
-    <div class="footer__column">
-      <h4>Explore ApostropheCMS</h4>
-      <ul>
-        <li>
-          <a href="http://apostrophecms.com/?utm_source=demo" target="_blank"
-            >ApostropheCMS.com</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://docs.apostrophecms.org/?utm_source=demo"
-            target="_blank">ApostropheCMS Docs</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://docs.apostrophecms.org/guide/development-setup.html?utm_source=demo"
-            target="_blank">Getting Started</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://apostrophecms.com/assembly?utm_source=demo"
-            target="_blank">ApostropheCMS Multisite</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://meetings.hubspot.com/tom-boutell/demo-meeting?utm_source=demo"
-            target="_blank">Book a Call</a
-          >
-        </li>
-      </ul>
-    </div>
-    <!-- Product and Social Media columns, copied from the demo -->
+    <p>&copy; {year} {siteTitle}</p>
+    <p>
+      Built with
+      <a href="https://apostrophecms.com" target="_blank">ApostropheCMS</a>
+      and
+      <a href="https://astro.build" target="_blank">Astro</a>
+    </p>
   </div>
 </footer>
 ```
@@ -428,7 +695,9 @@ The result starts like this, with the logo SVG and the last two columns shortene
 </template>
 </AposCodeBlock>
 
-The footer's links are hard-coded, so changing them means changing code. To let editors manage them, you could add a field for them to the global settings, the same way you added the site title.
+The copyright line reads `siteTitle` from the global document, the same field the header uses, so changing the site title updates both. The year comes from the server's clock each time the page renders.
+
+The footer's text and links are written into the component, so changing them means changing code. To let editors manage them, add fields to the global settings, the same way you added the site title.
 
 ## Add breadcrumbs
 
@@ -492,7 +761,7 @@ const { main } = page;
 
 ## Add basic styles
 
-Without styles, the navigation renders as a bulleted list and the logo SVG in the footer fills the page. Create `frontend/src/styles/site-chrome.css` with enough layout to make the chrome usable:
+Without styles, the navigation renders as a bulleted list and the header, breadcrumbs, and footer run into the page content. Create `frontend/src/styles/site-chrome.css` with enough layout to make the chrome usable:
 
 <AposCodeBlock>
 
@@ -558,21 +827,12 @@ Without styles, the navigation renders as a bulleted list and the logo SVG in th
 .footer__top {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
   max-width: var(--content-max-width);
   margin: 3rem auto 0;
   padding: 2rem 1rem;
   border-top: 1px solid #ddd;
-}
-.footer__logo svg {
-  width: 200px;
-  height: auto;
-}
-.footer__column ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  line-height: 1.8;
 }
 ```
 <template v-slot:caption>
@@ -584,7 +844,9 @@ The catch-all route already imports this file. In the Styling chapter you'll rep
 
 ## Try it
 
-Reload `http://localhost:4321/about`. The header shows your logo and links to Home and About, with About marked as the current page. The breadcrumbs read Home / About, and the footer sits below the content.
+Reload `http://localhost:4321/about`. The header shows your logo and links to Home and About, with About marked as the current page. The breadcrumbs read Home / About, and the footer below the content shows the year and your site title.
+
+<!-- TODO(screenshot): About page, logged out, showing the header with logo and navigation, the breadcrumbs, and the footer -->
 
 Now watch the chrome follow the page tree:
 
@@ -592,13 +854,15 @@ Now watch the chrome follow the page tree:
 2. Enter the title `Contact`, make sure **Type** is **Default**, and click **Publish**. Contact appears in the navigation.
 3. Create another page titled `Our Team`. Before publishing, set its parent to About: open the page settings, choose **About** under **Parent Page**, then publish. Our Team doesn't appear in the navigation, because it isn't a top-level page. Its breadcrumbs read Home / About / Our Team.
 4. Open the Contact page's settings and set **Visibility** to **Login Required**. Contact disappears from the navigation, even while you're logged in, because the header lists only public pages. Set it back to **Public** before you continue.
-5. Change the site title in the global settings. The header updates on every page, and so does the browser tab.
+5. Change the site title in the global settings. The header and footer update on every page, and so does the browser tab.
 
 Narrow the browser window to below 680 pixels. The navigation is replaced by the **Menu** button, which opens the mobile menu.
 
+<!-- TODO(screenshot): About page at a narrow width with the mobile menu open -->
+
 ## Troubleshooting
 
-**The header shows "Site Title" instead of your title**
+**The header or footer shows "Site Title" instead of your title**
 
 `aposData.global` doesn't have a `siteTitle`. Check that the global module file is at `backend/modules/@apostrophecms/global/index.js`, including the `@apostrophecms` folder, and that the backend restarted without errors.
 
@@ -619,11 +883,10 @@ The file is missing or misnamed. Astro file names are case-sensitive.
 - [`backend/modules/@apostrophecms/global/index.js`](https://github.com/apostrophecms/astro-public-demo/blob/develop/backend/modules/@apostrophecms/global/index.js)
 - [`frontend/src/pages/[...slug].astro`](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/pages/%5B...slug%5D.astro)
 - [`frontend/src/components/SiteHeader.astro`](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/SiteHeader.astro)
-- [`frontend/src/components/SiteFooter.astro`](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/SiteFooter.astro)
 - [`frontend/src/components/Breadcrumbs.astro`](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/Breadcrumbs.astro)
 
-The demo's versions include the localization and dark mode parts this chapter leaves out. `site-chrome.css` isn't in the demo. The Styling chapter replaces it.
+The demo's versions include the localization and dark mode parts this chapter leaves out. This chapter's `SiteFooter.astro` is simpler than the [demo's](https://github.com/apostrophecms/astro-public-demo/blob/develop/frontend/src/components/SiteFooter.astro), which has columns of links and the dark mode toggle. `site-chrome.css` isn't in the demo. The Styling chapter replaces it.
 
 ## Next steps
 
-Your site has a header, navigation, a footer, and breadcrumbs, all driven by content editors can change. In the next chapter, you'll build the demo's page types and learn how areas and template mapping shape each page.
+Your site has a header, navigation, a footer, and breadcrumbs, all driven by content editors can change. In the [next chapter](/tutorials/astro/creating-pages.html), you'll set up the demo's home page and default page types, share one widget configuration between their areas, and give each template its own layout.
