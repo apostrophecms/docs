@@ -1,9 +1,9 @@
 ---
 title: "Getting Started"
-description: "Create an ApostropheCMS + Astro project from the Astro Essentials starter kit, run both servers, make your first edit, and trace how a request flows from ApostropheCMS to Astro."
+description: "Create an ApostropheCMS + Astro project from the Astro Essentials starter kit, make your first page, learn the core concepts of page types, areas, widgets, and pieces, and trace how a request flows from ApostropheCMS to Astro."
 detailHeading: "Astro"
 url: "/tutorials/astro/getting-started.html"
-content: "Create a project from the Astro Essentials starter kit, run it, and learn how ApostropheCMS and Astro work together to render each page."
+content: "Create a project from the Astro Essentials starter kit, run it, and learn the core concepts behind how ApostropheCMS and Astro work together to render each page."
 tags:
   topic: "Core Concepts"
   type: astro
@@ -13,20 +13,35 @@ excludeFromFilters: true
 ---
 # Getting Started with ApostropheCMS and Astro
 
-In this chapter you create the project you'll build on for the rest of the series. You'll start from the [Astro Essentials starter kit](https://github.com/apostrophecms/starter-kit-astro-essentials), run it, make your first edit, and follow a single page request from the browser through Astro to ApostropheCMS and back.
+In this chapter you will create the project you'll build on for the rest of the series. You'll start from the [Astro Essentials starter kit](https://github.com/apostrophecms/starter-kit-astro-essentials), run it, and make your first page. Then you'll use that page to learn the core concepts of an ApostropheCMS + Astro project, and follow a single page request from the browser through Astro to ApostropheCMS and back.
 
 By the end of the chapter you'll have:
 
 - An ApostropheCMS + Astro project running on your machine
 - An admin account and a first page of your own
+- An understanding of page types, areas, widgets, and pieces, and how each one is split between ApostropheCMS and Astro
 - A working picture of how the two applications share the work of rendering a page
+
+## What you'll build
+
+Over this series, you'll build the Essentials starter kit up into the [Astro public demo](https://github.com/apostrophecms/astro-public-demo), a complete site with a styled home page, articles and authors, custom widgets, a light and dark mode toggle, and English, French, and German versions that visitors switch between from the header.
+
+<!-- TODO(screenshot): astro-public-demo home page, logged out, desktop width -->
+
+<!-- TODO(screenshot): astro-public-demo article page, logged in with the admin bar visible -->
+
+Each chapter adds one part of the demo to your project. The demo is also a project starter in its own right. If you'd rather start a real project from the finished site, choose **Demo** instead of **Essentials** when you run the installer.
+
+::: tip Exploring the demo alongside the tutorial
+To browse the finished site while you work, create a second project with the installer and choose **Demo** as the starting point. Both projects use ports 3000 and 4321, so stop one before you start the other.
+:::
 
 ## Prerequisites
 
 You need:
 
-- **Node.js 22.22 or later.** Node 24 is recommended.
-- **A terminal.** On Windows, see the [Windows options in the setup guide](/guide/development-setup.html#overview).
+- **Node.js 24.** Node 22 works only in its latest releases, because Astro raises its minimum Node 22 version from time to time. If the installer or Astro reports that your Node version is too old, upgrade to Node 24.
+- **On Windows, Git Bash or WSL 2.** npm doesn't work out of the box in PowerShell. See the [Windows options in the setup guide](/guide/development-setup.html#overview).
 
 You don't need to install a database. The installer offers SQLite, which keeps the database in a file inside your project. If you'd rather use MongoDB or PostgreSQL, see [Choosing a database](/guide/choosing-a-database.html).
 
@@ -47,6 +62,7 @@ Answer the prompts like this:
 3. **Choose a starting point:** choose **Essentials**. The default is **Demo**, so pick Essentials explicitly. The series builds the Essentials kit up into the demo one chapter at a time.
 4. **Choose a database:** choose **SQLite**, unless you already run MongoDB or PostgreSQL.
 5. **Create your admin account:** pick a username and password. You'll use them to log in.
+6. **Help us improve Apostrophe?** The installer asks whether it can send anonymous usage data: the choices you made in the installer, your operating system, and your Node.js version. It never sends your content or any personal information. For details, see the [telemetry policy](https://apostrophecms.com/telemetry-policy). Choose **See exactly what would be sent** to preview the data first. Choosing **Yes, share anonymous data** helps the ApostropheCMS team improve the installer and starter kits. The installer remembers your answer, so this step appears only the first time you run it.
 
 The installer copies the starter kit, writes a `.env` file for each application, installs dependencies, and creates your admin account. When it finishes, it prints the next steps:
 
@@ -62,6 +78,10 @@ To script the install, for example in CI, pass the answers as flags:
 npm create apostrophe@latest -- --unattended --kit=apostrophe-astro-essentials \
   --project-name=my-site --password=<admin-password> --telemetry=off
 ```
+
+This will create an admin account with the default user name of `admin`.
+
+The `--telemetry=off` flag will prevent your machine from sending anonymous information to Apostrophe about the starter kit selected and your development environment. No identifying information is sent. If this disclosure is okay, you can run the command without this flag.
 
 Run `npm create apostrophe@latest -- --help` for every flag.
 :::
@@ -85,6 +105,8 @@ The first start takes a little longer because ApostropheCMS builds its admin UI.
 
 Open `http://localhost:4321`. You'll see the starter kit's welcome page.
 
+<!-- TODO(screenshot): Essentials starter kit welcome page at localhost:4321, logged out -->
+
 ::: info Always work on port 4321
 Do all browsing and editing on the Astro address, `http://localhost:4321`. If you open the backend at port 3000, it shows a short message saying that it's a backend for Astro. That's expected.
 :::
@@ -92,15 +114,25 @@ Do all browsing and editing on the Astro address, `http://localhost:4321`. If yo
 ## Log in and make your first page
 
 1. Go to `http://localhost:4321/login` and log in with the account you created in the installer.
-2. Back on the home page, the ApostropheCMS admin bar appears across the top of the site.
+2. Back on the home page, the ApostropheCMS admin bar will appear across the top of the site.
 3. Click **Pages** in the admin bar, then **New Page**.
 4. Enter the title `About`. In the right-hand column, check that **Type** is set to **Default**.
 5. Click **Add Content** in the main area, choose **Rich Text**, and type a sentence.
 6. Click **Publish**.
 
+<!-- TODO(screenshot): New Page modal with title "About", Type set to Default, and a rich text widget in the main area -->
+
 ApostropheCMS takes you to the new page at `http://localhost:4321/about`, showing the title as a heading and your text below it.
 
-You just edited content in context, on the Astro site, with the ApostropheCMS editing UI. The rest of this chapter explains how that works.
+Now edit that text in context, directly on the page:
+
+1. Click **Edit** in the admin bar.
+2. Click the sentence you typed and change it. The rich text toolbar appears while you type.
+3. Click **Update** to publish the change. The button says **Update** because the page is already published. On a page that has never been published, it says **Publish**.
+
+<!-- TODO(screenshot): About page in edit mode, rich text widget selected with its toolbar showing -->
+
+You created the page in a modal and then edited its content in context, both on the Astro site with the ApostropheCMS editing UI. The rest of this chapter explains how that works.
 
 ## What's in the project
 
@@ -156,11 +188,198 @@ export default defineConfig({
 
 - `output: 'server'` renders each page on request, so editors always see current content. To publish a static site instead, see [Static Builds with ApostropheCMS + Astro](/tutorials/astro/static-builds-with-apostrophecms-astro.html).
 - `aposHost` is where Astro finds the backend. In production, set it with the `APOS_HOST` environment variable.
-- `templatesMapping` and `widgetsMapping` point to the folders that hold your page and widget components. You'll see how they're used below.
+- `templatesMapping` and `widgetsMapping` point to the folders that hold your page and widget components. The next section shows how they're used.
+
+## Core concepts
+
+Your About page already uses three of the four building blocks of an ApostropheCMS site: it has a **page type**, its content sits in an **area**, and the text you typed is a **widget**. The fourth, **pieces**, holds content that lives outside the page tree.
+
+Each building block has two halves. ApostropheCMS defines what the content is, in a module under `backend/modules`. Astro defines how it looks, in a component under `frontend/src`. A mapping file connects the two.
+
+If you already know ApostropheCMS, the backend halves will be familiar. The new part is how the Astro halves replace Nunjucks templates.
+
+### Page types
+
+A [page type](/guide/pages.html) defines a kind of page: which fields it has and which template renders it. When you created the About page, you chose the **Default** type.
+
+The backend half is a module that extends `@apostrophecms/page-type`:
+
+<AposCodeBlock>
+
+```javascript
+export default {
+  extend: '@apostrophecms/page-type',
+  options: {
+    label: 'Default Page'
+  },
+  fields: {
+    add: {
+      main: {
+        type: 'area',
+        options: {
+          widgets: {
+            '@apostrophecms/layout': {},
+            '@apostrophecms/rich-text': {},
+            '@apostrophecms/image': {},
+            '@apostrophecms/video': {}
+          }
+        }
+      }
+    },
+    group: {
+      basics: {
+        label: 'Basics',
+        fields: [
+          'title',
+          'main'
+        ]
+      }
+    }
+  }
+};
+```
+<template v-slot:caption>
+  backend/modules/default-page/index.js
+</template>
+</AposCodeBlock>
+
+The `label` is what you saw in the **Type** menu. Every page type gets a `title` field automatically. This one adds a `main` field, which you'll look at in the next section.
+
+The Astro half is a template component that receives the page's data as the `aposData` prop:
+
+<AposCodeBlock>
+
+```astro
+---
+import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
+const { page, user, query } = Astro.props.aposData;
+const { main } = page;
+---
+
+<section class="bp-content">
+  <h1>{ page.title }</h1>
+  <AposArea area={main} />
+</section>
+```
+<template v-slot:caption>
+  frontend/src/templates/DefaultPage.astro
+</template>
+</AposCodeBlock>
+
+The template mapping connects them. `templates/index.js` maps each page type's name to its Astro component:
+
+<AposCodeBlock>
+
+```javascript
+// Template registry — maps backend page type names to Astro components.
+// Keys MUST match the backend module name exactly (e.g. '@apostrophecms/home-page', 'default-page').
+// A wrong or missing key silently falls back to a default renderer — the page
+// will appear blank in the frontend with no console warning or error thrown.
+// Piece show/index pages use the 'module-name:show' / 'module-name:index' pattern.
+import HomePage from './HomePage.astro';
+import DefaultPage from './DefaultPage.astro';
+import BlogIndexPage from './BlogIndexPage.astro';
+import BlogShowPage from './BlogShowPage.astro';
+import NotFoundPage from './NotFoundPage.astro';
+
+const templateComponents = {
+  '@apostrophecms/home-page': HomePage,
+  'default-page': DefaultPage,
+  '@apostrophecms/blog-page:index': BlogIndexPage,
+  '@apostrophecms/blog-page:show': BlogShowPage,
+  '@apostrophecms/page:notFound': NotFoundPage
+};
+
+export default templateComponents;
+```
+<template v-slot:caption>
+  frontend/src/templates/index.js
+</template>
+</AposCodeBlock>
+
+The key is the backend module name, so the About page's `default-page` type renders with `DefaultPage.astro`. Every page in the page tree, which you open from **Pages** in the admin bar, has a type, and every type needs an entry here.
+
+In the demo, the home page and article pages are page types with their own fields and templates. You'll add page types in the [Creating Pages](/tutorials/astro/creating-pages.html) chapter.
+
+### Areas
+
+An [area](/guide/areas-and-widgets.html) is a field that holds a list of widgets. Editors add, remove, and reorder the widgets, and the area's options control which widget types are allowed. The `main` field in `default-page/index.js` is an area that allows layout, rich text, image, and video widgets.
+
+::: info Two naming rules for widget names
+- Widget names in an area's options leave off the `-widget` suffix of the module name. The `@apostrophecms/rich-text-widget` module is listed as `@apostrophecms/rich-text`.
+- Widgets that come with ApostropheCMS, or with official ApostropheCMS packages, keep their `@apostrophecms/` prefix. Your own widgets have no prefix.
+:::
+
+In the template, the `AposArea` component renders the area:
+
+```astro
+<AposArea area={main} />
+```
+
+That one line is where both editing experiences you tried come from:
+
+- **In context:** when you're logged in, `AposArea` adds editing controls around each widget, so editors can change content directly on the Astro page.
+- **In the modal:** an area is also a field in the page's editor modal, alongside the page's other fields. `default-page/index.js` puts `main` in the **Basics** group with `title`, so it appears on the modal's first tab. That's why you could add content when you created the page.
+
+Widgets can have areas of their own. The layout widget in the Essentials kit, for example, holds columns, and each column is an area for more widgets. In the demo, the home page's area offers layout widgets alongside heroes, cards, and other custom widgets.
+
+### Widgets
+
+A [widget](/guide/core-widgets.html) is one block of content inside an area, such as a paragraph of rich text, an image, or a video. Widgets don't exist on their own. They always belong to an area on a page, a piece, or another widget, and they're deleted with it.
+
+Like page types, each widget type has two halves:
+
+- **A backend module** that extends `@apostrophecms/widget-type` and defines the widget's fields and options. The core widgets, such as rich text, come with ApostropheCMS.
+- **An Astro component** in `frontend/src/widgets` that renders the widget.
+
+`AposArea` loops over the widgets in an area and finds a component for each one in `widgets/index.js`, the same way `AposTemplate` finds a page template:
+
+<AposCodeBlock>
+
+```javascript
+const widgetComponents = {
+  '@apostrophecms/rich-text': RichTextWidget,
+  '@apostrophecms/image': ImageWidget,
+  '@apostrophecms/video': VideoWidget,
+  '@apostrophecms/layout': LayoutWidget,
+  '@apostrophecms/layout-column': LayoutColumnWidget,
+  'nested-layout': NestedLayoutWidget,
+  'nested-column': NestedLayoutColumnWidget,
+  '@apostrophecms/file': FileWidget,
+};
+```
+<template v-slot:caption>
+  frontend/src/widgets/index.js
+</template>
+</AposCodeBlock>
+
+The keys follow the same naming rules as area options. The rich text you added is stored as `@apostrophecms/rich-text`, so `RichTextWidget.astro` renders it.
+
+The demo adds its own widgets, including a hero, cards, and buttons. You'll build widgets like these in the [Creating Widgets](/tutorials/astro/creating-widgets.html) chapter.
+
+### Pieces
+
+A [piece](/guide/pieces.html) is content that lives outside the page tree, such as a blog post, a team member, or a product. Each piece type gets its own manager in the admin bar, where editors add and organize pieces of that type.
+
+Pieces have two halves too. The backend module defines the piece type's fields. On the Astro side, a special page type displays the pieces with two templates: `:index` for the list and `:show` for a single piece. You can see this in the template mapping above, where the Essentials kit's blog uses `@apostrophecms/blog-page:index` and `@apostrophecms/blog-page:show`.
+
+Because pieces aren't tied to a single page, the same piece can appear anywhere on the site, such as a featured post on the home page or a list of related articles.
+
+In the demo, articles, authors, and article categories are all piece types. You'll build them in the [Creating Pieces](/tutorials/astro/creating-pieces.html) chapter.
+
+### The pattern
+
+Every building block follows the same steps:
+
+1. Define the content in a backend module.
+2. Build an Astro component to render it.
+3. Map the component in `templates/index.js` or `widgets/index.js`.
+
+The chapters that follow repeat this pattern for each part of the demo.
 
 ## How a page request flows
 
-Follow the request for your About page from start to finish.
+You've seen the pieces. Now follow the request for your About page from start to finish to see how they fit together.
 
 ### 1. The browser asks Astro
 
@@ -251,133 +470,11 @@ The response is the `aposData` object that every template receives. These are th
 `APOS_EXTERNAL_FRONT_KEY` must be the same in the backend and the frontend. The `dev` scripts in both `package.json` files set it to `dev` for local development, which is why the `curl` example uses `dev`. With a different key, the backend answers `forbidden`. In production, set the same secret value on both servers.
 :::
 
-### 4. The template mapping picks a component
+### 4. The mappings render the page
 
-`AposTemplate` looks at `aposData.template` and finds the matching Astro component in `templates/index.js`:
+`AposTemplate` reads `aposData.template` and looks it up in the template mapping. The About page's template is `default-page:page`. Regular pages end in `:page`, and `AposTemplate` drops that suffix before looking up the key, which is why the mapping key is just `default-page`.
 
-<AposCodeBlock>
-
-```javascript
-// Template registry — maps backend page type names to Astro components.
-// Keys MUST match the backend module name exactly (e.g. '@apostrophecms/home-page', 'default-page').
-// A wrong or missing key silently falls back to a default renderer — the page
-// will appear blank in the frontend with no console warning or error thrown.
-// Piece show/index pages use the 'module-name:show' / 'module-name:index' pattern.
-import HomePage from './HomePage.astro';
-import DefaultPage from './DefaultPage.astro';
-import BlogIndexPage from './BlogIndexPage.astro';
-import BlogShowPage from './BlogShowPage.astro';
-import NotFoundPage from './NotFoundPage.astro';
-
-const templateComponents = {
-  '@apostrophecms/home-page': HomePage,
-  'default-page': DefaultPage,
-  '@apostrophecms/blog-page:index': BlogIndexPage,
-  '@apostrophecms/blog-page:show': BlogShowPage,
-  '@apostrophecms/page:notFound': NotFoundPage
-};
-
-export default templateComponents;
-```
-<template v-slot:caption>
-  frontend/src/templates/index.js
-</template>
-</AposCodeBlock>
-
-Your About page is a `default-page`, so ApostropheCMS reports its template as `default-page:page`. Regular pages end in `:page`, and `AposTemplate` drops that suffix before looking up the key. That's why the mapping key is just `default-page`.
-
-Pages that list and display pieces, such as blog posts, use two templates: `:index` for the list and `:show` for a single item. You'll build these in the Pieces chapter.
-
-### 5. The page component renders the content
-
-`DefaultPage.astro` receives `aposData` and renders the page:
-
-<AposCodeBlock>
-
-```astro
----
-import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
-const { page, user, query } = Astro.props.aposData;
-const { main } = page;
----
-
-<section class="bp-content">
-  <h1>{ page.title }</h1>
-  <AposArea area={main} />
-</section>
-```
-<template v-slot:caption>
-  frontend/src/templates/DefaultPage.astro
-</template>
-</AposCodeBlock>
-
-`main` is an **area**: a field that holds a list of widgets that editors add, remove, and reorder. The backend module for the page type defines the area and the widgets it allows:
-
-<AposCodeBlock>
-
-```javascript
-export default {
-  extend: '@apostrophecms/page-type',
-  options: {
-    label: 'Default Page'
-  },
-  fields: {
-    add: {
-      main: {
-        type: 'area',
-        options: {
-          widgets: {
-            '@apostrophecms/layout': {},
-            '@apostrophecms/rich-text': {},
-            '@apostrophecms/image': {},
-            '@apostrophecms/video': {}
-          }
-        }
-      }
-    },
-    group: {
-      basics: {
-        label: 'Basics',
-        fields: [
-          'title',
-          'main'
-        ]
-      }
-    }
-  }
-};
-```
-<template v-slot:caption>
-  backend/modules/default-page/index.js
-</template>
-</AposCodeBlock>
-
-### 6. The widget mapping renders each widget
-
-`AposArea` loops over the widgets in the area. For each one, it finds a component in `widgets/index.js`, the same way `AposTemplate` finds a page template:
-
-<AposCodeBlock>
-
-```javascript
-const widgetComponents = {
-  '@apostrophecms/rich-text': RichTextWidget,
-  '@apostrophecms/image': ImageWidget,
-  '@apostrophecms/video': VideoWidget,
-  '@apostrophecms/layout': LayoutWidget,
-  '@apostrophecms/layout-column': LayoutColumnWidget,
-  'nested-layout': NestedLayoutWidget,
-  'nested-column': NestedLayoutColumnWidget,
-  '@apostrophecms/file': FileWidget,
-};
-```
-<template v-slot:caption>
-  frontend/src/widgets/index.js
-</template>
-</AposCodeBlock>
-
-Widget keys are the backend module name without the `-widget` suffix. The rich text you added is stored as `@apostrophecms/rich-text`, so `RichTextWidget.astro` renders it. Widgets that come with ApostropheCMS keep their `@apostrophecms/` prefix.
-
-When you're logged in, `AposArea` also adds the editing controls around each widget. That's what makes in-context editing work on an Astro page.
+`DefaultPage.astro` renders the title and passes the `main` area to `AposArea`. `AposArea` looks up each widget in the widget mapping and renders it with its component, adding editing controls when you're logged in. Astro sends the finished HTML back to the browser.
 
 ### The whole flow
 
@@ -460,4 +557,4 @@ For a reference overview of the starter kit's patterns, including image helpers,
 
 ## Next steps
 
-Your project runs, and you know how a page gets from ApostropheCMS to the browser. In the next chapter, you'll give the site its chrome: global settings, a header with navigation, a footer, and breadcrumbs.
+At this point your project is running, you know the building blocks of an ApostropheCMS + Astro site, and you've seen how a page gets from ApostropheCMS to the browser. In the next chapter, you'll give the site its chrome: global settings, a header with navigation, a footer, and breadcrumbs.
