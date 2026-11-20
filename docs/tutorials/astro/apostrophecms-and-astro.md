@@ -1,7 +1,7 @@
 ---
 next:
-  text: 'Introducing Apollo'
-  link: '/tutorials/astro/introducing-apollo.html'
+  text: 'Getting Started'
+  link: '/tutorials/astro/getting-started.html'
 title: "ApostropheCMS and Astro"
 detailHeading: "Astro"
 url: "/tutorials/astro/apostrophecms-and-astro.html"
@@ -78,7 +78,7 @@ A step-by-step series that starts from the [Astro Essentials starter kit](https:
   detail-heading="Series"
   title="Start building"
   content="Set up your development environment, explore core concepts, and learn the fundamental patterns for building with ApostropheCMS and Astro."
-  url="introducing-apollo.html"
+  url="getting-started.html"
 />
 
 ### Path 2: Deploy Your Project
