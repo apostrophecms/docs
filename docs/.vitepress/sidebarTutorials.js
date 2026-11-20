@@ -53,6 +53,10 @@ const sidebarTutorials = [
         link: 'tutorials/astro/getting-started.md'
       },
       {
+        text: 'Site Chrome',
+        link: 'tutorials/astro/site-chrome.md'
+      },
+      {
         text: 'Creating Pages',
         link: 'tutorials/astro/creating-pages.md'
       },
