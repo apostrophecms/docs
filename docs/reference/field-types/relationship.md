@@ -27,9 +27,13 @@ _toppings: {
 ```
 
 ::: tip
-**For better performance, it is strongly recommended that you set a projection filter** via the `builders` option, limiting the amount of information fetched about each related doc. You may also call other query builders by setting subproperties of the `builders` property. This is a useful way to limit the acceptable choices for the join.
+**For better performance, it is strongly recommended that you set a projection filter** via the `builders` option, limiting the amount of information fetched about each related doc. Other query builders can also be set as subproperties of `builders` to filter the related documents when the relationship is loaded.
 :::
 <!-- TODO: Link "query builders" to more docs on that feature -->
+
+::: warning
+Relationship `builders` apply when related documents are loaded. They do not filter the autocomplete suggestions or the documents offered by the Browse chooser in the editor. An editor can select and save a document that does not match a builder such as `and`; that document is then omitted when the relationship is loaded. Do not rely on `builders` to enforce which documents an editor can select.
+:::
 
 ## Settings
 
@@ -44,7 +48,7 @@ _toppings: {
 
 | Property | Type | Default | Description |
 |-----------|-----------|-----------|-----------|
-|`builders` | Object | n/a | Query builders to limit acceptable options for the join. [See below](#filtering-related-document-properties) for more.|
+|`builders` | Object | n/a | Query builders applied when loading related documents. These do not restrict the editor's autocomplete or Browse choices. [See below](#filtering-related-document-properties) for more.|
 |`fields` | Object | n/a | A field schema object, allowing editors to [add additional information to most relationships](/guide/relationships.md#providing-context-with-fields). |
 |`help` | String | n/a | Help text for the content editor |
 |`htmlHelp` | String | n/a | Help text with support for HTML markup |
