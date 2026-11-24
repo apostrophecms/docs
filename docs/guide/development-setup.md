@@ -49,7 +49,7 @@ Let's get started with what you will need to have installed on your machine to r
 
 ### Node.js 22+
 
-ApostropheCMS requires Node.js 22 or later. We recommend running the current Active LTS release — Node 24 at the time of writing — rather than the minimum. Node 22 is in maintenance support until April 2027, so it still works, but new projects should start on the current LTS.
+ApostropheCMS requires Node.js 22 or later. If you plan on using an Astro frontend with your project that minimum is 22.23.4, but we recommend running the current Active LTS release — Node 24 at the time of writing — rather than the minimum. Node 22 is in maintenance support until April 2027, so it still works, but new projects should start on the current LTS.
 
 Node.js is a JavaScript runtime and it runs server-side JS, including the Apostrophe app. npm is automatically included with Node. While you can download and install these directly from https://nodejs.org, we highly encourage using a Node Version Manager to allow you to switch easily between Node and npm versions.
 
